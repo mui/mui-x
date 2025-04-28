@@ -139,7 +139,7 @@ Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props 
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
 
-Here is how the Scatter Chart is composed:
+Here's how the Scatter Chart is composed:
 
 ```jsx
 <ChartDataProvider>
@@ -163,5 +163,5 @@ Here is how the Scatter Chart is composed:
 :::info
 The `data-drawing-container` indicates that children of this element should be considered as part of the drawing area, even if they overflow.
 
-See the [clipping section](/x/react-charts/composition/#clipping) for more info.
+See the [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
 :::

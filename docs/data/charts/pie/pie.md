@@ -129,7 +129,7 @@ Use the `<ChartDataProvider />` to provide the `series` prop for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<PiePlot />` component that renders the pie slices and their labels.
 
-Here is how the Pie Chart is composed:
+Here's how the Pie Chart is composed:
 
 ```jsx
 <ChartDataProvider>
