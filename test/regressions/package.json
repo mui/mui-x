@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run mocha\" \"pnpm run server\"",
-    "build": "cross-env TEST_BUILD=true vite build",
-    "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
-    "mocha": "mocha --config .mocharc.js '**/*.test.{js,ts,tsx}'",
-    "server": "serve . -p 5001"
+    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run runn\" \"pnpm run serverr\"",
+    "build": "cross-env TEST_BUILD=true vite build --config vite.config.js",
+    "dev": "pnpm test:regressions:build && pnpm test:regressions:server",
+    "runn": "mocha --config .mocharc.cjs '**/*.test.{js,ts,tsx}'",
+    "serverr": "serve . -p 5001"
   },
   "devDependencies": {
     "@babel/runtime": "^7.27.0",
