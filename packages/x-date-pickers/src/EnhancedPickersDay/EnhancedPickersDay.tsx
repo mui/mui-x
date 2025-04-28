@@ -17,6 +17,7 @@ import {
 import { useUtils } from '../internals/hooks/useUtils';
 import { EnhancedPickersDayOwnerState, EnhancedPickersDayProps } from './EnhancedPickersDay.types';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
+import '@mui/system';
 
 const DAY_SIZE = 36;
 
@@ -59,7 +60,7 @@ const overridesResolver = (
 
 const SET_MARGIN = DAY_MARGIN; // should be working with any given margin
 
-export const defaultEnhancedDayStyle = ({ theme }: { theme: Theme }) => ({
+const styleArg = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
@@ -83,10 +84,6 @@ export const defaultEnhancedDayStyle = ({ theme }: { theme: Theme }) => ({
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
   },
-});
-
-const styleArg = ({ theme }: { theme: Theme }) => ({
-  ...defaultEnhancedDayStyle({ theme }),
   marginLeft: SET_MARGIN,
   marginRight: SET_MARGIN,
   variants: [

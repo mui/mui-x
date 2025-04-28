@@ -9,7 +9,6 @@ import {
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import { usePickerDayOwnerState, useUtils } from '@mui/x-date-pickers/internals';
-import { defaultEnhancedDayStyle } from '@mui/x-date-pickers/EnhancedPickersDay';
 import {
   EnhancedDateRangePickerDayOwnerState,
   EnhancedDateRangePickerDayProps,
@@ -19,9 +18,8 @@ import {
   EnhancedDateRangePickerDayClassKey,
   getEnhancedDateRangePickerDayUtilityClass,
 } from './enhancedDateRangePickerDayClasses';
-import { boxSizing } from '@mui/system';
-import { positions } from '@mui/system';
-import { width } from '@mui/system';
+
+const DAY_SIZE = 36;
 
 const useUtilityClasses = (ownerState: EnhancedDateRangePickerDayOwnerState) => {
   const {
@@ -136,8 +134,34 @@ const selectedDayStyles = (theme: Theme) => ({
   },
 });
 
-const styleArg = ({ theme }: { theme: Theme }) => ({
-  ...defaultEnhancedDayStyle({ theme }),
+const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
+  name: 'MuiEnhancedDateRangePickerDay',
+  slot: 'Root',
+  overridesResolver,
+})<{ ownerState: EnhancedDateRangePickerDayOwnerState }>(({ theme }) => ({
+  ...theme.typography.caption,
+  width: DAY_SIZE,
+  height: DAY_SIZE,
+  borderRadius: DAY_SIZE / 2,
+  padding: 0,
+  // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
+  backgroundColor: 'transparent',
+  transition: theme.transitions.create('background-color', {
+    duration: theme.transitions.duration.short,
+  }),
+  color: (theme.vars || theme).palette.text.primary,
+  '@media (pointer: fine)': {
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+    },
+  },
+  '&:focus': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+  },
   zIndex: 1,
   isolation: 'isolate',
   position: 'initial',
@@ -209,7 +233,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
         },
       },
     },
-
     {
       props: { isDayInsidePreview: true },
       style: {
@@ -226,7 +249,6 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
     },
     {
       props: { isDaySelectionStart: true },
-
       style: {
         '::before': {
           ...highlightStyles(theme),
@@ -293,13 +315,7 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       },
     },
   ],
-});
-
-const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
-  name: 'MuiEnhancedDateRangePickerDay',
-  slot: 'Root',
-  overridesResolver,
-})<{ ownerState: EnhancedDateRangePickerDayOwnerState }>(styleArg);
+}));
 
 const EnhancedDateRangePickerDayContainer = styled('div', {
   name: 'MuiEnhancedDateRangePickerDay',

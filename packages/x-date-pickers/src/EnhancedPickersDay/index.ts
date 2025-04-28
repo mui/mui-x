@@ -1,4 +1,4 @@
-export { EnhancedPickersDay, defaultEnhancedDayStyle } from './EnhancedPickersDay';
+export { EnhancedPickersDay } from './EnhancedPickersDay';
 export type {
   EnhancedPickersDayProps,
   EnhancedPickersDayOwnerState,

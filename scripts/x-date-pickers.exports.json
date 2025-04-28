@@ -75,7 +75,6 @@
   { "name": "DayCalendarSkeletonClassKey", "kind": "TypeAlias" },
   { "name": "DayCalendarSkeletonProps", "kind": "Interface" },
   { "name": "DEFAULT_DESKTOP_MODE_MEDIA_QUERY", "kind": "Variable" },
-  { "name": "defaultEnhancedDayStyle", "kind": "Variable" },
   { "name": "DesktopDatePicker", "kind": "Variable" },
   { "name": "DesktopDatePickerProps", "kind": "Interface" },
   { "name": "DesktopDatePickerSlotProps", "kind": "Interface" },
