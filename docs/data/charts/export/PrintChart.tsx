@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-
+import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import { data } from './randomData';
 
 const series = [
@@ -16,13 +16,13 @@ const series = [
   },
 ];
 
-export default function PrintChartNoSnap() {
-  const apiRef = React.useRef(undefined);
+export default function PrintChart() {
+  const apiRef = React.useRef<ChartProApi>(undefined);
 
   return (
     <Stack width="100%" sx={{ display: 'block' }}>
       <Button
-        onClick={() => apiRef.current.exportAsPrint()}
+        onClick={() => apiRef.current!.exportAsPrint()}
         variant="contained"
         sx={{ mb: 1 }}
       >

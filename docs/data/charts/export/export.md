@@ -16,7 +16,7 @@ The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open th
 
 The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
 
-{{"demo": "PrintChartNoSnap.js"}}
+{{"demo": "PrintChart.js"}}
 
 ## Export as image
 
