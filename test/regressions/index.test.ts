@@ -259,7 +259,7 @@ async function main() {
       it('should take a screenshot of the charts print preview', async function test() {
         this.timeout(20000);
 
-        const route = '/docs-charts-export/PrintChart';
+        const route = '/docs-charts-export/PrintChartNoSnap';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
 
