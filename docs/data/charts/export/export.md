@@ -18,6 +18,44 @@ The print dialog allows you to print the chart or save it as a PDF, as well as c
 
 {{"demo": "PrintChart.js"}}
 
+## Export as image
+
+The `apiRef` prop also exposes a `exportAsImage()` method to export the chart as an image.
+
+### Dependency
+
+For `exportAsImage()` to work, you need to add `rasterizehtml` as a dependency in your project.
+
+<codeblock storageKey="package-manager">
+
+```bash npm
+npm install rasterizehtml
+```
+
+```bash pnpm
+pnpm add rasterizehtml
+```
+
+```bash yarn
+yarn add rasterizehtml
+```
+
+</codeblock>
+
+### Usage
+
+The function accepts an options object with the `type` property, which specifies the image format. The available formats are:
+
+- `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/);
+- `image/webp` which is only supported in some browsers.
+
+If the format is not supported by the browser, `exportAsImage()` falls back to `image/png`.
+
+Additionally, for lossy formats such as `image/jpeg` and `image/webp`, the options object also accepts the `quality` property, which is a number between 0 and 1.
+The default value is 0.9.
+
+{{"demo": "ExportChartAsImage.js"}}
+
 ## Composition
 
 As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.

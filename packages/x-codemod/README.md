@@ -40,10 +40,10 @@ To pass more options directly to jscodeshift, use `--jscodeshift=...`. For examp
 
 ```bash
 # single option
-npx @mui/x-codemod@next --jscodeshift=--run-in-band
+npx @mui/x-codemod --jscodeshift=--run-in-band
 
 # multiple options
-npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
+npx @mui/x-codemod --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
@@ -54,7 +54,7 @@ Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument
 
 ```bash
-npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
 ## v8.0.0

@@ -1,5 +1,5 @@
 ---
-title: React Tree View - Migration from v7 to v8
+title: Tree View - Migration from v7 to v8
 productId: x-tree-view
 ---
 
@@ -50,8 +50,8 @@ If you've configured aliases for these bundles, you must remove them now.
      alias: {
 -      '@mui/x-tree-view': '@mui/x-tree-view/modern',
 -      '@mui/x-tree-view-pro': '@mui/x-tree-view-pro/modern',
-     }
-   }
+     },
+   },
  }
 ```
 
@@ -300,32 +300,32 @@ If you were using `publicAPI` methods to access other information than the tree 
 
 ### Rename `publicAPI.selectItem()`
 
-The `selectItem` method has been renamed `setItemSelection`:
+The `selectItem()` method has been renamed `setItemSelection()`:
 
 ```diff
  const { publicAPI } = useTreeItemUtils();
 
  const handleSelectItem() {
--  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true })
-+  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true })
+-  publicAPI.selectItem({ event, itemId: props.itemId, shouldBeSelected: true });
++  publicAPI.setItemSelection({ event, itemId: props.itemId, shouldBeSelected: true });
  }
 ```
 
 ## Change `pubicAPI.setItemExpansion()` signature
 
-The `setItemExpansion` method now receives a single object instead of a list of parameters:
+The `setItemExpansion()` method now receives a single object instead of a list of parameters:
 
 ```diff
  const { publicAPI } = useTreeItemUtils();
 
  const handleExpandItem() {
--  publicAPI.setItemExpansion(event, props.itemId, true)
-+  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true })
+-  publicAPI.setItemExpansion(event, props.itemId, true);
++  publicAPI.setItemExpansion({ event, itemId: props.itemId, shouldBeExpanded: true });
  }
 ```
 
 :::success
-The `setItemExpansion` now toggles the expansion when `shouldBeExpanded` is not provided.
+The `setItemExpansion()` now toggles the expansion when `shouldBeExpanded` is not provided.
 :::
 
 ## Apply the indentation on the item content instead of it's parent's group

@@ -227,6 +227,21 @@ async function main() {
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
 
+    it('should export a chart as PNG', async function test() {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
+      await fse.ensureDir(path.dirname(screenshotPath));
+
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+    });
+
     describe('print preview', () => {
       /* These tests do not properly clean up after themselves, so moving them to their own describe block to close the
        * page after every test. */

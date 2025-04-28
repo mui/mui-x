@@ -1,5 +1,5 @@
 ---
-title: React Charts - Migration from v7 to v8
+title: Charts - Migration from v7 to v8
 productId: x-charts
 ---
 
@@ -57,8 +57,8 @@ If you've configured aliases for these bundles, you must remove them now.
      alias: {
 -      '@mui/x-charts': '@mui/x-charts/modern',
 -      '@mui/x-charts-pro': '@mui/x-charts-pro/modern',
-     }
-   }
+     },
+   },
  }
 ```
 
@@ -158,9 +158,9 @@ The `direction` prop of the legend has been changed to accept `'vertical'` and `
  <PieChart
    slotProps={{
      legend: {
--      direction: 'column'
-+      direction: 'vertical'
-     }
+-      direction: 'column',
++      direction: 'vertical',
+     },
    }}
  />
 ```
@@ -172,14 +172,14 @@ This is to align with the CSS values and reflect the RTL ability of the legend c
 
 ```diff
  <BarChart
-    slotProps={{
-      legend: {
-        position: {
--          horizontal: "left",
-+          horizontal: "start",
-        }
-      }
-    }}
+   slotProps={{
+     legend: {
+       position: {
+-        horizontal: 'left',
++        horizontal: 'start',
+       },
+     },
+   }}
  />
 ```
 
@@ -218,8 +218,8 @@ For consistency, the `tooltip` props have been replaced by the `slotProps.toolti
 
 ```diff
  <LineChart
--   tooltip={{ trigger: 'item' }}
-+   slotProps={{ tooltip: { trigger: 'item' }}}
+-  tooltip={{ trigger: 'item' }}
++  slotProps={{ tooltip: { trigger: 'item' }}}
  />
 ```
 
@@ -242,15 +242,15 @@ The series label cell is now a header cell `th` instead of `td`.
   <table>
 -   <header>
 -     <tr>
--       <td colspan='3'>The formatted x-axis value</td>
+-       <td colspan="3">The formatted x-axis value</td>
 -     </tr>
 -   <header>
 +   <caption>The formatted x-axis value</caption>
     <tbody>
       <tr>
--       <td><Mark color='red'/></td>
+-       <td><Mark color="red"/></td>
 -       <td>Series A</td>
-+       <th><Mark color='red'/>Series A</th>
++       <th><Mark color="red"/>Series A</th>
         <td>55</td>
       </tr>
     <tbody>
@@ -265,9 +265,9 @@ DOM modification is similar to the axis tooltip in the previous section.
   <table>
     <tbody>
       <tr>
--       <td><Mark color='red'/></td>
+-       <td><Mark color="red"/></td>
 -       <td>Series A</td>
-+       <th><Mark color='red'/>Series A</th>
++       <th><Mark color="red"/>Series A</th>
         <td>55</td>
       </tr>
     <tbody>
@@ -298,9 +298,9 @@ The `ChartsOnAxisClickHandler` component got removed.
 The `onAxisClick` handler can directly be passed to the chart containers.
 
 ```diff
-+ <ChartContainer onAxisClick={() => {}}>
-- <ChartContainer>
--   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
++<ChartContainer onAxisClick={() => {}}>
+-<ChartContainer>
+-  <ChartsOnAxisClickHandler onAxisClick={() => {}} />
  </ChartContainer>
 ```
 
@@ -370,11 +370,11 @@ The `labelFontSize` and `tickFontSize` props have been removed in favor of the s
   <ChartsXAxis
 -   labelFontSize={18}
 +   labelStyle={{
-+     fontSize: 18
++     fontSize: 18,
 +   }}
 -   tickFontSize={20}
 +   tickStyle={{
-+     fontSize: 20
++     fontSize: 20,
 +   }}
   />
 ```
@@ -386,14 +386,14 @@ The `useSeries` hook family has been stabilized and renamed accordingly.
 ```diff
   import {
 -   unstable_useSeries,
-+   useSeries,
 -   unstable_usePieSeries,
-+   usePieSeries,
 -   unstable_useLineSeries,
-+   useLineSeries,
 -   unstable_useBarSeries,
-+   useBarSeries,
 -   unstable_useScatterSeries,
++   useSeries,
++   usePieSeries,
++   useLineSeries,
++   useBarSeries,
 +   useScatterSeries,
   } from '@mui/x-charts/hooks';
   import {
@@ -407,10 +407,10 @@ The `useSeries` hook family has been stabilized and renamed accordingly.
 The `colors` prop in `SparkLineChart` has been renamed to `color`. It now accepts a single color or a function that returns a color.
 
 ```diff
-  <SparkLineChart
--   colors={['#000', '#fff']}
-+   color="#000"
-  />
+ <SparkLineChart
+-  colors={['#000', '#fff']}
++  color="#000"
+ />
 ```
 
 We provide a codemod to fix simple cases of this change, which you can run as follows:
