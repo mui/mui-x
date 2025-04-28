@@ -135,11 +135,11 @@ See [Custom components](/x/react-charts/components/) to learn how to further cus
 
 ## Composition
 
-For composition, use the **ChartDataProvider** to provide `series`, `xAxis`, and `yAxis` props.
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
-In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the **ScatterPlot** component that renders the scatter marks.
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
 
-For info here is the composition of the Scatter Chart component.
+Here is how the Scatter Chart is composed:
 
 ```jsx
 <ChartDataProvider>
@@ -163,5 +163,5 @@ For info here is the composition of the Scatter Chart component.
 :::info
 The `data-drawing-container` indicates that children of this element should be considered as part of the drawing are, even if they overflow.
 
-See the [clipping section](https://next.mui.com/x/react-charts/composition/#clipping) for more info.
+See the [clipping section](/x/react-charts/composition/#clipping) for more info.
 :::

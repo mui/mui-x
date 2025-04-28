@@ -141,16 +141,15 @@ For example, a battery level indicator is better with an hour-long duration.
 
 ## Composition
 
-For composition, use the **GaugeContainer** to provide all the parameters as props: `value`, `valueMin`, `valueMax`, `startAngle`
-`endAngle`, ...
+Use the `<GaugeContainer />` to provide all the parameters as props: `value`, `valueMin`, `valueMax`, `startAngle`, `endAngle`, etc.
 
-In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the following components:
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
 
-- **GaugeReferenceArc** renders the reference arc.
-- **GaugeValueArc** renders the value arc.
-- **GaugeValueText** renders the the text at the center.
+- `<GaugeReferenceArc />` renders the reference arc.
+- `<GaugeValueArc />` renders the value arc.
+- `<GaugeValueText />` renders the text at the center.
 
-For info here is the composition of the Gauge component.
+Here is how the Gauge Chart is composed.
 
 ```jsx
 <GaugeContainer>

@@ -100,30 +100,30 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 
 ## Composition
 
-For composition, use the **RadarDataProvider** to provide `series` and `radar` props.
+Use the `<RadarDataProvider />` to provide `series` and `radar` props for composition.
 
-In addition to the common chart components available for [composition](https://next.mui.com/x/react-charts/composition/), you can use the following components:
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
 
 - For axes
-  - **RadarGrid**: renders the grid and stripes.
-  - **RadarMetricLabels**: renders metric labels around the grid.
+  - `<RadarGrid />` renders the grid and stripes.
+  - `<RadarMetricLabels />` renders metric labels around the grid.
 - For data
-  - **RadarSeriesPlot**: renders series (the area and the marks) on top of each other.
-  - **RadarSeriesArea**: renders series area.
-  - **RadarSeriesMarks**: renders series marks.
+  - `<RadarSeriesPlot />` renders series (the area and the marks) on top of each other.
+  - `<RadarSeriesArea />` renders series area.
+  - `<RadarSeriesMarks />` renders series marks.
 - For interaction
-  - **RadarAxisHighlight**: renders line and marks along the highlighted axis.
+  - `<RadarAxisHighlight />` renders line and marks along the highlighted axis.
 
 :::info
-The **RadarSeriesPlot** renders all series together, such that the area of the second series is on top of the marks of the the first one.
+The `<RadarSeriesPlot />` renders all series together, such that the area of the second series is on top of the marks of the the first one.
 
-The **RadarSeriesArea** and **RadarSeriesMarks** allow to render all marks on top of all areas.
-Plus it allows to render some components between the areas and the marks.
+The `<RadarSeriesArea />` and `<RadarSeriesMarks />` allow to render all marks on top of all areas.
+It also allows rendering some components between the areas and the marks.
 :::
 
 {{"demo": "CompositionExample.js" }}
 
-Here's how the Radar Chart is composed:
+Here is how the Radar Chart is composed:
 
 ```jsx
 <RadarDataProvider>
