@@ -13,13 +13,17 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   });
 
   useEnhancedEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      highlight: {
-        ...prevState.highlight,
-        item: params.highlightedItem,
-      },
-    }));
+    store.update((prevState) =>
+      prevState.highlight.item === params.highlightedItem
+        ? prevState
+        : {
+            ...prevState,
+            highlight: {
+              ...prevState.highlight,
+              item: params.highlightedItem,
+            },
+          },
+    );
   }, [store, params.highlightedItem]);
 
   const clearHighlight = useEventCallback(() => {

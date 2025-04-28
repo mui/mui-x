@@ -5,7 +5,7 @@ import { warnOnce } from '../warning';
 /**
  * Make sure a controlled prop is used correctly.
  * Logs errors if the prop either:
- * 
+ *
  * - switch between controlled and uncontrolled
  * - modify it's default value
  * @param parameters
@@ -39,7 +39,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
       [
         `MUI X: A component is changing the ${
           isControlled ? '' : 'un'
-        }controlled ${propName} state of the ${componentName} to be ${isControlled ? 'un' : ''}controlled.`,
+        }controlled ${propName} state of ${componentName} to be ${isControlled ? 'un' : ''}controlled.`,
         'Elements should not switch from uncontrolled to controlled (or vice versa).',
         `Decide between using a controlled or uncontrolled ${propName} ` +
           'element for the lifetime of the component.',
