@@ -263,13 +263,17 @@ describe('<DataGrid /> - Keyboard', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'Home', ctrlKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
-      await act(async () => cell.scrollIntoView());
+      if (!isJSDOM) {
+        await act(async () => cell.scrollIntoView());
+      }
       await user.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', metaKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
-      await act(async () => cell.scrollIntoView());
+      if (!isJSDOM) {
+        await act(async () => cell.scrollIntoView());
+      }
       await user.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', shiftKey: true });
