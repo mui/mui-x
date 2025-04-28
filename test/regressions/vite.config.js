@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   root: path.join(process.cwd(), 'test/regressions'),
   optimizeDeps: {
-    include: ['prismjs'],
+    include: ['prismjs', 'clipboard-copy'],
   },
   build: {
     outDir: 'build',
