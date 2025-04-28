@@ -3,14 +3,9 @@ import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { clearWarningsCache } from '@mui/x-internals/warning';
 
 describe('useChartCartesianAxis', () => {
   const { render } = createRenderer();
-
-  beforeEach(() => {
-    clearWarningsCache();
-  });
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
