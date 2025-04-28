@@ -302,7 +302,7 @@ Here is how the Line Chart is composed.
 ```
 
 :::info
-The `data-drawing-container` indicates that children of this element should be considered as part of the drawing area, even if they overflow.
+The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
 
 See the [clipping section](/x/react-charts/composition/#clipping) for more info.
 :::
