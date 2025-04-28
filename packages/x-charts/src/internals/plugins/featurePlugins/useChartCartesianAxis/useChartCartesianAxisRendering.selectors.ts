@@ -1,4 +1,3 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -55,14 +54,6 @@ const selectorChartYZoomOptionsLookup = createSelector(
 export const selectorChartZoomOptionsLookup = createSelector(
   [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
   (xLookup, yLookup) => ({ ...xLookup, ...yLookup }),
-  {
-    memoizeOptions: {
-      // This selector returns Record<AxisId, DefaultizedZoomOptions> which is a map.
-      // Whenever the component re-renders, the axis is often a new object, which makes this a new instance.
-      // We need to use a custom equality check to avoid re-rendering the chart.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
 );
 
 const selectorChartXFilter = createSelector(
