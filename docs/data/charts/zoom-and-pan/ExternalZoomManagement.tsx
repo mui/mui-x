@@ -14,9 +14,7 @@ const initialZoomData: ZoomData[] = [
   },
 ];
 export default function ExternalZoomManagement() {
-  const apiRef = React.useRef(undefined) as React.RefObject<
-    ChartPublicAPI<[any]> | undefined
-  >;
+  const apiRef = React.useRef<ChartPublicAPI<[any]>>(undefined);
   const [zoomData, setZoomData] = React.useState(initialZoomData);
 
   return (
