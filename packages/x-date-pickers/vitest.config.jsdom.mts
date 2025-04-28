@@ -2,7 +2,7 @@ import { mergeConfig } from 'vitest/config';
 // eslint-disable-next-line import/no-relative-packages
 import filterReplacePlugin from '../../test/vite-plugin-filter-replace.mts';
 import sharedConfig from '../../vitest.shared.mts';
-import packageJson from './package.json';
+import { getTestName } from '../../scripts/getTestName.mts';
 
 export const filterReplace = filterReplacePlugin(
   [
@@ -27,7 +27,7 @@ export const filterReplace = filterReplacePlugin(
 export default mergeConfig(sharedConfig, {
   plugins: [filterReplace],
   test: {
-    name: `jsdom/${packageJson.name.split('/')[1]}`,
+    name: getTestName(import.meta.url),
     environment: 'jsdom',
   },
 });

@@ -1,11 +1,11 @@
 /// <reference types="@vitest/browser/providers/playwright" />
 import { mergeConfig } from 'vitest/config';
 import sharedConfig from '../../vitest.shared.mts';
-import packageJson from './package.json';
+import { getTestName } from '../../scripts/getTestName.mts';
 
 export default mergeConfig(sharedConfig, {
   test: {
-    name: `browser/${packageJson.name.split('/')[1]}`,
+    name: getTestName(import.meta.url),
     environment: 'browser',
     browser: {
       enabled: true,

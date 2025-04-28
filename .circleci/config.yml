@@ -155,7 +155,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm vitest --project "jsdom/*"
+          command: pnpm test:jsdom
 
   test_browser:
     <<: *default-job
@@ -172,14 +172,14 @@ jobs:
           steps:
             - run:
                 name: Test Browser
-                command: pnpm vitest --project "browser/*"
+                command: pnpm test:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 name: Test Browser + Coverage
-                command: pnpm vitest --project "browser/*" --coverage
+                command: pnpm test:browser --coverage
             - run:
                 name: Check coverage generated
                 command: |
