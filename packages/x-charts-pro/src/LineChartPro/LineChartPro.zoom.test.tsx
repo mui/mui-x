@@ -2,10 +2,22 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
+
+const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
+  const axisData = Array.from(
+    document.querySelectorAll(
+      `.MuiChartsAxis-direction${axis.toUpperCase()} .MuiChartsAxis-tickContainer`,
+    ),
+  )
+    .map((v) => v.textContent)
+    .filter(Boolean);
+
+  return axisData as string[];
+};
 
 describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   const { render } = createRenderer();
@@ -61,10 +73,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       options,
     );
 
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
     const svg = document.querySelector('svg')!;
 
@@ -84,10 +93,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     }
 
     expect(onZoomChange.callCount).to.equal(200);
-    expect(screen.queryByText('A')).to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
     // scroll back
     for (let i = 0; i < 200; i += 1) {
@@ -97,10 +103,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     }
 
     expect(onZoomChange.callCount).to.equal(400);
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
@@ -115,10 +118,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         options,
       );
 
-      expect(screen.queryByText('A')).to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).to.equal(null);
-      expect(screen.queryByText('D')).not.to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
       const svg = document.querySelector('svg')!;
 
@@ -144,10 +144,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(1);
-      expect(screen.queryByText('A')).to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).not.to.equal(null);
-      expect(screen.queryByText('D')).to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
       await user.pointer([
@@ -171,10 +168,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(2);
-      expect(screen.queryByText('A')).not.to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).to.equal(null);
-      expect(screen.queryByText('D')).to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
   });
 });
