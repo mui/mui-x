@@ -36,7 +36,7 @@ export interface GridRowSelectionApi {
    *
    * ⚠️ Caution: `setRowSelectionModel` doesn't apply the selection propagation automatically.
    * Pass model returned by API method `getPropagatedRowSelectionModel` instead to apply the selection propagation.
-   * @param {gridRowSelectionModel} rowSelectionModel The new row selection model
+   * @param {gridRowSelectionModel} rowSelectionModel The new row selection model.
    * @param {string} reason The reason for the state change.
    */
   setRowSelectionModel: (
