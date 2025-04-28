@@ -152,9 +152,6 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
 
       const svg = document.querySelector('svg')!;
 
-      const change = new CustomEvent('panChangeOptions', { detail: { threshold: 0 } });
-      svg.dispatchEvent(change);
-
       expect(getAxisTickValues('x')).to.deep.equal(['2.6', '2.8', '3.0']);
       expect(getAxisTickValues('y')).to.deep.equal(['26', '28', '30']);
 
@@ -221,9 +218,6 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
 
     const svg = document.querySelector('svg')!;
-
-    const change = new CustomEvent('panChangeOptions', { detail: { threshold: 0 } });
-    svg.dispatchEvent(change);
 
     await user.pointer([
       {
