@@ -12,7 +12,7 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 Bar charts series should contain a `data` property containing an array of values.
 
-You can customize bar ticks with the `xAxis`.
+You can specify bar ticks with the `xAxis` prop.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
 {{"demo": "BasicBars.js"}}
@@ -111,7 +111,7 @@ It works with any positive value and is properly applied to horizontal layouts, 
 ## Labels
 
 You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
 It can either get a function that gets the bar item and some context.
 Or you can pass `'value'` to display the raw value of the bar.
 
