@@ -4,13 +4,16 @@ title: React Data Grid - Server-side data
 
 # Data Grid - Server-side data
 
-<p class="description">The Data Grid server-side data.</p>
+<p class="description">Learn how to work with server-side data in the Data Grid using the Data Source layer.</p>
 
 ## Introduction
 
 Server-side data management in React can become complex with growing datasets.
 Challenges include manual data fetching, pagination, sorting, filtering, and performance optimization.
-A dedicated module can help abstract these complexities, improving user experience.
+A dedicated module can help abstract these complexities to improve the developer experience.
+The Data Grid provides the Data Source layer for this purpose.
+
+### The problem: compounding complexity
 
 Consider a Data Grid displaying a list of users that supports pagination, sorting by column headers, and filtering.
 The Data Grid fetches data from the server when the user changes the page or updates filtering or sorting.
@@ -66,7 +69,7 @@ But this example only scratches the surface of the complexity when working with 
 
 Trying to tackle each of these features invidually can make the code overly complex and difficult to maintain.
 
-## Data Source
+### The solution: the Data Source layer
 
 For the Data Grid, the solution to the situation described above is a centralized abstraction layer called the Data Source.
 This provides an interface for communications between the Data Grid on the client and the actual data on the server.
@@ -173,27 +176,26 @@ Open the Info section of your browser console to see the requests being made and
 ## Data caching
 
 The Data Source caches fetched data by default.
-This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows()` function again to avoid unnecessary calls to the server.
+This means that if the user navigates to a page or expands a node that has already been fetched, the Grid will not call the `getRows()` function again to avoid unnecessary calls to the server.
 
-The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the [demo above](#with-data-source).
+By default, the Grid uses `GridDataSourceCacheDefault`, which is a simple in-memory cache that stores the data in a plain object.
+You can see its implemention in the [Data Source demo above](#with-data-source).
 
 ### Improving the cache hit rate
 
-To increase the cache hit rate, Data Grid splits `getRows()` results into chunks before storing them in cache.
+To increase the cache hit rate, the Data Grid splits `getRows()` results into chunks before storing them in the cache.
 For the requests that follow, chunks are combined as needed to recreate the response.
 This means that a single request can make multiple calls to the `get()` or `set()` method of `GridDataSourceCache`.
 
 Chunk size is the lowest expected amount of records per request based on the `pageSize` value from the `paginationModel` and `pageSizeOptions` props.
-
-Because of this, values in the `pageSizeOptions` prop play a big role in the cache hit rate.
-We recommend using values that are multiples of the lowest value; even better if each subsequent value is a multiple of the previous value.
+As a result, the values in the `pageSizeOptions` prop play a big role in the cache hit rate.
+We recommend using values that are multiples of the lowest value—even better if each subsequent value is a multiple of the previous value.
 
 Here are some examples:
 
 1. Best scenario - `pageSizeOptions={[5, 10, 50, 100]}`
 
    In this case the chunk size is 5, which means that with `pageSize={100}` there are 20 cache records stored.
-
    Retrieving data for any other `pageSize` up to the first 100 records results in a cache hit, since the whole dataset can be made of the existing chunks.
 
 2. Parts of the data missing - `pageSizeOptions={[10, 20, 50]}`
@@ -206,17 +208,16 @@ Here are some examples:
 
    In this situation, the chunk size is 7.
    Retrieving the first page with `pageSize={15}` creates chunks split into `[7, 7, 1]` records.
-   Loading the second page creates 3 new chunks (again `[7, 7, 1]`), but now the third chunk from the first request has an overlap of 1 record with the first chunk of the second request.
+   Loading the second page creates three new chunks (again `[7, 7, 1]`), but now the third chunk from the first request has an overlap of 1 record with the first chunk of the second request.
    These chunks with 1 record can only be used as the last piece of a request for `pageSize={15}` and are useless in all other cases.
 
-:::info
-In the examples above, `sortModel` and `filterModel` remained unchanged.
-Changing those would require a new response to be retrieved and stored in the chunks.
-:::
+In the examples above, `sortModel` and `filterModel` remain unchanged.
+Changing these would require a new response to be retrieved and stored in the chunks.
 
 ### Customize the cache lifetime
 
-The `GridDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the `ttl` option in milliseconds to the `GridDataSourceCacheDefault` constructor, and then pass it as the `dataSourceCache` prop.
+The `GridDataSourceCacheDefault` has a default time to live (TTL) of 5 minutes.
+To customize this, pass the `ttl` option with a numerical value in milliseconds to the `GridDataSourceCacheDefault` constructor, then pass that as the `dataSourceCache` prop.
 
 ```tsx
 import { GridDataSourceCacheDefault } from '@mui/x-data-grid';
@@ -232,9 +233,9 @@ const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 se
 
 {{"demo": "ServerSideDataGridTTL.js", "bg": "inline"}}
 
-### Custom cache
+### Create a custom cache
 
-To provide a custom cache, use `dataSourceCache` prop, which could be either written from scratch or based on another cache library.
+Use the `dataSourceCache` prop to provide a custom cache, which may be written from scratch or based on a third-party cache library.
 This prop accepts a generic interface of type `GridDataSourceCache`.
 
 ```tsx
@@ -245,9 +246,9 @@ export interface GridDataSourceCache {
 }
 ```
 
-### Disable cache
+### Disable caching
 
-To disable the data source cache, pass `null` to the `dataSourceCache` prop.
+To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 
 ```tsx
 <DataGrid columns={columns} dataSource={customDataSource} dataSourceCache={null} />
@@ -257,10 +258,11 @@ To disable the data source cache, pass `null` to the `dataSourceCache` prop.
 
 ## Updating data
 
-The data source supports an optional `updateRow()` method for updating data on the server.
+The Data Source supports an optional `updateRow()` method for updating data on the server.
 
 This method returns a promise that resolves when the row is updated.
-If the promise resolves, the grid updates the row and mutates the cache. In case of an error, `onDataSourceError` is triggered with the error object containing the params as mentioned in the [Error handling](#error-handling) section.
+If the promise resolves, the Grid updates the row and mutates the cache.
+If there's an error, `onDataSourceError()` is triggered with the error object containing the params as mentioned in the [Error handling](#error-handling) section.
 
 ```diff
  const dataSource: GridDataSource = {
@@ -276,10 +278,10 @@ If the promise resolves, the grid updates the row and mutates the cache. In case
 {{"demo": "ServerSideEditing.js", "bg": "inline"}}
 
 :::warning
-When using the `updateRow()` method, the data source cache is automatically cleared after successful updates to prevent displaying outdated data.
+When using the `updateRow()` method, the Data Source cache is automatically cleared after successful updates to prevent displaying outdated data.
 This means any previously cached data will be refetched on the next request.
 
-For applications requiring caching with editing operations, consider implementing server-side caching instead.
+For applications that require caching with editing operations, consider implementing server-side caching instead.
 
 If you have a specific use case that requires preserving the client-side cache during edit operations, please [open an issue on GitHub](https://github.com/mui/mui-x/issues/new/choose) to help us understand your requirements.
 :::
@@ -293,7 +295,7 @@ You can manually trigger a refetch by calling the `dataSource.fetchRows()` API m
 
 ## Error handling
 
-You can handle errors with the data source by providing an error handler function with `onDataSourceError()`.
+You can handle errors with the Data Source by providing an error handler function with `onDataSourceError()`.
 This gets called whenever there's an error in fetching or updating the data.
 
 This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
