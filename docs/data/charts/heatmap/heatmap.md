@@ -10,15 +10,15 @@ components: Heatmap, HeatmapPlot, HeatmapTooltip
 
 ## Basics
 
-Heatmap charts series should contain a `data` property containing an array of 3-tuples.
-The 2 first numbers are respectively the x and y indexes of the cell.
-And the third is its value.
+Heatmap charts series must contain a `data` property containing an array of 3-tuples.
+The first two numbers in each tuple correspond to the x and y indexes of the cell, respectively.
+The third number is the value for the given cell.
 
 ```jsx
 series={[{
     data: [
-        [0, 2, 2.7], // Cell (0, 2) get the value 2.7
-        [1, 2, 4.5], // Cell (1, 2) get the value 4.5
+        [0, 2, 2.7], // Cell (0, 2) receives the value 2.7
+        [1, 2, 4.5], // Cell (1, 2) receives the value 4.5
     ]
 }]}
 ```

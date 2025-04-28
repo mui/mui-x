@@ -111,7 +111,7 @@ It works with any positive value and is properly applied to horizontal layouts, 
 ## Labels
 
 You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
 It can either get a function that gets the bar item and some context.
 Or you can pass `'value'` to display the raw value of the bar.
 

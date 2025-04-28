@@ -10,7 +10,7 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 ## Basics
 
-Pie charts series should contain a `data` property containing an array of objects.
+Pie charts series must contain a `data` property containing an array of objects.
 Each object corresponds to a slice of the pie.
 It must contain a property `value` and can have other optional properties like `label`.
 
