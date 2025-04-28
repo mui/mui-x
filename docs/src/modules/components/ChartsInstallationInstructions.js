@@ -4,8 +4,8 @@ import InstallationInstructions from './InstallationInstructions';
 // #npm-tag-reference
 
 const packages = {
-  Community: '@mui/x-charts@latest',
-  Pro: '@mui/x-charts-pro@latest',
+  Community: '@mui/x-charts',
+  Pro: '@mui/x-charts-pro',
 };
 
 export default function DataGridInstallationInstructions() {

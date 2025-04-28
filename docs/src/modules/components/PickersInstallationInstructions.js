@@ -4,8 +4,8 @@ import InstallationInstructions from './InstallationInstructions';
 // #npm-tag-reference
 
 const packages = {
-  Community: '@mui/x-date-pickers@latest',
-  Pro: '@mui/x-date-pickers-pro@latest',
+  Community: '@mui/x-date-pickers',
+  Pro: '@mui/x-date-pickers-pro',
 };
 
 const peerDependency = {
