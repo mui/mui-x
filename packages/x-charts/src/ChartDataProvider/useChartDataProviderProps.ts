@@ -6,14 +6,15 @@ import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/p
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export const useChartDataProviderProps = <
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
-  props: ChartDataProviderProps<TSeries, TSignatures>,
+  props: ChartDataProviderProps<TSeries, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
-  const { children, plugins = DEFAULT_PLUGINS, seriesConfig, ...other } = props;
+  const { children, localeText, plugins = DEFAULT_PLUGINS, seriesConfig, ...other } = props;
 
   const theme = useTheme();
 
@@ -31,6 +32,7 @@ export const useChartDataProviderProps = <
 
   return {
     children,
+    localeText,
     chartProviderProps,
   };
 };

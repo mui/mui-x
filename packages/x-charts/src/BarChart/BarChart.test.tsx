@@ -52,15 +52,7 @@ describe('<BarChart />', () => {
   });
 
   it('should render "No data to display" when series are empty and axes are not empty arrays', () => {
-    render(
-      <BarChart
-        series={[]}
-        width={100}
-        height={100}
-        xAxis={[{ scaleType: 'band', data: ['A'] }]}
-        yAxis={[]}
-      />,
-    );
+    render(<BarChart series={[]} width={100} height={100} xAxis={[{ data: ['A'] }]} yAxis={[]} />);
 
     expect(screen.getByText('No data to display')).toBeVisible();
   });
@@ -78,7 +70,7 @@ describe('<BarChart />', () => {
           height={400}
           width={400}
           series={[{ data: [10] }]}
-          xAxis={[{ scaleType: 'band', data: ['A'] }]}
+          xAxis={[{ data: ['A'] }]}
           hideLegend
           skipAnimation
         />,
@@ -92,7 +84,7 @@ describe('<BarChart />', () => {
 
       setProps({
         series: [{ data: [] }],
-        xAxis: [{ scaleType: 'band', data: [] }],
+        xAxis: [{ data: [] }],
       });
 
       expect(screen.queryByRole('tooltip')).to.equal(null);
@@ -108,7 +100,7 @@ describe('<BarChart />', () => {
           height={400}
           width={400}
           series={[{ data: [10] }]}
-          xAxis={[{ scaleType: 'band', data: ['A'] }]}
+          xAxis={[{ data: ['A'] }]}
           hideLegend
           skipAnimation
         />,

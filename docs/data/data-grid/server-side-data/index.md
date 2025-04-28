@@ -1,7 +1,3 @@
----
-title: React Data Grid - Server-side data
----
-
 # Data Grid - Server-side data
 
 <p class="description">The Data Grid server-side data.</p>

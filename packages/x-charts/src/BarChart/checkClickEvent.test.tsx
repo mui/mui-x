@@ -58,7 +58,7 @@ describe('BarChart - click event', () => {
               { dataKey: 'v1', id: 's1' },
               { dataKey: 'v2', id: 's2' },
             ]}
-            xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+            xAxis={[{ dataKey: 'x' }]}
             onAxisClick={onAxisClick}
           />
         </div>,
@@ -160,7 +160,7 @@ describe('BarChart - click event', () => {
             { dataKey: 'v1', id: 's1' },
             { dataKey: 'v2', id: 's2' },
           ]}
-          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+          xAxis={[{ dataKey: 'x' }]}
           onItemClick={() => {}}
         />,
       );
@@ -187,7 +187,7 @@ describe('BarChart - click event', () => {
               { dataKey: 'v1', id: 's1' },
               { dataKey: 'v2', id: 's2' },
             ]}
-            xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+            xAxis={[{ dataKey: 'x' }]}
             onItemClick={onItemClick}
           />
         </div>,

@@ -55,7 +55,6 @@ export default function Margin() {
             xAxis={[
               {
                 id: 'x-axis',
-                scaleType: 'band',
                 data: ['Page 1', 'Page 2', 'Page 3'],
                 position: props.hideXAxis ? 'none' : 'top',
                 height: props.xAxisHeight,

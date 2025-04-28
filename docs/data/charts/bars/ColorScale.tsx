@@ -72,7 +72,6 @@ export default function ColorScale() {
         ]}
         xAxis={[
           {
-            scaleType: 'band',
             data: [
               new Date(2019, 1, 1),
               new Date(2020, 1, 1),
@@ -81,7 +80,7 @@ export default function ColorScale() {
               new Date(2023, 1, 1),
               new Date(2024, 1, 1),
             ],
-            valueFormatter: (value) => value.getFullYear().toString(),
+            valueFormatter: (value: Date) => value.getFullYear().toString(),
             colorMap:
               (colorX === 'ordinal' && {
                 type: 'ordinal',

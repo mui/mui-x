@@ -1,12 +1,12 @@
 ---
-title: React Data Grid - Prompt Field component
+title: Data Grid - Prompt Field component
 productId: x-data-grid
 components: PromptField, PromptFieldRecord, PromptFieldControl, PromptFieldSend
 packageName: '@mui/x-data-grid-premium'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Prompt Field [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Data Grid - Prompt Field component [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Provide users with a prompt field to interact with the AI assistant.</p>
 
