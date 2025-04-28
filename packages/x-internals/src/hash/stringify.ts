@@ -8,7 +8,7 @@ export function stringify(input: object | string | number | null) {
   return JSON.stringify(input, (_, v) => {
     if (v !== null && typeof v === 'object') {
       if (seen.has(v)) {
-        return;
+        return null;
       }
       seen.add(v);
     }
