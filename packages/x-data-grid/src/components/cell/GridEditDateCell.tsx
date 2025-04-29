@@ -4,8 +4,9 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
-import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
+import { NotRendered } from '../../utils/assert';
+import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -14,7 +15,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
-const StyledInputBase = styled(InputBase)({
+const StyledInputBase = styled(NotRendered<GridSlotProps['baseInput']>)({
   fontSize: 'inherit',
 });
 
@@ -28,9 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export interface GridEditDateCellProps
-  extends GridRenderEditCellParams,
-    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex'> {
+export interface GridEditDateCellProps extends GridRenderEditCellParams {
   /**
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
@@ -41,6 +40,9 @@ export interface GridEditDateCellProps
     event: React.ChangeEvent<HTMLInputElement>,
     newValue: Date | null,
   ) => Promise<void> | void;
+  slotProps?: {
+    root?: Partial<GridSlotProps['baseInput']>;
+  };
 }
 
 function GridEditDateCell(props: GridEditDateCellProps) {
@@ -61,12 +63,13 @@ function GridEditDateCell(props: GridEditDateCellProps) {
     isValidating,
     isProcessingProps,
     onValueChange,
+    slotProps,
     ...other
   } = props;
 
   const isDateTime = colDef.type === 'dateTime';
   const apiRef = useGridApiContext();
-  const inputRef = React.useRef<HTMLInputElement>();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const valueTransformed = React.useMemo(() => {
     let parsedDate: Date | null;
@@ -152,17 +155,21 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   }, [hasFocus]);
   return (
     <StyledInputBase
+      as={rootProps.slots.baseInput}
       inputRef={inputRef}
       fullWidth
       className={classes.root}
       type={isDateTime ? 'datetime-local' : 'date'}
-      inputProps={{
-        max: isDateTime ? '9999-12-31T23:59' : '9999-12-31',
-        ...inputProps,
-      }}
       value={valueState.formatted}
       onChange={handleChange}
       {...other}
+      {...slotProps?.root}
+      slotProps={{
+        htmlInput: {
+          max: isDateTime ? '9999-12-31T23:59' : '9999-12-31',
+          ...slotProps?.root?.slotProps?.htmlInput,
+        },
+      }}
     />
   );
 }
@@ -170,7 +177,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
 GridEditDateCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
@@ -222,6 +229,7 @@ GridEditDateCell.propTypes = {
    * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.object.isRequired,
+  slotProps: PropTypes.object,
   /**
    * the tabIndex value.
    */

@@ -1,0 +1,40 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlight": {
+      "description": "Indicates if the chart should highlight items per axis or per series."
+    },
+    "highlightedItem": {
+      "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "localeText": { "description": "Localized text for chart components." },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+    },
+    "radar": { "description": "The configuration of the radar scales." },
+    "series": {
+      "description": "The series to display in the bar chart. An array of RadarSeriesType objects."
+    },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+    },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    }
+  },
+  "classDescriptions": {}
+}

@@ -1,0 +1,38 @@
+{
+  "name": "LineSeriesType",
+  "imports": [
+    "import { LineSeriesType } from '@mui/x-charts-pro'",
+    "import { LineSeriesType } from '@mui/x-charts'"
+  ],
+  "properties": {
+    "type": { "type": { "description": "'line'" }, "required": true },
+    "area": { "type": { "description": "boolean" } },
+    "baseline": { "type": { "description": "number | 'min' | 'max'" }, "default": "0" },
+    "color": { "type": { "description": "string" } },
+    "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
+    "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
+    "data": { "type": { "description": "readonly (number | null)[]" } },
+    "dataKey": { "type": { "description": "string" } },
+    "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
+    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "id": { "type": { "description": "SeriesId" } },
+    "label": {
+      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
+    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
+    "shape": {
+      "type": {
+        "description": "'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye'"
+      },
+      "default": "'circle'"
+    },
+    "showMark": { "type": { "description": "boolean | ((params: ShowMarkParams) =&gt; boolean)" } },
+    "stack": { "type": { "description": "string" } },
+    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
+    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
+    "strictStepCurve": { "type": { "description": "boolean" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "xAxisId": { "type": { "description": "string" } },
+    "yAxisId": { "type": { "description": "string" } }
+  }
+}

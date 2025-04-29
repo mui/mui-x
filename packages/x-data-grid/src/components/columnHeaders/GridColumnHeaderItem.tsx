@@ -1,20 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useRtl } from '@mui/system/RtlProvider';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
+import { PinnedColumnPosition } from '../../internals/constants';
+import { attachPinnedStyle } from '../../internals/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -23,6 +26,7 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
+  isLast: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
@@ -30,16 +34,34 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
   disableReorder?: boolean;
   separatorSide?: GridColumnHeaderSeparatorProps['side'];
+  pinnedPosition?: PinnedColumnPosition;
+  pinnedOffset?: number;
+  style?: React.CSSProperties;
+  isLastUnpinned: boolean;
+  isSiblingFocused: boolean;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
   showRightBorder: boolean;
+  showLeftBorder: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, isDragging, sortDirection, showRightBorder, filterItemsCounter } =
-    ownerState;
+  const {
+    colDef,
+    classes,
+    isDragging,
+    sortDirection,
+    showRightBorder,
+    showLeftBorder,
+    filterItemsCounter,
+    pinnedPosition,
+    isLastUnpinned,
+    isSiblingFocused,
+  } = ownerState;
 
   const isColumnSorted = sortDirection != null;
   const isColumnFiltered = filterItemsCounter != null && filterItemsCounter > 0;
@@ -59,6 +81,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isColumnNumeric && 'columnHeader--numeric',
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
+      showLeftBorder && 'columnHeader--withLeftBorder',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
+      // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
+      // See https://github.com/mui/mui-x/pull/14559
+      isLastUnpinned && 'columnHeader--lastUnpinned',
+      isSiblingFocused && 'columnHeader--siblingFocused',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -75,6 +104,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     colIndex,
     headerHeight,
     isResizing,
+    isLast,
     sortDirection,
     sortIndex,
     filterItemsCounter,
@@ -82,9 +112,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     tabIndex,
     disableReorder,
     separatorSide,
+    showLeftBorder,
+    showRightBorder,
+    pinnedPosition,
+    pinnedOffset,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
@@ -104,7 +139,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showRightBorder: rootProps.showColumnVerticalBorder,
+    showRightBorder,
+    showLeftBorder,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -128,6 +164,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const mouseEventsHandlers = React.useMemo(
     () => ({
       onClick: publish('columnHeaderClick'),
+      onContextMenu: publish('columnHeaderContextMenu'),
       onDoubleClick: publish('columnHeaderDoubleClick'),
       onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
       onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used
@@ -211,11 +248,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       )}
 
       {showSortIcon && (
-        <GridColumnHeaderSortIcon
+        <rootProps.slots.columnHeaderSortIcon
+          field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
+          {...rootProps.slotProps?.columnHeaderSortIcon}
         />
       )}
     </React.Fragment>
@@ -227,7 +266,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
       elementToFocus?.focus();
-      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
+      if (apiRef.current.columnHeadersContainerRef?.current) {
+        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+      }
     }
   }, [apiRef, hasFocus]);
 
@@ -237,6 +278,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       : colDef.headerClassName;
 
   const label = colDef.headerName ?? colDef.field;
+
+  const style = React.useMemo(
+    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
+    [pinnedPosition, pinnedOffset, props.style, isRtl],
+  );
 
   return (
     <GridGenericColumnHeaderItem
@@ -257,13 +303,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       width={colDef.computedWidth}
       columnMenuIconButton={columnMenuIconButton}
       columnTitleIconButtons={columnTitleIconButtons}
-      headerClassName={headerClassName}
+      headerClassName={clsx(headerClassName, isLast && gridClasses['columnHeader--last'])}
       label={label}
       resizable={!rootProps.disableColumnResize && !!colDef.resizable}
       data-field={colDef.field}
       columnMenu={columnMenu}
       draggableContainerProps={draggableEventHandlers}
       columnHeaderSeparatorProps={columnHeaderSeparatorProps}
+      style={style}
       {...mouseEventsHandlers}
     />
   );
@@ -272,7 +319,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 GridColumnHeaderItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
@@ -282,10 +329,18 @@ GridColumnHeaderItem.propTypes = {
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
+  isLast: PropTypes.bool.isRequired,
+  isLastUnpinned: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
+  isSiblingFocused: PropTypes.bool.isRequired,
+  pinnedOffset: PropTypes.number,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]),
   separatorSide: PropTypes.oneOf(['left', 'right']),
+  showLeftBorder: PropTypes.bool.isRequired,
+  showRightBorder: PropTypes.bool.isRequired,
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
   sortIndex: PropTypes.number,
+  style: PropTypes.object,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
 } as any;
 

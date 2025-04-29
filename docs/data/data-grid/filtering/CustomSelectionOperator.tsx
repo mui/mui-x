@@ -1,12 +1,10 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridRowSelectionModel,
-  GridFilterModel,
-  GridRowId,
   GridFilterOperator,
   getGridDefaultColumnTypes,
   DEFAULT_GRID_COL_TYPE_KEY,
+  gridRowSelectionManagerSelector,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -15,44 +13,11 @@ const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 const defaultColumnTypes = getGridDefaultColumnTypes();
 
 export default function CustomSelectionOperator() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
   });
-
-  const [models, setModels] = React.useState<{
-    rowSelectionModel: GridRowSelectionModel;
-    filterModel: GridFilterModel;
-  }>(() => ({
-    filterModel: {
-      items: [
-        {
-          field: 'col1',
-          operator: 'contains',
-          value: 'lo',
-        },
-      ],
-    },
-    rowSelectionModel: [5],
-  }));
-
-  const rowSelectionModelLookup = React.useMemo(
-    () =>
-      models.rowSelectionModel.reduce<Record<GridRowId, GridRowId>>(
-        (lookup, rowId) => {
-          lookup[rowId] = rowId;
-          return lookup;
-        },
-        {},
-      ),
-    [models.rowSelectionModel],
-  );
-
-  const rowSelectionModelLookupRef = React.useRef<Record<GridRowId, GridRowId>>(
-    rowSelectionModelLookup,
-  );
-  rowSelectionModelLookupRef.current = rowSelectionModelLookup;
 
   const columns = React.useMemo(() => {
     /**
@@ -70,7 +35,8 @@ export default function CustomSelectionOperator() {
 
         return (value, row, col, apiRef) => {
           const rowId = apiRef.current.getRowId(row);
-          if (rowSelectionModelLookupRef.current[rowId]) {
+          const rowSelectionManager = gridRowSelectionManagerSelector(apiRef);
+          if (rowSelectionManager.has(rowId)) {
             return true;
           }
 
@@ -96,31 +62,9 @@ export default function CustomSelectionOperator() {
     });
   }, [data.columns]);
 
-  const handleRowSelectionModelChange = React.useCallback(
-    (newRowSelectionModel: GridRowSelectionModel) =>
-      setModels((prev) => ({
-        ...prev,
-        rowSelectionModel: newRowSelectionModel,
-        // Forces the re-application of the filtering process
-        filterModel: { ...prev.filterModel },
-      })),
-    [],
-  );
-
-  const handleFilterModelChange = React.useCallback(
-    (newFilterModel: GridFilterModel) =>
-      setModels((prev) => ({ ...prev, filterModel: newFilterModel })),
-    [],
-  );
-
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        {...data}
-        columns={columns}
-        onRowSelectionModelChange={handleRowSelectionModelChange}
-        onFilterModelChange={handleFilterModelChange}
-      />
+      <DataGrid {...data} loading={loading} columns={columns} />
     </div>
   );
 }

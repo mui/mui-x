@@ -1,33 +1,31 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { DigitalClockClasses } from './digitalClockClasses';
 import {
   BaseClockProps,
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
-} from '../internals/models/props/clock';
-import { PickerValidDate, TimeView } from '../models';
+} from '../internals/models/props/time';
+import { PickerOwnerState, TimeView, PickerValidDate } from '../models';
 
-export interface ExportedDigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedBaseClockProps<TDate>,
-    DigitalClockOnlyProps {}
+export interface ExportedDigitalClockProps extends ExportedBaseClockProps, DigitalClockOnlyProps {}
 
 export interface DigitalClockSlots {
   /**
    * Component responsible for rendering a single digital clock item.
    * @default MenuItem from '@mui/material'
    */
-  digitalClockItem?: React.ElementType;
+  digitalClockItem?: React.JSXElementConstructor<DigitalClockItemProps>;
 }
 
 export interface DigitalClockSlotProps {
-  digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
+  digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, DigitalClockOwnerState>;
 }
 
-export interface DigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedDigitalClockProps<TDate>,
-    BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
+export interface DigitalClockProps
+  extends ExportedDigitalClockProps,
+    BaseClockProps<Extract<TimeView, 'hours'>> {
   /**
    * Available views.
    * @default ['hours']
@@ -47,4 +45,22 @@ export interface DigitalClockProps<TDate extends PickerValidDate>
    * @default {}
    */
   slotProps?: DigitalClockSlotProps;
+}
+
+export interface DigitalClockOwnerState extends PickerOwnerState {
+  /**
+   * `true` if this is not the initial render of the digital clock.
+   */
+  hasDigitalClockAlreadyBeenRendered: boolean;
+}
+
+export interface DigitalClockItemProps {
+  itemValue: PickerValidDate;
+  formattedValue: string;
+  onClick: () => void;
+  selected: boolean;
+  disabled: boolean;
+  readOnly?: boolean;
+  tabIndex: number;
+  [x: `data-${string}`]: string;
 }

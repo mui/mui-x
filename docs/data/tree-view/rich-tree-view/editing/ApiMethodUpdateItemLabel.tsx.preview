@@ -1,0 +1,8 @@
+<Stack spacing={2} direction="row">
+  <Button onClick={handleUpdateLabel}>
+    {isLabelUpdated ? 'Reset Data Grid label' : 'Change Data Grid label'}
+  </Button>
+</Stack>
+<Box sx={{ minHeight: 352, minWidth: 260 }}>
+  <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
+</Box>

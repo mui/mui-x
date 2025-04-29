@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId } from './gridRows';
 import type { GridApiCommon } from './api';
 import type { GridApiCommunity } from './api/gridApiCommunity';
@@ -26,7 +26,7 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
   extends GridExportOptions {
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**
@@ -40,13 +40,20 @@ export interface GridFileExportOptions<Api extends GridApiCommon = GridApiCommun
    * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridGetRowsToExportParams<Api>) => GridRowId[];
+  /**
+   * If `false`, the formulas in the cells will not be escaped.
+   * It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.
+   * See https://owasp.org/www-community/attacks/CSV_Injection for more information.
+   * @default true
+   */
+  escapeFormulas?: boolean;
 }
 
 export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity> {
   /**
    * The API of the grid.
    */
-  apiRef: React.MutableRefObject<Api>;
+  apiRef: RefObject<Api>;
 }
 
 export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
@@ -68,7 +75,7 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
   delimiter?: string;
   /**
    * The string used as the file name.
-   * @default `document.title`
+   * @default document.title
    */
   fileName?: string;
   /**
@@ -95,6 +102,12 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
    * @returns {GridRowId[]} The list of row ids to export.
    */
   getRowsToExport?: (params: GridCsvGetRowsToExportParams) => GridRowId[];
+  /**
+   * @ignore
+   * If `false`, the quotes will not be appended to the cell value.
+   * @default true
+   */
+  shouldAppendQuotes?: boolean;
 }
 
 /**
@@ -136,7 +149,7 @@ export interface GridPrintExportOptions extends GridExportOptions {
   /**
    * Provide Print specific styles to the print window.
    */
-  pageStyle?: string | Function;
+  pageStyle?: string | (() => string);
   /**
    * Function that returns the list of row ids to export in the order they should be exported.
    * @param {GridPrintGetRowsToExportParams} params With all properties from [[GridPrintGetRowsToExportParams]].

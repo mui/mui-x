@@ -1,88 +1,101 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { IconButtonProps } from '@mui/material/IconButton';
-import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { GridSlotProps, GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export type GridActionsCellItemProps = {
+interface GridActionsCellItemCommonProps {
   label: string;
-  icon?: React.ReactElement;
+  icon?: React.JSXElementConstructor<GridBaseIconProps> | React.ReactNode;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
-} & (
-  | ({ showInMenu?: false; icon: React.ReactElement } & IconButtonProps)
-  | ({
-      showInMenu: true;
-      /**
-       * If false, the menu will not close when this item is clicked.
-       * @default true
-       */
-      closeMenuOnClick?: boolean;
-      closeMenu?: () => void;
-    } & MenuItemProps)
-);
+}
 
-const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemProps>(
-  (props, ref) => {
-    const rootProps = useGridRootProps();
+export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
+  (
+    | ({ showInMenu?: false; icon: React.ReactElement<any> } & Omit<
+        GridSlotProps['baseIconButton'],
+        'component'
+      >)
+    | ({
+        showInMenu: true;
+        /**
+         * If false, the menu will not close when this item is clicked.
+         * @default true
+         */
+        closeMenuOnClick?: boolean;
+        closeMenu?: () => void;
+      } & Omit<GridSlotProps['baseMenuItem'], 'component'>)
+  );
 
-    if (!props.showInMenu) {
-      const { label, icon, showInMenu, onClick, ...other } = props;
+const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((props, ref) => {
+  const rootProps = useGridRootProps();
 
-      const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(event);
-      };
+  if (!props.showInMenu) {
+    const { label, icon, showInMenu, onClick, ...other } = props;
 
-      return (
-        <rootProps.slots.baseIconButton
-          ref={ref as React.MutableRefObject<HTMLButtonElement>}
-          size="small"
-          role="menuitem"
-          aria-label={label}
-          {...other}
-          onClick={handleClick}
-          {...rootProps.slotProps?.baseIconButton}
-        >
-          {React.cloneElement(icon!, { fontSize: 'small' })}
-        </rootProps.slots.baseIconButton>
-      );
-    }
-
-    const {
-      label,
-      icon,
-      showInMenu,
-      onClick,
-      closeMenuOnClick = true,
-      closeMenu,
-      ...other
-    } = props;
-
-    const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       onClick?.(event);
-      if (closeMenuOnClick) {
-        closeMenu?.();
-      }
     };
 
     return (
-      <MenuItem ref={ref} {...(other as any)} onClick={handleClick}>
-        {icon && <ListItemIcon>{icon}</ListItemIcon>}
-        {label}
-      </MenuItem>
+      <rootProps.slots.baseIconButton
+        size="small"
+        role="menuitem"
+        aria-label={label}
+        {...other}
+        onClick={handleClick}
+        {...rootProps.slotProps?.baseIconButton}
+        ref={ref as React.RefObject<HTMLButtonElement>}
+      >
+        {React.cloneElement(icon!, { fontSize: 'small' })}
+      </rootProps.slots.baseIconButton>
     );
-  },
-);
+  }
+
+  const { label, icon, showInMenu, onClick, closeMenuOnClick = true, closeMenu, ...other } = props;
+
+  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    onClick?.(event);
+    if (closeMenuOnClick) {
+      closeMenu?.();
+    }
+  };
+
+  return (
+    <rootProps.slots.baseMenuItem
+      ref={ref}
+      {...(other as any)}
+      onClick={handleClick}
+      iconStart={icon}
+    >
+      {label}
+    </rootProps.slots.baseMenuItem>
+  );
+});
 
 GridActionsCellItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  icon: PropTypes.element,
+  className: PropTypes.string,
+  /**
+   * from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component
+   */
+  component: PropTypes.elementType,
+  disabled: PropTypes.bool,
+  icon: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
   label: PropTypes.string.isRequired,
   showInMenu: PropTypes.bool,
+  style: PropTypes.object,
 } as any;
 
 export { GridActionsCellItem };

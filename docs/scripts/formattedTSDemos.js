@@ -9,7 +9,7 @@
  * List of demos to ignore when transpiling
  * Example: "app-bar/BottomAppBar.tsx"
  */
-const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx'];
+const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx', 'types.ts'];
 
 const fs = require('fs');
 const fse = require('fs-extra');
@@ -20,7 +20,8 @@ const yargs = require('yargs');
 const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
-const tsConfigPath = path.resolve(__dirname, '../tsconfig.json');
+const DOCS_ROOT = path.resolve(__dirname, '..');
+const tsConfigPath = path.resolve(DOCS_ROOT, './tsconfig.json');
 const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
   fs.readFileSync(filePath).toString(),
 );
@@ -41,7 +42,7 @@ const babelConfig = {
 
 const workspaceRoot = path.join(__dirname, '../../');
 
-async function getFiles(root) {
+async function getFiles(root, excludeRoot = false) {
   const files = [];
 
   try {
@@ -54,8 +55,10 @@ async function getFiles(root) {
           files.push(...(await getFiles(filePath)));
         } else if (
           stat.isFile() &&
-          filePath.endsWith('.tsx') &&
-          !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath)))
+          /\.tsx?$/.test(filePath) &&
+          !filePath.endsWith('.d.ts') &&
+          !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath))) &&
+          !(excludeRoot && path.dirname(filePath) === root)
         ) {
           files.push(filePath);
         }
@@ -78,7 +81,7 @@ const TranspileResult = {
 };
 
 async function transpileFile(tsxPath, program, ignoreCache = false) {
-  const jsPath = tsxPath.replace('.tsx', '.js');
+  const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
     if (!ignoreCache && (await fse.exists(jsPath))) {
       const [jsStat, tsxStat] = await Promise.all([fse.stat(jsPath), fse.stat(tsxPath)]);
@@ -95,7 +98,7 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     if (enableJSXPreview) {
       transformOptions.plugins = transformOptions.plugins.concat([
         [
-          require.resolve('docsx/src/modules/utils/babel-plugin-jsx-preview'),
+          path.resolve(DOCS_ROOT, './src/modules/utils/babel-plugin-jsx-preview'),
           { maxLines: 16, outputFilename: `${tsxPath}.preview` },
         ],
       ]);
@@ -126,7 +129,7 @@ async function main(argv) {
 
   const tsxFiles = [
     ...(await getFiles(path.join(workspaceRoot, 'docs/src/pages'))), // old structure
-    ...(await getFiles(path.join(workspaceRoot, 'docs/data'))), // new structure
+    ...(await getFiles(path.join(workspaceRoot, 'docs/data'), true)), // new structure
   ];
 
   const program = ts.createProgram({
@@ -197,12 +200,12 @@ yargs
       return command
         .option('watch', {
           default: false,
-          description: 'transpiles demos as soon as they changed',
+          description: 'Transpile demos as soon as they change',
           type: 'boolean',
         })
         .option('disable-cache', {
           default: false,
-          description: 'transpiles all demos even if they didnt change',
+          description: "Transpile all demos even if they didn't change",
           type: 'boolean',
         });
     },

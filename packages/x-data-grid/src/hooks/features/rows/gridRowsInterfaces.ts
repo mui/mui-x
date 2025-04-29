@@ -25,10 +25,6 @@ export interface GridRowsInternalCache {
    */
   dataRowIdToModelLookup: GridRowIdToModelLookup;
   /**
-   * Lookup containing the latest ids at all time (even those not stored in the state yet).
-   */
-  dataRowIdToIdLookup: GridRowIdToIdLookup;
-  /**
    * List of updates (partial or full) applied since the last time the state was synced with the cache.
    * It is used to build the tree.
    * If the update is a full update, we rebuild the tree from scratch.
@@ -50,7 +46,7 @@ export interface GridRowsState {
   treeDepths: GridTreeDepths;
   dataRowIds: GridRowId[];
   /**
-   * Matches the value of the `loading` prop.
+   * The loading status of the rows.
    */
   loading?: boolean;
   /**
@@ -66,18 +62,23 @@ export interface GridRowsState {
    */
   totalTopLevelRowCount: number;
   dataRowIdToModelLookup: GridRowIdToModelLookup;
-  dataRowIdToIdLookup: GridRowIdToIdLookup;
   additionalRowGroups?: {
     pinnedRows?: GridPinnedRowsState;
   };
+  /**
+   * Contains some values of type `GridRowId` that have been requested to be fetched
+   * either by `defaultGroupingExpansionDepth` or `isGroupExpandedByDefault` props.
+   * Applicable with server-side grouped data and `dataSource` only.
+   */
+  groupsToFetch?: GridRowId[];
 }
 
 export interface GridRowTreeCreationParams {
   previousTree: GridRowTreeConfig | null;
   previousTreeDepths: GridTreeDepths | null;
   updates: GridRowsPartialUpdates | GridRowsFullUpdate;
-  dataRowIdToIdLookup: GridRowIdToIdLookup;
   dataRowIdToModelLookup: GridRowIdToModelLookup;
+  previousGroupsToFetch?: GridRowId[];
 }
 
 export type GridRowTreeUpdateGroupAction = 'removeChildren' | 'insertChildren' | 'modifyChildren';
@@ -93,19 +94,14 @@ export type GridRowTreeUpdatedGroupsManager = {
 
 export type GridRowTreeCreationValue = Pick<
   GridRowsState,
-  'groupingName' | 'tree' | 'treeDepths' | 'dataRowIds'
+  'groupingName' | 'tree' | 'treeDepths' | 'dataRowIds' | 'groupsToFetch'
 > & {
   updatedGroupsManager?: GridRowTreeUpdatedGroupsManager;
 };
 
 export type GridHydrateRowsValue = Pick<
   GridRowsState,
-  | 'tree'
-  | 'treeDepths'
-  | 'dataRowIds'
-  | 'dataRowIdToIdLookup'
-  | 'dataRowIdToModelLookup'
-  | 'additionalRowGroups'
+  'tree' | 'treeDepths' | 'dataRowIds' | 'dataRowIdToModelLookup' | 'additionalRowGroups'
 >;
 
 export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'remove';
@@ -114,8 +110,6 @@ export type GridRowIdToModelLookup<R extends GridValidRowModel = GridValidRowMod
   string,
   R
 >;
-
-export type GridRowIdToIdLookup = Record<string, GridRowId>;
 
 export type GridTreeDepths = { [depth: number]: number };
 
@@ -128,6 +122,7 @@ export interface GridRowsPartialUpdates {
   type: 'partial';
   actions: { [action in GridRowsPartialUpdateAction]: GridRowId[] };
   idToActionLookup: { [id: GridRowId]: GridRowsPartialUpdateAction | undefined };
+  groupKeys?: string[];
 }
 
 export interface GridPinnedRowsState {

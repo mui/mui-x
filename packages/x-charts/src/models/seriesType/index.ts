@@ -1,40 +1,71 @@
-import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import { DefaultizedLineSeriesType, LineItemIdentifier, LineSeriesType } from './line';
-import { DefaultizedScatterSeriesType, ScatterItemIdentifier, ScatterSeriesType } from './scatter';
-import { DefaultizedPieSeriesType, PieSeriesType, PieItemIdentifier, PieValueType } from './pie';
-import { MakeOptional } from '../helpers';
+import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesType,
+  ChartsSeriesConfig,
+  StackableChartSeriesType,
+} from './config';
 
-type AllSeriesType =
-  | BarSeriesType
-  | LineSeriesType
-  | ScatterSeriesType
-  | PieSeriesType<MakeOptional<PieValueType, 'id'>>;
+// Series definition
 
-type CartesianSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType;
+type AllSeriesType<T extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[T]['seriesProp'];
 
-type DefaultizedCartesianSeriesType =
-  | DefaultizedBarSeriesType
-  | DefaultizedLineSeriesType
-  | DefaultizedScatterSeriesType;
+/**
+ * @deprecated We do not use this type in v8. If it's useful for you use case, please open an issue explaining why.
+ * Otherwise, it will be removed in next major.
+ */
+type CartesianSeriesType = AllSeriesType<CartesianChartSeriesType>;
 
-type DefaultizedSeriesType = DefaultizedCartesianSeriesType | DefaultizedPieSeriesType;
+type DefaultizedSeriesType<T extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[T]['series'];
 
-type StackableSeriesType = DefaultizedBarSeriesType | DefaultizedLineSeriesType;
+/**
+ * @deprecated We do not use this type in v8. If it's useful for you use case, please open an issue explaining why.
+ * Otherwise, it will be removed in next major.
+ */
+type DefaultizedCartesianSeriesType = DefaultizedSeriesType<CartesianChartSeriesType>;
 
-export type SeriesItemIdentifier =
-  | BarItemIdentifier
-  | LineItemIdentifier
-  | ScatterItemIdentifier
-  | PieItemIdentifier;
+/**
+ * @deprecated We do not use this type in v8. If it's useful for you use case, please open an issue explaining why.
+ * Otherwise, it will be removed in next major.
+ */
+type StackableSeriesType = DefaultizedSeriesType<StackableChartSeriesType>;
+
+// item identifier
+
+export type SeriesItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[T]['itemIdentifier'];
 
 export * from './line';
 export * from './bar';
 export * from './scatter';
 export * from './pie';
+export * from './radar';
 export type {
   AllSeriesType,
-  CartesianSeriesType,
   DefaultizedSeriesType,
+  CartesianSeriesType,
   DefaultizedCartesianSeriesType,
   StackableSeriesType,
 };
+
+// Helpers
+
+/**
+ * @deprecated We do not use this function in v8. If it's useful for you use case, please open an issue explaining why.
+ * Otherwise, it will be removed in next major.
+ */
+export function isDefaultizedBarSeries(
+  series: DefaultizedSeriesType,
+): series is DefaultizedBarSeriesType {
+  return series.type === 'bar';
+}
+
+/**
+ * @deprecated We do not use this function in v8. If it's useful for you use case, please open an issue explaining why.
+ * Otherwise, it will be removed in next major.
+ */
+export function isBarSeries(series: AllSeriesType): series is BarSeriesType {
+  return series.type === 'bar';
+}

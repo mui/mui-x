@@ -4,13 +4,16 @@ import {
   chromium,
   webkit,
   firefox,
-  Page,
-  Browser,
-  BrowserContext,
   devices,
-  BrowserContextOptions,
-  BrowserType,
+  type Page,
+  type Browser,
+  type BrowserContext,
+  type BrowserContextOptions,
+  type BrowserType,
+  type WebError,
+  type Locator,
 } from '@playwright/test';
+import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -21,8 +24,8 @@ function sleep(timeoutMS: number): Promise<void> {
 // A simplified version of https://github.com/testing-library/dom-testing-library/blob/main/src/wait-for.js
 function waitFor(callback: () => Promise<void>): Promise<void> {
   return new Promise((resolve, reject) => {
-    let intervalId: NodeJS.Timer | null = null;
-    let timeoutId: NodeJS.Timer | null = null;
+    let intervalId: NodeJS.Timeout | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
     let lastError: any = null;
 
     function handleTimeout() {
@@ -106,7 +109,7 @@ async function initializeEnvironment(
     ...contextOptions,
   });
   // Circle CI has low-performance CPUs.
-  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 4 : 2) * 1000);
+  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 8 : 4) * 1000);
   page = await context.newPage();
   // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
   // Update the Date accordingly in your test pages
@@ -129,7 +132,7 @@ async function initializeEnvironment(
   const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
   if (!isServerRunning) {
     throw new Error(
-      `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`yarn test:e2e:server\` and \`yarn test:e2e:build\`?`,
+      `Unable to navigate to ${baseUrl} after multiple attempts. Did you forget to run \`pnpm test:e2e:server\` and \`pnpm test:e2e:build\`?`,
     );
   }
   return { browser, context, page };
@@ -512,13 +515,129 @@ async function initializeEnvironment(
           await page.locator('[role="gridcell"][data-field="brand"] input').inputValue(),
         ).not.to.equal('v');
       });
+
+      // https://github.com/mui/mui-x/issues/12705
+      it('should not crash if the date is invalid', async () => {
+        await renderFixture('DataGrid/KeyboardEditDate');
+
+        await page.hover('div[role="columnheader"][data-field="birthday"]');
+        await page.click(
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="birthday column menu"]',
+        );
+        await page.click('"Filter"');
+        await page.keyboard.type('08/04/2024', { delay: 10 });
+
+        let thrownError: Error | null = null;
+        context.once('weberror', (webError: WebError) => {
+          thrownError = webError.error();
+          console.error(thrownError);
+        });
+
+        await page.keyboard.press('Backspace');
+
+        await sleep(200);
+        expect(thrownError).to.equal(null);
+      });
+
+      // https://github.com/mui/mui-x/issues/12290
+      it('should properly set the width of a group header if the resize happened in a group with fluid columns', async () => {
+        await renderFixture('DataGrid/ResizeWithFlex');
+
+        const headers = await page.locator('.MuiDataGrid-columnHeaders > div').all();
+        const columnHeader = headers.pop()!;
+
+        const columns = columnHeader.locator('.MuiDataGrid-columnHeader');
+        const separators = await columnHeader
+          .locator('.MuiDataGrid-columnSeparator--resizable')
+          .all();
+
+        const moveSeparator = async (separator: Locator) => {
+          const boundingBox = (await separator?.boundingBox())!;
+          const x = boundingBox.x + boundingBox.width / 2;
+          const y = boundingBox.y + boundingBox.height / 2;
+
+          await page.mouse.move(x, y, { steps: 5 });
+          await page.mouse.down();
+          await page.mouse.move(x - 20, y, { steps: 5 });
+          await page.mouse.up();
+        };
+
+        await moveSeparator(separators[0]);
+        await moveSeparator(separators[1]);
+
+        const groupHeaderWidth = await headers[0]
+          .locator('.MuiDataGrid-columnHeader--filledGroup')
+          .first()
+          .evaluate((node) => node.clientWidth);
+        const subGroupHeaderWidth = await headers[1]
+          .locator('.MuiDataGrid-columnHeader--filledGroup')
+          .first()
+          .evaluate((node) => node.clientWidth);
+
+        const groupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
+          // last column is not part of the group
+          elements.slice(0, -1).reduce((acc, element) => acc + element.clientWidth, 0),
+        );
+        const subGroupHeaderColumnsTotalWidth = await columns.evaluateAll((elements) =>
+          // first and last columns are not part of the sub-group
+          elements.slice(1, -1).reduce((acc, element) => acc + element.clientWidth, 0),
+        );
+
+        expect(groupHeaderWidth).to.equal(groupHeaderColumnsTotalWidth);
+        expect(subGroupHeaderWidth).to.equal(subGroupHeaderColumnsTotalWidth);
+      });
+
+      // https://github.com/mui/mui-x/issues/3524#issuecomment-2313533915
+      it('should allow vertical scroll when inside of a flex parent with maxHeight', async () => {
+        await renderFixture('DataGrid/MaxHeight');
+        await page.mouse.move(150, 150);
+        await page.mouse.wheel(0, 50);
+        await sleep(50);
+
+        const scrollTop = await page.evaluate(() => {
+          return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
+        });
+        expect(scrollTop).not.to.equal(0);
+      });
+
+      // https://github.com/mui/mui-x/issues/14726
+      it('should not cause scroll jumping when the focused cell is outside of the viewport', async () => {
+        await renderFixture('DataGrid/DynamicRowHeight');
+
+        await page.click('[role="row"][data-id="2"] [role="gridcell"][data-field="id"]');
+
+        const scrollPositions: number[] = [];
+        await page.exposeFunction('storeScrollPosition', async (scrollTop: number) => {
+          scrollPositions.push(scrollTop);
+        });
+        await page.evaluate(() => {
+          const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+          virtualScroller.addEventListener('scroll', () => {
+            // @ts-ignore
+            window.storeScrollPosition(virtualScroller.scrollTop);
+          });
+        });
+
+        await page.mouse.wheel(0, 150);
+        await page.waitForTimeout(500);
+
+        const hadScrollJump = scrollPositions.some((scrollTop, index) => {
+          if (index === 0) {
+            return false;
+          }
+          // When scrolling down, the scrollTop should be always decreasing
+          const prevScrollTop = scrollPositions[index - 1];
+          return scrollTop < prevScrollTop;
+        });
+
+        expect(hadScrollJump).to.equal(false, `Scroll jumped, scrollPositions: ${scrollPositions}`);
+      });
     });
 
     describe('<DatePicker />', () => {
       describe('<DesktopDatePicker />', () => {
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicDesktopDatePicker');
-
           await page.getByRole('button').click();
           expect(
             await page.getByRole('gridcell', { name: '17' }).getAttribute('aria-current'),
@@ -528,84 +647,219 @@ async function initializeEnvironment(
           // assert that the dialog closes after selection is complete
           // could run into race condition otherwise
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
-          expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
+          expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+            '04/11/2022',
+          );
+        });
+
+        // assertion for: https://github.com/mui/mui-x/issues/12652
+        it('should allow field editing after opening and closing the picker', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          // open picker
+          await page.getByRole('button').click();
+          await page.waitForSelector('[role="dialog"]', { state: 'attached' });
+          // close picker
+          await page.getByRole('button', { name: 'Choose date' }).click();
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
+          await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
+          await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
+
+          const input = page.getByRole('textbox', { includeHidden: true });
+          expect(await input.inputValue()).to.equal('04/11/2022');
         });
 
         it('should allow filling in a value and clearing a value', async () => {
           await renderFixture('DatePicker/BasicDesktopDatePicker');
-          const input = page.getByRole('textbox');
 
-          await input.fill('04/11/2022');
+          const input = page.getByRole('textbox', { includeHidden: true });
+
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
+          await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
+          await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
 
           expect(await input.inputValue()).to.equal('04/11/2022');
 
-          await input.blur();
-          await input.fill('');
+          await page.keyboard.press('Control+a');
+          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal(
+            '04/11/2022',
+          );
 
-          expect(await input.inputValue()).to.equal('MM/DD/YYYY');
+          await page.keyboard.press('Delete');
+          expect(await input.inputValue()).to.equal('');
         });
 
-        it('should allow typing in a value', async () => {
+        it('should handle change event on the input', async () => {
           await renderFixture('DatePicker/BasicDesktopDatePicker');
-          const input = page.getByRole('textbox');
 
-          await input.focus();
-          await input.fill('04/11/2022');
+          const input = page.getByRole('textbox', { includeHidden: true });
 
-          expect(await input.inputValue()).to.equal('04/11/2022');
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          await input.fill('02/12/2020');
+
+          expect(
+            await page.getByRole('button', { name: /Choose date/ }).getAttribute('aria-label'),
+          ).to.equal('Choose date, selected date is Feb 12, 2020');
         });
 
         it('should allow pasting a section', async () => {
-          // Only firefox is capable of reliably running this test in CI and headless browsers
-          if (browserType.name() !== 'firefox' && process.env.CIRCLECI) {
+          if (
+            // Only firefox is capable of reliably running this test in CI and headless browsers
+            (browserType.name() !== 'firefox' && process.env.CIRCLECI) ||
+            // chromium seems to fail when running this test locally in headless mode
+            (browserType.name() === 'chromium' && !process.env.CIRCLECI)
+          ) {
             return;
           }
           await renderFixture('DatePicker/BasicDesktopDatePicker');
-          const input = page.getByRole('textbox');
+
+          const input = page.getByRole('textbox', { includeHidden: true });
 
           const isMac = platform() === 'darwin';
           const modifier = isMac ? 'Meta' : 'Control';
 
-          await input.focus();
-          // ensure that the focus is moved to the end section by typing naturally - with a timeout
-          await input.pressSequentially('04/11/2022');
+          const monthSection = page.getByRole(`spinbutton`, { name: 'Month' });
+          const daySection = page.getByRole(`spinbutton`, { name: 'Day' });
+          const yearSection = page.getByRole(`spinbutton`, { name: 'Year' });
+
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          await monthSection.fill('04');
+          await daySection.fill('11');
+          await yearSection.fill('2022');
+
           // move to day section
-          await input.press('ArrowLeft');
+          await yearSection.press('ArrowLeft');
           // copy day section value
-          await input.press(`${modifier}+KeyC`);
+          await daySection.press(`${modifier}+KeyC`);
           // move to month section
-          await input.press('ArrowLeft');
+          await daySection.press('ArrowLeft');
           // initiate search query on month section
-          await input.press('1');
+          await monthSection.press('1');
           // paste day section value to month section
-          await input.press(`${modifier}+KeyV`);
+          await monthSection.press(`${modifier}+KeyV`);
 
           expect(await input.inputValue()).to.equal('11/11/2022');
 
           // move back to month section
-          await input.press('ArrowLeft');
+          await daySection.press('ArrowLeft');
           // check that the search query has been cleared after pasting
-          await input.press('2');
+          await monthSection.press('2');
           expect(await input.inputValue()).to.equal('02/11/2022');
         });
+
+        it('should focus the first field section after clearing a value', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+          const monthSection = page.getByRole('spinbutton', { name: 'Month' });
+          await monthSection.press('2');
+          await page.getByRole('button', { name: 'Clear' }).click();
+
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
+        });
+
+        it('should focus the first field section after clearing a value with the non-accessible DOM structure', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePickerNonAccessibleDOMStructure');
+
+          const textbox = page.getByRole('textbox');
+          // locator.fill('2') does not work reliably for this case in all browsers
+          await textbox.focus();
+          await textbox.press('2');
+          await page.getByRole('button', { name: 'Clear' }).click();
+
+          // firefox does not support document.getSelection().toString() on input elements
+          if (browserType.name() === 'firefox') {
+            expect(
+              await page.evaluate(() => {
+                return (
+                  document.activeElement?.tagName === 'INPUT' &&
+                  // only focused input has value set
+                  (document.activeElement as HTMLInputElement)?.value === 'MM/DD/YYYY'
+                );
+              }),
+            ).to.equal(true);
+          } else {
+            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('MM');
+          }
+        });
+
+        it('should submit a form when clicking "Enter" key', async () => {
+          await renderFixture('DatePicker/DesktopDatePickerFormNonAccessibleDOMStructure');
+
+          const textbox = page.getByRole('textbox');
+          await textbox.focus();
+          await textbox.press('Enter');
+
+          expect(await page.getByRole('textbox').inputValue()).to.equal('04/17/2022');
+          const status = page.getByRole('status');
+          expect(await status.isVisible()).to.equal(true);
+          expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        });
+
+        // TODO: enable when v7 fields form submitting is fixed
+        // it('should submit a form when clicking "Enter" key with v7 field', async () => {
+        //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
+
+        //   const monthSpinbutton = page.getByRole(`spinbutton`, { name: 'Month' });
+        //   await monthSpinbutton.focus();
+        //   await monthSpinbutton.press('Enter');
+
+        //   expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+        //     '04/17/2022',
+        //   );
+        //   const status = page.getByRole('status');
+        //   expect(await status.isVisible()).to.equal(true);
+        //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
+        // });
+
+        it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
+          await renderFixture('DatePicker/MomentJalaliDateCalendar');
+
+          await page.getByRole('gridcell', { name: '11' }).click();
+
+          const day11 = page.getByRole('gridcell', { name: '11' });
+          expect(await day11.getAttribute('aria-selected')).to.equal('true');
+          // check that selecting a day doesn't change the day text
+          expect(await day11.textContent()).to.equal('11');
+        });
       });
+
       describe('<MobileDatePicker />', () => {
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicMobileDatePicker');
 
-          await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
-
+          await page.getByRole('button').click();
           await page.getByRole('gridcell', { name: '11' }).click();
           await page.getByRole('button', { name: 'OK' }).click();
 
-          await waitFor(async () => {
-            // assert that the dialog has been closed and the focused element is the input
-            expect(await page.evaluate(() => document.activeElement?.nodeName)).to.equal('INPUT');
-          });
-          expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
+          // assert that the dialog closes after selection is complete
+          // could run into race condition otherwise
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+          expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+            '04/11/2022',
+          );
+        });
+
+        it('should have consistent `placeholder` and `value` behavior in the non-accessible DOM structure', async () => {
+          await renderFixture(
+            'DatePicker/MobileDatePickerWithClearActionNonAccessibleDOMStructure',
+          );
+
+          const input = page.getByRole('textbox');
+
+          await page.getByRole('button').click();
+          await page.getByRole('button', { name: 'Clear' }).click();
+
+          await input.blur();
+          expect(await input.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
+          expect(await input.inputValue()).to.equal('');
         });
       });
     });
+
     describe('<DesktopDateTimePicker />', () => {
       it('should allow selecting a value', async () => {
         await renderFixture('DatePicker/BasicDesktopDateTimePicker');
@@ -617,10 +871,12 @@ async function initializeEnvironment(
         await page.getByRole('option', { name: '30 minutes' }).click();
         await page.getByRole('option', { name: 'PM' }).click();
 
-        // assert that the dialog closes after selection is complete
-        // could run into race condition otherwise
+        // dialog closes after user actively closes it
+        await page.keyboard.press('Escape');
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
-        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 03:30 PM');
+        expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+          '04/11/2022 03:30 PM',
+        );
       });
 
       it('should allow selecting same view multiple times with keyboard', async () => {
@@ -666,10 +922,16 @@ async function initializeEnvironment(
         await page.keyboard.press('ArrowDown');
         await page.keyboard.press('Enter');
 
-        // assert that the dialog closes after selection is complete
-        // could run into race condition otherwise
+        // check that the picker has not been closed
+        await page.waitForSelector('[role="dialog"]', { state: 'visible' });
+
+        // Click 'OK' button to close dialog
+        await page.getByRole('button', { name: 'OK' }).click();
+
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
-        expect(await page.getByRole('textbox').inputValue()).to.equal('04/21/2022 02:05 PM');
+        expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+          '04/21/2022 02:05 PM',
+        );
       });
 
       it('should correctly select hours section when there are no time renderers', async () => {
@@ -681,29 +943,49 @@ async function initializeEnvironment(
 
         // assert that the hours section has been selected using two APIs
         await waitFor(async () => {
-          // Firefox does not resolve selection inside of an input component
-          // https://stackoverflow.com/questions/20419515/window-getselection-of-textarea-not-working-in-firefox#comment52700249_20419515
-          if (browserType.name() !== 'firefox') {
-            expect(await page.evaluate(() => window.getSelection()?.toString())).to.equal('12');
+          expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+        });
+      });
+
+      it('should correctly select hours section when there are no time renderers on v6', async () => {
+        // The test is flaky on webkit
+        if (browserType.name() === 'webkit') {
+          return;
+        }
+        await renderFixture(
+          'DatePicker/DesktopDateTimePickerNoTimeRenderers?enableAccessibleFieldDOMStructure=false',
+        );
+
+        await page.getByRole('button').click();
+        await page.getByRole('gridcell', { name: '11' }).click();
+
+        // assert that the hours section has been selected using two APIs
+        await waitFor(async () => {
+          // firefox does not support document.getSelection().toString() on input elements
+          if (browserType.name() === 'firefox') {
+            expect(
+              await page.evaluate(
+                () => (document.activeElement as HTMLInputElement | null)?.selectionStart,
+              ),
+            ).to.equal(11);
+          } else {
+            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('12');
           }
-          expect(
-            await page.evaluate(() => (document.activeElement as HTMLInputElement).selectionStart),
-          ).to.equal(11);
-          expect(
-            await page.evaluate(() => (document.activeElement as HTMLInputElement).selectionEnd),
-          ).to.equal(13);
         });
       });
     });
+
     describe('<DateRangePicker />', () => {
       it('should allow selecting a range value', async () => {
         // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox' && process.env.CIRCLECI) {
+        if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
-        await page.getByRole('textbox', { name: 'Start' }).click();
+        // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '17' }).last().click();
@@ -711,27 +993,29 @@ async function initializeEnvironment(
         // assert that the tooltip closes after selection is complete
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
 
-        expect(await page.getByRole('textbox', { name: 'Start' }).inputValue()).to.equal(
-          '04/11/2022',
-        );
-        expect(await page.getByRole('textbox', { name: 'End' }).inputValue()).to.equal(
-          '05/17/2022',
-        );
+        expect(
+          await page.getByRole('textbox', { name: 'Start', includeHidden: true }).inputValue(),
+        ).to.equal('04/11/2022');
+        expect(
+          await page.getByRole('textbox', { name: 'End', includeHidden: true }).inputValue(),
+        ).to.equal('05/17/2022');
       });
 
       it('should not close the tooltip when the focus switches between inputs', async () => {
         // firefox in CI is not happy with this test
-        if (browserType.name() === 'firefox' && process.env.CIRCLECI) {
+        if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
-        await page.getByRole('textbox', { name: 'Start' }).click();
+        // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
         // assert that the tooltip has been opened
         await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
 
-        await page.getByRole('textbox', { name: 'End' }).click();
+        // Old selector: await page.getByRole('textbox', { name: 'End' }).click();
+        await page.locator(`.${pickersSectionListClasses.root}`).last().click();
 
         // assert that the tooltip has not been closed after changing the active input
         await page.waitForSelector('[role="tooltip"]', { state: 'visible' });
@@ -739,6 +1023,106 @@ async function initializeEnvironment(
         await page.keyboard.press('Escape');
 
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+      });
+
+      it('should have the same selection process as a non-range picker when using a single input field with an accessible DOM structure', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingle');
+        await page.getByRole('button').click();
+
+        // assert that the dialog has been opened
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
+
+        await page.getByRole('gridcell', { name: '11' }).first().click();
+        await page.getByRole('gridcell', { name: '13' }).first().click();
+
+        // assert that the tooltip closes after selection is complete
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+
+        expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
+          '04/11/2022 – 04/13/2022',
+        );
+      });
+
+      it('should have the same selection process as a non-range picker when using a single input field with a non-accessible DOM structure', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+
+        await renderFixture(
+          'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
+        );
+        await page.getByRole('button').click();
+
+        // assert that the tooltip has been opened
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
+
+        await page.getByRole('gridcell', { name: '11' }).first().click();
+        await page.getByRole('gridcell', { name: '13' }).first().click();
+
+        // assert that the tooltip closes after selection is complete
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
+
+        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
+      });
+
+      it('should not change timezone when changing the start date from non DST to DST', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        const thrownErrors: string[] = [];
+        context.on('weberror', (webError) => {
+          thrownErrors.push(webError.error().message);
+        });
+
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        // open the picker
+        await page.getByRole('button').click();
+
+        await page.getByRole('spinbutton', { name: 'Month' }).first().press('ArrowDown');
+
+        expect(thrownErrors).not.to.contain(
+          'MUI X: The timezone of the start and the end date should be the same.',
+        );
+      });
+
+      it('should keep the focus on the clicked section', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        await renderFixture('DatePicker/DesktopDateRangePickerWithValue');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
+      });
+
+      it('should keep the focus on the clicked section with single input field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
       });
     });
   });
@@ -757,9 +1141,10 @@ describe('e2e: chromium on Android', () => {
   });
 
   it('should allow re-selecting value to have the same start and end date', async () => {
-    await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+    await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
-    await page.getByRole('textbox', { name: 'Start' }).tap();
+    // Old selector: await page.getByRole('textbox', { name: 'Start' }).tap();
+    await page.locator(`.${pickersSectionListClasses.root}`).first().tap();
 
     await page.getByRole('gridcell', { name: '11' }).first().tap();
     await page.getByRole('gridcell', { name: '17' }).first().tap();

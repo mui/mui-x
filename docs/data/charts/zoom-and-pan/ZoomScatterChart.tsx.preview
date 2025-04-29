@@ -1,0 +1,14 @@
+<ScatterChartPro
+  height={300}
+  xAxis={[
+    {
+      zoom: true,
+    },
+  ]}
+  yAxis={[
+    {
+      zoom: true,
+    },
+  ]}
+  series={series}
+/>

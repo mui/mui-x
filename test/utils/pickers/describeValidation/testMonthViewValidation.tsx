@@ -1,17 +1,14 @@
 import { expect } from 'chai';
 import * as React from 'react';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
+import { describeSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
-  const { views, componentFamily, render, clock } = getOptions();
+  const { views, componentFamily, render } = getOptions();
 
-  if (componentFamily === 'field' || !views.includes('month')) {
-    return;
-  }
-
-  describe('month view:', () => {
+  describeSkipIf(componentFamily === 'field' || !views.includes('month'))('month view:', () => {
     const defaultProps = {
       onChange: () => {},
       ...(views.length > 1 && {
@@ -26,12 +23,12 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       }),
     };
 
-    it('should apply shouldDisableMonth', function test() {
+    it('should apply shouldDisableMonth', () => {
       render(
         <ElementToTest
           {...defaultProps}
           value={null}
-          shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 3}
+          shouldDisableMonth={(date: any) => adapterToUse.getMonth(date) === 3}
         />,
       );
 
@@ -40,9 +37,9 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       expect(screen.getByText('May')).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -57,7 +54,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(now, nextMonth)) {
         setProps({ value: nextMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).not.to.have.attribute(
         'disabled',
@@ -65,7 +61,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
         setProps({ value: prevMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).to.have.attribute(
         'disabled',
@@ -74,9 +69,9 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       // TODO: define what appends when value is `null`
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -91,7 +86,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(now, nextMonth)) {
         setProps({ value: nextMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).to.have.attribute(
         'disabled',
@@ -99,7 +93,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
 
       if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
         setProps({ value: prevMonth });
-        clock.runToLast();
       }
       expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).not.to.have.attribute(
         'disabled',
@@ -108,7 +101,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       // TODO: define what appends when value is `null`
     });
 
-    it('should apply minDate', function test() {
+    it('should apply minDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -126,7 +119,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       // TODO: define what appends when value is `null`
     });
 
-    it('should apply maxDate', function test() {
+    it('should apply maxDate', () => {
       render(
         <ElementToTest
           {...defaultProps}

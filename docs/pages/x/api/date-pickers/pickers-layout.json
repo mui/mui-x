@@ -1,9 +1,6 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -26,20 +23,15 @@
   ],
   "slots": [
     {
-      "name": "tabs",
-      "description": "Tabs enabling toggling between views.",
-      "class": "MuiPickersLayout-tabs"
-    },
-    {
-      "name": "toolbar",
-      "description": "Custom component for the toolbar.\nIt is placed above the picker views.",
-      "class": "MuiPickersLayout-toolbar"
-    },
-    {
       "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
       "default": "PickersActionBar",
       "class": "MuiPickersLayout-actionBar"
+    },
+    {
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
     },
     {
       "name": "shortcuts",
@@ -48,9 +40,14 @@
       "class": "MuiPickersLayout-shortcuts"
     },
     {
-      "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
-      "class": null
+      "name": "tabs",
+      "description": "Tabs enabling toggling between views.",
+      "class": "MuiPickersLayout-tabs"
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.\nIt is placed above the Picker views.",
+      "class": "MuiPickersLayout-toolbar"
     }
   ],
   "classes": [

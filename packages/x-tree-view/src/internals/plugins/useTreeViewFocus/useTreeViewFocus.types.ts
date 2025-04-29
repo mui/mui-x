@@ -1,40 +1,53 @@
 import * as React from 'react';
 import { TreeViewPluginSignature } from '../../models';
-import { UseTreeViewIdSignature } from '../useTreeViewId/useTreeViewId.types';
-import type { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import type { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import type { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
-export interface UseTreeViewFocusInstance {
-  isNodeFocused: (nodeId: string) => boolean;
-  focusNode: (event: React.SyntheticEvent, nodeId: string | null) => void;
-  focusRoot: () => void;
+export interface UseTreeViewFocusPublicAPI {
+  /**
+   * Focus the item with the given id.
+   *
+   * If the item is the child of a collapsed item, then this method will do nothing.
+   * Make sure to expand the ancestors of the item before calling this method if needed.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item to focus.
+   */
+  focusItem: (event: React.SyntheticEvent, itemId: string) => void;
+}
+
+export interface UseTreeViewFocusInstance extends UseTreeViewFocusPublicAPI {
+  /**
+   * Remove the focus from the currently focused item (both from the internal state and the DOM).
+   */
+  removeFocusedItem: () => void;
 }
 
 export interface UseTreeViewFocusParameters {
   /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
+   * Callback fired when a given Tree Item is focused.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
+   * @param {string} itemId The id of the focused item.
    */
-  onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
+  onItemFocus?: (event: React.SyntheticEvent | null, itemId: string) => void;
 }
 
 export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
-  focusedNodeId: string | null;
+  focus: {
+    focusedItemId: string | null;
+  };
 }
 
 export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   params: UseTreeViewFocusParameters;
   defaultizedParams: UseTreeViewFocusDefaultizedParameters;
   instance: UseTreeViewFocusInstance;
+  publicAPI: UseTreeViewFocusPublicAPI;
   state: UseTreeViewFocusState;
-  dependantPlugins: [
-    UseTreeViewIdSignature,
-    UseTreeViewNodesSignature,
+  dependencies: [
+    UseTreeViewItemsSignature,
     UseTreeViewSelectionSignature,
     UseTreeViewExpansionSignature,
   ];

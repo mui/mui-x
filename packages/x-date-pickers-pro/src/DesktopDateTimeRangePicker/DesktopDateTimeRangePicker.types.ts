@@ -1,5 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -10,19 +9,20 @@ import {
   BaseDateTimeRangePickerSlots,
   BaseDateTimeRangePickerSlotProps,
 } from '../DateTimeRangePicker/shared';
-import { DateTimeRangePickerView } from '../internals/models';
 
-export interface DesktopDateTimeRangePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerSlots<TDate>,
-    MakeOptional<UseDesktopRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
+export interface DesktopDateTimeRangePickerSlots
+  extends BaseDateTimeRangePickerSlots,
+    MakeOptional<UseDesktopRangePickerSlots, 'field'> {}
 
-export interface DesktopDateTimeRangePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerSlotProps<TDate>,
-    Omit<UseDesktopRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs' | 'toolbar'> {}
+export interface DesktopDateTimeRangePickerSlotProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseDateTimeRangePickerSlotProps,
+    Omit<UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
-export interface DesktopDateTimeRangePickerProps<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerProps<TDate>,
-    DesktopRangeOnlyPickerProps<TDate> {
+export interface DesktopDateTimeRangePickerProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> extends BaseDateTimeRangePickerProps,
+    DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
    * @default 1
@@ -32,10 +32,10 @@ export interface DesktopDateTimeRangePickerProps<TDate extends PickerValidDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateTimeRangePickerSlots<TDate>;
+  slots?: DesktopDateTimeRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimeRangePickerSlotProps<TDate>;
+  slotProps?: DesktopDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

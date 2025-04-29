@@ -1,14 +1,19 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridDensity } from '../../../models/gridDensity';
 
-export const gridDensitySelector = (state: GridStateCommunity) => state.density;
+export const COMPACT_DENSITY_FACTOR = 0.7;
+export const COMFORTABLE_DENSITY_FACTOR = 1.3;
 
-export const gridDensityValueSelector = createSelector(
-  gridDensitySelector,
-  (density) => density.value,
-);
+const DENSITY_FACTORS: Record<GridDensity, number> = {
+  compact: COMPACT_DENSITY_FACTOR,
+  comfortable: COMFORTABLE_DENSITY_FACTOR,
+  standard: 1,
+};
+
+export const gridDensitySelector = createRootSelector((state: GridStateCommunity) => state.density);
 
 export const gridDensityFactorSelector = createSelector(
   gridDensitySelector,
-  (density) => density.factor,
+  (density) => DENSITY_FACTORS[density],
 );

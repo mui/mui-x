@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+import { MakeRequired } from '@mui/x-internals/types';
 import {
   AdapterFormats,
   AdapterOptions,
@@ -6,13 +7,12 @@ import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
 } from '../models';
-import { MakeRequired } from '../internals/models/helpers';
 
 type DateFnsLocaleBase = {
-  formatLong?: {
-    date?: any;
-    time?: any;
-    dateTime?: any;
+  formatLong: {
+    date: (...args: Array<any>) => any;
+    time: (...args: Array<any>) => any;
+    dateTime: (...args: Array<any>) => any;
   };
   code?: string;
 };
@@ -49,6 +49,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   ii: 'weekDay',
   iii: { sectionType: 'weekDay', contentType: 'letter' },
   iiii: { sectionType: 'weekDay', contentType: 'letter' },
+  // eslint-disable-next-line id-denylist
   e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ee: 'weekDay',
   eee: { sectionType: 'weekDay', contentType: 'letter' },
@@ -87,6 +88,7 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  dayOfMonthFull: 'do',
   weekday: 'EEEE',
   weekdayShort: 'EEEEEE',
   hours24h: 'HH',
@@ -101,11 +103,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
 
-  fullTime: 'p',
   fullTime12h: 'hh:mm aa',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
 };
@@ -114,14 +114,12 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
   AdapterOptions<DateFnsLocale, never>,
   'locale'
 > & {
-  longFormatters: Record<'p' | 'P', (token: string, formatLong: any) => string>;
+  longFormatters: Record<
+    'p' | 'P',
+    (token: string, formatLong: DateFnsLocaleBase['formatLong']) => string
+  >;
+  lib?: string;
 };
-
-declare module '@mui/x-date-pickers/models' {
-  interface PickerValidDateLookup {
-    'date-fns': Date;
-  }
-}
 
 /**
  * Based on `@date-io/date-fns`
@@ -151,7 +149,7 @@ declare module '@mui/x-date-pickers/models' {
 export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   implements
     Pick<
-      MuiPickersAdapter<Date, DateFnsLocale>,
+      MuiPickersAdapter<DateFnsLocale>,
       | 'date'
       | 'getInvalidDate'
       | 'getTimezone'
@@ -167,7 +165,7 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
 
   public isTimezoneCompatible = false;
 
-  public lib = 'date-fns';
+  public lib: string;
 
   public locale: DateFnsLocale;
 
@@ -180,25 +178,24 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   public longFormatters: DateFnsAdapterBaseOptions<DateFnsLocale>['longFormatters'];
 
   constructor(props: DateFnsAdapterBaseOptions<DateFnsLocale>) {
-    const { locale, formats, longFormatters } = props;
+    const { locale, formats, longFormatters, lib } = props;
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
     this.longFormatters = longFormatters;
+    this.lib = lib || 'date-fns';
   }
 
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Date> => {
-    type R = DateBuilderReturnType<T, Date>;
+  public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (typeof value === 'undefined') {
-      return <R>new Date();
+      return new Date() as unknown as R;
     }
 
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
-    return <R>new Date(value);
+    return new Date(value) as unknown as R;
   };
 
   public getInvalidDate = () => new Date('Invalid Date');
@@ -215,19 +212,15 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     return value;
   };
 
-  public getCurrentLocaleCode = () => {
-    return this.locale?.code || 'en-US';
+  public getCurrentLocaleCode = (): string => {
+    // `code` is undefined only in `date-fns` types, but all locales have it
+    return this.locale.code!;
   };
 
   // Note: date-fns input types are more lenient than this adapter, so we need to expose our more
   // strict signature and delegate to the more lenient signature. Otherwise, we have downstream type errors upon usage.
   public is12HourCycleInCurrentLocale = () => {
-    if (this.locale) {
-      return /a/.test(this.locale.formatLong!.time({ width: 'short' }));
-    }
-
-    // By default, date-fns is using en-US locale with am/pm enabled
-    return true;
+    return /a/.test(this.locale.formatLong!.time({ width: 'short' }));
   };
 
   public expandFormat = (format: string) => {
@@ -249,5 +242,9 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
+  };
+
+  public getDayOfWeek = (value: Date) => {
+    return value.getDay() + 1;
   };
 }

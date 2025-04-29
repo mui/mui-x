@@ -24,12 +24,12 @@ The Simple Tree View component receives its items directly as JSX children.
 
 ### Item identifier
 
-Each Tree Item must have a unique `nodeId`.
+Each Tree Item must have a unique `itemId`.
 This is used internally to identify the item in the various models, and to track it across updates.
 
 ```tsx
 <SimpleTreeView>
-  <TreeItem nodeId="item-unique-id" {...otherItemProps} />
+  <TreeItem itemId="item-unique-id" {...otherItemProps} />
 </SimpleTreeView>
 ```
 
@@ -47,11 +47,11 @@ You must pass a `label` prop to each Tree Item component, as shown below:
 
 Use the `disabled` prop on the Tree Item component to disable interaction and focus:
 
-{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+{{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
 
 #### The disabledItemsFocusable prop
 
-Note that the demo above also includes a switch.
+Note that the demo below also includes a switch.
 This toggles the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
 
 When this prop is set to false:
@@ -71,3 +71,39 @@ When it's set to true:
 - Mouse or keyboard interaction will not select disabled items.
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
+
+{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
+## Track item clicks
+
+Use the `onItemClick` prop to track the clicked item:
+
+{{"demo": "OnItemClick.js"}}
+
+## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+When your component first renders, `apiRef` is `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement()` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}

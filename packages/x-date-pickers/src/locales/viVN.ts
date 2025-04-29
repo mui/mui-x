@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'buổi',
 };
 
-const viVNPickers: Partial<PickersLocaleText<any>> = {
+const viVNPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Tháng trước',
   nextMonth: 'Tháng sau',
@@ -25,26 +25,28 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Bắt đầu',
   end: 'Kết thúc',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Ngày bắt đầu',
+  startTime: 'Thời gian bắt đầu',
+  endDate: 'Ngày kết thúc',
+  endTime: 'Thời gian kết thúc',
 
   // Action bar
   cancelButtonLabel: 'Hủy',
   clearButtonLabel: 'Xóa',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hôm nay',
+  nextStepButtonLabel: 'Sau',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Chọn ngày',
   dateTimePickerToolbarTitle: 'Chọn ngày và giờ',
   timePickerToolbarTitle: 'Chọn giờ',
   dateRangePickerToolbarTitle: 'Chọn khoảng ngày',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Chọn ${views[view]}. ${time === null ? 'Không có giờ được chọn' : `Giờ được chọn là ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Chọn ${views[view]}. ${!formattedTime ? 'Không có giờ được chọn' : `Giờ được chọn là ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} giờ`,
   minutesClockNumberText: (minutes) => `${minutes} phút`,
   secondsClockNumberText: (seconds) => `${seconds} giây`,
@@ -58,16 +60,13 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Tuần ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Chọn ngày, ngày đã chọn là ${utils.format(value, 'fullDate')}`
-      : 'Chọn ngày',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Chọn giờ, giờ đã chọn là ${utils.format(value, 'fullTime')}`
-      : 'Chọn giờ',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Chọn ngày, ngày đã chọn là ${formattedDate}` : 'Chọn ngày',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Chọn giờ, giờ đã chọn là ${formattedTime}` : 'Chọn giờ',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Xóa giá trị',
 
   // Table labels
   timeTableLabel: 'chọn giờ',
@@ -82,6 +81,19 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Năm',
+  month: 'Tháng',
+  day: 'Ngày',
+  weekDay: 'Thứ',
+  hours: 'Giờ',
+  minutes: 'Phút',
+  seconds: 'Giây',
+  meridiem: 'Buổi',
+
+  // Common
+  empty: 'Trống',
 };
 
 export const viVN = getPickersLocalization(viVNPickers);

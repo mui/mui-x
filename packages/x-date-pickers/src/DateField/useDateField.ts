@@ -1,51 +1,14 @@
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
+'use client';
 import { useField } from '../internals/hooks/useField';
-import {
-  UseDateFieldProps,
-  UseDateFieldDefaultizedProps,
-  UseDateFieldComponentProps,
-} from './DateField.types';
-import { validateDate } from '../internals/utils/validation/validateDate';
-import { applyDefaultDate } from '../internals/utils/date-utils';
-import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
-import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { PickerValidDate } from '../models';
+import { UseDateFieldProps } from './DateField.types';
+import { useDateManager } from '../managers';
 
-const useDefaultizedDateField = <TDate extends PickerValidDate, AdditionalProps extends {}>(
-  props: UseDateFieldProps<TDate>,
-): AdditionalProps & UseDateFieldDefaultizedProps<TDate> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDate,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
-  } as any;
-};
-
-export const useDateField = <TDate extends PickerValidDate, TChildProps extends {}>(
-  inProps: UseDateFieldComponentProps<TDate, TChildProps>,
+export const useDateField = <
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TProps extends UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
+>(
+  props: TProps,
 ) => {
-  const props = useDefaultizedDateField<TDate, TChildProps>(inProps);
-
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseDateFieldProps<TDate>
-  >(props, 'date');
-
-  return useField({
-    forwardedProps,
-    internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateDate,
-    valueType: 'date',
-  });
+  const manager = useDateManager(props);
+  return useField({ manager, props });
 };

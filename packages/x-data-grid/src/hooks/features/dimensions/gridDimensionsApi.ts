@@ -59,9 +59,17 @@ export interface GridDimensions {
    */
   rightPinnedWidth: number;
   /**
-   * Height of one headers.
+   * Height of one column header.
    */
   headerHeight: number;
+  /**
+   * Height of one column group header.
+   */
+  groupHeaderHeight: number;
+  /**
+   * Height of header filters.
+   */
+  headerFilterHeight: number;
   /**
    * Height of all the column headers.
    */
@@ -77,10 +85,6 @@ export interface GridDimensions {
 }
 
 export interface GridDimensionsApi {
-  /**
-   * Triggers a resize of the component and recalculation of width and height.
-   */
-  resize: () => void;
   /**
    * Returns the dimensions of the grid
    * @returns {GridDimensions} The dimension information of the grid. If `null`, the grid is not ready yet.

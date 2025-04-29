@@ -3,7 +3,8 @@
   "name": "PieArc",
   "imports": [
     "import { PieArc } from '@mui/x-charts/PieChart';",
-    "import { PieArc } from '@mui/x-charts';"
+    "import { PieArc } from '@mui/x-charts';",
+    "import { PieArc } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
@@ -15,13 +16,19 @@
     {
       "key": "highlighted",
       "className": "MuiPieArc-highlighted",
-      "description": "Styles applied to the root element when higlighted.",
+      "description": "Styles applied to the root element when highlighted.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiPieArc-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiPieArc-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${pieArcClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

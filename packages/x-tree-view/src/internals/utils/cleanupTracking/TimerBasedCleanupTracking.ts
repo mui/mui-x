@@ -4,7 +4,7 @@ import { CleanupTracking, UnregisterToken, UnsubscribeFn } from './CleanupTracki
 const CLEANUP_TIMER_LOOP_MILLIS = 1000;
 
 export class TimerBasedCleanupTracking implements CleanupTracking {
-  timeouts? = new Map<number, NodeJS.Timeout>();
+  timeouts? = new Map<number, ReturnType<typeof setTimeout>>();
 
   cleanupTimeout = CLEANUP_TIMER_LOOP_MILLIS;
 
@@ -14,7 +14,7 @@ export class TimerBasedCleanupTracking implements CleanupTracking {
 
   register(object: any, unsubscribe: UnsubscribeFn, unregisterToken: UnregisterToken): void {
     if (!this.timeouts) {
-      this.timeouts = new Map<number, NodeJS.Timeout>();
+      this.timeouts = new Map<number, ReturnType<typeof setTimeout>>();
     }
 
     const timeout = setTimeout(() => {

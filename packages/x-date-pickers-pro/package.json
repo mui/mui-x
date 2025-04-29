@@ -1,7 +1,7 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "7.0.0-beta.2",
-  "description": "The commercial edition of the date picker components (MUI X).",
+  "version": "8.1.0",
+  "description": "The Pro plan edition of the Date and Time Picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
@@ -11,7 +11,8 @@
   "homepage": "https://mui.com/x/react-date-pickers/",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "react",
@@ -27,43 +28,42 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui/mui-x.git",
+    "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.9",
-    "@mui/base": "^5.0.0-beta.36",
-    "@mui/system": "^5.15.9",
-    "@mui/utils": "^5.15.9",
-    "@mui/x-date-pickers": "7.0.0-beta.2",
-    "@mui/x-license": "7.0.0-beta.2",
-    "clsx": "^2.1.0",
+    "@babel/runtime": "^7.27.0",
+    "@mui/utils": "^7.0.2",
+    "@mui/x-date-pickers": "workspace:*",
+    "@mui/x-internals": "workspace:*",
+    "@mui/x-license": "workspace:*",
+    "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.0",
-    "date-fns": "^2.25.0 || ^3.2.0",
-    "date-fns-jalali": "^2.13.0-0",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "date-fns": "^2.25.0 || ^3.2.0 || ^4.0.0",
+    "date-fns-jalali": "^2.13.0-0 || ^3.2.0-0 || ^4.0.0-0",
     "dayjs": "^1.10.7",
     "luxon": "^3.0.2",
     "moment": "^2.29.4",
-    "moment-hijri": "^2.1.2",
+    "moment-hijri": "^2.1.2 || ^3.0.0",
     "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@emotion/react": {
@@ -95,15 +95,20 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.2",
-    "date-fns": "^2.30.0",
-    "dayjs": "^1.11.10",
-    "luxon": "^3.4.4",
-    "moment": "^2.30.1"
+    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/material": "^7.0.2",
+    "@mui/system": "^7.0.2",
+    "@types/luxon": "^3.6.2",
+    "@types/prop-types": "^15.7.14",
+    "date-fns": "^4.1.0",
+    "date-fns-jalali": "^4.1.0-0",
+    "dayjs": "^1.11.13",
+    "luxon": "^3.6.1",
+    "moment": "^2.30.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
   "engines": {
     "node": ">=14.0.0"
   }

@@ -1,37 +1,38 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '../models';
 import { PickersInputLocaleText } from '../locales';
 
-export interface MuiPickersAdapterContextValue<TDate extends PickerValidDate> {
+export interface MuiPickersAdapterContextValue {
   defaultDates: {
-    minDate: TDate;
-    maxDate: TDate;
+    minDate: PickerValidDate;
+    maxDate: PickerValidDate;
   };
 
-  utils: MuiPickersAdapter<TDate>;
-  localeText: PickersInputLocaleText<TDate> | undefined;
+  utils: MuiPickersAdapter;
+  localeText: PickersInputLocaleText | undefined;
 }
 
-export type MuiPickersAdapterContextNullableValue<TDate extends PickerValidDate> = {
-  [K in keyof MuiPickersAdapterContextValue<TDate>]: MuiPickersAdapterContextValue<TDate>[K] | null;
+export type MuiPickersAdapterContextNullableValue = {
+  [K in keyof MuiPickersAdapterContextValue]: MuiPickersAdapterContextValue[K] | null;
 };
 
 export const MuiPickersAdapterContext =
-  React.createContext<MuiPickersAdapterContextNullableValue<any> | null>(null);
+  React.createContext<MuiPickersAdapterContextNullableValue | null>(null);
 
 if (process.env.NODE_ENV !== 'production') {
   MuiPickersAdapterContext.displayName = 'MuiPickersAdapterContext';
 }
 
-export interface LocalizationProviderProps<TDate extends PickerValidDate, TLocale> {
+export interface LocalizationProviderProps<TLocale> {
   children?: React.ReactNode;
   /**
    * Date library adapter class function.
-   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/quickstart/#integrate-provider-and-adapter date adapter setup section} for more details.
    */
-  dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate, TLocale>;
+  dateAdapter?: new (...args: any) => MuiPickersAdapter<TLocale>;
   /** Formats that are used for any child pickers */
   dateFormats?: Partial<AdapterFormats>;
   /**
@@ -48,11 +49,11 @@ export interface LocalizationProviderProps<TDate extends PickerValidDate, TLocal
   /**
    * Locale for components texts
    */
-  localeText?: PickersInputLocaleText<TDate>;
+  localeText?: PickersInputLocaleText;
 }
 
-type LocalizationProviderComponent = (<TDate extends PickerValidDate, TLocale>(
-  props: LocalizationProviderProps<TDate, TLocale>,
+type LocalizationProviderComponent = (<TLocale>(
+  props: LocalizationProviderProps<TLocale>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -67,17 +68,16 @@ type LocalizationProviderComponent = (<TDate extends PickerValidDate, TLocale>(
  *
  * - [LocalizationProvider API](https://mui.com/x/api/date-pickers/localization-provider/)
  */
-export const LocalizationProvider = function LocalizationProvider<
-  TDate extends PickerValidDate,
-  TLocale,
->(inProps: LocalizationProviderProps<TDate, TLocale>) {
+export const LocalizationProvider = function LocalizationProvider<TLocale>(
+  inProps: LocalizationProviderProps<TLocale>,
+) {
   const { localeText: inLocaleText, ...otherInProps } = inProps;
 
   const { utils: parentUtils, localeText: parentLocaleText } = React.useContext(
     MuiPickersAdapterContext,
   ) ?? { utils: undefined, localeText: undefined };
 
-  const props: LocalizationProviderProps<TDate, TLocale> = useThemeProps({
+  const props: LocalizationProviderProps<TLocale> = useThemeProps({
     // We don't want to pass the `localeText` prop to the theme, that way it will always return the theme value,
     // We will then merge this theme value with our value manually
     props: otherInProps,
@@ -118,7 +118,7 @@ export const LocalizationProvider = function LocalizationProvider<
         [
           'MUI X: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
           "For example, `import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'` instead of `import AdapterDayjs from '@date-io/dayjs'`",
-          'More information on the installation documentation: https://mui.com/x/react-date-pickers/getting-started/#installation',
+          'More information on the installation documentation: https://mui.com/x/react-date-pickers/quickstart/#installation',
         ].join(`\n`),
       );
     }
@@ -126,19 +126,18 @@ export const LocalizationProvider = function LocalizationProvider<
     return adapter;
   }, [DateAdapter, adapterLocale, dateFormats, dateLibInstance, parentUtils]);
 
-  const defaultDates: MuiPickersAdapterContextNullableValue<TDate>['defaultDates'] =
-    React.useMemo(() => {
-      if (!utils) {
-        return null;
-      }
+  const defaultDates: MuiPickersAdapterContextNullableValue['defaultDates'] = React.useMemo(() => {
+    if (!utils) {
+      return null;
+    }
 
-      return {
-        minDate: utils.date('1900-01-01T00:00:00.000')!,
-        maxDate: utils.date('2099-12-31T00:00:00.000')!,
-      };
-    }, [utils]);
+    return {
+      minDate: utils.date('1900-01-01T00:00:00.000'),
+      maxDate: utils.date('2099-12-31T00:00:00.000'),
+    };
+  }, [utils]);
 
-  const contextValue: MuiPickersAdapterContextNullableValue<TDate> = React.useMemo(() => {
+  const contextValue: MuiPickersAdapterContextNullableValue = React.useMemo(() => {
     return {
       utils,
       defaultDates,
@@ -156,7 +155,7 @@ export const LocalizationProvider = function LocalizationProvider<
 LocalizationProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Locale for the date library you are using
@@ -165,7 +164,7 @@ LocalizationProvider.propTypes = {
   children: PropTypes.node,
   /**
    * Date library adapter class function.
-   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/quickstart/#integrate-provider-and-adapter date adapter setup section} for more details.
    */
   dateAdapter: PropTypes.func,
   /**
@@ -173,14 +172,13 @@ LocalizationProvider.propTypes = {
    */
   dateFormats: PropTypes.shape({
     dayOfMonth: PropTypes.string,
+    dayOfMonthFull: PropTypes.string,
     fullDate: PropTypes.string,
-    fullTime: PropTypes.string,
     fullTime12h: PropTypes.string,
     fullTime24h: PropTypes.string,
     hours12h: PropTypes.string,
     hours24h: PropTypes.string,
     keyboardDate: PropTypes.string,
-    keyboardDateTime: PropTypes.string,
     keyboardDateTime12h: PropTypes.string,
     keyboardDateTime24h: PropTypes.string,
     meridiem: PropTypes.string,

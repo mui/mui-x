@@ -7,13 +7,11 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build",
-    "rootDir": "./src"
+    "outDir": "build/esm",
+    "rootDir": "./src",
+    "types": ["node", "@mui/material/themeCssVarsAugmentation", "@emotion/styled", "@mui/types"]
   },
-  "include": [
-    "src/**/*.ts*",
-    "src/lib/**/*.js",
-    "../../node_modules/@mui/material/themeCssVarsAugmentation"
-  ], // TODO: Remove JS files
+  "references": [{ "path": "../x-internals/tsconfig.build.json" }],
+  "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }

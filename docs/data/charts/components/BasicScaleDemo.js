@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { ResponsiveChartContainer, LinePlot, useDrawingArea } from '@mui/x-charts';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { useDrawingArea } from '@mui/x-charts/hooks';
 
 const StyledPath = styled('path')(({ theme }) => ({
   fill: 'none',
@@ -46,8 +48,7 @@ function DrawingAreaBox() {
 }
 export default function BasicScaleDemo() {
   return (
-    <ResponsiveChartContainer
-      margin={{ top: 20, left: 10, right: 10, bottom: 30 }}
+    <ChartContainer
       height={300}
       series={[
         {
@@ -55,10 +56,11 @@ export default function BasicScaleDemo() {
           data: [13, 13, 54, 651, 657, 987, 64, 654, 954, 654, 897, 84],
         },
       ]}
-      xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }]}
+      xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], position: 'none' }]}
+      yAxis={[{ position: 'none' }]}
     >
       <LinePlot />
       <DrawingAreaBox />
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 }

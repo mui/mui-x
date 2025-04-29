@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useRtl } from '@mui/system/RtlProvider';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -12,6 +13,8 @@ import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
+import { PinnedColumnPosition } from '../../internals/constants';
+import { attachPinnedStyle } from '../../internals/utils';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -24,18 +27,35 @@ interface GridColumnGroupHeaderProps {
   height: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
+  style?: React.CSSProperties;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
+  pinnedPosition: PinnedColumnPosition | undefined;
+  pinnedOffset?: number;
 }
 
 type OwnerState = {
   groupId: GridColumnGroupHeaderProps['groupId'];
-  showColumnBorder: boolean;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
   isDragging: boolean;
+  isLastColumn: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
+  pinnedPosition?: PinnedColumnPosition | undefined;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, headerAlign, isDragging, showColumnBorder, groupId } = ownerState;
+  const {
+    classes,
+    headerAlign,
+    isDragging,
+    isLastColumn,
+    showLeftBorder,
+    showRightBorder,
+    groupId,
+    pinnedPosition,
+  } = ownerState;
 
   const slots = {
     root: [
@@ -44,10 +64,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       headerAlign === 'center' && 'columnHeader--alignCenter',
       headerAlign === 'right' && 'columnHeader--alignRight',
       isDragging && 'columnHeader--moving',
-      showColumnBorder && 'columnHeader--showColumnBorder',
-      showColumnBorder && 'columnHeader--withRightBorder',
+      showRightBorder && 'columnHeader--withRightBorder',
+      showLeftBorder && 'columnHeader--withLeftBorder',
       'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
+      isLastColumn && 'columnHeader--last',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer', 'withBorderColor'],
@@ -69,9 +92,12 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     hasFocus,
     tabIndex,
     isLastColumn,
+    pinnedPosition,
+    pinnedOffset,
   } = props;
 
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
 
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
@@ -101,12 +127,9 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     headerComponent = render(renderParams);
   }
 
-  const showColumnBorder = rootProps.showColumnVerticalBorder;
-
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showColumnBorder,
     headerAlign,
     depth,
     isDragging: false,
@@ -154,6 +177,11 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       ? group.headerClassName(renderParams)
       : group.headerClassName;
 
+  const style = React.useMemo(
+    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
+    [pinnedPosition, pinnedOffset, props.style, isRtl],
+  );
+
   return (
     <GridGenericColumnHeaderItem
       ref={headerCellRef}
@@ -178,6 +206,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       aria-colspan={fields.length}
       // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=
       data-fields={`|-${fields.join('-|-')}-|`}
+      style={style}
       {...mouseEventsHandlers}
     />
   );

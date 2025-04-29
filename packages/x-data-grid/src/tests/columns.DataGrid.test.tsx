@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer } from '@mui-internal/test-utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
+import {
+  DataGrid,
+  DataGridProps,
+  GridRowsProp,
+  GridColDef,
+  gridClasses,
+  gridColumnLookupSelector,
+} from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridApiCommunity } from '@mui/x-data-grid/internals';
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
@@ -120,5 +128,80 @@ describe('<DataGrid /> - Columns', () => {
     expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--numeric');
     // should not override valueFormatter with the default numeric one
     expect(getCell(0, 0).textContent).to.equal('formatted: 1');
+  });
+
+  // https://github.com/mui/mui-x/issues/13719
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should not crash when updating columns immediately after scrolling',
+    async () => {
+      const data = [
+        { id: 1, value: 'A' },
+        { id: 2, value: 'B' },
+        { id: 3, value: 'C' },
+        { id: 4, value: 'D' },
+        { id: 5, value: 'E' },
+        { id: 6, value: 'E' },
+        { id: 7, value: 'F' },
+        { id: 8, value: 'G' },
+        { id: 9, value: 'H' },
+      ];
+
+      function DynamicVirtualizationRange() {
+        const [cols, setCols] = React.useState<GridColDef[]>([{ field: 'id' }, { field: 'value' }]);
+
+        return (
+          <div style={{ width: '100%' }}>
+            <button onClick={() => setCols([{ field: 'id' }])}>Update columns</button>
+            <div style={{ height: 400 }}>
+              <DataGrid rows={data} columns={cols} />
+            </div>
+          </div>
+        );
+      }
+
+      const { user } = render(<DynamicVirtualizationRange />);
+
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      await act(async () => virtualScroller.scrollTo({ top: 1_000, behavior: 'instant' }));
+
+      await user.click(screen.getByText('Update columns'));
+    },
+  );
+
+  it('should revert to the default column properties if not specified otherwise', async () => {
+    const columns1: GridColDef[] = [{ field: 'status', type: 'string' }];
+    const columns2: GridColDef[] = [
+      { field: 'status', type: 'string', sortable: false, filterable: false },
+    ];
+
+    const apiRef: RefObject<GridApiCommunity | null> = { current: null };
+
+    function Component(props: { columns: DataGridProps['columns'] }) {
+      return (
+        <div style={{ height: 560, width: '100%' }}>
+          <DataGrid apiRef={apiRef} rows={[{ id: 1, status: 'pending' }]} {...props} />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<Component columns={columns1} />);
+
+    expect(gridColumnLookupSelector(apiRef).status).to.deep.include({
+      sortable: true,
+      filterable: true,
+    });
+
+    setProps({ columns: columns2 });
+    expect(gridColumnLookupSelector(apiRef).status).to.deep.include({
+      sortable: false,
+      filterable: false,
+    });
+
+    setProps({ columns: columns1 });
+    expect(gridColumnLookupSelector(apiRef).status).to.deep.include({
+      sortable: true,
+      filterable: true,
+    });
   });
 });

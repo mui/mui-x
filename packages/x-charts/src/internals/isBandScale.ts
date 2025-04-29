@@ -1,4 +1,4 @@
-import type { ScaleBand, ScalePoint } from 'd3-scale';
+import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { D3Scale } from '../models/axis';
 
 export function isBandScale<T extends { toString(): string }>(

@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Meridiem',
 };
 
-const deDEPickers: Partial<PickersLocaleText<any>> = {
+const deDEPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Letzter Monat',
   nextMonth: 'Nächster Monat',
@@ -26,26 +26,28 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Beginn',
   end: 'Ende',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Startdatum',
+  startTime: 'Startzeit',
+  endDate: 'Enddatum',
+  endTime: 'Endzeit',
 
   // Action bar
   cancelButtonLabel: 'Abbrechen',
   clearButtonLabel: 'Löschen',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Heute',
+  nextStepButtonLabel: 'Nächster',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Datum auswählen',
   dateTimePickerToolbarTitle: 'Datum & Uhrzeit auswählen',
   timePickerToolbarTitle: 'Uhrzeit auswählen',
   dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
+  timeRangePickerToolbarTitle: 'Zeitspanne auswählen',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} auswählen. ${time === null ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `${timeViews[view] ?? view} auswählen. ${!formattedTime ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
@@ -59,15 +61,17 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Woche ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Datum auswählen, gewähltes Datum ist ${utils.format(value, 'fullDate')}`
-      : 'Datum auswählen',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(value, 'fullTime')}`
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Datum auswählen, gewähltes Datum ist ${formattedDate}` : 'Datum auswählen',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime
+      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${formattedTime}`
       : 'Uhrzeit auswählen',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Zeitspanne auswählen, die aktuell ausgewählte Zeitspanne ist ${formattedRange}`
+      : 'Zeitspanne auswählen',
   fieldClearLabel: 'Wert leeren',
 
   // Table labels
@@ -83,6 +87,19 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Jahr',
+  month: 'Monat',
+  day: 'Tag',
+  weekDay: 'Wochentag',
+  hours: 'Stunden',
+  minutes: 'Minuten',
+  seconds: 'Sekunden',
+  meridiem: 'Tageszeit',
+
+  // Common
+  empty: 'Leer',
 };
 
 export const deDE = getPickersLocalization(deDEPickers);

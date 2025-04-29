@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { RichTreeView, TreeViewBaseItem } from '@mui/x-tree-view';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -34,7 +35,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 
 export default function MultiSelectTreeView() {
   return (
-    <Box sx={{ minHeight: 200, flexGrow: 1, maxWidth: 400 }}>
+    <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <RichTreeView multiSelect items={MUI_X_PRODUCTS} />
     </Box>
   );

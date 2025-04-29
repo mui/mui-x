@@ -32,16 +32,17 @@ If you already have a license for `@mui/x-data-grid-pro`, you can use the same o
 #### Community plan
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/x-date-pickers
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers
 ```
 
 </codeblock>
@@ -54,12 +55,12 @@ pnpm add @mui/x-date-pickers
 npm install @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers-pro @mui/x-license-pro
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers-pro @mui/x-license-pro
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
 </codeblock>
@@ -100,7 +101,7 @@ Which will transform the imports like this:
 ```
 
 Components of the Community plan such as `<DatePicker />` can be imported from both `@mui/x-date-pickers-pro` and `@mui/x-date-pickers`.
-[Date adapters](/x/react-date-pickers/getting-started/#installation) such as `AdapterDayjs` can only be imported from `@mui/x-date-pickers/[adapterName]`.
+[Date adapters](/x/react-date-pickers/quickstart/#installation) such as `AdapterDayjs` can only be imported from `@mui/x-date-pickers/[adapterName]`.
 
 ### 3. Handle breaking changes introduced in alpha
 
@@ -132,7 +133,7 @@ The props of `MonthPicker`, `YearPicker` and `DayPicker` have been reworked to m
 
 #### Translation
 
-Props for translation have been either deprecated or removed in favor of a [global localization](/x/react-date-pickers/localization/) similar to the one used by the data grid.
+Props for translation have been either deprecated or removed in favor of a [global localization](/x/react-date-pickers/localization/) similar to the one used by the Data Grid.
 We already have ten locales provided by the community. (Thank you!)
 
 #### Use slot for `ActionBar`

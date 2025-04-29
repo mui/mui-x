@@ -3,24 +3,23 @@ import {
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
+import { BaseSingleInputFieldProps } from '../internals/models';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
-import { PickerValidDate } from '../models';
+import { ValidateDateProps } from '../validation/validateDate';
 
-export interface DatePickerSlots<TDate extends PickerValidDate>
-  extends DesktopDatePickerSlots<TDate>,
-    MobileDatePickerSlots<TDate> {}
+export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
 
-export interface DatePickerSlotProps<TDate extends PickerValidDate>
-  extends DesktopDatePickerSlotProps<TDate>,
-    MobileDatePickerSlotProps<TDate> {}
+export interface DatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
-export interface DatePickerProps<TDate extends PickerValidDate>
-  extends DesktopDatePickerProps<TDate>,
-    MobileDatePickerProps<TDate> {
+export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerProps<TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -28,18 +27,28 @@ export interface DatePickerProps<TDate extends PickerValidDate>
    */
   desktopModeMediaQuery?: string;
   /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: DatePickerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overridable component slots.
-   * @default {}
+   * If `true`, the Picker will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
-  slots?: DatePickerSlots<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: DatePickerSlotProps<TDate>;
+  closeOnSelect?: boolean;
 }
+
+/**
+ * Props the field can receive when used inside a Date Picker (<DatePicker />, <DesktopDatePicker /> or <MobileDatePicker /> component).
+ */
+export type DatePickerFieldProps = ValidateDateProps & BaseSingleInputFieldProps;

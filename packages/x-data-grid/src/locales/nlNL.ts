@@ -1,4 +1,3 @@
-import { nlNL as nlNLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Geen resultaten.',
   noResultsOverlayLabel: 'Geen resultaten gevonden.',
+  noColumnsOverlayLabel: 'Geen kolommen',
+  noColumnsOverlayManageColumns: 'Kolommen beheren',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Grootte',
@@ -38,10 +40,18 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Print',
   toolbarExportExcel: 'Downloaden als Excel-bestand',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Zoeken',
+  columnsManagementNoColumns: 'Geen kolommen',
+  columnsManagementShowHideAllText: 'Toon/Verberg Alle',
+  columnsManagementReset: 'Reset',
+  columnsManagementDeleteIconLabel: 'Verwijderen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
@@ -57,7 +67,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'bevat',
+  filterOperatorDoesNotContain: 'bevat niet',
   filterOperatorEquals: 'gelijk aan',
+  filterOperatorDoesNotEqual: 'niet gelijk aan',
   filterOperatorStartsWith: 'begint met',
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
@@ -78,7 +90,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Bevat',
+  headerFilterOperatorDoesNotContain: 'Bevat niet',
   headerFilterOperatorEquals: 'Gelijk aan',
+  headerFilterOperatorDoesNotEqual: 'Niet gelijk aan',
   headerFilterOperatorStartsWith: 'Begint met',
   headerFilterOperatorEndsWith: 'Eindigt met',
   headerFilterOperatorIs: 'Is',
@@ -96,6 +110,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Is groter dan of gelijk aan',
   'headerFilterOperator<': 'Is kleiner dan',
   'headerFilterOperator<=': 'Is kleiner dan of gelijk aan',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'alles',
@@ -104,6 +119,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Toon kolommen',
   columnMenuManageColumns: 'Kolommen beheren',
   columnMenuFilter: 'Filteren',
@@ -111,6 +127,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Annuleer sortering',
   columnMenuSortAsc: 'Oplopend sorteren',
   columnMenuSortDesc: 'Aflopend sorteren',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -165,6 +182,34 @@ const nlNLGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Uitklappen',
   collapseDetailPanel: 'Inklappen',
 
+  // Pagination
+  paginationRowsPerPage: 'Regels per pagina:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Ga naar eerste pagina';
+    }
+    if (type === 'last') {
+      return 'Ga naar laatste pagina';
+    }
+    if (type === 'next') {
+      return 'Ga naar volgende pagina';
+    }
+    // if (type === 'previous') {
+    return 'Ga naar vorige pagina';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Rijen hersorteren',
 
@@ -175,6 +220,83 @@ const nlNLGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
   aggregationFunctionLabelSize: 'grootte',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
-export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);
+export const nlNL: Localization = getGridLocalization(nlNLGrid);

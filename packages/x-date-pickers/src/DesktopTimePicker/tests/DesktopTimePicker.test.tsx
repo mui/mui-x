@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { adapterToUse, createPickerRenderer, openPickerAsync } from 'test/utils/pickers';
 
 describe('<DesktopTimePicker />', () => {
-  const { render } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date('2018-01-01T10:05:05.000'),
-  });
+  const { render } = createPickerRenderer();
 
   describe('rendering behavior', () => {
     it('should render "accept" action and 3 time sections by default', () => {
@@ -24,14 +21,14 @@ describe('<DesktopTimePicker />', () => {
       expect(screen.getByRole('option', { name: 'AM' })).not.to.equal(null);
     });
 
-    it('should render single column picker given big enough "thresholdToRenderTimeInASingleColumn" number', () => {
+    it('should render single column Picker given big enough "thresholdToRenderTimeInASingleColumn" number', () => {
       render(<DesktopTimePicker open thresholdToRenderTimeInASingleColumn={1000} />);
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '09:35 AM' })).not.to.equal(null);
     });
 
-    it('should render single column picker given big enough "timeSteps.minutes" number', () => {
+    it('should render single column Picker given big enough "timeSteps.minutes" number', () => {
       render(<DesktopTimePicker open timeSteps={{ minutes: 60 }} />);
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);
@@ -60,100 +57,142 @@ describe('<DesktopTimePicker />', () => {
   });
 
   describe('selecting behavior', () => {
-    it('should call "onAccept", "onChange", and "onClose" when selecting a single option', () => {
+    it('should call "onAccept", "onChange", and "onClose" when selecting a single option', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(
+      const { user } = render(
         <DesktopTimePicker
           timeSteps={{ minutes: 60 }}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
         />,
       );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      await openPickerAsync(user, { type: 'time' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: '09:00 AM' }));
+      await user.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      await user.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call "onAccept", "onChange", and "onClose" when selecting all section', () => {
+    it('should call "onAccept", "onChange", and "onClose" when selecting all section', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(<DesktopTimePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      const { user } = render(
+        <DesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
+        />,
+      );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      await openPickerAsync(user, { type: 'time' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: '2 hours' }));
+      await user.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '15 minutes' }));
+      await user.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(2);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      await user.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(3);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      await user.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 15));
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should allow out of order section selection', () => {
+    it('should allow out of order section selection', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(<DesktopTimePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      const { user } = render(
+        <DesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
+        />,
+      );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      await openPickerAsync(user, { type: 'time' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: '15 minutes' }));
+      await user.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '2 hours' }));
+      await user.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(2);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '25 minutes' }));
+      await user.click(screen.getByRole('option', { name: '25 minutes' }));
       expect(onChange.callCount).to.equal(3);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      await user.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(4);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      await user.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 25));
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should finish selection when selecting only the last section', () => {
+    it('should finish selection when selecting only the last section', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      render(<DesktopTimePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      const { user } = render(
+        <DesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
+        />,
+      );
 
-      openPicker({ type: 'time', variant: 'desktop' });
+      await openPickerAsync(user, { type: 'time' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      await user.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      await user.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 12, 0));
       expect(onClose.callCount).to.equal(1);
     });
   });

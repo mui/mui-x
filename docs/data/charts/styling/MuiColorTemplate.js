@@ -38,17 +38,8 @@ function getGaussianSeriesData(mean, stdev = [0.3, 0.4], N = 50) {
 const legendPlacement = {
   slotProps: {
     legend: {
-      position: {
-        vertical: 'middle',
-        horizontal: 'right',
-      },
-      direction: 'column',
-      itemGap: 2,
+      direction: 'vertical',
     },
-  },
-  margin: {
-    top: 20,
-    right: 100,
   },
 };
 
@@ -68,7 +59,7 @@ const series = [
   { label: 'Series 13', data: getGaussianSeriesData([7, 0]) },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v) => v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 const categories = {

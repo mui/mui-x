@@ -1,51 +1,19 @@
-import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
-import { BaseFieldProps, FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
-import { FieldSection, FieldRef, PickerValidDate } from '@mui/x-date-pickers/models';
-
-export interface RangeFieldSection extends FieldSection {
-  dateName: 'start' | 'end';
-}
-
-export type FieldType = 'single-input' | 'multi-input';
-
-/**
- * Props the `textField` slot of the multi input field can receive when used inside a picker.
- */
-export interface MultiInputFieldSlotTextFieldProps {
-  inputRef?: React.Ref<HTMLInputElement>;
-  disabled?: boolean;
-  readOnly?: boolean;
-  id?: string;
-  label?: React.ReactNode;
-  onKeyDown?: React.KeyboardEventHandler;
-  onFocus?: React.FocusEventHandler;
-  focused?: boolean;
-  InputProps?: Partial<FieldsTextFieldProps['InputProps']>;
-}
-
-/**
- * Props the `root` slot of the multi input field can receive when used inside a picker.
- */
-export interface MultiInputFieldSlotRootProps {
-  onBlur?: React.FocusEventHandler;
-}
-
-export interface MultiInputFieldRefs {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-}
+import { SlotComponentProps } from '@mui/utils';
+import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { FieldOwnerState } from '@mui/x-date-pickers/models';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import type {
+  MultiInputFieldRefs,
+  MultiInputFieldSlotRootProps,
+  RangePosition,
+} from '../../models';
 
 /**
  * Props the multi input field can receive when used inside a picker.
- * Only contains what the MUI component are passing to the field, not what users can pass using the `props.slotProps.field`.
+ * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
-export interface BaseMultiInputFieldProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TError,
-> extends BaseFieldProps<TValue, TDate, TSection, TError>,
+export interface BaseMultiInputFieldProps
+  extends Pick<UseFieldInternalProps<PickerRangeValue, boolean, unknown>, 'readOnly' | 'autoFocus'>,
     MultiInputFieldRefs {
   slots?: {
     root?: React.ElementType;
@@ -53,15 +21,11 @@ export interface BaseMultiInputFieldProps<
     textField?: React.ElementType;
   };
   slotProps?: {
-    root?: SlotComponentProps<
-      React.ElementType<MultiInputFieldSlotRootProps>,
-      {},
-      Record<string, any>
-    >;
+    root?: SlotComponentProps<React.ElementType<MultiInputFieldSlotRootProps>, {}, FieldOwnerState>;
     textField?: SlotComponentProps<
-      React.ElementType<MultiInputFieldSlotTextFieldProps>,
+      typeof PickersTextField,
       {},
-      { position?: 'start' | 'end' } & Record<string, any>
+      FieldOwnerState & { position?: RangePosition }
     >;
   };
 }

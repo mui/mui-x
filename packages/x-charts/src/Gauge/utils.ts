@@ -1,13 +1,12 @@
-function deg2rad(angle: number) {
-  return (Math.PI * angle) / 180;
-}
+import { deg2rad } from '../internals/angleConversion';
+
 function getPoint(angle: number): [number, number] {
   const radAngle = deg2rad(angle);
   return [Math.sin(radAngle), -Math.cos(radAngle)];
 }
 
 /**
- * Retruns the ratio of the arc bounding box and its center.
+ * Returns the ratio of the arc bounding box and its center.
  * @param startAngle The start angle (in deg)
  * @param endAngle The end angle (in deg)
  */
@@ -22,9 +21,9 @@ export function getArcRatios(startAngle: number, endAngle: number) {
   const initialAngle = Math.floor(minAngle / 90) * 90;
 
   for (let step = 1; step <= 4; step += 1) {
-    const cartinalAngle = initialAngle + step * 90;
-    if (cartinalAngle < maxAngle) {
-      points.push(getPoint(cartinalAngle));
+    const cardinalAngle = initialAngle + step * 90;
+    if (cardinalAngle < maxAngle) {
+      points.push(getPoint(cardinalAngle));
     }
   }
 

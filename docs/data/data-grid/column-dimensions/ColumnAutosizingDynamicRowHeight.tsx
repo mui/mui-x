@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import {
-  DataGridPro,
+  DataGrid,
   GridColDef,
   gridClasses,
   useGridApiRef,
   GridAutosizeOptions,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { randomInt, randomArrayItem } from '@mui/x-data-grid-generator';
 
 const lines = [
@@ -48,11 +48,11 @@ export default function ColumnAutosizingDynamicRowHeight() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.autosizeColumns(autosizeOptions)}>
+      <Button onClick={() => apiRef.current?.autosizeColumns(autosizeOptions)}>
         Autosize Columns
       </Button>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
+        <DataGrid
           apiRef={apiRef}
           rows={rows}
           columns={columns}

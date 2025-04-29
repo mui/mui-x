@@ -9,7 +9,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Simple Tree View - Customization
 
-<p class="description">Learn how to customize the simple version of the Tree View component.</p>
+<p class="description">Learn how to customize the Simple Tree View component.</p>
+
+:::success
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+:::
 
 ## Basics
 
@@ -22,7 +26,7 @@ The demo below shows how to add icons using both an existing icon library, such 
 
 ### Custom toggle animations
 
-Use the `TransitionComponent` prop on the `TreeItem` to pass a component that handles your animation.
+Use the `groupTransition` slot on the Tree Item to pass a component that handles your animation.
 
 The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
@@ -34,32 +38,26 @@ Use `treeItemClasses` to target internal elements of the Tree Item component and
 
 {{"demo": "CustomStyling.js"}}
 
-### Adding custom content
+### Custom Tree Item
 
-Use the `ContentComponent` prop and the `useTreeItemState` hook to replace the Tree Item content with an entirely custom component.
+You can use the Tree Item's customization API to build new layouts and manage behaviors.
+
+Learn more about the anatomy of the Tree Items and the customization utilities provided on the [Tree Item Customization page](/x/react-tree-view/tree-item-customization/).
+
+### Headless API
+
+Use the `useTreeItem` hook to create your own component.
 The demo below shows how to add an avatar and custom typography elements.
 
-{{"demo": "CustomContentTreeView.js"}}
+{{"demo": "HeadlessAPI.js", "defaultCodeOpen": false}}
 
 ## Common examples
 
 ### Connection border
 
-Target the `treeItemClasses.group` class to add connection borders between the Tree View items.
+Target the `treeItemClasses.groupTransition` class to add connection borders between the Tree View items.
 
 {{"demo": "BorderedTreeView.js", "defaultCodeOpen": false}}
-
-### Limit expansion to icon container
-
-The demo below shows how to trigger the expansion interaction just by clicking on the icon container instead of the whole Tree Item surface.
-
-{{"demo": "IconExpansionTreeView.js", "defaultCodeOpen": false}}
-
-### File explorer
-
-The demo below shows many of the previous customization examples brought together to make the Tree View component look completely different than its default design.
-
-{{"demo": "CustomizedTreeView.js"}}
 
 ### Gmail clone
 

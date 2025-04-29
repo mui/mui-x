@@ -5,9 +5,10 @@
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "bottomAxis": {
-      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
+    "barLabel": {
+      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
     },
+    "borderRadius": { "description": "Defines the border radius of the bar element." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -19,12 +20,18 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
-    "layout": { "description": "The direction of the bar elements." },
-    "leftAxis": {
-      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
+    "highlightedItem": {
+      "description": "The highlighted item. Used when the highlight is controlled."
     },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "layout": { "description": "The direction of the bar elements." },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
+    "localeText": { "description": "Localized text for chart components." },
     "margin": {
-      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "onAxisClick": {
       "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
@@ -33,6 +40,10 @@
         "data": "The data about the clicked axis and items associated with it."
       }
     },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+    },
     "onItemClick": {
       "description": "Callback fired when a bar item is clicked.",
       "typeDescriptions": {
@@ -40,40 +51,35 @@
         "barItemIdentifier": "The bar item identifier."
       }
     },
-    "rightAxis": {
-      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    "series": {
+      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series-type/'>BarSeriesType</a> objects."
     },
-    "series": { "description": "The series to display in the bar chart." },
-    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
-    "topAxis": {
-      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_X_AXIS_KEY</code>."
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
     "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used with id set to <code>DEFAULT_Y_AXIS_KEY</code>."
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     }
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "axisContent": "",
-    "axisLabel": "",
-    "axisLine": "",
-    "axisTick": "",
-    "axisTickLabel": "",
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
     "bar": "The component that renders the bar.",
-    "itemContent": "",
+    "barLabel": "The component that renders the bar label.",
     "legend": "Custom rendering of the legend.",
-    "popper": ""
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

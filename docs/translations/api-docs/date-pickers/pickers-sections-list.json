@@ -1,0 +1,22 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
+  },
+  "classDescriptions": {
+    "sectionContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content of a section"
+    }
+  },
+  "slotDescriptions": { "root": "", "section": "", "sectionContent": "", "sectionSeparator": "" }
+}

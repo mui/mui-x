@@ -1,27 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, useSpring } from '@react-spring/web';
-import { color as d3Color } from 'd3-color';
-import { styled } from '@mui/material/styles';
-import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { DrawingContext } from '../context/DrawingProvider';
-import { cleanId } from '../internals/utils';
 import type { LineElementOwnerState } from './LineElement';
-
-export const LineElementPath = styled(animated.path, {
-  name: 'MuiLineElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineElementOwnerState }>(({ ownerState }) => ({
-  strokeWidth: 2,
-  strokeLinejoin: 'round',
-  fill: 'none',
-  stroke: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
-    : ownerState.color,
-  transition: 'opacity 0.2s ease-in, stroke 0.2s ease-in',
-  opacity: ownerState.isFaded ? 0.3 : 1,
-}));
+import { useAnimateLine } from '../hooks';
+import { AppearingMask } from './AppearingMask';
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {
   ownerState: LineElementOwnerState;
@@ -43,41 +25,39 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  *
  * - [AnimatedLine API](https://mui.com/x/api/charts/animated-line/)
  */
-function AnimatedLine(props: AnimatedLineProps) {
-  const { d, skipAnimation, ownerState, ...other } = props;
-  const { left, top, bottom, width, height, right, chartId } = React.useContext(DrawingContext);
+const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
+  function AnimatedLine(props, ref) {
+    const { skipAnimation, ownerState, ...other } = props;
 
-  const path = useAnimatedPath(d, skipAnimation);
+    const animateProps = useAnimateLine({ ...props, ref });
 
-  const { animatedWidth } = useSpring({
-    from: { animatedWidth: left },
-    to: { animatedWidth: width + left + right },
-    reset: false,
-    immediate: skipAnimation,
-  });
-
-  const clipId = cleanId(`${chartId}-${ownerState.id}-line-clip`);
-  return (
-    <React.Fragment>
-      <clipPath id={clipId}>
-        <animated.rect x={0} y={0} width={animatedWidth} height={top + height + bottom} />
-      </clipPath>
-      <g clipPath={`url(#${clipId})`}>
-        <LineElementPath {...other} ownerState={ownerState} d={path} />
-      </g>
-    </React.Fragment>
-  );
-}
+    return (
+      <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
+        <path
+          stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
+          strokeWidth={2}
+          strokeLinejoin="round"
+          fill="none"
+          filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+          opacity={ownerState.isFaded ? 0.3 : 1}
+          {...other}
+          {...animateProps}
+        />
+      </AppearingMask>
+    );
+  },
+);
 
 AnimatedLine.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   d: PropTypes.string.isRequired,
   ownerState: PropTypes.shape({
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
+    gradientId: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,

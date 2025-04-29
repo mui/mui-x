@@ -1,8 +1,22 @@
 import { expect } from 'chai';
 import { SinonSpy } from 'sinon';
-import { cleanText } from 'test/utils/pickers';
+import {
+  cleanText,
+  isPickerRangeType,
+  PickerComponentType,
+  PickerRangeComponentType,
+} from 'test/utils/pickers';
 
-export const expectInputValue = (
+export const expectFieldValueV7 = (
+  fieldSectionsContainer: HTMLDivElement,
+  expectedValue: string,
+  specialCase?: 'singleDigit' | 'RTL',
+) => {
+  const value = cleanText(fieldSectionsContainer.textContent ?? '', specialCase);
+  return expect(value).to.equal(expectedValue);
+};
+
+export const expectFieldValueV6 = (
   input: HTMLInputElement,
   expectedValue: string,
   specialCase?: 'singleDigit' | 'RTL',
@@ -11,7 +25,7 @@ export const expectInputValue = (
   return expect(value).to.equal(expectedValue);
 };
 
-export const expectInputPlaceholder = (
+export const expectFieldPlaceholderV6 = (
   input: HTMLInputElement,
   placeholder: string,
   specialCase?: 'singleDigit' | 'RTL',
@@ -21,11 +35,11 @@ export const expectInputPlaceholder = (
 };
 
 export function expectPickerChangeHandlerValue(
-  type: 'date' | 'date-time' | 'time' | 'date-range',
+  type: PickerComponentType | PickerRangeComponentType,
   spyCallback: SinonSpy,
   expectedValue: any,
 ) {
-  if (type === 'date-range') {
+  if (isPickerRangeType(type)) {
     spyCallback.lastCall.firstArg.forEach((value, index) => {
       expect(value).to.deep.equal(expectedValue[index]);
     });

@@ -1,0 +1,7 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  showToolbar
+  filterModel={filterModel}
+  onFilterModelChange={onFilterModelChange}
+/>

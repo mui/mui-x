@@ -8,7 +8,6 @@ export interface AddPathToDemoDataOptions {
    * If not defined, the tree data will not be built
    */
   groupingField?: string;
-
   /**
    * The depth of the tree
    * @default 1

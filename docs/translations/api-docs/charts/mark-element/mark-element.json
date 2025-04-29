@@ -6,6 +6,11 @@
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
   },
   "classDescriptions": {
+    "animate": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "animation is not skipped"
+    },
     "faded": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
@@ -14,8 +19,12 @@
     "highlighted": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "higlighted"
+      "conditions": "highlighted"
     },
-    "root": { "description": "Styles applied to the root element." }
+    "root": { "description": "Styles applied to the root element." },
+    "series": {
+      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${markElementClasses.series}-${seriesId}</code>.",
+      "nodeName": "the root element for a specified series"
+    }
   }
 }

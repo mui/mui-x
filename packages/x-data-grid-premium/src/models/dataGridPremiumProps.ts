@@ -1,9 +1,13 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridCallbackDetails,
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
+  GridGetRowsError,
+  GridUpdateRowError,
+  type GridColDef,
+  GridLocaleTextApi,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -11,17 +15,32 @@ import {
   DataGridProPropsWithoutDefaultValue,
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  DataGridPremiumSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
   GridAggregationModel,
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import type {
+  GridPivotingColDefOverrides,
+  GridPivotModel,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
+import {
+  GridDataSourcePremium as GridDataSource,
+  GridGetRowsParamsPremium as GridGetRowsParams,
+} from '../hooks/features/dataSource/models';
+import {
+  Conversation,
+  PromptResponse,
+  PromptSuggestion,
+} from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -38,7 +57,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
  */
 export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   extends Omit<
-    Partial<DataGridPremiumPropsWithDefaultValue> &
+    Partial<DataGridPremiumPropsWithDefaultValue<R>> &
       DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
       DataGridPremiumPropsWithoutDefaultValue<R>,
     DataGridPremiumForcedPropsKey
@@ -50,7 +69,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
 }
 
 /**
- * The props of the `DataGridPremium` component after the pre-processing phase.
+ * The props of the Data Grid Premium component after the pre-processing phase.
  */
 export interface DataGridPremiumProcessedProps
   extends DataGridPremiumPropsWithDefaultValue,
@@ -60,16 +79,13 @@ export interface DataGridPremiumProcessedProps
 export type DataGridPremiumForcedPropsKey = 'signature';
 
 /**
- * The `DataGridPremium` options with a default value overridable through props.
+ * The Data Grid Premium options with a default value overridable through props.
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface.
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
-export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
-  /**
-   * If `true`, the cell selection mode is enabled.
-   * @default false
-   */
-  cellSelection: boolean;
+export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowModel = any>
+  extends DataGridProPropsWithDefaultValue<R>,
+    DataGridPremiumSharedPropsWithDefaultValue {
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -88,9 +104,11 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
+   * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
    */
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
@@ -102,7 +120,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
-   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   * @default (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
   /**
@@ -114,17 +132,44 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
+   * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
    */
   splitClipboardPastedText: (text: string) => string[][] | null;
+  /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: boolean;
+  /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   */
+  getPivotDerivedColumns:
+    | ((
+        column: GridColDef,
+        getLocaleText: GridLocaleTextApi['getLocaleText'],
+      ) => GridColDef[] | undefined)
+    | null;
+  /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<DataGridProPropsWithoutDefaultValue<R>, 'initialState' | 'apiRef'> {
+  extends Omit<
+    DataGridProPropsWithoutDefaultValue<R>,
+    'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
+  > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.MutableRefObject<GridApiPremium>;
+  apiRef?: RefObject<GridApiPremium | null>;
   /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
@@ -170,6 +215,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   onExcelExportStateChange?: (inProgress: 'pending' | 'finished') => void;
   /**
+   * Callback fired before the clipboard paste operation starts.
+   * Use it to confirm or cancel the paste operation.
+   * @param {object} params Params passed to the callback.
+   * @param {string[][]} params.data The raw pasted data split by rows and cells.
+   * @returns {Promise<any>} A promise that resolves to confirm the paste operation, and rejects to cancel it.
+   */
+  onBeforeClipboardPasteStart?: (params: { data: string[][] }) => Promise<any>;
+  /**
    * Callback fired when the clipboard paste operation starts.
    */
   onClipboardPasteStart?: GridEventListener<'clipboardPasteStart'>;
@@ -182,4 +235,96 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
+  /**
+   * Data source object.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
+  /**
+   * The pivot model of the grid.
+   * Will be used to generate the pivot data.
+   * In case of `pivotActive` being `false`, the pivot model is still used to populate the pivot panel.
+   */
+  pivotModel?: GridPivotModel;
+  /**
+   * Callback fired when the pivot model changes.
+   * @param {GridPivotModel} pivotModel The new pivot model.
+   */
+  onPivotModelChange?: (pivotModel: GridPivotModel) => void;
+  /**
+   * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
+   * @default false
+   */
+  pivotActive?: boolean;
+  /**
+   * Callback fired when the pivot active state changes.
+   * @param {boolean} isPivotActive Whether the data grid is in pivot mode.
+   */
+  onPivotActiveChange?: (isPivotActive: boolean) => void;
+  /**
+   * If `true`, the pivot side panel is visible.
+   * @default false
+   */
+  pivotPanelOpen?: boolean;
+  /**
+   * Callback fired when the pivot side panel open state changes.
+   * @param {boolean} pivotPanelOpen Whether the pivot side panel is visible.
+   */
+  onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
+
+  /**
+   * The column definition overrides for the columns generated by the pivoting feature.
+   * @param {string} originalColumnField The field of the original column.
+   * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
+   * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * @default undefined
+   */
+  pivotingColDef?:
+    | Partial<GridPivotingColDefOverrides>
+    | ((
+        originalColumnField: GridColDef['field'],
+        columnGroupPath: string[],
+      ) => Partial<GridPivotingColDefOverrides> | undefined);
+  /**
+   * The conversations with the AI Assistant.
+   */
+  aiAssistantConversations?: Conversation[];
+  /**
+   * Callback fired when the AI Assistant conversations change.
+   * @param {Conversation[]} conversations The new AI Assistant conversations.
+   */
+  onAiAssistantConversationsChange?: (conversations: Conversation[]) => void;
+  /**
+   * The suggestions of the AI Assistant.
+   */
+  aiAssistantSuggestions?: PromptSuggestion[];
+  /**
+   * The index of the active AI Assistant conversation.
+   */
+  aiAssistantActiveConversationIndex?: number;
+  /**
+   * Callback fired when the AI Assistant active conversation index changes.
+   * @param {number} aiAssistantActiveConversationIndex The new active conversation index.
+   */
+  onAiAssistantActiveConversationIndexChange?: (aiAssistantActiveConversationIndex: number) => void;
+  /**
+   * If `true`, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context.
+   */
+  allowAiAssistantDataSampling?: boolean;
+  /**
+   * The function to be used to process the prompt.
+   * @param {string} prompt The prompt to be processed.
+   * @param {string} promptContext The prompt context.
+   * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.
+   * @returns {Promise<PromptResponse>} The prompt response.
+   */
+  onPrompt?: (
+    prompt: string,
+    promptContext: string,
+    conversationId?: string,
+  ) => Promise<PromptResponse>;
 }

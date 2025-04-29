@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridium',
 };
 
-const nlNLPickers: Partial<PickersLocaleText<any>> = {
+const nlNLPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Vorige maand',
   nextMonth: 'Volgende maand',
@@ -25,26 +25,28 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Start',
   end: 'Einde',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Startdatum',
+  startTime: 'Starttijd',
+  endDate: 'Einddatum',
+  endTime: 'Eindtijd',
 
   // Action bar
   cancelButtonLabel: 'Annuleren',
   clearButtonLabel: 'Resetten',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Vandaag',
+  nextStepButtonLabel: 'Volgende',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Selecteer datum',
   dateTimePickerToolbarTitle: 'Selecteer datum & tijd',
   timePickerToolbarTitle: 'Selecteer tijd',
   dateRangePickerToolbarTitle: 'Selecteer datumbereik',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Selecteer ${timeViews[view]}. ${time === null ? 'Geen tijd geselecteerd' : `Geselecteerde tijd is ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Selecteer ${timeViews[view]}. ${!formattedTime ? 'Geen tijd geselecteerd' : `Geselecteerde tijd is ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} uren`,
   minutesClockNumberText: (minutes) => `${minutes} minuten`,
   secondsClockNumberText: (seconds) => `${seconds} seconden`,
@@ -58,30 +60,40 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Kies datum, geselecteerde datum is ${utils.format(value, 'fullDate')}`
-      : 'Kies datum',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Kies tijd, geselecteerde tijd is ${utils.format(value, 'fullTime')}`
-      : 'Kies tijd',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Kies datum, geselecteerde datum is ${formattedDate}` : 'Kies datum',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Kies tijd, geselecteerde tijd is ${formattedTime}` : 'Kies tijd',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Wissen',
 
   // Table labels
   timeTableLabel: 'kies tijd',
   dateTableLabel: 'kies datum',
 
   // Field section placeholders
-  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldYearPlaceholder: (params) => 'J'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
   fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
-  fieldHoursPlaceholder: () => 'hh',
+  fieldHoursPlaceholder: () => 'uu',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Jaar',
+  month: 'Maand',
+  day: 'Dag',
+  weekDay: 'Weekdag',
+  hours: 'Uren',
+  minutes: 'Minuten',
+  seconds: 'Seconden',
+  meridiem: 'Middag',
+
+  // Common
+  empty: 'Leeg',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);

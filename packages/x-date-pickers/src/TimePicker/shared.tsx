@@ -1,40 +1,45 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useUtils } from '../internals/hooks/useUtils';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
-import { BaseTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   TimePickerToolbarProps,
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from './TimePickerToolbar';
-import { PickerValidDate, TimeValidationError } from '../models';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { TimeValidationError } from '../models';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
-import { TimeViewWithMeridiem } from '../internals/models';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
+import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
+import { ValidateTimePropsToDefault } from '../validation/validateTime';
+import { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
 
-export interface BaseTimePickerSlots<TDate extends PickerValidDate> extends TimeClockSlots {
+export interface BaseTimePickerSlots extends TimeClockSlots {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
    */
-  toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<TimePickerToolbarProps>;
 }
 
 export interface BaseTimePickerSlotProps extends TimeClockSlotProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
-export interface BaseTimePickerProps<
-  TDate extends PickerValidDate,
-  TView extends TimeViewWithMeridiem,
-> extends BasePickerInputProps<TDate | null, TDate, TView, TimeValidationError>,
-    ExportedBaseClockProps<TDate> {
+export type TimePickerViewRenderers<TView extends TimeViewWithMeridiem> = PickerViewRendererLookup<
+  PickerValue,
+  TView,
+  TimeViewRendererProps<TView, BaseClockProps<TView>>
+>;
+
+export interface BaseTimePickerProps<TView extends TimeViewWithMeridiem>
+  extends BasePickerInputProps<PickerValue, TView, TimeValidationError>,
+    ExportedBaseClockProps {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
@@ -44,7 +49,7 @@ export interface BaseTimePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseTimePickerSlots<TDate>;
+  slots?: BaseTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -53,41 +58,32 @@ export interface BaseTimePickerProps<
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
-  viewRenderers?: Partial<
-    PickerViewRendererLookup<
-      TDate | null,
-      TView,
-      TimeViewRendererProps<TView, BaseClockProps<TDate, TView>>,
-      {}
-    >
-  >;
+  viewRenderers?: Partial<TimePickerViewRenderers<TView>>;
 }
 
 type UseTimePickerDefaultizedProps<
-  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
-  Props extends BaseTimePickerProps<TDate, TView>,
+  Props extends BaseTimePickerProps<TView>,
 > = LocalizedComponent<
-  TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
+  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | ValidateTimePropsToDefault>
 >;
 
 export function useTimePickerDefaultizedProps<
-  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
-  Props extends BaseTimePickerProps<TDate, TView>,
->(props: Props, name: string): UseTimePickerDefaultizedProps<TDate, TView, Props> {
-  const utils = useUtils<TDate>();
+  Props extends BaseTimePickerProps<TView>,
+>(props: Props, name: string): UseTimePickerDefaultizedProps<TView, Props> {
+  const utils = useUtils();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
+  const validationProps = useApplyDefaultValuesToTimeValidationProps(themeProps);
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }
@@ -100,6 +96,7 @@ export function useTimePickerDefaultizedProps<
 
   return {
     ...themeProps,
+    ...validationProps,
     ampm,
     localeText,
     ...applyDefaultViewProps({
@@ -108,8 +105,6 @@ export function useTimePickerDefaultizedProps<
       defaultViews: ['hours', 'minutes'] as TView[],
       defaultOpenTo: 'hours' as TView,
     }),
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
     slots: {
       toolbar: TimePickerToolbar,
       ...themeProps.slots,

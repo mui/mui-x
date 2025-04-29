@@ -1,121 +1,261 @@
-import * as React from 'react';
 import {
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldPlaceholderV6,
+  expectFieldValueV6,
+  expectFieldValueV7,
   getTextbox,
   describeAdapters,
 } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { testSkipIf } from 'test/utils/skipIf';
 
-describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
+describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
+  const { start: startChar, end: endChar } = adapter.escapedCharacters;
   it('should support escaped characters in start separator', () => {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-    // For Day.js: "[Escaped] YYYY"
-    const { setProps } = render(
-      <DateField format={`${startChar}Escaped${endChar} ${adapter.formats.year}`} />,
-    );
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'Escaped YYYY');
+    // Test with accessible DOM structure
+    let view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      // For Day.js: "[Escaped] YYYY"
+      format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
+    expectFieldValueV7(view.getSectionsContainer(), 'Escaped YYYY');
 
-    setProps({ value: adapter.date('2019-01-01') });
-    expectInputValue(input, 'Escaped 2019');
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV7(view.getSectionsContainer(), 'Escaped 2019');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      // For Day.js: "[Escaped] YYYY"
+      format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
+    const input = getTextbox();
+    expectFieldPlaceholderV6(input, 'Escaped YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV6(input, 'Escaped 2019');
   });
 
   it('should support escaped characters between sections separator', () => {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-    // For Day.js: "MMMM [Escaped] YYYY"
-    const { setProps } = render(
-      <DateField
-        format={`${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`}
-      />,
-    );
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'MMMM Escaped YYYY');
+    // Test with accessible DOM structure
+    let view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      // For Day.js: "MMMM [Escaped] YYYY"
+      format: `${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
 
-    setProps({ value: adapter.date('2019-01-01') });
-    expectInputValue(input, 'January Escaped 2019');
+    expectFieldValueV7(view.getSectionsContainer(), 'MMMM Escaped YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV7(view.getSectionsContainer(), 'January Escaped 2019');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      // For Day.js: "MMMM [Escaped] YYYY"
+      format: `${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
+
+    const input = getTextbox();
+    expectFieldPlaceholderV6(input, 'MMMM Escaped YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV6(input, 'January Escaped 2019');
   });
 
-  it('should support nested escaped characters', function test() {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
-    // If your start character and end character are equal
-    // Then you can't have nested escaped characters
-    if (startChar === endChar) {
-      this.skip();
-    }
+  // If your start character and end character are equal
+  // Then you can't have nested escaped characters
+  testSkipIf(startChar === endChar)('should support nested escaped characters', () => {
+    // Test with accessible DOM structure
+    let view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      // For Day.js: "MMMM [Escaped[] YYYY"
+      format: `${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
 
-    // For Day.js: "MMMM [Escaped[] YYYY"
-    const { setProps } = render(
-      <DateField
-        format={`${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`}
-      />,
-    );
+    expectFieldValueV7(view.getSectionsContainer(), 'MMMM Escaped [ YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV7(view.getSectionsContainer(), 'January Escaped [ 2019');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      // For Day.js: "MMMM [Escaped[] YYYY"
+      format: `${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
+
     const input = getTextbox();
-    expectInputPlaceholder(input, 'MMMM Escaped [ YYYY');
+    expectFieldPlaceholderV6(input, 'MMMM Escaped [ YYYY');
 
-    setProps({ value: adapter.date('2019-01-01') });
-    expectInputValue(input, 'January Escaped [ 2019');
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV6(input, 'January Escaped [ 2019');
   });
 
-  it('should support several escaped parts', function test() {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
+  it('should support several escaped parts', () => {
+    // Test with accessible DOM structure
+    let view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      // For Day.js: "[Escaped] MMMM [Escaped] YYYY"
+      format: `${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
 
-    // For Day.js: "[Escaped] MMMM [Escaped] YYYY"
-    const { setProps } = render(
-      <DateField
-        format={`${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`}
-      />,
-    );
+    expectFieldValueV7(view.getSectionsContainer(), 'Escaped MMMM Escaped YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV7(view.getSectionsContainer(), 'Escaped January Escaped 2019');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      // For Day.js: "[Escaped] MMMM [Escaped] YYYY"
+      format: `${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`,
+      value: null,
+    });
+
     const input = getTextbox();
-    expectInputPlaceholder(input, 'Escaped MMMM Escaped YYYY');
+    expectFieldPlaceholderV6(input, 'Escaped MMMM Escaped YYYY');
 
-    setProps({ value: adapter.date('2019-01-01') });
-    expectInputValue(input, 'Escaped January Escaped 2019');
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV6(input, 'Escaped January Escaped 2019');
   });
 
-  it('should support format with only escaped parts', function test() {
-    const { start: startChar, end: endChar } = adapter.escapedCharacters;
+  it('should support format with only escaped parts', () => {
+    // Test with accessible DOM structure
+    const view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      // For Day.js: "[Escaped] [Escaped]"
+      format: `${startChar}Escaped${endChar} ${startChar}Escaped${endChar}`,
+      value: null,
+    });
 
-    // For Day.js: "[Escaped] [Escaped]"
-    render(<DateField format={`${startChar}Escaped${endChar} ${startChar}Escaped${endChar}`} />);
+    expectFieldValueV7(view.getSectionsContainer(), 'Escaped Escaped');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      // For Day.js: "[Escaped] [Escaped]"
+      format: `${startChar}Escaped${endChar} ${startChar}Escaped${endChar}`,
+      value: null,
+    });
+
     const input = getTextbox();
-    expectInputPlaceholder(input, 'Escaped Escaped');
+    expectFieldPlaceholderV6(input, 'Escaped Escaped');
+  });
+
+  it('should support format without separators', () => {
+    const view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      format: `${adapter.formats.dayOfMonth}${adapter.formats.monthShort}`,
+    });
+
+    expectFieldValueV7(view.getSectionsContainer(), 'DDMMMM');
   });
 
   it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
-    const { setProps } = render(<DateField formatDensity="spacious" />);
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'MM / DD / YYYY');
+    // Test with accessible DOM structure
+    let view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      formatDensity: `spacious`,
+      value: null,
+    });
 
-    setProps({ value: adapter.date('2019-01-01') });
-    expectInputValue(input, '01 / 01 / 2019');
+    expectFieldValueV7(view.getSectionsContainer(), 'MM / DD / YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV7(view.getSectionsContainer(), '01 / 01 / 2019');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      formatDensity: `spacious`,
+      value: null,
+    });
+
+    const input = getTextbox();
+    expectFieldPlaceholderV6(input, 'MM / DD / YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV6(input, '01 / 01 / 2019');
   });
 
   it('should add spaces around `.` when `formatDensity = "spacious"`', () => {
-    const { setProps } = render(
-      <DateField
-        formatDensity="spacious"
-        format={adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.')}
-      />,
-    );
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'MM . DD . YYYY');
+    // Test with accessible DOM structure
+    let view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      formatDensity: `spacious`,
+      format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.'),
+      value: null,
+    });
 
-    setProps({ value: adapter.date('2019-01-01') });
-    expectInputValue(input, '01 . 01 . 2019');
+    expectFieldValueV7(view.getSectionsContainer(), 'MM . DD . YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV7(view.getSectionsContainer(), '01 . 01 . 2019');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      formatDensity: `spacious`,
+      format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.'),
+      value: null,
+    });
+
+    const input = getTextbox();
+    expectFieldPlaceholderV6(input, 'MM . DD . YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV6(input, '01 . 01 . 2019');
   });
 
   it('should add spaces around `-` when `formatDensity = "spacious"`', () => {
-    const { setProps } = render(
-      <DateField
-        formatDensity="spacious"
-        format={adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-')}
-      />,
-    );
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'MM - DD - YYYY');
+    // Test with accessible DOM structure
+    let view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true,
+      formatDensity: `spacious`,
+      format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-'),
+      value: null,
+    });
 
-    setProps({ value: adapter.date('2019-01-01') });
-    expectInputValue(input, '01 - 01 - 2019');
+    expectFieldValueV7(view.getSectionsContainer(), 'MM - DD - YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV7(view.getSectionsContainer(), '01 - 01 - 2019');
+
+    view.unmount();
+
+    // Test with non-accessible DOM structure
+    view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
+      formatDensity: `spacious`,
+      format: adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-'),
+      value: null,
+    });
+
+    const input = getTextbox();
+    expectFieldPlaceholderV6(input, 'MM - DD - YYYY');
+
+    view.setProps({ value: adapter.date('2019-01-01') });
+    expectFieldValueV6(input, '01 - 01 - 2019');
   });
 });

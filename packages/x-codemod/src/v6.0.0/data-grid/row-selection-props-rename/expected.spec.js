@@ -5,7 +5,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium'
 
 function App () {
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DataGrid
         rowSelectionModel={[]}
         onRowSelectionModelChange={() => {}}
@@ -33,7 +33,7 @@ function App () {
         showColumnVerticalBorder
         columnHeaderHeight={56}
       />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }
 

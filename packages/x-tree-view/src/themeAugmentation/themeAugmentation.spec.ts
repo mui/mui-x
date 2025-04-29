@@ -2,13 +2,12 @@ import { createTheme } from '@mui/material/styles';
 import { treeItemClasses } from '../TreeItem';
 import { richTreeViewClasses } from '../RichTreeView';
 import { simpleTreeViewClasses } from '../SimpleTreeView';
-import { treeViewClasses } from '../TreeView';
 
 createTheme({
   components: {
     MuiSimpleTreeView: {
       defaultProps: {
-        defaultExpandedNodes: ['root'],
+        defaultExpandedItems: ['root'],
         // @ts-expect-error invalid MuiSimpleTreeView prop
         someRandomProp: true,
       },
@@ -27,7 +26,7 @@ createTheme({
     },
     MuiRichTreeView: {
       defaultProps: {
-        defaultExpandedNodes: ['root'],
+        defaultExpandedItems: ['root'],
         // @ts-expect-error invalid MuiRichTreeView prop
         someRandomProp: true,
       },
@@ -44,28 +43,9 @@ createTheme({
         },
       },
     },
-    MuiTreeView: {
-      defaultProps: {
-        defaultExpandedNodes: ['root'],
-        // @ts-expect-error invalid MuiTreeView prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${treeViewClasses.root}`]: {
-            backgroundColor: 'green',
-          },
-        },
-        // @ts-expect-error invalid MuiTreeView class key
-        main: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
     MuiTreeItem: {
       defaultProps: {
-        nodeId: '1',
+        itemId: '1',
         // @ts-expect-error invalid MuiTreeItem prop
         someRandomProp: true,
       },

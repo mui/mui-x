@@ -1,44 +1,17 @@
 {
   "props": {
-    "bottomAxis": {
-      "type": {
-        "name": "union",
-        "description": "{ axisId?: number<br>&#124;&nbsp;string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
-      },
-      "default": "xAxisIds[0] The id of the first provided axis"
-    },
-    "leftAxis": {
-      "type": {
-        "name": "union",
-        "description": "{ axisId?: number<br>&#124;&nbsp;string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
-      },
-      "default": "yAxisIds[0] The id of the first provided axis"
-    },
-    "rightAxis": {
-      "type": {
-        "name": "union",
-        "description": "{ axisId?: number<br>&#124;&nbsp;string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
-      },
-      "default": "null"
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "topAxis": {
-      "type": {
-        "name": "union",
-        "description": "{ axisId?: number<br>&#124;&nbsp;string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, labelStyle?: object, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
-      },
-      "default": "null"
     }
   },
   "name": "ChartsAxis",
   "imports": [
     "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
-    "import { ChartsAxis } from '@mui/x-charts';"
+    "import { ChartsAxis } from '@mui/x-charts';",
+    "import { ChartsAxis } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
@@ -98,13 +71,13 @@
     {
       "key": "tickContainer",
       "className": "MuiChartsAxis-tickContainer",
-      "description": "Styles applied to group ingruding the tick and its label.",
+      "description": "Styles applied to group including the tick and its label.",
       "isGlobal": false
     },
     {
       "key": "tickLabel",
       "className": "MuiChartsAxis-tickLabel",
-      "description": "Styles applied to ticks label.",
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
       "isGlobal": false
     },
     {

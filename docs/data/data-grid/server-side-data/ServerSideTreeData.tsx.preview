@@ -1,0 +1,15 @@
+<Button onClick={() => apiRef.current?.dataSource.cache.clear()}>
+  Reset cache
+</Button>
+<div style={{ height: 400 }}>
+  <DataGridPro
+    columns={columns}
+    dataSource={dataSource}
+    treeData
+    apiRef={apiRef}
+    pagination
+    pageSizeOptions={pageSizeOptions}
+    initialState={initialStateWithPagination}
+    showToolbar
+  />
+</div>

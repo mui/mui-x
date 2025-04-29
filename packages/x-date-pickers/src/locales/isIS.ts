@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'eftirmiðdagur',
 };
 
-const isISPickers: Partial<PickersLocaleText<any>> = {
+const isISPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Fyrri mánuður',
   nextMonth: 'Næsti mánuður',
@@ -35,16 +35,18 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Hreinsa',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Í dag',
+  nextStepButtonLabel: 'Næsti',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Velja dagsetningu',
   dateTimePickerToolbarTitle: 'Velja dagsetningu og tíma',
   timePickerToolbarTitle: 'Velja tíma',
   dateRangePickerToolbarTitle: 'Velja tímabil',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Velja ${timeViews[view]}. ${time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Velja ${timeViews[view]}. ${!formattedTime ? 'Enginn tími valinn' : `Valinn tími er ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} klukkustundir`,
   minutesClockNumberText: (minutes) => `${minutes} mínútur`,
   secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
@@ -58,16 +60,13 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Vika ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velja dagsetningu, valin dagsetning er ${utils.format(value, 'fullDate')}`
-      : 'Velja dagsetningu',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velja tíma, valinn tími er ${utils.format(value, 'fullTime')}`
-      : 'Velja tíma',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Velja dagsetningu, valin dagsetning er ${formattedDate}` : 'Velja dagsetningu',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Velja tíma, valinn tími er ${formattedTime}` : 'Velja tíma',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'velja tíma',
@@ -82,6 +81,19 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'ee',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const isIS = getPickersLocalization(isISPickers);

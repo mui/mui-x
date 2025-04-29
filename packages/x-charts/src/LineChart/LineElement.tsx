@@ -1,26 +1,28 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { InteractionContext } from '../context/InteractionProvider';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { HighlightScope } from '../context/HighlightProvider';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
 import { SeriesId } from '../models/seriesType/common';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
 
 export interface LineElementClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type LineElementClassKey = keyof LineElementClasses;
@@ -28,6 +30,7 @@ export type LineElementClassKey = keyof LineElementClasses;
 export interface LineElementOwnerState {
   id: SeriesId;
   color: string;
+  gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<LineElementClasses>;
@@ -41,6 +44,7 @@ export const lineElementClasses: LineElementClasses = generateUtilityClasses('Mu
   'root',
   'highlighted',
   'faded',
+  'series',
 ]);
 
 const useUtilityClasses = (ownerState: LineElementOwnerState) => {
@@ -61,15 +65,14 @@ export interface LineElementSlots {
 }
 
 export interface LineElementSlotProps {
-  line?: AnimatedLineProps;
+  line?: SlotComponentPropsFromProps<AnimatedLineProps, {}, LineElementOwnerState>;
 }
 
 export interface LineElementProps
   extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
-    Omit<React.ComponentPropsWithoutRef<'path'>, 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;
-  highlightScope?: Partial<HighlightScope>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -97,24 +100,22 @@ function LineElement(props: LineElementProps) {
     id,
     classes: innerClasses,
     color,
-    highlightScope,
+    gradientId,
     slots,
     slotProps,
     onClick,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
+  const { isFaded, isHighlighted } = useItemHighlighted({
+    seriesId: id,
+  });
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
+    gradientId,
     isFaded,
     isHighlighted,
   };
@@ -125,30 +126,26 @@ function LineElement(props: LineElementProps) {
     elementType: Line,
     externalSlotProps: slotProps?.line,
     additionalProps: {
-      ...other,
-      ...getInteractionItemProps({ type: 'line', seriesId: id }),
-      className: classes.root,
+      ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },
+    className: classes.root,
     ownerState,
   });
 
-  return <Line {...lineProps} />;
+  return <Line {...other} {...lineProps} />;
 }
 
 LineElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
+  gradientId: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, animations are skipped.

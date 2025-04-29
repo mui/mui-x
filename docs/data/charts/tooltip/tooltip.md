@@ -1,59 +1,27 @@
 ---
 title: Charts - Tooltip
 productId: x-charts
-components: ChartsAxisTooltipContent, ChartsItemTooltipContent, ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent, ChartsAxisHighlight
+components: ChartsTooltip, ChartsAxisTooltipContent, ChartsItemTooltipContent, ChartsTooltipContainer
 ---
 
 # Charts - Tooltip
 
 <p class="description">Tooltip provides extra data on charts item.</p>
 
-In all charts components, you can pass props to the tooltip by using `tooltip={{...}}`.
-If you are using composition, you can add the `<ChartsTooltip />` component and pass props directly.
+In all charts components, the tooltip is accessible via the slot `tooltip`.
+If you are using composition, you can use the `<ChartsTooltip />` component.
 
 ## Tooltip trigger
 
-The tooltip can be triggered by two kinds of events:
+The Tooltip can be triggered by two kinds of events:
 
-- `'item'`—when the user's mouse hovers over an item on the chart, the tooltip will display data about this specific item.
-- `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip will display data about all series at this specific x value.
+- `'item'`—when the user's mouse hovers over an item on the chart, the tooltip displays data about this specific item.
+- `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip displays data about all series at this specific x value.
+- `'none'`—disable the tooltip.
+
+To pass this trigger attribute to the tooltip use `slotProps.tooltip.trigger`.
 
 {{"demo": "Interaction.js"}}
-
-## Highlights
-
-### Highlighting axis
-
-You can highlight data based on mouse position.
-By default, those highlights are lines, but it can also be a vertical band if your x-axis use `scaleType: 'band'`.
-
-On the chart, to customize this behavior, you can use:
-
-```jsx
-axisHighlight={{
-  x: 'line', // Or 'none', or 'band'
-  y: 'line', // Or 'none'
-}}
-```
-
-{{"demo": "BandHighlight.js" }}
-
-### Highlighting series
-
-In parallel with the tooltip, you can highlight/fade elements.
-
-This kind of interaction is controlled by series properties `highlightScope` which contains two options:
-
-- `highlighted` Indicates which item to highlight. Its value can be
-  - `'none'` Do nothing (default one).
-  - `'item'` Only highlight the item itself.
-  - `'series'` Highlight all items of the series.
-- `faded` Indicates which item to fade (if they are not already highlighted). Its value can be
-  - `'none'` Do nothing (default one).
-  - `'series'` Fade all the items of the series.
-  - `'global'` Fade all the items of the chart.
-
-{{"demo": "ElementHighlights.js"}}
 
 ## Customization
 
@@ -69,10 +37,51 @@ Here is a demo with:
 
 {{"demo": "Formatting.js"}}
 
+### Advanced formatting
+
+The series `valueFormatter` provides a context as its second argument containing a `dataIndex` property which you can use to calculate other data-related values.
+
+In the demo below you can notice we use `dataIndex` to add each team's rank in the tooltip.
+
+{{"demo": "SeriesFormatter.js"}}
+
+### Axis formatter
+
+To modify how data is displayed in the axis use the `valueFormatter` property.
+
+Its second argument is a context that provides a `location` property with either `'tick'` or `'tooltip'`.
+
+In this demo, you can see:
+
+- The country axis displays only the country code
+- The label displays annotated data `Country: name (code)`
+
+{{"demo": "AxisFormatter.js"}}
+
+### Label formatting
+
+The label text inside the tooltip can also be formatted conditionally by providing a function to the series `label` property.
+
+```jsx
+<LineChart
+  // ...
+  series={[
+    {
+      data: [ ... ],
+      label: (location) => location === 'tooltip' ? 'BR' : 'Brazil'
+    }
+  ]}
+/>
+```
+
+:::info
+See [Label—Conditional formatting](/x/react-charts/label/#conditional-formatting) for more details.
+:::
+
 ### Hiding values
 
 You can hide the axis value with `hideTooltip` in the `xAxis` props.
-It will remove the header showing the x-axis value from the tooltip.
+It removes the header showing the x-axis value from the tooltip.
 
 ```jsx
 <LineChart
@@ -81,15 +90,113 @@ It will remove the header showing the x-axis value from the tooltip.
 />
 ```
 
+### Overriding content
+
+To override tooltip content, provide a custom component to `slots.tooltip`.
+Some helper are provided, such as:
+
+- `<ChartsTooltipContainer />` which provide a tooltip with built-in open and position management.
+- `useItemTooltip()` which provides all basic information associated to the current item.
+- `useAxesTooltip()` which provides all basic information associated to the current axes.
+
+Here is the basic scheme to follow.
+Examples about helpers are provided in the composition section.
+
+```jsx
+import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
+
+function CustomItemTooltipContent() {
+  const tooltipData = useItemTooltip();
+
+  if (!tooltipData) { // No data to display
+    return null;
+  }
+
+  return <div>{/** Your custom content **/}</div>;
+}
+
+<LineChart
+  slots={{ tooltip: CustomItemTooltip }}
+/>
+
+// With composition
+<ChartContainer>
+  // ...
+  <ChartsTooltipContainer trigger="item">
+    <CustomItemTooltipContent />
+  </ChartsTooltipContainer>
+</ChartContainer>
+```
+
+:::warning
+Do not skip ChartsTooltipContainer rendering if the tooltip has no data to display.
+For example the following code does not work.
+
+```jsx
+if (tooltipData === null) {
+  return null;
+}
+
+return (
+  <ChartsTooltipContainer trigger="item">
+    {/** My content **/}
+  </ChartsTooltipContainer>
+);
+```
+
+The ChartsTooltipContainer must render before the pointer enters the SVG because it uses this event to get the pointer type.
+:::
+
+### Overriding placement
+
+To override tooltip placement, override to the tooltip with `slots.tooltip`.
+If you want to keep the default content, you can place the `ChartsItemTooltipContent` or `ChartsAxisTooltipContent` in your custom tooltip.
+
 ## Composition
 
-If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
+If you're using composition, by default, the axis listens for mouse events to get its current x/y values.
 If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
 
-You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
+You need those listeners if you are using [axes highlight](/x/react-charts/highlighting/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
 
 ```jsx
 <ChartContainer {...} disableAxisListener>
   {/* ... */}
 </ChartContainer>
 ```
+
+### Overriding content
+
+#### Item Tooltip
+
+You can create your own tooltip by using `useItemTooltip()`.
+This hook returns the information about the current item user is interacting with.
+It contains:
+
+- `identifier`: An object that identify the item. Which often contains its series type, series id, and data index.
+- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
+- `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
+
+To follow the mouse position, you can track pointer events on the SVG thanks to `useSvgRef`.
+
+{{"demo": "CustomTooltipContent.js"}}
+
+#### Axis Tooltip
+
+Like in previous section, you can create your own tooltip by using `useAxesTooltip()`.
+This hook returns the information about the current axes user is interacting with and the relevant series.
+For each axis, it contains:
+
+- `identifier`: An object that identify the axis. Which often contains its series type, series id, and data index.
+- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
+- `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
+
+To follow the mouse position, you can track pointer events on the SVG thanks to `useSvgRef`.
+
+{{"demo": "CustomAxisTooltipContent.js"}}
+
+### Tooltip position
+
+This demo show example about how to use additional hooks such as `useXAxis()` or `useDrawingArea()` to customize the tooltip position.
+
+{{"demo": "CustomTooltipPosition.js"}}

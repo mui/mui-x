@@ -1,7 +1,19 @@
 import * as React from 'react';
-import type { BaseFieldProps } from '../internals/models/fields';
-import { PickerValidDate } from './pickers';
+import { TextFieldProps } from '@mui/material/TextField';
+import { FormControlOwnProps } from '@mui/material/FormControl';
+import type { ExportedPickersSectionListProps } from '../PickersSectionList';
+import type { UseFieldInternalProps, UseFieldReturnValue } from '../internals/hooks/useField';
+import type { PickersTextFieldProps } from '../PickersTextField';
+import {
+  BaseSingleInputFieldProps,
+  FieldRangeSection,
+  PickerRangeValue,
+  PickerValidValue,
+} from '../internals/models';
+import { PickerOwnerState } from './pickers';
+import type { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
 
+// Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
   | 'year'
   | 'month'
@@ -14,8 +26,6 @@ export type FieldSectionType =
   | 'empty';
 
 export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
-
-export type FieldValueType = 'date' | 'time' | 'date-time';
 
 export interface FieldSection {
   /**
@@ -67,24 +77,6 @@ export interface FieldSection {
    */
   modified: boolean;
   /**
-   * Start index of the section in the format
-   */
-  start: number;
-  /**
-   * End index of the section in the format
-   */
-  end: number;
-  /**
-   * Start index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  startInInput: number;
-  /**
-   * End index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  endInInput: number;
-  /**
    * Separator displayed before the value of the section in the input.
    * If it contains escaped characters, then it must not have the escaping characters.
    * For example, on Day.js, the `year` section of the format `YYYY [year]` has an end separator equal to `year` not `[year]`
@@ -96,14 +88,28 @@ export interface FieldSection {
    * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
   endSeparator: string;
+  /**
+   * If `true`, the `endSeparator` is a format separator (i.e. ":" or "/").
+   */
+  isEndFormatSeparator?: boolean;
 }
 
-export interface FieldRef<TSection extends FieldSection> {
+// If `PickerValidDate` contains `any`, then `TValue extends PickerRangeValue` will return true, so we have to handle this edge case first.
+type IsAny<T> = boolean extends (T extends never ? true : false) ? true : false;
+
+export type InferFieldSection<TValue extends PickerValidValue> =
+  IsAny<TValue> extends true
+    ? FieldSection
+    : TValue extends PickerRangeValue
+      ? FieldRangeSection
+      : FieldSection;
+
+export interface FieldRef<TValue extends PickerValidValue> {
   /**
    * Returns the sections of the current value.
-   * @returns {TSection[]} The sections of the current value.
+   * @returns {InferFieldSection<TValue>[]} The sections of the current value.
    */
-  getSections: () => TSection[];
+  getSections: () => InferFieldSection<TValue>[];
   /**
    * Returns the index of the active section (the first focused section).
    * If no section is active, returns `null`.
@@ -115,42 +121,131 @@ export interface FieldRef<TSection extends FieldSection> {
    * @param {FieldSelectedSections} selectedSections The sections to select.
    */
   setSelectedSections: (selectedSections: FieldSelectedSections) => void;
+  /**
+   * Focuses the field.
+   * @param {FieldSelectedSections | FieldSectionType} newSelectedSection The section to select once focused.
+   */
+  focusField: (newSelectedSection?: number | FieldSectionType) => void;
+  /**
+   * Returns `true` if the focused is on the field input.
+   * @returns {boolean} `true` if the field is focused.
+   */
+  isFieldFocused: () => boolean;
 }
 
-export type FieldSelectedSections =
-  | number
-  | FieldSectionType
-  | null
-  | 'all'
-  | { startIndex: number; endIndex: number };
+export type FieldSelectedSections = number | FieldSectionType | null | 'all';
+
+export interface FieldOwnerState extends PickerOwnerState {
+  /**
+   * `true` if the field is disabled, `false` otherwise.
+   */
+  isFieldDisabled: boolean;
+  /**
+   * `true` if the field is read-only, `false` otherwise.
+   */
+  isFieldReadOnly: boolean;
+  /**
+   * `true` if the field is required, `false` otherwise.
+   */
+  isFieldRequired: boolean;
+  /**
+   * The direction of the field.
+   * Is equal to "ltr" when the field is in left-to-right direction.
+   * Is equal to "rtl" when the field is in right-to-left direction.
+   */
+  fieldDirection: 'ltr' | 'rtl';
+}
 
 /**
- * Props the single input field can receive when used inside a picker.
- * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
+ * Props the `slotProps.field` of a Picker can receive.
  */
-export interface BaseSingleInputFieldProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TError,
-> extends BaseFieldProps<TValue, TDate, TSection, TError> {
-  label?: React.ReactNode;
-  id?: string;
-  name?: string;
-  inputRef?: React.Ref<HTMLInputElement>;
-  onKeyDown?: React.KeyboardEventHandler;
-  onBlur?: React.FocusEventHandler;
-  focused?: boolean;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
+export type PickerFieldSlotProps<
+  TValue extends PickerValidValue,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = ExportedPickerFieldUIProps &
+  Pick<
+    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
+    'shouldRespectLeadingZeros' | 'readOnly'
+  > &
+  React.HTMLAttributes<HTMLDivElement> & {
+    ref?: React.Ref<HTMLDivElement>;
   };
-  inputProps?: {
-    'aria-label'?: string;
-  };
-  slots?: {};
-  slotProps?: {};
-  clearable?: boolean;
-  onClear?: React.MouseEventHandler;
+
+/**
+ * Props the text field receives when used inside a single input Picker.
+ * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
+ */
+export type BaseSingleInputPickersTextFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = Omit<
+  UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, BaseSingleInputFieldProps>,
+  | 'slots'
+  | 'slotProps'
+  | 'clearable'
+  | 'onClear'
+  | 'openPickerButtonPosition'
+  | 'clearButtonPosition'
+  | 'openPickerAriaLabel'
+>;
+
+/**
+ * Props the built-in text field component can receive.
+ */
+export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  TEnableAccessibleFieldDOMStructure extends false
+    ? Omit<
+        TextFieldProps,
+        | 'autoComplete'
+        | 'error'
+        | 'maxRows'
+        | 'minRows'
+        | 'multiline'
+        | 'placeholder'
+        | 'rows'
+        | 'select'
+        | 'SelectProps'
+        | 'type'
+      >
+    : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
+
+export interface PickerTextFieldOwnerState extends FieldOwnerState {
+  // Should be moved to FieldOwnerState once we drop the textField slot.
+  /**
+   * `true` if the value of the field is currently empty.
+   */
+  isFieldValueEmpty: boolean;
+  // Should be moved to FieldOwnerState once we drop the textField slot.
+  /**
+   * `true` if the field is focused, `false` otherwise.
+   */
+  isFieldFocused: boolean;
+  // Should be moved to FieldOwnerState once we drop the textField slot.
+  /**
+   * `true` if the field has an error, `false` otherwise.
+   */
+  hasFieldError: boolean;
+  /**
+   * The size of the input.
+   */
+  inputSize: Exclude<FormControlOwnProps['size'], undefined>;
+  /**
+   * The color of the input.
+   */
+  inputColor: Exclude<FormControlOwnProps['color'], undefined>;
+  /**
+   * `true` if the input takes up the full width of its container.
+   */
+  isInputInFullWidth: boolean;
+  /**
+   * `true` if the input has a start adornment, `false` otherwise.
+   */
+  hasStartAdornment: boolean;
+  /**
+   * `true` if the input has an end adornment, `false` otherwise.
+   */
+  hasEndAdornment: boolean;
+  /**
+   * `true` if the input has a label, `false` otherwise.
+   */
+  inputHasLabel: boolean;
 }

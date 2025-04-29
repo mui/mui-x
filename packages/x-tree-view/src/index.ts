@@ -1,8 +1,17 @@
-export * from './TreeItem';
-export * from './TreeView';
+// Tree View
 export * from './SimpleTreeView';
 export * from './RichTreeView';
+
+// Tree Item
+export * from './TreeItem';
+export * from './useTreeItem';
+export * from './TreeItemIcon';
+export * from './TreeItemProvider';
+export * from './TreeItemDragAndDropOverlay';
+export * from './TreeItemLabelInput';
+
 export { unstable_resetCleanupTracking } from './internals/hooks/useInstanceEventHandler';
 
 export * from './models';
 export * from './icons';
+export * from './hooks';

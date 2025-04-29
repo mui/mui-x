@@ -2,21 +2,24 @@
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "defaultValue": { "type": { "name": "object" } },
-    "disabled": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
     },
     "onChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] }
+      "signature": {
+        "type": "function(value: PickerValidDate) => void",
+        "describedArgs": ["value"]
+      }
     },
-    "readOnly": { "type": { "name": "bool" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
       "type": { "name": "object" },
       "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`."
@@ -24,10 +27,16 @@
     "shouldDisableMonth": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(month: TDate) => boolean",
+        "type": "function(month: PickerValidDate) => boolean",
         "describedArgs": ["month"],
         "returned": "boolean"
       }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
     },
     "sx": {
       "type": {
@@ -52,12 +61,38 @@
     "import { MonthCalendar } from '@mui/x-date-pickers';",
     "import { MonthCalendar } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [
+    {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the `month` view.",
+      "default": "MonthCalendarButton",
+      "class": null
+    }
+  ],
   "classes": [
+    {
+      "key": "button",
+      "className": "MuiMonthCalendar-button",
+      "description": "Styles applied to the button element that represents a single month",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "Styles applied to a disabled button element.",
+      "isGlobal": true
+    },
     {
       "key": "root",
       "className": "MuiMonthCalendar-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "Styles applied to a selected button element.",
+      "isGlobal": true
     }
   ],
   "spread": true,
@@ -66,6 +101,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
   "cssComponent": false
 }

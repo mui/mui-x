@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXReferenceLine';
 import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
-import { XOR } from '../internals/utils';
+import { XOR } from '../internals/ts-generic';
 
 type ChartsReferenceLineProps<TValue extends string | number | Date = string | number | Date> = XOR<
   ChartsXReferenceLineProps<TValue>,
@@ -12,15 +13,11 @@ type ChartsReferenceLineProps<TValue extends string | number | Date = string | n
 function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   const { x, y } = props;
   if (x !== undefined && y !== undefined) {
-    throw new Error(
-      'MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set.',
-    );
+    throw new Error('MUI X: The ChartsReferenceLine cannot have both `x` and `y` props set.');
   }
 
   if (x === undefined && y === undefined) {
-    throw new Error(
-      'MUI X Charts: The ChartsReferenceLine should have a value in `x` or `y` prop.',
-    );
+    throw new Error('MUI X: The ChartsReferenceLine should have a value in `x` or `y` prop.');
   }
 
   if (x !== undefined) {
@@ -32,7 +29,7 @@ function ChartsReferenceLine(props: ChartsReferenceLineProps) {
 ChartsReferenceLine.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The id of the axis used for the reference value.
@@ -61,7 +58,7 @@ ChartsReferenceLine.propTypes = {
    */
   lineStyle: PropTypes.object,
   /**
-   * Additional space arround the label in px.
+   * Additional space around the label in px.
    * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
    * @default 5
    */

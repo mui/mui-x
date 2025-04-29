@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'меридием',
 };
 
-const ruRUPickers: Partial<PickersLocaleText<any>> = {
+const ruRUPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
@@ -26,26 +26,28 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Начало',
   end: 'Конец',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Начальная дата',
+  startTime: 'Начальное время',
+  endDate: 'Конечная дата',
+  endTime: 'Конечное время',
 
   // Action bar
   cancelButtonLabel: 'Отмена',
   clearButtonLabel: 'Очистить',
   okButtonLabel: 'Ок',
   todayButtonLabel: 'Сегодня',
+  nextStepButtonLabel: 'Следующий',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Выбрать дату',
   dateTimePickerToolbarTitle: 'Выбрать дату и время',
   timePickerToolbarTitle: 'Выбрать время',
   dateRangePickerToolbarTitle: 'Выбрать период',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Выбрать ${timeViews[view]}. ${time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Выбрать ${timeViews[view]}. ${!formattedTime ? 'Время не выбрано' : `Выбрано время ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -59,15 +61,12 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Неделя ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Выберите дату, выбрана дата ${utils.format(value, 'fullDate')}`
-      : 'Выберите дату',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Выберите время, выбрано время ${utils.format(value, 'fullTime')}`
-      : 'Выберите время',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Выберите дату, выбрана дата ${formattedDate}` : 'Выберите дату',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Выберите время, выбрано время ${formattedTime}` : 'Выберите время',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Очистить значение',
 
   // Table labels
@@ -78,11 +77,24 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
   fieldDayPlaceholder: () => 'ДД',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'ДДДД' : 'ДД'),
   fieldHoursPlaceholder: () => 'чч',
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
   fieldMeridiemPlaceholder: () => '(д|п)п',
+
+  // View names
+  year: 'Год',
+  month: 'Месяц',
+  day: 'День',
+  weekDay: 'День недели',
+  hours: 'Часы',
+  minutes: 'Минуты',
+  seconds: 'Секунды',
+  meridiem: 'Меридием',
+
+  // Common
+  empty: 'Пустой',
 };
 
 export const ruRU = getPickersLocalization(ruRUPickers);

@@ -29,6 +29,7 @@ const formatTokenMap: FieldFormatTokenMap = {
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
+  // eslint-disable-next-line id-denylist
   e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   d: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   dd: { sectionType: 'weekDay', contentType: 'letter' },
@@ -59,6 +60,7 @@ const defaultFormats: AdapterFormats = {
   month: 'MMMM',
   monthShort: 'MMM',
   dayOfMonth: 'D',
+  dayOfMonthFull: 'Do',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -73,11 +75,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
 };
@@ -119,7 +119,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
+export class AdapterMoment implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -192,21 +192,21 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, Moment> => {
-    type R = DateBuilderReturnType<T, Moment>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
     if (timezone === 'UTC') {
-      return <R>this.createUTCDate(value);
+      return this.createUTCDate(value) as unknown as R;
     }
 
     if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
-      return <R>this.createSystemDate(value);
+      return this.createSystemDate(value) as unknown as R;
     }
 
-    return <R>this.createTZDate(value, timezone);
+    return this.createTZDate(value, timezone) as unknown as R;
   };
 
   public getInvalidDate = () => this.moment(new Date('Invalid Date'));
@@ -246,7 +246,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     const cleanZone =
       timezone === 'default'
         ? // @ts-ignore
-          this.moment.defaultZone?.name ?? 'system'
+          (this.moment.defaultZone?.name ?? 'system')
         : timezone;
 
     if (cleanZone === 'system') {
@@ -302,7 +302,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
       .join('');
   };
 
-  public isValid = (value: Moment | null) => {
+  public isValid = (value: Moment | null): value is Moment => {
     if (value == null) {
       return false;
     }
@@ -389,7 +389,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public startOfWeek = (value: Moment) => {
-    return value.clone().startOf('week');
+    return this.setLocaleToValue(value.clone()).startOf('week');
   };
 
   public startOfDay = (value: Moment) => {
@@ -405,7 +405,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public endOfWeek = (value: Moment) => {
-    return value.clone().endOf('week');
+    return this.setLocaleToValue(value.clone()).endOf('week');
   };
 
   public endOfDay = (value: Moment) => {
@@ -515,12 +515,12 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = this.startOfWeek(this.startOfMonth(cleanValue));
-    const end = this.endOfWeek(this.endOfMonth(cleanValue));
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;
+    let currentDayOfYear = current.get('dayOfYear');
     const nestedWeeks: Moment[][] = [];
 
     while (current.isBefore(end)) {
@@ -528,7 +528,17 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
 
+      const prevDayOfYear = currentDayOfYear;
       current = this.addDays(current, 1);
+      currentDayOfYear = current.get('dayOfYear');
+
+      // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
+      // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
+      // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
+      if (prevDayOfYear === currentDayOfYear) {
+        current = current.add(12, 'h').startOf('day');
+      }
+
       count += 1;
     }
 
@@ -537,6 +547,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public getWeekNumber = (value: Moment) => {
     return value.week();
+  };
+
+  public getDayOfWeek = (value: Moment) => {
+    return value.day() + 1;
   };
 
   public getYearRange([start, end]: [Moment, Moment]) {

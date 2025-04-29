@@ -1,0 +1,8 @@
+<DataGridPro
+  rows={rows}
+  columns={columns}
+  rowHeight={64}
+  listView
+  listViewColumn={listViewColDef}
+  sx={{ backgroundColor: 'background.paper' }}
+/>

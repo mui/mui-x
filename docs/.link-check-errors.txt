@@ -1,2 +1,3 @@
-Broken links found by `yarn docs:link-check` that exist:
+Broken links found by `docs:link-check` that exist:
 
+- https://mui.com/x/react-data-grid/row-grouping/#disable-the-row-grouping

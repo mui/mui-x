@@ -1,10 +1,13 @@
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
+import { RefObject } from '@mui/x-internals/types';
+import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
+  getRow,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -57,9 +60,9 @@ const baselineProps: DataGridProProps = {
 };
 
 describe('<DataGridPro /> - Tree data', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -118,7 +121,7 @@ describe('<DataGridPro /> - Tree data', () => {
         'B.B.A.A',
         'C',
       ]);
-      act(() => apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]));
+      act(() => apiRef.current?.updateRows([{ name: 'A.A', _action: 'delete' }]));
       expect(getColumnValues(0)).to.deep.equal([
         'A',
         'A.B',
@@ -169,10 +172,10 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should keep children expansion when changing some of the rows', () => {
       render(<Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
-      act(() => apiRef.current.setRowChildrenExpansion('A', true));
-      clock.runToLast();
+      act(() => apiRef.current?.setRowChildrenExpansion('A', true));
+
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
-      act(() => apiRef.current.updateRows([{ name: 'B' }]));
+      act(() => apiRef.current?.updateRows([{ name: 'B' }]));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);
     });
   });
@@ -214,7 +217,7 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
       setProps({
         getTreeDataPath: (row) => [...row.name.split('.').reverse()],
-      } as DataGridProProps);
+      } as Pick<DataGridProProps, 'getTreeDataPath'>);
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',
@@ -272,7 +275,7 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
       const { setProps } = render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      act(() => apiRef.current.setRowChildrenExpansion('B', true));
+      act(() => apiRef.current?.setRowChildrenExpansion('B', true));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'B.A', 'B.B', 'C']);
       setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'B.B', 'B.A', 'A']);
@@ -284,8 +287,8 @@ describe('<DataGridPro /> - Tree data', () => {
       const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'A');
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
-      expect(isGroupExpandedByDefault.callCount).to.equal(8); // Should not be called on leaves
-      const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current.state.rows
+      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
+      const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current?.state.rows
         .tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()
@@ -398,7 +401,7 @@ describe('<DataGridPro /> - Tree data', () => {
     it('should toggle expansion when pressing Space while focusing grouping column', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      userEvent.mousePress(getCell(0, 0));
+      fireUserEvent.mousePress(getCell(0, 0));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.keyDown(getCell(0, 0), { key: ' ' });
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
@@ -415,11 +418,11 @@ describe('<DataGridPro /> - Tree data', () => {
       render(<Test groupingColDef={{ width: 200 }} />);
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
       act(() =>
-        apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]),
+        apiRef.current?.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]),
       );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       act(() =>
-        apiRef.current.updateColumns([
+        apiRef.current?.updateColumns([
           {
             field: 'name',
             headerName: 'New name',
@@ -442,6 +445,7 @@ describe('<DataGridPro /> - Tree data', () => {
         />
       );
     }
+
     it('should respect the pageSize for the top level rows when toggling children expansion', () => {
       render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
@@ -590,6 +594,47 @@ describe('<DataGridPro /> - Tree data', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['B (1)', 'D', 'D (1)', 'A']);
     });
+
+    it('should keep the correct count of the children and descendants in the filter state', () => {
+      render(
+        <Test
+          rows={[
+            { name: 'A' },
+            { name: 'A.A' },
+            { name: 'A.B' },
+            { name: 'A.B.A' },
+            { name: 'A.B.B' },
+            { name: 'A.C' },
+            { name: 'B' },
+            { name: 'B.A' },
+            { name: 'B.B' },
+            { name: 'B.C' },
+            { name: 'C' },
+          ]}
+          filterModel={{ items: [], quickFilterValues: ['A'] }}
+          defaultGroupingExpansionDepth={3}
+        />,
+      );
+
+      const { filteredChildrenCountLookup, filteredDescendantCountLookup } =
+        apiRef.current!.state.filter;
+
+      expect(filteredChildrenCountLookup.A).to.equal(3);
+      expect(filteredDescendantCountLookup.A).to.equal(5);
+
+      expect(filteredChildrenCountLookup.B).to.equal(1);
+      expect(filteredDescendantCountLookup.B).to.equal(1);
+
+      expect(filteredChildrenCountLookup.C).to.equal(undefined);
+      expect(filteredDescendantCountLookup.C).to.equal(undefined);
+
+      act(() => {
+        apiRef.current?.updateRows([{ name: 'A.D' }]);
+      });
+
+      expect(apiRef.current?.state.filter.filteredChildrenCountLookup.A).to.equal(4);
+      expect(apiRef.current?.state.filter.filteredDescendantCountLookup.A).to.equal(6);
+    });
   });
 
   describe('sorting', () => {
@@ -721,6 +766,67 @@ describe('<DataGridPro /> - Tree data', () => {
         'A.B',
         'A.A',
       ]);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should add necessary treegrid aria attributes to the rows', () => {
+      render(<Test defaultGroupingExpansionDepth={-1} />);
+
+      expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // A
+      expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // A.A
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('2');
+      expect(getRow(2).getAttribute('aria-level')).to.equal('2'); // A.B
+      expect(getRow(4).getAttribute('aria-posinset')).to.equal('1'); // B.A
+    });
+
+    it('should adjust treegrid aria attributes after filtering', () => {
+      render(
+        <Test
+          defaultGroupingExpansionDepth={-1}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: ['B'],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // A
+      expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // A.B
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('1'); // A.A is filtered out, set size is now 1
+      expect(getRow(2).getAttribute('aria-level')).to.equal('1'); // B
+      expect(getRow(3).getAttribute('aria-posinset')).to.equal('1'); // B.A
+      expect(getRow(3).getAttribute('aria-setsize')).to.equal('2'); // B.A & B.B
+    });
+
+    it('should not add the set specific aria attributes to pinned rows', () => {
+      render(
+        <Test
+          defaultGroupingExpansionDepth={-1}
+          pinnedRows={{
+            top: [
+              {
+                name: 'Pin',
+              },
+            ],
+          }}
+        />,
+      );
+
+      expect(getRow(0).getAttribute('aria-rowindex')).to.equal('2'); // header row is 1
+      expect(getRow(0).getAttribute('aria-level')).to.equal(null);
+      expect(getRow(0).getAttribute('aria-posinset')).to.equal(null);
+      expect(getRow(0).getAttribute('aria-setsize')).to.equal(null);
+      expect(getRow(1).getAttribute('aria-rowindex')).to.equal('3');
+      expect(getRow(1).getAttribute('aria-level')).to.equal('1'); // A
+      expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
+      expect(getRow(1).getAttribute('aria-setsize')).to.equal('3'); // A, B, C
     });
   });
 

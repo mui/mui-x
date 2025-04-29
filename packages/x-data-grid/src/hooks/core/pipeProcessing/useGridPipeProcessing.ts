@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridPipeProcessingApi,
@@ -8,12 +9,17 @@ import {
 } from './gridPipeProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
-interface GridPipeGroupCache {
-  processors: Map<string, GridPipeProcessor<any> | null>;
+type Cache = {
+  [G in GridPipeProcessorGroup]?: GroupCache;
+};
+
+type GroupCache = {
+  processors: Map<string, GridPipeProcessor<any>>;
+  processorsAsArray: GridPipeProcessor<any>[];
   appliers: {
     [applierId: string]: () => void;
   };
-}
+};
 
 /**
  * Implement the Pipeline Pattern
@@ -44,13 +50,11 @@ interface GridPipeGroupCache {
  *   * a processor is registered.
  *   * `apiRef.current.requestPipeProcessorsApplication` is called for the given group.
  */
-export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
-  const processorsCache = React.useRef<{
-    [G in GridPipeProcessorGroup]?: GridPipeGroupCache;
-  }>({});
+export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) => {
+  const cache = React.useRef<Cache>({});
 
   const isRunning = React.useRef(false);
-  const runAppliers = React.useCallback((groupCache: GridPipeGroupCache | undefined) => {
+  const runAppliers = React.useCallback((groupCache: GroupCache | undefined) => {
     if (isRunning.current || !groupCache) {
       return;
     }
@@ -65,22 +69,27 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
     GridPipeProcessingPrivateApi['registerPipeProcessor']
   >(
     (group, id, processor) => {
-      if (!processorsCache.current[group]) {
-        processorsCache.current[group] = {
+      if (!cache.current[group]) {
+        cache.current[group] = {
           processors: new Map(),
+          processorsAsArray: [],
           appliers: {},
         };
       }
 
-      const groupCache = processorsCache.current[group]!;
+      const groupCache = cache.current[group]!;
       const oldProcessor = groupCache.processors.get(id);
       if (oldProcessor !== processor) {
         groupCache.processors.set(id, processor);
+        groupCache.processorsAsArray = Array.from(cache.current[group]!.processors.values());
         runAppliers(groupCache);
       }
 
       return () => {
-        processorsCache.current[group]!.processors.set(id, null);
+        cache.current[group]!.processors.delete(id);
+        cache.current[group]!.processorsAsArray = Array.from(
+          cache.current[group]!.processors.values(),
+        );
       };
     },
     [runAppliers],
@@ -89,19 +98,19 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
   const registerPipeApplier = React.useCallback<
     GridPipeProcessingPrivateApi['registerPipeApplier']
   >((group, id, applier) => {
-    if (!processorsCache.current[group]) {
-      processorsCache.current[group] = {
+    if (!cache.current[group]) {
+      cache.current[group] = {
         processors: new Map(),
+        processorsAsArray: [],
         appliers: {},
       };
     }
 
-    processorsCache.current[group]!.appliers[id] = applier;
+    cache.current[group]!.appliers[id] = applier;
 
     return () => {
-      const { [id]: removedGroupApplier, ...otherAppliers } =
-        processorsCache.current[group]!.appliers;
-      processorsCache.current[group]!.appliers = otherAppliers;
+      const { [id]: removedGroupApplier, ...otherAppliers } = cache.current[group]!.appliers;
+      cache.current[group]!.appliers = otherAppliers;
     };
   }, []);
 
@@ -109,8 +118,7 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
     GridPipeProcessingPrivateApi['requestPipeProcessorsApplication']
   >(
     (group) => {
-      const groupCache = processorsCache.current[group];
-      runAppliers(groupCache);
+      runAppliers(cache.current[group]);
     },
     [runAppliers],
   );
@@ -119,18 +127,16 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
     GridPipeProcessingApi['unstable_applyPipeProcessors']
   >((...args) => {
     const [group, value, context] = args as [GridPipeProcessorGroup, any, any];
-    if (!processorsCache.current[group]) {
+    if (!cache.current[group]) {
       return value;
     }
 
-    const preProcessors = Array.from(processorsCache.current[group]!.processors.values());
-    return preProcessors.reduce((acc, preProcessor) => {
-      if (!preProcessor) {
-        return acc;
-      }
-
-      return preProcessor(acc, context);
-    }, value);
+    const processors = cache.current[group]!.processorsAsArray;
+    let result = value;
+    for (let i = 0; i < processors.length; i += 1) {
+      result = processors[i](result, context);
+    }
+    return result;
   }, []);
 
   const preProcessingPrivateApi: GridPipeProcessingPrivateApi = {

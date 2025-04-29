@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, act, fireEvent } from '@mui-internal/test-utils';
-import { FieldRef, FieldSection, FieldSectionType } from '@mui/x-date-pickers/models';
-import { expectInputValue } from './assertions';
+import { expect } from 'chai';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
+import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';
+import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
+import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
+import { PickerValue } from '@mui/x-date-pickers/internals';
+import { fireUserEvent } from '../fireUserEvent';
+import { expectFieldValueV7, expectFieldValueV6 } from './assertions';
+
+export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 
 interface BuildFieldInteractionsParams<P extends {}> {
-  // TODO: Export `Clock` from monorepo
-  clock: ReturnType<typeof createRenderer>['clock'];
   render: ReturnType<typeof createRenderer>['render'];
   Component: React.FunctionComponent<P>;
 }
@@ -15,20 +21,56 @@ export type FieldSectionSelector = (
   index?: 'first' | 'last',
 ) => void;
 
+export type FieldSectionSelectorAsync = (
+  selectedSection: FieldSectionType | undefined,
+  index?: 'first' | 'last',
+) => Promise<void>;
+
+export type FieldPressCharacter = (
+  sectionIndex: number | undefined | null,
+  character: string,
+) => void;
+
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
-    props: P,
-    hook?: (props: P) => Record<string, any>,
-    componentFamily?: 'picker' | 'field',
+    props: P & { enableAccessibleFieldDOMStructure: boolean },
+    config?: {
+      hook?: (props: P) => Record<string, any>;
+      componentFamily?: 'picker' | 'field';
+      direction?: 'rtl' | 'ltr';
+    },
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
-    input: HTMLInputElement;
+    /**
+     * @deprecated use `selectSectionAsync` instead.
+     */
     selectSection: FieldSectionSelector;
+    /**
+     * Helper that simplifies selecting a section of the date field.
+     * @param {FieldSectionType | undefined} selectedSection The requested section to select.
+     * @param {'first' | 'last'} index The index of the section to select.
+     */
+    selectSectionAsync: FieldSectionSelectorAsync;
+    getSectionsContainer: () => HTMLDivElement;
+    /**
+     * Returns the contentEditable DOM node of the requested section.
+     * @param {number} sectionIndex The index of the requested section.
+     * @returns {HTMLSpanElement} The contentEditable DOM node of the requested section.
+     */
+    getSection: (sectionIndex: number) => HTMLSpanElement;
+    /**
+     * Returns the contentEditable DOM node of the active section.
+     * @param {number | undefined} sectionIndex If defined, asserts that the active section is the expected one.
+     * @returns {HTMLSpanElement} The contentEditable DOM node of the active section.
+     */
+    getActiveSection: (sectionIndex: number | undefined) => HTMLSpanElement;
+    /**
+     * Press a character on the active section.
+     * @param {number | undefined | null} sectionIndex If null presses on the fieldContainer, otherwise if defined asserts that the active section is the expected one
+     * @param {string} character The character to press.
+     */
+    pressKey: FieldPressCharacter;
+    getHiddenInput: () => HTMLInputElement;
   };
-  clickOnInput: (
-    input: HTMLInputElement,
-    cursorStartPosition: number,
-    cursorEndPosition?: number,
-  ) => void;
   testFieldKeyPress: (
     params: P & {
       key: string;
@@ -40,48 +82,31 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     params: P & {
       keyStrokes: { value: string; expected: string }[];
       selectedSection?: FieldSectionType;
+      skipV7?: boolean;
     },
   ) => void;
 }
 
+const RTL_THEME = createTheme({
+  direction: 'rtl',
+});
+
 export const buildFieldInteractions = <P extends {}>({
-  clock,
   render,
   Component,
 }: BuildFieldInteractionsParams<P>): BuildFieldInteractionsResponse<P> => {
-  const clickOnInput: BuildFieldInteractionsResponse<P>['clickOnInput'] = (
-    input,
-    cursorStartPosition,
-    cursorEndPosition = cursorStartPosition,
-  ) => {
-    if (document.activeElement !== input) {
-      act(() => {
-        input.focus();
-      });
-      clock.runToLast();
-    }
-    act(() => {
-      fireEvent.mouseDown(input);
-      fireEvent.mouseUp(input);
-      input.setSelectionRange(cursorStartPosition, cursorEndPosition);
-      fireEvent.click(input);
-
-      clock.runToLast();
-    });
-  };
-
   const renderWithProps: BuildFieldInteractionsResponse<P>['renderWithProps'] = (
     props,
-    hook,
-    componentFamily = 'field',
+    { hook, componentFamily = 'field', direction = 'ltr' } = {},
   ) => {
-    let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
+    let fieldRef: React.RefObject<FieldRef<PickerValue> | null> = { current: null };
 
-    function WrappedComponent() {
-      fieldRef = React.useRef<FieldRef<FieldSection>>(null);
-      const hookResult = hook?.(props);
+    function WrappedComponent(propsFromRender: any) {
+      fieldRef = React.useRef<FieldRef<PickerValue>>(null);
+      const hookResult = hook?.(propsFromRender);
+
       const allProps = {
-        ...props,
+        ...propsFromRender,
         ...hookResult,
       } as any;
 
@@ -99,7 +124,7 @@ export const buildFieldInteractions = <P extends {}>({
         const hasMultipleInputs =
           // @ts-ignore
           Component.render.name.includes('Range') &&
-          allProps.slots?.field?.fieldType !== 'single-input';
+          allProps.slots?.field?.fieldType === 'multi-input';
         if (hasMultipleInputs) {
           allProps.slotProps.field.unstableStartFieldRef = fieldRef;
         } else {
@@ -107,37 +132,140 @@ export const buildFieldInteractions = <P extends {}>({
         }
       }
 
+      if (direction === 'rtl') {
+        return (
+          <ThemeProvider theme={RTL_THEME}>
+            <Component {...(allProps as P)} />
+          </ThemeProvider>
+        );
+      }
+
       return <Component {...(allProps as P)} />;
     }
 
-    const result = render(<WrappedComponent />);
+    const result = render(<WrappedComponent {...(props as any)} />);
 
-    const input = screen.queryAllByRole<HTMLInputElement>('textbox')[0];
-
-    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
-      if (document.activeElement !== input) {
-        // focus input to trigger setting placeholder as value if no value is present
-        act(() => {
-          input.focus();
-        });
-        // make sure the value of the input is rendered before proceeding
-        clock.runToLast();
+    const getSectionsContainer = () => {
+      if (!props.enableAccessibleFieldDOMStructure) {
+        throw new Error('Cannot use fake input with v6 TextField');
       }
 
-      let clickPosition: number;
-      if (selectedSection) {
-        const sections = fieldRef.current!.getSections();
-        const cleanSections = index === 'first' ? sections : [...sections].reverse();
-        const sectionToSelect = cleanSections.find((section) => section.type === selectedSection);
-        clickPosition = sectionToSelect!.startInInput;
-      } else {
-        clickPosition = 1;
-      }
-
-      clickOnInput(input, clickPosition);
+      return document.querySelector<HTMLDivElement>(`.${pickersSectionListClasses.root}`)!;
     };
 
-    return { input, selectSection, ...result };
+    const getHiddenInput = () => {
+      return document.querySelector('input')!;
+    };
+
+    const getSection = (sectionIndex: number) =>
+      getSectionsContainer().querySelector<HTMLSpanElement>(
+        `.${pickersSectionListClasses.section}[data-sectionindex="${sectionIndex}"] .${pickersSectionListClasses.sectionContent}`,
+      )!;
+
+    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
+      let sectionIndexToSelect: number;
+      if (selectedSection === undefined) {
+        sectionIndexToSelect = 0;
+      } else {
+        const sections = fieldRef.current!.getSections();
+        sectionIndexToSelect = sections[index === 'first' ? 'findIndex' : 'findLastIndex'](
+          (section) => section.type === selectedSection,
+        );
+      }
+
+      act(() => {
+        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
+        if (!props.enableAccessibleFieldDOMStructure) {
+          getTextbox().focus();
+        }
+      });
+
+      act(() => {
+        if (props.enableAccessibleFieldDOMStructure) {
+          getSection(sectionIndexToSelect).focus();
+        }
+      });
+    };
+
+    const selectSectionAsync: FieldSectionSelectorAsync = async (
+      selectedSection,
+      index = 'first',
+    ) => {
+      let sectionIndexToSelect: number;
+      if (selectedSection === undefined) {
+        sectionIndexToSelect = 0;
+      } else {
+        const sections = fieldRef.current!.getSections();
+        sectionIndexToSelect = sections[index === 'first' ? 'findIndex' : 'findLastIndex'](
+          (section) => section.type === selectedSection,
+        );
+      }
+
+      await act(async () => {
+        fieldRef.current!.setSelectedSections(sectionIndexToSelect);
+        if (!props.enableAccessibleFieldDOMStructure) {
+          getTextbox().focus();
+        }
+      });
+
+      await act(async () => {
+        if (props.enableAccessibleFieldDOMStructure) {
+          getSection(sectionIndexToSelect).focus();
+        }
+      });
+    };
+
+    const getActiveSection = (sectionIndex: number | undefined) => {
+      const activeElement = document.activeElement! as HTMLSpanElement;
+
+      if (sectionIndex !== undefined) {
+        const activeSectionIndex = activeElement.parentElement!.dataset.sectionindex;
+        expect(activeSectionIndex).to.equal(
+          sectionIndex.toString(),
+          `The active section should be ${sectionIndex.toString()} instead of ${activeSectionIndex}`,
+        );
+      }
+
+      return activeElement;
+    };
+
+    const pressKey: FieldPressCharacter = (sectionIndex, key) => {
+      if (!props.enableAccessibleFieldDOMStructure) {
+        throw new Error('`pressKey` is only available with v7 TextField');
+      }
+
+      const target =
+        sectionIndex === null ? getSectionsContainer() : getActiveSection(sectionIndex);
+
+      if (
+        [
+          'ArrowUp',
+          'ArrowDown',
+          'PageUp',
+          'PageDown',
+          'Home',
+          'End',
+          'Delete',
+          'ArrowLeft',
+          'ArrowRight',
+        ].includes(key)
+      ) {
+        fireUserEvent.keyPress(target, { key });
+      } else {
+        fireEvent.input(target, { target: { textContent: key } });
+      }
+    };
+
+    return {
+      selectSection,
+      selectSectionAsync,
+      getActiveSection,
+      getSection,
+      pressKey,
+      getHiddenInput,
+      getSectionsContainer,
+      ...result,
+    };
   };
 
   const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
@@ -146,11 +274,26 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    const { input, selectSection } = renderWithProps(props as any as P);
-    selectSection(selectedSection);
+    // Test with accessible DOM structure
+    const v7Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: true,
+    } as any);
+    v7Response.selectSection(selectedSection);
+    v7Response.pressKey(undefined, key);
+    expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
+    v7Response.unmount();
 
-    userEvent.keyPress(input, { key });
-    expectInputValue(input, expectedValue);
+    // Test with non-accessible DOM structure
+    const v6Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: false,
+    } as any);
+    v6Response.selectSection(selectedSection);
+    const input = getTextbox();
+    fireUserEvent.keyPress(input, { key });
+    expectFieldValueV6(input, expectedValue);
+    v6Response.unmount();
   };
 
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
@@ -158,24 +301,47 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    const { input, selectSection } = renderWithProps(props as any as P);
-    selectSection(selectedSection);
+    // Test with accessible DOM structure
+    const v7Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: true,
+    } as any);
+    v7Response.selectSection(selectedSection);
+    keyStrokes.forEach((keyStroke) => {
+      v7Response.pressKey(undefined, keyStroke.value);
+      expectFieldValueV7(
+        v7Response.getSectionsContainer(),
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
+    });
+    v7Response.unmount();
+
+    // Test with non-accessible DOM structure
+    const v6Response = renderWithProps({
+      ...props,
+      enableAccessibleFieldDOMStructure: false,
+    } as any);
+    v6Response.selectSection(selectedSection);
+    const input = getTextbox();
 
     keyStrokes.forEach((keyStroke) => {
       fireEvent.change(input, { target: { value: keyStroke.value } });
-      expectInputValue(
+      expectFieldValueV6(
         input,
         keyStroke.expected,
         (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
       );
     });
+    v6Response.unmount();
   };
 
-  return { clickOnInput, testFieldKeyPress, testFieldChange, renderWithProps };
+  return { testFieldKeyPress, testFieldChange, renderWithProps };
 };
 
 export const cleanText = (text: string, specialCase?: 'singleDigit' | 'RTL') => {
-  const clean = text.replace(/\u202f/g, ' ');
+  let clean = text.replace(/\u202f/g, ' ');
+  clean = text.replace(/\u200b/g, '');
   switch (specialCase) {
     case 'singleDigit':
       return clean.replace(/\u200e/g, '');
@@ -186,7 +352,28 @@ export const cleanText = (text: string, specialCase?: 'singleDigit' | 'RTL') => 
   }
 };
 
-export const getCleanedSelectedContent = (input: HTMLInputElement) =>
-  cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
+export const getCleanedSelectedContent = () => {
+  // In JSDOM env, document.getSelection() does not work on inputs.
+  if (document.activeElement?.tagName === 'INPUT') {
+    const input = document.activeElement as HTMLInputElement;
+    return cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
+  }
 
-export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
+  return cleanText(document.getSelection()?.toString() ?? '');
+};
+
+export const setValueOnFieldInput = (value: string, index = 0) => {
+  const hiddenInput = document.querySelectorAll<HTMLDivElement>(
+    `.${pickersInputBaseClasses.input}`,
+  )[index];
+
+  fireEvent.change(hiddenInput, { target: { value } });
+};
+
+export const getAllFieldInputRoot = () =>
+  document.querySelectorAll<HTMLDivElement>(`.${pickersInputBaseClasses.root}`);
+
+export const getFieldInputRoot = (index = 0) => getAllFieldInputRoot()[index];
+
+export const getFieldSectionsContainer = (index = 0) =>
+  document.querySelectorAll<HTMLDivElement>(`.${pickersSectionListClasses.root}`)[index];

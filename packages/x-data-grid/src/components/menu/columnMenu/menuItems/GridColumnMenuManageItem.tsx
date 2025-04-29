@@ -1,8 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
@@ -26,19 +23,19 @@ function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <MenuItem onClick={showColumns}>
-      <ListItemIcon>
-        <rootProps.slots.columnMenuManageColumnsIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('columnMenuManageColumns')}</ListItemText>
-    </MenuItem>
+    <rootProps.slots.baseMenuItem
+      onClick={showColumns}
+      iconStart={<rootProps.slots.columnMenuManageColumnsIcon fontSize="small" />}
+    >
+      {apiRef.current.getLocaleText('columnMenuManageColumns')}
+    </rootProps.slots.baseMenuItem>
   );
 }
 
 GridColumnMenuManageItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,

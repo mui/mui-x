@@ -1,13 +1,19 @@
-import * as React from 'react';
+'use client';
 import PropTypes from 'prop-types';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
-import { MarkElement, MarkElementProps } from './MarkElement';
-import { getValueToPositionMapper } from '../hooks/useScale';
+import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
+import { useChartId } from '../hooks/useChartId';
+import { getValueToPositionMapper } from '../hooks/useScale';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import { cleanId } from '../internals/cleanId';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { DrawingContext } from '../context/DrawingProvider';
-import { cleanId } from '../internals/utils';
+import { CircleMarkElement } from './CircleMarkElement';
+import getColor from './seriesConfig/getColor';
+import { MarkElement, MarkElementProps } from './MarkElement';
+import { useChartContext } from '../context/ChartProvider';
+import { useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -52,19 +58,21 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
-  const { chartId } = React.useContext(DrawingContext);
+  const seriesData = useLineSeriesContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
-  const Mark = slots?.mark ?? MarkElement;
+  const chartId = useChartId();
+  const { instance } = useChartContext();
 
   if (seriesData === undefined) {
     return null;
   }
   const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
@@ -73,45 +81,37 @@ function MarkPlot(props: MarkPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.map((seriesId) => {
           const {
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             showMark = true,
+            shape = 'circle',
           } = series[seriesId];
 
           if (showMark === false) {
             return null;
           }
 
-          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-          const yScale = yAxis[yAxisKey].scale;
-          const xData = xAxis[xAxisKey].data;
-
-          const xRange = xAxis[xAxisKey].scale.range();
-          const yRange = yScale.range();
-
-          const isInRange = ({ x, y }: { x: number; y: number }) => {
-            if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
-              return false;
-            }
-            if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
-              return false;
-            }
-            return true;
-          };
+          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+          const yScale = yAxis[yAxisId].scale;
+          const xData = xAxis[xAxisId].data;
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X Charts: ${
-                xAxisKey === DEFAULT_X_AXIS_KEY
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisKey}"`
+                  : `The x-axis with id "${xAxisId}"`
               } should have data property to be able to display a line plot.`,
             );
           }
 
           const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
+
+          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
+
+          const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
           return (
             <g key={seriesId} clipPath={`url(#${clipId})`}>
@@ -131,7 +131,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!isInRange({ x, y })) {
+                  if (!instance.isPointInside({ x, y })) {
                     // Remove out of range
                     return false;
                   }
@@ -152,11 +152,10 @@ function MarkPlot(props: MarkPlotProps) {
                       key={`${seriesId}-${index}`}
                       id={seriesId}
                       dataIndex={index}
-                      shape="circle"
-                      color={series[seriesId].color}
+                      shape={shape}
+                      color={colorGetter(index)}
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
-                      highlightScope={series[seriesId].highlightScope}
                       skipAnimation={skipAnimation}
                       onClick={
                         onItemClick &&
@@ -178,7 +177,7 @@ function MarkPlot(props: MarkPlotProps) {
 MarkPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line mark item is clicked.
@@ -188,7 +187,6 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
    */
   skipAnimation: PropTypes.bool,
   /**

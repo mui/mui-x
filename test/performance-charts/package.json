@@ -1,0 +1,28 @@
+{
+  "name": "@mui-x-internal/performance-charts",
+  "version": "7.8.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:performance": "vitest bench",
+    "build": "pnpm --filter=\"@mui/x-charts-pro...\" build",
+    "test:performance:browser": "vitest bench --browser"
+  },
+  "devDependencies": {
+    "@codspeed/vitest-plugin": "^4.0.1",
+    "@emotion/react": "^11.14.0",
+    "@mui/x-charts": "workspace:*",
+    "@mui/x-charts-pro": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^4.4.1",
+    "@vitejs/plugin-react-swc": "^3.9.0",
+    "@vitest/browser": "3.1.2",
+    "@vitest/ui": "3.1.2",
+    "jsdom": "^26.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vitest": "3.1.2"
+  }
+}

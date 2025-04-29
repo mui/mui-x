@@ -2,9 +2,11 @@
 <Box sx={{ height: 400, width: '100%' }}>
   <DataGrid
     {...data}
+    loading={loading}
     apiRef={apiRef}
     pagination
     paginationModel={paginationModel}
     onPaginationModelChange={setPaginationModel}
+    pageSizeOptions={[10, 25, 50, 100]}
   />
 </Box>

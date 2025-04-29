@@ -6,10 +6,10 @@ const views: Record<TimeViewWithMeridiem, string> = {
   hours: '小时',
   minutes: '分钟',
   seconds: '秒',
-  meridiem: '子午线',
+  meridiem: '十二小时制',
 };
 
-const zhCNPickers: Partial<PickersLocaleText<any>> = {
+const zhCNPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: '上个月',
   nextMonth: '下个月',
@@ -23,26 +23,28 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: '开始',
   end: '结束',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: '开始日期',
+  startTime: '开始时间',
+  endDate: '结束日期',
+  endTime: '结束时间',
 
   // Action bar
   cancelButtonLabel: '取消',
   clearButtonLabel: '清除',
   okButtonLabel: '确认',
   todayButtonLabel: '今天',
+  nextStepButtonLabel: '下个',
 
   // Toolbar titles
   datePickerToolbarTitle: '选择日期',
   dateTimePickerToolbarTitle: '选择日期和时间',
   timePickerToolbarTitle: '选择时间',
-  dateRangePickerToolbarTitle: '选择时间范围',
+  dateRangePickerToolbarTitle: '选择日期范围',
+  timeRangePickerToolbarTitle: '选择时间范围',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `选择 ${views[view]}. ${time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `选择 ${views[view]}. ${!formattedTime ? '未选择时间' : `已选择${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
@@ -56,16 +58,14 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}周`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `选择日期，已选择${utils.format(value, 'fullDate')}`
-      : '选择日期',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `选择时间，已选择${utils.format(value, 'fullTime')}`
-      : '选择时间',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `选择日期，已选择${formattedDate}` : '选择日期',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `选择时间，已选择${formattedTime}` : '选择时间',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `选择范围，已选范围是 ${formattedRange}` : '选择范围',
+  fieldClearLabel: '清除',
 
   // Table labels
   timeTableLabel: '选择时间',
@@ -80,6 +80,19 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: '年份',
+  month: '月份',
+  day: '日期',
+  weekDay: '星期',
+  hours: '时',
+  minutes: '分',
+  seconds: '秒',
+  meridiem: '十二小时制',
+
+  // Common
+  empty: '空',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);

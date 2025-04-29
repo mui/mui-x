@@ -1,9 +1,9 @@
 / /x/introduction/ 301
 /x/ https://mui.com/x/ 302
 # Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-/x/_next/* /_next/:splat
+/x/_next/* /_next/:splat 200
 
-# For links that we can't edit later on, e.g. hosted in the code published on npm or sent by email
+# For links that we can't edit later on, for example hosted in the code published on npm or sent by email
 
 # should all be prefixed with x-
 
@@ -19,9 +19,11 @@
 /r/x-pro-svg-link https://mui.com/x/introduction/licensing/#pro-plan 302
 /r/x-premium-svg https://mui.com/static/x/premium.svg 302
 /r/x-premium-svg-link https://mui.com/x/introduction/licensing/#premium-plan 302
+/r/x-telemetry-postinstall-troubleshoot https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cbug+%F0%9F%90%9B&projects=&template=1.bug.yml&title=MUI+X+Telemetry+failed+to+make+initialization 302
 
 # Legacy redirection
-
+# Added in chronological order (the last line is the most recent one)
+# To be removed 3+ years after being introduced
 # 2021
 /fr/* /:splat 200
 /de/* /:splat 200
@@ -52,10 +54,19 @@
 /x/api/date-pickers/calendar-picker-skeleton/ /x/api/date-pickers/day-calendar-skeleton/ 301
 /x/api/date-pickers/month-picker/ /x/api/date-pickers/month-calendar/ 301
 /x/api/date-pickers/year-picker/ /x/api/date-pickers/year-calendar/ 301
-/x/react-data-grid/editing-legacy/ https://https://v5.mui.com/x/react-data-grid/editing-legacy/ 301
+/x/react-data-grid/editing-legacy/ https://v5.mui.com/x/react-data-grid/editing-legacy/ 301
 /x/api/date-pickers/desktop-next-date-picker/ /x/api/date-pickers/desktop-date-picker/ 301
 /x/api/date-pickers/next-date-picker/ /x/api/date-pickers/date-picker/ 301
 /x/react-date-pickers/calendar/ /x/react-date-pickers/date-calendar/ 301
 /x/react-date-pickers/legacy-date-time-picker/ /x/react-date-pickers/date-time-picker/ 301
+# 2024
+/x/react-charts/heat-map/ /x/react-charts/heatmap/ 301
+/x/react-charts/tree-map/ /x/react-charts/treemap/ 301
+# 2025
+/x/react-charts/getting-started/ /x/react-charts/quickstart/ 301
+/x/react-data-grid/getting-started/ /x/react-data-grid/quickstart/ 301
+/x/react-date-pickers/getting-started/ /x/react-date-pickers/quickstart/ 301
+/x/react-tree-view/getting-started/ /x/react-tree-view/quickstart/ 301
+/x/react-data-grid/demo/ /x/react-data-grid/features/ 301
 
 # Proxies

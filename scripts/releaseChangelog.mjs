@@ -1,22 +1,23 @@
 /* eslint-disable no-restricted-syntax */
 import { Octokit } from '@octokit/rest';
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
 
 /**
  * @param {string} commitMessage
- * @returns {string} The tags in lowercases, ordered ascending and commaseparated
+ * @returns {string} The tags in lowercases, ordered ascending and comma-separated
  */
 function parseTags(commitMessage) {
-  const tagMatch = commitMessage.match(/^(\[[\w-]+\])+/);
+  const tagMatch = commitMessage.match(/^(\[[\w- ]+\])+/);
   if (tagMatch === null) {
     return '';
   }
   const [tagsWithBracketDelimiter] = tagMatch;
   return tagsWithBracketDelimiter
-    .match(/([\w-]+)/g)
+    .match(/([\w- ]+)/g)
     .map((tag) => {
       return tag;
     })
@@ -42,8 +43,31 @@ async function findLatestTaggedVersion(octokit) {
   return data[0].name.trim();
 }
 
+function resolvePackagesByLabels(labels) {
+  const resolvedPackages = [];
+  labels.forEach((label) => {
+    switch (label.name) {
+      case 'component: data grid':
+        resolvedPackages.push('DataGrid');
+        break;
+      case 'component: pickers':
+        resolvedPackages.push('pickers');
+        break;
+      case 'component: charts':
+        resolvedPackages.push('charts');
+        break;
+      case 'component: tree view':
+        resolvedPackages.push('TreeView');
+        break;
+      default:
+        break;
+    }
+  });
+  return resolvedPackages;
+}
+
 async function main(argv) {
-  const { githubToken, lastRelease: lastReleaseInput, release } = argv;
+  const { githubToken, lastRelease: lastReleaseInput, release, nextVersion } = argv;
 
   if (!githubToken) {
     throw new TypeError(
@@ -60,7 +84,7 @@ async function main(argv) {
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
-      `Creating changelog for ${latestTaggedVersion}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
+      `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
 
@@ -88,7 +112,13 @@ async function main(argv) {
 
   // Fetch all the pull Request and check if there is a section named changelog
 
-  const changeLogMessages = [];
+  const changeLogMessages = {};
+  const prsLabelsMap = {};
+  const community = {
+    firstTimers: new Set(),
+    contributors: new Set(),
+    team: new Set(),
+  };
   await Promise.all(
     commitsItems.map(async (commitsItem) => {
       const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
@@ -97,25 +127,55 @@ async function main(argv) {
       }
 
       const {
-        data: { body: bodyMessage },
+        data: {
+          body: bodyMessage,
+          labels,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          author_association,
+          user: { login },
+        },
       } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
         owner: GIT_ORGANIZATION,
         repo: GIT_REPO,
         pull_number: Number(searchPullRequestId[1]),
       });
 
+      switch (author_association) {
+        case 'CONTRIBUTOR':
+          community.contributors.add(`@${login}`);
+          break;
+        case 'FIRST_TIMER':
+          community.firstTimers.add(`@${login}`);
+          break;
+        case 'MEMBER':
+          community.team.add(`@${login}`);
+          break;
+        default:
+      }
+
+      prsLabelsMap[commitsItem.sha] = labels;
+
       if (!bodyMessage) {
         return;
       }
 
-      const changelogMotif = '# changelog';
-      const changelogIndex = bodyMessage.toLowerCase().indexOf(changelogMotif);
-      if (changelogIndex >= 0) {
-        changeLogMessages.push(
-          `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${
-            searchPullRequestId[1]
-          }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`,
-        );
+      const changelogMotif = '## changelog';
+      const lowercaseBody = bodyMessage.toLowerCase();
+      // Check if the body contains a line starting with '## changelog'
+      const matchedChangelog = lowercaseBody.matchAll(new RegExp(`^${changelogMotif}`, 'gim'));
+      const changelogMatches = Array.from(matchedChangelog);
+      if (changelogMatches.length > 0) {
+        const prLabels = prsLabelsMap[commitsItem.sha];
+        const resolvedPackage = resolvePackagesByLabels(prLabels)[0];
+        const changelogIndex = changelogMatches[0].index;
+        const message = `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${
+          searchPullRequestId[1]
+        }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`;
+        if (changeLogMessages[resolvedPackage || 'general']) {
+          changeLogMessages[resolvedPackage || 'general'].push(message);
+        } else {
+          changeLogMessages[resolvedPackage || 'general'] = [message];
+        }
       }
     }),
   );
@@ -136,7 +196,9 @@ async function main(argv) {
   const pickersCommits = [];
   const pickersProCommits = [];
   const chartsCommits = [];
+  const chartsProCommits = [];
   const treeViewCommits = [];
+  const treeViewProCommits = [];
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -144,10 +206,11 @@ async function main(argv) {
 
   commitsItems.forEach((commitItem) => {
     const tag = parseTags(commitItem.commit.message);
-    switch (tag) {
+    // for now we use only one parsed tag
+    const firstTag = tag.split(',')[0];
+    switch (firstTag) {
       case 'DataGrid':
-      case 'l10n':
-      case '118n':
+      case 'data grid':
         dataGridCommits.push(commitItem);
         break;
       case 'DataGridPro':
@@ -164,13 +227,25 @@ async function main(argv) {
         pickersCommits.push(commitItem);
         break;
       case 'DateRangePicker':
+      case 'DateTimeRangePicker':
+      case 'TimeRangePicker':
         pickersProCommits.push(commitItem);
+        break;
+      case 'charts-pro':
+        chartsProCommits.push(commitItem);
         break;
       case 'charts':
         chartsCommits.push(commitItem);
         break;
       case 'TreeView':
+      case 'RichTreeView':
+      case 'tree view':
+      case 'TreeItem':
         treeViewCommits.push(commitItem);
+        break;
+      case 'RichTreeViewPro':
+      case 'tree view pro':
+        treeViewProCommits.push(commitItem);
         break;
       case 'docs':
         docsCommits.push(commitItem);
@@ -181,6 +256,27 @@ async function main(argv) {
       case 'codemod':
         codemodCommits.push(commitItem);
         break;
+      case 'l10n':
+      case '118n': {
+        const prLabels = prsLabelsMap[commitItem.sha];
+        const resolvedPackages = resolvePackagesByLabels(prLabels);
+        if (resolvedPackages.length > 0) {
+          resolvedPackages.forEach((resolvedPackage) => {
+            switch (resolvedPackage) {
+              case 'DataGrid':
+                dataGridCommits.push(commitItem);
+                break;
+              case 'pickers':
+                pickersCommits.push(commitItem);
+                break;
+              default:
+                coreCommits.push(commitItem);
+                break;
+            }
+          });
+        }
+        break;
+      }
       default:
         otherCommits.push(commitItem);
         break;
@@ -209,11 +305,39 @@ async function main(argv) {
       .join('\n')}`;
   };
 
+  const logChangelogMessages = (product) => {
+    if (!changeLogMessages[product]?.length) {
+      return '';
+    }
+    return `${changeLogMessages[product].length > 0 ? '\n' : ''}${changeLogMessages[product].join('\n\n')}`;
+  };
+
   const nowFormatted = new Date().toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   });
+
+  const logCommunitySection = () => {
+    // TODO: separate first timers and regular contributors
+    const contributors = [
+      ...Array.from(community.contributors),
+      ...Array.from(community.firstTimers),
+    ].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+    if (contributors.length === 0) {
+      return '';
+    }
+
+    return `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}.`;
+  };
+
+  const logTeamSection = () => {
+    return `Following are all team members who have contributed to this release:\n${Array.from(
+      community.team,
+    )
+      .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+      .join(', ')}.`;
+  };
 
   const changelog = `
 ## __VERSION__
@@ -225,47 +349,61 @@ We'd like to offer a big thanks to the ${
   } contributors who made this release possible. Here are some highlights ✨:
 
 TODO INSERT HIGHLIGHTS
-${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
+${logChangelogMessages('general')}
+${logCommunitySection()}
+${logTeamSection()}
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
-
+${logChangelogMessages('DataGrid')}
 #### \`@mui/x-data-grid@__VERSION__\`
 
-${logChangelogSection(dataGridCommits)}
+${logChangelogSection(dataGridCommits) || 'Internal changes.'}
 
 #### \`@mui/x-data-grid-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-data-grid@__VERSION__\`${
     dataGridProCommits.length > 0 ? ', plus:\n' : '.'
   }
-${logChangelogSection(dataGridProCommits)}
-
+${logChangelogSection(dataGridProCommits)}${dataGridProCommits.length > 0 ? '\n' : ''}
 #### \`@mui/x-data-grid-premium@__VERSION__\` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
     dataGridPremiumCommits.length > 0 ? ', plus:\n' : '.'
   }
 ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 0 ? '\n' : ''}
-### Date Pickers
-
+### Date and Time Pickers
+${logChangelogMessages('pickers')}
 #### \`@mui/x-date-pickers@__VERSION__\`
 
-${logChangelogSection(pickersCommits)}
+${logChangelogSection(pickersCommits) || 'Internal changes.'}
 
 #### \`@mui/x-date-pickers-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
     pickersProCommits.length > 0 ? ', plus:\n' : '.'
   }
-${logChangelogSection(pickersProCommits)}
+${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' : ''}
+### Charts
+${logChangelogMessages('charts')}
+#### \`@mui/x-charts@__VERSION__\`
 
-### Charts / \`@mui/x-charts@__VERSION__\`
+${logChangelogSection(chartsCommits) || 'Internal changes.'}
 
-${logChangelogSection(chartsCommits)}
+#### \`@mui/x-charts-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-### Tree View / \`@mui/x-tree-view@__VERSION__\`
+Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
+${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
+### Tree View
+${logChangelogMessages('TreeView')}
+#### \`@mui/x-tree-view@__VERSION__\` 
+${logChangelogSection(treeViewProCommits) || 'Internal changes.'}
 
-${logChangelogSection(treeViewCommits)}
+#### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in \`@mui/x-tree-view@__VERSION__\`${treeViewProCommits.length > 0 ? ', plus:\n' : '.'}
+${logChangelogSection(treeViewProCommits)}${treeViewProCommits.length > 0 ? '\n' : ''}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
@@ -274,10 +412,10 @@ ${logChangelogSection(otherCommits, '')}
 `;
 
   // eslint-disable-next-line no-console -- output of this script
-  console.log(changelog);
+  console.log(nextVersion ? changelog.replace(/__VERSION__/g, nextVersion) : changelog);
 }
 
-yargs(process.argv.slice(2))
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'Creates a changelog',
@@ -296,8 +434,14 @@ yargs(process.argv.slice(2))
         })
         .option('release', {
           // #default-branch-switch
-          default: 'next',
+          // to be done when we branch off v8.x
+          default: 'master',
           describe: 'Ref which we want to release',
+          type: 'string',
+        })
+        .option('nextVersion', {
+          describe:
+            'The version expected to be released e.g. `5.2.0`. Replaces `__VERSION__` placeholder in the changelog.',
           type: 'string',
         });
     },

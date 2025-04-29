@@ -5,23 +5,30 @@
     "direction": {
       "description": "The direction of the legend layout. The default depends on the chart."
     },
-    "hidden": { "description": "Set to true to hide the legend." },
+    "onItemClick": {
+      "description": "Callback fired when a legend item is clicked.",
+      "typeDescriptions": {
+        "event": "The click event.",
+        "legendItem": "The legend item data.",
+        "index": "The index of the clicked legend item."
+      }
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
   "classDescriptions": {
-    "column": {
+    "horizontal": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with column layout"
+      "nodeName": "the legend in row layout"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
     "root": { "description": "Styles applied to the root element." },
-    "row": {
+    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" },
+    "vertical": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the legend with row layout"
-    },
-    "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" }
+      "nodeName": "the legend in column layout"
+    }
   },
   "slotDescriptions": { "legend": "Custom rendering of the legend." }
 }

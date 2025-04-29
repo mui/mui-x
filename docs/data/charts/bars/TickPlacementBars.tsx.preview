@@ -1,0 +1,11 @@
+<TickParamsSelector
+  tickPlacement={tickPlacement}
+  tickLabelPlacement={tickLabelPlacement}
+  setTickPlacement={setTickPlacement}
+  setTickLabelPlacement={setTickLabelPlacement}
+/>
+<BarChart
+  dataset={dataset}
+  xAxis={[{ dataKey: 'month', tickPlacement, tickLabelPlacement }]}
+  {...chartSetting}
+/>

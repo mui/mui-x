@@ -1,6 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import clsx from 'clsx';
 import { GaugeContainer, GaugeContainerProps } from './GaugeContainer';
 import { GaugeValueArc } from './GaugeValueArc';
 import { GaugeReferenceArc } from './GaugeReferenceArc';
@@ -25,23 +27,24 @@ const useUtilityClasses = (props: GaugeProps) => {
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
 
-function Gauge(props: GaugeProps) {
-  const { text, children, classes: propsClasses, ...other } = props;
+const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<SVGSVGElement>) {
+  const { text, children, classes: propsClasses, className, skipAnimation, ...other } = props;
   const classes = useUtilityClasses(props);
+
   return (
-    <GaugeContainer {...other} className={classes.root}>
+    <GaugeContainer {...other} className={clsx(classes.root, className)} ref={ref}>
       <GaugeReferenceArc className={classes.referenceArc} />
-      <GaugeValueArc className={classes.valueArc} />
+      <GaugeValueArc className={classes.valueArc} skipAnimation={skipAnimation} />
       <GaugeValueText className={classes.valueText} text={text} />
       {children}
     </GaugeContainer>
   );
-}
+});
 
 Gauge.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   classes: PropTypes.object,
@@ -66,12 +69,6 @@ Gauge.propTypes = {
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   desc: PropTypes.string,
   /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
-  /**
    * The end angle (deg).
    * @default 360
    */
@@ -81,7 +78,12 @@ Gauge.propTypes = {
    */
   height: PropTypes.number,
   /**
-   * The radius between circle center and the begining of the arc.
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default '80%'
@@ -90,15 +92,18 @@ Gauge.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The radius between circle center and the end of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
@@ -106,6 +111,11 @@ Gauge.propTypes = {
    * @default '100%'
    */
   outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The start angle (deg).
    * @default 0
@@ -133,12 +143,6 @@ Gauge.propTypes = {
    * @default 0
    */
   valueMin: PropTypes.number,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

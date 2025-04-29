@@ -1,4 +1,3 @@
-import { zhCN as zhCNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '没有数据。',
   noResultsOverlayLabel: '未找到数据。',
+  noColumnsOverlayLabel: '没有列',
+  noColumnsOverlayManageColumns: '管理列',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -37,10 +39,18 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '打印',
   toolbarExportExcel: '导出至Excel',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: '搜索',
+  columnsManagementNoColumns: '没有列',
+  columnsManagementShowHideAllText: '显示/隐藏所有',
+  columnsManagementReset: '重置',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
@@ -56,7 +66,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
+  filterOperatorDoesNotContain: '不包含',
   filterOperatorEquals: '等于',
+  filterOperatorDoesNotEqual: '不等于',
   filterOperatorStartsWith: '开始于',
   filterOperatorEndsWith: '结束于',
   filterOperatorIs: '是',
@@ -77,7 +89,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
+  headerFilterOperatorDoesNotContain: '不包含',
   headerFilterOperatorEquals: '等于',
+  headerFilterOperatorDoesNotEqual: '不等于',
   headerFilterOperatorStartsWith: '开始于',
   headerFilterOperatorEndsWith: '结束于',
   headerFilterOperatorIs: '是',
@@ -93,8 +107,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
   'headerFilterOperator!=': '不等于',
   'headerFilterOperator>': '大于',
   'headerFilterOperator>=': '大于或等于',
-  'headerFilterOperator<': '小雨',
+  'headerFilterOperator<': '小于',
   'headerFilterOperator<=': '小于或等于',
+  headerFilterClear: '清除筛选',
 
   // Filter values text
   filterValueAny: '任何',
@@ -103,6 +118,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '菜单',
+  columnMenuAriaLabel: (columnName: string) => `${columnName} 列菜单`,
   columnMenuShowColumns: '显示',
   columnMenuManageColumns: '管理列',
   columnMenuFilter: '筛选器',
@@ -110,6 +126,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: '恢复默认',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -161,6 +178,28 @@ const zhCNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '显示',
   collapseDetailPanel: '折叠',
 
+  // Pagination
+  paginationRowsPerPage: '每页行数:',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} 共 ${count !== -1 ? count : `超过 ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `约 ${estimated}` : `超过 ${to}`;
+    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '第一页';
+    }
+    if (type === 'last') {
+      return '最后一页';
+    }
+    if (type === 'next') {
+      return '下一页';
+    }
+    return '上一页';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '重新排列行',
 
@@ -171,6 +210,83 @@ const zhCNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: '最小',
   aggregationFunctionLabelMax: '最大',
   aggregationFunctionLabelSize: '大小',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: '提示词输入',
+  promptFieldPlaceholder: '输入提示词',
+  promptFieldPlaceholderWithRecording: '输入或录制提示词',
+  promptFieldPlaceholderListening: '正在录音…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: '发送',
+  promptFieldRecord: '录音',
+  promptFieldStopRecording: '停止录音',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
-export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);
+export const zhCN: Localization = getGridLocalization(zhCNGrid);

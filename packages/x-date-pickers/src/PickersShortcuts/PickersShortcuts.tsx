@@ -1,48 +1,55 @@
+'use client';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidValue } from '../internals/models';
+import { useIsValidValue, usePickerActionsContext } from '../hooks';
+import { PickerChangeImportance } from '../models/pickers';
 
-interface PickersShortcutsItemGetValueParams<TValue> {
+interface PickersShortcutsItemGetValueParams<TValue extends PickerValidValue> {
   isValid: (value: TValue) => boolean;
 }
 
-export interface PickersShortcutsItem<TValue> {
+export interface PickersShortcutsItem<TValue extends PickerValidValue> {
   label: string;
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
+  /**
+   * Identifier of the shortcut.
+   * If provided, it will be used as the key of the shortcut.
+   */
+  id?: string;
 }
 
-export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
+export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<PickerValidValue>, 'getValue'>;
 
-export type PickerShortcutChangeImportance = 'set' | 'accept';
-
-export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
+export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
+  extends Omit<ListProps, 'onChange'> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
-   * @default `[]`
+   * @default []
    */
   items?: PickersShortcutsItem<TValue>[];
   /**
    * Importance of the change when picking a shortcut:
-   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
-   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * - "accept": fires `onChange`, fires `onAccept` and closes the Picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the Picker.
    * @default "accept"
    */
-  changeImportance?: PickerShortcutChangeImportance;
+  changeImportance?: PickerChangeImportance;
 }
 
-export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
-  isLandscape: boolean;
-  onChange: (
-    newValue: TValue,
-    changeImportance: PickerShortcutChangeImportance,
-    shortcut: PickersShortcutsItemContext,
-  ) => void;
-  isValid: (value: TValue) => boolean;
-}
+export interface PickersShortcutsProps<TValue extends PickerValidValue>
+  extends ExportedPickersShortcutProps<TValue> {}
+
+const PickersShortcutsRoot = styled(List, {
+  name: 'MuiPickersLayout',
+  slot: 'Shortcuts',
+})({});
 
 /**
  * Demos:
@@ -53,27 +60,31 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
  *
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
-function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
+function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcutsProps<TValue>) {
+  const { items, changeImportance = 'accept', ...other } = props;
+
+  const { setValue } = usePickerActionsContext<TValue>();
+  const isValidValue = useIsValidValue<TValue>();
 
   if (items == null || items.length === 0) {
     return null;
   }
 
   const resolvedItems = items.map(({ getValue, ...item }) => {
-    const newValue = getValue({ isValid });
+    const newValue = getValue({ isValid: isValidValue });
 
     return {
+      ...item,
       label: item.label,
       onClick: () => {
-        onChange(newValue, changeImportance, item);
+        setValue(newValue, { changeImportance, shortcut: item });
       },
-      disabled: !isValid(newValue),
+      disabled: !isValidValue(newValue),
     };
   });
 
   return (
-    <List
+    <PickersShortcutsRoot
       dense
       sx={[
         {
@@ -87,24 +98,24 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     >
       {resolvedItems.map((item) => {
         return (
-          <ListItem key={item.label}>
+          <ListItem key={item.id ?? item.label}>
             <Chip {...item} />
           </ListItem>
         );
       })}
-    </List>
+    </PickersShortcutsRoot>
   );
 }
 
 PickersShortcuts.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Importance of the change when picking a shortcut:
-   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
-   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * - "accept": fires `onChange`, fires `onAccept` and closes the Picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the Picker.
    * @default "accept"
    */
   changeImportance: PropTypes.oneOf(['accept', 'set']),
@@ -122,20 +133,18 @@ PickersShortcuts.propTypes = {
    * @default false
    */
   disablePadding: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  isValid: PropTypes.func.isRequired,
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
-   * @default `[]`
+   * @default []
    */
   items: PropTypes.arrayOf(
     PropTypes.shape({
       getValue: PropTypes.func.isRequired,
+      id: PropTypes.string,
       label: PropTypes.string.isRequired,
     }),
   ),
-  onChange: PropTypes.func.isRequired,
   style: PropTypes.object,
   /**
    * The content of the subheader, normally `ListSubheader`.

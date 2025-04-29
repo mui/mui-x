@@ -1,0 +1,10 @@
+<DataGrid
+  {...data}
+  loading
+  slotProps={{
+    loadingOverlay: {
+      variant: 'skeleton',
+      noRowsVariant: 'skeleton',
+    },
+  }}
+/>

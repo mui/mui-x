@@ -15,22 +15,21 @@ module.exports = {
       '@mui/x-date-pickers': path.resolve(__dirname, './packages/x-date-pickers/src'),
       '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
       '@mui/x-charts': path.resolve(__dirname, './packages/x-charts/src'),
+      '@mui/x-charts-pro': path.resolve(__dirname, './packages/x-charts-pro/src'),
+      '@mui/x-charts-vendor': path.resolve(__dirname, './packages/x-charts-vendor'),
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
+      '@mui/x-tree-view-pro': path.resolve(__dirname, './packages/x-tree-view-pro/src'),
       '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
-      '@mui/markdown': path.resolve(__dirname, './node_modules/@mui/monorepo/packages/markdown'),
+      '@mui/x-telemetry': path.resolve(__dirname, './packages/x-telemetry/src'),
+      '@mui/x-internals': path.resolve(__dirname, './packages/x-internals/src'),
       '@mui/material-nextjs': path.resolve(
         __dirname,
         './node_modules/@mui/monorepo/packages/mui-material-nextjs/src',
       ),
-
-      '@mui-internal/test-utils': path.resolve(
-        __dirname,
-        './node_modules/@mui/monorepo/packages/test-utils/src',
-      ),
       docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },
-    extensions: ['.js', '.ts', '.tsx', '.d.ts'],
+    extensions: ['.js', '.mjs', '.ts', '.tsx', '.d.ts'],
   },
   output: {
     path: path.join(__dirname, 'build'),
@@ -41,23 +40,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules\/(?!@mui)/,
+        test: /\.(js|mjs|ts|tsx)$/,
+        exclude: /node_modules\/.*\/node_modules\/(?!@mui)/,
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
-        },
-      },
-      {
-        test: /\.md$/,
-        loader: 'raw-loader',
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        loader: 'string-replace-loader',
-        options: {
-          search: '__RELEASE_INFO__',
-          replace: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
         },
       },
     ],

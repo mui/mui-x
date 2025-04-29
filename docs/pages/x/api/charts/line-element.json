@@ -11,7 +11,8 @@
   "name": "LineElement",
   "imports": [
     "import { LineElement } from '@mui/x-charts/LineChart';",
-    "import { LineElement } from '@mui/x-charts';"
+    "import { LineElement } from '@mui/x-charts';",
+    "import { LineElement } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {
@@ -31,13 +32,19 @@
     {
       "key": "highlighted",
       "className": "MuiLineElement-highlighted",
-      "description": "Styles applied to the root element when higlighted.",
+      "description": "Styles applied to the root element when highlighted.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiLineElement-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiLineElement-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

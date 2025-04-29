@@ -1,0 +1,6 @@
+<RichTreeView
+  items={MUI_X_PRODUCTS}
+  slots={{ item: CustomTreeItem }}
+  isItemEditable
+  defaultExpandedItems={['grid', 'pickers']}
+/>

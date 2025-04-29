@@ -1,0 +1,29 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "type": { "description": "" },
+    "color": { "description": "" },
+    "data": { "description": "" },
+    "datasetKeys": {
+      "description": "The keys used to retrieve data from the dataset.<br /><br />When this prop is provided, all of <code>x</code>, <code>y</code>, and <code>id</code> must be provided.<br />While <code>z</code> is optional."
+    },
+    "disableHover": {
+      "description": "If true, the interaction will not use element hover for this series."
+    },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "" },
+    "label": {
+      "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
+    },
+    "markerSize": { "description": "" },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "xAxisId": { "description": "The id of the x-axis used to render the series." },
+    "yAxisId": { "description": "The id of the y-axis used to render the series." },
+    "zAxisId": { "description": "The id of the z-axis used to render the series." }
+  }
+}

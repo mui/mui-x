@@ -1,8 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars } from '../constants/cssVariables';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -32,22 +34,21 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridSelectedRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'SelectedRowCount',
-  overridesResolver: (props, styles) => styles.selectedRowCount,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   alignItems: 'center',
   display: 'flex',
-  margin: theme.spacing(0, 2),
+  margin: vars.spacing(0, 2),
   visibility: 'hidden',
   width: 0,
   height: 0,
-  [theme.breakpoints.up('sm')]: {
+  [vars.breakpoints.up('sm')]: {
     visibility: 'visible',
     width: 'auto',
     height: 'auto',
   },
-}));
+});
 
-const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
+const GridSelectedRowCount = forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
     const apiRef = useGridApiContext();
@@ -57,10 +58,10 @@ const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCou
 
     return (
       <GridSelectedRowCountRoot
-        ref={ref}
         className={clsx(classes.root, className)}
         ownerState={ownerState}
         {...other}
+        ref={ref}
       >
         {rowSelectedText}
       </GridSelectedRowCountRoot>
@@ -71,7 +72,7 @@ const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCou
 GridSelectedRowCount.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   selectedRowCount: PropTypes.number.isRequired,
   sx: PropTypes.oneOfType([

@@ -74,7 +74,7 @@ export default function LazyLoadingGrid() {
     async (params) => {
       const { slice, total } = await fetchRow(params);
 
-      apiRef.current.unstable_replaceRows(params.firstRowToRender, slice);
+      apiRef.current?.unstable_replaceRows(params.firstRowToRender, slice);
       setRowCount(total);
     },
     [apiRef, fetchRow],
@@ -97,9 +97,6 @@ export default function LazyLoadingGrid() {
         filterMode="server"
         rowsLoadingMode="server"
         onFetchRows={debouncedHandleFetchRows}
-        experimentalFeatures={{
-          lazyLoading: true,
-        }}
       />
     </div>
   );

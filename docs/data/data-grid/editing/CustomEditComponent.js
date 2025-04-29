@@ -58,6 +58,7 @@ const columns = [
   {
     field: 'rating',
     headerName: 'Rating',
+    display: 'flex',
     renderCell: renderRating,
     renderEditCell: renderRatingEditInputCell,
     editable: true,

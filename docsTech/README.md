@@ -2,8 +2,8 @@
 
 <h1 align="center">MUI X DataGrid overview</h1>
 
-Welcome in the documentation for contributors. If you want to use DataGrid components for your project, the [documentation for developers](https://mui.com/x/react-data-grid/getting-started/) is more appropriate.
-Here we will discuss how the code is structured, to simplify codebase navigation, and onboard new contributors.
+Welcome to the documentation for contributors. If you want to use Data Grid components for your project, the [documentation for developers](https://mui.com/x/react-data-grid/) is more appropriate.
+Here we discuss how the code is structured to simplify codebase navigation and onboard new contributors.
 
 ## Where is the code?
 
@@ -13,14 +13,14 @@ Since `@mui/x-data-grid-pro` is an extension of `@mui/x-data-grid`, it imports a
 
 In each package, the most used folders are:
 
-- `components` which contains all the React components. These files are responsible for displaying the data grid and listening for user interactions.
+- `components` which contains all the React components. These files are responsible for displaying the Data Grid and listening for user interactions.
 - `hooks` which contains all the logic of the DataGrid.
   - `hooks/core` defines logics for developers: initialization of the grid, error handling, translations, ...
   - `hooks/utils` defines logics for contributors: manipulating the state, managing events, ...
   - `hooks/features` defines logics for end-users: selection, filtering, editing, ...
 - `DataGrid[Pro|Premium]/useDataGrid[Pro|Premium]Component.tsx` is the file in which all the hooks are added to the grid
 - `colDef` contains the default values for each [column type](https://mui.com/x/react-data-grid/column-definition/#column-types): rendering cell, filter operators, sorting method, ...
-- `models` define the TypeScript interfaces of the gird
+- `models` define the TypeScript interfaces of the grid
 
 ## How does it work?
 
@@ -54,7 +54,7 @@ For example, `"cellKeyDown"` is listened by the focus, edit, selection, and navi
 Each of them defines an event handler responsible for modifying their sub-state.
 
 ```js
-useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
 ```
 
 The other interest of events is that developers can listen to them by [subscribing to the event](https://mui.com/x/react-data-grid/events/#subscribing-to-events) or by providing a `on<Event>` prop such as `onEditCellPropsChange`.

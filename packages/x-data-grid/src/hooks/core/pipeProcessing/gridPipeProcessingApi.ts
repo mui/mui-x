@@ -13,10 +13,15 @@ import {
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
-import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
+import {
+  GridHydrateColumnsValue,
+  GridPinnedColumnPosition,
+} from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
+import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
+import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
@@ -26,19 +31,23 @@ export interface GridPipeProcessingLookup {
     context: GridColDef;
   };
   exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
+  getRowsParams: { value: Partial<GridGetRowsParams> };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
   };
   hydrateRows: {
     value: GridHydrateRowsValue;
   };
-  exportMenu: { value: { component: React.ReactElement; componentName: string }[]; context: any };
+  exportMenu: {
+    value: { component: React.ReactElement<any>; componentName: string }[];
+    context: any;
+  };
   preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
-  rowHeight: { value: Record<string, number>; context: GridRowEntry };
+  rowHeight: { value: HeightEntry; context: GridRowEntry };
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
@@ -57,6 +66,12 @@ export interface GridPipeProcessingLookup {
   canStartEditing: {
     value: boolean;
     context: { event: React.KeyboardEvent; cellParams: GridCellParams; editMode: GridEditMode };
+  };
+  isColumnPinned: { value: GridPinnedColumnPosition | false; context: string };
+  processDataSourceRows: {
+    value: { params: GridGetRowsParams; response: GridGetRowsResponse };
+    // `true` if the row hydration should be re-applied
+    context: boolean;
   };
 }
 

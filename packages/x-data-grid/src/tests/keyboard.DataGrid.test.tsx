@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -10,11 +10,18 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
+import {
+  DataGrid,
+  DataGridProps,
+  GridActionsCellItem,
+  GridColDef,
+  GridColType,
+  GridValueSetter,
+} from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const PAGE_SIZE = 10;
 const ROW_HEIGHT = 52;
@@ -30,7 +37,7 @@ const expectAriaCoordinate = (
 };
 
 describe('<DataGrid /> - Keyboard', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function NavigationTestCaseNoScrollX(
     props: Omit<
@@ -50,7 +57,7 @@ describe('<DataGrid /> - Keyboard', () => {
           columns={transformColSizes(data.columns)}
           initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}
           pageSizeOptions={[PAGE_SIZE]}
-          rowBuffer={PAGE_SIZE}
+          rowBufferPx={PAGE_SIZE * ROW_HEIGHT}
           rowHeight={ROW_HEIGHT}
           columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
@@ -67,7 +74,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to cell below when pressing "ArrowDown" on a cell on the 1st page', () => {
       render(<NavigationTestCaseNoScrollX />);
       const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('9-1');
@@ -78,7 +85,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to cell below when pressing "ArrowDown" on a cell on the 2nd page', () => {
       render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(18, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('18-1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('19-1');
@@ -89,7 +96,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to the cell below when pressing "ArrowDown" on the checkbox selection cell', () => {
       render(<NavigationTestCaseNoScrollX checkboxSelection />);
       const cell = getCell(0, 0);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('0-0');
       fireEvent.keyDown(cell.querySelector('input')!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('1-0');
@@ -100,7 +107,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to the cell above when pressing "ArrowUp" on a cell on the 1st page', () => {
       render(<NavigationTestCaseNoScrollX />);
       const cell = getCell(1, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('1-1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
       expect(getActiveCell()).to.equal('0-1');
@@ -111,7 +118,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to the cell above when pressing "ArrowUp" on a cell on the 2nd page', () => {
       render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(11, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('11-1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
       expect(getActiveCell()).to.equal('10-1');
@@ -122,7 +129,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to the cell right when pressing "ArrowRight" on a cell', () => {
       render(<NavigationTestCaseNoScrollX />);
       const cell = getCell(1, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('1-1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-2');
@@ -133,7 +140,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to the cell right when pressing "ArrowRight" on the checkbox selection cell', () => {
       render(<NavigationTestCaseNoScrollX checkboxSelection />);
       const cell = getCell(1, 0);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('1-0');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-1');
@@ -142,7 +149,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should move to the cell left when pressing "ArrowLeft" on a cell', () => {
       render(<NavigationTestCaseNoScrollX />);
       const cell = getCell(1, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('1-1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
       expect(getActiveCell()).to.equal('1-0');
@@ -150,97 +157,92 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveCell()).to.equal('1-0'); // Already on the 1st cell
     });
 
-    it('should move down by the amount of rows visible on screen when pressing "PageDown"', function test() {
-      if (isJSDOM) {
-        // This test is not relevant if we can't choose the actual height
-        this.skip();
-      }
+    // This test is not relevant if we can't choose the actual height
+    testSkipIf(isJSDOM)(
+      'should move down by the amount of rows visible on screen when pressing "PageDown"',
+      () => {
+        render(<NavigationTestCaseNoScrollX />);
+        const cell = getCell(1, 1);
+        fireUserEvent.mousePress(cell);
+        expect(getActiveCell()).to.equal('1-1');
+        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        expect(getActiveCell()).to.equal(`6-1`);
+        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        expect(getActiveCell()).to.equal(`9-1`);
+      },
+    );
 
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(1, 1);
-      userEvent.mousePress(cell);
-      expect(getActiveCell()).to.equal('1-1');
-      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
-      expect(getActiveCell()).to.equal(`6-1`);
-      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
-      expect(getActiveCell()).to.equal(`9-1`);
-    });
+    // This test is not relevant if we can't choose the actual height
+    testSkipIf(isJSDOM)(
+      'should move down by the amount of rows visible on screen when pressing Space key',
+      () => {
+        render(<NavigationTestCaseNoScrollX />);
+        const cell = getCell(1, 1);
+        fireUserEvent.mousePress(cell);
+        expect(getActiveCell()).to.equal('1-1');
+        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        expect(getActiveCell()).to.equal(`6-1`);
+        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        expect(getActiveCell()).to.equal(`9-1`);
+      },
+    );
 
-    it('should move down by the amount of rows visible on screen when pressing Space key', function test() {
-      if (isJSDOM) {
-        // This test is not relevant if we can't choose the actual height
-        this.skip();
-      }
+    // This test is not relevant if we can't choose the actual height
+    testSkipIf(isJSDOM)(
+      'should move up by the amount of rows visible on screen when pressing "PageUp"',
+      () => {
+        render(<NavigationTestCaseNoScrollX />);
+        const cell = getCell(8, 1);
+        fireUserEvent.mousePress(cell);
+        expect(getActiveCell()).to.equal('8-1');
+        fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+        expect(getActiveCell()).to.equal(`3-1`);
+      },
+    );
 
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(1, 1);
-      userEvent.mousePress(cell);
-      expect(getActiveCell()).to.equal('1-1');
-      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
-      expect(getActiveCell()).to.equal(`6-1`);
-      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
-      expect(getActiveCell()).to.equal(`9-1`);
-    });
+    // This test is not relevant if we can't choose the actual height
+    testSkipIf(isJSDOM)(
+      'should move to the first row before moving to column header when pressing "PageUp"',
+      () => {
+        render(<NavigationTestCaseNoScrollX />);
+        const cell = getCell(3, 1);
+        fireUserEvent.mousePress(cell);
+        expect(getActiveCell()).to.equal('3-1');
 
-    it('should move up by the amount of rows visible on screen when pressing "PageUp"', function test() {
-      if (isJSDOM) {
-        // This test is not relevant if we can't choose the actual height
-        this.skip();
-      }
+        fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+        expect(getActiveCell()).to.equal(`0-1`, 'should focus first row');
 
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
-      expect(getActiveCell()).to.equal('8-1');
-      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-      expect(getActiveCell()).to.equal(`3-1`);
-    });
+        fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+        expect(getActiveCell()).to.equal(null);
+        expect(getActiveColumnHeader()).to.equal(`1`);
+      },
+    );
 
-    it('should move to the first row before moving to column header when pressing "PageUp"', function test() {
-      if (isJSDOM) {
-        // This test is not relevant if we can't choose the actual height
-        this.skip();
-      }
+    // This test is not relevant if we can't choose the actual height
+    testSkipIf(isJSDOM)(
+      'should move to the first row before moving to column header when pressing "PageUp" on page > 0',
+      () => {
+        render(<NavigationTestCaseNoScrollX hideFooter={false} />);
 
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(3, 1);
-      userEvent.mousePress(cell);
-      expect(getActiveCell()).to.equal('3-1');
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 
-      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-      expect(getActiveCell()).to.equal(`0-1`, 'should focus first row');
+        const cell = getCell(13, 1);
+        fireUserEvent.mousePress(cell);
+        expect(getActiveCell()).to.equal('13-1');
 
-      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-      expect(getActiveCell()).to.equal(null);
-      expect(getActiveColumnHeader()).to.equal(`1`);
-    });
+        fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+        expect(getActiveCell()).to.equal(`10-1`, 'should focus first row');
 
-    it('should move to the first row before moving to column header when pressing "PageUp" on page > 0', function test() {
-      if (isJSDOM) {
-        // This test is not relevant if we can't choose the actual height
-        this.skip();
-      }
-
-      render(<NavigationTestCaseNoScrollX hideFooter={false} />);
-
-      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-
-      const cell = getCell(13, 1);
-      userEvent.mousePress(cell);
-      expect(getActiveCell()).to.equal('13-1');
-
-      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-      expect(getActiveCell()).to.equal(`10-1`, 'should focus first row');
-
-      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-      expect(getActiveCell()).to.equal(null);
-      expect(getActiveColumnHeader()).to.equal(`1`);
-    });
+        fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+        expect(getActiveCell()).to.equal(null);
+        expect(getActiveColumnHeader()).to.equal(`1`);
+      },
+    );
 
     it('should navigate to the 1st cell of the current row when pressing "Home"', () => {
       render(<NavigationTestCaseNoScrollX />);
       const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home' });
       expect(getActiveCell()).to.equal('8-0');
@@ -252,17 +254,17 @@ describe('<DataGrid /> - Keyboard', () => {
       render(<NavigationTestCaseNoScrollX />);
 
       const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', ctrlKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', metaKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', shiftKey: true });
       expect(getActiveCell()).to.equal('0-0');
@@ -271,7 +273,7 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should navigate to the last cell of the current row when pressing "End"', () => {
       render(<NavigationTestCaseNoScrollX />);
       const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(cell, { key: 'End' });
       expect(getActiveCell()).to.equal('8-2');
@@ -283,17 +285,17 @@ describe('<DataGrid /> - Keyboard', () => {
       render(<NavigationTestCaseNoScrollX />);
 
       const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'End', ctrlKey: true });
       expect(getActiveCell()).to.equal('9-2');
 
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'End', metaKey: true });
       expect(getActiveCell()).to.equal('9-2');
 
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'End', shiftKey: true });
       expect(getActiveCell()).to.equal('9-2');
@@ -301,39 +303,43 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   describe('column header navigation', () => {
-    it('should scroll horizontally when navigating between column headers with arrows', function test() {
-      if (isJSDOM) {
-        // Need layouting for column virtualization
-        this.skip();
-      }
-      render(
-        <div style={{ width: 60, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} />
-        </div>,
-      );
-      getColumnHeaderCell(0).focus();
-      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollLeft).to.equal(0);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-      expect(virtualScroller.scrollLeft).not.to.equal(0);
-    });
+    // Need layout for column virtualization
+    testSkipIf(isJSDOM)(
+      'should scroll horizontally when navigating between column headers with arrows',
+      () => {
+        render(
+          <div style={{ width: 60, height: 300 }}>
+            <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} />
+          </div>,
+        );
+        getColumnHeaderCell(0).focus();
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        expect(virtualScroller.scrollLeft).to.equal(0);
+        fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+        expect(virtualScroller.scrollLeft).not.to.equal(0);
+      },
+    );
 
-    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
-      if (isJSDOM) {
-        // Need layouting for column virtualization
-        this.skip();
-      }
-      render(
-        <div style={{ width: 60, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} rows={[]} />
-        </div>,
-      );
-      getColumnHeaderCell(0).focus();
-      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollLeft).to.equal(0);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-      expect(virtualScroller.scrollLeft).not.to.equal(0);
-    });
+    // Need layout for column virtualization
+    testSkipIf(isJSDOM)(
+      'should scroll horizontally when navigating between column headers with arrows even if rows are empty',
+      () => {
+        render(
+          <div style={{ width: 60, height: 300 }}>
+            <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} rows={[]} />
+          </div>,
+        );
+        getColumnHeaderCell(0).focus();
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        expect(virtualScroller.scrollLeft).to.equal(0);
+        fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+        expect(virtualScroller.scrollLeft).not.to.equal(0);
+      },
+    );
 
     it('should move to the first row when pressing "ArrowDown" on a column header on the 1st page', () => {
       render(<NavigationTestCaseNoScrollX />);
@@ -371,25 +377,20 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(getActiveColumnHeader()).to.equal('0');
     });
 
-    it('should move down by the amount of rows visible on screen when pressing "PageDown"', function test() {
-      if (isJSDOM) {
-        // This test is not relevant if we can't choose the actual height
-        this.skip();
-      }
+    // This test is not relevant if we can't choose the actual height
+    testSkipIf(isJSDOM)(
+      'should move down by the amount of rows visible on screen when pressing "PageDown"',
+      () => {
+        render(<NavigationTestCaseNoScrollX />);
+        getColumnHeaderCell(1).focus();
+        expect(getActiveColumnHeader()).to.equal('1');
+        fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+        expect(getActiveCell()).to.equal(`5-1`);
+      },
+    );
 
-      render(<NavigationTestCaseNoScrollX />);
-      getColumnHeaderCell(1).focus();
-      expect(getActiveColumnHeader()).to.equal('1');
-      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
-      expect(getActiveCell()).to.equal(`5-1`);
-    });
-
-    it('should move focus when the focus is on a column header button', function test() {
-      if (isJSDOM) {
-        // This test is not relevant if we can't choose the actual height
-        this.skip();
-      }
-
+    // This test is not relevant if we can't choose the actual height
+    testSkipIf(isJSDOM)('should move focus when the focus is on a column header button', () => {
       render(<NavigationTestCaseNoScrollX />);
 
       // get the sort button in column header 1
@@ -397,7 +398,7 @@ describe('<DataGrid /> - Keyboard', () => {
         getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
 
       // Simulate click on this button
-      userEvent.mousePress(columnMenuButton);
+      fireUserEvent.mousePress(columnMenuButton);
       columnMenuButton.focus();
 
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
@@ -427,7 +428,7 @@ describe('<DataGrid /> - Keyboard', () => {
         </div>,
       );
       const input = screen.getByTestId('custom-input');
-      userEvent.mousePress(input);
+      fireUserEvent.mousePress(input);
       input.focus();
 
       // Verify that the event is not prevented during the bubbling.
@@ -478,7 +479,7 @@ describe('<DataGrid /> - Keyboard', () => {
             columns={transformColSizes(data.columns)}
             paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
             pageSizeOptions={[PAGE_SIZE]}
-            rowBuffer={PAGE_SIZE}
+            rowBufferPx={PAGE_SIZE * ROW_HEIGHT}
             rowHeight={ROW_HEIGHT}
             columnHeaderHeight={HEADER_HEIGHT}
             hideFooter
@@ -491,96 +492,104 @@ describe('<DataGrid /> - Keyboard', () => {
       );
     }
 
-    it('should scroll horizontally when navigating between column group headers with arrows', function test() {
-      if (isJSDOM) {
-        // Need layouting for column virtualization
-        this.skip();
-      }
-      render(
-        <div style={{ width: 60, height: 300 }}>
-          <DataGrid
-            columnGroupingModel={columnGroupingModel}
-            autoHeight={isJSDOM}
-            {...getBasicGridData(10, 10)}
-          />
-        </div>,
-      );
-      act(() => getColumnHeaderCell(0, 0).focus());
-      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollLeft).to.equal(0);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-      expect(virtualScroller.scrollLeft).not.to.equal(0);
-    });
+    // Need layouting for column virtualization
+    testSkipIf(isJSDOM)(
+      'should scroll horizontally when navigating between column group headers with arrows',
+      async () => {
+        const { user } = render(
+          <div style={{ width: 100, height: 300 }}>
+            <DataGrid columnGroupingModel={columnGroupingModel} {...getBasicGridData(10, 10)} />
+          </div>,
+        );
+        // Tab to the first column header
+        await user.keyboard('{Tab}');
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        expect(virtualScroller.scrollLeft).to.equal(0);
+        // We then need to move up to the group header, then right to the first named column
+        await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
+        expect(virtualScroller.scrollLeft).not.to.equal(0);
+      },
+    );
 
-    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
-      if (isJSDOM) {
-        // Need layouting for column virtualization
-        this.skip();
-      }
-      render(
-        <div style={{ width: 60, height: 300 }}>
-          <DataGrid
-            columnGroupingModel={columnGroupingModel}
-            autoHeight={isJSDOM}
-            {...getBasicGridData(10, 10)}
-            rows={[]}
-          />
-        </div>,
-      );
-      act(() => getColumnHeaderCell(0, 0).focus());
-      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-      expect(virtualScroller.scrollLeft).to.equal(0);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-      expect(virtualScroller.scrollLeft).not.to.equal(0);
-      expect(document.activeElement!).toHaveAccessibleName('prices');
-    });
+    // Need layouting for column virtualization
+    testSkipIf(isJSDOM)(
+      'should scroll horizontally when navigating between column headers with arrows even if rows are empty',
+      async () => {
+        const { user } = render(
+          <div style={{ width: 100, height: 300 }}>
+            <DataGrid
+              columnGroupingModel={columnGroupingModel}
+              {...getBasicGridData(10, 10)}
+              rows={[]}
+            />
+          </div>,
+        );
+        // Tab to the first column header
+        await user.keyboard('{Tab}');
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        expect(virtualScroller.scrollLeft).to.equal(0);
+        // We then need to move up to the group header, then right to the first named column
+        await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
+        expect(virtualScroller.scrollLeft).not.to.equal(0);
+        expect(document.activeElement!).toHaveAccessibleName('prices');
+      },
+    );
 
-    it('should move to the group header below when pressing "ArrowDown" on a column group header', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should move to the group header below when pressing "ArrowDown" on a column group header', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(2, 0).focus());
+      // Tab to the first column header then move to the first group header on the third column
+      await user.keyboard('{Tab}{ArrowUp}{ArrowUp}{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      // Move down to the group header below
+      await user.keyboard('{ArrowDown}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 3 });
     });
 
-    it('should go back to the same group header when pressing "ArrowUp" and "ArrowDown"', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should go back to the same group header when pressing "ArrowUp" and "ArrowDown"', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(3, 1).focus());
+      // Tab to the first column header then move to the testing group header
+      await user.keyboard('{Tab}{ArrowUp}{ArrowRight}{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+      await user.keyboard('{ArrowUp}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
     });
 
-    it('should go to next group header when pressing "ArrowRight"', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should go to next group header when pressing "ArrowRight"', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(0, 0).focus());
+      // Tab to the first column header then move to the testing group header
+      await user.keyboard('{Tab}{ArrowUp}{ArrowUp}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 1 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 7 });
     });
 
-    it('should go to previous group header when pressing "ArrowLeft"', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should go to previous group header when pressing "ArrowLeft"', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(6, 0).focus());
+      // Tab to the first column header then move to the testing group header
+      await user.keyboard('{Tab}{ArrowUp}{ArrowUp}{ArrowRight}{ArrowRight}{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 7 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 1 });
     });
 
@@ -613,24 +622,23 @@ describe('<DataGrid /> - Keyboard', () => {
     });
   });
 
-  it('should call preventDefault when using keyboard navigation', () => {
+  it('should call preventDefault when using keyboard navigation', async () => {
     const handleKeyDown = spy((event) => event.defaultPrevented);
 
     const columns = [{ field: 'id' }, { field: 'name' }];
     const rows = [{ id: 1, name: 'John' }];
 
-    render(
+    const { user } = render(
       <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    const firstCell = getCell(0, 0);
-    userEvent.mousePress(firstCell);
-    fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+    await user.click(getCell(0, 0));
+    await user.keyboard('{ArrowRight}');
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
-  it('should sort column when pressing enter and column header is selected', () => {
+  it('should sort column when pressing enter and column header is selected', async () => {
     const columns = [
       {
         field: 'id',
@@ -651,24 +659,26 @@ describe('<DataGrid /> - Keyboard', () => {
       },
     ];
 
-    render(
+    const { user } = render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
 
-    act(() => getColumnHeaderCell(0).focus());
+    await act(async () => {
+      getColumnHeaderCell(0).focus();
+    });
     expect(getActiveColumnHeader()).to.equal('0');
     expect(getColumnValues(1)).to.deep.equal(['John', 'Doe']);
-    fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter' });
-    fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter' });
+    await user.keyboard('{Enter}');
+    await user.keyboard('{Enter}');
     expect(getColumnValues(1)).to.deep.equal(['Doe', 'John']);
   });
 
   it('should select a row when pressing Space key + shiftKey', () => {
     render(<NavigationTestCaseNoScrollX disableRowSelectionOnClick />);
     const cell = getCell(0, 0);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(cell, { key: ' ', shiftKey: true });
     const row = getRow(0);
@@ -693,25 +703,24 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(renderCell.callCount).to.equal(4);
   });
 
-  it('should not scroll horizontally when cell is wider than viewport', () => {
+  it('should not scroll horizontally when cell is wider than viewport', async () => {
     const columns = [{ field: 'id', width: 400 }, { field: 'name' }];
     const rows = [
       { id: 1, name: 'John' },
       { id: 2, name: 'Doe' },
     ];
 
-    render(
+    const { user } = render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
     const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
 
-    const firstCell = getCell(0, 0);
-    userEvent.mousePress(firstCell);
+    await user.click(getCell(0, 0));
     expect(virtualScroller.scrollLeft).to.equal(0);
 
-    fireEvent.keyDown(firstCell, { key: 'ArrowDown' });
+    await user.keyboard('{ArrowDown}');
     expect(virtualScroller.scrollLeft).to.equal(0);
   });
 
@@ -740,7 +749,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     const cell = getCell(0, 1);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal(`0-0`);
@@ -774,7 +783,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     const cell = getCell(0, 1);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal(`0-0`);
@@ -808,7 +817,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     const cell = getCell(0, 1);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal(`0-0`);
@@ -835,5 +844,142 @@ describe('<DataGrid /> - Keyboard', () => {
     const cell = getColumnHeaderCell(0);
     act(() => cell.focus());
     fireEvent.keyDown(cell, { key: 'ArrowDown' });
+  });
+
+  describe('After pressing the backspace/delete key, the reset value type should match the column type', () => {
+    function setupTest(
+      rows: Record<string, string | number | Date | boolean>[],
+      columns: GridColDef[],
+      editMode: DataGridProps['editMode'],
+    ) {
+      const valueSetterMock = spy<GridValueSetter<(typeof columns)[number]>>(
+        (value, row, column) => {
+          return {
+            ...row,
+            [column.field]: value,
+          };
+        },
+      );
+      columns.forEach((column) => {
+        column.valueSetter = valueSetterMock;
+      });
+
+      render(<DataGrid rows={rows} columns={columns} editMode={editMode} autoHeight />);
+
+      return { valueSetterMock };
+    }
+
+    type TestResetValueParams = {
+      editMode: DataGridProps['editMode'];
+      keyType: 'Delete' | 'Backspace';
+      field: string;
+      type: GridColType;
+      value: string | number | Date | boolean;
+    };
+
+    function testResetValue({ editMode, keyType, field, type, value }: TestResetValueParams) {
+      const columns: GridColDef[] = [
+        { field: 'id', editable: true },
+        { field, editable: true, type },
+      ];
+      const rows = [{ id: 1, [field]: value }];
+      const { valueSetterMock } = setupTest(rows, columns, editMode);
+      const cell = getCell(0, 1);
+
+      cell.focus();
+      fireEvent.keyDown(cell, { key: keyType });
+
+      return {
+        cell: cell.textContent,
+        deletedValue: valueSetterMock.lastCall.args[0],
+      };
+    }
+
+    const testWithEditmodeAndKeytype = ({
+      editMode,
+      keyType,
+    }: Pick<TestResetValueParams, 'editMode' | 'keyType'>) => {
+      describe(`editMode="${editMode}" and ${keyType} key`, () => {
+        const defaultParams: TestResetValueParams = {
+          editMode,
+          keyType,
+          field: 'name',
+          type: 'string',
+          value: 'John Doe',
+        };
+
+        it(`should reset value for string type`, () => {
+          const { cell, deletedValue } = testResetValue({
+            ...defaultParams,
+            keyType: 'Delete',
+            field: 'name',
+            type: 'string',
+            value: 'John Doe',
+          });
+          expect(cell).to.equal('');
+          expect(deletedValue).to.equal('');
+        });
+
+        it(`should reset value for number type`, () => {
+          const { cell, deletedValue } = testResetValue({
+            ...defaultParams,
+            field: 'age',
+            type: 'number',
+            value: 24,
+          });
+          expect(cell).to.equal('');
+          expect(deletedValue).to.equal(undefined);
+        });
+
+        it(`should reset value for date type`, () => {
+          const { cell, deletedValue } = testResetValue({
+            ...defaultParams,
+            field: 'birthdate',
+            type: 'date',
+            value: new Date(),
+          });
+          expect(cell).to.equal('');
+          expect(deletedValue).to.equal(undefined);
+        });
+
+        it(`should reset value dateTime type`, () => {
+          const { cell, deletedValue } = testResetValue({
+            ...defaultParams,
+            field: 'appointment',
+            type: 'dateTime',
+            value: new Date(),
+          });
+          expect(cell).to.equal('');
+          expect(deletedValue).to.equal(undefined);
+        });
+
+        it(`should reset value boolean type`, () => {
+          const { cell, deletedValue } = testResetValue({
+            ...defaultParams,
+            field: 'isVerified',
+            type: 'boolean',
+            value: true,
+          });
+          expect(cell).to.equal('');
+          expect(deletedValue).to.equal(false);
+        });
+
+        it(`should reset value singleSelect type`, () => {
+          const { cell, deletedValue } = testResetValue({
+            ...defaultParams,
+            field: 'status',
+            type: 'singleSelect',
+            value: 'active',
+          });
+          expect(cell).to.equal('');
+          expect(deletedValue).to.equal(null);
+        });
+      });
+    };
+
+    testWithEditmodeAndKeytype({ editMode: 'cell', keyType: 'Delete' });
+    testWithEditmodeAndKeytype({ editMode: 'cell', keyType: 'Backspace' });
+    testWithEditmodeAndKeytype({ editMode: 'row', keyType: 'Delete' });
+    testWithEditmodeAndKeytype({ editMode: 'row', keyType: 'Backspace' });
   });
 });

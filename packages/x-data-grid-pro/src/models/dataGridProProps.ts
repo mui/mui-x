@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridEventListener,
   GridCallbackDetails,
@@ -7,14 +8,19 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
+  GridListViewColDef,
+  GridGetRowsError,
+  GridUpdateRowError,
 } from '@mui/x-data-grid';
-import {
+import type {
   GridExperimentalFeatures,
   DataGridPropsWithoutDefaultValue,
   DataGridPropsWithDefaultValues,
   DataGridPropsWithComplexDefaultValueAfterProcessing,
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   GridPinnedColumnFields,
+  DataGridProSharedPropsWithDefaultValue,
+  DataGridProSharedPropsWithoutDefaultValue,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
@@ -25,14 +31,12 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
-import type { GridAutosizeOptions } from '../hooks';
+import {
+  GridDataSourcePro as GridDataSource,
+  GridGetRowsParamsPro as GridGetRowsParams,
+} from '../hooks/features/dataSource/models';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
-  /**
-   * Enables the data grid to lazy load rows while scrolling.
-   */
-  lazyLoading: boolean;
-}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
@@ -47,7 +51,7 @@ interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
  */
 export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
-    Partial<DataGridProPropsWithDefaultValue> &
+    Partial<DataGridProPropsWithDefaultValue<R>> &
       DataGridProPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
@@ -59,23 +63,26 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
 }
 
 /**
- * The props of the `DataGridPro` component after the pre-processing phase.
+ * The props of the Data Grid Pro component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue,
+  extends DataGridProPropsWithDefaultValue<R>,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
     Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
 /**
- * The `DataGridPro` options with a default value overridable through props
+ * The Data Grid Pro options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
-export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefaultValues {
+export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = any>
+  extends DataGridPropsWithDefaultValues<R>,
+    DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: number;
@@ -97,16 +104,6 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
-  /**
-   * If `true`, columns are autosized after the datagrid is mounted.
-   * @default false
-   */
-  autosizeOnMount: boolean;
-  /**
-   * If `true`, column autosizing on header separator double-click is disabled.
-   * @default false
-   */
-  disableAutosize: boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false
@@ -138,7 +135,8 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
-   * * @default "client"
+   * @default "client"
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: GridFeatureMode;
   /**
@@ -148,25 +146,46 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    */
   keepColumnPositionIfDraggedOutside: boolean;
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * Used together with `dataSource` to enable lazy loading.
+   * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
+   * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
    * @default false
    */
-  headerFilters: boolean;
+  lazyLoading: boolean;
+  /**
+   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
+   * @default 500
+   */
+  lazyLoadingRequestThrottleMs: number;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `listViewColumn`.
+   */
+  listView: boolean;
+}
+interface DataGridProRegularProps<R extends GridValidRowModel> {
+  /**
+   * Determines the path of a row in the tree data.
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
+   * Note that all paths must contain at least one element.
+   * @template R
+   * @param {R} row The row from which we want the path.
+   * @returns {string[]} The path to the row.
+   */
+  getTreeDataPath?: (row: R) => readonly string[];
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
-    DataGridPropsWithoutDefaultValue<R>,
-    'initialState' | 'componentsProps' | 'slotProps'
-  > {
+      DataGridPropsWithoutDefaultValue<R>,
+      'initialState' | 'componentsProps' | 'slotProps' | 'dataSource' | 'onDataSourceError'
+    >,
+    DataGridProRegularProps<R>,
+    DataGridProSharedPropsWithoutDefaultValue {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
-  apiRef?: React.MutableRefObject<GridApiPro>;
-  /**
-   * The options for autosize when user-initiated.
-   */
-  autosizeOptions?: GridAutosizeOptions;
+  apiRef?: RefObject<GridApiPro | null>;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
@@ -179,33 +198,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   experimentalFeatures?: Partial<GridExperimentalProFeatures>;
   /**
-   * Determines the path of a row in the tree data.
-   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
-   * Note that all paths must contain at least one element.
-   * @template R
-   * @param {R} row The row from which we want the path.
-   * @returns {string[]} The path to the row.
-   */
-  getTreeDataPath?: (row: R) => string[];
-  /**
-   * Callback fired while a column is being resized.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onColumnResize?: GridEventListener<'columnResize'>;
-  /**
-   * Callback fired when the width of a column is changed.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onColumnWidthChange?: GridEventListener<'columnWidthChange'>;
-  /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
   /**
@@ -232,13 +229,13 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds?: GridRowId[];
+  detailPanelExpandedRowIds?: Set<GridRowId>;
   /**
    * Callback fired when the detail panel of a row is opened or closed.
    * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onDetailPanelExpandedRowIdsChange?: (ids: GridRowId[], details: GridCallbackDetails) => void;
+  onDetailPanelExpandedRowIdsChange?: (ids: Set<GridRowId>, details: GridCallbackDetails) => void;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -257,6 +254,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**
@@ -267,4 +265,17 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridProSlotProps;
+  /**
+   * Definition of the column rendered when the `listView` prop is enabled.
+   */
+  listViewColumn?: GridListViewColDef<R>;
+  /**
+   * The data source of the Data Grid Pro.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
 }

@@ -1,10 +1,19 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui-internal/test-utils';
+import { RefObject } from '@mui/x-internals/types';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridSortModel,
+  useGridApiRef,
+  GridApi,
+  GridColDef,
+  gridStringOrNumberComparator,
+  GridInitialState,
+} from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { GridInitialState } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -82,7 +91,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow sorting using `apiRef` for unsortable columns', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id', sortable: false }];
@@ -103,16 +112,16 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
 
     // should allow sort using `apiRef`
-    act(() => apiRef.current.sortColumn('id', 'desc'));
+    act(() => apiRef.current?.sortColumn('id', 'desc'));
     expect(getColumnValues(0)).to.deep.equal(['10', '5', '0']);
-    act(() => apiRef.current.sortColumn('id', 'asc'));
+    act(() => apiRef.current?.sortColumn('id', 'asc'));
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
-    act(() => apiRef.current.sortColumn('id', null));
+    act(() => apiRef.current?.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
   });
 
-  it('should allow clearing the current sorting using `sortColumn` idempotently', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+  it('should allow clearing the current sorting using `sortColumn` idempotently', async () => {
+    let apiRef: RefObject<GridApi | null>;
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id' }];
@@ -125,21 +134,61 @@ describe('<DataGrid /> - Sorting', () => {
       );
     }
 
-    render(<TestCase />);
+    const { user } = render(<TestCase />);
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
     const header = getColumnHeaderCell(0);
 
     // Trigger a sort using the header
-    fireEvent.click(header);
+    await user.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
 
     // Clear the value using `apiRef`
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current?.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
 
     // Check the behavior is idempotent
-    act(() => apiRef.current.sortColumn('id', null));
+    await act(() => apiRef.current?.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+  });
+
+  // See https://github.com/mui/mui-x/issues/12271
+  it('should not keep the sort item with `item.sort = null`', () => {
+    let apiRef: RefObject<GridApi | null>;
+    const onSortModelChange = spy();
+    function TestCase() {
+      apiRef = useGridApiRef();
+      const cols = [{ field: 'id' }];
+      const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            apiRef={apiRef}
+            columns={cols}
+            rows={rows}
+            onSortModelChange={onSortModelChange}
+          />
+        </div>
+      );
+    }
+
+    render(<TestCase />);
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+    const header = getColumnHeaderCell(0);
+
+    // Trigger a `asc` sort
+    fireEvent.click(header);
+    expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
+    expect(onSortModelChange.callCount).to.equal(1);
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([{ field: 'id', sort: 'asc' }]);
+
+    // Clear the sort using `apiRef`
+    act(() => apiRef.current?.sortColumn('id', null));
+    expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
+    expect(onSortModelChange.callCount).to.equal(2);
+
+    // Confirm that the sort item is cleared and not passed to `onSortModelChange`
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
 
   it('should always set correct `aria-sort` attribute', () => {
@@ -619,7 +668,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: RefObject<GridApi | null>;
     function TestCase() {
       apiRef = useGridApiRef();
 
@@ -633,8 +682,8 @@ describe('<DataGrid /> - Sorting', () => {
     }
 
     render(<TestCase />);
-    act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-    act(() => apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]));
+    act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
+    act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Patagonia' }]));
     expect(getColumnValues(0)).to.deep.equal(['Fila', 'Patagonia', 'Puma']);
   });
 
@@ -664,11 +713,9 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
     setProps({ columns: [{ field: 'id' }] });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(onSortModelChange.callCount).to.equal(1);
-      expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
-    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    expect(onSortModelChange.callCount).to.equal(1);
+    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
 
   // See https://github.com/mui/mui-x/issues/9204
@@ -699,9 +746,51 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
     setProps({ columns: [{ field: 'id' }], sortModel: [{ field: 'id', sort: 'desc' }] });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
-      expect(onSortModelChange.callCount).to.equal(0);
+    expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
+    expect(onSortModelChange.callCount).to.equal(0);
+  });
+
+  describe('getSortComparator', () => {
+    it('should allow to define sort comparators depending on the sort direction', async () => {
+      const cols: GridColDef[] = [
+        {
+          field: 'value',
+          getSortComparator: (sortDirection) => {
+            const modifier = sortDirection === 'desc' ? -1 : 1;
+            return (value1, value2, cellParams1, cellParams2) => {
+              if (value1 === null) {
+                return 1;
+              }
+              if (value2 === null) {
+                return -1;
+              }
+              return (
+                modifier * gridStringOrNumberComparator(value1, value2, cellParams1, cellParams2)
+              );
+            };
+          },
+        },
+      ];
+      const rows = [
+        { id: 1, value: 'a' },
+        { id: 2, value: null },
+        { id: 3, value: 'b' },
+        { id: 4, value: null },
+      ];
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} columns={cols} rows={rows} />
+        </div>,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['a', '', 'b', '']);
+
+      const header = getColumnHeaderCell(0);
+      fireEvent.click(header);
+      expect(getColumnValues(0)).to.deep.equal(['a', 'b', '', '']);
+
+      fireEvent.click(header);
+      expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);
     });
   });
 });

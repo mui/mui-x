@@ -1,36 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  DataGrid,
-  GridToolbarQuickFilter,
-  GridLogicOperator,
-} from '@mui/x-data-grid';
+import { DataGrid, GridLogicOperator } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function QuickSearchToolbar() {
-  return (
-    <Box
-      sx={{
-        p: 0.5,
-        pb: 0,
-      }}
-    >
-      <GridToolbarQuickFilter
-        quickFilterParser={(searchInput) =>
-          searchInput
-            .split(',')
-            .map((value) => value.trim())
-            .filter((value) => value !== '')
-        }
-      />
-    </Box>
-  );
-}
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function QuickFilteringCustomizedGrid() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -46,6 +22,7 @@ export default function QuickFilteringCustomizedGrid() {
     <Box sx={{ height: 400, width: 1 }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         initialState={{
           ...data.initialState,
@@ -57,7 +34,18 @@ export default function QuickFilteringCustomizedGrid() {
             },
           },
         }}
-        slots={{ toolbar: QuickSearchToolbar }}
+        slotProps={{
+          toolbar: {
+            quickFilterProps: {
+              quickFilterParser: (searchInput) =>
+                searchInput
+                  .split(',')
+                  .map((value) => value.trim())
+                  .filter((value) => value !== ''),
+            },
+          },
+        }}
+        showToolbar
       />
     </Box>
   );

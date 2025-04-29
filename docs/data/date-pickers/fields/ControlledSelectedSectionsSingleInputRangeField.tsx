@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -8,16 +9,15 @@ import {
   FieldSectionType,
   FieldSelectedSections,
   FieldRef,
-  RangeFieldSection,
-  RangePosition,
-} from '@mui/x-date-pickers-pro';
+} from '@mui/x-date-pickers/models';
+import { DateRange, RangePosition } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 export default function ControlledSelectedSectionsSingleInputRangeField() {
   const [selectedSections, setSelectedSections] =
     React.useState<FieldSelectedSections>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const fieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const fieldRef = React.useRef<FieldRef<DateRange<Dayjs>>>(null);
 
   const setSelectedSectionType = (
     selectedSectionType: FieldSectionType,
@@ -45,6 +45,7 @@ export default function ControlledSelectedSectionsSingleInputRangeField() {
             size="small"
             variant="outlined"
             onClick={() => setSelectedSectionType(sectionName, position)}
+            key={sectionName}
           >
             {sectionName}
           </Button>

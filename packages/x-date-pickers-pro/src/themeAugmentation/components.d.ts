@@ -21,6 +21,9 @@ export interface PickersProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDateTimeRangePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimeRangePickerToolbar'];
   };
+  MuiPickersRangeCalendarHeader?: {
+    defaultProps?: ComponentsProps['MuiPickersRangeCalendarHeader'];
+  };
 
   // Multi input range fields
   MuiMultiInputDateRangeField?: {

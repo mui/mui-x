@@ -7,9 +7,9 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(_day: string, date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(date: TDate) => string",
+        "type": "function(date: PickerValidDate) => string",
         "describedArgs": ["date"],
         "returned": "string"
       }
@@ -22,7 +22,12 @@
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "disableFuture": { "type": { "name": "bool" }, "default": "false" },
     "disableHighlightToday": { "type": { "name": "bool" }, "default": "false" },
-    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use the <a href=\"https://mui.com/x/react-date-pickers/fields/\">field component</a> instead."
+    },
     "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" } },
@@ -35,8 +40,8 @@
     "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -44,7 +49,10 @@
     "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
     },
     "onChange": {
       "type": { "name": "func" },
@@ -63,7 +71,10 @@
     },
     "onMonthChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+      "signature": {
+        "type": "function(month: PickerValidDate) => void",
+        "describedArgs": ["month"]
+      }
     },
     "onOpen": { "type": { "name": "func" } },
     "onSelectedSectionsChange": {
@@ -79,7 +90,7 @@
     },
     "onYearChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] }
+      "signature": { "type": "function(year: PickerValidDate) => void", "describedArgs": ["year"] }
     },
     "open": { "type": { "name": "bool" }, "default": "false" },
     "openTo": {
@@ -91,6 +102,7 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
@@ -101,7 +113,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
+      "default": "() => <span>...</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -111,13 +123,13 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate) => boolean",
+        "type": "function(day: PickerValidDate) => boolean",
         "describedArgs": ["day"],
         "returned": "boolean"
       }
@@ -125,7 +137,7 @@
     "shouldDisableMonth": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(month: TDate) => boolean",
+        "type": "function(month: PickerValidDate) => boolean",
         "describedArgs": ["month"],
         "returned": "boolean"
       }
@@ -133,7 +145,7 @@
     "shouldDisableYear": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(year: TDate) => boolean",
+        "type": "function(year: PickerValidDate) => boolean",
         "describedArgs": ["year"],
         "returned": "boolean"
       }
@@ -176,6 +188,10 @@
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
     },
+    "yearsOrder": {
+      "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
+      "default": "'asc'"
+    },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "4 on desktop, 3 on mobile"
@@ -189,9 +205,9 @@
   ],
   "slots": [
     {
-      "name": "toolbar",
-      "description": "Custom component for the toolbar rendered above the views.",
-      "default": "DatePickerToolbar",
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the Picker views.",
+      "default": "PickersActionBar",
       "class": null
     },
     {
@@ -201,39 +217,15 @@
       "class": null
     },
     {
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
+      "name": "clearButton",
+      "description": "Button to clear the value.",
       "default": "IconButton",
       "class": null
     },
     {
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.",
-      "default": "ArrowDropDown",
-      "class": null
-    },
-    {
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft",
-      "class": null
-    },
-    {
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight",
+      "name": "clearIcon",
+      "description": "Icon to display in the button used to clean the value.",
+      "default": "ClearIcon",
       "class": null
     },
     {
@@ -243,21 +235,9 @@
       "class": null
     },
     {
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar",
-      "class": null
-    },
-    {
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts",
-      "class": null
-    },
-    {
       "name": "desktopPaper",
       "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
-      "default": "PickersPopperPaper",
+      "default": "PickerPopperPaper",
       "class": null
     },
     {
@@ -269,48 +249,13 @@
     {
       "name": "desktopTrapFocus",
       "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "FocusTrap from '@mui/base'.",
+      "default": "TrapFocus from '@mui/material'.",
       "class": null
     },
     {
-      "name": "popper",
-      "description": "Custom component for the popper inside which the views are rendered on desktop.",
-      "default": "Popper from '@mui/material'.",
-      "class": null
-    },
-    {
-      "name": "textField",
-      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as `@mui/material/TextField`.",
-      "default": "TextField from '@mui/material'",
-      "class": null
-    },
-    {
-      "name": "inputAdornment",
-      "description": "Component displayed on the start or end input adornment used to open the picker on desktop.",
-      "default": "InputAdornment",
-      "class": null
-    },
-    {
-      "name": "openPickerButton",
-      "description": "Button to open the picker on desktop.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "layout",
-      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
-      "class": null
-    },
-    {
-      "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
-      "default": "ClearIcon",
-      "class": null
-    },
-    {
-      "name": "clearButton",
-      "description": "Button to clear the value.",
-      "default": "IconButton",
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
       "class": null
     },
     {
@@ -319,14 +264,20 @@
       "class": null
     },
     {
-      "name": "openPickerIcon",
-      "description": "Icon displayed in the open picker button on desktop.",
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the Picker.",
+      "default": "InputAdornment",
       "class": null
     },
     {
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot",
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    },
+    {
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
       "class": null
     },
     {
@@ -340,12 +291,90 @@
       "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
       "default": "Fade from '@mui/material'.",
       "class": null
+    },
+    {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the `month` view.",
+      "default": "MonthCalendarButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerButton",
+      "description": "Button to open the Picker.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon to display in the button used to open the Picker.",
+      "class": null
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the popper inside which the views are rendered on desktop.",
+      "default": "Popper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": null
+    },
+    {
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.",
+      "default": "ArrowDropDown",
+      "class": null
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DatePickerToolbar",
+      "class": null
+    },
+    {
+      "name": "yearButton",
+      "description": "Button displayed to render a single year in the `year` view.",
+      "default": "YearCalendarButton",
+      "class": null
     }
   ],
   "classes": [],
-  "spread": true,
-  "themeDefaultProps": null,
+  "spread": false,
+  "themeDefaultProps": false,
   "muiName": "MuiDatePicker",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui-internal/test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicker';
@@ -9,7 +9,7 @@ import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicke
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer();
 
-  it('should allow to select the same day and move to the next view', () => {
+  it('should allow to select the same day', () => {
     const onChange = spy();
     render(
       <StaticDateTimePicker onChange={onChange} defaultValue={adapterToUse.date('2018-01-01')} />,
@@ -17,8 +17,6 @@ describe('<StaticDateTimePicker />', () => {
 
     fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
     expect(onChange.callCount).to.equal(1);
-
-    expect(screen.getByLabelText(/Selected time/)).toBeVisible();
   });
 
   describe('Component slot: Tabs', () => {
@@ -31,7 +29,7 @@ describe('<StaticDateTimePicker />', () => {
         />,
       );
 
-      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
+      expect(screen.queryByTestId('picker-toolbar-title')).not.to.equal(null);
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
     });
 
@@ -45,7 +43,7 @@ describe('<StaticDateTimePicker />', () => {
         />,
       );
 
-      expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
+      expect(screen.queryByTestId('picker-toolbar-title')).to.equal(null);
       expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
 

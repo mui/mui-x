@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'popołudnie',
 };
 
-const plPLPickers: Partial<PickersLocaleText<any>> = {
+const plPLPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Poprzedni miesiąc',
   nextMonth: 'Następny miesiąc',
@@ -25,26 +25,28 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Początek',
   end: 'Koniec',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data rozpoczęcia',
+  startTime: 'Czas rozpoczęcia',
+  endDate: 'Data zakończenia',
+  endTime: 'Czas zakończenia',
 
   // Action bar
   cancelButtonLabel: 'Anuluj',
   clearButtonLabel: 'Wyczyść',
   okButtonLabel: 'Zatwierdź',
   todayButtonLabel: 'Dzisiaj',
+  nextStepButtonLabel: 'Następny',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Wybierz datę',
   dateTimePickerToolbarTitle: 'Wybierz datę i czas',
   timePickerToolbarTitle: 'Wybierz czas',
   dateRangePickerToolbarTitle: 'Wybierz zakres dat',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Wybierz ${timeViews[view]}. ${time === null ? 'Nie wybrano czasu' : `Wybrany czas to ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Wybierz ${timeViews[view]}. ${!formattedTime ? 'Nie wybrano czasu' : `Wybrany czas to ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} godzin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
@@ -58,16 +60,13 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Tydzień ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
-      ? `Wybierz datę, obecnie wybrana data to ${utils.format(value, 'fullDate')}`
-      : 'Wybierz datę',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Wybierz czas, obecnie wybrany czas to ${utils.format(value, 'fullTime')}`
-      : 'Wybierz czas',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Wyczyść',
 
   // Table labels
   timeTableLabel: 'wybierz czas',
@@ -82,6 +81,19 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
   // fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Rok',
+  month: 'Miesiąc',
+  day: 'Dzień',
+  weekDay: 'Dzień tygodnia',
+  hours: 'Godzin',
+  minutes: 'Minut',
+  seconds: 'Sekund',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const plPL = getPickersLocalization(plPLPickers);

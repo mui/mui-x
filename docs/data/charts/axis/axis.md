@@ -1,7 +1,7 @@
 ---
 title: Charts - Axis
 productId: x-charts
-components: ChartsAxis, ChartsReferenceLine, ChartsText
+components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxis, ChartsReferenceLine
 ---
 
 # Charts - Axis
@@ -20,9 +20,8 @@ Those props expect an array of objects.
 
 Here is a demonstration with two lines with the same data.
 But one uses a linear, and the other a log axis.
-
 Each axis definition is identified by its property `id`.
-And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
+Then each series specifies the axis they use with the `xAxisId` and `yAxisId` properties.
 
 {{"demo": "ScaleExample.js"}}
 
@@ -30,9 +29,9 @@ And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
 The management of those ids is for advanced use cases, such as charts with multiple axes.
 Or customized axes.
 
-If you do not provide a `xAxisKey` or `yAxisKey`, the series will use the first axis defined.
+If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
 
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisKey`, or `yAxisKey`.
+That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
 Those demonstrations use the defaultized values.
 :::
 
@@ -41,6 +40,7 @@ Those demonstrations use the defaultized values.
 The axis type is specified by its property `scaleType` which expect one of the following values:
 
 - `'band'`: Split the axis in equal band. Mostly used for bar charts.
+- `'point'`: Split the axis in equally spaced points. Mostly used for line charts on categories.
 - `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
 - `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
 
@@ -51,12 +51,31 @@ Which expects an array of value coherent with the `scaleType`:
 
 - For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
 - For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` it can contain `string`, or numerical values
+- For `'band'` or `'point'` it can contain `string`, or numerical values
 
 Some series types also require specific axis attributes:
 
 - line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
+- bar plots require an `xAxis` with `scaleType="band"` and some `data` provided.
+
+### Axis formatter
+
+Axis data can be displayed in the axes ticks and the tooltip.
+To modify how data is displayed use the `valueFormatter` property.
+
+The second argument of `valueFormatter` provides some rendering context for advanced use cases.
+
+In the next demo, `valueFormatter` is used to shorten months and introduce a breaking space for ticks only.
+To distinguish tick and tooltip, it uses the `context.location`.
+
+{{"demo": "FormatterDemo.js"}}
+
+#### Using the D3 formatter
+
+The context gives you access to the axis scale.
+The D3 [tickFormat(tickNumber, scpecifier)](https://d3js.org/d3-scale/linear#tickFormat) method can be interesting to adapt ticks format based on the scale properties.
+
+{{"demo": "FormatterD3.js"}}
 
 ### Axis sub domain
 
@@ -74,21 +93,35 @@ xAxis={[
 
 {{"demo": "MinMaxExample.js"}}
 
+### Relative axis subdomain
+
+You can adjust the axis range relatively to its data by using the `domainLimit` option.
+It can take 3 different values:
+
+- `"nice"` Rounds the domain at human friendly values. It's the default behavior.
+- `"strict"` Sets the domain to the min/max value to display.
+- `(minValue, maxValue) => { min, max }` Receives the calculated extremums as parameters, and should return the axis domain.
+
+The demo below shows different ways to set the y-axis range.
+They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
+
+{{"demo": "CustomDomainYAxis.js"}}
+
 ### Axis direction
 
 By default, the axes' directions are left to right and bottom to top.
 You can change this behavior with the property `reverse`.
 
-{{"demo": "ReverseExampleNoSnap.js"}}
+{{"demo": "ReverseExample.js"}}
 
 ## Grid
 
 You can add a grid in the background of the cartesian chart with the `grid` prop.
 
 It accepts an object with `vertical` and `horizontal` properties.
-Setting those properties to `true` will display the grid lines.
+Setting those properties to `true` displays the grid lines.
 
-If you use composition you can pass those properties to the `<ChartsGrid />` component.
+If you use composition you can pass those as props to the `<ChartsGrid />` component.
 
 ```jsx
 <BarChart grid={{ vertical: true }}>
@@ -112,7 +145,7 @@ This number is not the exact number of ticks displayed.
 Thanks to d3, ticks are placed to be human-readable.
 For example, ticks for time axes will be placed on special values (years, days, half-days, ...).
 
-If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might chose to render ticks on the 4 years, instead of putting 5 ticks on some months.
+If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might choose to render ticks on the 4 years, instead of putting 5 ticks on some months.
 :::
 
 As a helper, you can also provide `tickMinStep` and `tickMaxStep` which will compute `tickNumber` such that the step between two ticks respect those min/max values.
@@ -158,39 +191,63 @@ At the bottom, you can see one tick for the beginning and the middle of the day 
 
 {{"demo": "TickLabelPosition.js"}}
 
-## Axis customization
+## Position
 
-You can further customize the axis rendering besides the axis definition.
+The axis position can be customized with the `position` property of the axis configuration.
+Its value can be:
 
-### Position
-
-Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
-Those pros can accept three type of value:
-
-- `null` to not display the axis
-- `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
-- `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
+- `'top'` or `'bottom'` for the x-axis.
+- `'left'` or `'right'` for the y-axis.
+- `'none'` to hide the axis.
 
 {{"demo": "ModifyAxisPosition.js"}}
 
 ### Hiding axis
 
-To hide an axis, set it to `null`.
-For example `leftAxis={null}` hides the left axis.
+To hide an axis, set its `position` to `'none'`.
+The axis is still computed and used for the scaling.
 
 {{"demo": "HidingAxis.js"}}
+
+### Multiple axes on the same side
+
+You can display multiple axes on the same side.
+If two or more axes share the same `position`, they are displayed in the order they are defined from closest to the chart to farthest.
+
+To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for `yAxis` to increase the space between the axes.
+
+{{"demo": "MultipleAxes.js"}}
+
+## Axis customization
+
+You can further customize the axis rendering besides the axis definition.
+
+### Fixing tick label overflow issues
+
+When your tick labels are too long, they are clipped to avoid overflowing.
+If you would like to reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization) or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
+
+In the following demo, the size of the x- and y-axes is modified to increase the space available for tick labels.
+
+The first and last tick labels may bleed into the margin. If that margin is not enough to display the label, it might be clipped.
+To avoid this, you can use the `margin` prop to increase the space between the chart and the edge of the container.
+
+{{"demo": "MarginAndLabelPosition.js"}}
 
 ### Rendering
 
 Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
 
-{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Text customization
 
 To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
-{{"demo": "AxisTextCustomizationNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+When not set, the default values for the properties `textAnchor` and `dominantBaseline` depend on the value of the `angle` property.
+You can test below how the value of `angle` influences them.
+
+{{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Composition
 
@@ -199,7 +256,7 @@ If you are using composition, you have to provide the axis settings in the `<Cha
 It will provide all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>` components as children.
 Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
 
-You can choose their position with `position` props which accept `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
+You can choose their position with `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
 Other props are similar to the ones defined in the [previous section](/x/react-charts/axis/#rendering).
 
 {{"demo": "AxisWithComposition.js"}}

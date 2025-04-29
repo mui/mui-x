@@ -1,5 +1,10 @@
-import * as React from 'react';
-import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  getTextbox,
+  expectFieldPlaceholderV6,
+  expectFieldValueV7,
+  buildFieldInteractions,
+} from 'test/utils/pickers';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,
@@ -7,23 +12,41 @@ import {
 
 describe('<DesktopDateTimePicker /> - Field', () => {
   const { render } = createPickerRenderer();
+  const { renderWithProps } = buildFieldInteractions({
+    render,
+    Component: DesktopDateTimePicker,
+  });
 
   it('should pass the ampm prop to the field', () => {
-    const { setProps } = render(<DesktopDateTimePicker ampm />);
+    const view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true as const,
+      ampm: true,
+    });
 
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'MM/DD/YYYY hh:mm aa');
+    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
 
-    setProps({ ampm: false });
-    expectInputPlaceholder(input, 'MM/DD/YYYY hh:mm');
+    view.setProps({ ampm: false });
+    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
     const testFormat = (props: DesktopDateTimePickerProps<any>, expectedFormat: string) => {
-      const { unmount } = render(<DesktopDateTimePicker {...props} />);
+      // Test with accessible DOM structure
+      let view = renderWithProps(
+        { ...props, enableAccessibleFieldDOMStructure: true as const },
+        { componentFamily: 'picker' },
+      );
+      expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps(
+        { ...props, enableAccessibleFieldDOMStructure: false as const },
+        { componentFamily: 'picker' },
+      );
       const input = getTextbox();
-      expectInputPlaceholder(input, expectedFormat);
-      unmount();
+      expectFieldPlaceholderV6(input, expectedFormat);
+      view.unmount();
     };
 
     testFormat({ views: ['day', 'hours', 'minutes'], ampm: false }, 'DD hh:mm');

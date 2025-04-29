@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'il meridiano',
 };
 
-const itITPickers: Partial<PickersLocaleText<any>> = {
+const itITPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Mese precedente',
   nextMonth: 'Mese successivo',
@@ -25,26 +25,28 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Inizio',
   end: 'Fine',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data di inizio',
+  startTime: 'Ora di inizio',
+  endDate: 'Data di fine',
+  endTime: 'Ora di fine',
 
   // Action bar
   cancelButtonLabel: 'Cancellare',
   clearButtonLabel: 'Sgomberare',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Oggi',
+  nextStepButtonLabel: 'Successivo',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Seleziona data',
   dateTimePickerToolbarTitle: 'Seleziona data e orario',
   timePickerToolbarTitle: 'Seleziona orario',
   dateRangePickerToolbarTitle: 'Seleziona intervallo di date',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Seleziona ${views[view]}. ${time === null ? 'Nessun orario selezionato' : `L'ora selezionata è ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Seleziona ${views[view]}. ${!formattedTime ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ore`,
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
   secondsClockNumberText: (seconds) => `${seconds} secondi`,
@@ -58,16 +60,13 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Settimana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Scegli la data, la data selezionata è ${utils.format(value, 'fullDate')}`
-      : 'Scegli la data',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
-      : "Scegli l'ora",
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Scegli la data, la data selezionata è ${formattedDate}` : 'Scegli la data',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Scegli l'ora, l'ora selezionata è ${formattedTime}` : "Scegli l'ora",
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Cancella valore',
 
   // Table labels
   timeTableLabel: "scegli un'ora",
@@ -77,11 +76,24 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'GG',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'GGGG' : 'GG'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Anno',
+  month: 'Mese',
+  day: 'Giorno',
+  weekDay: 'Giorno della settimana',
+  hours: 'Ore',
+  minutes: 'Minuti',
+  seconds: 'Secondi',
+  meridiem: 'Meridiano',
+
+  // Common
+  empty: 'Vuoto',
 };
 
 export const itIT = getPickersLocalization(itITPickers);

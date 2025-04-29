@@ -1,18 +1,25 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { area as d3Area } from 'd3-shape';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { styled } from '@mui/material/styles';
+import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import {
   AreaElement,
+  areaElementClasses,
   AreaElementProps,
   AreaElementSlotProps,
   AreaElementSlots,
 } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import getCurveFactory from '../internals/getCurve';
+import { getCurveFactory } from '../internals/getCurve';
+import { isBandScale } from '../internals/isBandScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
+import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -32,71 +39,148 @@ export interface AreaPlotProps
   ) => void;
 }
 
+const AreaPlotRoot = styled('g', {
+  name: 'MuiAreaPlot',
+  slot: 'Root',
+})({
+  [`& .${areaElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
+
 const useAggregatedData = () => {
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeriesContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+  const getGradientId = useChartGradientIdBuilder();
 
-  if (seriesData === undefined) {
-    return [];
-  }
+  // This memo prevents odd line chart behavior when hydrating.
+  const allData = React.useMemo(() => {
+    if (seriesData === undefined) {
+      return [];
+    }
 
-  const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
-  const defaultXAxisId = xAxisIds[0];
-  const defaultYAxisId = yAxisIds[0];
+    const { series, stackingGroups } = seriesData;
 
-  return stackingGroups.flatMap(({ ids: groupIds }) => {
-    return groupIds.flatMap((seriesId) => {
-      const {
-        xAxisKey = defaultXAxisId,
-        yAxisKey = defaultYAxisId,
-        stackedData,
-        data,
-        connectNulls,
-      } = series[seriesId];
+    const defaultXAxisId = xAxisIds[0];
+    const defaultYAxisId = yAxisIds[0];
 
-      const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-      const yScale = yAxis[yAxisKey].scale;
-      const xData = xAxis[xAxisKey].data;
+    return stackingGroups.flatMap(({ ids: groupIds }) => {
+      return [...groupIds]
+        .reverse() // Revert stacked area for a more pleasant animation
+        .map((seriesId) => {
+          const {
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
+            stackedData,
+            data,
+            connectNulls,
+            baseline,
+            curve,
+            strictStepCurve,
+          } = series[seriesId];
 
-      if (process.env.NODE_ENV !== 'production') {
-        if (xData === undefined) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should have data property to be able to display a line plot.`,
-          );
-        }
-        if (xData.length < stackedData.length) {
-          throw new Error(
-            `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
-          );
-        }
-      }
+          const xScale = xAxis[xAxisId].scale;
+          const xPosition = getValueToPositionMapper(xScale);
+          const yScale = yAxis[yAxisId].scale;
+          const xData = xAxis[xAxisId].data;
 
-      const areaPath = d3Area<{
-        x: any;
-        y: [number, number];
-      }>()
-        .x((d) => xScale(d.x))
-        .defined((_, i) => connectNulls || data[i] != null)
-        .y0((d) => d.y && yScale(d.y[0])!)
-        .y1((d) => d.y && yScale(d.y[1])!);
+          const gradientId: string | undefined =
+            (yAxis[yAxisId].colorScale && getGradientId(yAxisId)) ||
+            (xAxis[xAxisId].colorScale && getGradientId(xAxisId)) ||
+            undefined;
 
-      const curve = getCurveFactory(series[seriesId].curve);
-      const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
-      const d3Data = connectNulls ? formattedData.filter((_, i) => data[i] != null) : formattedData;
+          if (process.env.NODE_ENV !== 'production') {
+            if (xData === undefined) {
+              throw new Error(
+                `MUI X: ${
+                  xAxisId === DEFAULT_X_AXIS_KEY
+                    ? 'The first `xAxis`'
+                    : `The x-axis with id "${xAxisId}"`
+                } should have data property to be able to display a line plot.`,
+              );
+            }
+            if (xData.length < stackedData.length) {
+              throw new Error(
+                `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              );
+            }
+          }
 
-      const d = areaPath.curve(curve)(d3Data) || '';
-      return {
-        ...series[seriesId],
-        d,
-        seriesId,
-      };
+          const shouldExpand = curve?.includes('step') && !strictStepCurve && isBandScale(xScale);
+
+          const formattedData: {
+            x: any;
+            y: [number, number];
+            nullData: boolean;
+            isExtension?: boolean;
+          }[] =
+            xData?.flatMap((x, index) => {
+              const nullData = data[index] == null;
+              if (shouldExpand) {
+                const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+                if (!nullData && (index === 0 || data[index - 1] == null)) {
+                  rep.unshift({
+                    x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
+                    y: stackedData[index],
+                    nullData,
+                    isExtension: true,
+                  });
+                }
+                if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
+                  rep.push({
+                    x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
+                    y: stackedData[index],
+                    nullData,
+                    isExtension: true,
+                  });
+                }
+                return rep;
+              }
+              return { x, y: stackedData[index], nullData };
+            }) ?? [];
+
+          const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
+
+          const areaPath = d3Area<{
+            x: any;
+            y: [number, number];
+            nullData: boolean;
+            isExtension?: boolean;
+          }>()
+            .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
+            .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
+            .y0((d) => {
+              if (typeof baseline === 'number') {
+                return yScale(baseline)!;
+              }
+              if (baseline === 'max') {
+                return yScale.range()[1];
+              }
+              if (baseline === 'min') {
+                return yScale.range()[0];
+              }
+
+              const value = d.y && yScale(d.y[0])!;
+              if (Number.isNaN(value)) {
+                return yScale.range()[0];
+              }
+              return value;
+            })
+            .y1((d) => d.y && yScale(d.y[1])!);
+
+          const d = areaPath.curve(getCurveFactory(curve))(d3Data) || '';
+          return {
+            ...series[seriesId],
+            gradientId,
+            d,
+            seriesId,
+          };
+        });
     });
-  });
+  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis, getGradientId]);
+
+  return allData;
 };
 
 /**
@@ -111,38 +195,38 @@ const useAggregatedData = () => {
  * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
  */
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps, onItemClick, skipAnimation, ...other } = props;
+  const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, ...other } = props;
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
 
   return (
-    <g {...other}>
-      {completedData
-        .reverse()
-        .map(
-          ({ d, seriesId, color, highlightScope, area }) =>
-            !!area && (
-              <AreaElement
-                key={seriesId}
-                id={seriesId}
-                d={d}
-                color={color}
-                highlightScope={highlightScope}
-                slots={slots}
-                slotProps={slotProps}
-                onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
-                skipAnimation={skipAnimation}
-              />
-            ),
-        )}
-    </g>
+    <AreaPlotRoot {...other}>
+      {completedData.map(
+        ({ d, seriesId, color, area, gradientId }) =>
+          !!area && (
+            <AreaElement
+              key={seriesId}
+              id={seriesId}
+              d={d}
+              color={color}
+              gradientId={gradientId}
+              slots={slots}
+              slotProps={slotProps}
+              onClick={onItemClick && ((event) => onItemClick(event, { type: 'line', seriesId }))}
+              skipAnimation={skipAnimation}
+            />
+          ),
+      )}
+    </AreaPlotRoot>
   );
 }
 
 AreaPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line area item is clicked.

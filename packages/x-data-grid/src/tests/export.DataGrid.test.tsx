@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer, screen, fireEvent } from '@mui-internal/test-utils';
+import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-describe('<DataGrid /> - Export', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+// We need `createObjectURL` to test the downloaded value
+describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
+  const { render } = createRenderer();
 
   function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
     const basicData = useBasicDemoData(3, 2);
@@ -18,28 +20,22 @@ describe('<DataGrid /> - Export', () => {
     );
   }
 
-  // We need `createObjectURL` to test the downloaded value
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let spyCreateObjectURL: SinonSpy;
+
+  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
-    spyCreateObjectURL = spy(global.URL, 'createObjectURL');
+    spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
+  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     spyCreateObjectURL.restore();
   });
 
   describe('component: GridToolbar', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase slots={{ toolbar: GridToolbar }} />);
+      render(<TestCase showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -48,14 +44,8 @@ describe('<DataGrid /> - Export', () => {
     });
 
     it('should apply custom csvOptions', async () => {
-      render(
-        <TestCase
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }}
-        />,
-      );
+      render(<TestCase showToolbar slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -66,22 +56,88 @@ describe('<DataGrid /> - Export', () => {
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', () => {
       render(
         <TestCase
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
+    });
+
+    it('should escape formulas in the cells', async () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'name' }]}
+            rows={[
+              { id: 0, name: '=1+1' },
+              { id: 1, name: '+1+1' },
+              { id: 2, name: '-1+1' },
+              { id: 3, name: '@1+1' },
+              { id: 4, name: '\t1+1' },
+              { id: 5, name: '\r1+1' },
+              { id: 6, name: ',=1+1' },
+              { id: 7, name: 'value,=1+1' },
+            ]}
+            showToolbar
+          />
+        </div>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
+      expect(spyCreateObjectURL.callCount).to.equal(1);
+      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+
+      expect(csv).to.equal(
+        [
+          'name',
+          '"\'=1+1"',
+          '"\'+1+1"',
+          '"\'-1+1"',
+          '"\'@1+1"',
+          '"\'\t1+1"',
+          '"\'\r1+1"',
+          '",=1+1"',
+          '"value,=1+1"',
+        ].join('\r\n'),
+      );
+    });
+
+    it('should export `undefined` and `null` values as blank', async () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'name' }]}
+            rows={[
+              { id: 0, name: 'Name' },
+              { id: 1, name: undefined },
+              { id: 2, name: null },
+              { id: 3, name: 1234 },
+            ]}
+            showToolbar
+          />
+        </div>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
+      expect(spyCreateObjectURL.callCount).to.equal(1);
+      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+
+      expect(csv).to.equal(['name', 'Name', '', '', '1234'].join('\r\n'));
     });
   });
 
   describe('component: GridToolbarExport', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} />);
+      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -93,10 +149,11 @@ describe('<DataGrid /> - Export', () => {
       render(
         <TestCase
           slots={{ toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
+          showToolbar
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -110,10 +167,11 @@ describe('<DataGrid /> - Export', () => {
           slots={{
             toolbar: () => <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />,
           }}
+          showToolbar
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });

@@ -11,11 +11,12 @@ export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
   // @ts-ignore
   aggregable: false,
   width: 100,
+  display: 'flex',
   align: 'center',
   headerAlign: 'center',
   headerName: '',
   disableColumnMenu: true,
   disableExport: true,
   renderCell: renderActionsCell,
-  getApplyQuickFilterFn: undefined,
+  getApplyQuickFilterFn: () => null,
 };

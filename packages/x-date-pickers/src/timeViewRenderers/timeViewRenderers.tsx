@@ -1,26 +1,26 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
-import { PickerValidDate, TimeView } from '../models';
+import { TimeView } from '../models';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
-import { BaseClockProps } from '../internals/models/props/clock';
+import { BaseClockProps } from '../internals/models/props/time';
 import {
   MultiSectionDigitalClock,
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
-import { isTimeView } from '../internals/utils/time-utils';
+import { isInternalTimeView, isTimeView } from '../internals/utils/time-utils';
 import { TimeViewWithMeridiem } from '../internals/models';
 import type { TimePickerProps } from '../TimePicker/TimePicker.types';
 
 export type TimeViewRendererProps<
   TView extends TimeViewWithMeridiem,
-  TComponentProps extends BaseClockProps<any, TView>,
+  TComponentProps extends BaseClockProps<TView>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;
   onViewChange?: (view: TView) => void;
   views: readonly TView[];
 };
 
-export const renderTimeViewClock = <TDate extends PickerValidDate>({
+export const renderTimeViewClock = ({
   view,
   onViewChange,
   focusedView,
@@ -49,8 +49,8 @@ export const renderTimeViewClock = <TDate extends PickerValidDate>({
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
   timezone,
-}: TimeViewRendererProps<TimeView, TimeClockProps<TDate, TimeView>>) => (
-  <TimeClock<TDate>
+}: TimeViewRendererProps<TimeView, TimeClockProps<TimeView>>) => (
+  <TimeClock
     view={view}
     onViewChange={onViewChange}
     focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
@@ -82,7 +82,7 @@ export const renderTimeViewClock = <TDate extends PickerValidDate>({
   />
 );
 
-export const renderDigitalClockTimeView = <TDate extends PickerValidDate>({
+export const renderDigitalClockTimeView = ({
   view,
   onViewChange,
   focusedView,
@@ -113,12 +113,12 @@ export const renderDigitalClockTimeView = <TDate extends PickerValidDate>({
   timezone,
 }: TimeViewRendererProps<
   Extract<TimeView, 'hours'>,
-  Omit<DigitalClockProps<TDate>, 'timeStep'> & Pick<TimePickerProps<TDate>, 'timeSteps'>
+  Omit<DigitalClockProps, 'timeStep'> & Pick<TimePickerProps, 'timeSteps'>
 >) => (
-  <DigitalClock<TDate>
+  <DigitalClock
     view={view}
     onViewChange={onViewChange}
-    focusedView={focusedView}
+    focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
     views={views.filter(isTimeView)}
     value={value}
@@ -147,7 +147,7 @@ export const renderDigitalClockTimeView = <TDate extends PickerValidDate>({
   />
 );
 
-export const renderMultiSectionDigitalClockTimeView = <TDate extends PickerValidDate>({
+export const renderMultiSectionDigitalClockTimeView = ({
   view,
   onViewChange,
   focusedView,
@@ -176,11 +176,11 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends PickerValid
   timeSteps,
   skipDisabled,
   timezone,
-}: TimeViewRendererProps<TimeViewWithMeridiem, MultiSectionDigitalClockProps<TDate>>) => (
-  <MultiSectionDigitalClock<TDate>
+}: TimeViewRendererProps<TimeViewWithMeridiem, MultiSectionDigitalClockProps>) => (
+  <MultiSectionDigitalClock
     view={view}
     onViewChange={onViewChange}
-    focusedView={focusedView}
+    focusedView={focusedView && isInternalTimeView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
     views={views.filter(isTimeView)}
     value={value}

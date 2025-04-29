@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
@@ -8,10 +9,7 @@ import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { getColumnsToExport, defaultGetRowsToExport } from './utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import {
-  GridExportDisplayOptions,
-  GridCsvExportMenuItem,
-} from '../../../components/toolbar/GridToolbarExport';
+import { GridExportDisplayOptions, GridCsvExportMenuItem } from '../../../components/toolbar';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**
@@ -22,7 +20,7 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
  * @requires useGridParamsApi (method)
  */
 export const useGridCsvExport = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'ignoreValueFormatterDuringExport'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
@@ -48,9 +46,13 @@ export const useGridCsvExport = (
       return buildCSV({
         columns: exportedColumns,
         rowIds: exportedRowIds,
-        delimiterCharacter: options.delimiter || ',',
-        includeHeaders: options.includeHeaders ?? true,
-        includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
+        csvOptions: {
+          delimiter: options.delimiter || ',',
+          shouldAppendQuotes: options.shouldAppendQuotes ?? true,
+          includeHeaders: options.includeHeaders ?? true,
+          includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
+          escapeFormulas: options.escapeFormulas ?? true,
+        },
         ignoreValueFormatter,
         apiRef,
       });

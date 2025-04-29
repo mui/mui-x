@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseMobilePickerSlots,
   MobileOnlyPickerProps,
@@ -8,28 +9,31 @@ import {
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
-import { DateView, PickerValidDate } from '../models';
 
-export interface MobileDatePickerSlots<TDate extends PickerValidDate>
-  extends BaseDatePickerSlots<TDate>,
-    MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
+export interface MobileDatePickerSlots
+  extends BaseDatePickerSlots,
+    MakeOptional<UseMobilePickerSlots, 'field'> {}
 
-export interface MobileDatePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDatePickerSlotProps<TDate>,
-    ExportedUseMobilePickerSlotProps<TDate, DateView> {}
+export interface MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseDatePickerSlotProps,
+    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
-export interface MobileDatePickerProps<TDate extends PickerValidDate>
-  extends BaseDatePickerProps<TDate>,
-    MobileOnlyPickerProps<TDate> {
+export interface MobileDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends BaseDatePickerProps,
+    MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDatePickerSlots<TDate>;
+  slots?: MobileDatePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDatePickerSlotProps<TDate>;
+  slotProps?: MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow?: 3 | 4;
 }

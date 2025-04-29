@@ -1,13 +1,10 @@
 import * as React from 'react';
 
 import { styled } from '@mui/material/styles';
-import {
-  ResponsiveChartContainer,
-  LinePlot,
-  ChartsYAxis,
-  useDrawingArea,
-  useYScale,
-} from '@mui/x-charts';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { useDrawingArea, useYScale } from '@mui/x-charts/hooks';
 
 const StyledPath = styled('path')(({ theme }) => ({
   fill: 'none',
@@ -98,38 +95,39 @@ function ValueHighlight(props) {
 export default function ScaleDemo() {
   const svgRef = React.useRef(null);
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       ref={svgRef}
-      margin={{ top: 20, left: 50, right: 50, bottom: 30 }}
       height={300}
       series={[
         {
           type: 'line',
           data: [5, 15, 20, 24, 30, 38, 40, 51, 52, 61],
-          yAxisKey: 'left_axis_id',
+          yAxisId: 'left_axis_id',
         },
         {
           type: 'line',
           data: [
             50134, 48361, 46362, 44826, 42376, 40168, 38264, 36159, 34259, 32168,
           ],
-          yAxisKey: 'right_axis_id',
+          yAxisId: 'right_axis_id',
         },
       ]}
-      xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], scaleType: 'point' }]}
+      xAxis={[
+        {
+          data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          scaleType: 'point',
+          position: 'none',
+        },
+      ]}
       yAxis={[
-        {
-          id: 'left_axis_id',
-        },
-        {
-          id: 'right_axis_id',
-        },
+        { id: 'left_axis_id', position: 'left' },
+        { id: 'right_axis_id', position: 'right', width: 50 },
       ]}
     >
       <LinePlot />
-      <ChartsYAxis position="left" axisId="left_axis_id" />
-      <ChartsYAxis position="right" axisId="right_axis_id" />
+      <ChartsYAxis axisId="left_axis_id" />
+      <ChartsYAxis axisId="right_axis_id" />
       <ValueHighlight svgRef={svgRef} />
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 }

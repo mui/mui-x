@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { sendMuiXTelemetryEvent, muiXTelemetryEvents } from '@mui/x-telemetry';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
@@ -8,15 +9,11 @@ import {
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
+  showNotAvailableInInitialProPlanError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { LicenseScope } from '../utils/licenseScope';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
-
-export type MuiCommercialPackageName =
-  | 'x-data-grid-pro'
-  | 'x-data-grid-premium'
-  | 'x-date-pickers-pro';
+import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 export const sharedLicenseStatuses: {
   [packageName in MuiCommercialPackageName]?: {
@@ -45,23 +42,32 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.licenseVerifier;
     }
 
-    const acceptedScopes: LicenseScope[] = packageName.includes('premium')
-      ? ['premium']
-      : ['pro', 'premium'];
-
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
       releaseInfo,
       licenseKey,
-      acceptedScopes,
+      packageName,
     });
 
     const fullPackageName = `@mui/${packageName}`;
+
+    sendMuiXTelemetryEvent(
+      muiXTelemetryEvents.licenseVerification(
+        { licenseKey },
+        {
+          packageName,
+          packageReleaseInfo: releaseInfo,
+          licenseStatus: licenseStatus?.status,
+        },
+      ),
+    );
 
     if (licenseStatus.status === LICENSE_STATUS.Valid) {
       // Skip
     } else if (licenseStatus.status === LICENSE_STATUS.Invalid) {
       showInvalidLicenseKeyError();
+    } else if (licenseStatus.status === LICENSE_STATUS.NotAvailableInInitialProPlan) {
+      showNotAvailableInInitialProPlanError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {

@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "@mui/internal-test-utils/initMatchers",
+      "@mui/material/themeCssVarsAugmentation",
+      "chai-dom",
+      "dayjs/plugin/timezone.d.ts",
+      "dayjs/plugin/utc.d.ts",
+      "mocha",
+      "moment-timezone",
+      "vite/client"
+    ],
+    "skipLibCheck": true
+  },
+  "include": ["e2e/**/*", "e2e-website/**/*", "regressions/**/*"],
+  "exclude": ["regressions/build/**/*", "regressions/screenshots/**/*"]
+}

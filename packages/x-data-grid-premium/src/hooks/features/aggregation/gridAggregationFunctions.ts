@@ -1,4 +1,3 @@
-import { GridValueFormatterParams } from '@mui/x-data-grid-pro';
 import { isNumber } from '@mui/x-data-grid-pro/internals';
 import { GridAggregationFunction } from './gridAggregationInterfaces';
 
@@ -33,6 +32,10 @@ const avgAgg: GridAggregationFunction<unknown, number> = {
       }
     }
 
+    if (sum === 0) {
+      return null;
+    }
+
     return sum / valuesCount;
   },
   columnTypes: ['number'],
@@ -44,12 +47,18 @@ const minAgg: GridAggregationFunction<number | Date> = {
       return null;
     }
 
+    let hasValidValue = false;
     let min: number | Date = +Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
       if (value != null && value < min) {
         min = value;
+        hasValidValue = true;
       }
+    }
+
+    if (!hasValidValue) {
+      return null;
     }
 
     return min;
@@ -63,12 +72,18 @@ const maxAgg: GridAggregationFunction<number | Date> = {
       return null;
     }
 
+    let hasValidValue = false;
     let max: number | Date = -Infinity;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
       if (value != null && value > max) {
         max = value;
+        hasValidValue = true;
       }
+    }
+
+    if (!hasValidValue) {
+      return null;
     }
 
     return max;
@@ -80,12 +95,12 @@ const sizeAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
     return values.filter((value) => typeof value !== 'undefined').length;
   },
-  valueFormatter: (params: GridValueFormatterParams) => {
-    if (params.value == null || !isNumber(params.value)) {
-      return params.value;
+  valueFormatter: (value: number | string | null) => {
+    if (value == null || !isNumber(value)) {
+      return value;
     }
 
-    return params.value.toLocaleString();
+    return value.toLocaleString();
   },
   hasCellUnit: false,
 };

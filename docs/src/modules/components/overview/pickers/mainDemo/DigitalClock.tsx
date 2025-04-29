@@ -1,0 +1,69 @@
+import * as React from 'react';
+import { Dayjs } from 'dayjs';
+import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { StaticTimePicker, StaticTimePickerProps } from '@mui/x-date-pickers/StaticTimePicker';
+import {
+  PickersLayoutProps,
+  usePickerLayout,
+  pickersLayoutClasses,
+  PickersLayoutRoot,
+  PickersLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersLayout';
+import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
+
+const StyledLayout = styled(PickersLayoutRoot)({
+  overflow: 'auto',
+  [`.${pickersLayoutClasses.contentWrapper}`]: {
+    '& .MuiClock-root': {
+      width: 'fit-content',
+    },
+  },
+});
+
+function CustomLayout(props: PickersLayoutProps<Dayjs | null>) {
+  const { actionBar, content, ownerState } = usePickerLayout(props);
+  return (
+    <StyledLayout ownerState={ownerState}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
+        {content}
+        {actionBar}
+      </PickersLayoutContentWrapper>
+    </StyledLayout>
+  );
+}
+export default function DigitalClock() {
+  return (
+    <Card variant="outlined" sx={{ padding: 0.8, height: 'fit-content' }}>
+      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+      <Typography variant="subtitle2" sx={{ pt: 1, pb: 2 }}>
+        Book now!
+      </Typography>
+      <Paper
+        elevation={0}
+        sx={{
+          display: 'flex',
+          border: (theme) => `1px solid ${theme.palette.divider}`,
+          flexWrap: 'wrap',
+          padding: 0,
+        }}
+      >
+        <StaticTimePicker
+          slots={{ layout: CustomLayout }}
+          viewRenderers={
+            {
+              hours: renderMultiSectionDigitalClockTimeView,
+              minutes: renderMultiSectionDigitalClockTimeView,
+              meridiem: renderMultiSectionDigitalClockTimeView,
+            } as StaticTimePickerProps['viewRenderers']
+          }
+        />
+      </Paper>
+    </Card>
+  );
+}

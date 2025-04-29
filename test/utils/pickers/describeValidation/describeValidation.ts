@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import * as React from 'react';
-import createDescribe from '@mui-internal/test-utils/createDescribe';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { testDayViewValidation } from './testDayViewValidation';
 import { testMonthViewValidation } from './testMonthViewValidation';
 import { testTextFieldValidation } from './testTextFieldValidation';

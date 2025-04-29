@@ -1,0 +1,9 @@
+<RichTreeViewPro
+  items={MUI_X_PRODUCTS}
+  itemsReordering
+  defaultExpandedItems={['grid', 'pickers']}
+  apiRef={apiRef}
+  isItemReorderable={(itemId) =>
+    apiRef.current!.getItemOrderedChildrenIds(itemId).length === 0
+  }
+/>

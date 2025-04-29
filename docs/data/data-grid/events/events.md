@@ -10,7 +10,7 @@ The handler is a method that's called with three arguments:
 
 1. the parameters containing the information related to the event
 2. the `MuiEvent` containing the DOM event or the React synthetic event, when available
-3. the `GridCallbackDetails` containing the `GridApi`—only if `DataGridPro` or `DataGridPremium` is being used
+3. the `GridCallbackDetails` containing the `GridApi`—only if Data Grid Pro or Data Grid Premium is being used
 
 For example, here is an event handler for the `rowClick` event:
 
@@ -41,17 +41,17 @@ The following demo shows how to subscribe to the `rowClick` event using the `onR
 
 {{"demo": "SubscribeToEventsProp.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### With `useGridApiEventHandler`
+### With `useGridEvent`
 
 ```tsx
-useGridApiEventHandler(apiRef, 'rowClick', handleEvent);
+useGridEvent(apiRef, 'rowClick', handleEvent);
 ```
 
 :::warning
-This hook can only be used inside the scope of the Data Grid (i.e. inside component slots or cell renderers).
+This hook can only be used inside the scope of the Data Grid (that is inside component slots or cell renderers).
 :::
 
-The following demo shows how to subscribe to the `rowClick` event using `useGridApiEventHandler`—try it out by clicking on any row:
+The following demo shows how to subscribe to the `rowClick` event using `useGridEvent()`—try it out by clicking on any row:
 
 {{"demo": "SubscribeToEventsHook.js", "bg": "inline", "defaultCodeOpen": false}}
 

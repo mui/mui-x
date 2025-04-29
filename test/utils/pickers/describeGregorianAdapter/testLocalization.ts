@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { cleanText } from 'test/utils/pickers';
+import moment from 'moment';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING } from './describeGregorianAdapter.utils';
 
@@ -20,7 +21,7 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
         expandedFormat === formatString ||
         (adapter.lib === 'luxon' && formatString === 'ccccc')
       ) {
-        // Luxon format 'ccccc' is not supported by the field components since multiple day can have the same one-letter value (e.g: Tuesday and Thursday).
+        // Luxon format 'ccccc' is not supported by the field components since multiple day can have the same one-letter value (for example: Tuesday and Thursday).
         // It is used in the calendar header to display the day of the weeks.
         // Format 'ccccc' is not supported for the field fomrat since multiple day can have the same short
         // It's used to display calendar days.
@@ -42,6 +43,10 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
   });
 
   it('Method: getCurrentLocaleCode', () => {
+    if (adapter.lib === 'moment') {
+      moment.locale('en');
+    }
+
     // Returns the default locale
     expect(adapter.getCurrentLocaleCode()).to.match(/en/);
   });

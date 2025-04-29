@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 
-import {
-  ResponsiveChartContainer,
-  LinePlot,
-  useDrawingArea,
-  useYScale,
-  useXScale,
-} from '@mui/x-charts';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 
 const x = Array.from({ length: 21 }, (_, index) => -1 + 0.2 * index);
 const linear = x.map((v) => -1 + v);
@@ -58,7 +54,7 @@ function CartesianAxis() {
 }
 export default function OriginDemo() {
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       margin={{ top: 5, left: 5, right: 5, bottom: 5 }}
       height={300}
       series={[
@@ -71,11 +67,11 @@ export default function OriginDemo() {
           data: poly,
         },
       ]}
-      xAxis={[{ data: x, scaleType: 'linear', min: -1, max: 3 }]}
-      yAxis={[{ min: -2, max: 5 }]}
+      xAxis={[{ data: x, scaleType: 'linear', min: -1, max: 3, position: 'none' }]}
+      yAxis={[{ min: -2, max: 5, position: 'none' }]}
     >
       <CartesianAxis />
       <LinePlot />
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 }

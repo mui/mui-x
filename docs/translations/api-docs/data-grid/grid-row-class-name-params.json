@@ -1,0 +1,13 @@
+{
+  "interfaceDescription": "Object passed as parameter in the row <code>getRowClassName</code> callback prop.",
+  "propertiesDescriptions": {
+    "columns": { "description": "All grid columns." },
+    "id": { "description": "The grid row id." },
+    "indexRelativeToCurrentPage": {
+      "description": "Index of the row in the current page.<br />If the pagination is disabled, it will be the index relative to all filtered rows."
+    },
+    "isFirstVisible": { "description": "Whether this row is the first visible or not." },
+    "isLastVisible": { "description": "Whether this row is the last visible or not." },
+    "row": { "description": "The row model of the row that the current cell belongs to." }
+  }
+}

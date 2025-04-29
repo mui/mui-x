@@ -2,8 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro, GridApiPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
@@ -12,11 +11,16 @@ import {
 import * as ReactDOM from 'react-dom';
 import { GridData } from 'docsx/data/data-grid/virtualization/ColumnVirtualizationGrid';
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Brand ID' },
   { field: 'brand', headerName: 'Brand name' },
   { field: 'rep', headerName: 'Representative' },
-  { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    renderCell: renderRating,
+    display: 'flex',
+  },
 ];
 
 function renderRating(params: any) {
@@ -48,7 +52,7 @@ function getFakeData(length: number): Promise<{ rows: GridData['rows'] }> {
 }
 
 export default function ColumnAutosizingAsync() {
-  const apiRef = useGridApiRef<GridApiPro>();
+  const apiRef = useGridApiRef();
   const [isLoading, setIsLoading] = React.useState(false);
   const [rows] = React.useState([]);
 
@@ -56,13 +60,16 @@ export default function ColumnAutosizingAsync() {
     setIsLoading(true);
     getFakeData(100)
       .then((data) => {
-        return ReactDOM.flushSync(() => {
+        ReactDOM.flushSync(() => {
           setIsLoading(false);
-          apiRef.current.updateRows(data.rows);
+          apiRef.current?.updateRows(data.rows);
         });
       })
+      // `sleep`/`setTimeout` is required because `.updateRows` is an
+      // async function throttled to avoid choking on frequent changes.
+      .then(() => sleep(0))
       .then(() =>
-        apiRef.current.autosizeColumns({
+        apiRef.current?.autosizeColumns({
           includeHeaders: true,
           includeOutliers: true,
         }),
@@ -98,4 +105,10 @@ export default function ColumnAutosizingAsync() {
       </div>
     </div>
   );
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }

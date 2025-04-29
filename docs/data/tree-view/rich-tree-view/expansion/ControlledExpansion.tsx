@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
@@ -34,50 +35,50 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const getAllItemWithChildrenNodeIds = () => {
-  const nodeIds: TreeViewItemId[] = [];
-  const registerNodeId = (item: TreeViewBaseItem) => {
+const getAllItemsWithChildrenItemIds = () => {
+  const itemIds: TreeViewItemId[] = [];
+  const registerItemId = (item: TreeViewBaseItem) => {
     if (item.children?.length) {
-      nodeIds.push(item.id);
-      item.children.forEach(registerNodeId);
+      itemIds.push(item.id);
+      item.children.forEach(registerItemId);
     }
   };
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
+  MUI_X_PRODUCTS.forEach(registerItemId);
 
-  return nodeIds;
+  return itemIds;
 };
 
 export default function ControlledExpansion() {
-  const [expandedNodes, setExpandedNodes] = React.useState<string[]>([]);
+  const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
 
-  const handleExpandedNodesChange = (
-    event: React.SyntheticEvent,
-    nodeIds: string[],
+  const handleExpandedItemsChange = (
+    event: React.SyntheticEvent | null,
+    itemIds: string[],
   ) => {
-    setExpandedNodes(nodeIds);
+    setExpandedItems(itemIds);
   };
 
   const handleExpandClick = () => {
-    setExpandedNodes((oldExpanded) =>
-      oldExpanded.length === 0 ? getAllItemWithChildrenNodeIds() : [],
+    setExpandedItems((oldExpanded) =>
+      oldExpanded.length === 0 ? getAllItemsWithChildrenItemIds() : [],
     );
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
+    <Stack spacing={2}>
+      <div>
         <Button onClick={handleExpandClick}>
-          {expandedNodes.length === 0 ? 'Expand all' : 'Collapse all'}
+          {expandedItems.length === 0 ? 'Expand all' : 'Collapse all'}
         </Button>
-      </Box>
-      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
+      </div>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          expandedNodes={expandedNodes}
-          onExpandedNodesChange={handleExpandedNodesChange}
+          expandedItems={expandedItems}
+          onExpandedItemsChange={handleExpandedItemsChange}
         />
       </Box>
-    </Box>
+    </Stack>
   );
 }

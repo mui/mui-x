@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { useGridApiOptionHandler, useGridNativeEventListener } from '../../utils';
+import { useGridEventPriority, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { isCopyShortcut } from '../../../utils/keyboardUtils';
+import { gridRowSelectionCountSelector } from '../rowSelection';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -58,7 +61,7 @@ function hasNativeSelection(element: HTMLInputElement) {
  * @requires useGridSelection (method)
  */
 export const useGridClipboard = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'
@@ -74,14 +77,7 @@ export const useGridClipboard = (
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
-      if (
-        !(
-          (event.ctrlKey || event.metaKey) &&
-          event.key.toLowerCase() === 'c' &&
-          !event.shiftKey &&
-          !event.altKey
-        )
-      ) {
+      if (!isCopyShortcut(event)) {
         return;
       }
 
@@ -91,19 +87,24 @@ export const useGridClipboard = (
       }
 
       let textToCopy = '';
-      const selectedRows = apiRef.current.getSelectedRows();
-      if (selectedRows.size > 0) {
+      const selectedRowsCount = gridRowSelectionCountSelector(apiRef);
+      if (selectedRowsCount > 0) {
         textToCopy = apiRef.current.getDataAsCsv({
           includeHeaders: false,
-          // TODO: make it configurable
           delimiter: clipboardCopyCellDelimiter,
+          shouldAppendQuotes: false,
+          escapeFormulas: false,
         });
       } else {
         const focusedCell = gridFocusCellSelector(apiRef);
         if (focusedCell) {
           const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
           textToCopy = serializeCellValue(cellParams, {
-            delimiterCharacter: clipboardCopyCellDelimiter,
+            csvOptions: {
+              delimiter: clipboardCopyCellDelimiter,
+              shouldAppendQuotes: false,
+              escapeFormulas: false,
+            },
             ignoreValueFormatter,
           });
         }
@@ -119,7 +120,12 @@ export const useGridClipboard = (
     [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
 
-  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
+  useGridNativeEventListener(
+    apiRef,
+    () => apiRef.current.rootElementRef.current,
+    'keydown',
+    handleCopy,
+  );
 
-  useGridApiOptionHandler(apiRef, 'clipboardCopy', props.onClipboardCopy);
+  useGridEventPriority(apiRef, 'clipboardCopy', props.onClipboardCopy);
 };

@@ -1,0 +1,14 @@
+<DataGrid
+  columns={columns}
+  rows={rows}
+  rowSpanning
+  disableRowSelectionOnClick
+  hideFooter
+  showCellVerticalBorder
+  showColumnVerticalBorder
+  sx={{
+    '& .MuiDataGrid-row:hover': {
+      backgroundColor: 'transparent',
+    },
+  }}
+/>

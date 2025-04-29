@@ -7,6 +7,20 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "aiAssistantActiveConversationIndexChange",
+    "description": "Fired when the AI Assistant active conversation index changes.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "aiAssistantConversationsChange",
+    "description": "Fired when the AI Assistant conversation state changes.",
+    "params": "Conversation[]",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
@@ -129,6 +143,14 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "columnHeaderContextMenu",
+    "description": "Fired when the user attempts to open a context menu in the column header.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
+    "componentProp": "onColumnHeaderContextMenu"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderDoubleClick",
     "description": "Fired when a column header is double-clicked.",
     "params": "GridColumnHeaderParams",
@@ -203,6 +225,13 @@
     "componentProp": "onResize"
   },
   {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "densityChange",
+    "description": "Fired when the density changes.",
+    "params": "GridDensity",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid-premium"],
     "name": "excelExportStateChange",
     "description": "Fired when the state of the Excel export task changes",
@@ -212,7 +241,7 @@
   {
     "projects": ["x-data-grid-pro", "x-data-grid-premium"],
     "name": "fetchRows",
-    "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object.",
+    "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object. Used to trigger <code>onFetchRows</code>.",
     "params": "GridFetchRowsParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onFetchRows"
@@ -249,9 +278,37 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "paginationMetaChange",
+    "description": "Fired when the pagination meta change.",
+    "params": "GridPaginationMeta",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "paginationModelChange",
     "description": "Fired when the pagination model changes.",
     "params": "GridPaginationModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotModeChange",
+    "description": "",
+    "params": "boolean",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotModelChange",
+    "description": "Fired when the pivot model changes.",
+    "params": "GridPivotModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotPanelOpenChange",
+    "description": "",
+    "params": "boolean",
     "event": "MuiEvent<{}>"
   },
   {
@@ -286,11 +343,25 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rootMount",
+    "description": "Fired when rootElementRef.current becomes available.",
+    "params": "HTMLElement",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowClick",
     "description": "Fired when a row is clicked. Not fired if the cell clicked is from an interactive column (actions, checkbox, etc).",
     "params": "GridRowParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onRowClick"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowCountChange",
+    "description": "Fired when the row count change.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

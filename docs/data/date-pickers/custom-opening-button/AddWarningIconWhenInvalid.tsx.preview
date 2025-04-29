@@ -1,0 +1,10 @@
+<DatePicker
+  label="Picker with error icon"
+  maxDate={dayjs('2022-04-17')}
+  defaultValue={dayjs('2022-04-18')}
+  onError={setError}
+  slots={{ inputAdornment: CustomInputAdornment }}
+  slotProps={{
+    inputAdornment: { hasError: !!error } as any,
+  }}
+/>

@@ -1,46 +1,34 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
-import { getDataGridUtilityClass as getClassName } from '../constants';
+import { gridClasses } from '../constants';
 
 const classes = {
-  root: getClassName('scrollbarFiller'),
-  header: getClassName('scrollbarFiller--header'),
-  borderTop: getClassName('scrollbarFiller--borderTop'),
-  pinnedRight: getClassName('scrollbarFiller--pinnedRight'),
+  root: gridClasses.scrollbarFiller,
+  header: gridClasses['scrollbarFiller--header'],
+  borderTop: gridClasses['scrollbarFiller--borderTop'],
+  borderBottom: gridClasses['scrollbarFiller--borderBottom'],
+  pinnedRight: gridClasses['scrollbarFiller--pinnedRight'],
 };
-
-const Style = styled('div')({
-  minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
-  alignSelf: 'stretch',
-  [`&.${classes.borderTop}`]: {
-    borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-  },
-  [`&.${classes.pinnedRight}`]: {
-    backgroundColor: 'var(--DataGrid-pinnedBackground)',
-  },
-  [`&.${classes.pinnedRight}:not(.${classes.header})`]: {
-    position: 'sticky',
-    right: 0,
-  },
-});
 
 function GridScrollbarFillerCell({
   header,
   borderTop = true,
+  borderBottom,
   pinnedRight,
 }: {
   header?: boolean;
   borderTop?: boolean;
+  borderBottom?: boolean;
   pinnedRight?: boolean;
 }) {
   return (
-    <Style
+    <div
       role="presentation"
       className={clsx(
         classes.root,
         header && classes.header,
         borderTop && classes.borderTop,
+        borderBottom && classes.borderBottom,
         pinnedRight && classes.pinnedRight,
       )}
     />

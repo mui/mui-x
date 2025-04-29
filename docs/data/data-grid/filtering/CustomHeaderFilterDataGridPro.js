@@ -62,11 +62,20 @@ function CustomHeaderFilter(props) {
 
   return (
     <Stack
-      sx={{
-        outline: hasFocus ? 'solid #1976d2 1px' : '',
-        outlineOffset: hasFocus ? -2 : 0,
-        borderTop: `1px solid var(--DataGrid-rowBorderColor)`,
-      }}
+      sx={[
+        {
+          borderBottom: `1px solid var(--DataGrid-rowBorderColor)`,
+        },
+        hasFocus
+          ? {
+              outline: 'solid #1976d2 1px',
+              outlineOffset: -2,
+            }
+          : {
+              outline: '',
+              outlineOffset: 0,
+            },
+      ]}
       tabIndex={tabIndex}
       ref={cellRef}
       data-field={colDef.field}
@@ -90,7 +99,7 @@ function CustomHeaderFilter(props) {
 }
 
 export default function CustomHeaderFilterDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
   });
@@ -99,6 +108,7 @@ export default function CustomHeaderFilterDataGridPro() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={loading}
         initialState={{
           ...data.initialState,
           columns: {

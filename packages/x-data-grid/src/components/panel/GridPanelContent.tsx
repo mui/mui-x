@@ -2,8 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -22,13 +23,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelContent',
-  overridesResolver: (props, styles) => styles.panelContent,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
   flex: '1 1',
   maxHeight: 400,
+  padding: vars.spacing(2.5, 1.5, 2, 1),
+  gap: vars.spacing(2.5),
 });
 
 function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
@@ -38,7 +40,7 @@ function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: S
 
   return (
     <GridPanelContentRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={rootProps}
       {...other}
     />
@@ -48,7 +50,7 @@ function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: S
 GridPanelContent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),

@@ -1,14 +1,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormControlState, useFormControl } from '@mui/material/FormControl';
+import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
+import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
+import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { MuiEvent } from '@mui/x-internals/types';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
+  PickersInputBaseClasses,
 } from './pickersInputBaseClasses';
 import { PickersInputBaseProps } from './PickersInputBase.types';
 import {
@@ -17,15 +21,17 @@ import {
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
+  PickersSectionElement,
 } from '../../PickersSectionList';
+import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
 export const PickersInputBaseRoot = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   ...theme.typography.body1,
   color: (theme.vars || theme).palette.text.primary,
   cursor: 'text',
@@ -36,16 +42,18 @@ export const PickersInputBaseRoot = styled('div', {
   position: 'relative',
   boxSizing: 'border-box', // Prevent padding issue with fullWidth.
   letterSpacing: `${round(0.15 / 16)}em`,
-  ...(ownerState.fullWidth && {
-    width: '100%',
-  }),
+  variants: [
+    {
+      props: { isInputInFullWidth: true },
+      style: { width: '100%' },
+    },
+  ],
 }));
 
 export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, {
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => ({
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -58,40 +66,60 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
   letterSpacing: 'inherit',
   // Baseline behavior
   width: '182px',
-  ...(ownerState.size === 'small' && {
-    paddingTop: 1,
-  }),
-  ...(theme.direction === 'rtl' && { textAlign: 'right /*! @noflip */' as any }),
-  ...(!(ownerState.adornedStart || ownerState.focused || ownerState.filled) && {
-    color: 'currentColor',
-    ...(ownerState.label == null &&
-      (theme.vars
+  variants: [
+    {
+      props: { fieldDirection: 'rtl' },
+      style: {
+        textAlign: 'right /*! @noflip */' as any,
+      },
+    },
+    {
+      props: { inputSize: 'small' },
+      style: {
+        paddingTop: 1,
+      },
+    },
+    {
+      props: { hasStartAdornment: false, isFieldFocused: false, isFieldValueEmpty: true },
+      style: {
+        color: 'currentColor',
+        opacity: 0,
+      },
+    },
+    {
+      props: {
+        hasStartAdornment: false,
+        isFieldFocused: false,
+        isFieldValueEmpty: true,
+        inputHasLabel: false,
+      },
+      style: theme.vars
         ? {
             opacity: theme.vars.opacity.inputPlaceholder,
           }
         : {
             opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
-          })),
-    ...(ownerState.label != null && { opacity: 0 }),
-  }),
+          },
+    },
+  ],
 }));
 
 const PickersInputBaseSection = styled(PickersSectionListSection, {
   name: 'MuiPickersInputBase',
   slot: 'Section',
-  overridesResolver: (props, styles) => styles.section,
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
   letterSpacing: 'inherit',
   lineHeight: '1.4375em', // 23px
-  display: 'flex',
+  display: 'inline-block',
+  whiteSpace: 'nowrap',
 }));
 
 const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, {
   name: 'MuiPickersInputBase',
   slot: 'SectionContent',
-  overridesResolver: (props, styles) => styles.content,
+  overridesResolver: (props, styles) => styles.content, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   lineHeight: '1.4375em', // 23px
@@ -103,7 +131,6 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
 const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
   name: 'MuiPickersInputBase',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
 })(() => ({
   whiteSpace: 'pre',
   letterSpacing: 'inherit',
@@ -112,37 +139,64 @@ const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparat
 const PickersInputBaseInput = styled('input', {
   name: 'MuiPickersInputBase',
   slot: 'Input',
-  overridesResolver: (props, styles) => styles.hiddenInput,
+  overridesResolver: (props, styles) => styles.hiddenInput, // FIXME: Inconsistent naming with slot
 })({
   ...visuallyHidden,
 });
 
-const useUtilityClasses = (ownerState: OwnerStateType) => {
+const PickersInputBaseActiveBar = styled('div', {
+  name: 'MuiPickersInputBase',
+  slot: 'ActiveBar',
+})<{ ownerState: { sectionOffsets: number[] } }>(({ theme, ownerState }) => ({
+  display: 'none',
+  position: 'absolute',
+  height: 2,
+  bottom: 2,
+  borderTopLeftRadius: 2,
+  borderTopRightRadius: 2,
+  transition: theme.transitions.create(['width', 'left'], {
+    duration: theme.transitions.duration.shortest,
+  }),
+  backgroundColor: (theme.vars || theme).palette.primary.main,
+  '[data-active-range-position="start"] &, [data-active-range-position="end"] &': {
+    display: 'block',
+  },
+  '[data-active-range-position="start"] &': {
+    left: ownerState.sectionOffsets[0],
+  },
+  '[data-active-range-position="end"] &': {
+    left: ownerState.sectionOffsets[1],
+  },
+}));
+
+const useUtilityClasses = (
+  classes: Partial<PickersInputBaseClasses> | undefined,
+  ownerState: PickerTextFieldOwnerState,
+) => {
   const {
-    focused,
-    disabled,
-    error,
-    classes,
-    fullWidth,
-    readOnly,
-    color,
-    size,
-    endAdornment,
-    startAdornment,
+    isFieldFocused,
+    isFieldDisabled,
+    isFieldReadOnly,
+    hasFieldError,
+    inputSize,
+    isInputInFullWidth,
+    inputColor,
+    hasStartAdornment,
+    hasEndAdornment,
   } = ownerState;
 
   const slots = {
     root: [
       'root',
-      focused && !disabled && 'focused',
-      disabled && 'disabled',
-      readOnly && 'readOnly',
-      error && 'error',
-      fullWidth && 'fullWidth',
-      `color${capitalize(color!)}`,
-      size === 'small' && 'inputSizeSmall',
-      Boolean(startAdornment) && 'adornedStart',
-      Boolean(endAdornment) && 'adornedEnd',
+      isFieldFocused && !isFieldDisabled && 'focused',
+      isFieldDisabled && 'disabled',
+      isFieldReadOnly && 'readOnly',
+      hasFieldError && 'error',
+      isInputInFullWidth && 'fullWidth',
+      `color${capitalize(inputColor!)}`,
+      inputSize === 'small' && 'inputSizeSmall',
+      hasStartAdornment && 'adornedStart',
+      hasEndAdornment && 'adornedEnd',
     ],
     notchedOutline: ['notchedOutline'],
     input: ['input'],
@@ -150,14 +204,56 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     sectionContent: ['sectionContent'],
     sectionBefore: ['sectionBefore'],
     sectionAfter: ['sectionAfter'],
+    activeBar: ['activeBar'],
   };
 
   return composeClasses(slots, getPickersInputBaseUtilityClass, classes);
 };
 
-interface OwnerStateType
-  extends FormControlState,
-    Omit<PickersInputBaseProps, keyof FormControlState> {}
+function resolveSectionElementWidth(
+  sectionElement: PickersSectionElement,
+  rootRef: React.RefObject<HTMLDivElement | null>,
+  index: number,
+  dateRangePosition: 'start' | 'end',
+) {
+  if (sectionElement.content.id) {
+    const activeSectionElements = rootRef.current?.querySelectorAll<HTMLSpanElement>(
+      `[data-sectionindex="${index}"] [data-range-position="${dateRangePosition}"]`,
+    );
+    if (activeSectionElements) {
+      return Array.from(activeSectionElements).reduce((currentActiveBarWidth, element) => {
+        return currentActiveBarWidth + element.offsetWidth;
+      }, 0);
+    }
+  }
+  return 0;
+}
+
+function resolveSectionWidthAndOffsets(
+  elements: PickersSectionElement[],
+  rootRef: React.RefObject<HTMLDivElement | null>,
+) {
+  let activeBarWidth = 0;
+  const activeRangePosition = rootRef.current?.getAttribute('data-active-range-position');
+  if (activeRangePosition === 'end') {
+    for (let i = elements.length - 1; i >= elements.length / 2; i -= 1) {
+      activeBarWidth += resolveSectionElementWidth(elements[i], rootRef, i, 'end');
+    }
+  } else {
+    for (let i = 0; i < elements.length / 2; i += 1) {
+      activeBarWidth += resolveSectionElementWidth(elements[i], rootRef, i, 'start');
+    }
+  }
+  return {
+    activeBarWidth,
+    sectionOffsets: [
+      rootRef.current?.querySelector<HTMLSpanElement>(`[data-sectionindex="0"]`)?.offsetLeft || 0,
+      rootRef.current?.querySelector<HTMLSpanElement>(
+        `[data-sectionindex="${elements.length / 2}"]`,
+      )?.offsetLeft || 0,
+    ],
+  };
+}
 
 /**
  * @ignore - internal component.
@@ -184,22 +280,31 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     startAdornment,
     renderSuffix,
     slots,
+    slotProps,
     contentEditable,
     tabIndex,
     onInput,
     onPaste,
     onKeyDown,
     fullWidth,
+    name,
+    readOnly,
     inputProps,
     inputRef,
     sectionListRef,
+    onFocus,
+    onBlur,
+    classes: classesProp,
+    ownerState: ownerStateProp,
     ...other
   } = props;
 
+  const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const activeBarRef = React.useRef<HTMLDivElement>(null);
+  const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
-
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -207,15 +312,39 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     );
   }
 
-  const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    // Fix a bug with IE11 where the focus/blur events are triggered
-    // while the component is disabled.
-    if (muiFormControl.disabled) {
-      event.stopPropagation();
-      return;
-    }
+  const ownerState = ownerStateProp ?? ownerStateContext;
 
+  const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {
     muiFormControl.onFocus?.(event);
+    onFocus?.(event);
+  };
+
+  const handleHiddenInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    handleInputFocus(event);
+  };
+
+  const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
+    onKeyDown?.(event);
+    if (event.key === 'Enter' && !event.defaultMuiPrevented) {
+      // Do nothing if it's a multi input field
+      if (rootRef.current?.dataset.multiInput) {
+        return;
+      }
+      const closestForm = rootRef.current?.closest<HTMLFormElement>('form');
+      const submitTrigger = closestForm?.querySelector<HTMLElement>('[type="submit"]');
+      if (!closestForm || !submitTrigger) {
+        // do nothing if there is no form or no submit button (trigger)
+        return;
+      }
+      event.preventDefault();
+      // native input trigger submit with the `submitter` field set
+      closestForm.requestSubmit(submitTrigger);
+    }
+  };
+
+  const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    muiFormControl.onBlur?.(event);
+    onBlur?.(event);
   };
 
   React.useEffect(() => {
@@ -236,24 +365,39 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     }
   }, [muiFormControl, areAllSectionsEmpty]);
 
-  const ownerState: OwnerStateType = {
-    ...(props as Omit<PickersInputBaseProps, keyof FormControlState>),
-    ...muiFormControl,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   const InputRoot = slots?.root || PickersInputBaseRoot;
+  const inputRootProps = useSlotProps({
+    elementType: InputRoot,
+    externalSlotProps: slotProps?.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      'aria-invalid': muiFormControl.error,
+      ref: handleRootRef,
+    },
+    className: classes.root,
+    ownerState,
+  });
+
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
+  const isSingleInputRange = elements.some(
+    (element) => element.content['data-range-position'] !== undefined,
+  );
+  React.useEffect(() => {
+    if (!isSingleInputRange || !ownerState.isPickerOpen) {
+      return;
+    }
+    const { activeBarWidth, sectionOffsets } = resolveSectionWidthAndOffsets(elements, rootRef);
+    sectionOffsetsRef.current = [sectionOffsets[0], sectionOffsets[1]];
+    if (activeBarRef.current) {
+      activeBarRef.current.style.width = `${activeBarWidth}px`;
+    }
+  }, [elements, isSingleInputRange, ownerState.isPickerOpen]);
+
   return (
-    <InputRoot
-      {...other}
-      className={classes.root}
-      ownerState={ownerState}
-      aria-invalid={muiFormControl.error}
-      ref={handleRootRef}
-    >
+    <InputRoot {...inputRootProps}>
       {startAdornment}
       <PickersSectionList
         sectionListRef={sectionListRef}
@@ -262,10 +406,10 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         tabIndex={tabIndex}
         className={classes.sectionsContainer}
         onFocus={handleInputFocus}
-        onBlur={muiFormControl.onBlur}
+        onBlur={handleInputBlur}
         onInput={onInput}
         onPaste={onPaste}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         slots={{
           root: InputSectionsContainer,
           section: PickersInputBaseSection,
@@ -274,12 +418,13 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         }}
         slotProps={{
           root: {
+            ...slotProps?.input,
             ownerState,
           } as any,
           sectionContent: { className: pickersInputBaseClasses.sectionContent },
-          sectionSeparator: ({ position }) => ({
+          sectionSeparator: ({ separatorPosition }) => ({
             className:
-              position === 'before'
+              separatorPosition === 'before'
                 ? pickersInputBaseClasses.sectionBefore
                 : pickersInputBaseClasses.sectionAfter,
           }),
@@ -292,15 +437,29 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
           })
         : null}
       <PickersInputBaseInput
+        name={name}
         className={classes.input}
         value={value}
         onChange={onChange}
         id={id}
         aria-hidden="true"
         tabIndex={-1}
+        readOnly={readOnly}
+        required={muiFormControl.required}
+        disabled={muiFormControl.disabled}
+        // Hidden input element cannot be focused, trigger the root focus instead
+        // This allows to maintain the ability to do `inputRef.current.focus()` to focus the field
+        onFocus={handleHiddenInputFocus}
         {...inputProps}
         ref={handleInputRef}
       />
+      {isSingleInputRange && (
+        <PickersInputBaseActiveBar
+          className={classes.activeBar}
+          ref={activeBarRef}
+          ownerState={{ sectionOffsets: sectionOffsetsRef.current }}
+        />
+      )}
     </InputRoot>
   );
 });
@@ -308,7 +467,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 PickersInputBase.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Is `true` if the current values equals the empty value.
@@ -317,16 +476,13 @@ PickersInputBase.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
@@ -343,20 +499,16 @@ PickersInputBase.propTypes = {
   fullWidth: PropTypes.bool,
   id: PropTypes.string,
   inputProps: PropTypes.object,
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([
@@ -370,6 +522,11 @@ PickersInputBase.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   /**
    * The components used for each slot inside.
    *

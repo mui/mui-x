@@ -6,39 +6,36 @@ import {
   MuiPickersAdapter,
   TimezoneProps,
   FieldSectionContentType,
-  FieldValueType,
-  PickersTimezone,
   PickerValidDate,
+  FieldRef,
+  OnErrorProps,
+  InferFieldSection,
+  PickerManager,
+  PickerValueType,
 } from '../../../models';
-import type { PickerValueManager } from '../usePicker';
-import { InferError, Validator } from '../useValidation';
+import { InternalPropNames } from '../../../hooks/useSplitFieldProps';
+import type { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
 
-export interface UseFieldParams<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-  TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+export interface UseFieldParameters<
+  TValue extends PickerValidValue,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+  TValidationProps extends {},
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
 > {
-  forwardedProps: TForwardedProps;
-  internalProps: TInternalProps;
-  valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
-  validator: Validator<
-    TValue,
-    TDate,
-    InferError<TInternalProps>,
-    UseFieldValidationProps<TValue, TInternalProps>
-  >;
-  valueType: FieldValueType;
+  manager: PickerManager<TValue, TEnableAccessibleFieldDOMStructure, TError, TValidationProps, any>;
+  props: TProps;
+  skipContextFieldRefAssignment?: boolean;
 }
 
 export interface UseFieldInternalProps<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends TimezoneProps {
+> extends TimezoneProps,
+    FormProps,
+    OnErrorProps<TValue, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -53,23 +50,15 @@ export interface UseFieldInternalProps<
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerValidDate;
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange?: FieldChangeHandler<TValue, TError>;
-  /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
-   */
-  onError?: (error: TError, value: TValue) => void;
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -81,10 +70,10 @@ export interface UseFieldInternalProps<
    */
   formatDensity?: 'dense' | 'spacious';
   /**
-   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
-   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   * If `true`, the format will respect the leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *
-   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
    *
    * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
    * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
@@ -92,22 +81,16 @@ export interface UseFieldInternalProps<
    * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
    * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
-   * @default `false`
+   * @default false
    */
   shouldRespectLeadingZeros?: boolean;
   /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
-   * @default false
-   */
-  readOnly?: boolean;
-  /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections?: FieldSelectedSections;
@@ -119,92 +102,113 @@ export interface UseFieldInternalProps<
   /**
    * The ref object used to imperatively interact with the field.
    */
-  unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  unstableFieldRef?: React.Ref<FieldRef<TValue>>;
   /**
-   * Callback fired when the clear button is clicked.
+   * @default true
    */
-  onClear?: React.MouseEventHandler;
+  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
   /**
-   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * If `true`, the `input` element is focused during the first mount.
    * @default false
    */
-  clearable?: boolean;
+  autoFocus?: boolean;
   /**
-   * If `true`, the component is disabled.
-   * @default false
+   * If `true`, the component is displayed in focused state.
    */
-  disabled?: boolean;
+  focused?: boolean;
 }
 
-export interface FieldRef<TSection extends FieldSection> {
-  /**
-   * Returns the sections of the current value.
-   * @returns {TSection[]} The sections of the current value.
-   */
-  getSections: () => TSection[];
-  /**
-   * Returns the index of the active section (the first focused section).
-   * If no section is active, returns `null`.
-   * @returns {number | null} The index of the active section.
-   */
-  getActiveSectionIndex: () => number | null;
-  /**
-   * Updates the selected sections.
-   * @param {FieldSelectedSections} selectedSections The sections to select.
-   */
-  setSelectedSections: (selectedSections: FieldSelectedSections) => void;
-}
+export type UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  TEnableAccessibleFieldDOMStructure extends false
+    ? {
+        clearable?: boolean;
+        error?: boolean;
+        placeholder?: string;
+        inputRef?: React.Ref<HTMLInputElement>;
+        onClick?: React.MouseEventHandler;
+        onFocus?: React.FocusEventHandler;
+        onKeyDown?: React.KeyboardEventHandler;
+        onBlur?: React.FocusEventHandler;
+        onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+        onClear?: React.MouseEventHandler;
+      }
+    : {
+        clearable?: boolean;
+        error?: boolean;
+        focused?: boolean;
+        sectionListRef?: React.Ref<PickersSectionListRef>;
+        onClick?: React.MouseEventHandler;
+        onKeyDown?: React.KeyboardEventHandler;
+        onFocus?: React.FocusEventHandler;
+        onBlur?: React.FocusEventHandler;
+        onInput?: React.FormEventHandler<HTMLDivElement>;
+        onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
+        onClear?: React.MouseEventHandler;
+      };
 
-export interface UseFieldForwardedProps {
-  inputRef?: React.Ref<HTMLInputElement>;
-  onKeyDown?: React.KeyboardEventHandler;
-  onMouseUp?: React.MouseEventHandler;
-  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
-  onClick?: React.MouseEventHandler;
-  onFocus?: () => void;
-  onBlur?: () => void;
-  error?: boolean;
-  onClear?: React.MouseEventHandler;
-  clearable?: boolean;
-  disabled?: boolean;
-}
+type UseFieldAdditionalProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  TEnableAccessibleFieldDOMStructure extends false
+    ? {
+        /**
+         * The aria label to set on the button that opens the Picker.
+         */
+        openPickerAriaLabel: string;
+        enableAccessibleFieldDOMStructure: false;
+        focused: boolean | undefined;
+        inputMode: 'text' | 'numeric';
+        placeholder: string;
+        value: string;
+        onChange: React.ChangeEventHandler<HTMLInputElement>;
+        autoComplete: 'off';
+      }
+    : {
+        /**
+         * The aria label to set on the button that opens the Picker.
+         */
+        openPickerAriaLabel: string;
+        enableAccessibleFieldDOMStructure: true;
+        elements: PickersSectionElement[];
+        tabIndex: number | undefined;
+        contentEditable: boolean;
+        value: string;
+        onChange: React.ChangeEventHandler<HTMLInputElement>;
+        areAllSectionsEmpty: boolean;
+        focused: boolean;
+      };
 
-export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
-  TForwardedProps,
-  keyof UseFieldForwardedProps
-> &
-  Required<UseFieldForwardedProps> &
-  Pick<React.InputHTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
-    inputRef: React.Ref<HTMLInputElement>;
-    value: string;
-    onChange: React.ChangeEventHandler<HTMLInputElement>;
-    error: boolean;
-    readOnly: boolean;
-    autoComplete: 'off';
-  };
+export type UseFieldReturnValue<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
+> =
+  // Some internal props are returned with a default value applied.
+  Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly' | 'autoFocus'>> &
+    // All the forwarded props the useField hooks is able to handled are returned with a default value applied.
+    Required<UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>> &
+    // Some additional props are generated internally and returned.
+    UseFieldAdditionalProps<TEnableAccessibleFieldDOMStructure> &
+    Omit<TProps, InternalPropNames<PickerValueType>>;
 
-export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
-  TSection,
-  'start' | 'end' | 'startInInput' | 'endInInput'
->;
-
-export type FieldSectionValueBoundaries<
-  TDate extends PickerValidDate,
-  SectionType extends FieldSectionType,
-> = {
+export type FieldSectionValueBoundaries<SectionType extends FieldSectionType> = {
   minimum: number;
   maximum: number;
-} & (SectionType extends 'day' ? { longestMonth: TDate } : {});
+} & (SectionType extends 'day' ? { longestMonth: PickerValidDate } : {});
 
-export type FieldSectionsValueBoundaries<TDate extends PickerValidDate> = {
+export type FieldSectionsValueBoundaries = {
   [SectionType in FieldSectionType]: (params: {
-    currentDate: TDate | null;
+    currentDate: PickerValidDate | null;
     format: string;
     contentType: FieldSectionContentType;
-  }) => FieldSectionValueBoundaries<TDate, SectionType>;
+  }) => FieldSectionValueBoundaries<SectionType>;
 };
 
-export type FieldChangeHandler<TValue, TError> = (
+export type FieldSectionsBoundaries = {
+  [SectionType in FieldSectionType]: {
+    minimum: number;
+    maximum: number;
+  };
+};
+
+export type FieldChangeHandler<TValue extends PickerValidValue, TError> = (
   value: TValue,
   context: FieldChangeHandlerContext<TError>,
 ) => void;
@@ -213,139 +217,130 @@ export interface FieldChangeHandlerContext<TError> {
   validationError: TError;
 }
 
-/**
- * Object used to access and update the active date (i.e: the date containing the active section).
- * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
- */
-interface FieldActiveDateManager<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
-  /**
-   * Active date from `state.value`.
-   */
-  date: TDate | null;
-  /**
-   * Active date from the `state.referenceValue`.
-   */
-  referenceDate: TDate;
-  /**
-   * @template TSection
-   * @param  {TSection[]} sections The sections of the full value.
-   * @returns {TSection[]} The sections of the active date.
-   * Get the sections of the active date.
-   */
-  getSections: (sections: TSection[]) => TSection[];
-  /**
-   * Creates the new value and reference value based on the new active date and the current state.
-   * @template TValue, TDate
-   * @param {TDate | null} newActiveDate The new value of the date containing the active section.
-   * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
-   */
-  getNewValuesFromNewActiveDate: (
-    newActiveDate: TDate | null,
-  ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
-}
+export type FieldParsedSelectedSections = number | 'all' | null;
 
-export type FieldSelectedSectionsIndexes = {
-  startIndex: number;
-  endIndex: number;
-  /**
-   * If `true`, the selectors at the very beginning and very end of the input will be selected.
-   */
-  shouldSelectBoundarySelectors: boolean;
-};
-
-export interface FieldValueManager<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
+export interface FieldValueManager<TValue extends PickerValidValue> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
-   * @template TValue, TDate, TSection
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The current value to generate sections from.
-   * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
-   * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
-   * @param {boolean} isRTL `true` if the direction is "right to left".
-   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
-   * @returns {TSection[]}  The new section list.
+   * @param {(date: PickerValidDate | null) => FieldSection[]} getSectionsFromDate Returns the sections of the given date.
+   * @returns {InferFieldSection<TValue>[]}  The new section list.
    */
   getSectionsFromValue: (
-    utils: MuiPickersAdapter<TDate>,
     value: TValue,
-    fallbackSections: TSection[] | null,
-    localizedDigits: string[],
-    isRTL: boolean,
-    getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
-  ) => TSection[];
+    getSectionsFromDate: (date: PickerValidDate | null) => FieldSection[],
+  ) => InferFieldSection<TValue>[];
   /**
    * Creates the string value to render in the input based on the current section list.
-   * @template TSection
-   * @param {TSection[]} sections The current section list.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {InferFieldSection<TValue>[]} sections The current section list.
    * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
-   * @param {boolean} isRTL `true` if the current orientation is "right to left"
+   * @param {boolean} isRtl `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (
-    sections: TSection[],
+  getV6InputValueFromSections: (
+    sections: InferFieldSection<TValue>[],
     localizedDigits: string[],
-    isRTL: boolean,
+    isRtl: boolean,
   ) => string;
   /**
-   * Returns the manager of the active date.
-   * @template TValue, TDate, TSection
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @param {UseFieldState<TValue, TSection>} state The current state of the field.
-   * @param {TSection} activeSection The active section.
-   * @returns {FieldActiveDateManager<TValue, TDate, TSection>} The manager of the active date.
+   * Creates the string value to render in the input based on the current section list.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {InferFieldSection<TValue>[]} sections The current section list.
+   * @returns {string} The string value to render in the input.
    */
-  getActiveDateManager: (
-    utils: MuiPickersAdapter<TDate>,
-    state: UseFieldState<TValue, TSection>,
-    activeSection: TSection,
-  ) => FieldActiveDateManager<TValue, TDate, TSection>;
+  getV7HiddenInputValueFromSections: (sections: InferFieldSection<TValue>[]) => string;
   /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.
-   * @template TValue, TDate
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {string} valueStr The string value to parse.
    * @param {TValue} referenceValue The reference value currently stored in state.
-   * @param {(dateStr: string, referenceDate: TDate) => TDate | null} parseDate A method to convert a string date into a parsed one.
+   * @param {(dateStr: string, referenceDate: PickerValidDate) => PickerValidDate | null} parseDate A method to convert a string date into a parsed one.
    * @returns {TValue} The new parsed value.
    */
   parseValueStr: (
     valueStr: string,
-    referenceValue: TValue,
-    parseDate: (dateStr: string, referenceDate: TDate) => TDate | null,
+    referenceValue: InferNonNullablePickerValue<TValue>,
+    parseDate: (dateStr: string, referenceDate: PickerValidDate) => PickerValidDate | null,
   ) => TValue;
   /**
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.
-   * @template TValue, TDate
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {MuiPickersAdapter} utils The utils to manipulate the date.
    * @param {TValue} value The new value from which we want to take all valid dates in the `referenceValue` state.
    * @param {TValue} prevReferenceValue The previous reference value. It is used as a fallback for invalid dates in the new value.
    * @returns {TValue} The new reference value with no invalid date.
    */
   updateReferenceValue: (
-    utils: MuiPickersAdapter<TDate>,
+    utils: MuiPickersAdapter,
     value: TValue,
-    prevReferenceValue: TValue,
+    prevReferenceValue: InferNonNullablePickerValue<TValue>,
+  ) => InferNonNullablePickerValue<TValue>;
+  /**
+   * Extract from the given value the date that contains the given section.
+   * @param {TValue} value The value to extract the date from.
+   * @param {InferFieldSection<TValue>} section The section to get the date from.
+   * @returns {PickerValidDate | null} The date that contains the section.
+   */
+  getDateFromSection: (value: TValue, section: InferFieldSection<TValue>) => PickerValidDate | null;
+  /**
+   * Get the sections of the date that contains the given section.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param  {InferFieldSection<TValue>[]} sections The sections of the full value.
+   * @param {InferFieldSection<TValue>} section A section of the date from which we want to get all the sections.
+   * @returns {InferFieldSection<TValue>[]} The sections of the date that contains the section.
+   */
+  getDateSectionsFromValue: (
+    sections: InferFieldSection<TValue>[],
+    section: InferFieldSection<TValue>,
+  ) => InferFieldSection<TValue>[];
+  /**
+   * Creates a new value based on the provided date and the current value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TValue} value The value to update the date in.
+   * @param {InferFieldSection<TValue>} section A section of the date we want to update in the value.
+   * @param {PickerValidDate | null} date The date that contains the section.
+   * @returns {TValue} The updated value.
+   */
+  updateDateInValue: (
+    value: TValue,
+    section: InferFieldSection<TValue>,
+    date: PickerValidDate | null,
   ) => TValue;
+  /**
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {InferFieldSection<TValue>[]} sections The sections of the full value.
+   * @param {InferFieldSection<TValue>} section A section of the date from which we want to clear all the sections.
+   * @returns {InferFieldSection<TValue>[]} The sections of the full value with all the sections of the target date cleared.
+   */
+  clearDateSections: (
+    sections: InferFieldSection<TValue>[],
+    section: InferFieldSection<TValue>,
+  ) => InferFieldSection<TValue>[];
 }
 
-export interface UseFieldState<TValue, TSection extends FieldSection> {
-  value: TValue;
+export interface UseFieldState<TValue extends PickerValidValue> {
+  /**
+   * Last value returned by `useControlledValue`.
+   */
+  lastExternalValue: TValue;
+  /**
+   * Last set of parameters used to generate the sections.
+   */
+  lastSectionsDependencies: { format: string; isRtl: boolean; locale: any };
   /**
    * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
-   * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
+   * It is updated whenever we have a valid date (for the Range Pickers we update only the portion of the range that is valid).
    */
-  referenceValue: TValue;
-  sections: TSection[];
+  referenceValue: InferNonNullablePickerValue<TValue>;
+  /**
+   * Sections currently displayed in the field.
+   */
+  sections: InferFieldSection<TValue>[];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.
    * There are two `onChange` calls:
@@ -365,23 +360,11 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * The property below allows us to set the first `onChange` value into state waiting for the second one.
    */
   tempValueStrAndroid: string | null;
+  /**
+   * The current query when editing the field using letters or digits.
+   */
+  characterQuery: CharacterEditingQuery | null;
 }
-
-export type UseFieldValidationProps<
-  TValue,
-  TInternalProps extends { value?: TValue; defaultValue?: TValue; timezone?: PickersTimezone },
-> = Omit<TInternalProps, 'value' | 'defaultValue' | 'timezone'> & {
-  value: TValue;
-  timezone: PickersTimezone;
-};
-
-export type AvailableAdjustKeyCode =
-  | 'ArrowUp'
-  | 'ArrowDown'
-  | 'PageUp'
-  | 'PageDown'
-  | 'Home'
-  | 'End';
 
 export type SectionNeighbors = {
   [sectionIndex: number]: {
@@ -410,3 +393,22 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
+
+export interface CharacterEditingQuery {
+  value: string;
+  sectionIndex: number;
+  sectionType: FieldSectionType;
+}
+
+export type UseFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
+  UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure> & {
+    enableAccessibleFieldDOMStructure?: boolean;
+  };
+
+export interface UseFieldDOMGetters {
+  isReady: () => boolean;
+  getRoot: () => HTMLElement;
+  getSectionContainer: (sectionIndex: number) => HTMLElement;
+  getSectionContent: (sectionIndex: number) => HTMLElement;
+  getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
+}

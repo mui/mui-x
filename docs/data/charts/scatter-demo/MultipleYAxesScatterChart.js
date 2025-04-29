@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { axisClasses } from '@mui/x-charts';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const data1 = [
   { x: 100, y: 200, id: 1 },
@@ -29,26 +29,24 @@ const data2 = [
 export default function MultipleYAxesScatterChart() {
   return (
     <ScatterChart
-      width={500}
       height={300}
       series={[
         {
           data: data1,
-          yAxisKey: 'leftAxis',
-          valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
+          yAxisId: 'leftAxis',
+          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
         },
         {
           data: data2,
-          yAxisKey: 'rightAxis',
-          valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
+          yAxisId: 'rightAxis',
+          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
         },
       ]}
       xAxis={[{ min: 0 }]}
       yAxis={[
         { id: 'leftAxis', min: 0 },
-        { id: 'rightAxis', min: 0 },
+        { id: 'rightAxis', min: 0, position: 'right' },
       ]}
-      rightAxis="rightAxis"
       sx={{
         [`& .${axisClasses.left}`]: {
           line: { stroke: '#8884d8' },

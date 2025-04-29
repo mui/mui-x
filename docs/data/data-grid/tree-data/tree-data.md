@@ -26,9 +26,11 @@ const rows: GridRowsProp = [
   { path: ['Sarah', 'Thomas', 'Karen'], jobTitle: 'Sales Person', id: 3 },
 ];
 
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
+
 <DataGridPro
   treeData
-  getTreeDataPath={(row) => row.path}
+  getTreeDataPath={getTreeDataPath}
   rows={rows}
   columns={columns}
 />;
@@ -41,13 +43,21 @@ const rows: GridRowsProp = [
   { path: 'Sarah/Thomas/Karen', jobTitle: 'Sales Person', id: 3 },
 ];
 
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) =>
+  row.path.split('/');
+
 <DataGridPro
   treeData
-  getTreeDataPath={(row) => row.path.split('/')}
+  getTreeDataPath={getTreeDataPath}
   rows={rows}
   columns={columns}
 />;
 ```
+
+:::warning
+The `getTreeDataPath` prop should keep the same reference between two renders.
+If it changes, the Data Grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
+:::
 
 {{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -75,11 +85,15 @@ If you want to access the grouping column field, for instance, to use it with co
 
 ## Group expansion
 
-Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion).
+Group expansion for tree data works similarly to how it's described in [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
+
+## Automatic parent and child selection
+
+The behavior for automatic parent and child selection is the same as for row grouping—see [the relevant section](/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection) in that feature's documentation for details.
 
 ## Gaps in the tree
 
-If some entries are missing to build the full tree, the `DataGridPro` will automatically create rows to fill those gaps.
+If some entries are missing to build the full tree, the Data Grid Pro will automatically create rows to fill those gaps.
 
 {{"demo": "TreeDataWithGap.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -116,23 +130,9 @@ const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
 
 :::
 
-## Children lazy-loading 🚧
+## Children lazy-loading
 
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
-:::
-
-Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.
-This implementation does not support every feature of the data grid but can be a good starting point for large datasets.
-
-The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
-To do so, you need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.
-
-{{"demo": "TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
+Check the [Server-side tree data](/x/react-data-grid/server-side-data/tree-data/) section for more information about lazy-loading tree data children.
 
 ## Full example
 

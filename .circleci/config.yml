@@ -5,38 +5,45 @@ parameters:
     description: Whether to force browserstack usage. We have limited resources on browserstack so the pipeline might decide to skip browserstack if this parameter isn't set to true.
     type: boolean
     default: false
-  react-dist-tag:
-    description: The dist-tag of react to be used
+  react-version:
+    description: The version of react to be used
     type: string
     default: stable
   workflow:
     description: The name of the workflow to run
     type: string
     default: pipeline
+  with-material-ui-6:
+    description: Use material-ui v6 for additional checks and tests
+    type: boolean
+    default: false
+  with-react-version:
+    description: The version of react to be used for the additional tests
+    type: string
+    default: stable
   e2e-base-url:
     description: The base url for running end-to-end test
     type: string
     default: ''
 
-defaults: &defaults
+default-job: &default-job
   parameters:
-    react-dist-tag:
-      description: The dist-tag of react to be used
+    react-version:
+      description: The version of react to be used
       type: string
-      default: << pipeline.parameters.react-dist-tag >>
+      default: << pipeline.parameters.react-version >>
     e2e-base-url:
       description: The base url for running end-to-end test
       type: string
       default: << pipeline.parameters.e2e-base-url >>
   environment:
-    # Keep in sync with "Save playwright cache"
-    PLAYWRIGHT_BROWSERS_PATH: /tmp/pw-browsers
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
-    REACT_DIST_TAG: << parameters.react-dist-tag >>
+    REACT_VERSION: << parameters.react-version >>
+    COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:18.19
+    - image: cimg/node:23.11
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -46,75 +53,80 @@ defaults: &defaults
 #   restore_cache:
 #     key: v1-repo-{{ .Branch }}-{{ .Revision }}
 
+default-context: &default-context
+  context:
+    - org-global
+
 commands:
   install_js:
     parameters:
-      browsers:
+      playwright:
+        description: If playwright should be installed.
         type: boolean
         default: false
-        description: 'Set to true if you intend to any browser (e.g. with playwright).'
+      react-version:
+        description: The version of React to use.
+        type: string
+        default: << pipeline.parameters.react-version >>
 
     steps:
+      - run:
+          name: Install pnpm package manager
+          # See https://stackoverflow.com/a/73411601
+          command: corepack enable --install-directory ~/bin
+
       - run:
           name: View install environment
           command: |
             node --version
-            yarn --version
-      - restore_cache:
-          name: Restore yarn cache
-          keys:
-            - v8-yarn-{{ checksum "yarn.lock" }}
+            pnpm --version
+
+      - when:
+          condition:
+            equal: [stable, << parameters.react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies
+                command: pnpm install
+      - unless:
+          condition:
+            equal: [stable, << parameters.react-version >>]
+          steps:
+            - run:
+                name: Install js dependencies without frozen lockfile
+                command: pnpm install --no-frozen-lockfile
+
       - run:
-          name: Set yarn cache folder
+          name: Resolve React version
           command: |
-            # Keep path in sync with `save_cache` for key "v8-yarn-"
-            yarn config set cache-folder /tmp/yarn-cache
-            # Debug information
-            yarn cache dir
-            yarn cache list
+            pnpm use-react-version
+            # log a patch for maintainers who want to check out this change
+            git --no-pager diff HEAD
+
       - when:
-          condition: << parameters.browsers >>
+          condition: << pipeline.parameters.with-material-ui-6 >>
           steps:
             - run:
-                name: Prepare playwright hash
-                command: yarn --json list --pattern playwright > /tmp/playwright_info.json
-            - store_artifacts:
-                name: Debug playwright hash
-                path: /tmp/playwright_info.json
-            - restore_cache:
-                name: Restore playwright cache
-                keys:
-                  - v6-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
-      - run:
-          name: Install js dependencies
-          command: yarn install
+                name: Install @mui/material v6
+                command: pnpm use-material-ui-v6
       - when:
-          condition: << parameters.browsers >>
+          condition: << parameters.playwright >>
           steps:
             - run:
-                name: Install playwright browsers
-                command: npx playwright install --with-deps
-      - save_cache:
-          name: Save yarn cache
-          key: v8-yarn-{{ checksum "yarn.lock" }}
-          paths:
-            # Keep path in sync with "Set yarn cache folder"
-            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
-            - /tmp/yarn-cache
-      - when:
-          condition: << parameters.browsers >>
-          steps:
-            - save_cache:
-                name: Save playwright cache
-                key: v6-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
-                paths:
-                  # Keep path in sync with "PLAYWRIGHT_BROWSERS_PATH"
-                  # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
-                  - /tmp/pw-browsers
+                name: Install playwright & ffmpeg
+                command: |
+                  pnpx playwright install --with-deps
+                  # Avoids installing a system version of ffmpeg
+                  ffmpeg_bin=$(find ~/.cache/ms-playwright -regex '.*/ffmpeg-[0-9]*')
+                  if [[ -z "$ffmpeg_bin" ]]; then
+                    >&2 echo "Could not find ffmpeg location"
+                    exit 1
+                  fi
+                  ln -s "$ffmpeg_bin" ~/bin/ffmpeg
 
 jobs:
   checkout:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
@@ -122,16 +134,24 @@ jobs:
           name: Should not have any git not staged
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: Check for duplicated packages
-          command: yarn deduplicate
+          name: '`pnpm dedupe` was run?'
+          command: |
+            # #default-branch-switch
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            then
+                echo "No changes to dependencies detected. Skipping..."
+            else
+                pnpm dedupe --check
+            fi
   test_unit:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
-      - install_js
+      - install_js:
+          react-version: << parameters.react-version >>
       - run:
           name: Tests fake browser
-          command: yarn test:coverage
+          command: pnpm test:coverage
       - run:
           name: Check coverage generated
           command: |
@@ -144,180 +164,254 @@ jobs:
           command: |
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x codecov
-            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_DIST_TAG-jsdom"
+            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
   test_lint:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
       - run:
           name: Eslint
-          command: yarn eslint:ci
+          command: pnpm eslint:ci
       - run:
           name: Lint JSON
-          command: yarn jsonlint
+          command: pnpm jsonlint
       - run:
           name: Lint Markdown
-          command: yarn markdownlint
+          command: pnpm markdownlint
   test_static:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
       - run:
-          name: '`yarn prettier` changes committed?'
-          command: yarn prettier --check
+          name: '`pnpm prettier` changes committed?'
+          command: |
+            # #default-branch-switch
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            then
+                pnpm prettier --check
+            else
+                pnpm prettier:check
+            fi
       - run:
           name: Generate PropTypes
-          command: yarn proptypes
+          command: pnpm proptypes
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
       - run:
-          name: '`yarn proptypes` changes committed?'
+          name: '`pnpm proptypes` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Generate the documentation
-          command: yarn docs:api
+          command: pnpm docs:api
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
       - run:
-          name: '`yarn docs:api` changes committed?'
+          name: '`pnpm docs:api` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
           name: Sync locale files
-          command: yarn l10n
+          command: pnpm l10n
       - run:
-          name: '`yarn l10n` changes committed?'
+          name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: '`yarn docs:link-check` changes committed?'
+          name: '`pnpm docs:link-check` changes committed?'
           command: |
-            yarn docs:link-check
+            pnpm docs:link-check
             git add -A && git diff --exit-code --staged
+      - run:
+          name: '`pnpm @mui/x-charts-vendor build` was run?'
+          command: |
+            # #default-branch-switch 
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
+            then
+              echo "No changes to dependencies detected. Skipping..."
+            else
+              pnpm --filter @mui/x-charts-vendor build
+              git add -A && git diff --exit-code --staged
+            fi
+      - run:
+          name: 'No dynamic date library import in the Pickers built types?'
+          command: |
+            pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
+            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
+            then
+                exit 1
+            else
+                exit 0
+            fi
+
   test_browser:
-    <<: *defaults
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.41.2-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    <<: *default-job
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
+          react-version: << parameters.react-version >>
       - run:
           name: Tests real browsers
-          command: yarn test:karma
+          command: pnpm test:karma
       - store_artifacts:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
           destination: artifact-file
   test_types:
-    <<: *defaults
+    <<: *default-job
     steps:
       - checkout
       - install_js
       - run:
           name: Transpile TypeScript demos
-          command: yarn docs:typescript:formatted --disable-cache
+          command: pnpm docs:typescript:formatted --disable-cache
       - run:
-          name: '`yarn docs:typescript:formatted` changes committed?'
-          command: git add -A && git diff --exit-code --staged
+          name: '`pnpm docs:typescript:formatted` changes committed?'
+          command: git add -A && git diff --exit-code --staged docs/src docs/data
       - run:
           name: Tests TypeScript definitions
-          command: yarn typescript:ci
+          command: pnpm typescript:ci
           environment:
-            NODE_OPTIONS: --max-old-space-size=3072
+            NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
-    <<: *defaults
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.41.2-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    <<: *default-job
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
+          react-version: << parameters.react-version >>
       - run:
           name: Run e2e tests
-          command: yarn test:e2e
+          command: pnpm test:e2e
   test_e2e_website:
-    <<: *defaults
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.41.2-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    <<: *default-job
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
       - run:
-          name: yarn test:e2e-website
-          command: yarn test:e2e-website
+          name: pnpm test:e2e-website
+          command: pnpm test:e2e-website
           environment:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_regressions:
-    <<: *defaults
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.41.2-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    <<: *default-job
     steps:
       - checkout
       - install_js:
-          browsers: true
+          playwright: true
+          react-version: << parameters.react-version >>
       - run:
           name: Run visual regression tests
-          command: xvfb-run yarn test:regressions
+          command: xvfb-run pnpm test:regressions
       - run:
           name: Upload screenshots to Argos CI
-          command: yarn test:argos
+          command: pnpm test:argos
   run_danger:
-    <<: *defaults
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.41.2-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    <<: *default-job
     steps:
       - checkout
-      - install_js:
-          browsers: true
+      - install_js
       - run:
           name: Run danger on PRs
-          command: yarn danger ci --fail-on-errors
-          environment:
-            DANGER_DISABLE_TRANSPILATION: 'true'
+          command: pnpm danger ci --fail-on-errors
 workflows:
-  version: 2
   pipeline:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout
+      - checkout:
+          <<: *default-context
       - test_unit:
+          <<: *default-context
           requires:
             - checkout
       - test_lint:
+          <<: *default-context
           requires:
             - checkout
       - test_static:
+          <<: *default-context
           requires:
             - checkout
       - test_browser:
+          <<: *default-context
           requires:
             - checkout
       - test_types:
+          <<: *default-context
           requires:
             - checkout
       - test_e2e:
+          <<: *default-context
           requires:
             - checkout
       - test_regressions:
+          <<: *default-context
           requires:
             - checkout
       - run_danger:
+          <<: *default-context
           requires:
             - checkout
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout
+      - checkout:
+          <<: *default-context
       - test_e2e_website:
           requires:
             - checkout
+
+  additional-tests:
+    when:
+      and:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - or:
+            - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+            - not:
+                equal: ['stable', << pipeline.parameters.with-react-version >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          name: test_unit_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - test_browser:
+          <<: *default-context
+          name: test_browser_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - test_regressions:
+          <<: *default-context
+          name: test_regressions_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e_additional
+          react-version: << pipeline.parameters.with-react-version >>
+
+  additional-checks:
+    when:
+      and:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+    jobs:
+      - test_types:
+          <<: *default-context
+          name: test_types_additional
+  test-react-18:
+    when:
+      equal: [pipeline, << pipeline.parameters.workflow >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          name: test_unit_react_18
+          react-version: ^18
+      - test_browser:
+          <<: *default-context
+          name: test_browser_react_18
+          react-version: ^18
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e_react_18
+          react-version: ^18

@@ -1,11 +1,12 @@
+'use client';
 import * as React from 'react';
-import { InteractionContext } from '../../context/InteractionProvider';
 import {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
-import { getIsHighlighted, getIsFaded } from '../../hooks/useInteractionItemProps';
+import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { deg2rad } from '../../internals/angleConversion';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -18,6 +19,7 @@ export interface AnimatedObject {
 }
 
 export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
+  dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;
 }
@@ -25,13 +27,12 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
 export function useTransformData(
   series: Pick<
     DefaultizedPieSeriesType,
-    'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope' | 'highlighted' | 'faded' | 'data'
+    'cornerRadius' | 'paddingAngle' | 'id' | 'highlighted' | 'faded' | 'data'
   > &
     ComputedPieRadius,
 ) {
   const {
     id: seriesId,
-    highlightScope,
     data,
     faded,
     highlighted,
@@ -42,28 +43,17 @@ export function useTransformData(
     cornerRadius: baseCornerRadius = 0,
   } = series;
 
-  const { item: highlightedItem } = React.useContext(InteractionContext);
-
-  const getHighlightStatus = React.useCallback(
-    (dataIndex: number) => {
-      const isHighlighted = getIsHighlighted(
-        highlightedItem,
-        { type: 'pie', seriesId, dataIndex },
-        highlightScope,
-      );
-      const isFaded =
-        !isHighlighted &&
-        getIsFaded(highlightedItem, { type: 'pie', seriesId, dataIndex }, highlightScope);
-
-      return { isHighlighted, isFaded };
-    },
-    [highlightScope, highlightedItem, seriesId],
-  );
+  const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
       data.map((item, itemIndex) => {
-        const { isHighlighted, isFaded } = getHighlightStatus(itemIndex);
+        const currentItem = {
+          seriesId,
+          dataIndex: itemIndex,
+        };
+        const isHighlighted = isItemHighlighted(currentItem);
+        const isFaded = !isHighlighted && isItemFaded(currentItem);
 
         const attributesOverride = {
           additionalRadius: 0,
@@ -71,7 +61,7 @@ export function useTransformData(
         };
         const paddingAngle = Math.max(
           0,
-          (Math.PI * (attributesOverride.paddingAngle ?? basePaddingAngle)) / 180,
+          deg2rad(attributesOverride.paddingAngle ?? basePaddingAngle),
         );
         const innerRadius = Math.max(0, attributesOverride.innerRadius ?? baseInnerRadius);
 
@@ -89,6 +79,7 @@ export function useTransformData(
         return {
           ...item,
           ...attributesOverride,
+          dataIndex: itemIndex,
           isFaded,
           isHighlighted,
           paddingAngle,
@@ -106,8 +97,10 @@ export function useTransformData(
       baseArcLabelRadius,
       data,
       faded,
-      getHighlightStatus,
       highlighted,
+      isItemFaded,
+      isItemHighlighted,
+      seriesId,
     ],
   );
 

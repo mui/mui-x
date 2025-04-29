@@ -1,45 +1,10 @@
-# Data Grid - Custom subcomponents
+# Data Grid - Custom slots and subcomponents
 
-<p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
+<p class="description">Learn how to override parts of the grid.</p>
 
-## Overriding components
+## Interacting with the Data Grid
 
-As part of the customization API, the Data Grid allows you to override internal components with the `slots` prop.
-The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
-
-If you wish to pass additional props in a component slot, you can do it using the `slotProps` prop.
-This prop is of type `GridSlotsComponentsProps`. Note that if you do and you use TypeScript, you'll need to cast your custom component so it can fit in the slot type.
-
-As an example, you could override the column menu and pass additional props as below.
-
-```tsx
-<DataGrid
-  rows={rows}
-  columns={columns}
-  slots={{
-    columnMenu: MyCustomColumnMenu as DataGridProps['slots']['columnMenu'],
-  }}
-  slotProps={{
-    columnMenu: { background: 'red', counter: rows.length },
-  }}
-/>
-```
-
-If you want to ensure type safety, you can declare your component using the slot props typings:
-
-```tsx
-import { GridSlotProps } from '@mui/x-data-grid';
-
-function MyCustomColumnMenu(
-  props: GridSlotProps['columnMenu'] & { background: string; counter: number },
-) {
-  // ...
-}
-```
-
-### Interacting with the data grid
-
-The grid exposes two hooks to help you access the data grid data while overriding component slots.
+The grid exposes two hooks to help you access the Data Grid data while overriding component slots.
 
 They can be used as below:
 
@@ -64,7 +29,18 @@ function CustomPagination() {
 
 ## Component slots
 
-The full list of overridable component slots can be found on the [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) API page.
+:::success
+
+- See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+- See [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) to learn about the available slots.
+
+  :::
+
+### Columns panel
+
+In the following demo, the columns panel is replaced with a custom component that represents the [column groups](/x/react-data-grid/column-groups/) as a nested list.
+
+{{"demo": "CustomColumnsPanel.js", "bg": "inline"}}
 
 ### Column menu
 
@@ -74,12 +50,22 @@ As mentioned above, the column menu is a component slot that can be recomposed e
 
 ### Toolbar
 
-To enable the toolbar you need to add the `toolbar: GridToolbar` to the Data Grid `slots` prop.
-This demo showcases how this can be achieved.
+Pass the `showToolbar` prop to the `<DataGrid />` component to enable the default toolbar.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
 
-You can also compose your own toolbar. Each button in the toolbar is wrapped with a tooltip component.
+You can also compose your own toolbar using the [Toolbar component](/x/react-data-grid/components/toolbar/).
+
+### Legacy toolbar
+
+:::warning
+
+The examples below use the `<GridToolbar />`, `<GridToolbarContainer>`, and various toolbar button components.
+They were deprecated in v8 and will be removed in v9.
+These components are now replaced by the new [Toolbar component](/x/react-data-grid/components/toolbar/).
+:::
+
+Each button in the toolbar is wrapped with a tooltip component.
 In order to override some of the props corresponding to the toolbar buttons, you can use the `slotProps` prop.
 
 The following demo shows how to override the tooltip title of the density selector and the variant of the export button.
@@ -128,23 +114,6 @@ The next demo reuses `GridPagination` but replaces the previous and next page bu
 
 {{"demo": "CustomPaginationGrid.js", "bg": "inline"}}
 
-### Loading overlay
-
-By default, the loading overlay displays a circular progress.
-This demo replaces it with a linear progress.
-
-{{"demo": "CustomLoadingOverlayGrid.js", "bg": "inline"}}
-
-### No rows overlay
-
-In the following demo, an illustration is added on top of the default "No Rows" message.
-
-{{"demo": "CustomEmptyOverlayGrid.js", "bg": "inline"}}
-
-:::info
-As with the no-rows overlay, the Data Grid also lets you override the no-results overlay using the `NoResultsOverlay` slot.
-:::
-
 ### Row
 
 The `slotProps.row` prop can be used to pass additional props to the row component.
@@ -166,22 +135,21 @@ As any component slot, every icon can be customized. However, it is not yet poss
 
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
 
-## Slot props
+:::warning
+Material UI icons need to be passed like `Icon as any` due to typing issues that might be resolved in a later version.
+:::
 
-To override default props or pass custom props to slot components, use the `slotProps` prop.
+### Overlays
 
-```tsx
-<DataGrid
-  slotProps={{
-    toolbar: {
-      // override default props
-      disableDensitySelector: true,
-    }
-  }}
->
-```
+See the [Overlays](/x/react-data-grid/overlays/) documentation on how to customize the `loadingOverlay`, `noRowsOverlay`, and `noResultsOverlay`.
 
-### Custom slot props with TypeScript
+## Custom slot props with TypeScript
+
+:::success
+This section focuses on module augmentation.
+
+See [Custom slots and subcomponents—Usage with TypeScript](/x/common-concepts/custom-components/#usage-with-typescript) if you don't want to use this approach.
+:::
 
 If the custom component requires additional props to work properly, TypeScript may throw type errors.
 To solve these type errors, use [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to enhance the props interface.
@@ -214,11 +182,12 @@ declare module '@mui/x-data-grid' {
   }}
   slotProps={{
     toolbar: {
-      // props required by CustomGridToolbar
+      // props used by CustomGridToolbar
       someCustomString: 'Hello',
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -238,11 +207,12 @@ declare module '@mui/x-data-grid-pro' {
   }}
   slotProps={{
     toolbar: {
-      // props required by CustomGridToolbar
+      // props used by CustomGridToolbar
       someCustomString: 'Hello',
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -262,11 +232,12 @@ declare module '@mui/x-data-grid-premium' {
   }}
   slotProps={{
     toolbar: {
-      // props required by CustomGridToolbar
+      // props used by CustomGridToolbar
       someCustomString: 'Hello',
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 

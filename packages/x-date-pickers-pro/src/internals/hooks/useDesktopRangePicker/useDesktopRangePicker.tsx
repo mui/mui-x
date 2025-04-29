@@ -1,230 +1,95 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useLicenseVerifier } from '@mui/x-license';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
+import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
-  executeInTheNextEventLoopTick,
-  getActiveElement,
   usePicker,
-  PickersPopper,
-  InferError,
-  ExportedBaseToolbarProps,
-  BaseFieldProps,
+  PickerPopper,
   DateOrTimeViewWithMeridiem,
-  UsePickerValueFieldResponse,
-  ExportedBaseTabsProps,
+  PickerProvider,
+  PickerRangeValue,
+  PickerFieldUIContextProvider,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
-  DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
-  UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
-import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
-import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../../models';
-import { RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
-
-const releaseInfo = getReleaseInfo();
+import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
+import { getRangeFieldType } from '../../utils/date-fields-utils';
+import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
 export const useDesktopRangePicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
+    TView,
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
 >({
   props,
+  steps,
   ...pickerParams
-}: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
-  useLicenseVerifier('x-date-pickers-pro', releaseInfo);
+}: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
 
-  const {
-    slots,
-    slotProps,
-    className,
-    sx,
-    format,
-    formatDensity,
-    timezone,
-    label,
-    inputRef,
-    name,
-    readOnly,
-    disabled,
-    autoFocus,
-    disableOpenPicker,
-    localeText,
-    reduceAnimations,
-  } = props;
+  const { slots, slotProps, inputRef, localeText } = props;
 
-  const fieldContainerRef = React.useRef<HTMLDivElement>(null);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-  const popperRef = React.useRef<HTMLDivElement>(null);
-  const initialView = React.useRef<TView | null>(props.openTo ?? null);
+  const fieldType = getRangeFieldType(slots.field);
+  const viewContainerRole = fieldType === 'single-input' ? 'dialog' : 'tooltip';
+  const rangePositionResponse = useRangePosition(props);
 
-  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
+  const getStepNavigation = createRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+  });
 
-  const {
-    open,
-    actions,
-    layoutProps,
-    renderCurrentView,
-    shouldRestoreFocus,
-    fieldProps: pickerFieldProps,
-  } = usePicker<
-    DateRange<TDate>,
-    TDate,
+  const { providerProps, renderCurrentView, ownerState } = usePicker<
+    PickerRangeValue,
     TView,
-    RangeFieldSection,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
+    TExternalProps
   >({
     ...pickerParams,
     props,
-    wrapperVariant: 'desktop',
-    autoFocusView: false,
-    additionalViewProps: {
-      rangePosition,
-      onRangePositionChange,
-    },
+    variant: 'desktop',
+    autoFocusView: viewContainerRole === 'dialog',
+    viewContainerRole,
+    localeText,
+    getStepNavigation,
+    onPopperExited: useEventCallback(() => rangePositionResponse.setRangePosition('start')),
   });
-
-  React.useEffect(() => {
-    if (layoutProps.view) {
-      initialView.current = layoutProps.view;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleBlur = () => {
-    executeInTheNextEventLoopTick(() => {
-      if (
-        fieldContainerRef.current?.contains(getActiveElement(document)) ||
-        popperRef.current?.contains(getActiveElement(document))
-      ) {
-        return;
-      }
-
-      actions.onDismiss();
-    });
-  };
 
   const Field = slots.field;
-  const fieldType = (Field as any).fieldType ?? 'multi-input';
 
-  const fieldProps: BaseFieldProps<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    InferError<TExternalProps>
-  > = useSlotProps<
-    typeof Field,
-    UseDesktopRangePickerSlotProps<TDate, TView>['field'],
-    UsePickerValueFieldResponse<DateRange<TDate>, RangeFieldSection, InferError<TExternalProps>> &
-      Partial<
-        Pick<
-          UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
-          | 'readOnly'
-          | 'disabled'
-          | 'className'
-          | 'sx'
-          | 'format'
-          | 'formatDensity'
-          | 'timezone'
-          | 'label'
-          | 'name'
-          | 'autoFocus'
-        >
-      >,
-    TExternalProps
-  >({
+  const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
+    ownerState,
     additionalProps: {
-      ...pickerFieldProps,
-      readOnly,
-      disabled,
-      className,
-      sx,
-      format,
-      formatDensity,
-      timezone,
-      autoFocus: autoFocus && !props.open,
-      ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && { inputRef, name }),
+      'data-active-range-position': providerProps.contextValue.open
+        ? rangePositionResponse.rangePosition
+        : undefined,
     },
-    ownerState: props,
   });
 
-  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
-    TDate,
-    TView,
-    InferError<TExternalProps>
-  >({
-    wrapperVariant: 'desktop',
-    fieldType,
-    open,
-    actions,
-    readOnly,
-    disableOpenPicker,
-    label,
-    localeText,
-    onBlur: handleBlur,
-    rangePosition,
-    onRangePositionChange,
-    singleInputFieldRef,
-    pickerSlotProps: slotProps,
-    pickerSlots: slots,
-    fieldProps,
-    anchorRef,
-    currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
-    initialView: initialView.current ?? undefined,
-    onViewChange: layoutProps.onViewChange,
-  });
-
-  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
-    ...slotProps,
-    tabs: {
-      ...slotProps?.tabs,
-      rangePosition,
-      onRangePositionChange,
-    } as ExportedBaseTabsProps,
-    toolbar: {
-      ...slotProps?.toolbar,
-      rangePosition,
-      onRangePositionChange,
-    } as ExportedBaseToolbarProps,
-  };
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
-      <Field {...enrichedFieldProps} />
-      <PickersPopper
-        role="tooltip"
-        placement="bottom-start"
-        containerRef={popperRef}
-        anchorEl={anchorRef.current}
-        onBlur={handleBlur}
-        {...actions}
-        open={open}
-        slots={slots}
-        slotProps={slotProps}
-        shouldRestoreFocus={shouldRestoreFocus}
-        reduceAnimations={reduceAnimations}
-      >
-        <Layout
-          {...layoutProps}
-          {...slotProps?.layout}
-          slots={slots}
-          slotProps={slotPropsForLayout}
-        >
-          {renderCurrentView()}
-        </Layout>
-      </PickersPopper>
-    </LocalizationProvider>
+    <PickerProvider {...providerProps}>
+      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
+        <PickerRangePositionContext.Provider value={rangePositionResponse}>
+          <Field {...fieldProps} />
+          <PickerPopper slots={slots} slotProps={slotProps}>
+            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+              {renderCurrentView()}
+            </Layout>
+          </PickerPopper>
+        </PickerRangePositionContext.Provider>
+      </PickerFieldUIContextProvider>
+    </PickerProvider>
   );
 
   return {

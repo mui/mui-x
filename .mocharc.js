@@ -11,7 +11,11 @@ module.exports = {
   recursive: true,
   timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000, // Circle CI has low-performance CPUs.
   reporter: 'dot',
-  require: [require.resolve('./test/utils/setupBabel'), require.resolve('./test/utils/setupJSDOM')],
+  require: [
+    require.resolve('./test/utils/ignoreCSS'),
+    require.resolve('./test/utils/setupBabel'),
+    require.resolve('./test/utils/setupJSDOM'),
+  ],
   'watch-ignore': [
     // default
     '.git',
@@ -21,5 +25,4 @@ module.exports = {
     '**/build/**',
     'docs/.next/**',
   ],
-  spec: ['packages/**/*.test.{js,ts,tsx}', 'docs/src/modules/**/*.test.{js,ts,tsx}'],
 };

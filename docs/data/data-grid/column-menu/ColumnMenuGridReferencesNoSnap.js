@@ -34,7 +34,7 @@ function PlanIcon(props) {
     <a
       href={planProps.href}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener"
       aria-label={planProps.title}
       title={planProps.title}
     >
@@ -137,14 +137,8 @@ const rows = [
 
 export default function ColumnMenuGridReferencesNoSnap() {
   return (
-    <div style={{ width: '100%' }}>
-      <DataGridPremium
-        columns={columns}
-        rows={rows}
-        disableColumnMenu
-        autoHeight
-        hideFooter
-      />
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+      <DataGridPremium columns={columns} rows={rows} disableColumnMenu hideFooter />
     </div>
   );
 }

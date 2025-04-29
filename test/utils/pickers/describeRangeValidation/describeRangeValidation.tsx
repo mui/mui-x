@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import * as React from 'react';
-import createDescribe from '@mui-internal/test-utils/createDescribe';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { testDayViewRangeValidation } from './testDayViewRangeValidation';
 import { testTextFieldRangeValidation } from './testTextFieldRangeValidation';
 import { DescribeRangeValidationInputOptions } from './describeRangeValidation.types';
@@ -29,7 +29,7 @@ function innerDescribeRangeValidation(
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    testSuite(ElementToTest, getTestOptions);
+    testSuite(ElementToTest as any, getTestOptions);
   });
 }
 

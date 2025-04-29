@@ -1,15 +1,18 @@
+import type { GridDataSourceApi } from '../../hooks/features/dataSource/models';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
 import type { GridColumnReorderApi } from './gridColumnApi';
-import { GridRowProApi } from './gridRowApi';
-import { GridRowMultiSelectionApi } from './gridRowSelectionApi';
+import type { GridRowProApi } from './gridRowApi';
+import type { GridRowMultiSelectionApi } from './gridRowSelectionApi';
 
 /**
- * The api of `DataGrid`.
+ * The API of the community version of the Data Grid.
  */
 export interface GridApiCommunity
-  extends GridApiCommon<GridStateCommunity, GridInitialStateCommunity> {}
+  extends GridApiCommon<GridStateCommunity, GridInitialStateCommunity>,
+    // Public APIs that are explicitly redefined in Pro and Premium plans
+    GridDataSourceApi {}
 
 export interface GridPrivateApiCommunity
   extends GridApiCommunity,

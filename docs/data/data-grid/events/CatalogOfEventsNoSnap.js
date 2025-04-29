@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -58,7 +58,7 @@ apiRef.current.subscribeEvent(
 );
 
 // Hook subscription (only available inside the scope of the grid)
-useGridApiEventHandler(apiRef, '${event.name}', handleEvent);
+useGridEvent(apiRef, '${event.name}', handleEvent);
 ${propExample}
 `;
   }, [event]);

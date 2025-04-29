@@ -3,7 +3,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const enUSPickers: PickersLocaleText<any> = {
+const enUSPickers: PickersLocaleText = {
   // Calendar navigation
   previousMonth: 'Previous month',
   nextMonth: 'Next month',
@@ -29,18 +29,18 @@ const enUSPickers: PickersLocaleText<any> = {
   clearButtonLabel: 'Clear',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Today',
+  nextStepButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Select date',
   dateTimePickerToolbarTitle: 'Select date & time',
   timePickerToolbarTitle: 'Select time',
   dateRangePickerToolbarTitle: 'Select date range',
+  timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
-      time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, formattedTime) =>
+    `Select ${view}. ${!formattedTime ? 'No time selected' : `Selected time is ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} hours`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} seconds`,
@@ -54,17 +54,14 @@ const enUSPickers: PickersLocaleText<any> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
-      : 'Choose date',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
-      : 'Choose time',
-
-  fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'pick time',
@@ -79,6 +76,19 @@ const enUSPickers: PickersLocaleText<any> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Year',
+  month: 'Month',
+  day: 'Day',
+  weekDay: 'Week day',
+  hours: 'Hours',
+  minutes: 'Minutes',
+  seconds: 'Seconds',
+  meridiem: 'Meridiem',
+
+  // Common
+  empty: 'Empty',
 };
 
 export const DEFAULT_LOCALE = enUSPickers;

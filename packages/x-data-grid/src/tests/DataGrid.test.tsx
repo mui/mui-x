@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DATA_GRID_PROPS_DEFAULT_VALUES } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid />', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -26,22 +26,34 @@ describe('<DataGrid />', () => {
     ],
   };
 
-  it('should accept aria & data attributes props', () => {
-    const gridRef = React.createRef<HTMLDivElement>();
+  it('should accept aria & data attributes props using `slotProps`', () => {
+    const rootRef = React.createRef<HTMLDivElement>();
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
           {...baselineProps}
-          ref={gridRef}
+          ref={rootRef}
           columns={[{ field: 'brand' }]}
-          data-custom-id="grid-1"
-          aria-label="Grid one"
+          slotProps={{
+            main: {
+              'data-custom-id': 'grid-1',
+              'aria-label': 'Grid one',
+            },
+            root: {
+              'data-custom-id': 'root-1',
+              'aria-label': 'Root one',
+            },
+          }}
         />
       </div>,
     );
 
-    expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(gridRef.current);
-    expect(document.querySelector('[aria-label="Grid one"]')).to.equal(gridRef.current);
+    expect(document.querySelector('[data-custom-id="root-1"]')).to.equal(rootRef.current);
+    expect(document.querySelector('[aria-label="Root one"]')).to.equal(rootRef.current);
+
+    const mainElement = document.querySelector('[role="grid"]');
+    expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(mainElement);
+    expect(document.querySelector('[aria-label="Grid one"]')).to.equal(mainElement);
   });
 
   it('should not fail when row have IDs match Object prototype keys (constructor, hasOwnProperty, etc)', () => {
@@ -61,5 +73,37 @@ describe('<DataGrid />', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
+  });
+
+  it('should not cause unexpected behavior when props are explictly set to undefined', () => {
+    const rows = [
+      { id: 'a', col1: 'Hello', col2: 'World' },
+      { id: 'constructor', col1: 'DataGridPro', col2: 'is Awesome' },
+      { id: 'hasOwnProperty', col1: 'MUI', col2: 'is Amazing' },
+    ];
+
+    const columns = [
+      { field: 'col1', headerName: 'Column 1', width: 150 },
+      { field: 'col2', headerName: 'Column 2', width: 150 },
+    ];
+    expect(() => {
+      render(
+        <div style={{ height: 300, width: 300 }}>
+          <DataGrid
+            {...(
+              Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
+                keyof typeof DATA_GRID_PROPS_DEFAULT_VALUES
+              >
+            ).reduce((acc, key) => {
+              // @ts-ignore
+              acc[key] = undefined;
+              return acc;
+            }, {})}
+            rows={rows}
+            columns={columns}
+          />
+        </div>,
+      );
+    }).not.toErrorDev();
   });
 });

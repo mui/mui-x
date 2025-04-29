@@ -1,0 +1,12 @@
+<div>
+  <Button onClick={handleScrollToChartsCommunity}>
+    Focus and scroll to charts community item
+  </Button>
+</div>
+<Box sx={{ height: 200, minWidth: 250, overflowY: 'scroll' }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    apiRef={apiRef}
+    defaultExpandedItems={['grid', 'pickers', 'charts', 'tree-view']}
+  />
+</Box>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Button, { ButtonProps } from '@mui/material/Button';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { TypographyProps } from '@mui/material/Typography';
 import { PickersToolbarText } from './PickersToolbarText';
 import { ExtendMui } from '../models/helpers';
@@ -16,11 +16,10 @@ export interface PickersToolbarButtonProps extends ExtendMui<ButtonProps, 'value
   value: React.ReactNode;
   variant: TypographyProps['variant'];
   classes?: Partial<PickersToolbarButtonClasses>;
-  width?: number;
+  width?: number | string;
 }
 
-const useUtilityClasses = (ownerState: PickersToolbarButtonProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersToolbarButtonClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -31,37 +30,47 @@ const useUtilityClasses = (ownerState: PickersToolbarButtonProps) => {
 const PickersToolbarButtonRoot = styled(Button, {
   name: 'MuiPickersToolbarButton',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   padding: 0,
   minWidth: 16,
   textTransform: 'none',
 });
 
-export const PickersToolbarButton: React.FunctionComponent<PickersToolbarButtonProps> =
-  React.forwardRef(function PickersToolbarButton(inProps, ref) {
-    const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbarButton' });
-    const { align, className, selected, typographyClassName, value, variant, width, ...other } =
-      props;
+export const PickersToolbarButton = React.forwardRef(function PickersToolbarButton(
+  inProps: PickersToolbarButtonProps,
+  ref: React.Ref<HTMLButtonElement>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbarButton' });
+  const {
+    align,
+    className,
+    classes: classesProp,
+    selected,
+    typographyClassName,
+    value,
+    variant,
+    width,
+    ...other
+  } = props;
 
-    const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses(classesProp);
 
-    return (
-      <PickersToolbarButtonRoot
-        data-mui-test="toolbar-button"
-        variant="text"
-        ref={ref}
-        className={clsx(className, classes.root)}
-        {...(width ? { sx: { width } } : {})}
-        {...other}
-      >
-        <PickersToolbarText
-          align={align}
-          className={typographyClassName}
-          variant={variant}
-          value={value}
-          selected={selected}
-        />
-      </PickersToolbarButtonRoot>
-    );
-  });
+  return (
+    <PickersToolbarButtonRoot
+      data-testid="toolbar-button"
+      variant="text"
+      ref={ref}
+      className={clsx(classes.root, className)}
+      {...(width ? { sx: { width } } : {})}
+      {...other}
+    >
+      <PickersToolbarText
+        align={align}
+        className={typographyClassName}
+        variant={variant}
+        value={value}
+        selected={selected}
+      />
+    </PickersToolbarButtonRoot>
+  );
+});

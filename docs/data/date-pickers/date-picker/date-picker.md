@@ -46,10 +46,10 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 The component is available in four variants:
 
 - The `DesktopDatePicker` component which works best for mouse devices and large screens.
-  It renders the views inside a popover and allows editing values directly inside the field.
+  It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDatePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values directly inside the field.
+  It renders the view inside a modal and a field for keyboard editing.
 
 - The `DatePicker` component which renders `DesktopDatePicker` or `MobileDatePicker` depending on the device it runs on.
 
@@ -65,9 +65,18 @@ Responsive components can suffer some inconsistencies between testing environmen
 Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
+### Keyboard Date Picker (legacy)
+
+The current implementation of the Date Picker component replaces the experimental Keyboard Date Picker from Material UI.
+See the [migration documentation](/material-ui/migration/pickers-migration/#imports) for more information.
+
+For accessibility, all Picker components accept keyboard inputs.
+If your use case only calls for keyboard editing, you can use Field components: the Date Picker component can be edited via input or a calendar, whereas the Date Field can only be edited via input.
+See the [Fields documentation](/x/react-date-pickers/fields/) for more details.
+
 ## Form props
 
-The component can be disabled or read-only.
+The component supports the `disabled`, `readOnly` and `name` form props:
 
 {{"demo": "FormPropsDatePickers.js"}}
 
@@ -88,8 +97,15 @@ Use the `openTo` prop to change this behavior:
 :::success
 The views will appear in the order defined by the `views` array.
 If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
-(e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).
+(for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
+
+## Order of years
+
+By default, years are displayed in ascending order, chronologically from the minimum year to the maximum.
+Set the `yearsOrder` prop to `desc` to show the years in descending order.
+
+{{"demo": "DatePickerYearsOrder.js"}}
 
 ## Landscape orientation
 
@@ -113,6 +129,10 @@ You can show a helper text with the date format accepted:
 You can enable the clearable behavior:
 
 {{"demo": "ClearableProp.js"}}
+
+:::info
+See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
+:::
 
 ## Localization
 

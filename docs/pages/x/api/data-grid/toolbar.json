@@ -1,0 +1,19 @@
+{
+  "props": {
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "Toolbar",
+  "imports": [
+    "import { Toolbar } from '@mui/x-data-grid/components';",
+    "import { Toolbar } from '@mui/x-data-grid';",
+    "import { Toolbar } from '@mui/x-data-grid-pro';",
+    "import { Toolbar } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiToolbar",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/toolbarV8/Toolbar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
+  "cssComponent": false
+}

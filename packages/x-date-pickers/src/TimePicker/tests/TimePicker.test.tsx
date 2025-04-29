@@ -1,19 +1,20 @@
 import * as React from 'react';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { screen } from '@mui-internal/test-utils/createRenderer';
 import { expect } from 'chai';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
 
 describe('<TimePicker />', () => {
   const { render } = createPickerRenderer();
 
-  it('should render in mobile mode when `useMediaQuery` returns `false`', () => {
+  it('should render in mobile mode when `useMediaQuery` returns `false`', async () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = stubMatchMedia(false);
 
-    render(<TimePicker />);
+    const { user } = render(<TimePicker />);
 
-    expect(screen.getByLabelText(/Choose time/)).to.have.tagName('input');
+    await user.click(screen.getByLabelText(/Choose time/));
+    expect(screen.queryByRole('dialog')).to.not.equal(null);
 
     window.matchMedia = originalMatchMedia;
   });

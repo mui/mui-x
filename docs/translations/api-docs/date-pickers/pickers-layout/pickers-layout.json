@@ -2,7 +2,6 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "orientation": { "description": "Force rendering in particular orientation." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {
@@ -21,10 +20,10 @@
     "root": { "description": "Styles applied to the root element." }
   },
   "slotDescriptions": {
-    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "shortcuts": "Custom component for the shortcuts.",
     "tabs": "Tabs enabling toggling between views.",
-    "toolbar": "Custom component for the toolbar. It is placed above the picker views."
+    "toolbar": "Custom component for the toolbar. It is placed above the Picker views."
   }
 }

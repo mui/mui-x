@@ -60,6 +60,9 @@ const defaultFormats: AdapterFormats = {
   month: 'LLLL',
   monthShort: 'MMM',
   dayOfMonth: 'd',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'd',
   weekday: 'cccc',
   weekdayShort: 'ccccc',
   hours24h: 'HH',
@@ -74,11 +77,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
 
-  fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
 };
@@ -114,7 +115,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
+export class AdapterLuxon implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -146,8 +147,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, DateTime> => {
-    type R = DateBuilderReturnType<T, DateTime>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
       return <R>null;
     }
@@ -211,6 +212,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     // Extract escaped section to avoid extending them
     const catchEscapedSectionsRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
 
+    // This RegExp tests if a string is only mad of supported tokens
+    const validTokens = [...Object.keys(this.formatTokenMap), 'yyyyy'];
+    const isWordComposedOfTokens = new RegExp(`^(${validTokens.join('|')})+$`);
+
     // Extract words to test if they are a token or a word to escape.
     const catchWordsRegexp = /(?:^|[^a-z])([a-z]+)(?:[^a-z]|$)|([a-z]+)/gi;
     return (
@@ -222,12 +227,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
             return token;
           }
           const expandedToken = DateTime.expandFormat(token, { locale: this.locale });
-          return expandedToken.replace(catchWordsRegexp, (correspondance, g1, g2) => {
+
+          return expandedToken.replace(catchWordsRegexp, (substring, g1, g2) => {
             const word = g1 || g2; // words are either in group 1 or group 2
-            if (word === 'yyyyy' || formatTokenMap[word] !== undefined) {
-              return correspondance;
+
+            if (isWordComposedOfTokens.test(word)) {
+              return substring;
             }
-            return `'${correspondance}'`;
+            return `'${substring}'`;
           });
         })
         .join('')
@@ -238,7 +245,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     );
   };
 
-  public isValid = (value: DateTime | null): boolean => {
+  public isValid = (value: DateTime | null): value is DateTime => {
     if (value === null) {
       return false;
     }
@@ -339,7 +346,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public startOfWeek = (value: DateTime) => {
-    return value.startOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).startOf('week', { useLocaleWeeks: true });
   };
 
   public startOfDay = (value: DateTime) => {
@@ -355,7 +362,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public endOfWeek = (value: DateTime) => {
-    return value.endOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).endOf('week', { useLocaleWeeks: true });
   };
 
   public endOfDay = (value: DateTime) => {
@@ -452,9 +459,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekArray = (value: DateTime) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const firstDay = this.startOfWeek(this.startOfMonth(cleanValue));
-    const lastDay = this.endOfWeek(this.endOfMonth(cleanValue));
+    const firstDay = this.startOfWeek(this.startOfMonth(value));
+    const lastDay = this.endOfWeek(this.endOfMonth(value));
 
     const { days } = lastDay.diff(firstDay, 'days').toObject();
 
@@ -476,7 +482,12 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
+    /* istanbul ignore next */
     return value.localWeekNumber ?? value.weekNumber;
+  };
+
+  public getDayOfWeek = (value: DateTime) => {
+    return value.weekday;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {

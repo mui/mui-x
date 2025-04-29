@@ -1,8 +1,15 @@
 import * as React from 'react';
-import { GridColDef, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
-import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { RefObject } from '@mui/x-internals/types';
 import {
+  GridColDef,
+  GridFilterOperator,
+  GridRowId,
+  gridRowIdSelector,
+  gridRowNodeSelector,
+} from '@mui/x-data-grid-pro';
+import { type GridBaseColDef } from '@mui/x-data-grid-pro/internals';
+import { GridApiPremium } from '../../../models/gridApiPremium';
+import type {
   GridAggregationCellMeta,
   GridAggregationLookup,
   GridAggregationPosition,
@@ -11,16 +18,14 @@ import {
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
+import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 
-const AGGREGATION_WRAPPABLE_PROPERTIES = [
-  'valueGetter',
-  'valueFormatter',
-  'renderCell',
-  'renderHeader',
-  'filterOperators',
-] as const;
-
-type WrappableColumnProperty = (typeof AGGREGATION_WRAPPABLE_PROPERTIES)[number];
+type WrappableColumnProperty =
+  | 'valueGetter'
+  | 'valueFormatter'
+  | 'renderCell'
+  | 'renderHeader'
+  | 'filterOperators';
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties: {
@@ -31,7 +36,7 @@ interface GridColDefWithAggregationWrappers extends GridBaseColDef {
 }
 
 type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: RefObject<GridApiPremium>;
   value: GridBaseColDef[P];
   colDef: GridBaseColDef;
   aggregationRule: GridAggregationRule;
@@ -46,8 +51,8 @@ const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'
   getCellAggregationResult,
 }) => {
   const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
-    const cellAggregationResult = getCellAggregationResult(rowId, column.field);
+    const rowId = gridRowIdSelector(apiRef, row);
+    const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
     }
@@ -74,16 +79,11 @@ const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueForm
   }
 
   const wrappedValueFormatter: GridBaseColDef['valueFormatter'] = (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
+    const rowId = gridRowIdSelector(apiRef, row);
     if (rowId != null) {
       const cellAggregationResult = getCellAggregationResult(rowId, column.field);
       if (cellAggregationResult != null) {
-        return aggregationRule.aggregationFunction.valueFormatter?.({
-          id: rowId,
-          field: column.field,
-          value,
-          api: apiRef.current,
-        });
+        return aggregationRule.aggregationFunction.valueFormatter?.(value, row, column, apiRef);
       }
     }
 
@@ -101,7 +101,9 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
   value: renderCell,
   aggregationRule,
   getCellAggregationResult,
+  apiRef,
 }) => {
+  const pivotActive = gridPivotActiveSelector(apiRef);
   const wrappedRenderCell: GridBaseColDef['renderCell'] = (params) => {
     const cellAggregationResult = getCellAggregationResult(params.id, params.field);
     if (cellAggregationResult != null) {
@@ -110,7 +112,15 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
           return <GridFooterCell {...params} />;
         }
 
+        if (pivotActive && cellAggregationResult.value === 0) {
+          return null;
+        }
+
         return params.formattedValue;
+      }
+
+      if (pivotActive && cellAggregationResult.value === 0) {
+        return null;
       }
 
       const aggregationMeta: GridAggregationCellMeta = {
@@ -151,7 +161,8 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
         return null;
       }
       return (value, row, column, api) => {
-        if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
+        const rowId = gridRowIdSelector(apiRef, row);
+        if (getCellAggregationResult(rowId, column.field) != null) {
           return true;
         }
         return filterFn(value, row, column, api);
@@ -172,6 +183,10 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   aggregationRule,
 }) => {
   const wrappedRenderHeader: GridBaseColDef['renderHeader'] = (params) => {
+    // TODO: investigate why colDef is undefined
+    if (!params.colDef) {
+      return null;
+    }
     return (
       <GridAggregationHeader
         {...params}
@@ -187,21 +202,21 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
 /**
  * Add a wrapper around each wrappable property of the column to customize the behavior of the aggregation cells.
  */
-export const wrapColumnWithAggregationValue = ({
-  column,
-  apiRef,
-  aggregationRule,
-}: {
-  column: GridBaseColDef;
-  apiRef: React.MutableRefObject<GridApiPremium>;
-  aggregationRule: GridAggregationRule;
-}): GridBaseColDef => {
+export const wrapColumnWithAggregationValue = (
+  column: GridBaseColDef,
+  aggregationRule: GridAggregationRule,
+  apiRef: RefObject<GridApiPremium>,
+): GridBaseColDef => {
   const getCellAggregationResult = (
     id: GridRowId,
     field: string,
   ): GridAggregationLookup[GridRowId][string] | null => {
     let cellAggregationPosition: GridAggregationPosition | null = null;
-    const rowNode = apiRef.current.getRowNode(id)!;
+    const rowNode = gridRowNodeSelector(apiRef, id);
+
+    if (!rowNode) {
+      return null;
+    }
 
     if (rowNode.type === 'group') {
       cellAggregationPosition = 'inline';
@@ -214,7 +229,7 @@ export const wrapColumnWithAggregationValue = ({
     }
 
     // TODO: Add custom root id
-    const groupId = cellAggregationPosition === 'inline' ? id : rowNode.parent ?? '';
+    const groupId = cellAggregationPosition === 'inline' ? id : (rowNode.parent ?? '');
 
     const aggregationResult = gridAggregationLookupSelector(apiRef)?.[groupId]?.[field];
     if (!aggregationResult || aggregationResult.position !== cellAggregationPosition) {
@@ -267,16 +282,21 @@ export const wrapColumnWithAggregationValue = ({
   return wrappedColumn;
 };
 
+const isColumnWrappedWithAggregation = (
+  column: GridColDef,
+): column is GridColDefWithAggregationWrappers => {
+  return (
+    typeof (column as GridColDefWithAggregationWrappers).aggregationWrappedProperties !==
+    'undefined'
+  );
+};
+
 /**
  * Remove the aggregation wrappers around the wrappable properties of the column.
  */
-export const unwrapColumnFromAggregation = ({
-  column,
-}: {
-  column: GridColDef | GridColDefWithAggregationWrappers;
-}) => {
-  if (!(column as GridColDefWithAggregationWrappers).aggregationWrappedProperties) {
-    return column as GridColDef;
+export const unwrapColumnFromAggregation = (column: GridColDef) => {
+  if (!isColumnWrappedWithAggregation(column)) {
+    return column;
   }
   const { aggregationWrappedProperties, ...unwrappedColumn } =
     column as GridColDefWithAggregationWrappers;

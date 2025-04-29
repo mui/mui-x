@@ -1,6 +1,7 @@
-const ANGLE_APPROX = 5; // Angle (in deg) for which we approximate the rectangle as perfectly horizontal/vertical
+import { warnOnce } from '@mui/x-internals/warning';
+import { deg2rad } from './angleConversion';
 
-let warnedOnce = false;
+const ANGLE_APPROX = 5; // Angle (in deg) for which we approximate the rectangle as perfectly horizontal/vertical
 
 /**
  * Return the minimal translation along the x-axis to avoid overflow of a rectangle of a given width, height, and rotation.
@@ -12,15 +13,12 @@ let warnedOnce = false;
  */
 export function getMinXTranslation(width: number, height: number, angle: number = 0) {
   if (process.env.NODE_ENV !== 'production') {
-    if (!warnedOnce && angle > 90 && angle < -90) {
-      warnedOnce = true;
-      console.warn(
-        [
-          `MUI X Charts: It seems you applied an angle larger than 90° or smaller than -90° to an axis text.`,
-          `This could cause some text overlapping.`,
-          `If you encounter a use case where it's needed, please open an issue.`,
-        ].join('\n'),
-      );
+    if (angle > 90 && angle < -90) {
+      warnOnce([
+        `MUI X: It seems you applied an angle larger than 90° or smaller than -90° to an axis text.`,
+        `This could cause some text overlapping.`,
+        `If you encounter a use case where it's needed, please open an issue.`,
+      ]);
     }
   }
   const standardAngle = Math.min(
@@ -37,7 +35,7 @@ export function getMinXTranslation(width: number, height: number, angle: number 
     return height;
   }
 
-  const radAngle = (standardAngle * Math.PI) / 180;
+  const radAngle = deg2rad(standardAngle);
   const angleSwich = Math.atan2(height, width);
 
   if (radAngle < angleSwich) {

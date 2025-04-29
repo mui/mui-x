@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -26,7 +27,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridFooterContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterContainer',
-  overridesResolver: (props, styles) => styles.footerContainer,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   justifyContent: 'space-between',
@@ -35,18 +35,18 @@ const GridFooterContainerRoot = styled('div', {
   borderTop: '1px solid',
 });
 
-const GridFooterContainer = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
-  function GridFooterContainer(props: GridFooterContainerProps, ref) {
+const GridFooterContainer = forwardRef<HTMLDivElement, GridFooterContainerProps>(
+  function GridFooterContainer(props, ref) {
     const { className, ...other } = props;
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
     return (
       <GridFooterContainerRoot
-        ref={ref}
         className={clsx(classes.root, className)}
         ownerState={rootProps}
         {...other}
+        ref={ref}
       />
     );
   },
@@ -55,7 +55,7 @@ const GridFooterContainer = React.forwardRef<HTMLDivElement, GridFooterContainer
 GridFooterContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),

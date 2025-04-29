@@ -1,5 +1,7 @@
 {
   "props": {
+    "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
+    "borderRadius": { "type": { "name": "number" } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
@@ -7,7 +9,7 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
-    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -18,13 +20,20 @@
   "name": "BarPlot",
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",
-    "import { BarPlot } from '@mui/x-charts';"
+    "import { BarPlot } from '@mui/x-charts';",
+    "import { BarPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {
       "name": "bar",
       "description": "The component that renders the bar.",
       "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
       "class": null
     }
   ],

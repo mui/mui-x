@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEventPriority } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**
@@ -8,11 +8,12 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
  * @requires useGridColumns (event) - can be after, async only
  */
 export function useGridEvents(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'onColumnHeaderClick'
     | 'onColumnHeaderDoubleClick'
+    | 'onColumnHeaderContextMenu'
     | 'onColumnHeaderOver'
     | 'onColumnHeaderOut'
     | 'onColumnHeaderEnter'
@@ -29,25 +30,26 @@ export function useGridEvents(
     | 'onMenuClose'
   >,
 ): void {
-  useGridApiOptionHandler(apiRef, 'columnHeaderClick', props.onColumnHeaderClick);
-  useGridApiOptionHandler(apiRef, 'columnHeaderDoubleClick', props.onColumnHeaderDoubleClick);
-  useGridApiOptionHandler(apiRef, 'columnHeaderOver', props.onColumnHeaderOver);
-  useGridApiOptionHandler(apiRef, 'columnHeaderOut', props.onColumnHeaderOut);
-  useGridApiOptionHandler(apiRef, 'columnHeaderEnter', props.onColumnHeaderEnter);
-  useGridApiOptionHandler(apiRef, 'columnHeaderLeave', props.onColumnHeaderLeave);
+  useGridEventPriority(apiRef, 'columnHeaderClick', props.onColumnHeaderClick);
+  useGridEventPriority(apiRef, 'columnHeaderContextMenu', props.onColumnHeaderContextMenu);
+  useGridEventPriority(apiRef, 'columnHeaderDoubleClick', props.onColumnHeaderDoubleClick);
+  useGridEventPriority(apiRef, 'columnHeaderOver', props.onColumnHeaderOver);
+  useGridEventPriority(apiRef, 'columnHeaderOut', props.onColumnHeaderOut);
+  useGridEventPriority(apiRef, 'columnHeaderEnter', props.onColumnHeaderEnter);
+  useGridEventPriority(apiRef, 'columnHeaderLeave', props.onColumnHeaderLeave);
 
-  useGridApiOptionHandler(apiRef, 'cellClick', props.onCellClick);
-  useGridApiOptionHandler(apiRef, 'cellDoubleClick', props.onCellDoubleClick);
-  useGridApiOptionHandler(apiRef, 'cellKeyDown', props.onCellKeyDown);
+  useGridEventPriority(apiRef, 'cellClick', props.onCellClick);
+  useGridEventPriority(apiRef, 'cellDoubleClick', props.onCellDoubleClick);
+  useGridEventPriority(apiRef, 'cellKeyDown', props.onCellKeyDown);
 
-  useGridApiOptionHandler(apiRef, 'preferencePanelClose', props.onPreferencePanelClose);
-  useGridApiOptionHandler(apiRef, 'preferencePanelOpen', props.onPreferencePanelOpen);
+  useGridEventPriority(apiRef, 'preferencePanelClose', props.onPreferencePanelClose);
+  useGridEventPriority(apiRef, 'preferencePanelOpen', props.onPreferencePanelOpen);
 
-  useGridApiOptionHandler(apiRef, 'menuOpen', props.onMenuOpen);
-  useGridApiOptionHandler(apiRef, 'menuClose', props.onMenuClose);
+  useGridEventPriority(apiRef, 'menuOpen', props.onMenuOpen);
+  useGridEventPriority(apiRef, 'menuClose', props.onMenuClose);
 
-  useGridApiOptionHandler(apiRef, 'rowDoubleClick', props.onRowDoubleClick);
-  useGridApiOptionHandler(apiRef, 'rowClick', props.onRowClick);
+  useGridEventPriority(apiRef, 'rowDoubleClick', props.onRowDoubleClick);
+  useGridEventPriority(apiRef, 'rowClick', props.onRowClick);
 
-  useGridApiOptionHandler(apiRef, 'stateChange', props.onStateChange);
+  useGridEventPriority(apiRef, 'stateChange', props.onStateChange);
 }

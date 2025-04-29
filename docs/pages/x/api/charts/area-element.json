@@ -11,7 +11,8 @@
   "name": "AreaElement",
   "imports": [
     "import { AreaElement } from '@mui/x-charts/LineChart';",
-    "import { AreaElement } from '@mui/x-charts';"
+    "import { AreaElement } from '@mui/x-charts';",
+    "import { AreaElement } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {
@@ -31,13 +32,19 @@
     {
       "key": "highlighted",
       "className": "MuiAreaElement-highlighted",
-      "description": "Styles applied to the root element when higlighted.",
+      "description": "Styles applied to the root element when highlighted.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiAreaElement-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiAreaElement-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

@@ -1,6 +1,6 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
 import { PieArc, PieArcProps } from './PieArc';
 import {
   ComputedPieRadius,
@@ -8,12 +8,7 @@ import {
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
-import { defaultTransitionConfig } from './dataTransform/transition';
-import {
-  AnimatedObject,
-  ValueWithHighlight,
-  useTransformData,
-} from './dataTransform/useTransformData';
+import { useTransformData } from './dataTransform/useTransformData';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -26,11 +21,11 @@ export interface PieArcPlotSlotProps {
 export interface PieArcPlotProps
   extends Pick<
       DefaultizedPieSeriesType,
-      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id' | 'highlightScope'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
     >,
     ComputedPieRadius {
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
    */
   faded?: DefaultizedPieSeriesType['faded'];
@@ -71,7 +66,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     cornerRadius = 0,
     paddingAngle = 0,
     id,
-    highlightScope,
     highlighted,
     faded = { additionalRadius: -5 },
     data,
@@ -86,14 +80,9 @@ function PieArcPlot(props: PieArcPlotProps) {
     cornerRadius,
     paddingAngle,
     id,
-    highlightScope,
     highlighted,
     faded,
     data,
-  });
-  const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...defaultTransitionConfig,
-    immediate: skipAnimation,
   });
 
   if (data.length === 0) {
@@ -104,48 +93,30 @@ function PieArcPlot(props: PieArcPlotProps) {
 
   return (
     <g {...other}>
-      {transition(
-        (
-          {
-            startAngle,
-            endAngle,
-            paddingAngle: pA,
-            innerRadius: iR,
-            arcLabelRadius,
-            outerRadius: oR,
-            cornerRadius: cR,
-            ...style
-          },
-          item,
-          _,
-          index,
-        ) => {
-          return (
-            <Arc
-              startAngle={startAngle}
-              endAngle={endAngle}
-              paddingAngle={pA}
-              innerRadius={iR}
-              outerRadius={oR}
-              cornerRadius={cR}
-              style={style}
-              id={id}
-              color={item.color}
-              dataIndex={index}
-              highlightScope={highlightScope}
-              isFaded={item.isFaded}
-              isHighlighted={item.isHighlighted}
-              onClick={
-                onItemClick &&
-                ((event) => {
-                  onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
-                })
-              }
-              {...slotProps?.pieArc}
-            />
-          );
-        },
-      )}
+      {transformedData.map((item, index) => (
+        <Arc
+          key={item.dataIndex}
+          startAngle={item.startAngle}
+          endAngle={item.endAngle}
+          paddingAngle={item.paddingAngle}
+          innerRadius={item.innerRadius}
+          outerRadius={item.outerRadius}
+          cornerRadius={item.cornerRadius}
+          skipAnimation={skipAnimation ?? false}
+          id={id}
+          color={item.color}
+          dataIndex={index}
+          isFaded={item.isFaded}
+          isHighlighted={item.isHighlighted}
+          onClick={
+            onItemClick &&
+            ((event) => {
+              onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
+            })
+          }
+          {...slotProps?.pieArc}
+        />
+      ))}
     </g>
   );
 }
@@ -153,7 +124,7 @@ function PieArcPlot(props: PieArcPlotProps) {
 PieArcPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The radius between circle center and the arc label in px.
@@ -170,16 +141,20 @@ PieArcPlot.propTypes = {
       color: PropTypes.string.isRequired,
       endAngle: PropTypes.number.isRequired,
       formattedValue: PropTypes.string.isRequired,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      labelMarkType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.func,
+      ]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,
     }),
   ).isRequired,
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
    */
   faded: PropTypes.shape({
@@ -192,7 +167,7 @@ PieArcPlot.propTypes = {
     paddingAngle: PropTypes.number,
   }),
   /**
-   * Override the arc attibutes when it is highlighted.
+   * Override the arc attributes when it is highlighted.
    */
   highlighted: PropTypes.shape({
     additionalRadius: PropTypes.number,
@@ -203,13 +178,9 @@ PieArcPlot.propTypes = {
     outerRadius: PropTypes.number,
     paddingAngle: PropTypes.number,
   }),
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * @default 0
    */
   innerRadius: PropTypes.number,

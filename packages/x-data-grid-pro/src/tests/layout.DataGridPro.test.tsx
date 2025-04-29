@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { createRenderer, act } from '@mui-internal/test-utils';
+import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
 import { grid } from 'test/utils/helperFn';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-describe('<DataGridPro /> - Layout', () => {
+describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -26,13 +28,6 @@ describe('<DataGridPro /> - Layout', () => {
     ],
     columns: [{ field: 'brand', width: 100 }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   // Adaptation of describeConformance()
   describe('MUI component API', () => {
@@ -84,7 +79,7 @@ describe('<DataGridPro /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
 
       function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
         apiRef = useGridApiRef();
@@ -135,12 +130,27 @@ describe('<DataGridPro /> - Layout', () => {
         width: '198px', // because of the 2px border
       });
 
-      act(() => apiRef!.current.setColumnVisibility('age', true));
+      act(() => apiRef.current?.setColumnVisibility('age', true));
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border
       });
     });
+  });
+
+  it('should work with `headerFilterHeight` prop', () => {
+    render(
+      <div style={{ display: 'flex', flexDirection: 'column', width: 300 }}>
+        <DataGridPro
+          {...baselineProps}
+          headerFilters
+          columnHeaderHeight={20}
+          headerFilterHeight={60}
+          rowHeight={20}
+        />
+      </div>,
+    );
+    expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 60);
   });
 
   it('should support translations in the theme', () => {
@@ -154,11 +164,7 @@ describe('<DataGridPro /> - Layout', () => {
     expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
   });
 
-  it('should support the sx prop', function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      this.skip(); // Doesn't work with mocked window.getComputedStyle
-    }
-
+  it('should support the sx prop', () => {
     const theme = createTheme({
       palette: {
         primary: {

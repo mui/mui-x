@@ -2,30 +2,32 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGridPremium,
-  GridToolbar,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+
+const visibleFields = [
+  'commodity',
+  'quantity',
+  'filledQuantity',
+  'status',
+  'isFilled',
+  'unitPrice',
+  'unitPriceCurrency',
+  'subTotal',
+  'feeRate',
+  'feeAmount',
+  'incoTerm',
+];
 
 export default function DataGridPremiumDemo() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     editable: true,
-    visibleFields: [
-      'commodity',
-      'quantity',
-      'filledQuantity',
-      'status',
-      'isFilled',
-      'unitPrice',
-      'unitPriceCurrency',
-      'subTotal',
-      'feeRate',
-      'feeAmount',
-      'incoTerm',
-    ],
+    visibleFields,
   });
   const apiRef = useGridApiRef();
 
@@ -38,7 +40,7 @@ export default function DataGridPremiumDemo() {
         model: ['commodity'],
       },
       sorting: {
-        sortModel: [{ field: '__row_group_by_columns_group__', sort: 'asc' }],
+        sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'asc' }],
       },
       aggregation: {
         model: {
@@ -52,11 +54,12 @@ export default function DataGridPremiumDemo() {
     <Box sx={{ height: 520, width: '100%' }}>
       <DataGridPremium
         {...data}
+        label="Data Grid Premium"
         apiRef={apiRef}
         loading={loading}
         disableRowSelectionOnClick
         initialState={initialState}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
       />
     </Box>
   );

@@ -5,7 +5,8 @@ import traverse from '@babel/traverse';
 import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
-import * as yargs from 'yargs';
+import yargs, { ArgumentsCamelCase } from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import localeNames from './localeNames';
@@ -14,6 +15,7 @@ import {
   SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
 } from '../docs/constants';
 
+// @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
@@ -36,6 +38,13 @@ const packagesWithL10n = [
     constantsRelativePath: 'packages/x-date-pickers/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-date-pickers/src/locales',
     documentationReportPath: 'docs/data/date-pickers/localization/data.json',
+  },
+  {
+    key: 'charts',
+    reportName: '📊 Charts',
+    constantsRelativePath: 'packages/x-charts/src/locales/enUS.ts',
+    localesRelativePath: 'packages/x-charts/src/locales',
+    documentationReportPath: 'docs/data/charts/localization/data.json',
   },
 ];
 
@@ -70,7 +79,7 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
           }
 
           // Test if the variable name follows the pattern xxXXGrid or xxXXPickers
-          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers)/.test(node.id.name)) {
+          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers|LocalText)/.test(node.id.name)) {
             visitorPath.skip();
             return;
           }
@@ -142,7 +151,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           (property.key as babelTypes.Identifier).name ||
           `'${(property.key as babelTypes.StringLiteral).value}'`;
 
-        // Ignore translations for MUI Core components, e.g. MuiTablePagination
+        // Ignore translations for Core components, for example MuiTablePagination
         if (key.startsWith('Mui')) {
           return;
         }
@@ -190,7 +199,7 @@ function findLocales(localesDirectory: string, constantsPath: string) {
 }
 
 function extractAndReplaceTranslations(localePath: string) {
-  const translations = {};
+  const translations: Translations = {};
   const file = fse.readFileSync(localePath, { encoding: 'utf-8' });
   const { code } = babel.transformSync(file, {
     plugins: [...BABEL_PLUGINS, plugin(translations)],
@@ -223,8 +232,9 @@ function injectTranslations(
 
       const valueAsCode = result!.code!.replace(/^const _ = (.*);/gs, '$1');
       const comment = !existingTranslations[key] && !existingTranslations[`'${key}'`] ? '// ' : '';
+      const content = `${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`;
 
-      lines.push(`${comment}${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`);
+      lines.push(...content.split('\n').map((line) => `${comment}${line}`));
     });
   });
 
@@ -315,7 +325,7 @@ type DocumentationReportItem = {
 };
 const generateDocReport = async (
   missingTranslations: MissingTranslations,
-  baseTranslationsNumber,
+  baseTranslationsNumber: TranslationsNumber,
 ) => {
   const workspaceRoot = path.resolve(__dirname, '../');
 
@@ -331,7 +341,7 @@ const generateDocReport = async (
         importName.length > 2
           ? `${importName.slice(0, 2).toLowerCase()}-${importName.slice(2).toUpperCase()}`
           : importName;
-      const localeName = localeNames[languageTag];
+      const localeName = localeNames[languageTag as keyof typeof localeNames];
 
       if (localeName === undefined) {
         throw new Error(
@@ -362,7 +372,7 @@ const generateDocReport = async (
   });
 };
 
-async function updateIssue(githubToken, newMessage) {
+async function updateIssue(githubToken: string, newMessage: string) {
   // Initialize the API client
   const octokit = new MyOctokit({
     auth: githubToken,
@@ -370,7 +380,7 @@ async function updateIssue(githubToken, newMessage) {
 
   const requestBody = `You can check below all of the localization files that contain at least one missing translation. If you are a fluent speaker of any of these languages, feel free to submit a pull request. Any help is welcome to make the X components to reach new cultures.
 
-Run \`yarn l10n --report\` to update the list below ⬇️
+Run \`pnpm l10n --report\` to update the list below ⬇️
 
 ${newMessage}
 `;
@@ -394,12 +404,14 @@ interface HandlerArgv {
   githubToken?: string;
 }
 
-async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
+type TranslationsNumber = Record<string, number>;
+
+async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
   const { report, githubToken } = argv;
   const workspaceRoot = path.resolve(__dirname, '../');
 
-  const missingTranslations: Record<string, any> = {};
-  const baseTranslationsNumber: Record<string, number> = {};
+  const missingTranslations: MissingTranslations = {};
+  const baseTranslationsNumber: TranslationsNumber = {};
 
   await Promise.all(
     packagesWithL10n.map(async (packageInfo) => {
@@ -442,7 +454,10 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
           }
           if (!missingTranslations[localeCode][packageInfo.key]) {
             missingTranslations[localeCode][packageInfo.key] = {
-              path: localePath.replace(workspaceRoot, '').slice(1), // Remove leading slash
+              // prettier-ignore
+              path: localePath
+                .replace(workspaceRoot, '').slice(1) // Remove leading slash
+                .split(path.sep).join('/'), // Ensure the path is using forward slashes even on Windows machines
               missingKeys: [],
             };
           }
@@ -488,7 +503,7 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   process.exit(0);
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Syncs translation files.',

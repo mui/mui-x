@@ -1,4 +1,3 @@
-import { viVN as viVNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,9 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Không có dữ liệu',
   noResultsOverlayLabel: 'Không tìm thấy kết quả.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',
@@ -38,10 +40,18 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'In',
   toolbarExportExcel: 'Xuất Excel',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Tìm kiếm',
+  columnsManagementNoColumns: 'Không có cột',
+  columnsManagementShowHideAllText: 'Hiện/Ẩn Tất cả',
+  columnsManagementReset: 'Đặt lại',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
@@ -56,19 +66,21 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterPanelInputPlaceholder: 'Lọc giá trị',
 
   // Filter operators text
-  filterOperatorContains: 'Chứa',
-  filterOperatorEquals: 'Bằng',
-  filterOperatorStartsWith: 'Bắt đầu bằng',
-  filterOperatorEndsWith: 'Kết thúc bằng',
-  filterOperatorIs: 'Là',
-  filterOperatorNot: 'Không là',
-  filterOperatorAfter: 'Trước',
+  filterOperatorContains: 'chứa',
+  filterOperatorDoesNotContain: 'không chứa',
+  filterOperatorEquals: 'bằng',
+  filterOperatorDoesNotEqual: 'không bằng',
+  filterOperatorStartsWith: 'bắt đầu với',
+  filterOperatorEndsWith: 'kết thúc với',
+  filterOperatorIs: 'là',
+  filterOperatorNot: 'không phải là',
+  filterOperatorAfter: 'sau',
   filterOperatorOnOrAfter: 'bằng hoặc sau',
-  filterOperatorBefore: 'Sau',
+  filterOperatorBefore: 'trước',
   filterOperatorOnOrBefore: 'bằng hoặc trước',
-  filterOperatorIsEmpty: 'Rỗng',
-  filterOperatorIsNotEmpty: 'Khác rỗng',
-  filterOperatorIsAnyOf: 'Bất kỳ',
+  filterOperatorIsEmpty: 'rỗng',
+  filterOperatorIsNotEmpty: 'khác rỗng',
+  filterOperatorIsAnyOf: 'là một trong',
   'filterOperator=': '=',
   'filterOperator!=': '!=',
   'filterOperator>': '>',
@@ -78,24 +90,27 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Chứa',
+  headerFilterOperatorDoesNotContain: 'Không chứa',
   headerFilterOperatorEquals: 'Bằng',
+  headerFilterOperatorDoesNotEqual: 'Không bằng',
   headerFilterOperatorStartsWith: 'Bắt đầu với',
   headerFilterOperatorEndsWith: 'Kết thúc với',
-  headerFilterOperatorIs: 'là',
-  headerFilterOperatorNot: 'Không là',
+  headerFilterOperatorIs: 'Là',
+  headerFilterOperatorNot: 'Không phải là',
   headerFilterOperatorAfter: 'Sau',
-  headerFilterOperatorOnOrAfter: 'Đang hoặc sau',
+  headerFilterOperatorOnOrAfter: 'Bằng hoặc sau',
   headerFilterOperatorBefore: 'Trước',
-  headerFilterOperatorOnOrBefore: 'Đang hoặc trước',
+  headerFilterOperatorOnOrBefore: 'Bằng hoặc trước',
   headerFilterOperatorIsEmpty: 'Rỗng',
   headerFilterOperatorIsNotEmpty: 'Khác rỗng',
-  headerFilterOperatorIsAnyOf: 'Bất kỳ',
+  headerFilterOperatorIsAnyOf: 'Là một trong',
   'headerFilterOperator=': 'Bằng',
   'headerFilterOperator!=': 'Khác',
   'headerFilterOperator>': 'Lớn hơn',
   'headerFilterOperator>=': 'Lớn hơn hoặc bằng',
   'headerFilterOperator<': 'Nhỏ hơn',
   'headerFilterOperator<=': 'Nhỏ hơn hoặc bằng',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',
@@ -104,6 +119,7 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Danh mục',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Danh sách cột',
   columnMenuManageColumns: 'Quản lý cột',
   columnMenuFilter: 'Bộ lọc',
@@ -111,6 +127,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Bỏ sắp xếp',
   columnMenuSortAsc: 'Sắp xếp tăng dần',
   columnMenuSortDesc: 'Sắp xếp giảm dần',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -163,6 +180,34 @@ const viVNGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Mở rộng',
   collapseDetailPanel: 'Thu nhỏ',
 
+  // Pagination
+  paginationRowsPerPage: 'Số hàng mỗi trang:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Tới trang đầu tiên';
+    }
+    if (type === 'last') {
+      return 'Tới trang cuối cùng';
+    }
+    if (type === 'next') {
+      return 'Tới trang tiếp theo';
+    }
+    // if (type === 'previous') {
+    return 'Về trang trước đó';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Sắp xếp hàng',
 
@@ -173,6 +218,83 @@ const viVNGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Tối thiểu',
   aggregationFunctionLabelMax: 'Tối đa',
   aggregationFunctionLabelSize: 'Kích cỡ',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
-export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);
+export const viVN: Localization = getGridLocalization(viVNGrid);

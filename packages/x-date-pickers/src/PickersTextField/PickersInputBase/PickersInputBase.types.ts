@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
+import { MuiEvent } from '@mui/x-internals/types';
 import { PickersSectionListProps } from '../../PickersSectionList';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersInputPropsUsedByField
   extends Pick<
@@ -15,7 +17,7 @@ export interface PickersInputPropsUsedByField
   areAllSectionsEmpty: boolean;
 
   onClick: React.MouseEventHandler<HTMLDivElement>;
-  onKeyDown: React.KeyboardEventHandler<HTMLDivElement>;
+  onKeyDown: React.EventHandler<MuiEvent<React.KeyboardEvent<HTMLDivElement>>>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
 
@@ -29,6 +31,7 @@ export interface PickersInputPropsUsedByField
   id?: string;
   fullWidth?: boolean;
   readOnly?: boolean;
+  name?: string;
 
   inputProps?: React.HTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> };
   inputRef?: React.Ref<HTMLInputElement>;
@@ -37,7 +40,7 @@ export interface PickersInputPropsUsedByField
 export interface PickersInputBaseProps
   extends Omit<BoxProps, keyof PickersInputPropsUsedByField>,
     PickersInputPropsUsedByField {
-  ownerState?: any;
+  ownerState?: PickerTextFieldOwnerState;
   margin?: 'dense' | 'none' | 'normal';
   renderSuffix?: (state: {
     disabled?: boolean;
@@ -58,4 +61,13 @@ export interface PickersInputBaseProps
     root?: React.ElementType;
     input?: React.ElementType;
   };
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: {
+    root?: any;
+    input?: any;
+  };
+  'data-multi-input'?: string;
 }

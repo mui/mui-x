@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@next <codemod> <paths...>
+npx @mui/x-codemod@latest <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -29,7 +29,7 @@ Options:
   --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
-  npx @mui/x-codemod@latest v6.0.0/preset-safe src
+  npx @mui/x-codemod@latest v8.0.0/preset-safe src
   npx @mui/x-codemod@latest v6.0.0/component-rename-prop src --
   --component=DataGrid --from=prop --to=newProp
 ```
@@ -39,10 +39,11 @@ Examples:
 To pass more options directly to jscodeshift, use `--jscodeshift=...`. For example:
 
 ```bash
-// single option
-npx @mui/x-codemod@next --jscodeshift=--run-in-band
-// multiple options
-npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
+# single option
+npx @mui/x-codemod --jscodeshift=--run-in-band
+
+# multiple options
+npx @mui/x-codemod --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
@@ -53,7 +54,521 @@ Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument
 
 ```bash
-npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+```
+
+## v8.0.0
+
+### 🚀 `preset-safe` for v8.0.0
+
+A combination of all important transformers for migrating v7 to v8.
+⚠️ This codemod should be run only once.
+It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
+To run codemods for a specific package, refer to the respective section.
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
+```
+
+The corresponding sub-sections are listed below
+
+- [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v800)
+- [`preset-safe-for-charts`](#preset-safe-for-charts-v800)
+- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v800)
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers-v800)
+
+### Tree View codemods
+
+#### `preset-safe` for Tree View v8.0.0
+
+The `preset-safe` codemods for Tree View.
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-tree-item-2`](#rename-tree-item-2)
+
+#### `rename-tree-view-simple-tree-view`
+
+Renames the Tree View component to Simple Tree View
+
+```diff
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
+
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+ return (
+-  <TreeView>
++  <SimpleTreeView>
+     <TreeItem itemId="1" label="First item" />
+-  </TreeView>
++  </SimpleTreeView>
+ );
+```
+
+#### `rename-tree-item-2`
+
+Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or utils like `useTreeItem2` or `TreeItem2Icon`).
+
+```diff
+-import { TreeItem2 } from '@mui/x-tree-view';
++import { TreeItem } from '@mui/x-tree-view';
+
+-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
++import { TreeItem } from '@mui/x-tree-view/TreeItem';
+```
+
+### Charts codemods
+
+#### `preset-safe` for Charts v8.0.0
+
+The `preset-safe` codemods for Charts.
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+- [`replace-legend-direction-values`](#replace-legend-direction-values)
+- [`rename-responsive-chart-container`](#rename-responsive-chart-container)
+- [`rename-label-and-tick-font-size`](#rename-label-and-tick-font-size)
+
+#### `rename-legend-to-slots-legend`
+
+Renames legend props to the corresponding slotProps.
+
+```diff
+ <LineChart
+-  legend={{ hiden: true}}
++  slotProps={{ legend: { hiden: true} }}
+ />
+```
+
+#### `replace-legend-direction-values`
+
+Replace `row` and `column` values by `horizontal` and `vertical` respectively.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+-        direction: "row"
++        direction: "horizontal"
+      }
+    }}
+ />
+```
+
+#### `replace-legend-position-values`
+
+Replace `"left" | "middle" | "right"` values `"start" | "center" | "end"` respectively.
+This is to align with the CSS values and reflect the RTL ability of the legend component.
+
+```diff
+ <BarChart
+    slotProps={{
+      legend: {
+        position: {
+-          horizontal: "left",
++          horizontal: "start",
+        }
+      }
+    }}
+ />
+```
+
+#### `rename-responsive-chart-container`
+
+Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.
+
+```diff
+-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
+
+-<ResponsiveChartContainer>
++<ChartContainer>
+   <BarPlot />
+-</ResponsiveChartContainer>
++</ChartContainer>
+```
+
+#### `rename-legend-position-type`
+
+Renames `LegendPosition` to `Position`.
+
+```diff
+-import { LegendPosition } from '@mui/x-charts/ChartsLegend';
++import { Position } from '@mui/x-charts/models';
+```
+
+> [!WARNING]
+> If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
+> Verify the git diff to remove the duplicate.
+>
+> ```diff
+>  import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> -import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+> +import { ChartContainer } from '@mui/x-charts/ChartContainer';
+> ```
+
+#### `rename-label-and-tick-font-size`
+
+Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle` prop.
+
+```diff
+ <ChartsXAxis
+-  labelFontSize={18}
++  labelStyle={{
++    fontSize: 18
++  }}
+-  tickFontSize={20}
++  tickStyle={{
++    fontSize: 20
++  }}
+ />
+```
+
+#### `remove-on-axis-click-handler`
+
+Remove the `<ChartsOnAxisClickHandler />` and move the associated `onAxisClick` prop to its parent.
+
+> [!WARNING]
+> This codemode does not work if component got renamed or if the handler is not a direct child of the container.
+
+```diff
++ <ChartContainer onAxisClick={() => {}}>
+- <ChartContainer>
+-   <ChartsOnAxisClickHandler onAxisClick={() => {}} />
+ </ChartContainer>
+```
+
+#### `rename-unstable-use-series`
+
+Remove `unstable_` prefix from `useSeries` and `use*Series` hooks, as they have now become stable.
+
+```diff
+  import {
+-   unstable_useSeries,
++   useSeries,
+-   unstable_usePieSeries,
++   usePieSeries,
+-   unstable_useLineSeries,
++   useLineSeries,
+-   unstable_useBarSeries,
++   useBarSeries,
+-   unstable_useScatterSeries,
++   useScatterSeries,
+  } from '@mui/x-charts/hooks';
+  import {
+-   unstable_useHeatmapSeries,
++   useHeatmapSeries,
+  } from '@mui/x-charts-pro/hooks';
+```
+
+#### `rename-sparkline-colors-to-color`
+
+Renames the `colors` prop of a `SparkLineChart` to `color` and accesses its first element.
+
+```diff
+ <SparkLineChart
+-  colors={['red']}
++  color={'red'}
+ />
+```
+
+If `colors` is a function, it will be wrapped in another function that returns its first element.
+
+```diff
+ <SparkLineChart
+-  colors={fn}
++  color={typeof fn === 'function' ? mode => fn(mode)[0] : fn[0]}
+ />
+```
+
+If there are cases that the codemod cannot handle, you should see a comment with a `mui-x-codemod` prefix in the code.
+
+```diff
+ <SparkLineChart
+-  colors={(mode) => (mode === 'light' ? ['black'] : ['white'])}
++  /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
++  color={(mode) => (mode === 'light' ? ['black'] : ['white'])}
+ />
+```
+
+### Data Grid codemods
+
+#### `preset-safe` for Data Grid v8.0.0
+
+The `preset-safe` codemods for Data Grid.
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+- [`remove-props`](#remove-props)
+- [`rename-props`](#rename-props)
+- [`rename-imports`](#rename-imports)
+- [`reform-row-selection-model`](#reform-row-selection-model)
+- [`rename-package`](#rename-package)
+- [`add-showToolbar-prop`](#add-showToolbar-prop)
+
+#### `remove-stabilized-v8-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGridPremium
+-  experimentalFeatures={{
+-    ariaV8: true,
+-  }}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
+
+#### `remove-props`
+
+Remove props that are no longer supported.
+
+The list includes these props:
+
+- `indeterminateCheckboxAction`
+- `rowPositionsDebounceMs`
+- `resetPageOnSortFilter`
+
+```diff
+ <DataGrid
+-  indeterminateCheckboxAction="deselect"
+-  rowPositionsDebounceMs={100}
+-  resetPageOnSortFilter
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-props <path>
+```
+
+#### `rename-props`
+
+Rename props to the new ones.
+
+The list includes these props:
+
+- `unstable_rowSpanning` to `rowSpanning`
+- `unstable_dataSource` to `dataSource`
+- `unstable_dataSourceCache` to `dataSourceCache`
+- `unstable_lazyLoading` to `lazyLoading`
+- `unstable_lazyLoadingRequestThrottleMs` to `lazyLoadingRequestThrottleMs`
+- `unstable_onDataSourceError` to `onDataSourceError`
+- `unstable_listView` to `listView`
+- `unstable_listColumn` to `listViewColumn`
+
+```diff
+ <DataGrid
+-  unstable_rowSpanning
+-  unstable_dataSource={dataSource}
+-  unstable_dataSourceCache={dataSourceCache}
+-  unstable_lazyLoading
+-  unstable_lazyLoadingRequestThrottleMs={100}
+-  unstable_onDataSourceError={() => {}}
+-  unstable_listView
+-  unstable_listColumn={{}}
++  rowSpanning
++  dataSource={dataSource}
++  dataSourceCache={dataSourceCache}
++  lazyLoading
++  lazyLoadingRequestThrottleMs={100}
++  onDataSourceError={() => {}}
++  listView
++  listViewColumn={{}}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-props <path>
+```
+
+#### `rename-imports`
+
+This codemod renames the imports of the Data Grid components. The list includes these imports:
+
+- `selectedGridRowsSelector` to `gridRowSelectionIdsSelector`
+- `selectedGridRowsCountSelector` to `gridRowSelectionCountSelector`
+
+```diff
+-import { selectedGridRowsSelector, selectedGridRowsCountSelector } from '@mui/x-data-grid';
++import { gridRowSelectionIdsSelector, gridRowSelectionCountSelector } from '@mui/x-data-grid';
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-imports <path>
+```
+
+#### `reform-row-selection-model`
+
+Reforms the controlled `rowSelectionModel` prop value to the new one.
+
+```diff
+-const [rowSelectionModel, setRowSelectionModel] = React.useState([1, 2]);
++const [rowSelectionModel, setRowSelectionModel] = React.useState({
++  type: 'include',
++  ids: new Set([1, 2]),
++});
+
+ <DataGrid
+  rowSelectionModel={rowSelectionModel}
+  onRowSelectionModelChange={setRowSelectionModel}
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/reform-row-selection-model <path>
+```
+
+#### `rename-package`
+
+Reorganizes the imports moved from `@mui/x-data-grid-pro` and `@mui/x-data-grid-premium`.
+
+```diff
+-import { LicenseInfo } from '@mui/x-data-grid-pro';
++import { LicenseInfo } from '@mui/x-license';
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-package <path>
+```
+
+#### `add-showToolbar-prop`
+
+Adds the `showToolbar` prop to the Data Grid components that are using `slots.toolbar` prop.
+
+```diff
+ <DataGridPremium
+  slots={{
+    toolbar: GridToolbar,
+  }}
++ showToolbar
+ />
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/add-showToolbar-prop <path>
+```
+
+### Pickers codemods
+
+#### `preset-safe` for Pickers v8.0.0
+
+The `preset-safe` codemods for Pickers.
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/pickers/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-adapter-date-fns-imports`](#rename-adapter-date-fns-imports)
+- [`rename-type-imports`](#rename-type-imports)
+
+#### `rename-adapter-date-fns-imports`
+
+> [!WARNING]
+> This codemod is not idempotent. Running it multiple times will rename the imports back and forth.
+> Usage of `AdapterDateFnsV3` would be replaced by `AdapterDateFns` and a subsequent run would rename it to `AdapterDateFnsV2`.
+
+- Renames `AdapterDateFns` and `AdapterDateFnsJalali` imports to `AdapterDateFnsV2` and `AdapterDateFnsJalaliV2` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV2';
+  ```
+
+- Renames `AdapterDateFnsV3` and `AdapterDateFnsJalaliV3` imports to `AdapterDateFns` and `AdapterDateFnsJalali` respectfully.
+
+  ```diff
+  -import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+  -import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalaliV3';
+  +import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+  ```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/pickers/rename-adapter-date-fns-imports <path>
+```
+
+#### `rename-type-imports`
+
+Renames:
+
+- `usePickersTranslations` to `usePickerTranslations`
+- `usePickersContext` to `usePickerContext`
+- `FieldValueType` to `PickerValueType`
+- `RangeFieldSection` to `FieldRangeSection`
+- `PickerShortcutChangeImportance` to `PickerChangeImportance`
+
+```diff
+-import { usePickersTranslations, usePickersContext } from '@mui/x-date-pickers/hooks';
++import { usePickerTranslations, usePickerContext } from '@mui/x-date-pickers/hooks';
+-import { FieldValueType } from '@mui/x-date-pickers';
++import { PickerValueType } from '@mui/x-date-pickers';
+-import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
++import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
+-import { PickerShortcutChangeImportance } from '@mui/x-date-pickers/PickersShortcuts';
++import { PickerChangeImportance } from '@mui/x-date-pickers/models';
+
+ interface MyComponentProps {
+-  valueType: FieldValueType;
++  valueType: PickerValueType;
+   foo: string;
+   bar: number;
+ }
+```
+
+<!-- #default-branch-switch -->
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/pickers/rename-type-imports <path>
 ```
 
 ## v7.0.0
@@ -66,7 +581,7 @@ It runs codemods for both Data Grid and Date and Time Pickers packages.
 To run codemods for a specific package, refer to the respective section.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
@@ -77,12 +592,12 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v7.0.0
+#### `preset-safe` for Pickers v7.0.0
 
-The `preset-safe` codemods for pickers.
+The `preset-safe` codemods for Pickers.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -108,7 +623,7 @@ This change only affects Date and Time Picker components.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-components-to-slots <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/rename-components-to-slots <path>
 ```
 
 #### `rename-default-calendar-month-to-reference-date`
@@ -121,7 +636,7 @@ Replace the `defaultCalendarMonth` prop with the `referenceDate` prop.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/rename-default-calendar-month-to-reference-date <path>
 ```
 
 #### `rename-day-picker-classes`
@@ -134,7 +649,7 @@ Rename the `dayPickerClasses` variable to `dayCalendarClasses`.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-day-picker-classes <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/rename-day-picker-classes <path>
 ```
 
 #### `rename-slots-types`
@@ -149,23 +664,24 @@ Replace types suffix `SlotsComponent` by `Slots` and `SlotsComponentsProps` by `
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/pickers/rename-slots-types <path>
+npx @mui/x-codemod@latest v7.0.0/pickers/rename-slots-types <path>
 ```
 
 ### Data Grid codemods
 
-#### `preset-safe` for data grid v7.0.0
+#### `preset-safe` for Data Grid v7.0.0
 
-The `preset-safe` codemods for data grid.
+The `preset-safe` codemods for Data Grid.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod@latest v7.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
 
 - [`rename-components-to-slots-data-grid`](#rename-components-to-slots-data-grid)
 - [`rename-cell-selection-props`](#rename-cell-selection-props)
+- [`remove-stabilized-v7-experimentalFeatures`](#remove-stabilized-v7-experimentalFeatures)
 
 #### `rename-components-to-slots-data-grid`
 
@@ -183,7 +699,7 @@ This change only affects Data Grid components.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/data-grid/rename-components-to-slots <path>
+npx @mui/x-codemod@latest v7.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 #### `rename-cell-selection-props`
@@ -202,29 +718,51 @@ Rename props related to `cellSelection` feature.
 ```
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/data-grid/rename-cell-selection-props <path>
+npx @mui/x-codemod@latest v7.0.0/data-grid/rename-cell-selection-props <path>
+```
+
+#### `remove-stabilized-v7-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGrid
+-  experimentalFeatures={{
+-    lazyLoading: true,
+-    ariaV7: true,
+-    clipboardPaste: true,
+-    columnGrouping: true,
+-  }}
+ />
+```
+
+```bash
+npx @mui/x-codemod@latest v7.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 ### Tree View codemods
 
-#### `preset-safe` for tree view v7.0.0
+#### `preset-safe` for Tree View v7.0.0
 
-The `preset-safe` codemods for tree view.
+The `preset-safe` codemods for Tree View.
 
 ```bash
-npx @mui/x-codemod@next v7.0.0/tree-view/preset-safe <path|folder>
+npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path|folder>
 ```
 
 The list includes these transformers
 
-- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view-1)
 - [`rename-use-tree-item`](#rename-use-tree-item)
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
+- [`replace-transition-props-by-slot`](#replace-transition-props-by-slot)
+- [`rename-focus-callback`](#rename-focus-callback)
+- [`rename-nodeid`](#rename-nodeid)
 
 #### `rename-tree-view-simple-tree-view`
 
-Renames the `TreeView` component to `SimpleTreeView`
+Renames the Tree View component to Simple Tree View
 
 ```diff
 -import { TreeView } from '@mui/x-tree-view';
@@ -233,13 +771,13 @@ Renames the `TreeView` component to `SimpleTreeView`
 -import { TreeView } from '@mui/x-tree-view/TreeView';
 +import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 
-   return (
--    <TreeView>
-+    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
--    </TreeView>
-+    </SimpleTreeView>
-   );
+ return (
+-  <TreeView>
++  <SimpleTreeView>
+     <TreeItem itemId="1" label="First item" />
+-  </TreeView>
++  </SimpleTreeView>
+ );
 ```
 
 #### `rename-use-tree-item`
@@ -251,8 +789,8 @@ Renames the `useTreeItem` hook to `useTreeItemState`
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });
@@ -273,13 +811,13 @@ Rename the expansion props
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 
@@ -290,14 +828,49 @@ Rename the selection props
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
  />
+```
+
+#### `replace-transition-props-by-slot`
+
+Replace the `TransitionComponent` and `TransitionProps` components with the `groupTransition` slot:
+
+```diff
+ <TreeItem
+-  TransitionComponent={Fade}
++  slots={{ groupTransition: Fade }}
+
+-  TransitionProps={{ timeout: 600 }}
++  slotProps={{ groupTransition: { timeout: 600 } }}
+ />
+```
+
+#### `rename-focus-callback`
+
+Replace the `onNodeFocus` callback with `onItemFocus`:
+
+```diff
+ <TreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
+ />
+```
+
+#### `rename-nodeid`
+
+Rename nodeId to itemId
+
+```diff
+ <TreeItem
+-  nodeId='unique-id'
++  itemId='unique-id'
 ```
 
 ## v6.0.0
@@ -320,9 +893,9 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v6.0.0
+#### `preset-safe` for Pickers v6.0.0
 
-The `preset-safe` codemods for pickers.
+The `preset-safe` codemods for Pickers.
 
 ```bash
 npx @mui/x-codemod@latest v6.0.0/pickers/preset-safe <path|folder>
@@ -647,9 +1220,9 @@ npx @mui/x-codemod@latest v6.0.0/pickers/rename-components-to-slots <path>
 
 ### Data Grid codemods
 
-#### `preset-safe` for data grid v6.0.0
+#### `preset-safe` for Data Grid v6.0.0
 
-The `preset-safe` codemods for data grid.
+The `preset-safe` codemods for Data Grid.
 
 ```bash
 npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path|folder>

@@ -1,5 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -11,17 +10,18 @@ import {
   BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface DesktopDateRangePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateRangePickerSlots<TDate>,
-    MakeOptional<UseDesktopRangePickerSlots<TDate, 'day'>, 'field'> {}
+export interface DesktopDateRangePickerSlots
+  extends BaseDateRangePickerSlots,
+    MakeOptional<UseDesktopRangePickerSlots, 'field'> {}
 
-export interface DesktopDateRangePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDateRangePickerSlotProps<TDate>,
-    Omit<UseDesktopRangePickerSlotProps<TDate, 'day'>, 'tabs'> {}
+export interface DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseDateRangePickerSlotProps,
+    Omit<UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
-export interface DesktopDateRangePickerProps<TDate extends PickerValidDate>
-  extends BaseDateRangePickerProps<TDate>,
-    DesktopRangeOnlyPickerProps<TDate> {
+export interface DesktopDateRangePickerProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> extends BaseDateRangePickerProps,
+    DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
    * @default 2
@@ -31,10 +31,15 @@ export interface DesktopDateRangePickerProps<TDate extends PickerValidDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateRangePickerSlots<TDate>;
+  slots?: DesktopDateRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateRangePickerSlotProps<TDate>;
+  slotProps?: DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
+   */
+  closeOnSelect?: boolean;
 }

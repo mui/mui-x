@@ -1,4 +1,7 @@
-import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
+import {
+  GridFilterInputDate,
+  GridFilterInputDateProps,
+} from '../components/panel/filterPanel/GridFilterInputDate';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator, GetApplyFilterFn } from '../models/gridFilterOperator';
 
@@ -16,6 +19,13 @@ function buildApplyFilterFn(
   if (showTime) {
     date.setSeconds(0, 0);
   } else {
+    // In GMT-X timezone, the date will be one day behind.
+    // For 2022-08-16:
+    // GMT+2: Tue Aug 16 2022 02:00:00 GMT+0200
+    // GMT-4: Mon Aug 15 2022 20:00:00 GMT-0400
+    //
+    // We need to add the offset before resetting the hours.
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     date.setHours(0, 0, 0, 0);
   }
   const time = date.getTime();
@@ -40,7 +50,9 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] => [
+export const getGridDateOperators = (
+  showTime?: boolean,
+): GridFilterOperator<any, Date, any, GridFilterInputDateProps>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {

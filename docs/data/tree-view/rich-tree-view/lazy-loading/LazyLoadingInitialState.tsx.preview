@@ -1,0 +1,7 @@
+<RichTreeViewPro
+  items={initialItems}
+  dataSource={{
+    getChildrenCount: (item) => item?.childrenCount as number,
+    getTreeItems: fetchData,
+  }}
+/>

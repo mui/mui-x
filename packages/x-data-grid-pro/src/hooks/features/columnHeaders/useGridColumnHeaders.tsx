@@ -8,6 +8,10 @@ import {
   GridFilterItem,
 } from '@mui/x-data-grid';
 import {
+  gridColumnsTotalWidthSelector,
+  gridHasFillerSelector,
+  gridHeaderFilterHeightSelector,
+  gridVerticalScrollbarWidthSelector,
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
   GetHeadersParams,
@@ -15,8 +19,11 @@ import {
   getGridFilter,
   GridStateColDef,
   GridColumnHeaderRow,
+  shouldCellShowLeftBorder,
+  shouldCellShowRightBorder,
+  PinnedColumnPosition,
 } from '@mui/x-data-grid/internals';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -42,7 +49,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     apiRef,
     gridTabIndexColumnHeaderFilterSelector,
   );
-  const { getColumnsToRender, ...otherProps } = useGridColumnHeadersCommunity({
+  const {
+    getColumnsToRender,
+    getPinnedCellOffset,
+    renderContext,
+    leftRenderContext,
+    rightRenderContext,
+    pinnedColumns,
+    visibleColumns,
+    columnPositions,
+    ...otherProps
+  } = useGridColumnHeadersCommunity({
     ...props,
     hasOtherElementInTabSequence:
       hasOtherElementInTabSequence || columnHeaderFilterTabIndexState !== null,
@@ -55,8 +72,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.headerFilters;
-  const dimensions = apiRef.current.getRootDimensions();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
+  const headerFilterHeight = useGridSelector(apiRef, gridHeaderFilterHeightSelector);
+  const scrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
@@ -82,11 +102,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [filterModel],
   );
 
-  const getColumnFilters = (params?: GetHeadersParams, other = {}) => {
-    if (disableHeaderFiltering) {
-      return null;
-    }
-
+  const getColumnFilters = (params?: GetHeadersParams) => {
     const { renderedColumns, firstColumnToRender } = getColumnsToRender(params);
 
     const filters: React.JSX.Element[] = [];
@@ -108,11 +124,33 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const item = getFilterItem(colDef);
 
+      const pinnedPosition = params?.position;
+      const pinnedOffset = getPinnedCellOffset(
+        pinnedPosition,
+        colDef.computedWidth,
+        columnIndex,
+        columnPositions,
+        columnsTotalWidth,
+        scrollbarWidth,
+      );
+
+      const indexInSection = i;
+      const sectionLength = renderedColumns.length;
+
+      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showRightBorder = shouldCellShowRightBorder(
+        pinnedPosition,
+        indexInSection,
+        sectionLength,
+        rootProps.showColumnVerticalBorder,
+        gridHasFiller,
+      );
+
       filters.push(
         <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
-          height={dimensions.headerHeight}
+          height={headerFilterHeight}
           width={colDef.computedWidth}
           colDef={colDef}
           hasFocus={hasFocus}
@@ -121,10 +159,21 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           headerClassName={headerClassName}
           data-field={colDef.field}
           item={item}
+          pinnedPosition={pinnedPosition}
+          pinnedOffset={pinnedOffset}
+          showLeftBorder={showLeftBorder}
+          showRightBorder={showRightBorder}
           {...rootProps.slotProps?.headerFilterCell}
-          {...other}
         />,
       );
+    }
+
+    return otherProps.getFillers(params, filters, 0, true);
+  };
+
+  const getColumnFiltersRow = () => {
+    if (disableHeaderFiltering) {
+      return null;
     }
 
     return (
@@ -135,13 +184,28 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         aria-rowindex={headerGroupingMaxDepth + 2}
         ownerState={rootProps}
       >
-        {otherProps.getFillers(params, filters, 0, true)}
+        {leftRenderContext &&
+          getColumnFilters({
+            position: PinnedColumnPosition.LEFT,
+            renderContext: leftRenderContext,
+            maxLastColumn: leftRenderContext.lastColumnIndex,
+          })}
+        {getColumnFilters({
+          renderContext,
+          maxLastColumn: visibleColumns.length - pinnedColumns.right.length,
+        })}
+        {rightRenderContext &&
+          getColumnFilters({
+            position: PinnedColumnPosition.RIGHT,
+            renderContext: rightRenderContext,
+            maxLastColumn: rightRenderContext.lastColumnIndex,
+          })}
       </GridColumnHeaderRow>
     );
   };
 
   return {
     ...otherProps,
-    getColumnFilters,
+    getColumnFiltersRow,
   };
 };

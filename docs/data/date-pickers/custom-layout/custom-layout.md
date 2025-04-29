@@ -8,7 +8,11 @@ packageName: '@mui/x-date-pickers'
 
 # Custom layout
 
-<p class="description">The Date and Time Pickers let you reorganize the layout</p>
+<p class="description">The Date and Time Pickers let you reorganize the layout.</p>
+
+:::success
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+:::
 
 ## Default layout structure
 
@@ -82,14 +86,17 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 
 function MyCustomLayout(props) {
-  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
 
   // Put the action bar before the content
   return (
-    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={props}>
+    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={ownerState}>
       {toolbar}
       {actionBar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

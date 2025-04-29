@@ -1,11 +1,11 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   GridGenericColumnMenu,
   GridColumnMenuProps,
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from '@mui/x-data-grid';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuPinningItem } from './GridColumnMenuPinningItem';
 
 export const GRID_COLUMN_MENU_SLOTS_PRO = {
@@ -20,27 +20,15 @@ export const GRID_COLUMN_MENU_SLOT_PROPS_PRO = {
   },
 };
 
-const GridProColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+export const GridProColumnMenu = forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridProColumnMenu(props, ref) {
     return (
       <GridGenericColumnMenu
-        ref={ref}
         {...props}
         defaultSlots={GRID_COLUMN_MENU_SLOTS_PRO}
         defaultSlotProps={GRID_COLUMN_MENU_SLOT_PROPS_PRO}
+        ref={ref}
       />
     );
   },
 );
-
-GridProColumnMenu.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  colDef: PropTypes.object.isRequired,
-  hideMenu: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-} as any;
-
-export { GridProColumnMenu };

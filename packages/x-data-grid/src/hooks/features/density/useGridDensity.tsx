@@ -1,64 +1,100 @@
 import * as React from 'react';
-import { GridDensity } from '../../../models/gridDensity';
+import { RefObject } from '@mui/x-internals/types';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridDensityApi } from '../../../models/api/gridDensityApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridDensitySelector } from './densitySelector';
-import { isDeepEqual } from '../../../utils/utils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-
-export const COMPACT_DENSITY_FACTOR = 0.7;
-export const COMFORTABLE_DENSITY_FACTOR = 1.3;
-
-const DENSITY_FACTORS: Record<GridDensity, number> = {
-  compact: COMPACT_DENSITY_FACTOR,
-  comfortable: COMFORTABLE_DENSITY_FACTOR,
-  standard: 1,
-};
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 
 export const densityStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'density'>
+  Pick<DataGridProcessedProps, 'initialState' | 'density'>
 > = (state, props) => ({
   ...state,
-  density: { value: props.density, factor: DENSITY_FACTORS[props.density] },
+  density: props.initialState?.density ?? props.density ?? 'standard',
 });
 
 export const useGridDensity = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'density'>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'density' | 'onDensityChange' | 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
 
-  const setDensity = React.useCallback<GridDensityApi['setDensity']>(
-    (newDensity): void => {
-      logger.debug(`Set grid density to ${newDensity}`);
-      apiRef.current.setState((state) => {
-        const currentDensityState = gridDensitySelector(state);
-        const newDensityState = { value: newDensity, factor: DENSITY_FACTORS[newDensity] };
+  apiRef.current.registerControlState({
+    stateId: 'density',
+    propModel: props.density,
+    propOnChange: props.onDensityChange,
+    stateSelector: gridDensitySelector,
+    changeEvent: 'densityChange',
+  });
 
-        if (isDeepEqual(currentDensityState, newDensityState)) {
-          return state;
-        }
+  const setDensity = useEventCallback<GridDensityApi['setDensity']>((newDensity): void => {
+    const currentDensity = gridDensitySelector(apiRef);
+    if (currentDensity === newDensity) {
+      return;
+    }
 
-        return {
-          ...state,
-          density: newDensityState,
-        };
-      });
-      apiRef.current.forceUpdate();
-    },
-    [logger, apiRef],
-  );
+    logger.debug(`Set grid density to ${newDensity}`);
 
-  React.useEffect(() => {
-    apiRef.current.setDensity(props.density);
-  }, [apiRef, props.density]);
+    apiRef.current.setState((state) => ({
+      ...state,
+      density: newDensity,
+    }));
+  });
 
   const densityApi: GridDensityApi = {
     setDensity,
   };
 
   useGridApiMethod(apiRef, densityApi, 'public');
+
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
+    (prevState, context) => {
+      const exportedDensity = gridDensitySelector(apiRef);
+
+      const shouldExportRowCount =
+        // Always export if the `exportOnlyDirtyModels` property is not activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the `density` is controlled
+        props.density != null ||
+        // Always export if the `density` has been initialized
+        props.initialState?.density != null;
+
+      if (!shouldExportRowCount) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        density: exportedDensity,
+      };
+    },
+    [apiRef, props.density, props.initialState?.density],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
+    (params, context) => {
+      const restoredDensity = context.stateToRestore?.density
+        ? context.stateToRestore.density
+        : gridDensitySelector(apiRef);
+      apiRef.current.setState((state) => ({
+        ...state,
+        density: restoredDensity,
+      }));
+      return params;
+    },
+    [apiRef],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+
+  React.useEffect(() => {
+    if (props.density) {
+      apiRef.current.setDensity(props.density);
+    }
+  }, [apiRef, props.density]);
 };

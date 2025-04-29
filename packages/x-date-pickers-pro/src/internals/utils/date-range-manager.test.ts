@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import { adapterToUse } from 'test/utils/pickers';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { calculateRangeChange, calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../../models';
 
 const start2018 = adapterToUse.date('2018-01-01');
+const start2018At4PM = adapterToUse.date('2018-01-01T16:00:00');
 const mid2018 = adapterToUse.date('2018-07-01');
 const end2019 = adapterToUse.date('2019-01-01');
 
@@ -15,6 +17,15 @@ describe('date-range-manager', () => {
       newDate: start2018,
       expectedRange: [start2018, null],
       expectedNextSelection: 'end' as const,
+    },
+    {
+      range: [null, null],
+      rangePosition: 'start' as const,
+      newDate: start2018,
+      expectedRange: [start2018At4PM, null],
+      expectedNextSelection: 'end' as const,
+      shouldMergeDateAndTime: true,
+      referenceDate: start2018At4PM,
     },
     {
       range: [start2018, null],
@@ -88,16 +99,35 @@ describe('date-range-manager', () => {
       allowRangeFlip: true,
       expectedNextSelection: 'end' as const,
     },
+    {
+      range: [start2018At4PM, null],
+      rangePosition: 'end' as const,
+      newDate: start2018,
+      expectedRange: [start2018At4PM, start2018],
+      allowRangeFlip: false,
+      expectedNextSelection: 'start' as const,
+    },
   ].forEach(
-    ({ range, rangePosition, newDate, expectedRange, allowRangeFlip, expectedNextSelection }) => {
+    ({
+      range,
+      rangePosition,
+      newDate,
+      expectedRange,
+      allowRangeFlip,
+      expectedNextSelection,
+      shouldMergeDateAndTime,
+      referenceDate,
+    }) => {
       it(`calculateRangeChange should return ${expectedRange} when selecting ${rangePosition} of ${range} with user input ${newDate}`, () => {
         expect(
           calculateRangeChange({
             utils: adapterToUse,
-            range: range as DateRange<Date>,
+            range: range as DateRange<PickerValidDate>,
             newDate,
             rangePosition,
             allowRangeFlip,
+            shouldMergeDateAndTime,
+            referenceDate,
           }),
         ).to.deep.equal({
           nextSelection: expectedNextSelection,
@@ -161,7 +191,7 @@ describe('date-range-manager', () => {
       expect(
         calculateRangePreview({
           utils: adapterToUse,
-          range: range as DateRange<Date>,
+          range: range as DateRange<PickerValidDate>,
           newDate,
           rangePosition,
         }),

@@ -24,8 +24,8 @@
     },
     {
       "name": "setRowSelectionModel",
-      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument. Any row already selected will be unselected.",
-      "type": "(rowIds: GridRowId[]) => void"
+      "description": "Sets the new row selection model.<br>⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically. Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation.",
+      "type": "(rowSelectionModel: GridRowSelectionModel) => void"
     }
   ]
 }

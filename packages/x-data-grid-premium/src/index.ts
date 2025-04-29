@@ -1,12 +1,5 @@
 import './typeOverloads';
 
-import { LicenseInfo as LicenseInfoExport } from '@mui/x-license';
-/**
- * @deprecated Use `@mui/x-license` package instead:
- * @example import { LicenseInfo } from '@mui/x-license';
- */
-export class LicenseInfo extends LicenseInfoExport {}
-
 export * from '@mui/x-data-grid/components';
 export * from '@mui/x-data-grid-pro/components';
 export * from '@mui/x-data-grid/constants';
@@ -25,6 +18,7 @@ export * from './models';
 export * from './components';
 
 export { GridColumnHeaders } from '@mui/x-data-grid-pro';
+export type { GridColumnHeadersProps } from '@mui/x-data-grid-pro';
 
 export type {
   DataGridPremiumProps,
@@ -39,3 +33,16 @@ export {
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
+
+export type {
+  GridGetRowsParamsPremium as GridGetRowsParams,
+  GridGetRowsResponsePremium as GridGetRowsResponse,
+  GridDataSourcePremium as GridDataSource,
+  GridDataSourceApiPremium as GridDataSourceApi,
+  GridDataSourceApiBasePremium as GridDataSourceApiBase,
+  GridDataSourcePremiumPrivateApi as GridDataSourcePrivateApi,
+} from './hooks/features/dataSource/models';
+
+export { useGridPivoting as unstable_useGridPivoting } from './hooks/features/pivoting/useGridPivoting';
+export type { GridPivotModel } from './hooks/features/pivoting/gridPivotingInterfaces';
+export { IS_SPEECH_RECOGNITION_SUPPORTED } from './utils/speechRecognition';

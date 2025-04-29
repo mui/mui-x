@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridPanelContent } from '../GridPanelContent';
@@ -57,7 +58,6 @@ export interface GridFilterPanelProps
    * @default false
    */
   disableRemoveAllButton?: boolean;
-
   /**
    * @ignore - do not document.
    */
@@ -70,7 +70,7 @@ const getGridFilter = (col: GridStateColDef): GridFilterItem => ({
   id: Math.round(Math.random() * 1e5),
 });
 
-const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
+const GridFilterPanel = forwardRef<HTMLDivElement, GridFilterPanelProps>(
   function GridFilterPanel(props, ref) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
@@ -235,7 +235,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     }, [validFilters.length]);
 
     return (
-      <GridPanelWrapper ref={ref} {...other}>
+      <GridPanelWrapper {...other} ref={ref}>
         <GridPanelContent>
           {readOnlyFilters.map((item, index) => (
             <GridFilterForm
@@ -305,7 +305,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
 GridFilterPanel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * @ignore - do not document.

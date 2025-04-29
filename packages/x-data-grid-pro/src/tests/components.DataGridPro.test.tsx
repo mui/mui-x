@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { createRenderer, EventType, fireEvent, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, EventType, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   gridClasses,
@@ -15,7 +16,7 @@ import { getCell, getRow } from 'test/utils/helperFn';
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
@@ -51,18 +52,18 @@ describe('<DataGridPro/> - Components', () => {
         ['onDragOver', 'cellDragOver'],
       ] as const
     ).forEach(([prop, event]) => {
-      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, () => {
+      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, async () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase slotProps={{ cell: { [prop]: propHandler } }} />);
-        apiRef!.current.subscribeEvent(event, eventHandler);
+        render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
+        apiRef.current?.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
         expect(eventHandler.callCount).to.equal(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
-        ) as EventType; // e.g. onDoubleClick -> doubleClick
+        ) as EventType; // for example onDoubleClick -> doubleClick
         const cell = getCell(0, 0);
 
         if (event !== 'cellMouseUp') {
@@ -71,23 +72,25 @@ describe('<DataGridPro/> - Components', () => {
 
         fireEvent[eventToFire](cell);
 
-        expect(propHandler.callCount).to.equal(1);
+        await waitFor(() => {
+          expect(propHandler.callCount).to.equal(1);
+        });
         expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
         expect(eventHandler.callCount).to.equal(1);
       });
     });
 
-    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, () => {
+    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, async () => {
       const propHandler = spy();
       const eventHandler = spy();
-      render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
-      apiRef!.current.subscribeEvent('cellKeyDown', eventHandler);
+      const { user } = render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
+      apiRef.current?.subscribeEvent('cellKeyDown', eventHandler);
 
       expect(propHandler.callCount).to.equal(0);
       expect(eventHandler.callCount).to.equal(0);
 
-      userEvent.mousePress(getCell(0, 0));
-      fireEvent.keyDown(getCell(0, 0));
+      await user.click(getCell(0, 0));
+      await user.keyboard('a');
 
       expect(propHandler.callCount).to.equal(1);
       expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
@@ -103,15 +106,15 @@ describe('<DataGridPro/> - Components', () => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase slotProps={{ row: { [prop]: propHandler } }} />);
-        apiRef!.current.subscribeEvent(event, eventHandler);
+        render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
+        apiRef.current?.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
         expect(eventHandler.callCount).to.equal(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
-        ) as EventType; // e.g. onDoubleClick -> doubleClick
+        ) as EventType; // for example onDoubleClick -> doubleClick
         fireEvent[eventToFire](getRow(0));
 
         expect(propHandler.callCount).to.equal(1);

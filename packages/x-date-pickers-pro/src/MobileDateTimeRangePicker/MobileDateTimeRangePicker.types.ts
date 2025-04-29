@@ -1,5 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseMobileRangePickerSlots,
   UseMobileRangePickerSlotProps,
@@ -10,27 +9,28 @@ import {
   BaseDateTimeRangePickerSlots,
   BaseDateTimeRangePickerSlotProps,
 } from '../DateTimeRangePicker/shared';
-import { DateTimeRangePickerView } from '../internals/models';
 
-export interface MobileDateTimeRangePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerSlots<TDate>,
-    MakeOptional<UseMobileRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
+export interface MobileDateTimeRangePickerSlots
+  extends BaseDateTimeRangePickerSlots,
+    MakeOptional<UseMobileRangePickerSlots, 'field'> {}
 
-export interface MobileDateTimeRangePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerSlotProps<TDate>,
-    Omit<UseMobileRangePickerSlotProps<TDate, DateTimeRangePickerView>, 'tabs' | 'toolbar'> {}
+export interface MobileDateTimeRangePickerSlotProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseDateTimeRangePickerSlotProps,
+    Omit<UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
-export interface MobileDateTimeRangePickerProps<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerProps<TDate>,
-    MobileRangeOnlyPickerProps<TDate> {
+export interface MobileDateTimeRangePickerProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> extends BaseDateTimeRangePickerProps,
+    MobileRangeOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDateTimeRangePickerSlots<TDate>;
+  slots?: MobileDateTimeRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimeRangePickerSlotProps<TDate>;
+  slotProps?: MobileDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

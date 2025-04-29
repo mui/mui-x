@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DescribeValidationInputOptions, DescribeValidationOptions } from '../describeValidation';
 
 interface DescribeRangeValidationKeyboardOptions {
-  inputValue?: (
+  setValue?: (
     value: any,
     context?: {
       setEndDate?: boolean;
@@ -13,14 +13,13 @@ interface DescribeRangeValidationKeyboardOptions {
 export interface DescribeRangeValidationInputOptions
   extends DescribeValidationInputOptions,
     DescribeRangeValidationKeyboardOptions {
-  isSingleInput?: boolean;
-  variant?: 'mobile' | 'desktop';
+  fieldType: 'single-input' | 'multi-input' | 'no-input';
 }
 
 export interface DescribeRangeValidationOptions
   extends DescribeValidationOptions,
     DescribeRangeValidationKeyboardOptions {
-  isSingleInput?: boolean;
+  fieldType: 'single-input' | 'multi-input' | 'no-input';
 }
 
 export type DescribeRangeValidationTestSuite = (

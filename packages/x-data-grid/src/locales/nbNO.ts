@@ -1,4 +1,3 @@
-import { nbNO as nbNOCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
   noResultsOverlayLabel: 'Fant ingen resultat.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tetthet',
@@ -21,7 +23,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Filters toolbar button text
   toolbarFilters: 'Filter',
   toolbarFiltersLabel: 'Vis filter',
-  toolbarFiltersTooltipHide: 'Skjul fitler',
+  toolbarFiltersTooltipHide: 'Skjul filter',
   toolbarFiltersTooltipShow: 'Vis filter',
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
@@ -38,17 +40,25 @@ const nbNOGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Skriv ut',
   toolbarExportExcel: 'Last ned som Excel',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: 'Søk',
+  columnsManagementNoColumns: 'Ingen kolonner',
+  columnsManagementShowHideAllText: 'Vis/skjul alle',
+  columnsManagementReset: 'Nullstill',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
   filterPanelRemoveAll: 'Fjern alle',
   filterPanelDeleteIconLabel: 'Slett',
   filterPanelLogicOperator: 'Logisk operator',
-  filterPanelOperator: 'Operatører',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonner',
@@ -57,7 +67,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'inneholder',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'er lik',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'starter med',
   filterOperatorEndsWith: 'slutter med',
   filterOperatorIs: 'er',
@@ -69,33 +81,36 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'er tom',
   filterOperatorIsNotEmpty: 'er ikke tom',
   filterOperatorIsAnyOf: 'er en av',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
-  // headerFilterOperatorContains: 'Contains',
-  // headerFilterOperatorEquals: 'Equals',
-  // headerFilterOperatorStartsWith: 'Starts with',
-  // headerFilterOperatorEndsWith: 'Ends with',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
-  // headerFilterOperatorAfter: 'Is after',
-  // headerFilterOperatorOnOrAfter: 'Is on or after',
-  // headerFilterOperatorBefore: 'Is before',
-  // headerFilterOperatorOnOrBefore: 'Is on or before',
-  // headerFilterOperatorIsEmpty: 'Is empty',
-  // headerFilterOperatorIsNotEmpty: 'Is not empty',
-  // headerFilterOperatorIsAnyOf: 'Is any of',
-  // 'headerFilterOperator=': 'Equals',
-  // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Greater than',
-  // 'headerFilterOperator>=': 'Greater than or equal to',
-  // 'headerFilterOperator<': 'Less than',
-  // 'headerFilterOperator<=': 'Less than or equal to',
+  headerFilterOperatorContains: 'Inneholder',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorEquals: 'Lik',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorStartsWith: 'Starter på',
+  headerFilterOperatorEndsWith: 'Slutter på',
+  headerFilterOperatorIs: 'Er',
+  headerFilterOperatorNot: 'Er ikke',
+  headerFilterOperatorAfter: 'Er etter',
+  headerFilterOperatorOnOrAfter: 'Er på eller etter',
+  headerFilterOperatorBefore: 'Er før',
+  headerFilterOperatorOnOrBefore: 'Er på eller før',
+  headerFilterOperatorIsEmpty: 'Er tom',
+  headerFilterOperatorIsNotEmpty: 'Er ikke tom',
+  headerFilterOperatorIsAnyOf: 'Er en av',
+  'headerFilterOperator=': 'Lik',
+  'headerFilterOperator!=': 'Ikke lik',
+  'headerFilterOperator>': 'Større enn',
+  'headerFilterOperator>=': 'Større enn eller lik',
+  'headerFilterOperator<': 'Mindre enn',
+  'headerFilterOperator<=': 'Mindre enn eller lik',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'noen',
@@ -104,6 +119,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filter',
@@ -111,6 +127,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Usorter',
   columnMenuSortAsc: 'Sorter ØKENDE',
   columnMenuSortDesc: 'Sorter SYNKENDE',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -130,7 +147,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} av ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'Avmerkingsboks valgt',
+  checkboxSelectionHeaderName: 'Avmerkingsboks',
   checkboxSelectionSelectAllRows: 'Velg alle rader',
   checkboxSelectionUnselectAllRows: 'Velg bort alle rader',
   checkboxSelectionSelectRow: 'Velg rad',
@@ -156,15 +173,43 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Grouping columns
   groupingColumnHeaderName: 'Grupper',
   groupColumn: (name) => `Grupper på ${name}`,
-  unGroupColumn: (name) => `Stopp å grupper på ${name}`,
+  unGroupColumn: (name) => `Slutt å grupper på ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Utvid/kollaps detalj panel',
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
 
+  // Pagination
+  paginationRowsPerPage: 'Rader per side:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Gå til første side';
+    }
+    if (type === 'last') {
+      return 'Gå til siste side';
+    }
+    if (type === 'next') {
+      return 'Gå til neste side';
+    }
+    // if (type === 'previous') {
+    return 'Gå til forrige side';
+  },
+
   // Row reordering text
-  rowReorderingHeaderName: 'Rad reorganisering',
+  rowReorderingHeaderName: 'Radreorganisering',
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregering',
@@ -173,6 +218,83 @@ const nbNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'maks',
   aggregationFunctionLabelSize: 'størrelse',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
-export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);
+export const nbNO: Localization = getGridLocalization(nbNOGrid);

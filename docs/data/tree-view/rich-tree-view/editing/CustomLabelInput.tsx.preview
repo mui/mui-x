@@ -1,0 +1,7 @@
+<RichTreeView
+  items={ITEMS}
+  slots={{ item: CustomTreeItem }}
+  isItemEditable
+  defaultExpandedItems={['1', '2']}
+  getItemLabel={(item) => `${item.firstName} ${item.lastName}`}
+/>

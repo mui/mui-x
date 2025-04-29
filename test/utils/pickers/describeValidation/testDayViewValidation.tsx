@@ -1,17 +1,14 @@
 import { expect } from 'chai';
 import * as React from 'react';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
+import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
-  const { componentFamily, views, render, clock, withDate, withTime } = getOptions();
+  const { componentFamily, views, render, withDate, withTime } = getOptions();
 
-  if (componentFamily === 'field' || !views.includes('day')) {
-    return;
-  }
-
-  describe('day view:', () => {
+  describeSkipIf(componentFamily === 'field' || !views.includes('day'))('day view:', () => {
     const defaultProps = {
       onChange: () => {},
       open: true,
@@ -20,12 +17,14 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       slotProps: { toolbar: { hidden: true } },
     };
 
-    it('should apply shouldDisableDate', function test() {
+    it('should apply shouldDisableDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
           value={adapterToUse.date('2018-03-12')}
-          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
+          shouldDisableDate={(date: any) =>
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
+          }
         />,
       );
 
@@ -35,12 +34,12 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '12' })).to.have.attribute('disabled');
     });
 
-    it('should apply shouldDisableYear', function test() {
+    it('should apply shouldDisableYear', () => {
       const { setProps } = render(
         <ElementToTest
           {...defaultProps}
           value={adapterToUse.date('2018-03-12')}
-          shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
+          shouldDisableYear={(date: any) => adapterToUse.getYear(date) === 2018}
         />,
       );
 
@@ -49,19 +48,18 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
 
       setProps({ value: adapterToUse.date('2019-01-01') });
-      clock.runToLast();
 
       expect(screen.getByRole('gridcell', { name: '1' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '15' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '30' })).not.to.have.attribute('disabled');
     });
 
-    it('should apply shouldDisableMonth', function test() {
+    it('should apply shouldDisableMonth', () => {
       const { setProps } = render(
         <ElementToTest
           {...defaultProps}
           value={adapterToUse.date('2018-03-12')}
-          shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 2}
+          shouldDisableMonth={(date: any) => adapterToUse.getMonth(date) === 2}
         />,
       );
 
@@ -70,16 +68,15 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
 
       setProps({ value: adapterToUse.date('2018-02-01') });
-      clock.runToLast();
 
       expect(screen.getByRole('gridcell', { name: '1' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '15' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '28' })).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -94,7 +91,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(now, tomorrow)) {
         setProps({ value: tomorrow });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
@@ -102,16 +98,15 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: yesterday });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),
       ).to.have.attribute('disabled');
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -126,7 +121,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(now, tomorrow)) {
         setProps({ value: tomorrow });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
@@ -134,14 +128,13 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: yesterday });
-        clock.runToLast();
       }
       expect(
         screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),
       ).not.to.have.attribute('disabled');
     });
 
-    it('should apply minDate', function test() {
+    it('should apply minDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -158,7 +151,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
 
-    it('should apply maxDate', function test() {
+    it('should apply maxDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -175,12 +168,8 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
     });
 
-    it('should apply maxDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    // prop only available on DateTime pickers
+    testSkipIf(!withDate || !withTime)('should apply maxDateTime', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -195,12 +184,8 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
     });
 
-    it('should apply minDateTime', function test() {
-      if (!withDate || !withTime) {
-        // prop only available on DateTime pickers
-        return;
-      }
-
+    // prop only available on DateTime pickers
+    testSkipIf(!withDate || !withTime)('should apply minDateTime', () => {
       render(
         <ElementToTest
           {...defaultProps}

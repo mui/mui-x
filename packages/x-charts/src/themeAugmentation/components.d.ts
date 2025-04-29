@@ -1,64 +1,67 @@
 import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
 
-export interface ChartsComponents {
+export interface ChartsComponents<Theme = unknown> {
   MuiChartsAxis?: {
-    defaultProps?: ComponentsProps['MuiChartsAxis'];
-    styleOverrides?: ComponentsOverrides['MuiChartsAxis'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxis'];
   };
   MuiChartsXAxis?: {
     defaultProps?: ComponentsProps['MuiChartsXAxis'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsXAxis'];
   };
   MuiChartsYAxis?: {
     defaultProps?: ComponentsProps['MuiChartsYAxis'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsYAxis'];
   };
   MuiChartsAxisHighlight?: {
-    defaultProps?: ComponentsProps['MuiChartsAxisHighlight'];
-    styleOverrides?: ComponentsOverrides['MuiChartsAxisHighlight'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxisHighlight'];
   };
-  MuiChartsClipPath?: {
-    defaultProps?: ComponentsProps['MuiChartsClipPath'];
+  MuiChartsGrid?: {
+    defaultProps?: ComponentsProps['MuiChartsGrid'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsGrid'];
   };
   MuiChartsLegend?: {
     defaultProps?: ComponentsProps['MuiChartsLegend'];
-    styleOverrides?: ComponentsOverrides['MuiChartsLegend'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsLegend'];
+  };
+  MuiChartsLocalizationProvider?: {
+    defaultProps?: ComponentsProps['MuiChartsLocalizationProvider'];
   };
   MuiChartsTooltip?: {
     defaultProps?: ComponentsProps['MuiChartsTooltip'];
-    styleOverrides?: ComponentsOverrides['MuiChartsTooltip'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsTooltip'];
   };
   MuiChartsSurface?: {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSurface'];
   };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
   };
   MuiBarElement?: {
-    defaultProps?: ComponentsProps['MuiBarElement'];
-    styleOverrides?: ComponentsOverrides['MuiBarElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarElement'];
+  };
+  MuiBarLabel?: {
+    defaultProps?: ComponentsProps['MuiBarLabel'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiBarLabel'];
   };
   MuiLineChart?: {
     defaultProps?: ComponentsProps['MuiLineChart'];
   };
   MuiAreaElement?: {
-    defaultProps?: ComponentsProps['MuiAreaElement'];
-    styleOverrides?: ComponentsOverrides['MuiAreaElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiAreaElement'];
   };
   MuiLineElement?: {
-    defaultProps?: ComponentsProps['MuiLineElement'];
-    styleOverrides?: ComponentsOverrides['MuiLineElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiLineElement'];
   };
   MuiMarkElement?: {
-    defaultProps?: ComponentsProps['MuiMarkElement'];
-    styleOverrides?: ComponentsOverrides['MuiMarkElement'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMarkElement'];
   };
   MuiScatterChart?: {
     defaultProps?: ComponentsProps['MuiScatterChart'];
   };
-  MuiScatter?: {
-    defaultProps?: ComponentsProps['MuiScatter'];
-  };
+  MuiScatter?: {};
 }
 
 declare module '@mui/material/styles' {
-  interface Components extends ChartsComponents {}
+  interface Components<Theme = unknown> extends ChartsComponents<Theme> {}
 }

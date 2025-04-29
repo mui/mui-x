@@ -1,67 +1,91 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "apiRef": {
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
+    },
+    "checkboxSelection": {
+      "description": "If <code>true</code>, the Tree View renders a checkbox at the left of its label that allows selecting it."
+    },
     "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "defaultExpandedNodes": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion is not controlled."
+    "defaultExpandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is not controlled."
     },
-    "defaultSelectedNodes": {
-      "description": "Selected node ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    "defaultSelectedItems": {
+      "description": "Selected item ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "disabledItemsFocusable": {
       "description": "If <code>true</code>, will allow focus on disabled items."
     },
     "disableSelection": { "description": "If <code>true</code> selection is disabled." },
-    "expandedNodes": {
-      "description": "Expanded node ids. Used when the item&#39;s expansion is controlled."
+    "expandedItems": {
+      "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
+    },
+    "expansionTrigger": {
+      "description": "The slot that triggers the item&#39;s expansion when clicked."
+    },
+    "experimentalFeatures": {
+      "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
+    "itemChildrenIndentation": {
+      "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
+    },
     "multiSelect": {
-      "description": "If true <code>ctrl</code> and <code>shift</code> will trigger multiselect."
+      "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
     },
-    "onExpandedNodesChange": {
-      "description": "Callback fired when tree items are expanded/collapsed.",
+    "onExpandedItemsChange": {
+      "description": "Callback fired when Tree Items are expanded/collapsed.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "nodeIds": "The ids of the expanded nodes."
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
+        "itemIds": "The ids of the expanded items."
       }
     },
-    "onNodeExpansionToggle": {
-      "description": "Callback fired when a tree item is expanded or collapsed.",
+    "onItemClick": {
+      "description": "Callback fired when the <code>content</code> slot of a given Tree Item is clicked.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "nodeId": "The nodeId of the modified node.",
-        "isExpanded": "<code>true</code> if the node has just been expanded, <code>false</code> if it has just been collapsed."
+        "event": "The DOM event that triggered the change.",
+        "itemId": "The id of the focused item."
       }
     },
-    "onNodeFocus": {
-      "description": "Callback fired when tree items are focused.",
+    "onItemExpansionToggle": {
+      "description": "Callback fired when a Tree Item is expanded or collapsed.",
       "typeDescriptions": {
-        "event": "The event source of the callback <strong>Warning</strong>: This is a generic event not a focus event.",
-        "nodeId": "The id of the node focused.",
-        "value": "of the focused node."
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
+        "itemId": "The itemId of the modified item.",
+        "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
       }
     },
-    "onNodeSelectionToggle": {
-      "description": "Callback fired when a tree item is selected or deselected.",
+    "onItemFocus": {
+      "description": "Callback fired when a given Tree Item is focused.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "nodeId": "The nodeId of the modified node.",
-        "isSelected": "<code>true</code> if the node has just been selected, <code>false</code> if it has just been deselected."
+        "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
+        "itemId": "The id of the focused item."
       }
     },
-    "onSelectedNodesChange": {
-      "description": "Callback fired when tree items are selected/deselected.",
+    "onItemSelectionToggle": {
+      "description": "Callback fired when a Tree Item is selected or deselected.",
       "typeDescriptions": {
-        "event": "The event source of the callback",
-        "nodeIds": "The ids of the selected nodes. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
+        "itemId": "The itemId of the modified item.",
+        "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
     },
-    "selectedNodes": {
-      "description": "Selected node ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    "onSelectedItemsChange": {
+      "description": "Callback fired when Tree Items are selected/deselected.",
+      "typeDescriptions": {
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
+        "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+      }
+    },
+    "selectedItems": {
+      "description": "Selected item ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
+    },
+    "selectionPropagation": {
+      "description": "When <code>selectionPropagation.descendants</code> is set to <code>true</code>.<br>- Selecting a parent selects all its descendants automatically. - Deselecting a parent deselects all its descendants automatically.<br>When <code>selectionPropagation.parents</code> is set to <code>true</code>.<br>- Selecting all the descendants of a parent selects the parent automatically. - Deselecting a descendant of a selected parent deselects the parent automatically.<br>Only works when <code>multiSelect</code> is <code>true</code>. On the &lt;SimpleTreeView /&gt;, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)"
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
@@ -69,11 +93,36 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "item": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s root element"
+    },
+    "itemCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s checkbox element"
+    },
+    "itemContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s content element"
+    },
+    "itemGroupTransition": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s transition element"
+    },
+    "itemIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s icon container element icon"
+    },
+    "itemLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s label element"
+    }
+  },
   "slotDescriptions": {
-    "collapseIcon": "The default icon used to collapse the node.",
-    "endIcon": "The default icon displayed next to an end node. This is applied to all tree nodes and can be overridden by the TreeItem <code>icon</code> slot prop.",
-    "expandIcon": "The default icon used to expand the node.",
+    "collapseIcon": "The default icon used to collapse the item.",
+    "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
+    "expandIcon": "The default icon used to expand the item.",
     "root": "Element rendered at the root."
   }
 }

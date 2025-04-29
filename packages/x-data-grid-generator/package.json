@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "7.0.0-beta.3",
+  "version": "8.1.0",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -11,46 +11,64 @@
   "homepage": "https://github.com/mui/mui-x/tree/master/packages/x-data-grid-generator",
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "build"
   },
   "keywords": [
     "mui-x"
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui/mui-x.git",
+    "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.9",
-    "@mui/base": "^5.0.0-beta.36",
-    "@mui/x-data-grid-premium": "7.0.0-beta.3",
-    "chance": "^1.1.11",
-    "clsx": "^2.1.0",
-    "lru-cache": "^7.18.3"
+    "@babel/runtime": "^7.27.0",
+    "@mui/x-data-grid": "workspace:*",
+    "@mui/x-data-grid-premium": "workspace:*",
+    "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-internals": "workspace:*",
+    "chance": "^1.1.12",
+    "clsx": "^2.1.1",
+    "lru-cache": "^11.1.0"
   },
   "devDependencies": {
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
     "@types/chance": "^1.1.6",
-    "@types/lru-cache": "^7.10.9"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^5.4.1",
-    "@mui/material": "^5.15.0",
-    "react": "^17.0.0 || ^18.0.0"
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.4.1 || ^6.0.0 || ^7.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
-  "setupFiles": [
-    "<rootDir>/src/setupTests.js"
-  ],
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
+  "exports": {
+    "./services/static-data": {
+      "mui-src": "./src/services/static-data.ts"
+    }
+  },
   "engines": {
     "node": ">=14.0.0"
   }

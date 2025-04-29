@@ -6,29 +6,33 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": ["jsdom"],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
     {
       "matchDepTypes": ["peerDependencies"],
       "rangeStrategy": "widen"
     },
     {
       "groupName": "babel",
-      "matchPackagePatterns": "@babel/*"
+      "matchPackageNames": ["@babel/**"]
     },
     {
       "groupName": "D3",
-      "matchPackagePatterns": ["d3-*", "@types/d3-*"]
+      "matchPackageNames": ["d3-*", "@types/d3-*"]
     },
     {
       "groupName": "react-spring",
-      "matchPackagePatterns": "@react-spring/*"
+      "matchPackageNames": ["@react-spring/**"]
     },
     {
       "groupName": "Emotion",
-      "matchPackagePatterns": "@emotion/*"
+      "matchPackageNames": ["@emotion/**"]
     },
     {
       "groupName": "core-js",
@@ -36,42 +40,30 @@
       "allowedVersions": "< 2.0.0"
     },
     {
-      "groupName": "raw-loader",
-      "matchPackageNames": ["raw-loader"],
-      "allowedVersions": "< 2.0.0"
+      "groupName": "react-docgen",
+      "matchPackageNames": ["react-docgen"],
+      "allowedVersions": "< 6.0.0"
     },
     {
       "groupName": "React",
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "react-is",
-        "react-test-renderer",
-        "@types/react",
-        "@types/react-dom"
-      ]
-    },
-    {
-      "groupName": "React router",
-      "matchPackageNames": ["react-router", "react-router-dom"]
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "typescript-eslint",
-      "matchPackagePatterns": "@typescript-eslint/*"
+      "matchPackageNames": ["@typescript-eslint/**"]
     },
     {
-      "groupName": "@types/node",
-      "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 19.0.0"
+      "groupName": "ESLint plugins",
+      "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
     },
     {
       "groupName": "bundling fixtures",
-      "matchPaths": ["test/bundling/fixtures/**/package.json"],
+      "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "every 6 months on the first day of the month"
     },
     {
       "groupName": "examples",
-      "matchPaths": ["examples/**/package.json"],
+      "matchFileNames": ["examples/**/package.json"],
       "minor": {
         "enabled": false
       },
@@ -85,32 +77,61 @@
       "enabled": false
     },
     {
-      "groupName": "MUI Core",
+      "groupName": "Material UI",
       "matchPackageNames": [
-        "@mui/base",
         "@mui/icons-material",
         "@mui/joy",
         "@mui/lab",
         "@mui/material",
-        "@mui/styles",
+        "@mui/material-nextjs",
         "@mui/system",
+        "@mui/types",
         "@mui/utils"
       ]
     },
     {
-      "groupName": "Playwright",
-      "matchPackagePatterns": ["playwright", "@playwright/test"]
+      "groupName": "MUI Internal",
+      "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "matchDepTypes": ["action"],
-      "pinDigests": true
+      "pinDigests": true,
+      "automerge": true
     },
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "Vite & Vitest",
+      "matchPackageNames": ["@vitejs/**", "/vitest/"]
+    },
+    {
+      "groupName": "date-fns-v2",
+      "matchPackageNames": ["date-fns-v2"],
+      "allowedVersions": "< 3.0.0"
+    },
+    {
+      "groupName": "recast",
+      "matchPackageNames": ["recast"],
+      "allowedVersions": "< 0.23.10"
+    },
+    {
+      "groupName": "Tanstack query",
+      "matchPackageNames": ["@tanstack/*query*"]
+    },
+    {
+      "groupName": "fingerprintjs",
+      "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
+      "allowedVersions": "< 4.0.0"
+    },
+    {
+      "groupName": "conf",
+      "matchPackageNames": ["conf"],
+      "allowedVersions": "< 12.0.0"
     }
   ],
-  "postUpdateOptions": ["yarnDedupeHighest"],
+  "postUpdateOptions": ["pnpmDedupe"],
   "prConcurrentLimit": 30,
   "prHourlyLimit": 0,
   "rangeStrategy": "bump",

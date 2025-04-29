@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   DayCalendarSkeletonClasses,
@@ -25,8 +26,7 @@ export interface DayCalendarSkeletonProps extends HTMLDivProps {
   ref?: React.Ref<HTMLDivElement>;
 }
 
-const useUtilityClasses = (ownerState: DayCalendarSkeletonProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DayCalendarSkeletonClasses> | undefined) => {
   const slots = {
     root: ['root'],
     week: ['week'],
@@ -39,7 +39,6 @@ const useUtilityClasses = (ownerState: DayCalendarSkeletonProps) => {
 const DayCalendarSkeletonRoot = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({
   alignSelf: 'start',
 });
@@ -47,7 +46,6 @@ const DayCalendarSkeletonRoot = styled('div', {
 const DayCalendarSkeletonWeek = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Week',
-  overridesResolver: (props, styles) => styles.week,
 })({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
@@ -57,23 +55,12 @@ const DayCalendarSkeletonWeek = styled('div', {
 const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
-  overridesResolver: (props, styles) => styles.daySkeleton,
-})<{ ownerState: { day: number } }>(({ ownerState }) => ({
+})({
   margin: `0 ${DAY_MARGIN}px`,
-  ...(ownerState.day === 0 && {
+  '&[data-day-in-month="0"]': {
     visibility: 'hidden',
-  }),
-}));
-
-DayCalendarSkeletonDay.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.shape({
-    day: PropTypes.number.isRequired,
-  }).isRequired,
-} as any;
+  },
+});
 
 const monthMap = [
   [0, 1, 1, 1, 1, 1, 1],
@@ -98,22 +85,22 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
     name: 'MuiDayCalendarSkeleton',
   });
 
-  const { className, ...other } = props;
+  const { className, classes: classesProp, ...other } = props;
 
-  const classes = useUtilityClasses(other);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <DayCalendarSkeletonRoot className={clsx(classes.root, className)} {...other}>
       {monthMap.map((week, index) => (
         <DayCalendarSkeletonWeek key={index} className={classes.week}>
-          {week.map((day, index2) => (
+          {week.map((dayInMonth, index2) => (
             <DayCalendarSkeletonDay
               key={index2}
               variant="circular"
               width={DAY_SIZE}
               height={DAY_SIZE}
               className={classes.daySkeleton}
-              ownerState={{ day }}
+              data-day-in-month={dayInMonth}
             />
           ))}
         </DayCalendarSkeletonWeek>
@@ -125,7 +112,7 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
 DayCalendarSkeleton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.

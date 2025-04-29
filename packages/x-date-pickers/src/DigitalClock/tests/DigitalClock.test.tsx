@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/disallow-active-element-as-key-event-target */
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -8,7 +9,7 @@ import {
   digitalClockHandler,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { screen } from '@mui-internal/test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
@@ -92,17 +93,85 @@ describe('<DigitalClock />', () => {
     });
   });
 
-  it('forwards list class to MenuList', () => {
-    const { getByRole } = render(<DigitalClock classes={{ list: 'foo' }} />);
+  describe('Keyboard support', () => {
+    it('should move focus up by 5 on PageUp press', () => {
+      const handleChange = spy();
+      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+      const lastOptionIndex = options.length - 1;
 
-    const list = getByRole('listbox');
-    expect(list).to.have.class('foo');
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[lastOptionIndex - 5]);
+
+      fireEvent.keyDown(options[lastOptionIndex - 5], { key: 'PageUp' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[lastOptionIndex - 10]);
+    });
+
+    it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', () => {
+      const handleChange = spy();
+      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+
+      // moves focus to 4th element using arrow down
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(options[index], { key: 'ArrowDown' });
+      });
+
+      fireEvent.keyDown(options[3], { key: 'PageUp' });
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[0]);
+    });
+
+    it('should move focus down by 5 on PageDown press', () => {
+      const handleChange = spy();
+      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+
+      fireEvent.keyDown(options[0], { key: 'PageDown' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[5]);
+
+      fireEvent.keyDown(options[5], { key: 'PageDown' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(options[10]);
+    });
+
+    it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', () => {
+      const handleChange = spy();
+      render(<DigitalClock autoFocus onChange={handleChange} />);
+      const options = screen.getAllByRole('option');
+      const lastOptionIndex = options.length - 1;
+
+      const lastElement = options[lastOptionIndex];
+
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
+      // moves focus 4 steps above last item using arrow up
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(options[lastOptionIndex - index], { key: 'ArrowUp' });
+      });
+      fireEvent.keyDown(options[lastOptionIndex - 3], { key: 'PageDown' });
+
+      expect(handleChange.callCount).to.equal(0);
+      expect(document.activeElement).to.equal(lastElement);
+    });
+  });
+
+  it('forwards list class to MenuList', () => {
+    render(<DigitalClock classes={{ list: 'foo' }} />);
+
+    expect(screen.getByRole('listbox')).to.have.class('foo');
   });
 
   it('forwards item class to clock item', () => {
-    const { getAllByRole } = render(<DigitalClock classes={{ item: 'bar' }} />);
+    render(<DigitalClock classes={{ item: 'bar' }} />);
 
-    const options = getAllByRole('option');
+    const options = screen.getAllByRole('option');
     expect(options[0]).to.have.class('bar');
   });
 });

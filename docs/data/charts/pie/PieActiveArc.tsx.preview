@@ -1,10 +1,12 @@
 <PieChart
   series={[
     {
-      data,
-      highlightScope: { faded: 'global', highlighted: 'item' },
+      data: desktopOS,
+      highlightScope: { fade: 'global', highlight: 'item' },
       faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+      valueFormatter,
     },
   ]}
   height={200}
+  width={200}
 />

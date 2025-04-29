@@ -10,7 +10,7 @@ import {
 } from './pickersFadeTransitionGroupClasses';
 
 export interface PickersFadeTransitionGroupProps {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   className?: string;
   reduceAnimations: boolean;
   transKey: React.Key;
@@ -20,8 +20,7 @@ export interface PickersFadeTransitionGroupProps {
   classes?: Partial<PickersFadeTransitionGroupClasses>;
 }
 
-const useUtilityClasses = (ownerState: PickersFadeTransitionGroupProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersFadeTransitionGroupClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -32,7 +31,6 @@ const useUtilityClasses = (ownerState: PickersFadeTransitionGroupProps) => {
 const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
   name: 'MuiPickersFadeTransitionGroup',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   display: 'block',
   position: 'relative',
@@ -43,9 +41,10 @@ const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
  */
 export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersFadeTransitionGroup' });
-  const { children, className, reduceAnimations, transKey } = props;
-  const classes = useUtilityClasses(props);
+  const { children, className, reduceAnimations, transKey, classes: classesProp } = props;
+  const classes = useUtilityClasses(classesProp);
   const theme = useTheme();
+
   if (reduceAnimations) {
     return children;
   }

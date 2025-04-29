@@ -1,0 +1,11 @@
+<DataGridPro
+  columns={columns}
+  rows={rows}
+  sx={{
+    [`& .${gridClasses.columnSeparator}`]: {
+      [`&:not(.${gridClasses['columnSeparator--resizable']})`]: {
+        display: 'none',
+      },
+    },
+  }}
+/>

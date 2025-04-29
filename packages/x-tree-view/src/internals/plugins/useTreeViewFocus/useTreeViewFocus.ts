@@ -1,113 +1,134 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { EventHandlers } from '@mui/base/utils';
-import ownerDocument from '@mui/utils/ownerDocument';
+import { EventHandlers } from '@mui/utils/types';
 import { TreeViewPlugin } from '../../models';
-import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
+import { TreeViewCancellableEvent } from '../../../models';
+import {
+  selectorDefaultFocusableItemId,
+  selectorFocusedItemId,
+} from './useTreeViewFocus.selectors';
+import { selectorIsItemExpanded } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
   params,
-  state,
-  setState,
-  models,
-  rootRef,
+  store,
 }) => {
-  const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
-    const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
-    setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
-  });
-
-  const isNodeFocused = React.useCallback(
-    (nodeId: string) => state.focusedNodeId === nodeId,
-    [state.focusedNodeId],
-  );
-
-  const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
-    if (nodeId) {
-      setFocusedNodeId(nodeId);
-
-      if (params.onNodeFocus) {
-        params.onNodeFocus(event, nodeId);
+  const setFocusedItemId = useEventCallback((itemId: string | null) => {
+    store.update((prevState) => {
+      const focusedItemId = selectorFocusedItemId(prevState);
+      if (focusedItemId === itemId) {
+        return prevState;
       }
-    }
-  });
 
-  const focusRoot = useEventCallback(() => {
-    rootRef.current?.focus({ preventScroll: true });
-  });
-
-  populateInstance<UseTreeViewFocusSignature>(instance, {
-    isNodeFocused,
-    focusNode,
-    focusRoot,
-  });
-
-  useInstanceEventHandler(instance, 'removeNode', ({ id }) => {
-    setFocusedNodeId((oldFocusedNodeId) => {
-      if (
-        oldFocusedNodeId === id &&
-        rootRef.current === ownerDocument(rootRef.current).activeElement
-      ) {
-        return instance.getChildrenIds(null)[0];
-      }
-      return oldFocusedNodeId;
+      return {
+        ...prevState,
+        focus: { ...prevState.focus, focusedItemId: itemId },
+      };
     });
   });
 
-  const createHandleFocus =
-    (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
+  const isItemVisible = (itemId: string) => {
+    const itemMeta = selectorItemMeta(store.value, itemId);
+    return (
+      itemMeta &&
+      (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
+    );
+  };
+
+  const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
+    const itemElement = instance.getItemDOMElement(itemId);
+    if (itemElement) {
+      itemElement.focus();
+    }
+
+    setFocusedItemId(itemId);
+
+    if (params.onItemFocus) {
+      params.onItemFocus(event, itemId);
+    }
+  };
+
+  const focusItem = useEventCallback((event: React.SyntheticEvent, itemId: string) => {
+    // If we receive an itemId, and it is visible, the focus will be set to it
+    if (isItemVisible(itemId)) {
+      innerFocusItem(event, itemId);
+    }
+  });
+
+  const removeFocusedItem = useEventCallback(() => {
+    const focusedItemId = selectorFocusedItemId(store.value);
+    if (focusedItemId == null) {
+      return;
+    }
+
+    const itemMeta = selectorItemMeta(store.value, focusedItemId);
+    if (itemMeta) {
+      const itemElement = instance.getItemDOMElement(focusedItemId);
+      if (itemElement) {
+        itemElement.blur();
+      }
+    }
+
+    setFocusedItemId(null);
+  });
+
+  useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
+    const focusedItemId = selectorFocusedItemId(store.value);
+    const defaultFocusableItemId = selectorDefaultFocusableItemId(store.value);
+    if (focusedItemId === id && defaultFocusableItemId != null) {
+      innerFocusItem(null, defaultFocusableItemId);
+    }
+  });
+
+  const createRootHandleFocus =
+    (otherHandlers: EventHandlers) =>
+    (event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent) => {
       otherHandlers.onFocus?.(event);
+      if (event.defaultMuiPrevented) {
+        return;
+      }
 
       // if the event bubbled (which is React specific) we don't want to steal focus
-      if (event.target === event.currentTarget) {
-        const isNodeVisible = (nodeId: string) => {
-          const node = instance.getNode(nodeId);
-          return node && (node.parentId == null || instance.isNodeExpanded(node.parentId));
-        };
-
-        let nodeToFocusId: string | null | undefined;
-        if (Array.isArray(models.selectedNodes.value)) {
-          nodeToFocusId = models.selectedNodes.value.find(isNodeVisible);
-        } else if (
-          models.selectedNodes.value != null &&
-          isNodeVisible(models.selectedNodes.value)
-        ) {
-          nodeToFocusId = models.selectedNodes.value;
-        }
-
-        if (nodeToFocusId == null) {
-          nodeToFocusId = instance.getNavigableChildrenIds(null)[0];
-        }
-
-        instance.focusNode(event, nodeToFocusId);
+      const defaultFocusableItemId = selectorDefaultFocusableItemId(store.value);
+      if (event.target === event.currentTarget && defaultFocusableItemId != null) {
+        innerFocusItem(event, defaultFocusableItemId);
       }
     };
 
-  const createHandleBlur =
-    (otherHandlers: EventHandlers) => (event: React.FocusEvent<HTMLUListElement>) => {
+  const createRootHandleBlur =
+    (otherHandlers: EventHandlers) =>
+    (event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-      setFocusedNodeId(null);
-    };
+      if (event.defaultMuiPrevented) {
+        return;
+      }
 
-  const focusedNode = instance.getNode(state.focusedNodeId!);
-  const activeDescendant = focusedNode
-    ? instance.getTreeItemId(focusedNode.id, focusedNode.idAttribute)
-    : null;
+      setFocusedItemId(null);
+    };
 
   return {
     getRootProps: (otherHandlers) => ({
-      onFocus: createHandleFocus(otherHandlers),
-      onBlur: createHandleBlur(otherHandlers),
-      'aria-activedescendant': activeDescendant ?? undefined,
+      onFocus: createRootHandleFocus(otherHandlers),
+      onBlur: createRootHandleBlur(otherHandlers),
     }),
+    publicAPI: {
+      focusItem,
+    },
+    instance: {
+      focusItem,
+      removeFocusedItem,
+    },
   };
 };
 
-useTreeViewFocus.getInitialState = () => ({ focusedNodeId: null });
+useTreeViewFocus.getInitialState = () => ({
+  focus: { focusedItemId: null },
+});
 
 useTreeViewFocus.params = {
-  onNodeFocus: true,
+  onItemFocus: true,
 };

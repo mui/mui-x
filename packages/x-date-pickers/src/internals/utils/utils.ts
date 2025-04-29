@@ -1,3 +1,5 @@
+import { Theme } from '@mui/material/styles';
+import { SxProps, SystemStyleObject } from '@mui/system';
 import * as React from 'react';
 
 /* Use it instead of .includes method for IE support */
@@ -47,4 +49,31 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
   return activeEl;
 };
 
+/**
+ * Gets the index of the focused list item in a given ul list element.
+ *
+ * @param {HTMLUListElement} listElement - The list element to search within.
+ * @returns {number} The index of the focused list item, or -1 if none is focused.
+ */
+export const getFocusedListItemIndex = (listElement: HTMLUListElement): number => {
+  const children = Array.from(listElement.children);
+  return children.indexOf(getActiveElement(document)!);
+};
+
 export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';
+
+export function mergeSx(
+  ...sxProps: (SxProps<Theme> | undefined)[]
+): ReadonlyArray<
+  boolean | SystemStyleObject<Theme> | ((theme: Theme) => SystemStyleObject<Theme>)
+> {
+  return sxProps.reduce((acc, sxProp) => {
+    if (Array.isArray(sxProp)) {
+      acc.push(...sxProp);
+    } else if (sxProp != null) {
+      acc.push(sxProp);
+    }
+
+    return acc;
+  }, [] as any);
+}

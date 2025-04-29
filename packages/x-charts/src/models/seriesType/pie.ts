@@ -1,6 +1,7 @@
-import { PieArcDatum as D3PieArcDatum } from 'd3-shape';
-import { DefaultizedProps } from '../helpers';
+import { PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import type { ChartsLabelMarkProps } from '../../ChartsLabel';
 
 export type PieItemId = string | number;
 
@@ -8,10 +9,18 @@ export type PieValueType = {
   /**
    * A unique identifier of the pie slice.
    */
-  id: PieItemId;
+  id?: PieItemId;
   value: number;
-  label?: string;
+  /**
+   * The label to display on the tooltip, arc, or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend' | 'arc') => string);
   color?: string;
+  /**
+   * Defines the mark type for the pie item.
+   * @default 'circle'
+   */
+  labelMarkType?: ChartsLabelMarkProps['type'];
 };
 
 export type DefaultizedPieValueType = PieValueType &
@@ -19,11 +28,11 @@ export type DefaultizedPieValueType = PieValueType &
 
 export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
 
-export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Tdata> {
+export interface PieSeriesType<TData = PieValueType> extends CommonSeriesType<TData> {
   type: 'pie';
-  data: Tdata[];
+  data: Readonly<TData[]>;
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
    * The '100%' is the maximal radius that fit into the drawing area.
    * @default 0
@@ -63,11 +72,20 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    * @default 0
    */
   paddingAngle?: number;
+  /**
+   * The sorting strategy used to order pie slices.
+   * Can be 'none', 'asc', 'desc', or a sorting function.
+   * @default 'none'
+   */
   sortingValues?: ChartsPieSorting;
   /**
    * The label displayed into the arc.
    */
-  arcLabel?: 'formattedValue' | 'label' | 'value' | ((item: DefaultizedPieValueType) => string);
+  arcLabel?:
+    | 'formattedValue'
+    | 'label'
+    | 'value'
+    | ((item: Omit<DefaultizedPieValueType, 'label'> & { label?: string }) => string);
   /**
    * The minimal angle required to display the arc label.
    * @default 0
@@ -88,7 +106,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    */
   cy?: number | string;
   /**
-   * Override the arc attibutes when it is highlighted.
+   * Override the arc attributes when it is highlighted.
    */
   highlighted?: {
     /**
@@ -104,7 +122,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
     color?: string;
   };
   /**
-   * Override the arc attibutes when it is faded.
+   * Override the arc attributes when it is faded.
    */
   faded?: {
     /**
@@ -141,7 +159,7 @@ export interface DefaultizedPieSeriesType
  */
 export interface ComputedPieRadius {
   /**
-   * The radius between circle center and the begining of the arc.
+   * The radius between circle center and the beginning of the arc.
    * @default 0
    */
   innerRadius?: number;

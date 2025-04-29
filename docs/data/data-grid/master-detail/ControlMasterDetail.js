@@ -11,7 +11,7 @@ import Alert from '@mui/material/Alert';
 
 export default function ControlMasterDetail() {
   const [detailPanelExpandedRowIds, setDetailPanelExpandedRowIds] = React.useState(
-    [],
+    () => new Set(),
   );
 
   const handleDetailPanelExpandedRowIdsChange = React.useCallback((newIds) => {
@@ -29,7 +29,6 @@ export default function ControlMasterDetail() {
         <DataGridPro
           rows={rows}
           columns={columns}
-          rowThreshold={0}
           getDetailPanelContent={({ row }) => (
             <Box sx={{ p: 2 }}>{`Order #${row.id}`}</Box>
           )}

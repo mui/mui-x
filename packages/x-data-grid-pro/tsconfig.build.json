@@ -7,13 +7,14 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build",
+    "outDir": "build/esm",
     "rootDir": "./src"
   },
   "references": [
     { "path": "../x-data-grid/tsconfig.build.json" },
-    { "path": "../x-license/tsconfig.build.json" }
+    { "path": "../x-license/tsconfig.build.json" },
+    { "path": "../x-internals/tsconfig.build.json" }
   ],
-  "include": ["src/**/*.ts*", "../../node_modules/@mui/material/themeCssVarsAugmentation"],
+  "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }

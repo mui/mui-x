@@ -1,14 +1,17 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Scatter, ScatterProps } from './Scatter';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { Scatter, ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
+import { useScatterSeriesContext } from '../hooks/useScatterSeries';
+import getColor from './seriesConfig/getColor';
+import { useXAxes, useYAxes } from '../hooks';
+import { useZAxes } from '../hooks/useZAxis';
 
-export interface ScatterPlotSlots {
+export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
 }
 
-export interface ScatterPlotSlotProps {
+export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
@@ -37,35 +40,46 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
-  const seriesData = React.useContext(SeriesContext).scatter;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useScatterSeriesContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+  const { zAxis, zAxisIds } = useZAxes();
 
   if (seriesData === undefined) {
     return null;
   }
   const { series, seriesOrder } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
+
+  const defaultZAxisId = zAxisIds[0];
 
   const ScatterItems = slots?.scatter ?? Scatter;
 
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisKey, yAxisKey, markerSize, color } = series[seriesId];
+        const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
-        const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
-        const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;
+        const colorGetter = getColor(
+          series[seriesId],
+          xAxis[xAxisId ?? defaultXAxisId],
+          yAxis[yAxisId ?? defaultYAxisId],
+          zAxis[zAxisId ?? defaultZAxisId],
+        );
+        const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+        const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
         return (
           <ScatterItems
             key={id}
             xScale={xScale}
             yScale={yScale}
             color={color}
-            markerSize={markerSize ?? 4}
+            colorGetter={colorGetter}
             series={series[seriesId]}
             onItemClick={onItemClick}
+            slots={slots}
+            slotProps={slotProps}
             {...slotProps?.scatter}
           />
         );
@@ -77,7 +91,7 @@ function ScatterPlot(props: ScatterPlotProps) {
 ScatterPlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when clicking on a scatter item.

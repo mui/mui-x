@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
@@ -34,46 +35,49 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const getAllItemNodeIds = () => {
+const getAllItemItemIds = () => {
   const ids: TreeViewItemId[] = [];
-  const registerNodeId = (item: TreeViewBaseItem) => {
+  const registerItemId = (item: TreeViewBaseItem) => {
     ids.push(item.id);
-    item.children?.forEach(registerNodeId);
+    item.children?.forEach(registerItemId);
   };
 
-  MUI_X_PRODUCTS.forEach(registerNodeId);
+  MUI_X_PRODUCTS.forEach(registerItemId);
 
   return ids;
 };
 
 export default function ControlledSelection() {
-  const [selectedNodes, setSelectedNodes] = React.useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
 
-  const handleSelectedNodesChange = (event: React.SyntheticEvent, ids: string[]) => {
-    setSelectedNodes(ids);
+  const handleSelectedItemsChange = (
+    event: React.SyntheticEvent | null,
+    ids: string[],
+  ) => {
+    setSelectedItems(ids);
   };
 
   const handleSelectClick = () => {
-    setSelectedNodes((oldSelected) =>
-      oldSelected.length === 0 ? getAllItemNodeIds() : [],
+    setSelectedItems((oldSelected) =>
+      oldSelected.length === 0 ? getAllItemItemIds() : [],
     );
   };
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 400 }}>
-      <Box sx={{ mb: 1 }}>
+    <Stack spacing={2}>
+      <div>
         <Button onClick={handleSelectClick}>
-          {selectedNodes.length === 0 ? 'Select all' : 'Unselect all'}
+          {selectedItems.length === 0 ? 'Select all' : 'Unselect all'}
         </Button>
-      </Box>
-      <Box sx={{ minHeight: 200, flexGrow: 1 }}>
+      </div>
+      <Box sx={{ minHeight: 352, minWidth: 250 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
-          selectedNodes={selectedNodes}
-          onSelectedNodesChange={handleSelectedNodesChange}
+          selectedItems={selectedItems}
+          onSelectedItemsChange={handleSelectedItemsChange}
           multiSelect
         />
       </Box>
-    </Box>
+    </Stack>
   );
 }

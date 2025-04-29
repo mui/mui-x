@@ -1,4 +1,4 @@
-const coreExports = require('@mui-internal/test-utils/setupJSDOM');
+const coreExports = require('@mui/internal-test-utils/setupJSDOM');
 
 require('./licenseRelease');
 require('./addChaiAssertions');

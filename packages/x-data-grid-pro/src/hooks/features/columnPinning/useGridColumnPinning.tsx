@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
   useGridApiMethod,
-  useGridApiEventHandler,
+  useGridEvent,
   GridEventListener,
   GridPinnedColumnPosition,
   gridColumnFieldsSelector,
@@ -47,7 +48,7 @@ export const columnPinningStateInitializer: GridStateInitializer<
 };
 
 export const useGridColumnPinning = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'disableColumnPinning'
@@ -144,7 +145,7 @@ export const useGridColumnPinning = (
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
-      const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
+      const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef);
 
       const shouldExportPinnedColumns =
         // Always export if the `exportOnlyDirtyModels` property is not activated
@@ -227,13 +228,13 @@ export const useGridColumnPinning = (
   );
 
   const getPinnedColumns = React.useCallback<GridColumnPinningApi['getPinnedColumns']>(() => {
-    return gridPinnedColumnsSelector(apiRef.current.state);
+    return gridPinnedColumnsSelector(apiRef);
   }, [apiRef]);
 
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
       setState(apiRef, newPinnedColumns);
-      apiRef.current.forceUpdate();
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     },
     [apiRef],
   );
@@ -278,16 +279,16 @@ export const useGridColumnPinning = (
      * on must be moved to left or right to make room for it. The ^^^ below represents the column
      * which gave space to receive X.
      *
-     * | X | B | C | D | -> | B | C | D | X | (e.g. X moved to after D, so delta=1)
+     * | X | B | C | D | -> | B | C | D | X | (for example X moved to after D, so delta=1)
      *              ^^^              ^^^
      *
-     * | A | B | C | X | -> | X | A | B | C | (e.g. X moved before A, so delta=-1)
+     * | A | B | C | X | -> | X | A | B | C | (for example X moved before A, so delta=-1)
      *  ^^^                      ^^^
      *
      * If column P is pinned, it will not move to provide space. However, it will jump to the next
      * non-pinned column.
      *
-     * | X | B | P | D | -> | B | D | P | X | (e.g. X moved to after D, with P pinned)
+     * | X | B | P | D | -> | B | D | P | X | (for example X moved to after D, with P pinned)
      *              ^^^          ^^^
      */
     const siblingField = latestColumnFields[targetIndex - delta];
@@ -327,7 +328,7 @@ export const useGridColumnPinning = (
       newOrderedFieldsBeforePinningColumns;
   };
 
-  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnOrderChange);
+  useGridEvent(apiRef, 'columnOrderChange', handleColumnOrderChange);
 
   React.useEffect(() => {
     if (props.pinnedColumns) {
@@ -336,10 +337,7 @@ export const useGridColumnPinning = (
   }, [apiRef, props.pinnedColumns]);
 };
 
-function setState(
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
-  model: GridPinnedColumnFields,
-) {
+function setState(apiRef: RefObject<GridPrivateApiPro>, model: GridPinnedColumnFields) {
   apiRef.current.setState((state) => ({
     ...state,
     pinnedColumns: model,

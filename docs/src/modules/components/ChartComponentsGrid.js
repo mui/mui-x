@@ -47,31 +47,37 @@ function getComponents() {
       href: '/x/react-charts/gauge/',
     },
     {
-      title: 'Heatmap',
-      srcLight: '/static/x/component-illustrations/heatmap-light.png',
-      srcDark: '/static/x/component-illustrations/heatmap-dark.png',
-      href: '/x/react-charts/heat-map/',
-      planned: true,
-    },
-    {
       title: 'Radar Chart',
       srcLight: '/static/x/component-illustrations/radar-light.png',
       srcDark: '/static/x/component-illustrations/radar-dark.png',
       href: '/x/react-charts/radar/',
-      planned: true,
     },
     {
       title: 'Treemap',
       srcLight: '/static/x/component-illustrations/treemap-light.png',
       srcDark: '/static/x/component-illustrations/treemap-dark.png',
-      href: '/x/react-charts/tree-map/',
+      href: '/x/react-charts/treemap/',
       planned: true,
+    },
+    {
+      title: 'Heatmap',
+      srcLight: '/static/x/component-illustrations/heatmap-light.png',
+      srcDark: '/static/x/component-illustrations/heatmap-dark.png',
+      href: '/x/react-charts/heatmap/',
+      pro: true,
     },
     {
       title: 'Funnel Chart',
       srcLight: '/static/x/component-illustrations/funnel-light.png',
       srcDark: '/static/x/component-illustrations/funnel-dark.png',
       href: '/x/react-charts/funnel/',
+      pro: true,
+    },
+    {
+      title: 'Sankey Chart',
+      srcLight: '/static/x/component-illustrations/sankey-light.png',
+      srcDark: '/static/x/component-illustrations/sankey-dark.png',
+      href: '/x/react-charts/sankey/',
       planned: true,
       pro: true,
     },
@@ -83,14 +89,6 @@ function getComponents() {
       planned: true,
       pro: true,
     },
-    {
-      title: 'Sankey Chart',
-      srcLight: '/static/x/component-illustrations/sankey-light.png',
-      srcDark: '/static/x/component-illustrations/sankey-dark.png',
-      href: '/x/react-charts/sankey/',
-      planned: true,
-      pro: true,
-    },
   ];
 }
 
@@ -98,7 +96,7 @@ export default function ChartComponentsGrid() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {getComponents().map((component) => (
-        <Grid item xs={12} sm={4} sx={{ flexGrow: 1 }} key={component.title}>
+        <Grid size={{ xs: 12, sm: 4 }} sx={{ flexGrow: 1 }} key={component.title}>
           <Card
             component={Link}
             noLinkStyle

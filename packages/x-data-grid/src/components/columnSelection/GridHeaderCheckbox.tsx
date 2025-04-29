@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isMultipleRowSelectionEnabled } from '../../hooks/features/rowSelection/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -14,6 +15,8 @@ import type { GridHeaderSelectionCheckboxParams } from '../../models/params/grid
 import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import type { GridRowId } from '../../models/gridRows';
+import { type GridRowSelectionModel } from '../../models/gridRowSelectionModel';
+import { createRowSelectionManager } from '../../models/gridRowSelectionManager';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -27,7 +30,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderParams>(
+const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const { field, colDef, ...other } = props;
     const [, forceUpdate] = React.useState(false);
@@ -44,48 +47,84 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     );
 
     const filteredSelection = React.useMemo(() => {
-      if (typeof rootProps.isRowSelectable !== 'function') {
+      const isRowSelectable = rootProps.isRowSelectable;
+      if (typeof isRowSelectable !== 'function') {
         return selection;
       }
 
-      return selection.filter((id) => {
+      if (selection.type === 'exclude') {
+        return selection;
+      }
+
+      // selection.type === 'include'
+      const selectionModel: GridRowSelectionModel = { type: 'include', ids: new Set<GridRowId>() };
+      for (const id of selection.ids) {
+        if (rootProps.keepNonExistentRowsSelected) {
+          selectionModel.ids.add(id);
+        }
         // The row might have been deleted
         if (!apiRef.current.getRow(id)) {
-          return false;
+          continue;
         }
 
-        return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
-      });
-    }, [apiRef, rootProps.isRowSelectable, selection]);
+        if (isRowSelectable(apiRef.current.getRowParams(id))) {
+          selectionModel.ids.add(id);
+        }
+      }
+      return selectionModel;
+    }, [apiRef, rootProps.isRowSelectable, rootProps.keepNonExistentRowsSelected, selection]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
       const rowIds =
-        !rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly
+        !rootProps.pagination ||
+        !rootProps.checkboxSelectionVisibleOnly ||
+        rootProps.paginationMode === 'server'
           ? visibleRowIds
           : paginatedVisibleRowIds;
 
-      // Convert to an object to make O(1) checking if a row exists or not
-      // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
-      return rowIds.reduce<Record<GridRowId, true>>((acc, id) => {
-        acc[id] = true;
-        return acc;
-      }, {});
+      // Convert to a Set to make O(1) checking if a row exists or not
+      const candidates = new Set<GridRowId>();
+      for (let i = 0; i < rowIds.length; i += 1) {
+        const id = rowIds[i];
+        if (apiRef.current.isRowSelectable(id)) {
+          candidates.add(id);
+        }
+      }
+      return candidates;
     }, [
+      apiRef,
       rootProps.pagination,
+      rootProps.paginationMode,
       rootProps.checkboxSelectionVisibleOnly,
       paginatedVisibleRowIds,
       visibleRowIds,
     ]);
 
     // Amount of rows selected and that are visible in the current page
-    const currentSelectionSize = React.useMemo(
-      () => filteredSelection.filter((id) => selectionCandidates[id]).length,
-      [filteredSelection, selectionCandidates],
-    );
+    const currentSelectionSize = React.useMemo(() => {
+      const selectionManager = createRowSelectionManager(filteredSelection);
+      let size = 0;
+      for (const id of selectionCandidates) {
+        if (selectionManager.has(id)) {
+          size += 1;
+        }
+      }
+      return size;
+    }, [filteredSelection, selectionCandidates]);
 
-    const isIndeterminate =
-      currentSelectionSize > 0 && currentSelectionSize < Object.keys(selectionCandidates).length;
+    const isIndeterminate = React.useMemo(() => {
+      if (filteredSelection.ids.size === 0) {
+        return false;
+      }
+      const selectionManager = createRowSelectionManager(filteredSelection);
+      for (const rowId of selectionCandidates) {
+        if (!selectionManager.has(rowId)) {
+          return true;
+        }
+      }
+      return false;
+    }, [filteredSelection, selectionCandidates]);
 
     const isChecked = currentSelectionSize > 0;
 
@@ -126,22 +165,26 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     }, [apiRef, handleSelectionChange]);
 
     const label = apiRef.current.getLocaleText(
-      isChecked ? 'checkboxSelectionUnselectAllRows' : 'checkboxSelectionSelectAllRows',
+      isChecked && !isIndeterminate
+        ? 'checkboxSelectionUnselectAllRows'
+        : 'checkboxSelectionSelectAllRows',
     );
 
     return (
       <rootProps.slots.baseCheckbox
-        ref={ref}
         indeterminate={isIndeterminate}
-        checked={isChecked}
+        checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label }}
+        slotProps={{
+          htmlInput: { 'aria-label': label, name: 'select_all_rows' },
+        }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
         disabled={!isMultipleRowSelectionEnabled(rootProps)}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
+        ref={ref}
       />
     );
   },
@@ -150,7 +193,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
 GridHeaderCheckbox.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * The column of the current header component.

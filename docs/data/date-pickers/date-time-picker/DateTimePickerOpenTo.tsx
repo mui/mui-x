@@ -8,7 +8,7 @@ import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 export default function DateTimePickerOpenTo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['MobileDateTimePicker', 'MobileDateTimePicker']}>
+      <DemoContainer components={['DateTimePicker', 'MobileTimePicker']}>
         <DateTimePicker label={'"year"'} openTo="year" />
         <MobileTimePicker label={'"hours"'} openTo="hours" />
       </DemoContainer>

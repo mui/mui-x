@@ -8,14 +8,21 @@
       },
       "required": true
     },
-    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
+    "skipAnimation": { "type": { "name": "bool" } }
   },
   "name": "MarkElement",
   "imports": [
     "import { MarkElement } from '@mui/x-charts/LineChart';",
-    "import { MarkElement } from '@mui/x-charts';"
+    "import { MarkElement } from '@mui/x-charts';",
+    "import { MarkElement } from '@mui/x-charts-pro';"
   ],
   "classes": [
+    {
+      "key": "animate",
+      "className": "MuiMarkElement-animate",
+      "description": "Styles applied to the root element when animation is not skipped.",
+      "isGlobal": false
+    },
     {
       "key": "faded",
       "className": "MuiMarkElement-faded",
@@ -25,13 +32,19 @@
     {
       "key": "highlighted",
       "className": "MuiMarkElement-highlighted",
-      "description": "Styles applied to the root element when higlighted.",
+      "description": "Styles applied to the root element when highlighted.",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiMarkElement-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiMarkElement-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

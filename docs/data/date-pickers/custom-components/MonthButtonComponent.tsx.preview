@@ -1,0 +1,5 @@
+<DateCalendar
+  slots={{ monthButton: CustomMonthButton }}
+  views={['month', 'day']}
+  openTo="month"
+/>

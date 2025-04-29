@@ -4,13 +4,12 @@ import InstallationInstructions from './InstallationInstructions';
 // #default-branch-switch
 
 const packages = {
-  Community: '@mui/x-date-pickers@next',
-  Pro: '@mui/x-date-pickers-pro@next',
+  Community: '@mui/x-date-pickers',
+  Pro: '@mui/x-date-pickers-pro',
 };
 
 const peerDependency = {
   label: 'Date library',
-  installationComment: '// Install date library (if not already installed)',
   packages: ['dayjs', 'date-fns', 'luxon', 'moment'],
 };
 

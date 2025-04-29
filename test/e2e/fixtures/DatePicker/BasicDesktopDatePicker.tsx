@@ -6,7 +6,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 export default function BasicDesktopDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DesktopDatePicker label="Desktop Date Picker" />
+      <DesktopDatePicker
+        label="Desktop Date Picker"
+        className="test-date-picker"
+        slotProps={{ field: { clearable: true } }}
+      />
     </LocalizationProvider>
   );
 }

@@ -1,89 +1,26 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
-import { color as d3Color } from 'd3-color';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { animated } from '@react-spring/web';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { InteractionContext } from '../context/InteractionProvider';
-import { HighlightScope } from '../context/HighlightProvider';
-import { SeriesId } from '../models/seriesType/common';
-
-export interface BarElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-}
-
-export type BarElementClassKey = keyof BarElementClasses;
-
-export interface BarElementOwnerState {
-  id: SeriesId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<BarElementClasses>;
-}
-
-export function getBarElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiBarElement', slot);
-}
-
-export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
-  'root',
-]);
-
-const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id } = ownerState;
-  const slots = {
-    root: ['root', `series-${id}`],
-  };
-
-  return composeClasses(slots, getBarElementUtilityClass, classes);
-};
-
-export const BarElementPath = styled(animated.rect, {
-  name: 'MuiBarElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: BarElementOwnerState }>(({ ownerState }) => ({
-  stroke: 'none',
-  shapeRendering: 'crispEdges',
-  fill: ownerState.isHighlighted
-    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
-    : ownerState.color,
-  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  opacity: (ownerState.isFaded && 0.3) || 1,
-}));
-
-interface BarProps extends Omit<React.ComponentPropsWithoutRef<'path'>, 'id' | 'color'> {
-  highlightScope?: Partial<HighlightScope>;
-  onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
-  ownerState: BarElementOwnerState;
-}
+import useSlotProps from '@mui/utils/useSlotProps';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { useItemHighlighted } from '../hooks/useItemHighlighted';
+import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
 
 export interface BarElementSlots {
   /**
    * The component that renders the bar.
    * @default BarElementPath
    */
-  bar?: React.JSXElementConstructor<BarProps>;
+  bar?: React.ElementType<BarProps>;
 }
-
 export interface BarElementSlotProps {
-  bar?: Partial<BarProps>;
+  bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.ComponentPropsWithoutRef<'path'>, 'id'> & {
-    highlightScope?: Partial<HighlightScope>;
+  Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -94,6 +31,15 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
      * @default {}
      */
     slots?: BarElementSlots;
+
+    x: number;
+    xOrigin: number;
+    y: number;
+    yOrigin: number;
+    width: number;
+    height: number;
+    layout: 'horizontal' | 'vertical';
+    skipAnimation: boolean;
   };
 
 function BarElement(props: BarElementProps) {
@@ -102,24 +48,25 @@ function BarElement(props: BarElementProps) {
     dataIndex,
     classes: innerClasses,
     color,
-    highlightScope,
     slots,
     slotProps,
     style,
     onClick,
+    skipAnimation,
+    layout,
+    x,
+    xOrigin,
+    y,
+    yOrigin,
+    width,
+    height,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'bar', seriesId: id, dataIndex },
-    highlightScope,
-  );
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'bar', seriesId: id, dataIndex }, highlightScope);
+  const interactionProps = useInteractionItemProps({ type: 'bar', seriesId: id, dataIndex });
+  const { isFaded, isHighlighted } = useItemHighlighted({
+    seriesId: id,
+    dataIndex,
+  });
 
   const ownerState = {
     id,
@@ -129,37 +76,51 @@ function BarElement(props: BarElementProps) {
     isFaded,
     isHighlighted,
   };
+
   const classes = useUtilityClasses(ownerState);
 
-  const Bar = slots?.bar ?? BarElementPath;
+  const Bar = slots?.bar ?? AnimatedBarElement;
+
   const barProps = useSlotProps({
     elementType: Bar,
     externalSlotProps: slotProps?.bar,
+    externalForwardedProps: other,
     additionalProps: {
-      ...other,
-      ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      ...interactionProps,
+      id,
+      dataIndex,
+      color,
+      x,
+      xOrigin,
+      y,
+      yOrigin,
+      width,
+      height,
       style,
-      className: classes.root,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
+      stroke: 'none',
+      fill: color,
+      skipAnimation,
+      layout,
     },
+    className: classes.root,
     ownerState,
   });
+
   return <Bar {...barProps} />;
 }
 
 BarElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  skipAnimation: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
@@ -170,6 +131,8 @@ BarElement.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  xOrigin: PropTypes.number.isRequired,
+  yOrigin: PropTypes.number.isRequired,
 } as any;
 
 export { BarElement };

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormControlState, useFormControl } from '@mui/material/FormControl';
+import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersOutlinedInputClasses,
   getPickersOutlinedInputUtilityClass,
+  PickersOutlinedInputClasses,
 } from './pickersOutlinedInputClasses';
 import Outline from './Outline';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
@@ -13,6 +15,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;
@@ -21,8 +24,7 @@ export interface PickersOutlinedInputProps extends PickersInputBaseProps {
 const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersOutlinedInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -41,8 +43,6 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
     },
     [`&.${pickersOutlinedInputClasses.focused} .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderStyle: 'solid',
-      // @ts-ignore
-      borderColor: (theme.vars || theme).palette[ownerState.color].main,
       borderWidth: 2,
     },
     [`&.${pickersOutlinedInputClasses.disabled}`]: {
@@ -56,23 +56,38 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
     [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
       borderColor: (theme.vars || theme).palette.error.main,
     },
+    variants: Object.keys((theme.vars ?? theme).palette)
+      // @ts-ignore
+      .filter((key) => (theme.vars ?? theme).palette[key]?.main ?? false)
+      .map((color) => ({
+        props: { inputColor: color },
+        style: {
+          [`&.${pickersOutlinedInputClasses.focused}:not(.${pickersOutlinedInputClasses.error}) .${pickersOutlinedInputClasses.notchedOutline}`]:
+            {
+              // @ts-ignore
+              borderColor: (theme.vars || theme).palette[color].main,
+            },
+        },
+      })),
   };
 });
 
 const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsContainer, {
   name: 'MuiPickersOutlinedInput',
   slot: 'SectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>(({ ownerState }) => ({
+})<{ ownerState: PickerTextFieldOwnerState }>({
   padding: '16.5px 0',
-  ...(ownerState.size === 'small' && {
-    padding: '8.5px 0',
-  }),
-}));
+  variants: [
+    {
+      props: { inputSize: 'small' },
+      style: {
+        padding: '8.5px 0',
+      },
+    },
+  ],
+});
 
-const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const { classes } = ownerState;
-
+const useUtilityClasses = (classes: Partial<PickersOutlinedInputClasses> | undefined) => {
   const slots = {
     root: ['root'],
     notchedOutline: ['notchedOutline'],
@@ -87,10 +102,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
   };
 };
 
-interface OwnerStateType
-  extends FormControlState,
-    Omit<PickersOutlinedInputProps, keyof FormControlState> {}
-
 /**
  * @ignore - internal component.
  */
@@ -103,17 +114,17 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
     name: 'MuiPickersOutlinedInput',
   });
 
-  const { label, autoFocus, ownerState: ownerStateProp, notched, ...other } = props;
+  const {
+    label,
+    autoFocus,
+    ownerState: ownerStateProp,
+    classes: classesProp,
+    notched,
+    ...other
+  } = props;
 
   const muiFormControl = useFormControl();
-
-  const ownerState = {
-    ...props,
-    ...ownerStateProp,
-    ...muiFormControl,
-    color: muiFormControl?.color || 'primary',
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <PickersInputBase
@@ -133,7 +144,6 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
               label
             )
           }
-          ownerState={ownerState}
         />
       )}
       {...other}
@@ -147,7 +157,7 @@ const PickersOutlinedInput = React.forwardRef(function PickersOutlinedInput(
 PickersOutlinedInput.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Is `true` if the current values equals the empty value.
@@ -156,16 +166,13 @@ PickersOutlinedInput.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
@@ -182,21 +189,17 @@ PickersOutlinedInput.propTypes = {
   fullWidth: PropTypes.bool,
   id: PropTypes.string,
   inputProps: PropTypes.object,
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   notched: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([
@@ -210,6 +213,11 @@ PickersOutlinedInput.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   /**
    * The components used for each slot inside.
    *

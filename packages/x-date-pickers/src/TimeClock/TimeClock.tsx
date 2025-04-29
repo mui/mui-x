@@ -1,26 +1,28 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { getTimeClockUtilityClass } from './timeClockClasses';
+import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
     arrowSwitcher: ['arrowSwitcher'],
@@ -32,8 +34,7 @@ const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
 const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TimeClockProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
@@ -42,18 +43,17 @@ const TimeClockRoot = styled(PickerViewRoot, {
 const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
-  overridesResolver: (props, styles) => styles.arrowSwitcher,
-})<{ ownerState: TimeClockProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   position: 'absolute',
   right: 12,
   top: 15,
 });
 
-type TimeClockComponent = (<TDate extends PickerValidDate>(
-  props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimeClockComponent = ((
+  props: TimeClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
+const TIME_CLOCK_DEFAULT_VIEWS: readonly TimeView[] = ['hours', 'minutes'];
 
 /**
  * Demos:
@@ -65,11 +65,11 @@ const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
  *
  * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
-export const TimeClock = React.forwardRef(function TimeClock<TDate extends PickerValidDate>(
-  inProps: TimeClockProps<TDate>,
+export const TimeClock = React.forwardRef(function TimeClock(
+  inProps: TimeClockProps<TimeView>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const props = useThemeProps({
     props: inProps,
@@ -101,17 +101,19 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     focusedView,
     onFocusedViewChange,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     timezone: timezoneProp,
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'TimeClock',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
@@ -124,8 +126,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     timezone,
   });
 
-  const localeText = useLocaleText<TDate>();
-  const now = useNow<TDate>(timezone);
+  const translations = usePickerTranslations();
+  const now = useNow(timezone);
+  const selectedId = useId();
+  const { ownerState } = usePickerPrivateContext();
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
     view: inView,
@@ -137,7 +141,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     onFocusedViewChange,
   });
 
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(
     valueOrReferenceDate,
     ampm,
     setValueAndGoToNextView,
@@ -149,7 +153,13 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
       const shouldCheckPastEnd =
         viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
 
-      const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
+      const containsValidTime = ({
+        start,
+        end,
+      }: {
+        start: PickerValidDate;
+        end: PickerValidDate;
+      }) => {
         if (minTime && isAfter(minTime, end)) {
           return false;
         }
@@ -183,13 +193,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
                 utils.setMinutes(valueOrReferenceDate, timeValue),
                 'minutes',
               );
-
             case 'seconds':
               return !shouldDisableTime(
                 utils.setSeconds(valueOrReferenceDate, timeValue),
                 'seconds',
               );
-
             default:
               return false;
           }
@@ -202,6 +210,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
         case 'hours': {
           const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
           const dateWithNewHours = utils.setHours(valueOrReferenceDate, valueWithMeridiem);
+
+          if (utils.getHours(dateWithNewHours) !== valueWithMeridiem) {
+            return true;
+          }
+
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
@@ -245,10 +258,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     ],
   );
 
-  const selectedId = useId();
-
   const viewProps = React.useMemo<
-    Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
+    Pick<ClockProps, 'onChange' | 'viewValue' | 'viewRange' | 'children'>
   >(() => {
     switch (view) {
       case 'hours': {
@@ -261,18 +272,32 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
           );
         };
 
+        const viewValue = utils.getHours(valueOrReferenceDate);
+
+        let viewRange: [number, number];
+        if (ampm) {
+          if (viewValue > 12) {
+            viewRange = [12, 23];
+          } else {
+            viewRange = [0, 11];
+          }
+        } else {
+          viewRange = [0, 23];
+        }
+
         return {
           onChange: handleHoursChange,
-          viewValue: utils.getHours(valueOrReferenceDate),
+          viewValue,
           children: getHourNumbers({
             value,
             utils,
             ampm,
             onChange: handleHoursChange,
-            getClockNumberText: localeText.hoursClockNumberText,
+            getClockNumberText: translations.hoursClockNumberText,
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
+          viewRange,
         };
       }
 
@@ -289,14 +314,15 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
         return {
           viewValue: minutesValue,
           onChange: handleMinutesChange,
-          children: getMinutesNumbers<TDate>({
+          children: getMinutesNumbers({
             utils,
             value: minutesValue,
             onChange: handleMinutesChange,
-            getClockNumberText: localeText.minutesClockNumberText,
+            getClockNumberText: translations.minutesClockNumberText,
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
@@ -317,10 +343,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
             utils,
             value: secondsValue,
             onChange: handleSecondsChange,
-            getClockNumberText: localeText.secondsClockNumberText,
+            getClockNumberText: translations.secondsClockNumberText,
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
@@ -332,9 +359,9 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     utils,
     value,
     ampm,
-    localeText.hoursClockNumberText,
-    localeText.minutesClockNumberText,
-    localeText.secondsClockNumberText,
+    translations.hoursClockNumberText,
+    translations.minutesClockNumberText,
+    translations.secondsClockNumberText,
     meridiemMode,
     setValueAndGoToNextView,
     valueOrReferenceDate,
@@ -343,8 +370,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     disabled,
   ]);
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <TimeClockRoot
@@ -353,7 +379,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
       ownerState={ownerState}
       {...other}
     >
-      <Clock<TDate>
+      <Clock
         autoFocus={autoFocus ?? !!focusedView}
         ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
@@ -375,10 +401,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
           slotProps={slotProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
-          previousLabel={localeText.openPreviousView}
+          previousLabel={translations.openPreviousView}
           onGoToNext={() => setView(nextView!)}
           isNextDisabled={!nextView}
-          nextLabel={localeText.openNextView}
+          nextLabel={translations.openNextView}
           ownerState={ownerState}
         />
       )}
@@ -389,11 +415,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
 TimeClock.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -419,7 +445,8 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -459,7 +486,7 @@ TimeClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
@@ -486,7 +513,8 @@ TimeClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -497,8 +525,7 @@ TimeClock.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

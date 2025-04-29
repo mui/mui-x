@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { act, fireEvent, screen } from '@mui-internal/test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateView } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<StaticDatePicker /> - Keyboard interactions', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
@@ -71,7 +71,6 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
-        clock.runToLast();
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
@@ -126,6 +125,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       });
     });
   });
+
   describe('MonthCalendar keyboard navigation', () => {
     [
       { key: 'ArrowLeft', expectFocusedMonth: 'Jul' },

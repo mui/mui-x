@@ -1,15 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-} from '@mui/utils';
-import type { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { objectShallowCompare, useGridSelector } from '../../hooks/utils/useGridSelector';
+import { getCheckboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -23,16 +23,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface TouchRippleActions {
-  stop: (event: any, callback?: () => void) => void;
-}
-
-const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRenderCellParams>(
+const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const {
       field,
       id,
-      value: isChecked,
       formattedValue,
       row,
       rowNode,
@@ -48,11 +43,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
-    const checkboxElement = React.useRef<HTMLElement>(null);
-
-    const rippleRef = React.useRef<TouchRippleActions>(null);
-    const handleRef = useForkRef(checkboxElement, ref);
-    const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
@@ -60,20 +50,13 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     };
 
     React.useLayoutEffect(() => {
-      if (tabIndex === 0 && element) {
-        element!.tabIndex = -1;
+      if (tabIndex === 0) {
+        const element = apiRef.current.getCellElement(id, field);
+        if (element) {
+          element.tabIndex = -1;
+        }
       }
-    }, [element, tabIndex]);
-
-    React.useEffect(() => {
-      if (hasFocus) {
-        const input = checkboxElement.current?.querySelector('input');
-        input?.focus({ preventScroll: true });
-      } else if (rippleRef.current) {
-        // Only available in @mui/material v5.4.1 or later
-        rippleRef.current.stop({});
-      }
-    }, [hasFocus]);
+    }, [apiRef, tabIndex, id, field]);
 
     const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
       if (event.key === ' ') {
@@ -83,29 +66,42 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, []);
 
+    const isSelectable = apiRef.current.isRowSelectable(id);
+
+    const checkboxPropsSelector = getCheckboxPropsSelector(
+      id,
+      rootProps.rowSelectionPropagation?.parents ?? false,
+    );
+    const { isIndeterminate, isChecked } = useGridSelector(
+      apiRef,
+      checkboxPropsSelector,
+      undefined,
+      objectShallowCompare,
+    );
+
     if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
       return null;
     }
 
-    const isSelectable = apiRef.current.isRowSelectable(id);
-
     const label = apiRef.current.getLocaleText(
-      isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
+      isChecked && !isIndeterminate ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
 
     return (
       <rootProps.slots.baseCheckbox
-        ref={handleRef}
         tabIndex={tabIndex}
-        checked={isChecked}
+        checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label }}
+        slotProps={{
+          htmlInput: { 'aria-label': label, name: 'select_row' },
+        }}
         onKeyDown={handleKeyDown}
+        indeterminate={isIndeterminate}
         disabled={!isSelectable}
-        touchRippleRef={rippleRef as any /* FIXME: typing error */}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
+        ref={ref as any}
       />
     );
   },
@@ -114,7 +110,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
 GridCellCheckboxForwardRef.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.

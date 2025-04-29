@@ -7,8 +7,9 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import type { GridApiCommunity } from '../../internals';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useRtl } from '@mui/system/RtlProvider';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -24,74 +25,64 @@ import {
   FocusElement,
   GridCellParams,
 } from '../../models/params/gridCellParams';
-import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
-import { GridTreeNodeWithRender } from '../../models/gridRows';
-import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
+import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
+import {
+  gridFocusCellSelector,
+  gridTabIndexCellSelector,
+} from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { PinnedColumnPosition } from '../../internals/constants';
+import {
+  gridRowSpanningHiddenCellsSelector,
+  gridRowSpanningSpannedCellsSelector,
+} from '../../hooks/features/rows/gridRowSpanningSelectors';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
+import { attachPinnedStyle } from '../../internals/utils';
+import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 
-export enum PinnedPosition {
-  NONE,
-  LEFT,
-  RIGHT,
-}
+export const gridPinnedColumnPositionLookup = {
+  [PinnedColumnPosition.LEFT]: GridPinnedColumnPosition.LEFT,
+  [PinnedColumnPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
+  [PinnedColumnPosition.NONE]: undefined,
+  [PinnedColumnPosition.VIRTUAL]: undefined,
+};
 
-export type GridCellProps = {
+export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
   className?: string;
   colIndex: number;
-  column: GridColDef;
+  column: GridStateColDef;
+  row: GridRowModel;
   rowId: GridRowId;
-  height: number | 'auto';
+  rowNode: GridTreeNode;
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
   isNotVisible: boolean;
-  editCellState: GridEditCellProps<any> | null;
-  pinnedOffset: number;
-  pinnedPosition: PinnedPosition;
-  sectionIndex: number;
-  sectionLength: number;
-  gridHasScrollX: boolean;
+  pinnedOffset?: number;
+  pinnedPosition: PinnedColumnPosition;
+  showRightBorder: boolean;
+  showLeftBorder: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseOver?: React.MouseEventHandler<HTMLDivElement>;
+  onKeyUp?: React.KeyboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any; // TODO v7: remove this - it breaks type safety
-};
-
-type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
-  api: GridApiCommunity;
-};
-const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
-  id: -1,
-  field: '__unset__',
-  row: {},
-  rowNode: {
-    id: -1,
-    depth: 0,
-    type: 'leaf',
-    parent: -1,
-    groupingKey: null,
-  },
-  colDef: {
-    type: 'string',
-    field: '__unset__',
-    computedWidth: 0,
-  },
-  cellMode: GridCellModes.View,
-  hasFocus: false,
-  tabIndex: -1,
-  value: null,
-  formattedValue: '__unset__',
-  isEditable: false,
-  api: {} as any,
+  onFocus?: React.FocusEventHandler<Element>;
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+  [x: `data-${string}`]: string;
 };
 
 type OwnerState = Pick<GridCellProps, 'align' | 'pinnedPosition'> & {
@@ -123,11 +114,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       showLeftBorder && 'cell--withLeftBorder',
       showRightBorder && 'cell--withRightBorder',
-      pinnedPosition === PinnedPosition.LEFT && 'cell--pinnedLeft',
-      pinnedPosition === PinnedPosition.RIGHT && 'cell--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'cell--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'cell--pinnedRight',
       isSelectionMode && !isEditable && 'cell--selectionMode',
     ],
-    content: ['cellContent'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -137,26 +127,25 @@ let warnedOnce = false;
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
-const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) => {
+const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
+    row,
     rowId,
-    editCellState,
+    rowNode,
     align,
     children: childrenProp,
     colIndex,
-    height,
     width,
     className,
     style: styleProp,
-    gridHasScrollX,
     colSpan,
     disableDragEvents,
     isNotVisible,
     pinnedOffset,
     pinnedPosition,
-    sectionIndex,
-    sectionLength,
+    showRightBorder,
+    showLeftBorder,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -169,35 +158,51 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     ...other
   } = props;
 
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
 
   const field = column.field;
 
-  const cellParamsWithAPI = useGridSelector(
+  const editCellState: GridEditCellProps<any> | null = useGridSelector(
     apiRef,
-    () => {
-      // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
-      // associated with `rowId`/`fieldId`, but this selector runs after the state has been
-      // updated, while `rowId`/`fieldId` reference an entry in the old state.
-      try {
-        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
-          rowId,
-          field,
-        );
-
-        const result = cellParams as CellParamsWithAPI;
-        result.api = apiRef.current;
-        return result;
-      } catch (e) {
-        if (e instanceof MissingRowIdError) {
-          return EMPTY_CELL_PARAMS;
-        }
-        throw e;
-      }
+    gridEditCellStateSelector,
+    {
+      rowId,
+      field,
     },
-    objectShallowCompare,
   );
+
+  const config = useGridConfiguration();
+  const cellAggregationResult = config.hooks.useCellAggregationResult(rowId, field);
+  const cellMode: GridCellModes = editCellState ? GridCellModes.Edit : GridCellModes.View;
+
+  const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
+    any,
+    any,
+    any,
+    GridTreeNodeWithRender
+  >(rowId, field, row, {
+    colDef: column,
+    cellMode,
+    rowNode: rowNode as GridTreeNodeWithRender,
+    tabIndex: useGridSelector(apiRef, () => {
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
+      return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
+    }),
+    hasFocus: useGridSelector(apiRef, () => {
+      const focus = gridFocusCellSelector(apiRef);
+      return focus?.id === rowId && focus.field === field;
+    }),
+  });
+  cellParams.api = apiRef.current;
+
+  if (cellAggregationResult) {
+    cellParams.value = cellAggregationResult.value;
+    cellParams.formattedValue = column.valueFormatter
+      ? column.valueFormatter(cellParams.value as never, row, column, apiRef)
+      : cellParams.value;
+  }
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
@@ -206,7 +211,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }),
   );
 
-  const { cellMode, hasFocus, isEditable = false, value, formattedValue } = cellParamsWithAPI;
+  const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
+  const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
+
+  const { hasFocus, isEditable = false, value } = cellParams;
 
   const canManageOwnFocus =
     column.type === 'actions' &&
@@ -214,42 +222,44 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       .getActions?.(apiRef.current.getRowParams(rowId))
       .some((action) => !action.props.disabled);
   const tabIndex =
-    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParamsWithAPI.tabIndex : -1;
+    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParams.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
-  const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
-    id: rowId,
-    field,
-  }) as (string | undefined)[];
+  // There is a hidden grid state access in `applyPipeProcessor('cellClassName', ...)`
+  const pipesClassName = useGridSelector(apiRef, () =>
+    apiRef.current
+      .unstable_applyPipeProcessors('cellClassName', [], {
+        id: rowId,
+        field,
+      })
+      .filter(Boolean)
+      .join(' '),
+  );
+
+  const classNames = [pipesClassName] as (string | undefined)[];
 
   if (column.cellClassName) {
     classNames.push(
       typeof column.cellClassName === 'function'
-        ? column.cellClassName(cellParamsWithAPI)
+        ? column.cellClassName(cellParams)
         : column.cellClassName,
     );
   }
 
-  if (getCellClassName) {
-    classNames.push(getCellClassName(cellParamsWithAPI));
+  if (column.display === 'flex') {
+    classNames.push(gridClasses['cell--flex']);
   }
 
-  const valueToRender = formattedValue == null ? value : formattedValue;
+  if (getCellClassName) {
+    classNames.push(getCellClassName(cellParams));
+  }
+
+  const valueToRender = cellParams.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
-  // @ts-expect-error To access `cellSelection` flag as it's a `premium` feature
   const isSelectionMode = rootProps.cellSelection ?? false;
-
-  const isSectionLastCell = sectionIndex === sectionLength - 1;
-
-  const showLeftBorder = pinnedPosition === PinnedPosition.RIGHT && sectionIndex === 0;
-
-  const showRightBorder =
-    (rootProps.showCellVerticalBorder &&
-      (pinnedPosition !== PinnedPosition.LEFT ? !isSectionLastCell : true)) ||
-    (pinnedPosition === PinnedPosition.LEFT && isSectionLastCell);
 
   const ownerState = {
     align,
@@ -305,31 +315,44 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     [apiRef, field, rowId],
   );
 
+  const isCellRowSpanned = hiddenCells[rowId]?.[field] ?? false;
+  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
+
   const style = React.useMemo(() => {
     if (isNotVisible) {
       return {
         padding: 0,
         opacity: 0,
         width: 0,
+        height: 0,
         border: 0,
       };
     }
-    const cellStyle = {
-      '--width': `${width}px`,
-      '--height': typeof height === 'number' ? `${height}px` : height,
-      ...styleProp,
-    } as React.CSSProperties;
 
-    if (pinnedPosition === PinnedPosition.LEFT) {
-      cellStyle.left = pinnedOffset;
-    }
+    const cellStyle = attachPinnedStyle(
+      {
+        '--width': `${width}px`,
+        ...styleProp,
+      } as React.CSSProperties,
+      isRtl,
+      pinnedPosition,
+      pinnedOffset,
+    );
 
-    if (pinnedPosition === PinnedPosition.RIGHT) {
-      cellStyle.right = pinnedOffset;
+    const isLeftPinned = pinnedPosition === PinnedColumnPosition.LEFT;
+    const isRightPinned = pinnedPosition === PinnedColumnPosition.RIGHT;
+
+    if (rowSpan > 1) {
+      cellStyle.height = `calc(var(--height) * ${rowSpan})`;
+      cellStyle.zIndex = 10;
+
+      if (isLeftPinned || isRightPinned) {
+        cellStyle.zIndex = 40;
+      }
     }
 
     return cellStyle;
-  }, [width, height, isNotVisible, styleProp, pinnedOffset, pinnedPosition]);
+  }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl, rowSpan]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -352,8 +375,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     }
   }, [hasFocus, cellMode, apiRef]);
 
-  if (cellParamsWithAPI === EMPTY_CELL_PARAMS) {
-    return null;
+  if (isCellRowSpanned) {
+    return (
+      <div
+        data-colindex={colIndex}
+        role="presentation"
+        style={{ width: 'var(--width)', ...style }}
+      />
+    );
   }
 
   let handleFocus: any = other.onFocus;
@@ -387,21 +416,26 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   }
 
   let children: React.ReactNode;
-  if (editCellState == null && column.renderCell) {
-    children = column.renderCell(cellParamsWithAPI);
-    classNames.push(gridClasses['cell--withRenderer']);
-    classNames.push(rootClasses?.['cell--withRenderer']);
+  let title: string | undefined;
+
+  if (editCellState === null && column.renderCell) {
+    children = column.renderCell(cellParams);
   }
 
-  if (editCellState != null && column.renderEditCell) {
+  if (editCellState !== null && column.renderEditCell) {
     const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
+    const formattedValue = column.valueFormatter
+      ? column.valueFormatter(editCellState.value as never, updatedRow, column, apiRef)
+      : cellParams.formattedValue;
+
     const params: GridRenderEditCellParams = {
-      ...cellParamsWithAPI,
+      ...cellParams,
       row: updatedRow,
+      formattedValue,
       ...editCellStateRest,
     };
 
@@ -412,11 +446,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   if (children === undefined) {
     const valueString = valueToRender?.toString();
-    children = (
-      <div className={classes.content} title={valueString} role="presentation">
-        {valueString}
-      </div>
-    );
+    children = valueString;
+    title = valueString;
   }
 
   if (React.isValidElement(children) && canManageOwnFocus) {
@@ -432,14 +463,15 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   return (
     <div
-      ref={handleRef}
-      className={clsx(className, classNames, classes.root)}
+      className={clsx(classes.root, classNames, className)}
       role="gridcell"
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
+      aria-rowspan={rowSpan}
       style={style}
+      title={title}
       tabIndex={tabIndex}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
@@ -451,6 +483,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       {...draggableEventHandlers}
       {...other}
       onFocus={handleFocus}
+      ref={handleRef}
     >
       {children}
     </div>
@@ -460,35 +493,21 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 GridCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
-  className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
   column: PropTypes.object.isRequired,
   disableDragEvents: PropTypes.bool,
-  editCellState: PropTypes.shape({
-    changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
-    isProcessingProps: PropTypes.bool,
-    isValidating: PropTypes.bool,
-    value: PropTypes.any,
-  }),
-  gridHasScrollX: PropTypes.bool.isRequired,
-  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isNotVisible: PropTypes.bool.isRequired,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onDragEnter: PropTypes.func,
-  onDragOver: PropTypes.func,
-  onKeyDown: PropTypes.func,
-  onMouseDown: PropTypes.func,
-  onMouseUp: PropTypes.func,
-  pinnedOffset: PropTypes.number.isRequired,
-  pinnedPosition: PropTypes.oneOf([0, 1, 2]).isRequired,
+  pinnedOffset: PropTypes.number,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
+  row: PropTypes.object.isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  sectionIndex: PropTypes.number.isRequired,
-  sectionLength: PropTypes.number.isRequired,
+  rowNode: PropTypes.object.isRequired,
+  showLeftBorder: PropTypes.bool.isRequired,
+  showRightBorder: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired,
 } as any;
 

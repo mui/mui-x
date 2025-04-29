@@ -1,5 +1,6 @@
+'use client';
 import * as React from 'react';
-import LRUCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
 import { GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
@@ -37,7 +38,10 @@ export interface UseDemoDataOptions {
 
 // Generate fake data from a seed.
 // It's about x20 faster than getRealData.
-async function extrapolateSeed(rowLength: number, data: GridDemoData): Promise<GridDemoData> {
+export async function extrapolateSeed(
+  rowLength: number,
+  data: GridDemoData,
+): Promise<GridDemoData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -70,13 +74,12 @@ async function extrapolateSeed(rowLength: number, data: GridDemoData): Promise<G
   });
 }
 
-const deepFreeze = <T>(object: T): T => {
+export const deepFreeze = <T>(object: T): T => {
   // Retrieve the property names defined on object
   const propNames = Object.getOwnPropertyNames(object);
 
   // Freeze properties before freezing self
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const name of propNames) {
     const value = object[name as keyof T];
 
@@ -96,9 +99,7 @@ export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenera
     options.dataSet === 'Commodity' ? getCommodityColumns(options.editable) : getEmployeeColumns();
 
   if (options.visibleFields) {
-    columns = columns.map((col) =>
-      options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
-    );
+    columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
   if (options.maxColumns) {
     columns = columns.slice(0, options.maxColumns);

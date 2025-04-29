@@ -26,6 +26,7 @@ async function run(argv) {
     .sync(globPattern, {
       cwd: workspaceRoot,
       ignore,
+      followSymbolicLinks: false,
     })
     .filter((relativeFile) => {
       return /\.test\.(js|ts|tsx)$/.test(relativeFile);
@@ -52,11 +53,12 @@ async function run(argv) {
     args.push(`--grep '${argv.testNamePattern}'`);
   }
 
-  const mochaProcess = childProcess.spawn('yarn', args, {
+  const mochaProcess = childProcess.spawn('pnpm', args, {
     env: {
       ...process.env,
       BABEL_ENV: 'test',
       NODE_ENV: argv.production ? 'production' : 'test',
+      TZ: 'UTC',
     },
     shell: true,
     stdio: ['inherit', 'inherit', 'inherit'],

@@ -1,18 +1,26 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { refType } from '@mui/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
+import {
+  getPickersTextFieldUtilityClass,
+  PickersTextFieldClasses,
+} from './pickersTextFieldClasses';
 import { PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from './PickersOutlinedInput';
 import { PickersFilledInput } from './PickersFilledInput';
 import { PickersInput } from './PickersInput';
+import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
+import { PickerTextFieldOwnerStateContext } from './usePickerTextFieldOwnerState';
+import { PickerTextFieldOwnerState } from '../models/fields';
 
 const VARIANT_COMPONENT = {
   standard: PickersInput,
@@ -23,25 +31,25 @@ const VARIANT_COMPONENT = {
 const PickersTextFieldRoot = styled(FormControl, {
   name: 'MuiPickersTextField',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>({});
+})<{ ownerState: PickerTextFieldOwnerState }>({});
 
-const useUtilityClasses = (ownerState: PickersTextFieldProps) => {
-  const { focused, disabled, classes, required } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<PickersTextFieldClasses> | undefined,
+  ownerState: PickerTextFieldOwnerState,
+) => {
+  const { isFieldFocused, isFieldDisabled, isFieldRequired } = ownerState;
 
   const slots = {
     root: [
       'root',
-      focused && !disabled && 'focused',
-      disabled && 'disabled',
-      required && 'required',
+      isFieldFocused && !isFieldDisabled && 'focused',
+      isFieldDisabled && 'disabled',
+      isFieldRequired && 'required',
     ],
   };
 
   return composeClasses(slots, getPickersTextFieldUtilityClass, classes);
 };
-
-type OwnerStateType = Partial<PickersTextFieldProps>;
 
 const PickersTextField = React.forwardRef(function PickersTextField(
   inProps: PickersTextFieldProps,
@@ -57,6 +65,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     onFocus,
     onBlur,
     className,
+    classes: classesProp,
     color = 'primary',
     disabled = false,
     error = false,
@@ -83,12 +92,15 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     onChange,
     fullWidth,
     id: idProp,
+    name,
     // Props used by FormHelperText
     helperText,
     FormHelperTextProps,
     // Props used by InputLabel
     label,
     InputLabelProps,
+    // @ts-ignore
+    'data-active-range-position': dataActiveRangePosition,
     ...other
   } = props;
 
@@ -99,73 +111,107 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
   const inputLabelId = label && id ? `${id}-label` : undefined;
 
-  const ownerState = {
-    ...props,
-    color,
-    disabled,
-    error,
-    focused,
-    required,
-    variant,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const fieldOwnerState = useFieldOwnerState({
+    disabled: props.disabled,
+    required: props.required,
+    readOnly: InputProps?.readOnly,
+  });
+  const ownerState = React.useMemo<PickerTextFieldOwnerState>(
+    () => ({
+      ...fieldOwnerState,
+      isFieldValueEmpty: areAllSectionsEmpty,
+      isFieldFocused: focused ?? false,
+      hasFieldError: error ?? false,
+      inputSize: props.size ?? 'medium',
+      inputColor: color ?? 'primary',
+      isInputInFullWidth: fullWidth ?? false,
+      hasStartAdornment: Boolean(startAdornment ?? InputProps?.startAdornment),
+      hasEndAdornment: Boolean(endAdornment ?? InputProps?.endAdornment),
+      inputHasLabel: !!label,
+    }),
+    [
+      fieldOwnerState,
+      areAllSectionsEmpty,
+      focused,
+      error,
+      props.size,
+      color,
+      fullWidth,
+      startAdornment,
+      endAdornment,
+      InputProps?.startAdornment,
+      InputProps?.endAdornment,
+      label,
+    ],
+  );
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   const PickersInputComponent = VARIANT_COMPONENT[variant];
 
   return (
-    <PickersTextFieldRoot
-      className={clsx(classes.root, className)}
-      ref={handleRootRef}
-      focused={focused}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      disabled={disabled}
-      variant={variant}
-      error={error}
-      color={color}
-      fullWidth={fullWidth}
-      required={required}
-      ownerState={ownerState}
-      {...other}
-    >
-      <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
-        {label}
-      </InputLabel>
-      <PickersInputComponent
-        elements={elements}
-        areAllSectionsEmpty={areAllSectionsEmpty}
-        onClick={onClick}
-        onKeyDown={onKeyDown}
-        onInput={onInput}
-        onPaste={onPaste}
-        endAdornment={endAdornment}
-        startAdornment={startAdornment}
-        tabIndex={tabIndex}
-        contentEditable={contentEditable}
-        value={value}
-        onChange={onChange}
-        id={id}
+    <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
+      <PickersTextFieldRoot
+        className={clsx(classes.root, className)}
+        ref={handleRootRef}
+        focused={focused}
+        disabled={disabled}
+        variant={variant}
+        error={error}
+        color={color}
         fullWidth={fullWidth}
-        inputProps={inputProps}
-        inputRef={inputRef}
-        sectionListRef={sectionListRef}
-        label={label}
-        {...InputProps}
-      />
-      {helperText && (
-        <FormHelperText id={helperTextId} {...FormHelperTextProps}>
-          {helperText}
-        </FormHelperText>
-      )}
-    </PickersTextFieldRoot>
+        required={required}
+        ownerState={ownerState}
+        {...other}
+      >
+        {label != null && label !== '' && (
+          <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
+            {label}
+          </InputLabel>
+        )}
+        <PickersInputComponent
+          elements={elements}
+          areAllSectionsEmpty={areAllSectionsEmpty}
+          onClick={onClick}
+          onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
+          onInput={onInput}
+          onPaste={onPaste}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          endAdornment={endAdornment}
+          startAdornment={startAdornment}
+          tabIndex={tabIndex}
+          contentEditable={contentEditable}
+          value={value}
+          onChange={onChange}
+          id={id}
+          fullWidth={fullWidth}
+          inputProps={inputProps}
+          inputRef={inputRef}
+          sectionListRef={sectionListRef}
+          label={label}
+          name={name}
+          role="group"
+          aria-labelledby={inputLabelId}
+          aria-describedby={helperTextId}
+          aria-live={helperTextId ? 'polite' : undefined}
+          data-active-range-position={dataActiveRangePosition}
+          {...InputProps}
+        />
+        {helperText && (
+          <FormHelperText id={helperTextId} {...FormHelperTextProps}>
+            {helperText}
+          </FormHelperText>
+        )}
+      </PickersTextFieldRoot>
+    </PickerTextFieldOwnerStateContext.Provider>
   );
 });
 
 PickersTextField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Is `true` if the current values equals the empty value.
@@ -229,18 +275,14 @@ PickersTextField.propTypes = {
    * component depending on the `variant` prop value.
    */
   InputProps: PropTypes.object,
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   label: PropTypes.node,
   /**
    * If `dense` or `normal`, will adjust vertical spacing of this and contained components.
    * @default 'none'
    */
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   onBlur: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,

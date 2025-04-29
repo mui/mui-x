@@ -1,19 +1,18 @@
-import { beBYCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
-  twoToFour: string;
-  other: string;
+  few: string;
+  many: string;
 };
 
 const getPluralForm = (count: number, options: PluralForm) => {
-  let pluralForm = options.other;
+  let pluralForm = options.many;
   const lastDigit = count % 10;
 
   if (lastDigit > 1 && lastDigit < 5 && (count < 10 || count > 20)) {
-    pluralForm = options.twoToFour;
+    pluralForm = options.few;
   } else if (lastDigit === 1 && count % 100 !== 11) {
     pluralForm = options.one;
   }
@@ -25,6 +24,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма радкоў',
   noResultsOverlayLabel: 'Дадзеныя не знойдзены.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Вышыня радка',
@@ -45,8 +47,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     getPluralForm(count, {
       one: 'актыўны фільтр',
-      twoToFour: 'актыўных фільтра',
-      other: 'актыўных фільтраў',
+      few: 'актыўных фільтра',
+      many: 'актыўных фільтраў',
     }),
 
   // Quick filter toolbar field
@@ -61,10 +63,18 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Друк',
   toolbarExportExcel: 'Спампаваць у фармаце Excel',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
   // columnsManagementSearchTitle: 'Search',
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
+  // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',
@@ -80,7 +90,9 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'змяшчае',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'роўны',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'пачынаецца з',
   filterOperatorEndsWith: 'скончваецца на',
   filterOperatorIs: 'роўны',
@@ -101,7 +113,9 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   // headerFilterOperatorStartsWith: 'Starts with',
   // headerFilterOperatorEndsWith: 'Ends with',
   // headerFilterOperatorIs: 'Is',
@@ -119,6 +133,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // 'headerFilterOperator>=': 'Greater than or equal to',
   // 'headerFilterOperator<': 'Less than',
   // 'headerFilterOperator<=': 'Less than or equal to',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: 'усякі',
@@ -127,6 +142,7 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Меню',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Паказаць слупкі',
   columnMenuManageColumns: 'Кіраваць слупкамі',
   columnMenuFilter: 'Фільтр',
@@ -134,13 +150,14 @@ const beBYGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Скасаваць сартыроўку',
   columnMenuSortAsc: 'Сартыраваць па нарастанню',
   columnMenuSortDesc: 'Сартыраваць па спаданню',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
     getPluralForm(count, {
       one: 'актыўны фільтр',
-      twoToFour: 'актыўных фільтра',
-      other: 'актыўных фільтраў',
+      few: 'актыўных фільтра',
+      many: 'актыўных фільтраў',
     }),
   columnHeaderFiltersLabel: 'Паказаць фільтры',
   columnHeaderSortIconLabel: 'Сартыраваць',
@@ -149,8 +166,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) =>
     getPluralForm(count, {
       one: 'абраны радок',
-      twoToFour: 'абраных радка',
-      other: 'абраных радкоў',
+      few: 'абраных радка',
+      many: 'абраных радкоў',
     }),
 
   // Total row amount footer text
@@ -194,6 +211,34 @@ const beBYGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Разгарнуць',
   collapseDetailPanel: 'Згарнуць',
 
+  // Pagination
+  paginationRowsPerPage: 'Радкоў на старонцы:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Перайсці на першую старонку';
+    }
+    if (type === 'last') {
+      return 'Перайсці на апошнюю старонку';
+    }
+    if (type === 'next') {
+      return 'Перайсці на наступную старонку';
+    }
+    // if (type === 'previous') {
+    return 'Перайсці на папярэднюю старонку';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Змяненне чарговасці радкоў',
 
@@ -204,6 +249,83 @@ const beBYGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'мінімум',
   aggregationFunctionLabelMax: 'максімум',
   aggregationFunctionLabelSize: 'памер',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
-export const beBY: Localization = getGridLocalization(beBYGrid, beBYCore);
+export const beBY: Localization = getGridLocalization(beBYGrid);

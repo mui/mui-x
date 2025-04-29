@@ -3,48 +3,50 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
-  hours: 'las horas',
-  minutes: 'los minutos',
-  seconds: 'los segundos',
-  meridiem: 'meridiano',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meridiano',
 };
 
-const esESPickers: Partial<PickersLocaleText<any>> = {
+const esESPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
-  previousMonth: 'Último mes',
-  nextMonth: 'Próximo mes',
+  previousMonth: 'Mes anterior',
+  nextMonth: 'Mes siguiente',
 
   // View navigation
   openPreviousView: 'Abrir la última vista',
   openNextView: 'Abrir la siguiente vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'la vista del año está abierta, cambie a la vista de calendario'
-      : 'la vista de calendario está abierta, cambie a la vista del año',
+      ? 'la vista anual está abierta, cambie a la vista de calendario'
+      : 'la vista de calendario está abierta, cambie a la vista anual',
 
   // DateRange labels
   start: 'Empezar',
   end: 'Terminar',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Fecha inicio',
+  startTime: 'Hora inicio',
+  endDate: 'Fecha final',
+  endTime: 'Hora final',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
   clearButtonLabel: 'Limpiar',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoy',
+  nextStepButtonLabel: 'Siguiente',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Seleccionar fecha',
   dateTimePickerToolbarTitle: 'Seleccionar fecha y hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Seleccione ${views[view]}. ${time === null ? 'No hay hora seleccionada' : `La hora seleccionada es ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Seleccione ${views[view]}. ${!formattedTime ? 'No hay hora seleccionada' : `La hora seleccionada es ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -58,15 +60,12 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Elige fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
-      : 'Elige fecha',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Elige hora, la hora elegida es ${utils.format(value, 'fullTime')}`
-      : 'Elige hora',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Elige fecha, la fecha elegida es ${formattedDate}` : 'Elige fecha',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Elige hora, la hora elegida es ${formattedTime}` : 'Elige hora',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Limpiar valor',
 
   // Table labels
@@ -82,6 +81,19 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Año',
+  month: 'Mes',
+  day: 'Dia',
+  weekDay: 'Dia de la semana',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meridiano',
+
+  // Common
+  empty: 'Vacío',
 };
 
 export const esES = getPickersLocalization(esESPickers);

@@ -9,14 +9,14 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'iltapäivä',
 };
 
-const fiFIPickers: Partial<PickersLocaleText<any>> = {
+const fiFIPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Edellinen kuukausi',
   nextMonth: 'Seuraava kuukausi',
 
   // View navigation
-  openPreviousView: 'Avaa edellinen kuukausi',
-  openNextView: 'Avaa seuraava kuukausi',
+  openPreviousView: 'Avaa edellinen näkymä',
+  openNextView: 'Avaa seuraava näkymä',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'
@@ -25,29 +25,31 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Alku',
   end: 'Loppu',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Alkamispäivämäärä',
+  startTime: 'Alkamisaika',
+  endDate: 'Päättymispäivämäärä',
+  endTime: 'Päättymisaika',
 
   // Action bar
   cancelButtonLabel: 'Peruuta',
   clearButtonLabel: 'Tyhjennä',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Tänään',
+  nextStepButtonLabel: 'Seuraava',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Valitse päivä',
   dateTimePickerToolbarTitle: 'Valitse päivä ja aika',
   timePickerToolbarTitle: 'Valitse aika',
   dateRangePickerToolbarTitle: 'Valitse aikaväli',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Valitse ${views[view]}. ${time === null ? 'Ei aikaa valittuna' : `Valittu aika on ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Valitse ${views[view]}. ${!formattedTime ? 'Ei aikaa valittuna' : `Valittu aika on ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} tuntia`,
   minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
-  secondsClockNumberText: (seconds) => `${seconds} sekunttia`,
+  secondsClockNumberText: (seconds) => `${seconds} sekuntia`,
 
   // Digital clock labels
   selectViewText: (view) => `Valitse ${views[view]}`,
@@ -58,16 +60,13 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Viikko ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Valitse päivä, valittu päivä on ${utils.format(value, 'fullDate')}`
-      : 'Valitse päivä',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Valitse aika, valittu aika on ${utils.format(value, 'fullTime')}`
-      : 'Valitse aika',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Valitse päivä, valittu päivä on ${formattedDate}` : 'Valitse päivä',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Valitse aika, valittu aika on ${formattedTime}` : 'Valitse aika',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Tyhjennä arvo',
 
   // Table labels
   timeTableLabel: 'valitse aika',
@@ -82,6 +81,19 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Vuosi',
+  month: 'Kuukausi',
+  day: 'Päivä',
+  weekDay: 'Viikonpäivä',
+  hours: 'Tunnit',
+  minutes: 'Minuutit',
+  seconds: 'Sekunnit',
+  meridiem: 'Iltapäivä',
+
+  // Common
+  empty: 'Tyhjä',
 };
 
 export const fiFI = getPickersLocalization(fiFIPickers);

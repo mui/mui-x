@@ -1,14 +1,9 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  screen,
-  userEvent,
-  within,
-  act,
-  fireEvent,
-} from '@mui-internal/test-utils';
+import { RefObject } from '@mui/x-internals/types';
+import { createRenderer, screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
@@ -21,8 +16,7 @@ import {
   useGridApiRef,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
@@ -50,9 +44,9 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Aggregation', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
@@ -177,7 +171,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         setProps({ columns: [{ ...column, editable: true }] });
         fireEvent.doubleClick(cell);
         expect(cell.querySelector('input')).not.to.equal(null);
-        userEvent.mousePress(getCell(1, 0));
+        fireUserEvent.mousePress(getCell(1, 0));
 
         setProps({ columns: [column] });
         fireEvent.doubleClick(cell);
@@ -208,6 +202,65 @@ describe('<DataGridPremium /> - Aggregation', () => {
         '5',
         '5' /* Agg root */,
       ]);
+    });
+
+    it('should update aggregation values after filtering', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category2'] },
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '9', // Agg "Cat 1"
+        '6', // Agg "Cat 2"
+        '15', // Agg root
+      ]);
+
+      setProps({
+        filterModel: {
+          items: [{ field: 'category1', operator: 'contains', value: 'Cat B' }],
+        },
+      });
+
+      expect(getColumnValues(1)).to.deep.equal([
+        '5', // Agg "Cat 1"
+        '5', // Agg root
+      ]);
+    });
+
+    it('should apply sorting on the aggregated values', async () => {
+      const { user } = render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal([
+        '10' /* Agg "Cat A" */,
+        '5' /* Agg "Cat B" */,
+        '15' /* Agg root */,
+      ]);
+
+      const header = getColumnHeaderCell(1);
+      await user.click(header);
+
+      expect(getColumnValues(1)).to.deep.equal(
+        ['5' /* Agg "Cat B" */, '10' /* Agg "Cat A" */, '15' /* Agg root */],
+        'sorted asc',
+      );
+
+      await user.click(header);
+
+      expect(getColumnValues(1)).to.deep.equal(
+        ['10' /* Agg "Cat A" */, '5' /* Agg "Cat B" */, '15' /* Agg root */],
+        'sorted desc',
+      );
     });
 
     describe('prop: getAggregationPosition', () => {
@@ -393,24 +446,23 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('Column menu', () => {
-    it('should render select on aggregable column', () => {
+    it('should render select on aggregable column', async () => {
       render(<Test />);
 
-      act(() => apiRef.current.showColumnMenu('id'));
-      clock.runToLast();
+      await act(async () => apiRef.current?.showColumnMenu('id'));
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
     });
 
-    it('should update the aggregation when changing "Aggregation" select value', () => {
-      render(<Test />);
+    it('should update the aggregation when changing "Aggregation" select value', async () => {
+      const { user } = render(<Test />);
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      act(() => apiRef.current.showColumnMenu('id'));
-      clock.runToLast();
-      userEvent.mousePress(screen.getByLabelText('Aggregation'));
-      userEvent.mousePress(
+      await act(async () => apiRef.current?.showColumnMenu('id'));
+
+      await user.click(screen.getByLabelText('Aggregation'));
+      await user.click(
         within(
           screen.getByRole('listbox', {
             name: 'Aggregation',
@@ -560,8 +612,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      act(() => apiRef.current.showColumnMenu('id'));
-      clock.runToLast();
+      act(() => apiRef.current?.showColumnMenu('id'));
 
       expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
     });
@@ -600,7 +651,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
       act(() =>
-        apiRef.current.updateColumns([
+        apiRef.current?.updateColumns([
           { field: 'id', availableAggregationFunctions: ['min', 'max'] },
         ]),
       );
@@ -641,7 +692,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should use the aggregation function valueFormatter if defined', () => {
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
-        valueFormatter: (params) => `+ ${params.value}`,
+        valueFormatter: (value) => `+ ${value}`,
       };
 
       render(
@@ -884,6 +935,25 @@ describe('<DataGridPremium /> - Aggregation', () => {
           }),
         ).to.equal(7);
       });
+    });
+  });
+
+  describe('"no rows" overlay', () => {
+    it('should display "no rows" overlay and not show aggregation footer when there are no rows', () => {
+      render(
+        <Test
+          rows={[]}
+          initialState={{
+            aggregation: { model: { id: 'sum' } },
+          }}
+        />,
+      );
+
+      // Check for "no rows" overlay
+      expect(screen.queryByText('No rows')).not.to.equal(null);
+
+      // Ensure aggregation footer is not present
+      expect(getColumnValues(0)).to.deep.equal([]);
     });
   });
 });

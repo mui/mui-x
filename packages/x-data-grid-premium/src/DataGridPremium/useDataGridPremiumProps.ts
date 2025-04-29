@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
-import { DATA_GRID_PRO_PROPS_DEFAULT_VALUES, GRID_DEFAULT_LOCALE_TEXT } from '@mui/x-data-grid-pro';
-import { computeSlots, useProps } from '@mui/x-data-grid-pro/internals';
+import { useTheme } from '@mui/material/styles';
+import { getThemeProps } from '@mui/system';
+import {
+  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+  GRID_DEFAULT_LOCALE_TEXT,
+  DataGridProProps,
+  GridSignature,
+} from '@mui/x-data-grid-pro';
+import { computeSlots } from '@mui/x-data-grid-pro/internals';
 import {
   DataGridPremiumProps,
   DataGridPremiumProcessedProps,
@@ -10,6 +16,27 @@ import {
 import { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
+import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';
+
+interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
+
+type DataGridProForcedProps = {
+  [key in keyof DataGridProProps]?: DataGridPremiumProcessedProps[key];
+};
+type GetDataGridProForcedProps = (
+  themedProps: GetDataGridPremiumPropsDefaultValues,
+) => DataGridProForcedProps;
+
+const getDataGridPremiumForcedProps: GetDataGridProForcedProps = (themedProps) => ({
+  signature: GridSignature.DataGridPremium,
+  ...(themedProps.dataSource
+    ? {
+        filterMode: 'server',
+        sortingMode: 'server',
+        paginationMode: 'server',
+      }
+    : {}),
+});
 
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
@@ -30,17 +57,18 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
     const text = pastedText.replace(/\r?\n$/, '');
     return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
   },
+  disablePivoting: false,
+  getPivotDerivedColumns: defaultGetPivotDerivedColumns,
+  aiAssistant: false,
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
-  const themedProps = useProps(
-    // eslint-disable-next-line material-ui/mui-name-matches-component-name
-    useThemeProps({
-      props: inProps,
-      name: 'MuiDataGrid',
-    }),
+  const theme = useTheme();
+  const themedProps = React.useMemo(
+    () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
+    [theme, inProps],
   );
 
   const localeText = React.useMemo(
@@ -60,10 +88,11 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
+      ...(themedProps.dataSource ? { aggregationFunctions: {} } : {}),
       ...themedProps,
       localeText,
       slots,
-      signature: 'DataGridPremium',
+      ...getDataGridPremiumForcedProps(themedProps),
     }),
     [themedProps, localeText, slots],
   );

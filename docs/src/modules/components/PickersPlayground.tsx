@@ -38,6 +38,9 @@ import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRange
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { isDatePickerView, isTimeView } from '@mui/x-date-pickers/internals';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
+import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
+import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 
 const ComponentSection = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -47,9 +50,12 @@ const ComponentSection = styled('div')(({ theme }) => ({
   '& .MuiPickersLayout-root': {
     borderRadius: 8,
     border: '1px dashed',
-    borderColor: theme.palette.mode === 'light' ? theme.palette.grey[300] : theme.palette.divider,
-    ...(theme.palette.mode === 'dark' && {
+    borderColor: theme.palette.divider,
+    ...theme.applyStyles('dark', {
       backgroundColor: alpha(theme.palette.grey[900], 0.2),
+    }),
+    ...theme.applyStyles('light', {
+      borderColor: theme.palette.grey[300],
     }),
   },
 }));
@@ -57,7 +63,7 @@ const ComponentSection = styled('div')(({ theme }) => ({
 const PropControlsSection = styled('div')(({ theme }) => ({
   flexGrow: 1,
   background: alpha(theme.palette.grey[50], 0.5),
-  ...(theme.palette.mode === 'dark' && {
+  ...theme.applyStyles('dark', {
     backgroundColor: alpha(theme.palette.grey[900], 0.3),
   }),
 }));
@@ -98,8 +104,11 @@ function TriBooleanGroupControl({
             color="primary"
             fullWidth
           >
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value={''}>Undefined</ToggleButton>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value>True</ToggleButton>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value={false}>False</ToggleButton>
           </ToggleButtonGroup>
         }
@@ -154,13 +163,14 @@ const DEFAULT_VIEWS_MAP: ViewsMap = {
   seconds: false,
 };
 
-type ComponentFamily = 'date' | 'time' | 'date-time' | 'date-range';
+type ComponentFamily = 'date' | 'time' | 'date-time' | 'date-range' | 'date-time-range';
 
 const componentFamilies: { family: ComponentFamily; label: string }[] = [
   { family: 'date', label: 'Date' },
   { family: 'time', label: 'Time' },
   { family: 'date-time', label: 'Date Time' },
   { family: 'date-range', label: 'Date Range' },
+  { family: 'date-time-range', label: 'Date Time Range' },
 ];
 
 interface ComponentFamilySet {
@@ -210,7 +220,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-function DisabledCheckboxTooltip({ children }: { children: React.ReactElement }) {
+function DisabledCheckboxTooltip({ children }: { children: React.ReactElement<any> }) {
   return (
     <Tooltip title="At least one view has to be provided to the components">{children}</Tooltip>
   );
@@ -263,6 +273,7 @@ function ViewSwitcher({
 
   return (
     <FormControl component="fieldset" variant="standard">
+      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <FormLabel id="views-label" component="legend">
         Available views
       </FormLabel>
@@ -363,7 +374,7 @@ export default function PickersPlayground() {
   const dateViews = React.useMemo(() => availableViews.filter(isDatePickerView), [availableViews]);
   const timeViews = React.useMemo(() => availableViews.filter(isTimeView), [availableViews]);
 
-  const commonProps = React.useMemo<StaticDateTimePickerProps<Dayjs>>(
+  const commonProps = React.useMemo<StaticDateTimePickerProps>(
     () => ({
       orientation: isLandscape ? 'landscape' : 'portrait',
       showDaysOutsideCurrentMonth,
@@ -392,6 +403,7 @@ export default function PickersPlayground() {
       ampm: ampm !== undefined ? ampm : undefined,
       ampmInClock: ampmInClock !== undefined ? ampmInClock : undefined,
       displayStaticWrapperAs: isStaticDesktopMode ? 'desktop' : 'mobile',
+      sx: { [`&.${pickersLayoutClasses.root}`]: { overflowX: 'auto' } },
     }),
     [
       ampm,
@@ -508,6 +520,22 @@ export default function PickersPlayground() {
     [commonProps],
   );
 
+  const DATE_TIME_RANGE_PICKERS: ComponentFamilySet[] = React.useMemo(
+    () => [
+      {
+        name: 'DesktopDateTimeRangePicker',
+        component: DesktopDateTimeRangePicker,
+        props: commonProps,
+      },
+      {
+        name: 'MobileDateTimeRangePicker',
+        component: MobileDateTimeRangePicker,
+        props: commonProps,
+      },
+    ],
+    [commonProps],
+  );
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box
@@ -520,6 +548,7 @@ export default function PickersPlayground() {
       >
         <ComponentSection sx={{ width: { xs: '100%', md: '60%' }, padding: { xs: 2, md: 4 } }}>
           <FormControl fullWidth>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
               labelId="selected-component-family-label"
@@ -592,6 +621,30 @@ export default function PickersPlayground() {
               ))}
             </DemoContainer>
           )}
+          {selectedPickers === 'date-time-range' && (
+            <DemoContainer
+              components={['DesktopDateTimeRangePicker', 'MobileDateTimeRangePicker']}
+              sx={{ flexGrow: 1 }}
+            >
+              {DATE_TIME_RANGE_PICKERS.map(({ name, component: Component, props }) => (
+                <Component
+                  key={name}
+                  label={name}
+                  calendars={singleCalendar ? 1 : undefined}
+                  views={['day', ...timeViews]}
+                  {...props}
+                  slotProps={{
+                    ...props.slotProps,
+                    ...(displayShortcuts && {
+                      shortcuts: {
+                        items: shortcutsItems,
+                      },
+                    }),
+                  }}
+                />
+              ))}
+            </DemoContainer>
+          )}
         </ComponentSection>
         <Divider orientation="vertical" light sx={{ display: { xs: 'none', md: 'flex' } }} />
         <Divider light sx={{ display: { xs: 'auto', md: 'none' } }} />
@@ -609,6 +662,7 @@ export default function PickersPlayground() {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             Playground
           </Typography>
@@ -622,23 +676,31 @@ export default function PickersPlayground() {
             {selectedPickers !== 'date-range' && (
               <ViewSwitcher
                 showDateViews={selectedPickers === 'date' || selectedPickers === 'date-time'}
-                showTimeViews={selectedPickers === 'time' || selectedPickers === 'date-time'}
+                showTimeViews={
+                  selectedPickers === 'time' ||
+                  selectedPickers === 'date-time' ||
+                  selectedPickers === 'date-time-range'
+                }
                 views={views}
                 handleViewsChange={handleViewsChange}
               />
             )}
-            <BooleanGroupControl
-              label="Static desktop mode"
-              value={isStaticDesktopMode}
-              onChange={setIsStaticDesktopMode}
-            />
-            {selectedPickers === 'date-time' && (
-              <TriBooleanGroupControl
-                label="Tabs hidden"
-                value={isTabsHidden}
-                onChange={setIsTabsHidden}
+            {selectedPickers !== 'date-time-range' && (
+              <BooleanGroupControl
+                label="Static desktop mode"
+                value={isStaticDesktopMode}
+                onChange={setIsStaticDesktopMode}
               />
             )}
+
+            {selectedPickers === 'date-time' ||
+              (selectedPickers === 'date-time-range' && (
+                <TriBooleanGroupControl
+                  label="Tabs hidden"
+                  value={isTabsHidden}
+                  onChange={setIsTabsHidden}
+                />
+              ))}
             <BooleanGroupControl
               label="Show days outside current month"
               value={showDaysOutsideCurrentMonth}
@@ -654,7 +716,7 @@ export default function PickersPlayground() {
               value={displayWeekNumber}
               onChange={setDisplayWeekNumber}
             />
-            {selectedPickers !== 'date-range' && (
+            {selectedPickers !== 'date-range' && selectedPickers !== 'date-time-range' && (
               <BooleanGroupControl
                 label="Disable day margin"
                 value={disableDayMargin}

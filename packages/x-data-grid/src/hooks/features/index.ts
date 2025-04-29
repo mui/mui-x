@@ -2,9 +2,12 @@
 export * from './columnMenu';
 export * from './columns';
 export * from './columnGrouping';
+export * from './columnResize';
 export * from './density';
+export * from './editing';
 export * from './filter';
 export * from './focus';
+export * from './listView';
 export * from './pagination';
 export * from './preferencesPanel';
 export * from './rows';
@@ -14,3 +17,4 @@ export * from './dimensions';
 export * from './statePersistence';
 export * from './headerFiltering';
 export * from './virtualization';
+export * from './dataSource';

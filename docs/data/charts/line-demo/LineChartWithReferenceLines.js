@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
-import { ChartsReferenceLine } from '@mui/x-charts';
+import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
+const margin = { right: 24 };
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
 const xLabels = [
@@ -27,6 +28,8 @@ export default function LineChartWithReferenceLines() {
         { data: uData, label: 'uv', type: 'line' },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
+      yAxis={[{ width: 50 }]}
+      margin={margin}
     >
       <LinePlot />
       <MarkPlot />

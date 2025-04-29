@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Cells', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -52,7 +51,8 @@ describe('<DataGrid /> - Cells', () => {
     });
   });
 
-  describe('prop: showCellVerticalBorder', () => {
+  // Doesn't work with mocked window.getComputedStyle
+  describeSkipIf(isJSDOM)('prop: showCellVerticalBorder', () => {
     function expectRightBorder(element: HTMLElement) {
       const computedStyle = window.getComputedStyle(element);
       const color = computedStyle.getPropertyValue('border-right-color');
@@ -60,15 +60,10 @@ describe('<DataGrid /> - Cells', () => {
 
       expect(width).to.equal('1px');
       // should not be transparent
-      expect(color).to.not.equal('rgba(0, 0, 0, 0)');
+      expect(color).not.to.equal('rgba(0, 0, 0, 0)');
     }
 
-    it('should add right border to cells', function test() {
-      if (isJSDOM) {
-        // Doesn't work with mocked window.getComputedStyle
-        this.skip();
-      }
-
+    it('should add right border to cells', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
@@ -85,12 +80,7 @@ describe('<DataGrid /> - Cells', () => {
     });
 
     // See https://github.com/mui/mui-x/issues/4122
-    it('should add right border to cells in the last row', function test() {
-      if (isJSDOM) {
-        // Doesn't work with mocked window.getComputedStyle
-        this.skip();
-      }
-
+    it('should add right border to cells in the last row', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
@@ -169,7 +159,7 @@ describe('<DataGrid /> - Cells', () => {
     expect(valueFormatter.lastCall.args[2].field).to.equal('isActive');
   });
 
-  it('should throw when focusing cell without updating the state', () => {
+  it('should throw when focusing cell without updating the state', async () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
@@ -180,76 +170,76 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
 
-    userEvent.mousePress(getCell(0, 0));
-
     expect(() => {
       getCell(1, 0).focus();
     }).toWarnDev(['MUI X: The cell with id=1 and field=brand received focus.']);
   });
 
-  it('should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport', function test() {
-    if (isJSDOM) {
-      this.skip();
-    }
-    const rowHeight = 50;
-    const defaultData = getBasicGridData(20, 20);
+  testSkipIf(isJSDOM)(
+    'should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport',
+    async () => {
+      const rowHeight = 50;
+      const defaultData = getBasicGridData(20, 20);
 
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid columns={defaultData.columns} rows={defaultData.rows} rowHeight={rowHeight} />
-      </div>,
-    );
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={defaultData.columns} rows={defaultData.rows} rowHeight={rowHeight} />
+        </div>,
+      );
 
-    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
-    const cell = getCell(1, 3);
-    userEvent.mousePress(cell);
+      const cell = getCell(1, 3);
+      await user.click(cell);
 
-    const activeElementTextContent = document.activeElement?.textContent;
-    const columnWidth = document.activeElement!.clientWidth;
+      const activeElementTextContent = document.activeElement?.textContent;
+      const columnWidth = document.activeElement!.clientWidth;
 
-    const scrollTop = 10 * rowHeight;
-    fireEvent.scroll(virtualScroller, { target: { scrollTop } });
-    expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
+      const tenRows = 10 * rowHeight;
+      fireEvent.scroll(virtualScroller, { target: { scrollTop: tenRows } });
+      expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
 
-    const scrollLeft = 10 * columnWidth;
-    fireEvent.scroll(virtualScroller, { target: { scrollLeft } });
+      const tenColumns = 10 * columnWidth;
+      fireEvent.scroll(virtualScroller, { target: { scrollLeft: tenColumns } });
 
-    expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
-  });
+      expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
+    },
+  );
 
   // See https://github.com/mui/mui-x/issues/6378
-  it('should not cause scroll jump when focused cell mounts in the render zone', async function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should not cause scroll jump when focused cell mounts in the render zone',
+    async () => {
+      const rowHeight = 50;
+      const columns = [{ field: 'id' }];
+      const rows = [];
+      for (let i = 0; i < 20; i += 1) {
+        rows.push({ id: i });
+      }
 
-    const rowHeight = 50;
-    const columns = [{ field: 'id' }];
-    const rows = [];
-    for (let i = 0; i < 20; i += 1) {
-      rows.push({ id: i });
-    }
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
+        </div>,
+      );
 
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
-      </div>,
-    );
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
-    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      const thirdRowCell = getCell(2, 0);
+      await user.click(thirdRowCell);
 
-    const thirdRowCell = getCell(2, 0);
-    userEvent.mousePress(thirdRowCell);
+      const sixRows = 6 * rowHeight;
+      fireEvent.scroll(virtualScroller, { target: { scrollTop: sixRows } });
+      await waitFor(() => {
+        expect(virtualScroller.scrollTop).to.equal(300);
+      });
 
-    let scrollTop = 6 * rowHeight;
-    virtualScroller.scrollTop = scrollTop;
-    virtualScroller.dispatchEvent(new Event('scroll'));
-    expect(virtualScroller.scrollTop).to.equal(scrollTop);
-
-    scrollTop = 2 * rowHeight;
-    virtualScroller.scrollTop = scrollTop;
-    virtualScroller.dispatchEvent(new Event('scroll'));
-    expect(virtualScroller.scrollTop).to.equal(scrollTop);
-  });
+      const twoRows = 2 * rowHeight;
+      fireEvent.scroll(virtualScroller, { target: { scrollTop: twoRows } });
+      await waitFor(() => {
+        expect(virtualScroller.scrollTop).to.equal(twoRows);
+      });
+    },
+  );
 });

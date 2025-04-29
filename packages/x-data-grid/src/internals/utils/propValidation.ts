@@ -1,4 +1,7 @@
+import { warnOnce } from '@mui/x-internals/warning';
+import { isNumber } from '../../utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridSignature } from '../../constants/signature';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
 
@@ -13,24 +16,39 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
         'Please remove one of these two props.',
       ].join('\n')) ||
     undefined,
+  (props) =>
+    (props.paginationMode === 'client' &&
+      props.paginationMeta != null &&
+      [
+        'MUI X: Usage of the `paginationMeta` prop with client-side pagination (`paginationMode="client"`) has no effect.',
+        '`paginationMeta` is only meant to be used with `paginationMode="server"`.',
+      ].join('\n')) ||
+    undefined,
+  (props) =>
+    (props.signature === GridSignature.DataGrid &&
+      props.paginationMode === 'client' &&
+      isNumber(props.rowCount) &&
+      [
+        'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect.',
+        '`rowCount` is only meant to be used with `paginationMode="server"`.',
+      ].join('\n')) ||
+    undefined,
+  (props) =>
+    (props.paginationMode === 'server' &&
+      props.rowCount == null &&
+      !props.dataSource &&
+      [
+        "MUI X: The `rowCount` prop must be passed using `paginationMode='server'`",
+        'For more detail, see http://mui.com/components/data-grid/pagination/#index-based-pagination',
+      ].join('\n')) ||
+    undefined,
 ];
 
-const warnedOnceMap = new Set();
-const warnOnce = (message: string) => {
-  if (!warnedOnceMap.has(message)) {
-    console.error(message);
-    warnedOnceMap.add(message);
-  }
-};
-
-export const validateProps = <TProps>(props: TProps, validators: PropValidator<TProps>[]) => {
-  if (process.env.NODE_ENV === 'production') {
-    return;
-  }
+export function validateProps<TProps>(props: TProps, validators: PropValidator<TProps>[]) {
   validators.forEach((validator) => {
-    const warning = validator(props);
-    if (warning) {
-      warnOnce(warning);
+    const message = validator(props);
+    if (message) {
+      warnOnce(message, 'error');
     }
   });
-};
+}

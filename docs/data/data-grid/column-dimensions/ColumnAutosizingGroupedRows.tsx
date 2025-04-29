@@ -1,10 +1,16 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GridGroupingColDefOverride,
+  GridValidRowModel,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> = {
+  width: 250,
+};
 
 export default function ColumnAutosizingGroupedRows() {
   const data = useMovieData();
@@ -20,9 +26,9 @@ export default function ColumnAutosizingGroupedRows() {
   });
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('rowExpansionChange', (params) => {
+    return apiRef.current?.subscribeEvent('rowExpansionChange', (params) => {
       if (params.childrenExpanded) {
-        apiRef.current.autosizeColumns({ includeOutliers: true });
+        apiRef.current?.autosizeColumns({ includeOutliers: true });
       }
     });
   }, [apiRef]);
@@ -34,7 +40,7 @@ export default function ColumnAutosizingGroupedRows() {
         columns={columns}
         apiRef={apiRef}
         initialState={initialState}
-        groupingColDef={{ width: 250 }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

@@ -10,7 +10,7 @@ const theme = createTheme({});
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    (<ThemeProvider theme={theme}>
       <DataGrid
         disableMultipleRowSelection
         showCellVerticalBorder
@@ -37,7 +37,7 @@ function App() {
             okButtonLabel: "string_okText"
           }} />
       </LocalizationProvider>
-    </ThemeProvider>
+    </ThemeProvider>)
   );
 }
 

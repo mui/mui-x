@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within, userEvent } from '@mui-internal/test-utils';
+import { createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -7,7 +7,7 @@ import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/hel
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Column headers', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -51,8 +51,8 @@ describe('<DataGrid /> - Column headers', () => {
   });
 
   describe('Column menu', () => {
-    it('should allow to hide column', () => {
-      render(
+    it('should allow to hide column', async () => {
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -63,15 +63,14 @@ describe('<DataGrid /> - Column headers', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
-      clock.runToLast();
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+      await user.click(screen.getByRole('menuitem', { name: 'Hide column' }));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
-    it('should not allow to hide the only visible column', () => {
-      render(
+    it('should not allow to hide the only visible column', async () => {
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -87,15 +86,16 @@ describe('<DataGrid /> - Column headers', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-      fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
-      clock.runToLast();
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+      await user
+        .setup({ pointerEventsCheck: 0 })
+        .click(screen.getByRole('menuitem', { name: 'Hide column' }));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
     });
 
-    it('should not allow to hide the only visible column that has menu', () => {
-      render(
+    it('should not allow to hide the only visible column that has menu', async () => {
+      const { user } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -109,32 +109,46 @@ describe('<DataGrid /> - Column headers', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
-      clock.runToLast();
+      await user.click(within(getColumnHeaderCell(1)).getByLabelText('brand column menu'));
+      await user
+        .setup({ pointerEventsCheck: 0 })
+        .click(screen.getByRole('menuitem', { name: 'Hide column' }));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
 
     it('menu icon button should close column menu when already open', async () => {
-      render(
+      const { user } = render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
         </div>,
       );
 
-      userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      clock.runToLast();
-      expect(screen.queryByRole('menu')).to.not.equal(null);
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      expect(screen.queryByRole('menu')).not.to.equal(null);
 
-      userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      clock.runToLast();
-      expect(screen.queryByRole('menu')).to.equal(null);
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
     });
   });
 
-  it('should display sort column menu items as per sortingOrder prop', () => {
+  it("should use 'headerName' as the aria-label for the menu icon button", async () => {
     render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          {...baselineProps}
+          disableColumnSorting
+          columns={[{ headerName: 'brand header name', field: 'brand' }]}
+        />
+      </div>,
+    );
+    expect(await screen.findByLabelText('brand header name column menu')).not.to.equal(null);
+  });
+
+  it('should display sort column menu items as per sortingOrder prop', async () => {
+    const { user } = render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
           {...baselineProps}
@@ -144,9 +158,8 @@ describe('<DataGrid /> - Column headers', () => {
       </div>,
     );
     const columnCell = getColumnHeaderCell(0);
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-    fireEvent.click(menuIconButton);
-    clock.runToLast();
+    const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
+    await user.click(menuIconButton);
 
     expect(screen.queryByRole('menuitem', { name: /asc/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitem', { name: /desc/i })).not.to.equal(null);

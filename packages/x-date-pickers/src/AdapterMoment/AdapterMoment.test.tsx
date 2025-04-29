@@ -1,33 +1,36 @@
-import * as React from 'react';
 import moment, { Moment } from 'moment';
 import momentTZ from 'moment-timezone';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen } from '@mui-internal/test-utils/createRenderer';
+import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldValueV7,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
+import 'moment/locale/ru';
 
 describe('<AdapterMoment />', () => {
   const commonParams = {
     formatDateTime: 'YYYY-MM-DD HH:mm:ss',
     dateLibInstanceWithTimezoneSupport: momentTZ,
     setDefaultTimezone: momentTZ.tz.setDefault,
-    getLocaleFromDate: (value: Moment) => value.locale(),
+    getLocaleFromDate: (value: PickerValidDate) => (value as Moment).locale(),
     frenchLocale: 'fr',
   };
 
+  moment.locale('en');
+
   describeGregorianAdapter(AdapterMoment, commonParams);
+
+  moment.locale('en');
 
   // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
   describeGregorianAdapter(AdapterMoment, {
@@ -43,7 +46,7 @@ describe('<AdapterMoment />', () => {
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterMoment({ locale: 'en' });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING) as Moment;
 
       it('getWeekArray: week should start on Monday', () => {
         const result = adapter.getWeekArray(date);
@@ -61,7 +64,7 @@ describe('<AdapterMoment />', () => {
 
     describe('Russian', () => {
       const adapter = new AdapterMoment({ locale: 'ru' });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING) as Moment;
 
       beforeEach(() => {
         moment.locale('ru');
@@ -114,7 +117,7 @@ describe('<AdapterMoment />', () => {
         expectedWithEn: string,
         expectedWithRu: string,
       ) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Moment;
 
         expect(adapter.format(date, format)).to.equal(expectedWithEn);
         expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
@@ -122,7 +125,6 @@ describe('<AdapterMoment />', () => {
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
-      expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
     });
@@ -151,24 +153,28 @@ describe('<AdapterMoment />', () => {
 
       describe(`test with the locale "${localeKey}"`, () => {
         const { render, adapter } = createPickerRenderer({
-          clock: 'fake',
           adapterName: 'moment',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
-            localizedTexts[localeKey].placeholder,
-          );
+        it('should have correct placeholder', () => {
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const view = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

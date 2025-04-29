@@ -1,7 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -21,9 +22,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridColumnHeadersRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaders',
-  overridesResolver: (props, styles) => styles.columnHeaders,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
+  flexDirection: 'column',
   borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
   borderTopRightRadius: 'var(--unstable_DataGrid-radius)',
 });
@@ -32,7 +33,7 @@ interface GridBaseColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement
   sx?: SxProps<Theme>;
 }
 
-export const GridBaseColumnHeaders = React.forwardRef<HTMLDivElement, GridBaseColumnHeadersProps>(
+export const GridBaseColumnHeaders = forwardRef<HTMLDivElement, GridBaseColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const { className, ...other } = props;
     const rootProps = useGridRootProps();
@@ -41,11 +42,11 @@ export const GridBaseColumnHeaders = React.forwardRef<HTMLDivElement, GridBaseCo
 
     return (
       <GridColumnHeadersRoot
-        ref={ref}
-        className={clsx(className, classes.root)}
+        className={clsx(classes.root, className)}
         ownerState={rootProps}
         {...other}
         role="presentation"
+        ref={ref}
       />
     );
   },

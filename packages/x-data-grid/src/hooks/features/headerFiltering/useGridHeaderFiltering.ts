@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
@@ -15,17 +16,19 @@ import {
   GridHeaderFilteringPrivateApi,
 } from '../../../models/api/gridHeaderFilteringApi';
 
-export const headerFilteringStateInitializer: GridStateInitializer = (state) => ({
+export const headerFilteringStateInitializer: GridStateInitializer = (
+  state,
+  props: DataGridProcessedProps,
+) => ({
   ...state,
-  headerFiltering: { editing: null, menuOpen: null },
+  headerFiltering: { enabled: props.headerFilters ?? false, editing: null, menuOpen: null },
 });
 
 export const useGridHeaderFiltering = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'signature'>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'signature' | 'headerFilters'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');
-
   const setHeaderFilterState = React.useCallback(
     (headerFilterState: Partial<GridHeaderFilteringState>) => {
       apiRef.current.setState((state) => {
@@ -37,14 +40,14 @@ export const useGridHeaderFiltering = (
         return {
           ...state,
           headerFiltering: {
+            enabled: props.headerFilters ?? false,
             editing: headerFilterState.editing ?? null,
             menuOpen: headerFilterState.menuOpen ?? null,
           },
         };
       });
-      apiRef.current.forceUpdate();
     },
-    [apiRef, props.signature],
+    [apiRef, props.signature, props.headerFilters],
   );
 
   const startHeaderFilterEditMode = React.useCallback<
@@ -117,4 +120,16 @@ export const useGridHeaderFiltering = (
 
   useGridApiMethod(apiRef, headerFilterApi, 'public');
   useGridApiMethod(apiRef, headerFilterPrivateApi, 'private');
+
+  /*
+   * EFFECTS
+   */
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    } else {
+      apiRef.current.setHeaderFilterState({ enabled: props.headerFilters ?? false });
+    }
+  }, [apiRef, props.headerFilters]);
 };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer } from '@mui-internal/test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocalizationContext } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -46,7 +46,7 @@ describe('<LocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
     expect(localeText.start).to.equal('Debut');
     expect(localeText.end).to.equal('End');
   });
@@ -72,7 +72,7 @@ describe('<LocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
     expect(localeText.start).to.equal('Start');
   });
 
@@ -87,7 +87,7 @@ describe('<LocalizationProvider />', () => {
       </LocalizationProvider>,
     );
 
-    const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
     expect(localeText.start).to.equal('Début');
   });
 
@@ -102,7 +102,7 @@ describe('<LocalizationProvider />', () => {
       </LocalizationProvider>,
     );
 
-    const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
+    const localeText: PickersLocaleText = handleContextChange.lastCall.args[0].localeText;
     expect(localeText.start).to.equal('Empezar');
   });
 });

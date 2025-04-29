@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
+import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   DataGridProProps,
@@ -14,8 +15,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();
@@ -38,41 +38,35 @@ describe('<DataGridPro /> - Lazy loader', () => {
     columns: [{ field: 'id' }, { field: 'first' }],
   };
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
-          experimentalFeatures={{
-            lazyLoading: true,
-          }}
           apiRef={apiRef}
           {...baselineProps}
           {...props}
           sortingMode="server"
           filterMode="server"
           rowsLoadingMode="server"
+          paginationMode="server"
         />
       </div>
     );
   }
 
-  it('should not call onFetchRows if the viewport is fully loaded', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
     const handleFetchRows = spy();
     const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
     expect(handleFetchRows.callCount).to.equal(0);
   });
 
-  it('should call onFetchRows when sorting is applied', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)('should call onFetchRows when sorting is applied', () => {
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
@@ -82,16 +76,16 @@ describe('<DataGridPro /> - Lazy loader', () => {
     expect(handleFetchRows.callCount).to.equal(2);
   });
 
-  it('should render skeleton cell if rowCount is bigger than the number of rows', function test() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
+  // Needs layout
+  testSkipIf(isJSDOM)(
+    'should render skeleton cell if rowCount is bigger than the number of rows',
+    () => {
+      render(<TestLazyLoader rowCount={10} />);
 
-    render(<TestLazyLoader rowCount={10} />);
-
-    // The 4th row should be a skeleton one
-    expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
-  });
+      // The 4th row should be a skeleton one
+      expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+    },
+  );
 
   it('should update all rows accordingly when `apiRef.current.unstable_replaceRows` is called', () => {
     render(<TestLazyLoader rowCount={6} />);
@@ -101,15 +95,15 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { id: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const initialAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
       'auto-generated-skeleton-row-root-2',
     ]);
-    act(() => apiRef.current.unstable_replaceRows(4, newRows));
+    act(() => apiRef.current?.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const updatedAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
   });
 
@@ -122,10 +116,10 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { id: 5, first: 'Mac' },
     ];
 
-    act(() => apiRef.current.unstable_replaceRows(3, newRows));
+    act(() => apiRef.current?.unstable_replaceRows(3, newRows));
     expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John', 'Mac']);
 
-    act(() => apiRef.current.updateRows([{ id: 4, first: 'John updated' }]));
+    act(() => apiRef.current?.updateRows([{ id: 4, first: 'John updated' }]));
     expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John updated', 'Mac']);
   });
 
@@ -157,18 +151,40 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { clientId: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const initialAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
       'auto-generated-skeleton-row-root-2',
     ]);
-    act(() => apiRef.current.unstable_replaceRows(4, newRows));
+    act(() => apiRef.current?.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
+    const updatedAllRows = apiRef.current?.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children!;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
 
-    expect(apiRef.current.getRowNode(4)).to.not.equal(null);
-    expect(apiRef.current.getRowNode(5)).to.not.equal(null);
+    expect(apiRef.current?.getRowNode(4)).not.to.equal(null);
+    expect(apiRef.current?.getRowNode(5)).not.to.equal(null);
+  });
+
+  it('should update rows when `apiRef.current.updateRows` with data reversed', () => {
+    render(<TestLazyLoader rowCount={5} autoHeight={isJSDOM} />);
+
+    const newRows: GridRowModel[] = [
+      {
+        id: 3,
+        first: 'Jim',
+      },
+      {
+        id: 2,
+        first: 'Jack',
+      },
+      {
+        id: 1,
+        first: 'Mike',
+      },
+    ];
+
+    act(() => apiRef.current?.unstable_replaceRows(0, newRows));
+    expect(getColumnValues(1)).to.deep.equal(['Jim', 'Jack', 'Mike']);
   });
 });

@@ -7,8 +7,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
-import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { MarkdownElement } from '@mui/docs/MarkdownElement';
 import allSelectors from 'docsx/pages/x/api/data-grid/selectors.json';
 
 const SelectorDetails = styled(AccordionDetails)({
@@ -33,27 +33,11 @@ export const SelectorExample = styled(HighlightedCode)(({ theme }) => ({
 const SELECTOR_NAME_PATTERN = /^grid(.*)Selector/;
 
 function SelectorAccordion({ selector }) {
-  let signature = `${selector.name}: (state: GridState) => ${selector.returnType}`;
-  if (selector.supportsApiRef) {
-    signature = [
-      `${selector.name}: (apiRef: GridApiRef) => ${selector.returnType}`,
-      '// or',
-      `${selector.name}: (state: GridState, instanceId?: number) => ${selector.returnType}`,
-    ].join('\n');
-  }
-
+  const signature = `${selector.name}: (apiRef: GridApiRef) => ${selector.returnType}`;
   const match = selector.name.match(SELECTOR_NAME_PATTERN);
   const valueName =
     match == null ? 'value' : `${match[1][0].toLocaleLowerCase()}${match[1].slice(1)}`;
-
-  let example = `const ${valueName} = ${selector.name}(apiRef.current.state);`;
-  if (selector.supportsApiRef) {
-    example = [
-      `${selector.name}(apiRef)`,
-      '// or',
-      `${selector.name}(state, apiRef.current.instanceId)`,
-    ].join('\n');
-  }
+  const example = `const ${valueName} = ${selector.name}(apiRef);`;
 
   return (
     <Accordion>

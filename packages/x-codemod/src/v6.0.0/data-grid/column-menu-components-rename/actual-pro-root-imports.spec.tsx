@@ -8,6 +8,7 @@ import {
   GridFilterItemProps,
 } from '@mui/x-data-grid-pro';
 
+// prettier-ignore
 function App({ column, hideMenu }: GridFilterItemProps) {
   return (
     <React.Fragment>

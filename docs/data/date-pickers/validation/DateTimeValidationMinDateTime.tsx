@@ -16,7 +16,7 @@ export default function DateTimeValidationMinDateTime() {
         <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={todayAtNoon} minDateTime={todayAt3PM} />
         </DemoItem>
-        <DemoItem label="DateTimeRangePicker">
+        <DemoItem label="DateTimeRangePicker" component="DateTimeRangePicker">
           <DateTimeRangePicker
             defaultValue={[todayAtNoon, todayAt3PM]}
             minDateTime={todayAt3PM}

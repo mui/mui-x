@@ -49,6 +49,7 @@ const COLUMNS: GridColDef[] = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
+    valueFormatter: (value) => (typeof value === 'number' ? `${value}` : ''),
     availableAggregationFunctions: ['max', 'min'],
   },
   {
@@ -544,6 +545,9 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
 ];
+
+export const getMovieColumns = (): GridColDef[] => COLUMNS;
+export const getMovieRows = (): GridRowModel<Movie>[] => ROWS;
 
 export const useMovieData = () => {
   return {

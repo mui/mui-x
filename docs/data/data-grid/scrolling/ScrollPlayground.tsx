@@ -22,17 +22,17 @@ export default function ScrollPlayground() {
     colIndex: 0,
   });
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
   });
 
   React.useEffect(() => {
     const { rowIndex, colIndex } = coordinates;
-    apiRef.current.scrollToIndexes(coordinates);
+    apiRef.current?.scrollToIndexes(coordinates);
     const id = gridExpandedSortedRowIdsSelector(apiRef)[rowIndex];
     const column = gridVisibleColumnDefinitionsSelector(apiRef)[colIndex];
-    apiRef.current.setCellFocus(id, column.field);
+    apiRef.current?.setCellFocus(id, column.field);
   }, [apiRef, coordinates]);
 
   const handleClick = (position: string) => () => {
@@ -69,15 +69,15 @@ export default function ScrollPlayground() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ width: 300, margin: '0 auto 16px' }}>
         <Grid container justifyContent="center">
-          <Grid item>
+          <Grid>
             <Button onClick={handleClick('top')}>top</Button>
           </Grid>
         </Grid>
         <Grid container textAlign="center">
-          <Grid item xs={4}>
+          <Grid size={{ xs: 4 }}>
             <Button onClick={handleClick('left')}>left</Button>
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={{ xs: 4 }}>
             <IconButton
               color="primary"
               aria-label="home"
@@ -86,12 +86,12 @@ export default function ScrollPlayground() {
               <HomeIcon />
             </IconButton>
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={{ xs: 4 }}>
             <Button onClick={handleClick('right')}>right</Button>
           </Grid>
         </Grid>
         <Grid container justifyContent="center">
-          <Grid item>
+          <Grid>
             <Button onClick={handleClick('bottom')}>bottom</Button>
           </Grid>
         </Grid>
@@ -101,6 +101,7 @@ export default function ScrollPlayground() {
           apiRef={apiRef}
           onCellClick={handleCellClick}
           hideFooter
+          loading={loading}
           {...data}
         />
       </Box>

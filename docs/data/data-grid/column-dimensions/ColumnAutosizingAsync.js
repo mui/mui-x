@@ -2,8 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-import { useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   randomInt,
   randomRating,
@@ -15,7 +14,12 @@ const columns = [
   { field: 'id', headerName: 'Brand ID' },
   { field: 'brand', headerName: 'Brand name' },
   { field: 'rep', headerName: 'Representative' },
-  { field: 'rating', headerName: 'Rating', renderCell: renderRating },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    renderCell: renderRating,
+    display: 'flex',
+  },
 ];
 
 function renderRating(params) {
@@ -56,13 +60,16 @@ export default function ColumnAutosizingAsync() {
     setIsLoading(true);
     getFakeData(100)
       .then((data) => {
-        return ReactDOM.flushSync(() => {
+        ReactDOM.flushSync(() => {
           setIsLoading(false);
-          apiRef.current.updateRows(data.rows);
+          apiRef.current?.updateRows(data.rows);
         });
       })
+      // `sleep`/`setTimeout` is required because `.updateRows` is an
+      // async function throttled to avoid choking on frequent changes.
+      .then(() => sleep(0))
       .then(() =>
-        apiRef.current.autosizeColumns({
+        apiRef.current?.autosizeColumns({
           includeHeaders: true,
           includeOutliers: true,
         }),
@@ -98,4 +105,10 @@ export default function ColumnAutosizingAsync() {
       </div>
     </div>
   );
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }

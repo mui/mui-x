@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "RadarMetricLabels",
+  "imports": [
+    "import { RadarMetricLabels } from '@mui/x-charts/RadarChart';",
+    "import { RadarMetricLabels } from '@mui/x-charts';",
+    "import { RadarMetricLabels } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadarMetricLabels",
+  "filename": "/packages/x-charts/src/RadarChart/RadarMetricLabels/RadarMetricLabels.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🧪</a></li></ul>",
+  "cssComponent": false
+}

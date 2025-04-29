@@ -1,0 +1,8 @@
+{
+  "interfaceDescription": "Object passed as parameter in the <code>exportState()</code> grid API method.",
+  "propertiesDescriptions": {
+    "exportOnlyDirtyModels": {
+      "description": "By default, the grid exports all the models.<br />You can switch this property to <code>true</code> to only exports models that are either controlled, initialized or modified.<br />For instance, with this property, if you don&#39;t control or initialize the <code>filterModel</code> and you did not apply any filter, the model won&#39;t be exported.<br />Note that the column dimensions are not a model. The grid only exports the dimensions of the modified columns even when <code>exportOnlyDirtyModels</code> is false."
+    }
+  }
+}

@@ -1,21 +1,17 @@
 import * as React from 'react';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
-import { GridSignature } from '../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
 export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
-  apiRef: React.MutableRefObject<PrivateApi>,
-  props: Pick<DataGridProcessedProps, 'signature'>,
+  apiRef: RefObject<PrivateApi>,
 ) => {
   const controlStateMapRef = React.useRef<
-    Record<string, GridControlStateItem<PrivateApi['state'], any>>
+    Record<string, GridControlStateItem<PrivateApi['state'], any, any>>
   >({});
-  const [, rawForceUpdate] = React.useState<PrivateApi['state']>();
-
   const registerControlState = React.useCallback<
     GridStatePrivateApi<PrivateApi['state']>['registerControlState']
   >((controlStateItem) => {
@@ -35,18 +31,21 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         return false;
       }
 
+      const apiRefWithNewState = {
+        current: {
+          state: newState,
+        },
+      };
+
       let ignoreSetState = false;
 
       // Apply the control state constraints
       const updatedControlStateIds: { stateId: string; hasPropChanged: boolean }[] = [];
       Object.keys(controlStateMapRef.current).forEach((stateId) => {
         const controlState = controlStateMapRef.current[stateId];
-        const oldSubState = controlState.stateSelector(
-          apiRef.current.state,
-          apiRef.current.instanceId,
-        );
+        const oldSubState = controlState.stateSelector(apiRef);
+        const newSubState = controlState.stateSelector(apiRefWithNewState);
 
-        const newSubState = controlState.stateSelector(newState, apiRef.current.instanceId);
         if (newSubState === oldSubState) {
           return;
         }
@@ -78,25 +77,20 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
       if (!ignoreSetState) {
         // We always assign it as we mutate rows for perf reason.
         apiRef.current.state = newState;
-
-        if (apiRef.current.publishEvent) {
-          apiRef.current.publishEvent('stateChange', newState);
-        }
-
+        apiRef.current.publishEvent('stateChange', newState);
         apiRef.current.store.update(newState);
       }
 
       if (updatedControlStateIds.length === 1) {
         const { stateId, hasPropChanged } = updatedControlStateIds[0];
         const controlState = controlStateMapRef.current[stateId];
-        const model = controlState.stateSelector(newState, apiRef.current.instanceId);
+        const model = controlState.stateSelector(apiRefWithNewState);
 
         if (controlState.propOnChange && hasPropChanged) {
-          const details =
-            props.signature === GridSignature.DataGridPro
-              ? { api: apiRef.current, reason }
-              : { reason };
-          controlState.propOnChange(model, details);
+          controlState.propOnChange(model, {
+            reason,
+            api: apiRef.current,
+          });
         }
 
         if (!ignoreSetState) {
@@ -106,7 +100,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
 
       return !ignoreSetState;
     },
-    [apiRef, props.signature],
+    [apiRef],
   );
 
   const updateControlState = React.useCallback<
@@ -120,11 +114,8 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
     [apiRef],
   );
 
-  const forceUpdate = React.useCallback(() => rawForceUpdate(() => apiRef.current.state), [apiRef]);
-
   const publicStateApi: Omit<GridStateApi<PrivateApi['state']>, 'state'> = {
     setState,
-    forceUpdate,
   };
 
   const privateStateApi: GridStatePrivateApi<PrivateApi['state']> = {

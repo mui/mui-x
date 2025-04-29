@@ -1,15 +1,15 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { CSSInterpolation } from '@mui/system';
-import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
+import ButtonBase from '@mui/material/ButtonBase';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
-import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
@@ -18,107 +18,32 @@ import {
   getPickersDayUtilityClass,
   pickersDayClasses,
 } from './pickersDayClasses';
-import { PickerValidDate } from '../models';
+import { PickerDayOwnerState, PickersDayProps } from './PickersDay.types';
+import { usePickerDayOwnerState } from './usePickerDayOwnerState';
 
-export interface ExportedPickersDayProps {
-  /**
-   * If `true`, today's date is rendering without highlighting with circle.
-   * @default false
-   */
-  disableHighlightToday?: boolean;
-  /**
-   * If `true`, days outside the current month are rendered:
-   *
-   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
-   *
-   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
-   *
-   * - ignored if `calendars` equals more than `1` on range pickers.
-   * @default false
-   */
-  showDaysOutsideCurrentMonth?: boolean;
-}
-
-export interface PickersDayProps<TDate extends PickerValidDate>
-  extends ExportedPickersDayProps,
-    Omit<
-      ExtendMui<ButtonBaseProps>,
-      'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
-    > {
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<PickersDayClasses>;
-  /**
-   * The date to show.
-   */
-  day: TDate;
-  /**
-   * If `true`, renders as disabled.
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * If `true`, days are rendering without margin. Useful for displaying linked range of days.
-   * @default false
-   */
-  disableMargin?: boolean;
-  isAnimating?: boolean;
-  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
-  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) => void;
-  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: TDate) => void;
-  onDaySelect: (day: TDate) => void;
-  /**
-   * If `true`, day is outside of month and will be hidden.
-   */
-  outsideCurrentMonth: boolean;
-  /**
-   * If `true`, day is the first visible cell of the month.
-   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
-   */
-  isFirstVisibleCell: boolean;
-  /**
-   * If `true`, day is the last visible cell of the month.
-   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
-   */
-  isLastVisibleCell: boolean;
-  /**
-   * If `true`, renders as selected.
-   * @default false
-   */
-  selected?: boolean;
-  /**
-   * If `true`, renders as today date.
-   * @default false
-   */
-  today?: boolean;
-}
-
-type OwnerState = Partial<PickersDayProps<any>>;
-
-const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
+const useUtilityClasses = (
+  classes: Partial<PickersDayClasses> | undefined,
+  ownerState: PickerDayOwnerState,
+) => {
   const {
-    selected,
+    isDaySelected,
+    isDayDisabled,
+    isDayCurrent,
+    isDayOutsideMonth,
     disableMargin,
     disableHighlightToday,
-    today,
-    disabled,
-    outsideCurrentMonth,
     showDaysOutsideCurrentMonth,
-    classes,
   } = ownerState;
 
-  const isHiddenDaySpacingFiller = outsideCurrentMonth && !showDaysOutsideCurrentMonth;
+  const isHiddenDaySpacingFiller = isDayOutsideMonth && !showDaysOutsideCurrentMonth;
   const slots = {
     root: [
       'root',
-      selected && !isHiddenDaySpacingFiller && 'selected',
-      disabled && 'disabled',
+      isDaySelected && !isHiddenDaySpacingFiller && 'selected',
+      isDayDisabled && 'disabled',
       !disableMargin && 'dayWithMargin',
-      !disableHighlightToday && today && 'today',
-      outsideCurrentMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
+      !disableHighlightToday && isDayCurrent && 'today',
+      isDayOutsideMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
       isHiddenDaySpacingFiller && 'hiddenDaySpacingFiller',
     ],
     hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
@@ -127,7 +52,7 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
   return composeClasses(slots, getPickersDayUtilityClass, classes);
 };
 
-const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
+const styleArg = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
@@ -170,34 +95,43 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   [`&.${pickersDayClasses.disabled}&.${pickersDayClasses.selected}`]: {
     opacity: 0.6,
   },
-  ...(!ownerState.disableMargin && {
-    margin: `0 ${DAY_MARGIN}px`,
-  }),
-  ...(ownerState.outsideCurrentMonth &&
-    ownerState.showDaysOutsideCurrentMonth && {
-      color: (theme.vars || theme).palette.text.secondary,
-    }),
-  ...(!ownerState.disableHighlightToday &&
-    ownerState.today && {
-      [`&:not(.${pickersDayClasses.selected})`]: {
-        border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+  variants: [
+    {
+      props: { disableMargin: false },
+      style: {
+        margin: `0 ${DAY_MARGIN}px`,
       },
-    }),
+    },
+    {
+      props: { isDayOutsideMonth: true, showDaysOutsideCurrentMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
+    },
+    {
+      props: { disableHighlightToday: false, isDayCurrent: true },
+      style: {
+        [`&:not(.${pickersDayClasses.selected})`]: {
+          border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+        },
+      },
+    },
+  ],
 });
 
 const overridesResolver = (
-  props: { ownerState: OwnerState },
+  props: { ownerState: PickerDayOwnerState },
   styles: Record<PickersDayClassKey, CSSInterpolation>,
 ) => {
   const { ownerState } = props;
   return [
     styles.root,
     !ownerState.disableMargin && styles.dayWithMargin,
-    !ownerState.disableHighlightToday && ownerState.today && styles.today,
-    !ownerState.outsideCurrentMonth &&
+    !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
+    !ownerState.isDayOutsideMonth &&
       ownerState.showDaysOutsideCurrentMonth &&
       styles.dayOutsideMonth,
-    ownerState.outsideCurrentMonth &&
+    ownerState.isDayOutsideMonth &&
       !ownerState.showDaysOutsideCurrentMonth &&
       styles.hiddenDaySpacingFiller,
   ];
@@ -207,14 +141,14 @@ const PickersDayRoot = styled(ButtonBase, {
   name: 'MuiPickersDay',
   slot: 'Root',
   overridesResolver,
-})<{ ownerState: OwnerState }>(styleArg);
+})<{ ownerState: PickerDayOwnerState }>(styleArg);
 
 const PickersDayFiller = styled('div', {
   name: 'MuiPickersDay',
   slot: 'Root',
   overridesResolver,
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
-  ...styleArg({ theme, ownerState }),
+})<{ ownerState: PickerDayOwnerState }>(({ theme }) => ({
+  ...styleArg({ theme }),
   // visibility: 'hidden' does not work here as it hides the element from screen readers as well
   opacity: 0,
   pointerEvents: 'none',
@@ -222,15 +156,15 @@ const PickersDayFiller = styled('div', {
 
 const noop = () => {};
 
-type PickersDayComponent = (<TDate extends PickerValidDate>(
-  props: PickersDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
+type PickersDayComponent = ((
+  props: PickersDayProps & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerValidDate>(
-  inProps: PickersDayProps<TDate>,
+const PickersDayRaw = React.forwardRef(function PickersDay(
+  inProps: PickersDayProps,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
-  const props = useThemeProps<Theme, PickersDayProps<TDate>, 'MuiPickersDay'>({
+  const props = useThemeProps({
     props: inProps,
     name: 'MuiPickersDay',
   });
@@ -238,10 +172,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
   const {
     autoFocus = false,
     className,
-    day,
-    disabled = false,
-    disableHighlightToday = false,
-    disableMargin = false,
+    classes: classesProp,
     hidden,
     isAnimating,
     onClick,
@@ -251,30 +182,34 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
     onKeyDown = noop,
     onMouseDown = noop,
     onMouseEnter = noop,
-    outsideCurrentMonth,
-    selected = false,
-    showDaysOutsideCurrentMonth = false,
     children,
-    today: isToday = false,
     isFirstVisibleCell,
     isLastVisibleCell,
+    day,
+    selected,
+    disabled,
+    today,
+    outsideCurrentMonth,
+    disableMargin,
+    disableHighlightToday,
+    showDaysOutsideCurrentMonth,
     ...other
   } = props;
 
-  const ownerState = {
-    ...props,
-    autoFocus,
-    disabled,
-    disableHighlightToday,
-    disableMargin,
+  const ownerState = usePickerDayOwnerState({
+    day,
     selected,
+    disabled,
+    today,
+    outsideCurrentMonth,
+    disableMargin,
+    disableHighlightToday,
     showDaysOutsideCurrentMonth,
-    today: isToday,
-  };
+  });
 
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp, ownerState);
 
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
   const ref = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);
 
@@ -325,7 +260,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
       className={clsx(classes.root, className)}
       ref={handleRef}
       centerRipple
-      data-mui-test="day"
+      data-testid="day"
       disabled={disabled}
       tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}
@@ -345,7 +280,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
 PickersDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * A ref for imperative actions.

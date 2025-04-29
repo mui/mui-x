@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { RefObject } from '@mui/x-internals/types';
+import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, GridColDef } from '@mui/x-data-grid';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -22,7 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowReorderPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };
@@ -41,6 +42,10 @@ export const useGridRowReorderPreProcessors = (
       const haveReorderColumn = columnsState.lookup[reorderColumn.field] != null;
 
       if (shouldHaveReorderColumn && haveReorderColumn) {
+        columnsState.lookup[reorderColumn.field] = {
+          ...reorderColumn,
+          ...columnsState.lookup[reorderColumn.field],
+        };
         return columnsState;
       }
 

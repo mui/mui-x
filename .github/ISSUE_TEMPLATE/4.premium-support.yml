@@ -13,7 +13,7 @@ body:
     id: contact
     attributes:
       label: Order ID or Support key 💳
-      description: The order ID of the purchased Premium plan. Community users can [learn more about support](https://mui.com/getting-started/support/) in the documentation.
+      description: The order ID of the purchased Premium plan. Community users can [learn more about support](https://mui.com/x/introduction/support/) in the documentation.
       placeholder: 'e.g. 11111'
     validations:
       required: true
@@ -21,7 +21,7 @@ body:
     attributes:
       label: Search keywords
       description: |
-        Your issue may have already been reported! First search for duplicates among the [existing issues](https://github.com/mui/mui-x/issues).
+        Your issue may have already been reported! First search for duplicates among the [existing issues](https://github.com/mui/mui-x/issues?q=is%3Aissue).
         If your issue isn't a duplicate, great! Please list the keywords you used so people in the future can find this one more easily:
     validations:
       required: true
@@ -32,6 +32,16 @@ body:
       options:
         - label: I have tested the latest version
           required: true
+  - type: dropdown
+    attributes:
+      label: Affected products
+      description: Which products are affected by this issue? If you're not sure, leave this blank.
+      multiple: true
+      options:
+        - Data Grid
+        - Date and Time Pickers
+        - Charts
+        - Tree View
   - type: textarea
     attributes:
       label: The problem in depth

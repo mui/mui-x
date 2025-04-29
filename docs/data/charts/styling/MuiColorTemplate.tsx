@@ -9,8 +9,8 @@ import Button from '@mui/material/Button';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Chance } from 'chance';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { ScatterValueType } from '@mui/x-charts';
+import { ScatterChart, ScatterChartProps } from '@mui/x-charts/ScatterChart';
+import { ScatterValueType } from '@mui/x-charts/models';
 import {
   blueberryTwilightPalette,
   mangoFusionPalette,
@@ -39,22 +39,13 @@ function getGaussianSeriesData(
   });
 }
 
-const legendPlacement = {
+const legendPlacement: Partial<ScatterChartProps> = {
   slotProps: {
     legend: {
-      position: {
-        vertical: 'middle',
-        horizontal: 'right',
-      },
-      direction: 'column',
-      itemGap: 2,
+      direction: 'vertical',
     },
   },
-  margin: {
-    top: 20,
-    right: 100,
-  },
-} as const;
+};
 
 const series = [
   { label: 'Series 1', data: getGaussianSeriesData([-5, 0]) },
@@ -72,7 +63,8 @@ const series = [
   { label: 'Series 13', data: getGaussianSeriesData([7, 0]) },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v: ScatterValueType | null) =>
+    v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 const categories = {

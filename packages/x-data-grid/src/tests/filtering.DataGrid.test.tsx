@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui-internal/test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -8,17 +8,14 @@ import {
   GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
-  GridSlots,
-  GridToolbar,
   GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Filter', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -240,7 +237,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
-    it('should allow to update the filters when initialized with initialState', () => {
+    it('should allow to update the filters when initialized with initialState', async () => {
       render(
         <TestCase
           initialState={{
@@ -261,8 +258,10 @@ describe('<DataGrid /> - Filter', () => {
       fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Puma']);
+      });
     });
   });
 
@@ -349,6 +348,74 @@ describe('<DataGrid /> - Filter', () => {
       });
     });
 
+    it('should filter with operator "does not contain"', () => {
+      testEval(() => {
+        expect(getRows({ operator: 'doesNotContain', value: 'Fra' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+
+        // Trim value
+        expect(getRows({ operator: 'doesNotContain', value: ' Fra ' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+
+        // Case-insensitive
+        expect(getRows({ operator: 'doesNotContain', value: 'fra' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+
+        // Number casting
+        expect(getRows({ operator: 'doesNotContain', value: '0' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'France (fr)',
+          'Germany',
+          '1',
+        ]);
+        expect(getRows({ operator: 'doesNotContain', value: '1' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'France (fr)',
+          'Germany',
+          '0',
+        ]);
+
+        // Empty values
+        expect(getRows({ operator: 'doesNotContain', value: undefined })).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'doesNotContain', value: '' })).to.deep.equal(ALL_ROWS);
+
+        // Value with regexp special literal
+        expect(
+          getRows({ operator: 'doesNotContain', value: '[-[]{}()*+?.,\\^$|#s]' }),
+        ).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'doesNotContain', value: '(fr)' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+      });
+    });
+
     it('should filter with operator "equals"', () => {
       expect(getRows({ operator: 'equals', value: 'France (fr)' })).to.deep.equal(['France (fr)']);
 
@@ -367,6 +434,59 @@ describe('<DataGrid /> - Filter', () => {
       // Empty values
       expect(getRows({ operator: 'equals', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'equals', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "doesNotEqual"', () => {
+      expect(getRows({ operator: 'doesNotEqual', value: 'France (fr)' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'Germany',
+        '0',
+        '1',
+      ]);
+
+      // Trim value
+      expect(getRows({ operator: 'doesNotEqual', value: ' France (fr) ' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'Germany',
+        '0',
+        '1',
+      ]);
+
+      // Case-insensitive
+      expect(getRows({ operator: 'doesNotEqual', value: 'france (fr)' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'Germany',
+        '0',
+        '1',
+      ]);
+
+      // Number casting
+      expect(getRows({ operator: 'doesNotEqual', value: '0' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'France (fr)',
+        'Germany',
+        '1',
+      ]);
+      expect(getRows({ operator: 'doesNotEqual', value: '1' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'France (fr)',
+        'Germany',
+        '0',
+      ]);
+
+      // Empty values
+      expect(getRows({ operator: 'doesNotEqual', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'doesNotEqual', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "startsWith"', () => {
@@ -991,11 +1111,24 @@ describe('<DataGrid /> - Filter', () => {
     };
 
     const ALL_ROWS = ['undefined', 'null', 'true', 'false'];
+    const TRUTHY_ROWS = ['true'];
+    const FALSY_ROWS = ['undefined', 'null', 'false'];
 
     it('should filter with operator "is"', () => {
-      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(['true']);
+      expect(getRows({ operator: 'is', value: 'TRUE' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: 'True' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: true })).to.deep.equal(TRUTHY_ROWS);
+
+      expect(getRows({ operator: 'is', value: 'FALSE' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: 'False' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: 'false' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: false })).to.deep.equal(FALSY_ROWS);
+
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: null })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
     });
   });
 
@@ -1276,8 +1409,8 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('filter button tooltip', () => {
-    it('should display `falsy` value', () => {
-      const { setProps } = render(
+    it('should display `falsy` value', async () => {
+      const { setProps, user } = render(
         <DataGrid
           filterModel={{
             items: [{ id: 0, field: 'isAdmin', operator: 'is', value: false }],
@@ -1306,15 +1439,24 @@ describe('<DataGrid /> - Filter', () => {
               type: 'number',
             },
           ]}
-          slots={{ toolbar: GridToolbarFilterButton as GridSlots['toolbar'] }}
+          slots={{ toolbar: GridToolbarFilterButton }}
+          showToolbar
         />,
       );
 
       const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
       expect(screen.queryByRole('tooltip')).to.equal(null);
 
-      fireEvent.mouseOver(filterButton);
-      clock.tick(1000); // tooltip display delay
+      await user.hover(filterButton);
+
+      await waitFor(
+        () => {
+          expect(screen.queryByRole('tooltip')).not.to.equal(null);
+        },
+        {
+          timeout: 2000,
+        },
+      );
 
       const tooltip = screen.getByRole('tooltip');
 
@@ -1327,8 +1469,8 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('custom `filterOperators`', () => {
-    it('should allow to customize filter tooltip using `filterOperator.getValueAsString`', () => {
-      render(
+    it('should allow to customize filter tooltip using `filterOperator.getValueAsString`', async () => {
+      const { user } = render(
         <div style={{ width: '100%', height: '400px' }}>
           <DataGrid
             filterModel={{
@@ -1370,7 +1512,8 @@ describe('<DataGrid /> - Filter', () => {
                 ] as GridFilterOperator<any, string>[],
               },
             ]}
-            slots={{ toolbar: GridToolbarFilterButton as GridSlots['toolbar'] }}
+            slots={{ toolbar: GridToolbarFilterButton }}
+            showToolbar
           />
         </div>,
       );
@@ -1378,8 +1521,11 @@ describe('<DataGrid /> - Filter', () => {
       const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
       expect(screen.queryByRole('tooltip')).to.equal(null);
 
-      fireEvent.mouseOver(filterButton);
-      clock.tick(1000); // tooltip display delay
+      await user.hover(filterButton);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('tooltip')).not.to.equal(null);
+      });
 
       const tooltip = screen.getByRole('tooltip');
 
@@ -1410,9 +1556,7 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
           />
         </div>
       );

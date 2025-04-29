@@ -1,8 +1,16 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
-    "hidden": { "type": { "name": "bool" }, "default": "false" },
+    "direction": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, legendItem: SeriesLegendItemContext, index: number) => void",
+        "describedArgs": ["event", "legendItem", "index"]
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -13,21 +21,22 @@
   "name": "ChartsLegend",
   "imports": [
     "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
-    "import { ChartsLegend } from '@mui/x-charts';"
+    "import { ChartsLegend } from '@mui/x-charts';",
+    "import { ChartsLegend } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
-      "default": "DefaultChartsLegend",
+      "default": "ChartsLegend",
       "class": null
     }
   ],
   "classes": [
     {
-      "key": "column",
-      "className": "MuiChartsLegend-column",
-      "description": "Styles applied to the legend with column layout.",
+      "key": "horizontal",
+      "className": "MuiChartsLegend-horizontal",
+      "description": "Styles applied to the legend in row layout.",
       "isGlobal": false
     },
     {
@@ -49,19 +58,22 @@
       "isGlobal": false
     },
     {
-      "key": "row",
-      "className": "MuiChartsLegend-row",
-      "description": "Styles applied to the legend with row layout.",
-      "isGlobal": false
-    },
-    {
       "key": "series",
       "className": "MuiChartsLegend-series",
       "description": "Styles applied to a series element.",
       "isGlobal": false
+    },
+    {
+      "key": "vertical",
+      "className": "MuiChartsLegend-vertical",
+      "description": "Styles applied to the legend in column layout.",
+      "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiChartsLegend",
+  "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-charts/src/ChartsLegend/ChartsLegend.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",

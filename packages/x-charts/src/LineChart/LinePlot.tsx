@@ -1,18 +1,26 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { line as d3Line } from 'd3-shape';
-import { SeriesContext } from '../context/SeriesContextProvider';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import { styled } from '@mui/material/styles';
+import { warnOnce } from '@mui/x-internals/warning';
+import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import {
   LineElement,
+  lineElementClasses,
   LineElementProps,
   LineElementSlotProps,
   LineElementSlots,
 } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import getCurveFactory from '../internals/getCurve';
+import { getCurveFactory } from '../internals/getCurve';
+import { isBandScale } from '../internals/isBandScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
+import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
+import { useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -32,69 +40,129 @@ export interface LinePlotProps
   ) => void;
 }
 
+const LinePlotRoot = styled('g', {
+  name: 'MuiAreaPlot',
+  slot: 'Root',
+})({
+  [`& .${lineElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
+
 const useAggregatedData = () => {
-  const seriesData = React.useContext(SeriesContext).line;
-  const axisData = React.useContext(CartesianContext);
+  const seriesData = useLineSeriesContext();
 
-  if (seriesData === undefined) {
-    return [];
-  }
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+  const getGradientId = useChartGradientIdBuilder();
 
-  const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
-  const defaultXAxisId = xAxisIds[0];
-  const defaultYAxisId = yAxisIds[0];
+  // This memo prevents odd line chart behavior when hydrating.
+  const allData = React.useMemo(() => {
+    if (seriesData === undefined) {
+      return [];
+    }
 
-  return stackingGroups.flatMap(({ ids: groupIds }) => {
-    return groupIds.flatMap((seriesId) => {
-      const {
-        xAxisKey = defaultXAxisId,
-        yAxisKey = defaultYAxisId,
-        stackedData,
-        data,
-        connectNulls,
-      } = series[seriesId];
+    const { series, stackingGroups } = seriesData;
+    const defaultXAxisId = xAxisIds[0];
+    const defaultYAxisId = yAxisIds[0];
 
-      const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-      const yScale = yAxis[yAxisKey].scale;
-      const xData = xAxis[xAxisKey].data;
+    return stackingGroups.flatMap(({ ids: groupIds }) => {
+      return groupIds.flatMap((seriesId) => {
+        const {
+          xAxisId = defaultXAxisId,
+          yAxisId = defaultYAxisId,
+          stackedData,
+          data,
+          connectNulls,
+          curve,
+          strictStepCurve,
+        } = series[seriesId];
 
-      if (process.env.NODE_ENV !== 'production') {
-        if (xData === undefined) {
-          throw new Error(
-            `MUI X Charts: ${
-              xAxisKey === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisKey}"`
-            } should have data property to be able to display a line plot.`,
-          );
+        const xScale = xAxis[xAxisId].scale;
+        const xPosition = getValueToPositionMapper(xScale);
+        const yScale = yAxis[yAxisId].scale;
+        const xData = xAxis[xAxisId].data;
+
+        const gradientId: string | undefined =
+          (yAxis[yAxisId].colorScale && getGradientId(yAxisId)) ||
+          (xAxis[xAxisId].colorScale && getGradientId(xAxisId)) ||
+          undefined;
+
+        if (process.env.NODE_ENV !== 'production') {
+          if (xData === undefined) {
+            throw new Error(
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
+                  ? 'The first `xAxis`'
+                  : `The x-axis with id "${xAxisId}"`
+              } should have data property to be able to display a line plot.`,
+            );
+          }
+          if (xData.length < stackedData.length) {
+            warnOnce(
+              `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              'error',
+            );
+          }
         }
-        if (xData.length < stackedData.length) {
-          throw new Error(
-            `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
-          );
-        }
-      }
 
-      const linePath = d3Line<{
-        x: any;
-        y: [number, number];
-      }>()
-        .x((d) => xScale(d.x))
-        .defined((_, i) => connectNulls || data[i] != null)
-        .y((d) => yScale(d.y[1])!);
+        const shouldExpand = curve?.includes('step') && !strictStepCurve && isBandScale(xScale);
 
-      const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
-      const d3Data = connectNulls ? formattedData.filter((_, i) => data[i] != null) : formattedData;
+        const formattedData: {
+          x: any;
+          y: [number, number];
+          nullData: boolean;
+          isExtension?: boolean;
+        }[] =
+          xData?.flatMap((x, index) => {
+            const nullData = data[index] == null;
+            if (shouldExpand) {
+              const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+              if (!nullData && (index === 0 || data[index - 1] == null)) {
+                rep.unshift({
+                  x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
+                  y: stackedData[index],
+                  nullData,
+                  isExtension: true,
+                });
+              }
+              if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
+                rep.push({
+                  x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
+                  y: stackedData[index],
+                  nullData,
+                  isExtension: true,
+                });
+              }
+              return rep;
+            }
+            return { x, y: stackedData[index], nullData };
+          }) ?? [];
 
-      const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
-      return {
-        ...series[seriesId],
-        d,
-        seriesId,
-      };
+        const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
+
+        const linePath = d3Line<{
+          x: any;
+          y: [number, number];
+          nullData: boolean;
+          isExtension?: boolean;
+        }>()
+          .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
+          .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
+          .y((d) => yScale(d.y[1])!);
+
+        const d = linePath.curve(getCurveFactory(curve))(d3Data) || '';
+        return {
+          ...series[seriesId],
+          gradientId,
+          d,
+          seriesId,
+        };
+      });
     });
-  });
+  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis, getGradientId]);
+
+  return allData;
 };
 
 /**
@@ -108,20 +176,21 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
-
   return (
-    <g {...other}>
-      {completedData.map(({ d, seriesId, color, highlightScope }) => {
+    <LinePlotRoot {...other}>
+      {completedData.map(({ d, seriesId, color, gradientId }) => {
         return (
           <LineElement
             key={seriesId}
             id={seriesId}
             d={d}
             color={color}
-            highlightScope={highlightScope}
+            gradientId={gradientId}
             skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}
@@ -129,14 +198,14 @@ function LinePlot(props: LinePlotProps) {
           />
         );
       })}
-    </g>
+    </LinePlotRoot>
   );
 }
 
 LinePlot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Callback fired when a line item is clicked.

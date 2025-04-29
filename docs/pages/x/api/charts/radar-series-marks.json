@@ -1,0 +1,49 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "seriesId": { "type": { "name": "string" } }
+  },
+  "name": "RadarSeriesMarks",
+  "imports": [
+    "import { RadarSeriesMarks } from '@mui/x-charts/RadarChart';",
+    "import { RadarSeriesMarks } from '@mui/x-charts';",
+    "import { RadarSeriesMarks } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "area",
+      "className": "MuiRadarSeriesMarks-area",
+      "description": "Styles applied to the series area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "faded",
+      "className": "MuiRadarSeriesMarks-faded",
+      "description": "Styles applied to the series element if it is faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiRadarSeriesMarks-highlighted",
+      "description": "Styles applied to the series element if it is highlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiRadarSeriesMarks-mark",
+      "description": "Styles applied to the series mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiRadarSeriesMarks-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiRadarSeriesMarks",
+  "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesMarks.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🧪</a></li></ul>",
+  "cssComponent": false
+}

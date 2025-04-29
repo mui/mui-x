@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DrawingContext } from '../context/DrawingProvider';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export type ChartsClipPathProps = {
   id: string;
@@ -14,7 +15,7 @@ export type ChartsClipPathProps = {
  */
 function ChartsClipPath(props: ChartsClipPathProps) {
   const { id, offset: offsetProps } = props;
-  const { left, top, width, height } = React.useContext(DrawingContext);
+  const { left, top, width, height } = useDrawingArea();
 
   const offset = { top: 0, right: 0, bottom: 0, left: 0, ...offsetProps };
   return (
@@ -32,7 +33,7 @@ function ChartsClipPath(props: ChartsClipPathProps) {
 ChartsClipPath.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   id: PropTypes.string.isRequired,
   offset: PropTypes.shape({

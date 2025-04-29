@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
+import { vars } from '../../constants/cssVariables';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
@@ -17,43 +18,57 @@ const Pinned = styled('div')({
   position: 'sticky',
   height: '100%',
   boxSizing: 'border-box',
-  borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-  backgroundColor: 'var(--DataGrid-pinnedBackground)',
+  borderTop: '1px solid var(--rowBorderColor)',
+  backgroundColor: vars.cell.background.pinned,
 });
 const PinnedLeft = styled(Pinned)({
   left: 0,
-  borderRight: '1px solid var(--DataGrid-rowBorderColor)',
+  borderRight: '1px solid var(--rowBorderColor)',
 });
 const PinnedRight = styled(Pinned)({
   right: 0,
-  borderLeft: '1px solid var(--DataGrid-rowBorderColor)',
+  borderLeft: '1px solid var(--rowBorderColor)',
 });
 
 const Main = styled('div')({
   flexGrow: 1,
-  borderTop: '1px solid var(--DataGrid-rowBorderColor)',
+  borderTop: '1px solid var(--rowBorderColor)',
 });
 
-function GridVirtualScrollerFiller() {
+type Props = {
+  /** The number of rows */
+  rowsLength: number;
+};
+
+function GridVirtualScrollerFiller({ rowsLength }: Props) {
   const apiRef = useGridApiContext();
   const {
     viewportOuterSize,
     minimumSize,
     hasScrollX,
+    hasScrollY,
     scrollbarSize,
     leftPinnedWidth,
     rightPinnedWidth,
   } = useGridSelector(apiRef, gridDimensionsSelector);
 
-  const scrollbarHeight = hasScrollX ? scrollbarSize : 0;
-  const expandedHeight = viewportOuterSize.height - minimumSize.height - scrollbarHeight;
-  const height = Math.max(scrollbarHeight, expandedHeight);
-  if (height === 0) {
+  const height = hasScrollX ? scrollbarSize : 0;
+  const needsLastRowBorder = viewportOuterSize.height - minimumSize.height > 0;
+  if (height === 0 && !needsLastRowBorder) {
     return null;
   }
 
   return (
-    <Filler className={gridClasses.filler} role="presentation" style={{ height }}>
+    <Filler
+      className={gridClasses.filler}
+      role="presentation"
+      style={
+        {
+          height,
+          '--rowBorderColor': rowsLength === 0 ? 'transparent' : 'var(--DataGrid-rowBorderColor)',
+        } as React.CSSProperties
+      }
+    >
       {leftPinnedWidth > 0 && (
         <PinnedLeft
           className={gridClasses['filler--pinnedLeft']}
@@ -64,7 +79,7 @@ function GridVirtualScrollerFiller() {
       {rightPinnedWidth > 0 && (
         <PinnedRight
           className={gridClasses['filler--pinnedRight']}
-          style={{ width: rightPinnedWidth }}
+          style={{ width: rightPinnedWidth + (hasScrollY ? scrollbarSize : 0) }}
         />
       )}
     </Filler>

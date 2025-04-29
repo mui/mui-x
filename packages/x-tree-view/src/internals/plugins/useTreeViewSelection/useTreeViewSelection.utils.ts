@@ -1,75 +1,143 @@
-import { TreeViewInstance } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
+import { TreeViewUsedStore } from '../../models';
+import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
+import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
+import {
+  selectorItemOrderedChildrenIds,
+  selectorItemParentId,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
 
-/**
- * This is used to determine the start and end of a selection range so
- * we can get the nodes between the two border nodes.
- *
- * It finds the nodes' common ancestor using
- * a naive implementation of a lowest common ancestor algorithm
- * (https://en.wikipedia.org/wiki/Lowest_common_ancestor).
- * Then compares the ancestor's 2 children that are ancestors of nodeA and NodeB
- * so we can compare their indexes to work out which node comes first in a depth first search.
- * (https://en.wikipedia.org/wiki/Depth-first_search)
- *
- * Another way to put it is which node is shallower in a trémaux tree
- * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
- */
-export const findOrderInTremauxTree = (
-  instance: TreeViewInstance<[UseTreeViewNodesSignature]>,
-  nodeAId: string,
-  nodeBId: string,
-) => {
-  if (nodeAId === nodeBId) {
-    return [nodeAId, nodeBId];
+export const getLookupFromArray = (array: string[]) => {
+  const lookup: { [itemId: string]: true } = {};
+  array.forEach((itemId) => {
+    lookup[itemId] = true;
+  });
+  return lookup;
+};
+
+export const getAddedAndRemovedItems = ({
+  store,
+  oldModel,
+  newModel,
+}: {
+  store: TreeViewUsedStore<UseTreeViewSelectionSignature>;
+  oldModel: TreeViewItemId[];
+  newModel: TreeViewItemId[];
+}) => {
+  const newModelMap = new Map<TreeViewItemId, true>();
+  newModel.forEach((id) => {
+    newModelMap.set(id, true);
+  });
+
+  return {
+    added: newModel.filter((itemId) => !selectorIsItemSelected(store.value, itemId)),
+    removed: oldModel.filter((itemId) => !newModelMap.has(itemId)),
+  };
+};
+
+export const propagateSelection = ({
+  store,
+  selectionPropagation,
+  newModel,
+  oldModel,
+  additionalItemsToPropagate,
+}: {
+  store: TreeViewUsedStore<UseTreeViewSelectionSignature>;
+  selectionPropagation: TreeViewSelectionPropagation;
+  newModel: TreeViewItemId[];
+  oldModel: TreeViewItemId[];
+  additionalItemsToPropagate?: TreeViewItemId[];
+}): string[] => {
+  if (!selectionPropagation.descendants && !selectionPropagation.parents) {
+    return newModel;
   }
 
-  const nodeA = instance.getNode(nodeAId);
-  const nodeB = instance.getNode(nodeBId);
+  let shouldRegenerateModel = false;
+  const newModelLookup = getLookupFromArray(newModel);
 
-  if (nodeA.parentId === nodeB.id || nodeB.parentId === nodeA.id) {
-    return nodeB.parentId === nodeA.id ? [nodeA.id, nodeB.id] : [nodeB.id, nodeA.id];
-  }
+  const changes = getAddedAndRemovedItems({
+    store,
+    newModel,
+    oldModel,
+  });
 
-  const aFamily: (string | null)[] = [nodeA.id];
-  const bFamily: (string | null)[] = [nodeB.id];
+  additionalItemsToPropagate?.forEach((itemId) => {
+    if (newModelLookup[itemId]) {
+      if (!changes.added.includes(itemId)) {
+        changes.added.push(itemId);
+      }
+    } else if (!changes.removed.includes(itemId)) {
+      changes.removed.push(itemId);
+    }
+  });
 
-  let aAncestor = nodeA.parentId;
-  let bAncestor = nodeB.parentId;
+  changes.added.forEach((addedItemId) => {
+    if (selectionPropagation.descendants) {
+      const selectDescendants = (itemId: TreeViewItemId) => {
+        if (itemId !== addedItemId) {
+          shouldRegenerateModel = true;
+          newModelLookup[itemId] = true;
+        }
 
-  let aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
-  let bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
+        selectorItemOrderedChildrenIds(store.value, itemId).forEach(selectDescendants);
+      };
 
-  let continueA = true;
-  let continueB = true;
+      selectDescendants(addedItemId);
+    }
 
-  while (!bAncestorIsCommon && !aAncestorIsCommon) {
-    if (continueA) {
-      aFamily.push(aAncestor);
-      aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
-      continueA = aAncestor !== null;
-      if (!aAncestorIsCommon && continueA) {
-        aAncestor = instance.getNode(aAncestor!).parentId;
+    if (selectionPropagation.parents) {
+      const checkAllDescendantsSelected = (itemId: TreeViewItemId): boolean => {
+        if (!newModelLookup[itemId]) {
+          return false;
+        }
+
+        const children = selectorItemOrderedChildrenIds(store.value, itemId);
+        return children.every(checkAllDescendantsSelected);
+      };
+
+      const selectParents = (itemId: TreeViewItemId) => {
+        const parentId = selectorItemParentId(store.value, itemId);
+        if (parentId == null) {
+          return;
+        }
+
+        const siblings = selectorItemOrderedChildrenIds(store.value, parentId);
+        if (siblings.every(checkAllDescendantsSelected)) {
+          shouldRegenerateModel = true;
+          newModelLookup[parentId] = true;
+          selectParents(parentId);
+        }
+      };
+      selectParents(addedItemId);
+    }
+  });
+
+  changes.removed.forEach((removedItemId) => {
+    if (selectionPropagation.parents) {
+      let parentId = selectorItemParentId(store.value, removedItemId);
+      while (parentId != null) {
+        if (newModelLookup[parentId]) {
+          shouldRegenerateModel = true;
+          delete newModelLookup[parentId];
+        }
+
+        parentId = selectorItemParentId(store.value, parentId);
       }
     }
 
-    if (continueB && !aAncestorIsCommon) {
-      bFamily.push(bAncestor);
-      bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
-      continueB = bAncestor !== null;
-      if (!bAncestorIsCommon && continueB) {
-        bAncestor = instance.getNode(bAncestor!).parentId;
-      }
+    if (selectionPropagation.descendants) {
+      const deSelectDescendants = (itemId: TreeViewItemId) => {
+        if (itemId !== removedItemId) {
+          shouldRegenerateModel = true;
+          delete newModelLookup[itemId];
+        }
+
+        selectorItemOrderedChildrenIds(store.value, itemId).forEach(deSelectDescendants);
+      };
+
+      deSelectDescendants(removedItemId);
     }
-  }
+  });
 
-  const commonAncestor = aAncestorIsCommon ? aAncestor : bAncestor;
-  const ancestorFamily = instance.getChildrenIds(commonAncestor);
-
-  const aSide = aFamily[aFamily.indexOf(commonAncestor) - 1];
-  const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
-
-  return ancestorFamily.indexOf(aSide!) < ancestorFamily.indexOf(bSide!)
-    ? [nodeAId, nodeBId]
-    : [nodeBId, nodeAId];
+  return shouldRegenerateModel ? Object.keys(newModelLookup) : newModel;
 };

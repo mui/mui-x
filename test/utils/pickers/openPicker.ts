@@ -1,42 +1,53 @@
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { fireEvent, screen, MuiRenderResult } from '@mui/internal-test-utils';
+import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
+
+export type PickerComponentType = 'date' | 'date-time' | 'time';
+
+export type PickerRangeComponentType = 'date-range' | 'date-time-range' | 'time-range';
 
 export type OpenPickerParams =
   | {
-      type: 'date' | 'date-time' | 'time';
-      variant: 'mobile' | 'desktop';
+      type: PickerComponentType;
     }
   | {
-      type: 'date-range';
-      variant: 'mobile' | 'desktop';
+      type: PickerRangeComponentType;
       initialFocus: 'start' | 'end';
-      /**
-       * @default false
-       */
-      isSingleInput?: boolean;
+      fieldType: 'single-input' | 'multi-input';
     };
 
+/**
+ * @deprecated use `openPickerAsync` instead
+ */
 export const openPicker = (params: OpenPickerParams) => {
-  if (params.type === 'date-range') {
-    if (params.isSingleInput) {
-      const target = screen.getByRole<HTMLInputElement>('textbox');
-      userEvent.mousePress(target);
-      const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
-
-      return target.setSelectionRange(cursorPosition, cursorPosition);
-    }
-
-    const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
-
-    return userEvent.mousePress(target);
+  const isRangeType =
+    params.type === 'date-range' ||
+    params.type === 'date-time-range' ||
+    params.type === 'time-range';
+  if (isRangeType && params.fieldType === 'multi-input') {
+    const fieldSectionsContainer = getFieldSectionsContainer(params.initialFocus === 'end' ? 1 : 0);
+    fireEvent.click(fieldSectionsContainer);
+    return true;
   }
 
-  if (params.variant === 'mobile') {
-    return userEvent.mousePress(screen.getByRole('textbox'));
+  const target = screen.getByLabelText(/(choose date)|(choose time)|(choose range)/i);
+
+  fireEvent.click(target);
+  return true;
+};
+
+export const openPickerAsync = async (user: MuiRenderResult['user'], params: OpenPickerParams) => {
+  const isRangeType =
+    params.type === 'date-range' ||
+    params.type === 'date-time-range' ||
+    params.type === 'time-range';
+  if (isRangeType && params.fieldType === 'multi-input') {
+    const fieldSectionsContainer = getFieldSectionsContainer(params.initialFocus === 'end' ? 1 : 0);
+    await user.click(fieldSectionsContainer);
+    return true;
   }
 
-  const target =
-    params.type === 'time'
-      ? screen.getByLabelText(/choose time/i)
-      : screen.getByLabelText(/choose date/i);
-  return userEvent.mousePress(target);
+  const target = screen.getByLabelText(/(choose date)|(choose time)|(choose range)/i);
+
+  await user.click(target);
+  return true;
 };

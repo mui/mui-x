@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { MuiBaseEvent } from '@mui/x-internals/types';
 import type {
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
@@ -18,13 +19,13 @@ import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
-import type { MuiBaseEvent } from '../muiEvent';
 import type { GridGroupNode } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
-import { GridPaginationModel } from '../gridPaginationProps';
+import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
+import { GridDensity } from '../gridDensity';
 
 export interface GridRowEventLookup {
   /**
@@ -84,6 +85,13 @@ export interface GridColumnHeaderEventLookup {
    * Fired when a column header is clicked
    */
   columnHeaderClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when the user attempts to open a context menu in the column header.
+   */
+  columnHeaderContextMenu: {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
   };
@@ -358,6 +366,18 @@ export interface GridControlledStateEventLookup {
    * Fired when the column visibility model changes.
    */
   columnVisibilityModelChange: { params: GridColumnVisibilityModel };
+  /**
+   * Fired when the row count change.
+   */
+  rowCountChange: { params: number };
+  /**
+   * Fired when the density changes.
+   */
+  densityChange: { params: GridDensity };
+  /**
+   * Fired when the pagination meta change.
+   */
+  paginationMetaChange: { params: GridPaginationMeta };
 }
 
 export interface GridControlledStateReasonLookup {
@@ -369,6 +389,7 @@ export interface GridControlledStateReasonLookup {
     | 'restoreState'
     | 'removeAllFilterItems';
   pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
+  rows: 'addSkeletonRows';
 }
 
 export interface GridEventLookup
@@ -378,6 +399,10 @@ export interface GridEventLookup
     GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
+  /**
+   * Fired when rootElementRef.current becomes available.
+   */
+  rootMount: { params: HTMLElement };
   /**
    * Fired when the grid is unmounted.
    */
@@ -529,7 +554,12 @@ export interface GridEventLookup
    * Fired when the content size used by the `GridVirtualScroller` changes.
    * @ignore - do not document.
    */
-  virtualScrollerContentSizeChange: {};
+  virtualScrollerContentSizeChange: {
+    params: {
+      columnsTotalWidth: number;
+      contentHeight: number;
+    };
+  };
   /**
    * Fired when the content is scrolled by the mouse wheel.
    * It's attached to the "mousewheel" event.
@@ -542,6 +572,12 @@ export interface GridEventLookup
    * @ignore - do not document.
    */
   virtualScrollerTouchMove: { params: {}; event: React.TouchEvent };
+  /**
+   * Fired when the area of height `scrollEndThreshold` is entering the viewport from the bottom.
+   * Used to trigger infinite loading.
+   * @ignore - do not document.
+   */
+  rowsScrollEndIntersection: {};
 
   // Selection
   /**

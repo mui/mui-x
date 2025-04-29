@@ -1,0 +1,8 @@
+<RichTreeViewPro
+  items={MUI_X_PRODUCTS}
+  itemsReordering
+  defaultExpandedItems={['grid', 'pickers']}
+  canMoveItemToNewPosition={(params) =>
+    params.oldPosition.parentId === params.newPosition.parentId
+  }
+/>

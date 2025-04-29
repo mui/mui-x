@@ -4,38 +4,144 @@ productId: x-tree-view
 
 # Migration from v6 to v7
 
-<!-- #default-branch-switch -->
-
 <p class="description">This guide describes the changes needed to migrate the Tree View from v6 to v7.</p>
 
 ## Introduction
 
-TBD
+This is a reference guide for upgrading `@mui/x-tree-view` from v6 to v7.
+To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
-## Start using the alpha release
+## Start using the new release
 
-In `package.json`, change the version of the tree view package to `next`.
+In `package.json`, change the version of the Tree View package to `^7.0.0`.
 
 ```diff
--"@mui/x-tree-view": "6.x.x",
-+"@mui/x-tree-view": "next",
+-"@mui/x-tree-view": "^6.0.0",
++"@mui/x-tree-view": "^7.0.0",
 ```
 
 ## Update `@mui/material` package
 
-To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.0`.
+To have the option of using the latest API from `@mui/material`, the package peer dependency version has been updated to `^5.15.14`.
 It is a change in minor version only, so it should not cause any breaking changes.
 Please update your `@mui/material` package to this or a newer version.
+
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
+You can run `v7.0.0/tree-view/preset-safe` targeting only Tree View or `v7.0.0/preset-safe` to target other MUI X components like the Data Grid as well.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+```bash
+# Tree View specific
+npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path>
+
+# Target other MUI X components as well
+npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for the Tree View](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-tree-view-v700) for more details.
+:::
+
+Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
+
+If you have already applied the `v7.0.0/tree-view/preset-safe` (or `v7.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
+
+All other changes must be handled manually.
+
+:::warning
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies, etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+
+```tsx
+<RichTreeView {...newProps} />
+```
+
+After running the codemods, make sure to test your application and that you don't have any console errors.
+
+Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
 
 ## Breaking changes
 
 Since `v7` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 
-### ✅ Use `SimpleTreeView` instead of `TreeView`
+### Drop the legacy bundle
 
-The `TreeView` component has been deprecated and will be removed in the next major.
-You can start replacing it with the new `SimpleTreeView` component which has exactly the same API:
+The support for IE 11 has been removed from all MUI X packages.
+The `legacy` bundle that used to support old browsers like IE 11 is no longer included.
+
+:::info
+If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
+:::
+
+### Drop webpack 4 support
+
+Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
+
+These features are not supported by webpack 4, so if you are using webpack 4, you will need to transpile these features yourself or upgrade to webpack 5.
+
+Here is an example of how you can transpile these features on webpack 4 using the `@babel/preset-env` preset:
+
+```diff
+ // webpack.config.js
+
+ module.exports = (env) => ({
+   // ...
+   module: {
+     rules: [
+       {
+         test: /\.[jt]sx?$/,
+-        exclude: /node_modules/,
++        exclude: [
++          {
++            test: path.resolve(__dirname, 'node_modules'),
++            exclude: [path.resolve(__dirname, 'node_modules/@mui/x-tree-view')],
++          },
++        ],
+       },
+     ],
+   },
+ });
+```
+
+### ✅ Rename `nodeId` to `itemId`
+
+The required `nodeId` prop used by the Tree Item has been renamed to `itemId` for consistency:
+
+```diff
+ <TreeView>
+-  <TreeItem label="Item 1" nodeId="one">
++  <TreeItem label="Item 1" itemId="one">
+ </TreeView>
+```
+
+The same change has been applied to the `ContentComponent` prop:
+
+```diff
+ const CustomContent = React.forwardRef((props, ref) => {
+-  const id = props.nodeId;
++  const id = props.itemId;
+   // Render some UI
+ });
+
+ function App() {
+   return (
+     <SimpleTreeView>
+       <TreeItem ContentComponent={CustomContent} />
+     </SimpleTreeView>
+   )
+ }
+```
+
+### ✅ Use Simple Tree View instead of Tree View
+
+The `<TreeView />` component has been deprecated and will be removed in the next major.
+You can start replacing it with the new `<SimpleTreeView />` component which has exactly the same API:
 
 ```diff
 -import { TreeView } from '@mui/x-tree-view';
@@ -47,7 +153,7 @@ You can start replacing it with the new `SimpleTreeView` component which has exa
    return (
 -    <TreeView>
 +    <SimpleTreeView>
-       <TreeItem nodeId="1" label="First item" />
+       <TreeItem itemId="1" label="First item" />
 -    </TreeView>
 +    </SimpleTreeView>
    );
@@ -84,8 +190,8 @@ If you were using the `treeViewClasses` object, you can replace it with the new 
 
 #### Define `expandIcon`
 
-The icon used to expand the children of a node (rendered when this node is collapsed)
-is now defined as a slot both on the Tree View and the Tree Item components.
+The icon used to expand the children of an item (rendered when this item is collapsed)
+is now defined as a slot both on the `<TreeView />` and the `<TreeItem />` components.
 
 If you were using the `ChevronRight` icon from `@mui/icons-material`,
 you can stop passing it to your component because it is now the default value:
@@ -116,14 +222,14 @@ you need to use the new `expandIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing another icon to your Tree Item component,
+If you were passing another icon to your `<TreeItem />` component,
 you need to use the new `expandIcon` slot on this component:
 
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     expandIcon={<MyCustomExpandIcon />}
 +     slots={{ expandIcon: MyCustomExpandIcon }}
     />
@@ -132,8 +238,8 @@ you need to use the new `expandIcon` slot on this component:
 
 #### Define `collapseIcon`
 
-The icon used to collapse the children of a node (rendered when this node is expanded)
-is now defined as a slot both on the Tree View and the Tree Item components.
+The icon used to collapse the children of an item (rendered when this item is expanded)
+is now defined as a slot both on the `<TreeView />` and `<TreeItem />` components.
 
 If you were using the `ExpandMore` icon from `@mui/icons-material`,
 you can stop passing it to your component because it is now the default value:
@@ -164,14 +270,14 @@ you need to use the new `collapseIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing another icon to your Tree Item component,
+If you were passing another icon to your `<TreeItem />` component,
 you need to use the new `collapseIcon` slot on this component:
 
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     collapseIcon={<MyCustomCollapseIcon />}
 +     slots={{ collapseIcon: MyCustomCollapseIcon }}
     />
@@ -198,7 +304,7 @@ by passing the same icon to both the `collapseIcon` and the `expandIcon` slots o
 #### Define `endIcon`
 
 The icon rendered next to an item without children
-is now defined as a slot both on the Tree View and the Tree Item components.
+is now defined as a slot both on the `<TreeView />` and `<TreeItem />` components.
 
 If you were passing an icon to your Tree View component,
 you need to use the new `endIcon` slot on this component:
@@ -216,14 +322,14 @@ you need to use the new `endIcon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
-If you were passing an icon to your Tree Item component,
+If you were passing an icon to your `<TreeItem />` component,
 you need to use the new `endIcon` slot on this component:
 
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     endIcon={<MyCustomEndIcon />}
 +     slots={{ endIcon: MyCustomEndIcon }}
     />
@@ -233,16 +339,16 @@ you need to use the new `endIcon` slot on this component:
 #### Define `icon`
 
 The icon rendered next to an item
-is now defined as a slot on the Tree Item component.
+is now defined as a slot on the `<TreeItem />` component.
 
-If you were passing an icon to your Tree Item component,
+If you were passing an icon to your `<TreeItem />` component,
 you need to use the new `icon` slot on this component:
 
 ```diff
   <SimpleTreeView>
     <TreeItem
-      nodeId="1"
-      label="Node 1"
+      itemId="1"
+      label="Item 1"
 -     icon={<MyCustomIcon />}
 +     slots={{ icon: MyCustomIcon }}
     />
@@ -253,38 +359,72 @@ you need to use the new `icon` slot on this component:
 Note that the `slots` prop expects a React component, not the JSX element returned when rendering this component.
 :::
 
+### ✅ Use slots to define the group transition
+
+The component used to animate the item children
+is now defined as a slot on the `<TreeItem />` component.
+
+If you were passing a `TransitionComponent` or `TransitionProps` to your `<TreeItem />` component,
+you need to use the new `groupTransition` slot on this component:
+
+```diff
+ <SimpleTreeView>
+   <TreeItem
+     itemId="1"
+     label="Item 1"
+-    TransitionComponent={Fade}
+-    TransitionProps={{ timeout: 600 }}
++    slots={{ groupTransition: Fade }}
++    slotProps={{ groupTransition: { timeout: 600 } }}
+   />
+ </SimpleTreeView>
+```
+
+### Rename the `group` class of the Tree Item component
+
+The `group` class of the `<TreeItem />` component has been renamed to `groupTransition` to match with its new slot name.
+
+```diff
+ const StyledTreeItem = styled(TreeItem)({
+-  [`& .${treeItemClasses.group}`]: {
++  [`& .${treeItemClasses.groupTransition}`]: {
+    marginLeft: 20,
+  },
+ });
+```
+
 ### ✅ Rename `onNodeToggle`, `expanded` and `defaultExpanded`
 
 The expansion props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeToggle`    | `onExpandedNodesChange` |
-| `expanded`        | `expandedNodes`         |
-| `defaultExpanded` | `defaultExpandedNodes`  |
+| `onNodeToggle`    | `onExpandedItemsChange` |
+| `expanded`        | `expandedItems`         |
+| `defaultExpanded` | `defaultExpandedItems`  |
 
 ```diff
  <TreeView
 -  onNodeToggle={handleExpansionChange}
-+  onExpandedNodesChange={handleExpansionChange}
++  onExpandedItemsChange={handleExpansionChange}
 
--  expanded={expandedNodes}
-+  expandedNodes={expandedNodes}
+-  expanded={expandedItems}
++  expandedItems={expandedItems}
 
--  defaultExpanded={defaultExpandedNodes}
-+  defaultExpandedNodes={defaultExpandedNodes}
+-  defaultExpanded={defaultExpandedItems}
++  defaultExpandedItems={defaultExpandedItems}
  />
 ```
 
 :::info
-If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific node,
-you can use the new `onNodeExpansionToggle` prop which is called whenever a node is expanded or collapsed with its id and expansion status
+If you were using the `onNodeToggle` prop to react to the expansion or collapse of a specific item,
+you can use the new `onItemExpansionToggle` prop which is called whenever an item is expanded or collapsed with its id and expansion status
 
 ```tsx
-// It is also available on the deprecated `TreeView` component
+// It is also available on the deprecated Tree View component
 <SimpleTreeView
-  onNodeExpansionToggle={(event, nodeId, isExpanded) =>
-    console.log(nodeId, isExpanded)
+  onItemExpansionToggle={(event, itemId, isExpanded) =>
+    console.log(itemId, isExpanded)
   }
 />
 ```
@@ -297,50 +437,88 @@ The selection props have been renamed to better describe their behaviors:
 
 | Old name          | New name                |
 | :---------------- | :---------------------- |
-| `onNodeSelect`    | `onSelectedNodesChange` |
-| `selected`        | `selectedNodes`         |
-| `defaultSelected` | `defaultSelectedNodes`  |
+| `onNodeSelect`    | `onSelectedItemsChange` |
+| `selected`        | `selectedItems`         |
+| `defaultSelected` | `defaultSelectedItems`  |
 
 ```diff
  <TreeView
 -  onNodeSelect={handleSelectionChange}
-+  onSelectedNodesChange={handleSelectionChange}
++  onSelectedItemsChange={handleSelectionChange}
 
--  selected={selectedNodes}
-+  selectedNodes={selectedNodes}
+-  selected={selectedItems}
++  selectedItems={selectedItems}
 
--  defaultSelected={defaultSelectedNodes}
-+  defaultSelectedNodes={defaultSelectedNodes}
+-  defaultSelected={defaultSelectedItems}
++  defaultSelectedItems={defaultSelectedItems}
  />
 ```
 
 :::info
-If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific node,
-you can use the new `onNodeSelectionToggle` prop which is called whenever a node is selected or deselected with its id and selection status.
+If you were using the `onNodeSelect` prop to react to the selection or deselection of a specific item,
+you can use the new `onItemSelectionToggle` prop which is called whenever an item is selected or deselected with its id and selection status.
 
 ```tsx
-// It is also available on the deprecated `TreeView` component
+// It is also available on the deprecated `<TreeView />` component
 <SimpleTreeView
-  onNodeSelectionToggle={(event, nodeId, isSelected) =>
-    console.log(nodeId, isSelected)
+  onItemSelectionToggle={(event, itemId, isSelected) =>
+    console.log(itemId, isSelected)
   }
 />
 ```
 
 :::
 
+### Focus the Tree Item instead of the Tree View
+
+The focus is now applied to the Tree Item root element instead of the Tree View root element.
+
+This change will allow new features that require the focus to be on the Tree Item,
+like the drag and drop reordering of items.
+It also solves several issues with focus management,
+like the inability to scroll to the focused item when a lot of items are rendered.
+
+This will mostly impact how you write tests to interact with the Tree View:
+
+For example, if you were writing a test with `react-testing-library`, here is what the changes could look like:
+
+```diff
+ it('test example on first item', () => {
+   const { getByRole } = render(
+     <SimpleTreeView>
+       <TreeItem itemId="one" id="one">One</TreeItem>
+       <TreeItem itemId="two" id="two">Two</TreeItem>
+    </SimpleTreeView>
+   );
+
+   // Set the focus to the item "One"
+-  const tree = getByRole('tree');
++  const treeItem = getByRole('treeitem', { name: 'One' });
+   act(() => {
+-    tree.focus();
++    treeItem.focus();
+   });
+-  fireEvent.keyDown(tree, { key: 'ArrowDown' });
++  fireEvent.keyDown(treeItem, { key: 'ArrowDown' });
+
+  // Check if the new focused item is "Two"
+- expect(tree)to.have.attribute('aria-activedescendant', 'two');
++ expect(document.activeElement).to.have.attribute('id', 'two');
+ })
+```
+
 ### ✅ Use `useTreeItemState` instead of `useTreeItem`
 
 The `useTreeItem` hook has been renamed `useTreeItemState`.
-This will help create a new headless version of the `TreeItem` component based on a future `useTreeItem` hook.
+This will help create a new headless version of the Tree Item component based on a future `useTreeItem` hook.
 
 ```diff
 -import { TreeItem, useTreeItem } from '@mui/x-tree-view/TreeItem';
 +import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
  const CustomContent = React.forwardRef((props, ref) => {
--  const { disabled } = useTreeItem(props.nodeId);
-+  const { disabled } = useTreeItemState(props.nodeId);
+-  const { disabled } = useTreeItem(props.itemId);
++  const { disabled } = useTreeItemState(props.itemId);
 
    // Render some UI
  });
@@ -352,4 +530,15 @@ This will help create a new headless version of the `TreeItem` component based o
      </SimpleTreeView>
    )
  }
+```
+
+### ✅ Rename `onNodeFocus`
+
+The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
+
+```diff
+ <SimpleTreeView
+-  onNodeFocus={onNodeFocus}
++  onItemFocus={onItemFocus}
+ />
 ```

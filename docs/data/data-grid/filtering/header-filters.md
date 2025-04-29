@@ -24,6 +24,12 @@ You can disable the default filter panel using `disableColumnFilter` prop and on
 
 {{"demo": "SimpleHeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Inline clear button
+
+The clear button is within the header filter menu by default. To display the clear button in the header filter cell instead, set `slotProps.headerFilterCell.showClearIcon` to `true`.
+
+{{"demo": "HeaderFilteringInlineClearDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Customize header filters
 
 There are multiple ways to customize header filters.
@@ -49,7 +55,7 @@ The following demo uses the `renderHeaderFilter` method to customize the header 
 
 ### Customize using `filterOperators`
 
-If the filter operator has a [custom `InputComponent`](https://mui.com/x/react-data-grid/filtering/#custom-input-component), the same component is being used for the header filter.
+If the filter operator has a [custom `InputComponent`](/x/react-data-grid/filtering/customization/#custom-input-component), the same component is being used for the header filter.
 
 When rendered as a header filter, the `InputComponent` also receives the `headerFilterMenu` and `clearButton` props that contain the filter operator menu and clear button.
 
@@ -66,6 +72,15 @@ Additionally, `slots.headerFilterMenu` could also be used to customize the menu 
 ```
 
 {{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Custom header filter height
+
+By default, the height of the header filter row is the same as the header row (represented by `columnHeaderHeight` prop).
+You can customize the height of the header filter cell using the `headerFilterHeight` prop.
+
+```tsx
+<DataGridPro {...data} headerFilterHeight={52} />
+```
 
 ## Ignore diacritics (accents)
 

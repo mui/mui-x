@@ -6,12 +6,12 @@ components: SparkLineChart
 
 # Charts - Sparkline
 
-<p class="description">Sparkline charts can provide an overview of data trends.</p>
+<p class="description">Sparkline chart can provide an overview of data trends.</p>
 
 ## Basics
 
 A sparkline is a small chart drawn without axes or coordinates, that presents the general shape of a variation in a simplified way.
-The `<SparklineChart />` requires only the `data` props which is an array of numbers.
+The `<SparkLineChart />` requires only the `data` props which is an array of numbers.
 You can also switch from line to a bar plot with `plotType="bar"`.
 
 {{"demo": "BasicSparkLine.js"}}
@@ -35,6 +35,8 @@ If you need more advanced customization, you can provide custom props for `toolt
 
 ## Axis management
 
+### X-axis data
+
 By default, the sparkline assigns `xAxis` values as an ascending integer sequence starting from 0 (0, 1, 2,...). These values are, in this case, hidden in the tooltip.
 You can override this behavior if your data are not evenly distributed, or if you need to label them.
 
@@ -47,3 +49,32 @@ Whereas most of the other charts expect an array of axis configuration objects.
 ```
 
 {{"demo": "CustomAxis.js"}}
+
+### Y-axis range
+
+You can fix the y-range of the sparkline by providing `min`/`max` values to the `yAxis` configuration.
+
+The following demo shows two sparklines, one with small and another with large values.
+The first row has the default y-axis values, while on the second row a fixed range from `0` to `100` has been set.
+
+{{"demo": "CustomYAxis.js"}}
+
+You can adjust the y-axis range of a sparkline relatively to its data by using the `domainLimit` option in the `yAxis` configuration.
+See the [axis docs page](/x/react-charts/axis/#relative-axis-subdomain) for more information.
+
+The demo below shows different ways to set the y-axis range.
+They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
+
+{{"demo": "CustomDomainYAxis.js"}}
+
+## Color customization
+
+You can customize the color of the sparkline by providing a color to the `color` prop.
+
+{{"demo": "ColorCustomization.js"}}
+
+The `color` prop also accepts a function that is called with the mode (`'light'` or `'dark'`), so you can adapt the color to user preferences.
+
+The following example shows a white line if this page is in dark mode, or a black one if it is in light mode.
+
+{{"demo": "ColorCustomizationMode.js"}}

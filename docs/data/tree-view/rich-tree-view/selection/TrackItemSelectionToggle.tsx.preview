@@ -1,0 +1,11 @@
+<Typography>
+  {lastSelectedItem == null
+    ? 'No item selection recorded'
+    : `Last selected item: ${lastSelectedItem}`}
+</Typography>
+<Box sx={{ minHeight: 352, minWidth: 300 }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    onItemSelectionToggle={handleItemSelectionToggle}
+  />
+</Box>

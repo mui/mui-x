@@ -1,31 +1,37 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { getMultiSectionDigitalClockUtilityClass } from './multiSectionDigitalClockClasses';
+import {
+  getMultiSectionDigitalClockUtilityClass,
+  MultiSectionDigitalClockClasses,
+} from './multiSectionDigitalClockClasses';
 import { MultiSectionDigitalClockSection } from './MultiSectionDigitalClockSection';
 import {
   MultiSectionDigitalClockProps,
   MultiSectionDigitalClockViewProps,
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
-import { PickerValidDate, TimeStepOptions, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeStepOptions, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -36,16 +42,14 @@ const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
 const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MultiSectionDigitalClockProps<any> }>(({ theme }) => ({
-  display: 'flex',
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   flexDirection: 'row',
   width: '100%',
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
-type MultiSectionDigitalClockComponent = (<TDate extends PickerValidDate>(
-  props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MultiSectionDigitalClockComponent = ((
+  props: MultiSectionDigitalClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -58,10 +62,12 @@ type MultiSectionDigitalClockComponent = (<TDate extends PickerValidDate>(
  *
  * - [MultiSectionDigitalClock API](https://mui.com/x/api/date-pickers/multi-section-digital-clock/)
  */
-export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
-  TDate extends PickerValidDate,
->(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const utils = useUtils<TDate>();
+export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock(
+  inProps: MultiSectionDigitalClockProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const utils = useUtils();
+  const isRtl = useRtl();
 
   const props = useThemeProps({
     props: inProps,
@@ -92,6 +98,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     focusedView: inFocusedView,
     onFocusedViewChange,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     skipDisabled = false,
@@ -103,17 +110,18 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useControlledValueWithTimezone({
+  } = useControlledValue({
     name: 'MultiSectionDigitalClock',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
 
-  const localeText = useLocaleText<TDate>();
-  const now = useNow<TDate>(timezone);
+  const translations = usePickerTranslations();
+  const now = useNow(timezone);
 
   const timeSteps = React.useMemo<Required<TimeStepOptions>>(
     () => ({
@@ -135,7 +143,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
 
   const handleValueChange = useEventCallback(
     (
-      newValue: TDate | null,
+      newValue: PickerValidDate | null,
       selectionState?: PickerSelectionState,
       selectedView?: TimeViewWithMeridiem,
     ) => handleRawValueChange(newValue, selectionState, selectedView),
@@ -148,10 +156,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     return inViews.includes('meridiem') ? inViews : [...inViews, 'meridiem'];
   }, [ampm, inViews]);
 
-  const { view, setValueAndGoToNextView, focusedView } = useViews<
-    TDate | null,
-    TimeViewWithMeridiem
-  >({
+  const { view, setValueAndGoToNextView, focusedView } = useViews({
     view: inView,
     views,
     openTo,
@@ -161,11 +166,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     onFocusedViewChange,
   });
 
-  const handleMeridiemValueChange = useEventCallback((newValue: TDate | null) => {
+  const handleMeridiemValueChange = useEventCallback((newValue: PickerValidDate | null) => {
     setValueAndGoToNextView(newValue, 'finish', 'meridiem');
   });
 
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(
     valueOrReferenceDate,
     ampm,
     handleMeridiemValueChange,
@@ -178,7 +183,13 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       const shouldCheckPastEnd =
         viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
 
-      const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
+      const containsValidTime = ({
+        start,
+        end,
+      }: {
+        start: PickerValidDate;
+        end: PickerValidDate;
+      }) => {
         if (minTime && isAfter(minTime, end)) {
           return false;
         }
@@ -231,6 +242,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         case 'hours': {
           const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
           const dateWithNewHours = utils.setHours(valueOrReferenceDate, valueWithMeridiem);
+
+          if (utils.getHours(dateWithNewHours) !== valueWithMeridiem) {
+            return true;
+          }
+
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
@@ -292,9 +308,9 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               value,
               ampm,
               utils,
-              isDisabled: (hours) => disabled || isTimeDisabled(hours, 'hours'),
+              isDisabled: (hours) => isTimeDisabled(hours, 'hours'),
               timeStep: timeSteps.hours,
-              resolveAriaLabel: localeText.hoursClockNumberText,
+              resolveAriaLabel: translations.hoursClockNumberText,
               valueOrReferenceDate,
             }),
           };
@@ -312,11 +328,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
             items: getTimeSectionOptions({
               value: utils.getMinutes(valueOrReferenceDate),
               utils,
-              isDisabled: (minutes) => disabled || isTimeDisabled(minutes, 'minutes'),
+              isDisabled: (minutes) => isTimeDisabled(minutes, 'minutes'),
               resolveLabel: (minutes) => utils.format(utils.setMinutes(now, minutes), 'minutes'),
               timeStep: timeSteps.minutes,
               hasValue: !!value,
-              resolveAriaLabel: localeText.minutesClockNumberText,
+              resolveAriaLabel: translations.minutesClockNumberText,
             }),
           };
         }
@@ -333,11 +349,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
             items: getTimeSectionOptions({
               value: utils.getSeconds(valueOrReferenceDate),
               utils,
-              isDisabled: (seconds) => disabled || isTimeDisabled(seconds, 'seconds'),
+              isDisabled: (seconds) => isTimeDisabled(seconds, 'seconds'),
               resolveLabel: (seconds) => utils.format(utils.setSeconds(now, seconds), 'seconds'),
               timeStep: timeSteps.seconds,
               hasValue: !!value,
-              resolveAriaLabel: localeText.secondsClockNumberText,
+              resolveAriaLabel: translations.secondsClockNumberText,
             }),
           };
         }
@@ -378,17 +394,28 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       timeSteps.hours,
       timeSteps.minutes,
       timeSteps.seconds,
-      localeText.hoursClockNumberText,
-      localeText.minutesClockNumberText,
-      localeText.secondsClockNumberText,
+      translations.hoursClockNumberText,
+      translations.minutesClockNumberText,
+      translations.secondsClockNumberText,
       meridiemMode,
       setValueAndGoToNextView,
       valueOrReferenceDate,
-      disabled,
       isTimeDisabled,
       handleMeridiemChange,
     ],
   );
+
+  const viewsToRender = React.useMemo(() => {
+    if (!isRtl) {
+      return views;
+    }
+    const digitViews: TimeViewWithMeridiem[] = views.filter((v) => v !== 'meridiem');
+    digitViews.reverse();
+    if (views.includes('meridiem')) {
+      digitViews.push('meridiem');
+    }
+    return digitViews;
+  }, [isRtl, views]);
 
   const viewTimeOptions = React.useMemo(() => {
     return views.reduce(
@@ -399,8 +426,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     );
   }, [views, buildViewProps]);
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const { ownerState } = usePickerPrivateContext();
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <MultiSectionDigitalClockRoot
@@ -410,11 +437,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       role="group"
       {...other}
     >
-      {Object.entries(viewTimeOptions).map(([timeView, viewOptions]) => (
+      {viewsToRender.map((timeView) => (
         <MultiSectionDigitalClockSection
           key={timeView}
-          items={viewOptions.items}
-          onChange={viewOptions.onChange}
+          items={viewTimeOptions[timeView].items}
+          onChange={viewTimeOptions[timeView].onChange}
           active={view === timeView}
           autoFocus={autoFocus ?? focusedView === timeView}
           disabled={disabled}
@@ -422,7 +449,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           slots={slots}
           slotProps={slotProps}
           skipDisabled={skipDisabled}
-          aria-label={localeText.selectViewText(timeView as TimeViewWithMeridiem)}
+          aria-label={translations.selectViewText(timeView)}
         />
       ))}
     </MultiSectionDigitalClockRoot>
@@ -432,11 +459,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
 MultiSectionDigitalClock.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -457,7 +484,8 @@ MultiSectionDigitalClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -497,7 +525,7 @@ MultiSectionDigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
@@ -524,7 +552,8 @@ MultiSectionDigitalClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -535,8 +564,7 @@ MultiSectionDigitalClock.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

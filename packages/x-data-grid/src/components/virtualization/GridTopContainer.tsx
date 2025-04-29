@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 
 const useUtilityClasses = () => {
@@ -13,27 +13,17 @@ const useUtilityClasses = () => {
 
 const Element = styled('div')({
   position: 'sticky',
-  zIndex: 2,
+  zIndex: 40,
   top: 0,
-  '&::after': {
-    content: '" "',
-    position: 'absolute',
-    zIndex: 5,
-    bottom: 0,
-    left: 0,
-    height: 1,
-    width: 'var(--DataGrid-rowWidth)',
-    backgroundColor: 'var(--DataGrid-rowBorderColor)',
-  },
 });
 
-export function GridTopContainer(props: React.HTMLAttributes<HTMLDivElement>) {
+export function GridTopContainer(props: React.PropsWithChildren) {
   const classes = useUtilityClasses();
 
   return (
     <Element
       {...props}
-      className={clsx(classes.root, props.className, gridClasses['container--top'])}
+      className={clsx(classes.root, gridClasses['container--top'])}
       role="presentation"
     />
   );

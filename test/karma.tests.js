@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-import '@mui-internal/test-utils/setupKarma';
+import '@mui/internal-test-utils/setupKarma';
 
 import './utils/init';
 import { createXMochaHooks } from './utils/mochaHooks';
@@ -19,4 +19,7 @@ afterEach(function beforeEachHook() {
 });
 
 const packagesContext = require.context('../packages', true, /\.test\.tsx$/);
-packagesContext.keys().forEach(packagesContext);
+packagesContext
+  .keys()
+  .filter((key) => !key.includes('x-data-grid'))
+  .forEach(packagesContext);

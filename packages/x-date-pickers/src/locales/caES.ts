@@ -3,48 +3,50 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
-  hours: 'les hores',
-  minutes: 'els minuts',
-  seconds: 'els segons',
-  meridiem: 'meridiem',
+  hours: 'Hores',
+  minutes: 'Minuts',
+  seconds: 'Segons',
+  meridiem: 'Meridià',
 };
 
-const caESPickers: Partial<PickersLocaleText<any>> = {
+const caESPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
-  previousMonth: 'Últim mes',
-  nextMonth: 'Pròxim mes',
+  previousMonth: 'Mes anterior',
+  nextMonth: 'Mes següent',
 
   // View navigation
   openPreviousView: "Obrir l'última vista",
-  openNextView: 'obrir la següent vista',
+  openNextView: 'Obrir la següent vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? "la vista de l'any està oberta, canvie a la vista de calendari"
-      : "la vista de calendari està oberta, canvie a la vista de l'any",
+      ? 'la vista anual està oberta, canvia a la vista de calendari'
+      : 'la vista de calendari està oberta, canvia a la vista anual',
 
   // DateRange labels
   start: 'Començar',
   end: 'Terminar',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data inicial',
+  startTime: 'Hora inicial',
+  endDate: 'Data final',
+  endTime: 'Hora final',
 
   // Action bar
   cancelButtonLabel: 'Cancel·lar',
   clearButtonLabel: 'Netejar',
   okButtonLabel: 'OK',
-  todayButtonLabel: 'Hui',
+  todayButtonLabel: 'Avuí',
+  nextStepButtonLabel: 'Següent',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Seleccionar data',
   dateTimePickerToolbarTitle: 'Seleccionar data i hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rang de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Seleccione ${views[view]}. ${time === null ? 'Sense temps seleccionat' : `El temps seleccionat és ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Selecciona ${views[view]}. ${!formattedTime ? 'Hora no seleccionada' : `L'hora seleccionada és ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} hores`,
   minutesClockNumberText: (minutes) => `${minutes} minuts`,
   secondsClockNumberText: (seconds) => `${seconds} segons`,
@@ -53,21 +55,18 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   selectViewText: (view) => `Seleccionar ${views[view]}`,
 
   // Calendar labels
-  calendarWeekNumberHeaderLabel: 'Número de setmana',
+  calendarWeekNumberHeaderLabel: 'Número de la setmana',
   calendarWeekNumberHeaderText: '#',
   calendarWeekNumberAriaLabelText: (weekNumber) => `Setmana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Tria la data, la data triada és ${utils.format(value, 'fullDate')}`
-      : 'Tria la data',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Tria l'hora, l'hora triada és ${utils.format(value, 'fullTime')}`
-      : "Tria l'hora",
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Tria la data, la data triada és ${formattedDate}` : 'Tria la data',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Tria l'hora, l'hora triada és ${formattedTime}` : "Tria l'hora",
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Netega el valor',
 
   // Table labels
   timeTableLabel: 'tria la data',
@@ -82,6 +81,19 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Any',
+  month: 'Mes',
+  day: 'Dia',
+  weekDay: 'Dia de la setmana',
+  hours: 'Hores',
+  minutes: 'Minuts',
+  seconds: 'Segons',
+  meridiem: 'Meridià',
+
+  // Common
+  empty: 'Buit',
 };
 
 export const caES = getPickersLocalization(caESPickers);

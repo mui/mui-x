@@ -1,0 +1,16 @@
+/*
+!/dist
+!/es
+!/lib
+!/lib-vendor
+!/src
+!/d3-*
+!/delaunator.*
+!/robust-predicates.*
+!/internmap.js
+!LICENSE.txt
+!CHANGELOG.md
+!README.md
+!package.json
+*.map
+**/*.test.*

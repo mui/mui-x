@@ -1,90 +1,110 @@
+'use client';
 import * as React from 'react';
-import { InteractionContext } from '../context/InteractionProvider';
-import { HighlighContext, HighlightScope } from '../context/HighlightProvider';
 import { SeriesItemIdentifier } from '../models';
+import { useChartContext } from '../context/ChartProvider';
+import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
-export const useInteractionItemProps = (scope?: Partial<HighlightScope>, skip?: boolean) => {
-  const { dispatch: dispatchInteraction } = React.useContext(InteractionContext);
-  const { dispatch: dispatchHighlight } = React.useContext(HighlighContext);
+const onPointerDown = (event: React.PointerEvent) => {
+  if (
+    'hasPointerCapture' in event.currentTarget &&
+    event.currentTarget.hasPointerCapture(event.pointerId)
+  ) {
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+};
+
+export const useInteractionItemProps = (
+  data: SeriesItemIdentifier,
+  skip?: boolean,
+): {
+  onPointerEnter?: () => void;
+  onPointerLeave?: () => void;
+  onPointerDown?: (event: React.PointerEvent) => void;
+} => {
+  const { instance } =
+    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  const interactionActive = React.useRef(false);
+
+  const onPointerEnter = React.useCallback(() => {
+    interactionActive.current = true;
+    instance.setItemInteraction({
+      type: data.type,
+      seriesId: data.seriesId,
+      dataIndex: data.dataIndex,
+    } as SeriesItemIdentifier);
+    instance.setHighlight({
+      seriesId: data.seriesId,
+      dataIndex: data.dataIndex,
+    });
+  }, [instance, data.type, data.seriesId, data.dataIndex]);
+
+  const onPointerLeave = React.useCallback(() => {
+    interactionActive.current = false;
+    instance.removeItemInteraction({
+      type: data.type,
+      seriesId: data.seriesId,
+      dataIndex: data.dataIndex,
+    } as SeriesItemIdentifier);
+    instance.clearHighlight();
+  }, [instance, data.type, data.seriesId, data.dataIndex]);
+
+  React.useEffect(() => {
+    return () => {
+      /* Clean up state if this item is unmounted while active. */
+      if (interactionActive.current) {
+        onPointerLeave();
+      }
+    };
+  }, [onPointerLeave]);
 
   if (skip) {
-    return () => ({});
+    return {};
   }
-  const getInteractionItemProps = (data: SeriesItemIdentifier) => {
-    const onMouseEnter = () => {
-      dispatchInteraction({
-        type: 'enterItem',
-        data,
-      });
-      dispatchHighlight({
-        type: 'enterItem',
-        item: data,
-        scope,
-      });
-    };
-    const onMouseLeave = () => {
-      dispatchInteraction({ type: 'leaveItem', data });
 
-      dispatchHighlight({
-        type: 'leaveItem',
-        item: data,
-      });
-    };
-    return {
-      onMouseEnter,
-      onMouseLeave,
-    };
+  return {
+    onPointerEnter,
+    onPointerLeave,
+    onPointerDown,
   };
-  return getInteractionItemProps;
 };
 
-export const getIsHighlighted = (
-  selectedItem: SeriesItemIdentifier | null,
-  currentItem: SeriesItemIdentifier,
-  highlightScope?: Partial<HighlightScope>,
-) => {
-  if (
-    !highlightScope?.highlighted ||
-    highlightScope.highlighted === 'none' ||
-    selectedItem === null
-  ) {
-    return false;
-  }
+export const useInteractionAllItemProps = (data: SeriesItemIdentifier[], skip?: boolean) => {
+  const { instance } =
+    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
-  const isSeriesSelected =
-    selectedItem.type === currentItem.type && selectedItem.seriesId === currentItem.seriesId;
+  const results = React.useMemo(() => {
+    return data.map((item) => {
+      if (skip) {
+        return {};
+      }
 
-  if (!isSeriesSelected) {
-    return false;
-  }
+      const onPointerEnter = () => {
+        if (!item) {
+          return;
+        }
+        instance.setItemInteraction(item);
+        instance.setHighlight({
+          seriesId: item.seriesId,
+          dataIndex: item.dataIndex,
+        });
+      };
 
-  if (highlightScope.highlighted === 'series') {
-    return isSeriesSelected;
-  }
+      const onPointerLeave = () => {
+        if (!item) {
+          return;
+        }
+        instance.removeItemInteraction(item);
+        instance.clearHighlight();
+      };
 
-  return selectedItem.dataIndex !== undefined && selectedItem.dataIndex === currentItem.dataIndex;
-};
+      return {
+        onPointerEnter,
+        onPointerLeave,
+        onPointerDown,
+      };
+    });
+  }, [data, instance, skip]);
 
-export const getIsFaded = (
-  selectedItem: SeriesItemIdentifier | null,
-  currentItem: SeriesItemIdentifier,
-  highlightScope?: Partial<HighlightScope>,
-) => {
-  if (!highlightScope?.faded || highlightScope.faded === 'none' || selectedItem === null) {
-    return false;
-  }
-
-  const isSeriesSelected =
-    selectedItem.type === currentItem.type && selectedItem.seriesId === currentItem.seriesId;
-
-  if (highlightScope.faded === 'series') {
-    return isSeriesSelected && selectedItem.dataIndex !== currentItem.dataIndex;
-  }
-  if (highlightScope.faded === 'global') {
-    if (!isSeriesSelected) {
-      return true;
-    }
-    return selectedItem.dataIndex !== undefined && selectedItem.dataIndex !== currentItem.dataIndex;
-  }
-  return false;
+  return results;
 };

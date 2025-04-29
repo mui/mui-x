@@ -11,7 +11,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 
 <p class="description">Gauge let the user evaluate metrics.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
+{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
 ## Basics
 
@@ -21,10 +21,14 @@ The Gauge displays a numeric value that varies within a defined range.
 
 ## Value range
 
+<<<<<<< HEAD
 The Gauge value is provided through the `value` props, which accept a value range between 0 and 100.
+=======
+The Gauge's value is provided through the `value` props, which accept a value range between 0 and 100.
+>>>>>>> upstream/master
 To modify it, use the `valueMin` and `valueMax` props.
 
-{{"demo": "GaugeValueRangeNoSnap.js"}}
+{{"demo": "GaugeValueRange.js"}}
 
 ## Arcs configuration
 
@@ -34,7 +38,7 @@ Modify the arc shape with the following props:
 - `innerRadius` and `outerRadius`: The arc's radii. It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
 - `cornerRadius`: It can be a fixed number of pixels or a percentage string, which will be a percent of the maximal available radius
 
-{{"demo": "ArcPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true }}
+{{"demo": "ArcPlayground.js", "bg": "playground", "hideToolbar": true }}
 
 :::success
 Notice that the arc position is computed to let the Gauge take as much space as possible in the drawing area.
@@ -52,11 +56,11 @@ In the second case, the formatter argument contains the `value`, `valueMin` and 
 
 To modify the text's layout, use the `gaugeClasses.valueText` class name.
 
-{{"demo": "TextPlaygroundNoSnap.js", "bg": "playground", "hideToolbar": true}}
+{{"demo": "TextPlayground.js", "bg": "playground", "hideToolbar": true}}
 
 ## Arc design
 
-To customize the Gauge styles, use the `chartsGaugeClasses` export to pull class names from different parts of the component, such as `valueText`, `valueArc`, and `referenceArc`.
+To customize the Gauge styles, use the `gaugeClasses` export to pull class names from different parts of the component, such as `valueText`, `valueArc`, and `referenceArc`.
 
 For a full reference list, visit the [API page](/x/api/charts/gauge/#classes).
 
@@ -101,7 +105,7 @@ import {
 
 ### Creating your components
 
-To create your own components, use the `useGaugeState` hook which provides all you need about the gauge configuration:
+To create your own components, use the `useGaugeState()` hook which provides all you need about the gauge configuration:
 
 - information about the value: `value`, `valueMin`, `valueMax`
 - information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`
@@ -137,4 +141,24 @@ For example, a battery level indicator is better with an hour-long duration.
   aria-labelledby="battery_level_label"
   aria-valuetext="50% (6 hours) remaining"
 />
+```
+
+## Composition
+
+Use the `<GaugeContainer />` to provide all the parameters as props: `value`, `valueMin`, `valueMax`, `startAngle`, `endAngle`, etc.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+
+- `<GaugeReferenceArc />` renders the reference arc.
+- `<GaugeValueArc />` renders the value arc.
+- `<GaugeValueText />` renders the text at the center.
+
+Here's how the Gauge is composed:
+
+```jsx
+<GaugeContainer>
+  <GaugeReferenceArc />
+  <GaugeValueArc skipAnimation={skipAnimation} />
+  <GaugeValueText text={text} />
+</GaugeContainer>
 ```

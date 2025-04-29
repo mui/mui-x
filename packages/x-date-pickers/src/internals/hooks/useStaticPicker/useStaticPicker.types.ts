@@ -1,23 +1,15 @@
-import * as React from 'react';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { BasePickerProps } from '../../models/props/basePickerProps';
-import { UsePickerParams } from '../usePicker';
-import { UsePickerViewsProps } from '../usePicker/usePickerViews';
-import { FieldSection, PickerValidDate } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { UsePickerParameters, UsePickerProps } from '../usePicker';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
-export interface UseStaticPickerSlots<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlots<TDate | null, TDate, TView> {}
+export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
 
-export interface UseStaticPickerSlotProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {}
+export interface UseStaticPickerSlotProps extends ExportedPickersLayoutSlotProps<PickerValue> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -27,6 +19,7 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
   /**
    * If `true`, the view is focused during the first mount.
+   * @default false
    */
   autoFocus?: boolean;
   /**
@@ -38,35 +31,35 @@ export interface StaticOnlyPickerProps {
 }
 
 export interface UseStaticPickerProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TDate | null, TDate, TView, any, any>,
-> extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
+> extends BasePickerProps<PickerValue, TView, TError, TExternalProps>,
     StaticOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UseStaticPickerSlots<TDate, TView>;
+  slots?: UseStaticPickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseStaticPickerSlotProps<TDate, TView>;
+  slotProps?: UseStaticPickerSlotProps;
 }
 
 export interface UseStaticPickerParams<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
-    'valueManager' | 'valueType' | 'validator'
+    UsePickerParameters<PickerValue, TView, TExternalProps>,
+    'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
   /**
-   * Ref to pass to the root element
+   * Steps available for the picker.
+   * This will be used to define the behavior of navigation actions.
+   * If null, the picker will not have any step navigation.
    */
-  ref?: React.Ref<HTMLDivElement>;
+  steps: PickerStep[] | null;
 }

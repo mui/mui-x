@@ -8,7 +8,7 @@ We use GitHub issues as a bug and feature request tracker.
 
 If you think you've found a bug, or you have a new feature idea:
 
-1. Please start by [making sure it hasn't already been reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed).
+1. Please start by [making sure it hasn't already been reported or fixed](https://github.com/mui/mui-x/issues?q=is%3Aissue).
    You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 2. Then, if no duplicates exist, [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repository.
 
@@ -27,46 +27,55 @@ We require bug reports to be accompanied by a **minimal reproduction**.
 It significantly increases the odds of fixing the problem.
 You have a few possible options to provide it:
 
-- You can browse the documentation, find an example close to your use case, and then open it in a live editor:
-  <a href="/x/react-date-pickers/getting-started/#render-your-first-component">
-  <span class="only-light-mode">
-  <img src="/static/docs-infra/forking-an-example.png" alt="Forking an example" loading="lazy" width="1548" height="606" style="display: block; max-width: 774px;">
-  </span>
-  <span class="only-dark-mode">
-  <img src="/static/docs-infra/forking-an-example-dark.png" alt="Forking an example" loading="lazy" width="1548" height="606" style="display: block; max-width: 774px;">
-  </span>
-  </a>
+#### Use the live editors
 
-  - [Data Grid](/x/react-data-grid/#mit-version-free-forever)
-  - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
-  - [Charts](/x/react-charts/getting-started/#single-charts)
-  - [Tree View](/x/react-tree-view/#simple-tree-view)
+You can browse the documentation, find an example close to your use case, and then open it in a live editor:
 
-- You can use a starter template to build a reproduction case with:
-  <!-- #default-branch-switch -->
-  - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/next/bug-reproductions/x-data-grid?file=src/index.tsx)
-  - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
+<a href="/x/react-date-pickers/quickstart/#render-the-component">
+<span class="only-light-mode">
+<img src="/static/docs-infra/forking-an-example.png" alt="Forking an example" loading="lazy" width="1628" height="700" style="display: block; max-width: 774px;">
+</span>
+<span class="only-dark-mode">
+<img src="/static/docs-infra/forking-an-example-dark.png" alt="Forking an example" loading="lazy" width="1628" height="700" style="display: block; max-width: 774px;">
+</span>
+</a>
 
-## Stack Overflow
+- [Data Grid](/x/react-data-grid/#community-version-free-forever)
+- [Date Pickers](/x/react-date-pickers/quickstart/#render-the-component)
+- [Charts](/x/react-charts/quickstart/#self-contained-charts)
+- [Tree View](/x/react-tree-view/)
 
-We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
+#### Use starter templates
 
-You can search through existing questions and answers to see if someone has asked a similar question using one of [these tags](https://stackoverflow.com/questions/tagged/mui-x+or+mui-x-charts+or+mui-x-data-grid+or+mui-x-date-picker):
+You can use a starter template to build a reproduction case with:
 
-- mui-x
-- mui-x-data-grid
-- mui-x-date-picker
-- mui-x-charts
+<!-- #default-branch-switch -->
+<!-- TODO: Change this in the "old" version branches and remove this comment there. -->
+<!-- Afterwards replace this comment with "version-branch-off" -->
 
-If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
+- A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
+- A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
+
+## Stack Overflow
+
+We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
+
+You can search through existing questions and answers to see if someone has asked a similar question using one of these tags:
+
+- [mui-x-data-grid](https://stackoverflow.com/questions/tagged/mui-x-data-grid)
+- [mui-x-date-picker](https://stackoverflow.com/questions/tagged/mui-x-date-picker)
+- [mui-x-charts](https://stackoverflow.com/questions/tagged/mui-x-charts)
+- [mui-x-tree-view](https://stackoverflow.com/questions/tagged/mui-x-tree-view)
+
+If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs) using the relevant tags.
 
 ## Technical support
 
 :::info
-The technical support covers only MUI X components.
+The technical support covers only MUI X components. If you need to cover the entire component library, check out [Priority Support](/x/introduction/priority-support/).
 :::
 
-When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your active license.
+When purchasing a MUI X Pro or Premium license you get access to free technical support until the end of your active license.
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
@@ -76,30 +85,30 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
+3. MUI X Priority Support (paid add-on): Provides a 24h SLA for the first answer.
 
 ## Long-term support (LTS)
 
 Bug fixes, performance enhancements, and other improvements are delivered in new releases.
-However, we remain committed to providing security updates and addressing regressions for the immediate predecessor of the current major version.
+However, we remain committed to providing security updates and addressing regressions for **two years** after a version enters LTS.
 
 This includes issues introduced by external sources, like browser upgrades or changes to upstream dependencies.
 
 ### Supported versions
 
-- MUI X v7: ✅ Pre-release (Continuous support - Stable release: March 2024)
-- MUI X v6: ✅ Stable major (Continuous support)
-- MUI X v5: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
-- MUI X v4: 🅧 No longer supported.
-- MUI X v3: 🅧 Never existed.
-- MUI X v2: 🅧 Never existed.
-- MUI X v1: 🅧 Never existed.
+| MUI X version | Release    | Supported                                                                       |
+| ------------: | :--------- | :------------------------------------------------------------------------------ |
+|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support).                                           |
+|        ^7.0.0 | 2024-03-23 | ⚠️ LTS - Support for security issues and regressions **until April 17th 2027**. |
+|        ^6.0.0 | 2023-03-03 | ⚠️ LTS - Support for security issues and regressions **until March 23th 2026**. |
+|        ^5.0.0 | 2021-11-23 | ❌                                                                              |
+|        ^4.0.0 | 2021-09-28 | ❌                                                                              |
 
 ## Community
 
 ### Social media
 
-The MUI X community is active on both [X/Twitter](https://twitter.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
+The MUI X community is active on both [X/Twitter](https://x.com/MUI_hq) and [LinkedIn](https://www.linkedin.com/company/mui/).
 These are great platforms to share what you're working on and connect with other developers.
 
 ### Discord
@@ -110,7 +119,7 @@ Our tools are used by thousands of developers and teams all around the world, ma
 You can join Discord to engage in lively discussions, share your projects, and interact with developers just like you from all around the world. We'd love for you to join us!
 
 :::warning
-How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
+How-to questions are not accepted on Discord, they should be asked on [Stack Overflow](#stack-overflow).
 :::
 
 ## Custom work

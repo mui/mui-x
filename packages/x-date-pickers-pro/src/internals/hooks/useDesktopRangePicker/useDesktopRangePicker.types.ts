@@ -1,33 +1,48 @@
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickerFieldSlotProps, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
-  PickersPopperSlots,
-  PickersPopperSlotProps,
-  UsePickerViewsProps,
+  PickerPopperSlots,
+  PickerPopperSlotProps,
+  UsePickerProps,
   DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
-  RangeOnlyPickerProps,
-  RangePickerAdditionalViewProps,
-  UseRangePickerParams,
+  ExportedPickersLayoutSlotProps,
+  ExportedPickersLayoutSlots,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
+  NonStaticRangePickerProps,
+  NonStaticRangePickerHookParameters,
   UseRangePickerProps,
-  UseRangePickerSlotProps,
-  UseRangePickerSlots,
-} from '../models/useRangePicker';
+} from '../../models';
 
-export interface UseDesktopRangePickerSlots<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends UseRangePickerSlots<TDate, TView>,
-    PickersPopperSlots {}
+export interface UseDesktopRangePickerSlots
+  extends PickerPopperSlots,
+    ExportedPickersLayoutSlots<PickerRangeValue>,
+    PickerFieldUISlotsFromContext {
+  /**
+   * Component used to enter the date with the keyboard.
+   */
+  field: React.ElementType;
+}
 
-export interface UseDesktopRangePickerSlotProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends UseRangePickerSlotProps<TDate, TView>,
-    PickersPopperSlotProps {}
+export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends PickerPopperSlotProps,
+    ExportedPickersLayoutSlotProps<PickerRangeValue>,
+    PickerFieldUISlotPropsFromContext {
+  field?: SlotComponentPropsFromProps<
+    PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> & {
+      dateSeparator?: string;
+    },
+    {},
+    PickerOwnerState
+  >;
+}
 
-export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate>
-  extends RangeOnlyPickerProps<TDate> {
+export interface DesktopRangeOnlyPickerProps extends NonStaticRangePickerProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -35,38 +50,30 @@ export interface DesktopRangeOnlyPickerProps<TDate extends PickerValidDate>
 }
 
 export interface UseDesktopRangePickerProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
-> extends UseRangePickerProps<
-    TDate,
-    TView,
-    TError,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  > {
+  TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
+> extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots: UseDesktopRangePickerSlots<TDate, TView>;
+  slots: UseDesktopRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TDate, TView>;
+  slotProps?: UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
-export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
-
 export interface UseDesktopRangePickerParams<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
-> extends UseRangePickerParams<
-    TDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TExternalProps extends UseDesktopRangePickerProps<
     TView,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  > {}
+    TEnableAccessibleFieldDOMStructure,
+    any,
+    TExternalProps
+  >,
+> extends NonStaticRangePickerHookParameters<TView, TExternalProps> {}

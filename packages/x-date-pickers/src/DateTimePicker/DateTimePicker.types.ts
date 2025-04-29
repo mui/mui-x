@@ -3,25 +3,27 @@ import {
   DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { BaseSingleInputFieldProps } from '../internals/models';
 import {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
-import { PickerValidDate } from '../models';
+import { ValidateDateTimeProps } from '../validation';
+import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
-export interface DateTimePickerSlots<TDate extends PickerValidDate>
-  extends DesktopDateTimePickerSlots<TDate>,
-    MobileDateTimePickerSlots<TDate, DateOrTimeViewWithMeridiem> {}
+export interface DateTimePickerSlots
+  extends DesktopDateTimePickerSlots,
+    MobileDateTimePickerSlots {}
 
-export interface DateTimePickerSlotProps<TDate extends PickerValidDate>
-  extends DesktopDateTimePickerSlotProps<TDate>,
-    MobileDateTimePickerSlotProps<TDate, DateOrTimeViewWithMeridiem> {}
+export interface DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
-export interface DateTimePickerProps<TDate extends PickerValidDate>
-  extends DesktopDateTimePickerProps<TDate>,
-    Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>, 'views'> {
+export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+    ExportedYearCalendarProps,
+    Omit<MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -29,18 +31,23 @@ export interface DateTimePickerProps<TDate extends PickerValidDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Years rendered per row.
-   * @default 4 on desktop, 3 on mobile
-   */
-  yearsPerRow?: 3 | 4;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateTimePickerSlots<TDate>;
+  slots?: DateTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimePickerSlotProps<TDate>;
+  slotProps?: DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow?: 3 | 4;
 }
+
+/**
+ * Props the field can receive when used inside a Date Time Picker (<DateTimePicker />, <DesktopDateTimePicker /> or <MobileDateTimePicker /> component).
+ */
+export type DateTimePickerFieldProps = ValidateDateTimeProps & BaseSingleInputFieldProps;

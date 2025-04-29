@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DefaultizedPieValueType } from '@mui/x-charts';
+import { DefaultizedPieValueType } from '@mui/x-charts/models';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 
 const data = [
@@ -13,7 +13,7 @@ const sizing = {
   margin: { right: 5 },
   width: 200,
   height: 200,
-  legend: { hidden: true },
+  hideLegend: true,
 };
 const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
 

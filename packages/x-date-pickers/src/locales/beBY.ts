@@ -10,7 +10,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'мерыдыем',
 };
 
-const beBYPickers: Partial<PickersLocaleText<any>> = {
+const beBYPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Папярэдні месяц',
   nextMonth: 'Наступны месяц',
@@ -36,16 +36,18 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Ачысціць',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Сёння',
+  nextStepButtonLabel: 'Наступны',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Абраць дату',
   dateTimePickerToolbarTitle: 'Абраць дату і час',
   timePickerToolbarTitle: 'Абраць час',
   dateRangePickerToolbarTitle: 'Абраць каляндарны перыяд',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Абярыце ${views[view]}. ${time === null ? 'Час не абраны' : `Абраны час ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Абярыце ${views[view]}. ${!formattedTime ? 'Час не абраны' : `Абраны час ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} гадзін`,
   minutesClockNumberText: (minutes) => `${minutes} хвілін`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -59,16 +61,13 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Тыдзень ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Абраць дату, абрана дата  ${utils.format(value, 'fullDate')}`
-      : 'Абраць дату',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Абраць час, абрыны час  ${utils.format(value, 'fullTime')}`
-      : 'Абраць час',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Абраць дату, абрана дата  ${formattedDate}` : 'Абраць дату',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Абраць час, абрыны час  ${formattedTime}` : 'Абраць час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'абраць час',
@@ -83,6 +82,19 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const beBY = getPickersLocalization(beBYPickers);

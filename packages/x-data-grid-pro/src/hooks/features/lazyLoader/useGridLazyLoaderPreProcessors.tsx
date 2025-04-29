@@ -1,28 +1,23 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { GRID_ROOT_GROUP_ID, GridGroupNode, GridSkeletonRowNode } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import {
-  DataGridProProcessedProps,
-  GridExperimentalProFeatures,
-} from '../../../models/dataGridProProps';
+import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 
 const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
 
 export const useGridLazyLoaderPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode' | 'experimentalFeatures'>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
+  props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode'>,
 ) => {
-  const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
-
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       const rootGroup = groupingParams.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
 
       if (
-        !lazyLoading ||
         props.rowsLoadingMode !== 'server' ||
         !props.rowCount ||
         rootGroup.children.length >= props.rowCount
@@ -55,7 +50,7 @@ export const useGridLazyLoaderPreProcessors = (
         tree,
       };
     },
-    [props.rowCount, props.rowsLoadingMode, lazyLoading],
+    [props.rowCount, props.rowsLoadingMode],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateRows', addSkeletonRows);

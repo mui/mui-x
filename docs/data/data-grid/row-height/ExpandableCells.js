@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Link from '@mui/material/Link';
 import {
   randomInt,
@@ -34,7 +34,7 @@ function ExpandableCell({ value }) {
         <Link
           type="button"
           component="button"
-          sx={{ fontSize: 'inherit' }}
+          sx={{ fontSize: 'inherit', letterSpacing: 'inherit' }}
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? 'view less' : 'view more'}
@@ -80,7 +80,7 @@ export default function ExpandableCells() {
         columns={columns}
         getEstimatedRowHeight={() => 100}
         getRowHeight={() => 'auto'}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         sx={{
           '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
             py: 1,

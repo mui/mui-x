@@ -1,0 +1,12 @@
+<PieChart
+  series={[
+    {
+      data: data.map((d) => ({ label: d.team, id: d.team, value: d.points })),
+      valueFormatter: (v, { dataIndex }) => {
+        const { rank } = data[dataIndex];
+        return `has ${v.value} points and is ranked ${rank}.`;
+      },
+    },
+  ]}
+  {...otherProps}
+/>

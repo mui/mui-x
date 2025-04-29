@@ -7,30 +7,35 @@ import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
+import { LicenseInfo } from '@mui/x-license';
+import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
+import { CodeCopyProvider } from '@mui/docs/CodeCopy';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
-import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
+import { CodeStylingProvider } from 'docs/src/modules/utils/codeStylingSolution';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
-import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
-import { LicenseInfo } from '@mui/x-license';
+import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
-import config from '../config';
+import { mapTranslations } from '@mui/docs/i18n';
+import * as config from '../config';
 
+// Enable telemetry for internal purposes
+muiXTelemetrySettings.enableTelemetry();
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
     // #default-branch-switch
-    // Use the "latest" npm tag for the master git branch
-    // Use the "next" npm tag for the next git branch
-    return 'next';
+    // Use the "next" tag for the master git branch after we start working on the next major version
+    // Once the major release is finished we can go back to "latest"
+    return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -40,7 +45,11 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    newDeps['@mui/material'] = versions['@mui/material'];
+    // #default-branch-switch
+    // TODO: Do we really need this? The condition does not make that much sense tbh!
+    // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
+    newDeps['@mui/material'] =
+      versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
 
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
@@ -48,7 +57,7 @@ ponyfillGlobal.muiDocConfig = {
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
-    const output = {
+    return {
       ...versions,
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
@@ -57,10 +66,12 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
+      '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
+      '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
+      '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       exceljs: 'latest',
     };
-    return output;
   },
   postProcessImport,
 };
@@ -167,7 +178,6 @@ Tip: you can access the documentation \`theme\` object directly in the console.
     'font-family:monospace;color:#1976d2;font-size:12px;',
   );
 }
-
 function AppWrapper(props) {
   const { children, emotionCache, pageProps } = props;
 
@@ -196,27 +206,43 @@ function AppWrapper(props) {
     }
   }, []);
 
-  let fonts = [];
-  if (pathnameToLanguage(router.asPath).canonicalAs.match(/onepirate/)) {
-    fonts = [
-      'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
-    ];
-  }
-
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
+    const productIdSubpathMap = {
+      introduction: '/x/introduction',
+      'x-data-grid': '/x/react-data-grid',
+      'x-date-pickers': '/x/react-date-pickers',
+      'x-charts': '/x/react-charts',
+      'x-tree-view': '/x/react-tree-view',
+    };
+
+    const getVersionOptions = (id, versions) =>
+      versions.map((version) => {
+        if (version === process.env.LIB_VERSION) {
+          return {
+            current: true,
+            text: `v${version}`,
+            href: `${languagePrefix}${productIdSubpathMap[id]}/`,
+          };
+        }
+        if (version === 'v8') {
+          return {
+            text: version,
+            href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+          };
+        }
+        return {
+          text: version,
+          href: `https://${version}.mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+        };
+      });
 
     let productIdentifier = {
       metadata: '',
       name: 'MUI X',
       versions: [
-        {
-          text: `v${process.env.LIB_VERSION}`,
-          current: true,
-        },
-        { text: 'v6', href: `https://mui.com${languagePrefix}/x/introduction/` },
-        { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
+        ...getVersionOptions('introduction', [process.env.LIB_VERSION, 'v7', 'v6', 'v5']),
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
     };
@@ -226,12 +252,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          {
-            text: `v${process.env.DATA_GRID_VERSION}`,
-            current: true,
-          },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-data-grid/` },
-          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
+          ...getVersionOptions('x-data-grid', [process.env.DATA_GRID_VERSION, 'v7', 'v6', 'v5']),
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -240,14 +261,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          {
-            text: `v${process.env.DATE_PICKERS_VERSION}`,
-            current: true,
-          },
-          {
-            text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
-          },
+          ...getVersionOptions('x-date-pickers', [process.env.DATE_PICKERS_VERSION, 'v7', 'v6']),
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -258,26 +272,17 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: [
-          {
-            text: `v${process.env.CHARTS_VERSION}`,
-            current: true,
-          },
-          { text: 'v6', href: `https://mui.com${languagePrefix}/x/react-charts/` },
-        ],
+        versions: getVersionOptions('x-charts', [process.env.CHARTS_VERSION, 'v7', 'v6']),
       };
     } else if (productId === 'x-tree-view') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Tree View',
         versions: [
-          {
-            text: `v${process.env.TREE_VIEW_VERSION}`,
-            current: true,
-          },
+          ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION, 'v7']),
           {
             text: 'v6',
-            href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+            href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
           },
         ],
       };
@@ -293,6 +298,13 @@ function AppWrapper(props) {
     };
   }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
+  let fonts = [];
+  if (pathnameToLanguage(router.asPath).canonicalAs.match(/onepirate/)) {
+    fonts = [
+      'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Work+Sans:wght@300;400&display=swap',
+    ];
+  }
+
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
   const ThemeWrapper = router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
@@ -300,24 +312,31 @@ function AppWrapper(props) {
   return (
     <React.Fragment>
       <NextHead>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
         {fonts.map((font) => (
           <link rel="stylesheet" href={font} key={font} />
         ))}
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>
-      <DocsProvider config={config} defaultUserLanguage={pageProps.userLanguage}>
+      <DocsProvider
+        config={config}
+        defaultUserLanguage={pageProps.userLanguage}
+        translations={pageProps.translations}
+      >
         <CodeCopyProvider>
-          <CodeVariantProvider>
-            <PageContext.Provider value={pageContextValue}>
-              <ThemeWrapper>
-                <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                  {children}
-                  <GoogleAnalytics />
-                </DocsStyledEngineProvider>
-              </ThemeWrapper>
-            </PageContext.Provider>
-          </CodeVariantProvider>
+          <CodeStylingProvider>
+            <CodeVariantProvider>
+              <PageContext.Provider value={pageContextValue}>
+                <ThemeWrapper>
+                  <DocsStyledEngineProvider cacheLtr={emotionCache}>
+                    {children}
+                    <GoogleAnalytics />
+                  </DocsStyledEngineProvider>
+                </ThemeWrapper>
+              </PageContext.Provider>
+            </CodeVariantProvider>
+          </CodeStylingProvider>
         </CodeCopyProvider>
       </DocsProvider>
     </React.Fragment>
@@ -333,9 +352,11 @@ AppWrapper.propTypes = {
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <AppWrapper emotionCache={emotionCache} pageProps={pageProps}>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </AppWrapper>
   );
 }
@@ -349,6 +370,9 @@ MyApp.propTypes = {
 MyApp.getInitialProps = async ({ ctx, Component }) => {
   let pageProps = {};
 
+  const req = require.context('../translations', false, /\.\/translations.*\.json$/);
+  const translations = mapTranslations(req);
+
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }
@@ -356,6 +380,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
   return {
     pageProps: {
       userLanguage: ctx.query.userLanguage || 'en',
+      translations,
       ...pageProps,
     },
   };
@@ -363,6 +388,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 
 // Track fraction of actual events to prevent exceeding event quota.
 // Filter sessions instead of individual events so that we can track multiple metrics per device.
+// See https://github.com/GoogleChromeLabs/web-vitals-report to use this data
 const disableWebVitalsReporting = Math.random() > 0.0001;
 export function reportWebVitals({ id, name, label, delta, value }) {
   if (disableWebVitalsReporting) {

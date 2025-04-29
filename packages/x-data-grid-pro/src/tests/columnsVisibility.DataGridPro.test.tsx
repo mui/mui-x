@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act } from '@mui-internal/test-utils';
+import { RefObject } from '@mui/x-internals/types';
+import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPro,
   DataGridProProps,
@@ -22,9 +23,9 @@ const rows: GridRowsProp = [{ id: 1 }];
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns visibility', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   function TestDataGridPro(
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
@@ -55,7 +56,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
 
-      act(() => apiRef.current.updateColumns([{ field: 'id', width: 300 }]));
+      act(() => apiRef.current?.updateColumns([{ field: 'id', width: 300 }]));
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
     });
   });
@@ -65,13 +66,13 @@ describe('<DataGridPro /> - Columns visibility', () => {
       render(
         <TestDataGridPro initialState={{ columns: { columnVisibilityModel: { idBis: false } } }} />,
       );
-      act(() => apiRef.current.setColumnVisibility('id', false));
+      act(() => apiRef.current?.setColumnVisibility('id', false));
       expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
         id: false,
         idBis: false,
       });
 
-      act(() => apiRef.current.setColumnVisibility('id', true));
+      act(() => apiRef.current?.setColumnVisibility('id', true));
       expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
         id: true,
         idBis: false,
@@ -88,14 +89,14 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
 
-      act(() => apiRef.current.setColumnVisibility('id', false));
+      act(() => apiRef.current?.setColumnVisibility('id', false));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         id: false,
         idBis: false,
       });
 
-      act(() => apiRef.current.setColumnVisibility('id', true));
+      act(() => apiRef.current?.setColumnVisibility('id', true));
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         idBis: false,
@@ -114,14 +115,14 @@ describe('<DataGridPro /> - Columns visibility', () => {
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
-      act(() => apiRef.current.setColumnVisibilityModel({}));
+      act(() => apiRef.current?.setColumnVisibilityModel({}));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
     });
   });
 
-  it('should not hide column when resizing a column after hiding it and showing it again', () => {
-    const { getByRole } = render(
+  it('should not hide column when resizing a column after hiding it and showing it again', async () => {
+    const { user } = render(
       <TestDataGridPro
         initialState={{
           columns: { columnVisibilityModel: {} },
@@ -130,16 +131,29 @@ describe('<DataGridPro /> - Columns visibility', () => {
       />,
     );
 
-    const showHideAllCheckbox = getByRole('checkbox', { name: 'Show/Hide All' });
-    fireEvent.click(showHideAllCheckbox);
+    const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
+    await user.click(showHideAllCheckbox);
     expect(getColumnHeadersTextContent()).to.deep.equal([]);
-    fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);
+    await user.click(document.querySelector('[role="tooltip"] [name="id"]')!);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
     const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 100 });
-    fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
-    fireEvent.mouseUp(separator);
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target: separator,
+        coords: { clientX: 100 },
+      },
+      {
+        target: separator,
+        coords: { clientX: 110 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target: separator,
+        coords: { clientX: 110 },
+      },
+    ]);
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
   });

@@ -40,7 +40,7 @@ function DisplayEvents(props: DisplayEventsProps) {
 
 // debounce function
 function debounce(func: (...arg: any) => void, wait = 500) {
-  let timeout: NodeJS.Timeout;
+  let timeout: ReturnType<typeof setTimeout>;
   function debounced(...args: any) {
     const later = () => {
       func(...args);
@@ -57,15 +57,15 @@ function debounce(func: (...arg: any) => void, wait = 500) {
 }
 
 function DateFieldWithAccept(
-  props: DateFieldProps<Dayjs> & { onAccept: (value: Dayjs | null) => void },
+  props: DateFieldProps & { onAccept: (value: Dayjs | null) => void },
 ) {
-  const { value: valueProp, onAccept, onChange, ...other } = props;
+  const { value: valueProp, defaultValue, onAccept, onChange, ...other } = props;
 
   const [value, setValue] = useControlled<Dayjs | null>({
     name: 'FieldAcceptValue',
     state: 'value',
     controlled: valueProp,
-    default: null,
+    default: defaultValue,
   });
 
   // Debounced function needs to be memoized to keep the same timeout between each render.

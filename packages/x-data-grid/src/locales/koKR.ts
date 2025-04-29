@@ -1,4 +1,3 @@
-import { koKR as koKRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '행이 없습니다.',
   noResultsOverlayLabel: '결과값이 없습니다.',
+  // noColumnsOverlayLabel: 'No columns',
+  // noColumnsOverlayManageColumns: 'Manage columns',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: '행 간격',
@@ -37,14 +39,22 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: '프린트',
   toolbarExportExcel: 'Excel로 내보내기',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
+
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
+  columnsManagementSearchTitle: '검색',
+  columnsManagementNoColumns: '열이 없습니다.',
+  columnsManagementShowHideAllText: '모두 보기/숨기기',
+  columnsManagementReset: '초기화',
+  columnsManagementDeleteIconLabel: '제거',
 
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: '모두 삭제',
   filterPanelDeleteIconLabel: '삭제',
   filterPanelLogicOperator: '논리 연산자',
   filterPanelOperator: '연산자',
@@ -56,7 +66,9 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '포함하는',
+  filterOperatorDoesNotContain: '포함하지 않는',
   filterOperatorEquals: '값이 같은',
+  filterOperatorDoesNotEqual: '값이 다른',
   filterOperatorStartsWith: '시작하는',
   filterOperatorEndsWith: '끝나는',
   filterOperatorIs: '~인',
@@ -68,33 +80,36 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '값이 없는',
   filterOperatorIsNotEmpty: '값이 있는',
   filterOperatorIsAnyOf: '값 중 하나인',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
-  // headerFilterOperatorContains: 'Contains',
-  // headerFilterOperatorEquals: 'Equals',
-  // headerFilterOperatorStartsWith: 'Starts with',
-  // headerFilterOperatorEndsWith: 'Ends with',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
-  // headerFilterOperatorAfter: 'Is after',
-  // headerFilterOperatorOnOrAfter: 'Is on or after',
-  // headerFilterOperatorBefore: 'Is before',
-  // headerFilterOperatorOnOrBefore: 'Is on or before',
-  // headerFilterOperatorIsEmpty: 'Is empty',
-  // headerFilterOperatorIsNotEmpty: 'Is not empty',
-  // headerFilterOperatorIsAnyOf: 'Is any of',
-  // 'headerFilterOperator=': 'Equals',
-  // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Greater than',
-  // 'headerFilterOperator>=': 'Greater than or equal to',
-  // 'headerFilterOperator<': 'Less than',
-  // 'headerFilterOperator<=': 'Less than or equal to',
+  headerFilterOperatorContains: '포함하는',
+  headerFilterOperatorDoesNotContain: '포함하지 않는',
+  headerFilterOperatorEquals: '값이 같은',
+  headerFilterOperatorDoesNotEqual: '값이 다른',
+  headerFilterOperatorStartsWith: '시작하는',
+  headerFilterOperatorEndsWith: '끝나는',
+  headerFilterOperatorIs: '~인',
+  headerFilterOperatorNot: '~아닌',
+  headerFilterOperatorAfter: '더 이후',
+  headerFilterOperatorOnOrAfter: '이후',
+  headerFilterOperatorBefore: '더 이전',
+  headerFilterOperatorOnOrBefore: '이전',
+  headerFilterOperatorIsEmpty: '값이 없는',
+  headerFilterOperatorIsNotEmpty: '값이 있는',
+  headerFilterOperatorIsAnyOf: '값 중 하나인',
+  'headerFilterOperator=': '값이 같은',
+  'headerFilterOperator!=': '값이 다른',
+  'headerFilterOperator>': '더 큰',
+  'headerFilterOperator>=': '같거나 더 큰',
+  'headerFilterOperator<': '더 작은',
+  'headerFilterOperator<=': '같거나 더 작은',
+  // headerFilterClear: 'Clear filter',
 
   // Filter values text
   filterValueAny: '아무값',
@@ -103,13 +118,15 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: '메뉴',
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '열 표시',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: '열 관리',
   columnMenuFilter: '필터',
   columnMenuHideColumn: '열 숨기기',
   columnMenuUnsort: '정렬 해제',
   columnMenuSortAsc: '오름차순 정렬',
   columnMenuSortDesc: '내림차순 정렬',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
@@ -160,16 +177,121 @@ const koKRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: '열기',
   collapseDetailPanel: '접기',
 
+  // Pagination
+  paginationRowsPerPage: '페이지 당 행:',
+  // paginationDisplayedRows: ({
+  //   from,
+  //   to,
+  //   count,
+  //   estimated
+  // }) => {
+  //   if (!estimated) {
+  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+  //   }
+  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  // },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return '첫 번째 페이지로 이동';
+    }
+    if (type === 'last') {
+      return '마지막 페이지로 이동';
+    }
+    if (type === 'next') {
+      return '다음 페이지로 이동';
+    }
+    // if (type === 'previous') {
+    return '이전 페이지로 이동';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: '행 재배치',
 
   // Aggregation
-  aggregationMenuItemHeader: '총계',
+  aggregationMenuItemHeader: '집계',
   aggregationFunctionLabelSum: '합',
   aggregationFunctionLabelAvg: '평균',
   aggregationFunctionLabelMin: '최소값',
   aggregationFunctionLabelMax: '최대값',
   aggregationFunctionLabelSize: '크기',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: '프롬프트 입력',
+  promptFieldPlaceholder: '프롬프트 입력…',
+  promptFieldPlaceholderWithRecording: '프롬프트 입력 또는 녹음…',
+  promptFieldPlaceholderListening: '녹음 중…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: '전송',
+  promptFieldRecord: '녹음',
+  promptFieldStopRecording: '녹음 정지',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
-export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);
+export const koKR: Localization = getGridLocalization(koKRGrid);

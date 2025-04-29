@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -10,7 +11,7 @@ import {
   GridSortModel,
   GridSortCellParams,
 } from '../../../models/gridSortModel';
-import { buildWarning } from '../../../utils/warning';
+import { gridRowNodeSelector } from '../rows/gridRowsSelector';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -22,18 +23,16 @@ interface GridParsedSortItem {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
 
-const sortModelDisableMultiColumnsSortingWarning = buildWarning(
-  [
-    'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
-    'If you are using the community version of the `DataGrid`, this prop is always `true`.',
-  ],
-  'error',
-);
-
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
     if (process.env.NODE_ENV !== 'production') {
-      sortModelDisableMultiColumnsSortingWarning();
+      warnOnce(
+        [
+          'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
+        ],
+        'error',
+      );
     }
     return [model[0]];
   }
@@ -56,26 +55,35 @@ const isDesc = (direction: GridSortDirection) => direction === 'desc';
 /**
  * Transform an item of the sorting model into a method comparing two rows.
  * @param {GridSortItem} sortItem The sort item we want to apply.
- * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
+ * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridParsedSortItem | null} The parsed sort item. Returns `null` is the sort item is not valid.
  */
 const parseSortItem = (
   sortItem: GridSortItem,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ): GridParsedSortItem | null => {
   const column = apiRef.current.getColumn(sortItem.field);
   if (!column || sortItem.sort === null) {
     return null;
   }
 
-  const comparator: GridComparatorFn = isDesc(sortItem.sort)
-    ? (...args) => -1 * column.sortComparator!(...args)
-    : column.sortComparator!;
+  let comparator: GridComparatorFn | undefined;
+  if (column.getSortComparator) {
+    comparator = column.getSortComparator(sortItem.sort);
+  } else {
+    comparator = isDesc(sortItem.sort)
+      ? (...args) => -1 * column.sortComparator!(...args)
+      : column.sortComparator!;
+  }
+
+  if (!comparator) {
+    return null;
+  }
 
   const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
     id,
     field: column.field,
-    rowNode: apiRef.current.getRowNode(id)!,
+    rowNode: gridRowNodeSelector(apiRef, id),
     value: apiRef.current.getCellValue(id, column.field),
     api: apiRef.current,
   });
@@ -122,12 +130,12 @@ const compareRows = (
 /**
  * Generates a method to easily sort a list of rows according to the current sort model.
  * @param {GridSortModel} sortModel The model with which we want to sort the rows.
- * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
+ * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridSortingModelApplier | null} A method that generates a list of sorted row ids from a list of rows according to the current sort model. If `null`, we consider that the rows should remain in the order there were provided.
  */
 export const buildAggregatedSortingApplier = (
   sortModel: GridSortModel,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ): GridSortingModelApplier | null => {
   const comparatorList = sortModel
     .map((item) => parseSortItem(item, apiRef))

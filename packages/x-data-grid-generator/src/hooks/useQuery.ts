@@ -1,208 +1,20 @@
+'use client';
 import * as React from 'react';
-import {
-  getGridDefaultColumnTypes,
-  GridRowModel,
-  GridFilterModel,
-  GridSortModel,
-  GridRowId,
-  GridLogicOperator,
-  GridFilterOperator,
-  GridColDef,
-} from '@mui/x-data-grid-pro';
-import { isDeepEqual } from '@mui/x-data-grid/internals';
+import { getGridDefaultColumnTypes, GridRowModel } from '@mui/x-data-grid-pro';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useDemoData,
   UseDemoDataOptions,
   getColumnsFromOptions,
   getInitialState,
 } from './useDemoData';
-import { randomInt } from '../services/random-generator';
-
-const apiRef = {} as any;
-
-const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridRowModel) => {
-  return colDef.valueGetter?.(row[row.id] as never, row, colDef, apiRef) || row[field];
-};
-
-const getRowComparator = (
-  sortModel: GridSortModel | undefined,
-  columnsWithDefaultColDef: GridColDef[],
-) => {
-  if (!sortModel) {
-    const comparator = () => 0;
-    return comparator;
-  }
-  const sortOperators = sortModel.map((sortItem) => {
-    const columnField = sortItem.field;
-    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
-    return {
-      ...sortItem,
-      valueGetter: simplifiedValueGetter(columnField, colDef),
-      sortComparator: colDef.sortComparator,
-    };
-  });
-
-  const comparator = (row1: GridRowModel, row2: GridRowModel) =>
-    sortOperators.reduce((acc, { valueGetter, sort, sortComparator }) => {
-      if (acc !== 0) {
-        return acc;
-      }
-      const v1 = valueGetter(row1);
-      const v2 = valueGetter(row2);
-      return sort === 'desc' ? -1 * sortComparator(v1, v2) : sortComparator(v1, v2);
-    }, 0);
-
-  return comparator;
-};
-
-const getFilteredRows = (
-  rows: GridRowModel[],
-  filterModel: GridFilterModel | undefined,
-  columnsWithDefaultColDef: GridColDef[],
-) => {
-  if (filterModel === undefined || filterModel.items.length === 0) {
-    return rows;
-  }
-
-  const valueGetters = filterModel.items.map(({ field }) =>
-    simplifiedValueGetter(
-      field,
-      columnsWithDefaultColDef.find((column) => column.field === field) as any,
-    ),
-  );
-  const filterFunctions = filterModel.items.map((filterItem) => {
-    const { field, operator } = filterItem;
-    const colDef = columnsWithDefaultColDef.find((column) => column.field === field) as any;
-
-    const filterOperator: any = colDef.filterOperators.find(
-      ({ value }: GridFilterOperator) => operator === value,
-    );
-
-    let parsedValue = filterItem.value;
-    if (colDef.valueParser) {
-      const parser = colDef.valueParser;
-      parsedValue = Array.isArray(filterItem.value)
-        ? filterItem.value?.map((x) => parser(x))
-        : parser(filterItem.value);
-    }
-
-    return filterOperator?.getApplyFilterFn({ filterItem, value: parsedValue }, colDef);
-  });
-
-  if (filterModel.logicOperator === GridLogicOperator.Or) {
-    return rows.filter((row: GridRowModel) =>
-      filterModel.items.some((_, index) => {
-        const value = valueGetters[index](row);
-        return filterFunctions[index] === null ? true : filterFunctions[index]({ value });
-      }),
-    );
-  }
-  return rows.filter((row: GridRowModel) =>
-    filterModel.items.every((_, index) => {
-      const value = valueGetters[index](row);
-      return filterFunctions[index] === null ? true : filterFunctions[index]({ value });
-    }),
-  );
-};
-
-/**
- * Simulates server data loading
- */
-export const loadServerRows = (
-  rows: GridRowModel[],
-  queryOptions: QueryOptions,
-  serverOptions: ServerOptions,
-  columnsWithDefaultColDef: GridColDef[],
-): Promise<FakeServerResponse> => {
-  const { minDelay = 100, maxDelay = 300, useCursorPagination } = serverOptions;
-
-  if (maxDelay < minDelay) {
-    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
-  }
-  const delay = randomInt(minDelay, maxDelay);
-
-  const { cursor, page = 0, pageSize } = queryOptions;
-
-  let nextCursor;
-  let firstRowIndex;
-  let lastRowIndex;
-
-  let filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
-
-  const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
-  filteredRows = [...filteredRows].sort(rowComparator);
-
-  const totalRowCount = filteredRows.length;
-  if (!pageSize) {
-    firstRowIndex = 0;
-    lastRowIndex = filteredRows.length;
-  } else if (useCursorPagination) {
-    firstRowIndex = cursor ? filteredRows.findIndex(({ id }) => id === cursor) : 0;
-    firstRowIndex = Math.max(firstRowIndex, 0); // if cursor not found return 0
-    lastRowIndex = firstRowIndex + pageSize;
-
-    nextCursor = lastRowIndex >= filteredRows.length ? undefined : filteredRows[lastRowIndex].id;
-  } else {
-    firstRowIndex = page * pageSize;
-    lastRowIndex = (page + 1) * pageSize;
-  }
-  const response: FakeServerResponse = {
-    returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
-    nextCursor,
-    totalRowCount,
-  };
-
-  return new Promise<FakeServerResponse>((resolve) => {
-    setTimeout(() => {
-      resolve(response);
-    }, delay); // simulate network latency
-  });
-};
-
-interface FakeServerResponse {
-  returnedRows: GridRowModel[];
-  nextCursor?: string;
-  totalRowCount: number;
-}
-
-interface PageInfo {
-  totalRowCount?: number;
-  nextCursor?: string;
-  pageSize?: number;
-}
-
-interface DefaultServerOptions {
-  minDelay: number;
-  maxDelay: number;
-  useCursorPagination?: boolean;
-}
-
-type ServerOptions = Partial<DefaultServerOptions>;
-
-export interface QueryOptions {
-  cursor?: GridRowId;
-  page?: number;
-  pageSize?: number;
-  // TODO: implement the behavior liked to following models
-  filterModel?: GridFilterModel;
-  sortModel?: GridSortModel;
-  firstRowToRender?: number;
-  lastRowToRender?: number;
-}
+import { DEFAULT_SERVER_OPTIONS, loadServerRows } from './serverUtils';
+import type { ServerOptions, QueryOptions, PageInfo } from './serverUtils';
 
 const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
   dataSet: 'Commodity',
   rowLength: 100,
   maxColumns: 6,
-};
-
-declare const DISABLE_CHANCE_RANDOM: any;
-const disableDelay = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
-
-const DEFAULT_SERVER_OPTIONS: DefaultServerOptions = {
-  minDelay: disableDelay ? 0 : 100,
-  maxDelay: disableDelay ? 0 : 300,
-  useCursorPagination: true,
 };
 
 export const createFakeServer = (
@@ -249,7 +61,7 @@ export const createFakeServer = (
       );
 
       (async function fetchData() {
-        const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
+        const { returnedRows, nextCursor, totalRowCount, hasNextPage } = await loadServerRows(
           rows,
           queryOptions,
           serverOptionsWithDefault,
@@ -263,6 +75,7 @@ export const createFakeServer = (
           pageInfo: {
             totalRowCount,
             nextCursor,
+            hasNextPage,
             pageSize: returnedRows.length,
           },
         };

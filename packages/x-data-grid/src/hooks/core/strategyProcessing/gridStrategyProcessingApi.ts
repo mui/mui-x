@@ -13,30 +13,48 @@ import {
   GridSortingMethodParams,
   GridSortingMethodValue,
 } from '../../features/sorting/gridSortingState';
+import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 
-export type GridStrategyGroup =
-  GridStrategyProcessingLookup[keyof GridStrategyProcessingLookup]['group'];
+export enum GridStrategyGroup {
+  DataSource = 'dataSource',
+  RowTree = 'rowTree',
+}
+
+export type GridStrategyGroupValue = `${GridStrategyGroup}`;
 
 export interface GridStrategyProcessingLookup {
+  dataSourceRowsUpdate: {
+    group: GridStrategyGroup.DataSource;
+    params:
+      | {
+          response: GridGetRowsResponse;
+          fetchParams: GridGetRowsParams;
+        }
+      | {
+          error: Error;
+          fetchParams: GridGetRowsParams;
+        };
+    value: void;
+  };
   rowTreeCreation: {
-    group: 'rowTree';
+    group: GridStrategyGroup.RowTree;
     params: GridRowTreeCreationParams;
     value: GridRowTreeCreationValue;
   };
   filtering: {
-    group: 'rowTree';
+    group: GridStrategyGroup.RowTree;
     params: GridFilteringMethodParams;
     value: GridFilteringMethodValue;
   };
   sorting: {
-    group: 'rowTree';
+    group: GridStrategyGroup.RowTree;
     params: GridSortingMethodParams;
     value: GridSortingMethodValue;
   };
   visibleRowsLookupCreation: {
-    group: 'rowTree';
+    group: GridStrategyGroup.RowTree;
     params: {
       tree: GridRowsState['tree'];
       filteredRowsLookup: GridFilterState['filteredRowsLookup'];
@@ -66,21 +84,21 @@ export interface GridStrategyProcessingApi {
   ) => () => void;
   /**
    * Set a callback to know if a strategy is available.
-   * @param {GridStrategyGroup} strategyGroup The group for which we set strategy availability.
+   * @param {GridStrategyGroupValue} strategyGroup The group for which we set strategy availability.
    * @param {string} strategyName The name of the strategy.
    * @param {boolean} callback A callback to know if this strategy is available.
    */
   setStrategyAvailability: (
-    strategyGroup: GridStrategyGroup,
+    strategyGroup: GridStrategyGroupValue,
     strategyName: string,
     callback: () => boolean,
   ) => void;
   /**
    * Returns the name of the active strategy of a given strategy group
-   * @param {GridStrategyGroup} strategyGroup The group from which we want the active strategy.
+   * @param {GridStrategyGroupValue} strategyGroup The group from which we want the active strategy.
    * @returns {string} The name of the active strategy.
    */
-  getActiveStrategy: (strategyGroup: GridStrategyGroup) => string;
+  getActiveStrategy: (strategyGroup: GridStrategyGroupValue) => string;
   /**
    * Run the processor registered for the active strategy.
    * @param {GridStrategyProcessorName} processorName The name of the processor to run.

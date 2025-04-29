@@ -10,7 +10,8 @@
   "name": "BarElement",
   "imports": [
     "import { BarElement } from '@mui/x-charts/BarChart';",
-    "import { BarElement } from '@mui/x-charts';"
+    "import { BarElement } from '@mui/x-charts';",
+    "import { BarElement } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {
@@ -22,9 +23,27 @@
   ],
   "classes": [
     {
+      "key": "faded",
+      "className": "MuiBarElement-faded",
+      "description": "Styles applied to the root element if it is faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiBarElement-highlighted",
+      "description": "Styles applied to the root element if it is highlighted.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiBarElement-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiBarElement-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

@@ -1,0 +1,12 @@
+<Button onClick={loadNewData}>Regenerate Data</Button>
+
+<div style={{ height: 450, position: 'relative' }}>
+  <DataGridPremium
+    columns={columns}
+    dataSource={dataSource}
+    apiRef={apiRef}
+    initialState={initialState}
+    showToolbar
+    groupingColDef={groupingColDef}
+  />
+</div>

@@ -1,0 +1,22 @@
+{
+  "name": "GridCellParams",
+  "imports": [
+    "import { GridCellParams } from '@mui/x-data-grid-premium'",
+    "import { GridCellParams } from '@mui/x-data-grid-pro'",
+    "import { GridCellParams } from '@mui/x-data-grid'"
+  ],
+  "properties": {
+    "api": { "type": { "description": "GridApiCommunity" }, "required": true },
+    "cellMode": { "type": { "description": "GridCellMode" }, "required": true },
+    "colDef": { "type": { "description": "GridStateColDef" }, "required": true },
+    "field": { "type": { "description": "string" }, "required": true },
+    "hasFocus": { "type": { "description": "boolean" }, "required": true },
+    "id": { "type": { "description": "GridRowId" }, "required": true },
+    "row": { "type": { "description": "GridRowModel&lt;R&gt;" }, "required": true },
+    "rowNode": { "type": { "description": "N" }, "required": true },
+    "tabIndex": { "type": { "description": "0 | -1" }, "required": true },
+    "formattedValue": { "type": { "description": "F | undefined" } },
+    "isEditable": { "type": { "description": "boolean" } },
+    "value": { "type": { "description": "V | undefined" } }
+  }
+}

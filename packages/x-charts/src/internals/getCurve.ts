@@ -7,35 +7,33 @@ import {
   curveStep,
   curveStepAfter,
   curveStepBefore,
-} from 'd3-shape';
-import { CurveType } from '../models/seriesType/line';
+  curveBumpX,
+  curveBumpY,
+} from '@mui/x-charts-vendor/d3-shape';
+import { CurveType } from '../models/curve';
 
-export default function getCurveFactory(curveType?: CurveType) {
+export function getCurveFactory(curveType?: CurveType) {
   switch (curveType) {
-    case 'catmullRom': {
+    case 'catmullRom':
       return curveCatmullRom.alpha(0.5);
-    }
-    case 'linear': {
+    case 'linear':
       return curveLinear;
-    }
-    case 'monotoneX': {
+    case 'monotoneX':
       return curveMonotoneX;
-    }
-    case 'monotoneY': {
+    case 'monotoneY':
       return curveMonotoneY;
-    }
-    case 'natural': {
+    case 'natural':
       return curveNatural;
-    }
-    case 'step': {
+    case 'step':
       return curveStep;
-    }
-    case 'stepBefore': {
+    case 'stepBefore':
       return curveStepBefore;
-    }
-    case 'stepAfter': {
+    case 'stepAfter':
       return curveStepAfter;
-    }
+    case 'bumpY':
+      return curveBumpY;
+    case 'bumpX':
+      return curveBumpX;
     default:
       return curveMonotoneX;
   }

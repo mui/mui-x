@@ -1,26 +1,8 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { DateOrTimeViewWithMeridiem } from '../common';
 
-export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedBaseToolbarProps {
-  isLandscape: boolean;
-  onChange: (newValue: TValue) => void;
-  value: TValue;
-  /**
-   * Currently visible picker view.
-   */
-  view: TView;
-  /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: (view: TView) => void;
-  views: readonly TView[];
-  disabled?: boolean;
-  readOnly?: boolean;
+export interface BaseToolbarProps extends ExportedBaseToolbarProps {
   titleId?: string;
 }
 

@@ -7,10 +7,10 @@
     "cornerRadius": {
       "description": "The radius applied to arc corners (similar to border radius)."
     },
-    "faded": { "description": "Override the arc attibutes when it is faded." },
-    "highlighted": { "description": "Override the arc attibutes when it is highlighted." },
+    "faded": { "description": "Override the arc attributes when it is faded." },
+    "highlighted": { "description": "Override the arc attributes when it is highlighted." },
     "innerRadius": {
-      "description": "The radius between circle center and the begining of the arc."
+      "description": "The radius between circle center and the beginning of the arc."
     },
     "onItemClick": {
       "description": "Callback fired when a pie item is clicked.",

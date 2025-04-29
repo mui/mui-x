@@ -7,14 +7,20 @@ const originalDocument = global.document;
 global.document = undefined;
 
 const path = require('path');
-const { TSESLint } = require('@typescript-eslint/experimental-utils');
+const mocha = require('mocha');
+const { RuleTester } = require('@typescript-eslint/rule-tester');
+const TSESlintParser = require('@typescript-eslint/parser');
 const rule = require('./no-direct-state-access');
 
-const ruleTester = new TSESLint.RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
-  parserOptions: {
-    tsconfigRootDir: path.join(__dirname, '../fixtures'),
-    project: './tsconfig.json',
+RuleTester.afterAll = mocha.after;
+
+const ruleTester = new RuleTester({
+  languageOptions: {
+    parser: TSESlintParser,
+    parserOptions: {
+      tsconfigRootDir: path.join(__dirname, '../fixtures'),
+      project: './tsconfig.json',
+    },
   },
 });
 

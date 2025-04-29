@@ -1,98 +1,13 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
-import { styled, useThemeProps } from '@mui/material/styles';
-import { Popper, PopperProps } from '@mui/base/Popper';
-import { NoSsr } from '@mui/base/NoSsr';
-import { useSlotProps } from '@mui/base/utils';
-import {
-  AxisInteractionData,
-  InteractionContext,
-  ItemInteractionData,
-} from '../context/InteractionProvider';
-import {
-  generateVirtualElement,
-  useMouseTracker,
-  getTooltipHasData,
-  TriggerOptions,
-} from './utils';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
-import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
+import HTMLElementType from '@mui/utils/HTMLElementType';
+import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
+import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
+import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
+import { useUtilityClasses } from './chartsTooltipClasses';
 
-export interface ChartsTooltipSlots {
-  popper?: React.ElementType<PopperProps>;
-  axisContent?: React.ElementType<ChartsAxisContentProps>;
-  itemContent?: React.ElementType<ChartsItemContentProps>;
-}
-
-export interface ChartsTooltipSlotProps {
-  popper?: Partial<PopperProps>;
-  axisContent?: Partial<ChartsAxisContentProps>;
-  itemContent?: Partial<ChartsItemContentProps>;
-}
-
-export type ChartsTooltipProps = {
-  /**
-   * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
-   * @default 'item'
-   */
-  trigger?: TriggerOptions;
-  /**
-   * Component to override the tooltip content when triger is set to 'item'.
-   * @deprecated Use slots.itemContent instead
-   */
-  itemContent?: React.ElementType<ChartsItemContentProps<any>>;
-  /**
-   * Component to override the tooltip content when triger is set to 'axis'.
-   * @deprecated Use slots.axisContent instead
-   */
-  axisContent?: React.ElementType<ChartsAxisContentProps>;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<ChartsTooltipClasses>;
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: ChartsTooltipSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: ChartsTooltipSlotProps;
-};
-
-const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] }) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['root'],
-    table: ['table'],
-    row: ['row'],
-    cell: ['cell'],
-    mark: ['mark'],
-    markCell: ['markCell'],
-    labelCell: ['labelCell'],
-    valueCell: ['valueCell'],
-  };
-
-  return composeClasses(slots, getChartsTooltipUtilityClass, classes);
-};
-
-const ChartsTooltipRoot = styled(Popper, {
-  name: 'MuiChartsTooltip',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})(({ theme }) => ({
-  pointerEvents: 'none',
-  zIndex: theme.zIndex.modal,
-}));
+export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
 
 /**
  * Demos:
@@ -104,101 +19,255 @@ const ChartsTooltipRoot = styled(Popper, {
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
 function ChartsTooltip(props: ChartsTooltipProps) {
-  const themeProps = useThemeProps({
-    props,
-    name: 'MuiChartsTooltip',
-  });
-  const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = themeProps;
+  const { classes: propClasses, trigger = 'axis' } = props;
 
-  const mousePosition = useMouseTracker();
-
-  const { item, axis } = React.useContext(InteractionContext);
-
-  const displayedData = trigger === 'item' ? item : axis;
-
-  const tooltipHasData = getTooltipHasData(trigger, displayedData);
-  const popperOpen = mousePosition !== null && tooltipHasData;
-
-  const classes = useUtilityClasses({ classes: themeProps.classes });
-
-  const PopperComponent = slots?.popper ?? ChartsTooltipRoot;
-  const popperProps = useSlotProps({
-    elementType: PopperComponent,
-    externalSlotProps: slotProps?.popper,
-    additionalProps: {
-      open: popperOpen,
-      placement: 'right-start' as const,
-      anchorEl: generateVirtualElement(mousePosition),
-    },
-    ownerState: {},
-  });
-
-  if (trigger === 'none') {
-    return null;
-  }
+  const classes = useUtilityClasses(propClasses);
 
   return (
-    <NoSsr>
-      {popperOpen && (
-        <PopperComponent {...popperProps}>
-          {trigger === 'item' ? (
-            <ChartsItemTooltipContent
-              itemData={displayedData as ItemInteractionData<ChartSeriesType>}
-              content={slots?.itemContent ?? itemContent}
-              contentProps={slotProps?.itemContent}
-              sx={{ mx: 2 }}
-              classes={classes}
-            />
-          ) : (
-            <ChartsAxisTooltipContent
-              axisData={displayedData as AxisInteractionData}
-              content={slots?.axisContent ?? axisContent}
-              contentProps={slotProps?.axisContent}
-              sx={{ mx: 2 }}
-              classes={classes}
-            />
-          )}
-        </PopperComponent>
+    <ChartsTooltipContainer {...props} classes={classes}>
+      {trigger === 'axis' ? (
+        <ChartsAxisTooltipContent classes={classes} />
+      ) : (
+        <ChartsItemTooltipContent classes={classes} />
       )}
-    </NoSsr>
+    </ChartsTooltipContainer>
   );
 }
 
 ChartsTooltip.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Component to override the tooltip content when triger is set to 'axis'.
-   * @deprecated Use slots.axisContent instead
+   * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
+   * or a function that returns either.
+   * It's used to set the position of the popper.
+   * The return value will passed as the reference object of the Popper instance.
    */
-  axisContent: PropTypes.elementType,
+  anchorEl: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    HTMLElementType,
+    PropTypes.object,
+    PropTypes.func,
+  ]),
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
   /**
-   * Component to override the tooltip content when triger is set to 'item'.
-   * @deprecated Use slots.itemContent instead
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
    */
-  itemContent: PropTypes.elementType,
+  component: PropTypes.elementType,
   /**
-   * The props used for each component slot.
+   * The components used for each slot inside the Popper.
+   * Either a string to use a HTML element or a component.
+   *
+   * @deprecated use the `slots` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
+   * @default {}
+   */
+  components: PropTypes.shape({
+    Root: PropTypes.elementType,
+  }),
+  /**
+   * The props used for each slot inside the Popper.
+   *
+   * @deprecated use the `slotProps` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
+   * @default {}
+   */
+  componentsProps: PropTypes.shape({
+    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  }),
+  /**
+   * An HTML element or function that returns one.
+   * The `container` will have the portal children appended to it.
+   *
+   * You can also provide a callback, which is called in a React layout effect.
+   * This lets you set the container from a ref, and also makes server-side rendering possible.
+   *
+   * By default, it uses the body of the top-level document object,
+   * so it's simply `document.body` most of the time.
+   */
+  container: PropTypes.oneOfType([
+    (props, propName) => {
+      if (props[propName] == null) {
+        return new Error(`Prop '${propName}' is required but wasn't specified`);
+      }
+      if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
+        return new Error(`Expected prop '${propName}' to be of type Element`);
+      }
+      return null;
+    },
+    PropTypes.func,
+  ]),
+  /**
+   * The `children` will be under the DOM hierarchy of the parent component.
+   * @default false
+   */
+  disablePortal: PropTypes.bool,
+  /**
+   * Always keep the children in the DOM.
+   * This prop can be useful in SEO situation or
+   * when you want to maximize the responsiveness of the Popper.
+   * @default false
+   */
+  keepMounted: PropTypes.bool,
+  /**
+   * Popper.js is based on a "plugin-like" architecture,
+   * most of its features are fully encapsulated "modifiers".
+   *
+   * A modifier is a function that is called each time Popper.js needs to
+   * compute the position of the popper.
+   * For this reason, modifiers should be very performant to avoid bottlenecks.
+   * To learn how to create a modifier, [read the modifiers documentation](https://popper.js.org/docs/v2/modifiers/).
+   */
+  modifiers: PropTypes.arrayOf(
+    PropTypes.shape({
+      data: PropTypes.object,
+      effect: PropTypes.func,
+      enabled: PropTypes.bool,
+      fn: PropTypes.func,
+      name: PropTypes.any,
+      options: PropTypes.object,
+      phase: PropTypes.oneOf([
+        'afterMain',
+        'afterRead',
+        'afterWrite',
+        'beforeMain',
+        'beforeRead',
+        'beforeWrite',
+        'main',
+        'read',
+        'write',
+      ]),
+      requires: PropTypes.arrayOf(PropTypes.string),
+      requiresIfExists: PropTypes.arrayOf(PropTypes.string),
+    }),
+  ),
+  /**
+   * If `true`, the component is shown.
+   */
+  open: PropTypes.bool,
+  /**
+   * Popper placement.
+   * @default 'bottom'
+   */
+  placement: PropTypes.oneOf([
+    'auto-end',
+    'auto-start',
+    'auto',
+    'bottom-end',
+    'bottom-start',
+    'bottom',
+    'left-end',
+    'left-start',
+    'left',
+    'right-end',
+    'right-start',
+    'right',
+    'top-end',
+    'top-start',
+    'top',
+  ]),
+  /**
+   * Options provided to the [`Popper.js`](https://popper.js.org/docs/v2/constructors/#options) instance.
+   * @default {}
+   */
+  popperOptions: PropTypes.shape({
+    modifiers: PropTypes.array,
+    onFirstUpdate: PropTypes.func,
+    placement: PropTypes.oneOf([
+      'auto-end',
+      'auto-start',
+      'auto',
+      'bottom-end',
+      'bottom-start',
+      'bottom',
+      'left-end',
+      'left-start',
+      'left',
+      'right-end',
+      'right-start',
+      'right',
+      'top-end',
+      'top-start',
+      'top',
+    ]),
+    strategy: PropTypes.oneOf(['absolute', 'fixed']),
+  }),
+  /**
+   * A ref that points to the used popper instance.
+   */
+  popperRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        destroy: PropTypes.func.isRequired,
+        forceUpdate: PropTypes.func.isRequired,
+        setOptions: PropTypes.func.isRequired,
+        state: PropTypes.shape({
+          attributes: PropTypes.object.isRequired,
+          elements: PropTypes.object.isRequired,
+          modifiersData: PropTypes.object.isRequired,
+          options: PropTypes.object.isRequired,
+          orderedModifiers: PropTypes.arrayOf(PropTypes.object).isRequired,
+          placement: PropTypes.oneOf([
+            'auto-end',
+            'auto-start',
+            'auto',
+            'bottom-end',
+            'bottom-start',
+            'bottom',
+            'left-end',
+            'left-start',
+            'left',
+            'right-end',
+            'right-start',
+            'right',
+            'top-end',
+            'top-start',
+            'top',
+          ]).isRequired,
+          rects: PropTypes.object.isRequired,
+          reset: PropTypes.bool.isRequired,
+          scrollParents: PropTypes.object.isRequired,
+          strategy: PropTypes.oneOf(['absolute', 'fixed']).isRequired,
+          styles: PropTypes.object.isRequired,
+        }).isRequired,
+        update: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
+   * The props used for each slot inside the Popper.
    * @default {}
    */
   slotProps: PropTypes.object,
   /**
-   * Overridable component slots.
+   * The components used for each slot inside the Popper.
+   * Either a string to use a HTML element or a component.
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
+   * Help supporting a react-transition-group/Transition component.
+   * @default false
+   */
+  transition: PropTypes.bool,
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
    * - 'axis': Shows values associated with the hovered x value
    * - 'none': Does not display tooltip
-   * @default 'item'
+   * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),
 } as any;

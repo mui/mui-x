@@ -18,36 +18,236 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
-    title: 'MUI X v7.0.0-beta.0',
-    description:
-      'Featuring new components and multiple enhancements for both developers and end-users.',
-    date: new Date(2024, 0, 29),
-    url: 'https://mui.com/blog/mui-x-v7-beta/',
+    title: 'MUI X v8',
+    description: 'Cutting-edge features, enhanced customization, and full support for native ESM.',
+    date: new Date(2025, 3, 17),
+    url: 'https://mui.com/blog/mui-x-v8/',
     highlightList: [
       {
-        title: 'Data Grid - Sticky headers',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#sticky-headers',
+        title: 'Data Grid – Pivoting [Premium]',
+        url: 'https://mui.com/blog/mui-x-v8/#pivoting',
       },
       {
-        title: 'Data Grid - Columns management panel',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#improved-columns-panel-design',
+        title: 'Data Grid – Ask Your Table (AI Assistance) [Premium]',
+        url: 'https://mui.com/blog/mui-x-v8/#ask-your-table-ai-assistance-in-the-data-grid',
       },
       {
-        title: 'Rich Tree View',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#richtreeview',
+        title: 'Data Grid – Server-side aggregation & Lazy loading [Premium/Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#server-side-aggregation-and-lazy-loading',
       },
       {
-        title: 'Date Time Range Picker',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#date-time-range-picker',
+        title: 'Data Grid – Data source with support for editing',
+        url: 'https://mui.com/blog/mui-x-v8/#data-source-with-support-for-editing',
       },
       {
-        title: 'Charts - Reference line ',
-        url: 'https://mui.com/blog/mui-x-v7-beta/#reference-line',
+        title: 'Data Grid – Data source on the community plan',
+        url: 'https://mui.com/blog/mui-x-v8/#data-source-on-the-community-plan',
+      },
+      {
+        title: 'Data Grid – New toolbar',
+        url: 'https://mui.com/blog/mui-x-v8/#new-toolbar',
+      },
+      {
+        title: 'Data Grid – No columns overlay',
+        url: 'https://mui.com/blog/mui-x-v8/#no-columns-overlay',
+      },
+      {
+        title: 'Date & Time Pickers – Time Range Picker [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#time-range-picker',
+      },
+      {
+        title: 'Date & Time Pickers – New view-switching strategy',
+        url: 'https://mui.com/blog/mui-x-v8/#new-view-switching-strategy',
+      },
+      {
+        title: 'Date & Time Pickers – Clear "ownerState" for slots',
+        url: 'https://mui.com/blog/mui-x-v8/#clear-ownerstate-for-slots',
+      },
+      {
+        title: 'Date & Time Pickers – Accessible DOM structure',
+        url: 'https://mui.com/blog/mui-x-v8/#accessible-dom-structure',
+      },
+      {
+        title: 'Date & Time Pickers – Keyboard editing on mobile pickers',
+        url: 'https://mui.com/blog/mui-x-v8/#keyboard-editing-on-mobile-pickers',
+      },
+      {
+        title: 'Tree View – Lazy loading children [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#lazy-loading-children',
+      },
+      {
+        title: 'Tree View – Automatic selection propagation',
+        url: 'https://mui.com/blog/mui-x-v8/#automatic-selection-propagation',
+      },
+      {
+        title: 'Tree View – New customization hook',
+        url: 'https://mui.com/blog/mui-x-v8/#new-customization-hook',
+      },
+      {
+        title: 'Charts – Funnel charts [Pro]',
+        url: 'https://mui.com/blog/mui-x-v8/#funnel-charts',
+      },
+      {
+        title: 'Charts – Radar charts',
+        url: 'https://mui.com/blog/mui-x-v8/#radar-charts',
+      },
+      {
+        title: 'Charts – New animation engine',
+        url: 'https://mui.com/blog/mui-x-v8/#new-animation-engine',
+      },
+      {
+        title: 'Charts – Server-side rendering for charts',
+        url: 'https://mui.com/blog/mui-x-v8/#server-side-rendering-for-charts',
+      },
+      {
+        title: 'Charts – Refined design and interaction',
+        url: 'https://mui.com/blog/mui-x-v8/#refined-design-and-interaction',
+      },
+      {
+        title: 'Charts – HTML legend for Charts',
+        url: 'https://mui.com/blog/mui-x-v8/#html-legend-for-charts',
+      },
+      {
+        title: 'Charts – Composition',
+        url: 'https://mui.com/blog/mui-x-v8/#charts-composition',
       },
     ],
   },
   {
-    title: 'MUI X v6.18.x',
+    title: 'MUI X v7.19',
+    description: 'A roundup of all new features since v7.15.0.',
+    date: new Date(2024, 9, 4),
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.19.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Row spanning',
+        url: '/x/react-data-grid/row-spanning/',
+      },
+      {
+        title: 'Data Grid – Automatic parent and child selection',
+        url: '/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection',
+      },
+      {
+        title: 'Date and Time Pickers – Support date-fns v4',
+        url: '/x/react-date-pickers/adapters-locale/#with-date-fns',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v7.15',
+    date: new Date(2024, 7, 29),
+    description: 'A roundup of all new features since v7.13.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.15.0',
+    highlightList: [
+      {
+        title: 'Material UI v6 support',
+        url: 'https://github.com/mui/mui-x/releases/tag/v7.15.0',
+      },
+      {
+        title: 'Charts – Zoom filtering',
+        url: '/x/react-charts/zoom-and-pan/#zoom-filtering',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v7.13',
+    date: new Date(2024, 7, 16),
+    description: 'A roundup of all new features since v7.8.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.13.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Loading overlay variants',
+        url: '/x/react-data-grid/overlays/#loading-overlay',
+      },
+      {
+        title: 'Rich Tree View – Drag & drop re-ordering',
+        url: '/x/react-tree-view/rich-tree-view/ordering/',
+      },
+      {
+        title: 'Rich Tree View – Label editing',
+        url: '/x/react-tree-view/rich-tree-view/editing/',
+      },
+      {
+        title: 'Charts – Heatmap',
+        url: '/x/react-charts/heatmap/',
+      },
+      {
+        title: 'Charts – Zoom & Pan',
+        url: '/x/react-charts/zoom-and-pan/',
+      },
+      {
+        title: 'Charts – Color legend',
+        url: '/x/react-charts/legend/#color-legend',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v7.8',
+    date: new Date(2024, 5, 28),
+    description: 'A roundup of all new features since v7.0.0.',
+    url: 'https://github.com/mui/mui-x/releases/tag/v7.8.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Server-side Data Source',
+        url: '/x/react-data-grid/server-side-data/',
+      },
+      {
+        title: 'Data Grid – Support unknown and estimated row count in server-side pagination',
+        url: '/x/react-data-grid/pagination/#index-based-pagination',
+      },
+      {
+        title: 'Charts – Color scales',
+        url: '/x/react-charts/styling/#values-color',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v7',
+    description:
+      'Featuring new components and multiple enhancements for both developers and end-users.',
+    date: new Date(2024, 2, 21),
+    url: 'https://mui.com/blog/mui-x-v7/',
+    highlightList: [
+      {
+        title: 'Data Grid – Column resizing on the Community plan',
+        url: 'https://mui.com/blog/mui-x-v7/#column-resizing-on-the-community-plan',
+      },
+      {
+        title: 'Data Grid – Sticky headers and improved scrolling performance',
+        url: 'https://mui.com/blog/mui-x-v7/#sticky-headers-and-improved-scrolling-performance',
+      },
+      {
+        title: 'Data Grid – Improved columns panel design',
+        url: 'https://mui.com/blog/mui-x-v7/#improved-columns-panel-design',
+      },
+      {
+        title: 'Data Grid – New stable features',
+        url: 'https://mui.com/blog/mui-x-v7/#new-stable-features',
+      },
+      {
+        title: 'Rich Tree View',
+        url: 'https://mui.com/blog/mui-x-v7/#rich-tree-view',
+      },
+      {
+        title: 'Charts – Gauge charts',
+        url: 'https://mui.com/blog/mui-x-v7/#gauge-charts',
+      },
+      {
+        title: 'Charts – Reference line',
+        url: 'https://mui.com/blog/mui-x-v7/#reference-line',
+      },
+      {
+        title: 'Date Time Range Picker',
+        url: 'https://mui.com/blog/mui-x-v7/#date-time-range-picker',
+      },
+      {
+        title: 'Support for date-fns v3',
+        url: 'https://mui.com/blog/mui-x-v7/#support-for-date-fns-v3',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v6.18',
     description: 'New stable components, polished features, better performance, and more.',
     date: new Date(2023, 10, 13),
     url: 'https://mui.com/blog/mui-x-end-v6-features/',
@@ -79,7 +279,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v6.11.0',
+    title: 'MUI X v6.11',
     description: 'A roundup of all new features since v6.0.0.',
     date: new Date(2023, 7, 14),
     url: 'https://mui.com/blog/mui-x-mid-v6-features/',
@@ -111,7 +311,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v6.0.0',
+    title: 'MUI X v6',
     description: 'A new major is available, with many new features and improvements.',
     date: new Date(2023, 2, 6),
     url: 'https://mui.com/blog/mui-x-v6/',
@@ -147,7 +347,7 @@ const entries = [
     ],
   },
   {
-    title: 'Date Pickers v5.0.0',
+    title: 'MUI X Date Pickers v5',
     description:
       'After some months of polishing in pre-releases, the Date Pickers finally get a stable.',
     date: new Date(2022, 8, 22),
@@ -168,7 +368,7 @@ const entries = [
     ],
   },
   {
-    title: 'Data Grid v5.15',
+    title: 'MUI X Data Grid v5.15',
     description:
       'This version brings an amazing set of new supported use cases with the Data Grid Premium.',
     date: new Date(2022, 7, 12),
@@ -196,7 +396,7 @@ const entries = [
     ],
   },
   {
-    title: 'MUI X v5.0.0',
+    title: 'MUI X v5',
     description: 'A new Data Grid virtualization engine, and improvements in several APIs.',
     date: new Date(2021, 10, 22),
     url: 'https://mui.com/blog/mui-x-v5/',
@@ -268,20 +468,22 @@ function BlogCard({ entry }) {
             {entry.description}
           </Typography>
         </div>
-        <Button
-          component="a"
-          size="small"
-          variant="outlined"
-          href={entry.url}
-          sx={{
-            height: 'fit-content',
-            flexShrink: 0,
-            width: { xs: '100%', sm: 'fit-content' },
-          }}
-        >
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-          {'Read more'}
-        </Button>
+        {entry.url && (
+          <Button
+            component="a"
+            size="small"
+            variant="outlined"
+            href={entry.url}
+            sx={{
+              height: 'fit-content',
+              flexShrink: 0,
+              width: { xs: '100%', sm: 'fit-content' },
+            }}
+          >
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+            {'Read more'}
+          </Button>
+        )}
       </Box>
       <Divider />
       <List sx={{ p: 2, pt: 1.5 }}>

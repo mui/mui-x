@@ -1,0 +1,12 @@
+<Typography>
+  {isSelectedItemLeaf == null && 'No item selected'}
+  {isSelectedItemLeaf === true && 'The selected item is a leaf'}
+  {isSelectedItemLeaf === false && 'The selected item is a node with children'}
+</Typography>
+<Box sx={{ minHeight: 352, minWidth: 300 }}>
+  <RichTreeView
+    items={MUI_X_PRODUCTS}
+    apiRef={apiRef}
+    onSelectedItemsChange={handleSelectedItemsChange}
+  />
+</Box>

@@ -1,5 +1,5 @@
+import { RefObject } from '@mui/x-internals/types';
 import {
-  GridRowId,
   GridRowTreeConfig,
   GridTreeNode,
   GridFilterState,
@@ -17,10 +17,13 @@ interface FilterRowTreeFromTreeDataParams {
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
-  apiRef: React.MutableRefObject<GridPrivateApiPro>;
+  apiRef: RefObject<GridPrivateApiPro>;
 }
 
-export const TREE_DATA_STRATEGY = 'tree-data';
+export enum TreeDataStrategy {
+  Default = 'tree-data',
+  DataSource = 'tree-data-source',
+}
 
 /**
  * A node is visible if one of the following criteria is met:
@@ -31,8 +34,9 @@ export const filterRowTreeFromTreeData = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
-  const filteredRowsLookup: Record<GridRowId, boolean> = {};
-  const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+  const filteredRowsLookup: GridFilterState['filteredRowsLookup'] = {};
+  const filteredChildrenCountLookup: GridFilterState['filteredChildrenCountLookup'] = {};
+  const filteredDescendantCountLookup: GridFilterState['filteredDescendantCountLookup'] = {};
   const filterCache = {};
 
   const filterResults: GridAggregatedFilterItemApplierResult = {
@@ -64,6 +68,7 @@ export const filterRowTreeFromTreeData = (
       );
     }
 
+    let filteredChildrenCount = 0;
     let filteredDescendantCount = 0;
     if (node.type === 'group') {
       node.children.forEach((childId) => {
@@ -75,6 +80,9 @@ export const filterRowTreeFromTreeData = (
         );
 
         filteredDescendantCount += childSubTreeSize;
+        if (childSubTreeSize > 0) {
+          filteredChildrenCount += 1;
+        }
       });
     }
 
@@ -94,12 +102,15 @@ export const filterRowTreeFromTreeData = (
       }
     }
 
-    filteredRowsLookup[node.id] = shouldPassFilters;
+    if (!shouldPassFilters) {
+      filteredRowsLookup[node.id] = false;
+    }
 
     if (!shouldPassFilters) {
       return 0;
     }
 
+    filteredChildrenCountLookup[node.id] = filteredChildrenCount;
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
 
     if (node.type === 'footer') {
@@ -119,6 +130,7 @@ export const filterRowTreeFromTreeData = (
 
   return {
     filteredRowsLookup,
+    filteredChildrenCountLookup,
     filteredDescendantCountLookup,
   };
 };

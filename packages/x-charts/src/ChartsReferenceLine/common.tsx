@@ -14,7 +14,7 @@ export type CommonChartsReferenceLineProps = {
    */
   label?: string;
   /**
-   * Additional space arround the label in px.
+   * Additional space around the label in px.
    * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
    * @default 5
    */

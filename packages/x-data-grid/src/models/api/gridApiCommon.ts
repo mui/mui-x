@@ -1,28 +1,28 @@
-import { GridColumnApi } from './gridColumnApi';
-import { GridColumnMenuApi } from './gridColumnMenuApi';
-import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
-import { GridCsvExportApi } from './gridCsvExportApi';
-import { GridDensityApi } from './gridDensityApi';
-import { GridEditingApi, GridEditingPrivateApi } from './gridEditingApi';
+import type { GridColumnApi } from './gridColumnApi';
+import type { GridColumnMenuApi } from './gridColumnMenuApi';
+import type { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
+import type { GridCsvExportApi } from './gridCsvExportApi';
+import type { GridDensityApi } from './gridDensityApi';
+import type { GridEditingApi, GridEditingPrivateApi } from './gridEditingApi';
 import type { GridFilterApi } from './gridFilterApi';
-import { GridFocusApi, GridFocusPrivateApi } from './gridFocusApi';
-import { GridLocaleTextApi } from './gridLocaleTextApi';
-import type { GridParamsApi } from './gridParamsApi';
-import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
-import { GridPrintExportApi } from './gridPrintExportApi';
-import { GridRowApi } from './gridRowApi';
-import { GridRowsMetaApi, GridRowsMetaPrivateApi } from './gridRowsMetaApi';
-import { GridRowSelectionApi } from './gridRowSelectionApi';
-import { GridSortApi } from './gridSortApi';
-import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
-import { GridLoggerApi } from './gridLoggerApi';
-import { GridScrollApi } from './gridScrollApi';
-import { GridVirtualizationApi, GridVirtualizationPrivateApi } from './gridVirtualizationApi';
+import type { GridFocusApi, GridFocusPrivateApi } from './gridFocusApi';
+import type { GridLocaleTextApi } from './gridLocaleTextApi';
+import type { GridParamsApi, GridParamsPrivateApi } from './gridParamsApi';
+import type { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
+import type { GridPrintExportApi } from './gridPrintExportApi';
+import type { GridRowApi, GridRowProPrivateApi } from './gridRowApi';
+import type { GridRowsMetaApi, GridRowsMetaPrivateApi } from './gridRowsMetaApi';
+import type { GridRowSelectionApi } from './gridRowSelectionApi';
+import type { GridSortApi } from './gridSortApi';
+import type { GridStateApi, GridStatePrivateApi } from './gridStateApi';
+import type { GridLoggerApi } from './gridLoggerApi';
+import type { GridScrollApi } from './gridScrollApi';
+import type { GridVirtualizationApi, GridVirtualizationPrivateApi } from './gridVirtualizationApi';
 import type {
   GridPipeProcessingApi,
   GridPipeProcessingPrivateApi,
 } from '../../hooks/core/pipeProcessing';
-import { GridColumnSpanningApi, GridColumnSpanningPrivateApi } from './gridColumnSpanning';
+import type { GridColumnSpanningApi, GridColumnSpanningPrivateApi } from './gridColumnSpanning';
 import type { GridStrategyProcessingApi } from '../../hooks/core/strategyProcessing';
 import type {
   GridDimensionsApi,
@@ -30,10 +30,15 @@ import type {
 } from '../../hooks/features/dimensions/gridDimensionsApi';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
-import { GridColumnGroupingApi } from './gridColumnGroupingApi';
+import type { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
-import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
+import type {
+  GridHeaderFilteringApi,
+  GridHeaderFilteringPrivateApi,
+} from './gridHeaderFilteringApi';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
+import type { GridColumnResizeApi } from '../../hooks/features/columnResize';
+import type { GridPivotingPrivateApiCommunity } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -63,7 +68,8 @@ export interface GridApiCommon<
     GridStateApi<GridState>,
     GridStatePersistenceApi<GridInitialState>,
     GridColumnGroupingApi,
-    GridHeaderFilteringApi {}
+    GridHeaderFilteringApi,
+    GridColumnResizeApi {}
 
 export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,
@@ -80,7 +86,10 @@ export interface GridPrivateOnlyApiCommon<
     GridLoggerApi,
     GridFocusPrivateApi,
     GridHeaderFilteringPrivateApi,
-    GridVirtualizationPrivateApi {}
+    GridVirtualizationPrivateApi,
+    GridRowProPrivateApi,
+    GridParamsPrivateApi,
+    GridPivotingPrivateApiCommunity {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

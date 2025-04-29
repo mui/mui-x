@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Південь',
 };
 
-const ukUAPickers: Partial<PickersLocaleText<any>> = {
+const ukUAPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Попередній місяць',
   nextMonth: 'Наступний місяць',
@@ -25,26 +25,28 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Початок',
   end: 'Кінець',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'День початку',
+  startTime: 'Час початку',
+  endDate: 'День закінчення',
+  endTime: 'Час закінчення',
 
   // Action bar
   cancelButtonLabel: 'Відміна',
   clearButtonLabel: 'Очистити',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Сьогодні',
+  nextStepButtonLabel: 'Наступний',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Вибрати дату',
   dateTimePickerToolbarTitle: 'Вибрати дату і час',
   timePickerToolbarTitle: 'Вибрати час',
   dateRangePickerToolbarTitle: 'Вибрати календарний період',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Вибрати ${timeViews[view]}. ${time === null ? 'Час не вибраний' : `Вибрано час ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Вибрати ${timeViews[view]}. ${!formattedTime ? 'Час не вибраний' : `Вибрано час ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -58,16 +60,13 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Тиждень ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Оберіть дату, обрана дата  ${utils.format(value, 'fullDate')}`
-      : 'Оберіть дату',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Оберіть час, обраний час  ${utils.format(value, 'fullTime')}`
-      : 'Оберіть час',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Оберіть дату, обрана дата  ${formattedDate}` : 'Оберіть дату',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Оберіть час, обраний час  ${formattedTime}` : 'Оберіть час',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  fieldClearLabel: 'Очистити дані',
 
   // Table labels
   timeTableLabel: 'оберіть час',
@@ -82,6 +81,19 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Рік',
+  month: 'Місяць',
+  day: 'День',
+  weekDay: 'День тижня',
+  hours: 'Годин',
+  minutes: 'Хвилин',
+  seconds: 'Секунд',
+  meridiem: 'Меридіем',
+
+  // Common
+  empty: 'Порожній',
 };
 
 export const ukUA = getPickersLocalization(ukUAPickers);

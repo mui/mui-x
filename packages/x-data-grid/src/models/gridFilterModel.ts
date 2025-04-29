@@ -13,18 +13,18 @@ export interface GridFilterModel {
   /**
    * - `GridLogicOperator.And`: the row must pass all the filter items.
    * - `GridLogicOperator.Or`: the row must pass at least on filter item.
-   * @default `GridLogicOperator.And`
+   * @default GridLogicOperator.And
    */
   logicOperator?: GridLogicOperator;
   /**
    * values used to quick filter rows
-   * @default `[]`
+   * @default []
    */
   quickFilterValues?: any[];
   /**
    * - `GridLogicOperator.And`: the row must pass all the values.
    * - `GridLogicOperator.Or`: the row must pass at least one value.
-   * @default `GridLogicOperator.And`
+   * @default GridLogicOperator.And
    */
   quickFilterLogicOperator?: GridLogicOperator;
   /**

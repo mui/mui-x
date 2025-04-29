@@ -2,7 +2,7 @@
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
-Sorting is enabled by default to the data grid users and works out of the box without any explicit configuration.
+Sorting is enabled by default to the Data Grid users and works out of the box without any explicit configuration.
 Users can set a sorting rule simply by clicking on a column header.
 Following clicks change the column's sorting direction. You can see the applied direction on the header's arrow indicator.
 
@@ -24,7 +24,7 @@ Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass sorting rules to the data grid
+## Pass sorting rules to the Data Grid
 
 ### Structure of the model
 
@@ -118,6 +118,16 @@ The sorting is based on `isAdmin` and then on `name`, if necessary. It re-uses t
 
 {{"demo": "ExtendedSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Asymmetric comparator
+
+The Data Grid considers the `sortComparator` function symmetric, automatically reversing the return value for descending sorting by multiplying it by `-1`.
+
+While this is sufficient for most use cases, it is possible to define an asymmetric comparator using the `getSortComparator` function – it receives the sorting direction as an argument and returns a comparator function.
+
+In the demo below, the `getSortComparator` function is used in the "Quantity" column to keep the `null` values at the bottom when sorting is applied (regardless of the sorting direction):
+
+{{"demo": "GetSortComparator.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Custom sort order
 
 By default, the sort order cycles between these three different modes:
@@ -153,6 +163,10 @@ const columns: GridColDef = [
 Sorting can be run server-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
 
 {{"demo": "ServerSortingGrid.js", "bg": "inline"}}
+
+:::success
+You can combine server-side sorting with [server-side filtering](/x/react-data-grid/filtering/server-side/) and [server-side pagination](/x/react-data-grid/pagination/#server-side-pagination) to avoid fetching more data than needed, since it's already processed outside of the Data Grid.
+:::
 
 ## apiRef
 

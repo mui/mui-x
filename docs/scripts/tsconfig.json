@@ -1,10 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": [
-    "../../node_modules/@mui/monorepo/packages/api-docs-builder/react-docgen.d.ts",
-    "api/buildApi.ts",
-    "i18n.js"
-  ],
+  "include": ["api/buildApi.ts", "i18n.js"],
   "compilerOptions": {
     "allowJs": true,
     "isolatedModules": true,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { SxProps, Theme } from '@mui/material/styles';
@@ -9,8 +9,7 @@ import {
   PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
-import { PickerValidDate, DateView } from '../models';
-import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
+import { PickerValidDate, DateView, PickerOwnerState } from '../models';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
 export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
@@ -20,7 +19,7 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
    */
   switchViewButton?: React.ElementType;
   /**
-   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
+   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.
    * @default ArrowDropDown
    */
   switchViewIcon?: React.ElementType;
@@ -29,27 +28,23 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
 // We keep the interface to allow module augmentation
 export interface PickersCalendarHeaderSlotPropsOverrides {}
 
-export type PickersCalendarHeaderOwnerState<TDate extends PickerValidDate> =
-  PickersCalendarHeaderProps<TDate>;
-
-export interface PickersCalendarHeaderSlotProps<TDate extends PickerValidDate>
-  extends PickersArrowSwitcherSlotProps {
+export interface PickersCalendarHeaderSlotProps extends PickersArrowSwitcherSlotProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
     PickersCalendarHeaderSlotPropsOverrides,
-    PickersCalendarHeaderOwnerState<TDate>
+    PickerOwnerState
   >;
 
   switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersCalendarHeaderSlotPropsOverrides,
-    undefined
+    PickerOwnerState
   >;
 }
 
-export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
+export interface PickersCalendarHeaderProps
   extends ExportedPickersArrowSwitcherProps,
-    MonthValidationOptions<TDate> {
+    MonthValidationOptions {
   /**
    * Overridable component slots.
    * @default {}
@@ -59,14 +54,18 @@ export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersCalendarHeaderSlotProps<TDate>;
-  currentMonth: TDate;
+  slotProps?: PickersCalendarHeaderSlotProps;
+  currentMonth: PickerValidDate;
   disabled?: boolean;
   views: readonly DateView[];
-  onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
+  onMonthChange: (date: PickerValidDate) => void;
   view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
+  /**
+   * Id of the calendar text element.
+   * It is used to establish an `aria-labelledby` relationship with the calendar `grid` element.
+   */
   labelId?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -79,7 +78,7 @@ export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
   sx?: SxProps<Theme>;
 }
 
-export type ExportedPickersCalendarHeaderProps<TDate extends PickerValidDate> = Pick<
-  PickersCalendarHeaderProps<TDate>,
+export type ExportedPickersCalendarHeaderProps = Pick<
+  PickersCalendarHeaderProps,
   'classes' | 'slots' | 'slotProps'
 >;

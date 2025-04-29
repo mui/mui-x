@@ -5,7 +5,7 @@
 ## Using the `sx` prop
 
 For one-off styles, the `sx` prop can be used.
-It allows to apply simple to complex customizations directly onto the `DataGrid` element.
+It allows to apply simple to complex customizations directly onto the Data Grid element.
 The keys accepted can be any CSS property as well as the custom properties provided by MUI.
 For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop/).
 
@@ -115,6 +115,68 @@ You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` t
 The following demo illustrates how this can be achieved.
 
 {{"demo": "StripedGrid.js", "bg": "inline"}}
+
+## Container, header, and pinned sections
+
+By default, the Data Grid uses the Material UI `theme.palette.background.default` color for the background color of the grid container, the column headers, and the pinned rows and columns.
+
+You can override these background colors with the following theme configuration:
+
+```tsx
+import { createTheme } from '@mui/material/styles';
+import type {} from '@mui/x-data-grid/themeAugmentation';
+
+const theme = createTheme({
+  palette: {
+    DataGrid: {
+      // Container background
+      bg: '#f8fafc',
+      // Pinned rows and columns background
+      pinnedBg: '#f1f5f9',
+      // Column header background
+      headerBg: '#eaeff5',
+    },
+  },
+});
+```
+
+### Light and dark mode in Material UI v6
+
+Material UI v6 users can use the `colorSchemes` property to specify different colors for light and dark mode:
+
+```tsx
+import { createTheme } from '@mui/material/styles';
+import type {} from '@mui/x-data-grid/themeAugmentation';
+
+const theme = createTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        DataGrid: {
+          bg: '#f8fafc',
+          pinnedBg: '#f1f5f9',
+          headerBg: '#eaeff5',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        DataGrid: {
+          bg: '#334155',
+          pinnedBg: '#293548',
+          headerBg: '#1e293b',
+        },
+      },
+    },
+  },
+});
+```
+
+### Light and dark mode in Material UI v5
+
+Material UI v5 supports specifying different colors for light and dark mode with two different themes, as shown in the demo below.
+
+{{"demo": "BackgroundColorsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom theme
 

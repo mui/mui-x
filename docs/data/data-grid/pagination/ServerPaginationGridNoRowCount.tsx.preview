@@ -1,0 +1,12 @@
+<DataGrid
+  apiRef={apiRef}
+  rows={rows}
+  {...data}
+  initialState={{ ...data.initialState, pagination: { rowCount: -1 } }}
+  paginationMeta={paginationMeta}
+  loading={isLoading}
+  pageSizeOptions={[5, 10, 25, 50]}
+  paginationModel={paginationModel}
+  paginationMode="server"
+  onPaginationModelChange={setPaginationModel}
+/>

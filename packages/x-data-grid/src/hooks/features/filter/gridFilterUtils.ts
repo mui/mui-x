@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   GridColDef,
   GridFilterItem,
@@ -14,7 +15,6 @@ import {
   GridFilterItemResult,
   GridQuickFilterValueResult,
 } from './gridFilterState';
-import { buildWarning } from '../../../utils/warning';
 import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,
@@ -30,6 +30,7 @@ function getHasEval() {
   }
 
   try {
+    // eslint-disable-next-line no-new-func
     hasEval = new Function('return true')() as boolean;
   } catch (_: unknown) {
     hasEval = false;
@@ -51,13 +52,13 @@ type GridFilterItemApplierNotAggregated = (
 /**
  * Adds default values to the optional fields of a filter items.
  * @param {GridFilterItem} item The raw filter item.
- * @param {React.MutableRefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
+ * @param {RefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
  * @return {GridFilterItem} The clean filter item with an uniq ID and an always-defined operator.
  * TODO: Make the typing reflect the different between GridFilterInputItem and GridFilterItem.
  */
 export const cleanFilterItem = (
   item: GridFilterItem,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
 ) => {
   const cleanItem: GridFilterItem = { ...item };
 
@@ -75,35 +76,24 @@ export const cleanFilterItem = (
   return cleanItem;
 };
 
-const filterModelDisableMultiColumnsFilteringWarning = buildWarning(
-  [
-    'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-    'If you are using the community version of the `DataGrid`, this prop is always `true`.',
-  ],
-  'error',
-);
-
-const filterModelMissingItemIdWarning = buildWarning(
-  'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
-  'error',
-);
-
-const filterModelMissingItemOperatorWarning = buildWarning(
-  'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
-  'error',
-);
-
 export const sanitizeFilterModel = (
   model: GridFilterModel,
   disableMultipleColumnsFiltering: boolean,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
 ) => {
   const hasSeveralItems = model.items.length > 1;
 
   let items: GridFilterItem[];
   if (hasSeveralItems && disableMultipleColumnsFiltering) {
-    filterModelDisableMultiColumnsFilteringWarning();
-
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
+        ],
+        'error',
+      );
+    }
     items = [model.items[0]];
   } else {
     items = model.items;
@@ -112,12 +102,22 @@ export const sanitizeFilterModel = (
   const hasItemsWithoutIds = hasSeveralItems && items.some((item) => item.id == null);
   const hasItemWithoutOperator = items.some((item) => item.operator == null);
 
-  if (hasItemsWithoutIds) {
-    filterModelMissingItemIdWarning();
+  if (process.env.NODE_ENV !== 'production') {
+    if (hasItemsWithoutIds) {
+      warnOnce(
+        'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
+        'error',
+      );
+    }
   }
 
-  if (hasItemWithoutOperator) {
-    filterModelMissingItemOperatorWarning();
+  if (process.env.NODE_ENV !== 'production') {
+    if (hasItemWithoutOperator) {
+      warnOnce(
+        'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
+        'error',
+      );
+    }
   }
 
   if (hasItemWithoutOperator || hasItemsWithoutIds) {
@@ -141,7 +141,7 @@ export const mergeStateWithFilterModel =
   (
     filterModel: GridFilterModel,
     disableMultipleColumnsFiltering: boolean,
-    apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+    apiRef: RefObject<GridPrivateApiCommunity>,
   ) =>
   (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
     ...filteringState,
@@ -157,7 +157,7 @@ export const removeDiacritics = (value: unknown) => {
 
 const getFilterCallbackFromItem = (
   filterItem: GridFilterItem,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
 ): GridFilterItemApplier | null => {
   if (!filterItem.field || !filterItem.operator) {
     return null;
@@ -223,12 +223,12 @@ let filterItemsApplierId = 1;
 /**
  * Generates a method to easily check if a row is matching the current filter model.
  * @param {GridFilterModel} filterModel The model with which we want to filter the rows.
- * @param {React.MutableRefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
+ * @param {RefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 const buildAggregatedFilterItemsApplier = (
   filterModel: GridFilterModel,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   disableEval: boolean,
 ): GridFilterItemApplierNotAggregated | null => {
   const { items } = filterModel;
@@ -258,7 +258,8 @@ const buildAggregatedFilterItemsApplier = (
   }
 
   // We generate a new function with `new Function()` to avoid expensive patterns for JS engines
-  // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
+  // such as a dynamic object assignment, for example `{ [dynamicKey]: value }`.
+  // eslint-disable-next-line no-new-func
   const filterItemCore = new Function(
     'appliers',
     'row',
@@ -301,12 +302,12 @@ export const shouldQuickFilterExcludeHiddenColumns = (filterModel: GridFilterMod
 /**
  * Generates a method to easily check if a row is matching the current quick filter.
  * @param {any[]} filterModel The model with which we want to filter the rows.
- * @param {React.MutableRefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
+ * @param {RefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 const buildAggregatedQuickFilterApplier = (
   filterModel: GridFilterModel,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
 ): GridFilterItemApplierNotAggregated | null => {
   const quickFilterValues = filterModel.quickFilterValues?.filter(Boolean) ?? [];
   if (quickFilterValues.length === 0) {
@@ -347,7 +348,7 @@ const buildAggregatedQuickFilterApplier = (
   return function isRowMatchingQuickFilter(row, shouldApplyFilter) {
     const result = {} as GridQuickFilterValueResult;
 
-    /* eslint-disable no-restricted-syntax, no-labels */
+    /* eslint-disable no-labels */
     outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
       const filterValue = quickFilterValues[v];
 
@@ -378,15 +379,13 @@ const buildAggregatedQuickFilterApplier = (
 
       result[filterValue] = false;
     }
-    /* eslint-enable no-restricted-syntax, no-labels */
-
     return result;
   };
 };
 
 export const buildAggregatedFilterApplier = (
   filterModel: GridFilterModel,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   disableEval: boolean,
 ): GridAggregatedFilterItemApplier => {
   const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(
@@ -410,7 +409,7 @@ type FilterCache = {
 
 const filterModelItems = (
   cache: FilterCache,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   items: GridFilterItem[],
 ) => {
   if (!cache.cleanedFilterItems) {
@@ -425,7 +424,7 @@ export const passFilterLogic = (
   allFilterItemResults: (null | GridFilterItemResult)[],
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   cache: FilterCache,
 ): boolean => {
   const cleanedFilterItems = filterModelItems(cache, apiRef, filterModel.items);

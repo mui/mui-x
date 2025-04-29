@@ -9,11 +9,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-import { useLocaleText } from '@mui/x-date-pickers/internals';
+import {
+  usePickerActionsContext,
+  usePickerTranslations,
+} from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props) {
-  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
-  const localeText = useLocaleText();
+  const { actions, className } = props;
+  const translations = usePickerTranslations();
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = useId();
@@ -27,14 +32,13 @@ function CustomActionBar(props) {
       case 'clear':
         return (
           <MenuItem
-            data-mui-test="clear-action-button"
             onClick={() => {
-              onClear();
+              clearValue();
               setAnchorEl(null);
             }}
             key={actionType}
           >
-            {localeText.clearButtonLabel}
+            {translations.clearButtonLabel}
           </MenuItem>
         );
 
@@ -43,11 +47,11 @@ function CustomActionBar(props) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onCancel();
+              cancelValueChanges();
             }}
             key={actionType}
           >
-            {localeText.cancelButtonLabel}
+            {translations.cancelButtonLabel}
           </MenuItem>
         );
 
@@ -56,25 +60,24 @@ function CustomActionBar(props) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onAccept();
+              acceptValueChanges();
             }}
             key={actionType}
           >
-            {localeText.okButtonLabel}
+            {translations.okButtonLabel}
           </MenuItem>
         );
 
       case 'today':
         return (
           <MenuItem
-            data-mui-test="today-action-button"
             onClick={() => {
               setAnchorEl(null);
-              onSetToday();
+              setValueToToday();
             }}
             key={actionType}
           >
-            {localeText.todayButtonLabel}
+            {translations.todayButtonLabel}
           </MenuItem>
         );
 

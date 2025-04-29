@@ -1,7 +1,10 @@
 import * as React from 'react';
-import createDescribe from '@mui-internal/test-utils/createDescribe';
-import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
-import { FieldSection } from '@mui/x-date-pickers/models';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
+import {
+  BasePickerInputProps,
+  PickerValidValue,
+  UsePickerNonStaticProps,
+} from '@mui/x-date-pickers/internals';
 import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
@@ -17,16 +20,15 @@ const TEST_SUITES: DescribeValueTestSuite<any, any>[] = [
   testShortcuts,
 ];
 
-function innerDescribeValue<TValue, C extends PickerComponentFamily>(
+function innerDescribeValue<TValue extends PickerValidValue, C extends PickerComponentFamily>(
   ElementToTest: React.FunctionComponent<any>,
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
   const options = getOptions();
-  const { defaultProps, render, clock, componentFamily } = options;
+  const { defaultProps, render, componentFamily } = options;
 
   function WrappedElementToTest(
-    props: BasePickerInputProps<TValue, any, any, any> &
-      UsePickerValueNonStaticProps<TValue, FieldSection> & { hook?: any },
+    props: BasePickerInputProps<TValue, any, any> & UsePickerNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);
@@ -35,38 +37,64 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
 
   let renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   if (componentFamily === 'field' || componentFamily === 'picker') {
-    const interactions = buildFieldInteractions({ clock, render, Component: ElementToTest });
+    const interactions = buildFieldInteractions({ render, Component: ElementToTest });
 
-    renderWithProps = (props: any, hook?: any) =>
-      interactions.renderWithProps({ ...defaultProps, ...props }, hook, componentFamily);
+    renderWithProps = (props: any, config?: any) =>
+      interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });
   } else {
-    renderWithProps = (props: any, hook?: any) => {
-      const response = render(<WrappedElementToTest {...props} hook={hook} />);
+    renderWithProps = ({ enableAccessibleFieldDOMStructure, ...props }: any, config?: any) => {
+      const response = render(<WrappedElementToTest {...props} hook={config?.hook} />);
 
       return {
         ...response,
-        input: null as any,
+        getSectionsContainer: () => {
+          throw new Error(
+            'You can only use `getSectionsContainer` on components that render a field',
+          );
+        },
         selectSection: () => {
-          throw new Error('You can only select a section on components that render a field');
+          throw new Error('You can only use `selectSection` on components that render a field');
+        },
+        selectSectionAsync: () => {
+          throw new Error(
+            'You can only use `selectSectionAsync` on components that render a field',
+          );
+        },
+        getHiddenInput: () => {
+          throw new Error('You can only use `getHiddenInput` on components that render a field');
+        },
+        getActiveSection: () => {
+          throw new Error('You can only use `getActiveSection` on components that render a field');
+        },
+        getSection: () => {
+          throw new Error('You can only use `getSection` on components that render a field');
+        },
+        pressKey: () => {
+          throw new Error('You can only use `pressKey` on components that render a field');
         },
       };
     };
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    testSuite(WrappedElementToTest, { ...options, renderWithProps });
+    const typedTestSuite = testSuite as DescribeValueTestSuite<TValue, any>;
+    typedTestSuite(WrappedElementToTest, { ...options, renderWithProps });
   });
 }
 
-type P<TValue, C extends PickerComponentFamily> = [
+type P<TValue extends PickerValidValue, C extends PickerComponentFamily> = [
   React.FunctionComponent,
   () => DescribeValueOptions<C, TValue>,
 ];
 
 type DescribeValue = {
-  <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
-  skip: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
-  only: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
+  <TValue extends PickerValidValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
+  skip: <TValue extends PickerValidValue, C extends PickerComponentFamily>(
+    ...args: P<TValue, C>
+  ) => void;
+  only: <TValue extends PickerValidValue, C extends PickerComponentFamily>(
+    ...args: P<TValue, C>
+  ) => void;
 };
 
 /**

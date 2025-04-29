@@ -4,9 +4,9 @@ import { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { InputLabelProps } from '@mui/material/InputLabel';
 import { TextFieldVariants } from '@mui/material/TextField';
 import { PickersInputPropsUsedByField } from './PickersInputBase/PickersInputBase.types';
-import { PickersInputProps } from './PickersInput';
-import { PickersOutlinedInputProps } from './PickersOutlinedInput';
-import { PickersFilledInputProps } from './PickersFilledInput';
+import type { PickersInputProps } from './PickersInput';
+import type { PickersOutlinedInputProps } from './PickersOutlinedInput';
+import type { PickersFilledInputProps } from './PickersFilledInput';
 
 interface PickersTextFieldPropsUsedByField {
   onFocus: React.FocusEventHandler<HTMLDivElement>;

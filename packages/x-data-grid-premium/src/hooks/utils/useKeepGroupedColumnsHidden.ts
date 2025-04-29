@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   GridColumnVisibilityModel,
@@ -36,7 +37,7 @@ const updateColumnVisibilityModel = (
  */
 export const useKeepGroupedColumnsHidden = (
   props: {
-    apiRef: React.MutableRefObject<GridApi>;
+    apiRef: RefObject<GridApi | null>;
   } & Pick<DataGridPremiumProps, 'initialState' | 'rowGroupingModel'>,
 ) => {
   const initialProps = React.useRef(props);
@@ -45,13 +46,13 @@ export const useKeepGroupedColumnsHidden = (
   );
 
   React.useEffect(() => {
-    props.apiRef.current.subscribeEvent('rowGroupingModelChange', (newModel) => {
+    props.apiRef.current?.subscribeEvent('rowGroupingModelChange', (newModel) => {
       const columnVisibilityModel = updateColumnVisibilityModel(
         gridColumnVisibilityModelSelector(props.apiRef),
         newModel,
         rowGroupingModel.current,
       );
-      props.apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
+      props.apiRef.current?.setColumnVisibilityModel(columnVisibilityModel);
       rowGroupingModel.current = newModel;
     });
   }, [props.apiRef]);

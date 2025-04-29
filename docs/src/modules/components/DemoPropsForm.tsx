@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import Check from '@mui/icons-material/Check';
 
@@ -11,6 +12,7 @@ import FormLabel, { formLabelClasses } from '@mui/material/FormLabel';
 import IconButton from '@mui/material/IconButton';
 import Input, { inputClasses } from '@mui/material/Input';
 import MenuItem from '@mui/material/MenuItem';
+import Slider from '@mui/material/Slider';
 
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -30,42 +32,43 @@ const shallowEqual = (item1: { [k: string]: any }, item2: { [k: string]: any }) 
   return equal;
 };
 
-type DataType<ComponentProps> = {
+type Placement =
+  | 'top-start'
+  | 'top'
+  | 'top-end'
+  | 'left-start'
+  | 'right-start'
+  | 'left'
+  | 'right'
+  | 'left-end'
+  | 'right-end'
+  | 'bottom-start'
+  | 'bottom'
+  | 'bottom-end';
+
+type Margin = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
+
+type DefaultTypes = {
   /**
-   * Name of the prop, e.g. 'children'
+   * The display name of the prop, for example 'X Axis Label'
    */
-  propName: Extract<keyof ComponentProps, string>;
-  /**
-   * The controller to be used:
-   * - `switch`: render the switch component for boolean
-   * - `color`: render the built-in color selector
-   * - `select`: render <select> with the specified options
-   * - `input`: render <input />
-   * - `radio`: render group of radios
-   */
-  knob?: 'switch' | 'color' | 'select' | 'input' | 'radio' | 'controlled' | 'number' | 'placement';
+  displayName?: string;
+};
+
+type ConditionalTypes = {
   /**
    * The options for these knobs: `select` and `radio`
    */
-  options?: Array<string>;
+  options: readonly string[];
   /**
    * The labels for these knobs: `radio`
    */
-  labels?: Array<string>;
-  /**
-   * The default value to be used by the components.
-   * If exists, it will be injected to the `renderDemo` callback but it will not show
-   * in the code block.
-   *
-   * To make it appears in the code block, specified `codeBlockDisplay: true`
-   */
-  defaultValue?: string | number | boolean;
-  /**
-   * If not specify (`undefined`), the prop displays when user change the value
-   * If `true`, the prop with defaultValue will always display in the code block.
-   * If `false`, the prop does not display in the code block.
-   */
-  codeBlockDisplay?: boolean;
+  labels?: readonly string[];
   /**
    * Option for knobs: `number`
    */
@@ -78,9 +81,93 @@ type DataType<ComponentProps> = {
    * Option for knobs: `number`
    */
   max?: number;
-}[];
+};
 
-interface ChartDemoPropsFormProps<ComponentProps> {
+type NumberDataType = {
+  knob: 'number' | 'slider';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: number;
+} & DefaultTypes &
+  Pick<ConditionalTypes, 'step' | 'min' | 'max'>;
+
+type SelectDataType = {
+  knob: 'select' | 'color';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: string;
+} & DefaultTypes &
+  Pick<ConditionalTypes, 'options'>;
+
+type RadioDataType = {
+  knob: 'radio';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: string;
+} & DefaultTypes &
+  Pick<ConditionalTypes, 'options' | 'labels'>;
+
+type SwitchDataType = {
+  knob: 'switch';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: boolean;
+} & DefaultTypes;
+
+type InputDataType = {
+  knob: 'input';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: string;
+} & DefaultTypes;
+
+type PlacementDataType = {
+  knob: 'placement';
+  /**
+   * The default value to be used by the components.
+   */
+  defaultValue?: Placement;
+} & DefaultTypes;
+
+export type DataType =
+  | NumberDataType
+  | SelectDataType
+  | RadioDataType
+  | SwitchDataType
+  | InputDataType
+  | PlacementDataType;
+
+export type PropsFromData<Data extends Record<string, DataType>> = {
+  [K in keyof Data]: Data[K] extends { options: readonly (infer T)[] }
+    ? Data[K] extends { defaultValue: any }
+      ? T
+      : T | undefined
+    : Data[K] extends { defaultValue: any }
+      ? FromKnob<Data[K]>
+      : FromKnob<Data[K]> | undefined;
+};
+
+export type FromKnob<DT extends DataType> = DT['knob'] extends 'number' | 'slider'
+  ? number
+  : DT['knob'] extends 'switch'
+    ? boolean
+    : DT['knob'] extends 'input'
+      ? string
+      : DT['knob'] extends 'placement'
+        ? Placement
+        : DT['knob'] extends 'margin'
+          ? Margin
+          : never;
+
+interface ChartDemoPropsFormProps<
+  Data extends Record<string, DataType>,
+  Props extends PropsFromData<Data>,
+> {
   /**
    * Name of the component to show in the code block.
    */
@@ -88,69 +175,26 @@ interface ChartDemoPropsFormProps<ComponentProps> {
   /**
    * Configuration
    */
-  data: DataType<ComponentProps>;
-  onPropsChange: (data: any) => void;
+  data: Data;
+  /**
+   * Props to be displayed in the form
+   */
+  props: Props;
+  onPropsChange: (state: Props | ((prevState: Props) => Props)) => void;
 }
 
-function ControlledColorRadio(props: any) {
-  const { value, ...other } = props;
-  return (
-    <Paper
-      color={value}
-      sx={{
-        width: 28,
-        height: 28,
-        borderRadius: 'sm',
-        textTransform: 'capitalize',
-        position: 'relative',
-        bgcolor: value,
-      }}
-    >
-      <Radio
-        {...other}
-        value={value}
-        icon={<Check sx={{ opacity: 0 }} />}
-        checkedIcon={
-          <Check
-            fontSize="medium"
-            color="inherit"
-            sx={{
-              zIndex: 1,
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              pointerEvents: 'none',
-              color: (theme) => theme.palette.background.default,
-            }}
-          />
-        }
-        sx={{ width: '100%', height: '100%', margin: 0 }}
-      />
-    </Paper>
+export default function ChartDemoPropsForm<
+  Data extends Record<string, DataType>,
+  Props extends PropsFromData<Data>,
+>({ componentName, data, props, onPropsChange }: ChartDemoPropsFormProps<Data, Props>) {
+  const initialProps = React.useMemo(
+    () =>
+      Object.entries(data).reduce(
+        (acc, [propName, value]) => ({ ...acc, [propName]: value.defaultValue }),
+        {} as Props,
+      ),
+    [data],
   );
-}
-
-export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>({
-  componentName,
-  data,
-  onPropsChange,
-}: ChartDemoPropsFormProps<T>) {
-  const initialProps = {} as { [k in keyof T]: any };
-  let demoProps = {} as { [k in keyof T]: any };
-
-  data.forEach((p) => {
-    demoProps[p.propName] = p.defaultValue;
-
-    initialProps[p.propName] = p.defaultValue;
-  });
-  const [props, setProps] = React.useState<T>(initialProps as T);
-
-  React.useEffect(() => {
-    onPropsChange(props);
-  }, [props, onPropsChange]);
-
-  demoProps = { ...demoProps, ...props };
 
   return (
     <Box
@@ -187,7 +231,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
         <IconButton
           aria-label="Reset all"
           size="small"
-          onClick={() => setProps(initialProps as T)}
+          onClick={() => onPropsChange(initialProps)}
           sx={{
             visibility: !shallowEqual(props, initialProps) ? 'visible' : 'hidden',
             '--IconButton-size': '30px',
@@ -208,8 +252,10 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
           },
         }}
       >
-        {data.map(({ propName, knob, options = [], defaultValue, labels, step, min, max }) => {
+        {Object.entries(data).map(([propName, propData]) => {
+          const { knob, defaultValue, displayName } = propData;
           const resolvedValue = props[propName] ?? defaultValue;
+          const title = displayName || propName;
           if (!knob) {
             return null;
           }
@@ -220,11 +266,11 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                 size="small"
                 sx={{ justifyContent: 'space-between', display: 'flex', flexDirection: 'row' }}
               >
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Switch
                   checked={Boolean(resolvedValue)}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.checked,
                     }))
@@ -233,11 +279,33 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
               </FormControl>
             );
           }
+          if (knob === 'slider') {
+            const { step, min, max } = propData;
+            return (
+              <FormControl key={propName}>
+                <FormLabel>{title}</FormLabel>
+                <Slider
+                  value={Number.parseFloat(`${resolvedValue}`)}
+                  onChange={(_, value) =>
+                    onPropsChange((latestProps) => ({
+                      ...latestProps,
+                      [propName]: Number.parseFloat(`${value}`),
+                    }))
+                  }
+                  valueLabelDisplay="auto"
+                  step={step}
+                  min={min}
+                  max={max}
+                />
+              </FormControl>
+            );
+          }
           if (knob === 'radio') {
+            const { options, labels } = propData;
             const labelId = `${componentName}-${propName}`;
             return (
               <FormControl key={propName} size="small">
-                <FormLabel sx={{ textTransform: 'capitalize' }}>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <RadioGroup
                   // orientation="horizontal"
                   name={labelId}
@@ -251,7 +319,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                     } else if (value === 'undefined') {
                       value = undefined;
                     }
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: value,
                     }));
@@ -262,6 +330,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                     const checked = String(resolvedValue) === value;
                     return (
                       <FormControlLabel
+                        key={value}
                         control={<Radio size="small" />}
                         // variant={checked ? 'solid' : 'outlined'}
                         color={checked ? 'primary' : 'info'}
@@ -275,14 +344,15 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
             );
           }
           if (knob === 'color') {
+            const { options } = propData;
             return (
               <FormControl key={propName} sx={{ mb: 1 }} size="small">
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <RadioGroup
                   name={`${componentName}-color`}
                   value={resolvedValue || ''}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))
@@ -310,14 +380,14 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
             );
           }
           if (knob === 'select') {
+            const { options } = propData;
             return (
               <FormControl key={propName} size="small">
-                <FormLabel sx={{ textTransform: 'capitalize' }}>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Select
-                  placeholder="Select a variant..."
-                  value={(resolvedValue || 'none') as string}
+                  value={resolvedValue || 'none'}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))
@@ -335,12 +405,12 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
           if (knob === 'input') {
             return (
               <FormControl key={propName}>
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Input
                   size="small"
                   value={props[propName] ?? ''}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))
@@ -356,22 +426,19 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
             );
           }
           if (knob === 'number') {
+            const { step, min, max } = propData;
             return (
               <FormControl key={propName}>
-                <FormLabel>{propName}</FormLabel>
+                <FormLabel>{title}</FormLabel>
                 <Input
                   size="small"
                   type="number"
-                  value={
-                    typeof props[propName] === 'number'
-                      ? (props[propName] as number)
-                      : (defaultValue as string)
-                  }
+                  value={typeof props[propName] === 'number' ? props[propName] : defaultValue}
                   onChange={(event) => {
                     if (Number.isNaN(Number.parseFloat(event.target.value))) {
                       return;
                     }
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: Number.parseFloat(event.target.value),
                     }));
@@ -396,12 +463,12 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
           if (knob === 'placement') {
             return (
               <FormControl key={propName}>
-                <FormLabel>Placement</FormLabel>
+                <FormLabel>{displayName ?? 'Placement'}</FormLabel>
                 <RadioGroup
                   name="placement"
                   value={resolvedValue}
                   onChange={(event) =>
-                    setProps((latestProps) => ({
+                    onPropsChange((latestProps) => ({
                       ...latestProps,
                       [propName]: event.target.value,
                     }))
@@ -432,7 +499,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                         color: 'text.secondary',
                       }}
                     >
-                      {resolvedValue}
+                      {`${resolvedValue}`}
                     </Box>
                     {/* void */}
                     <div />
@@ -457,19 +524,21 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                         key={placement}
                         // variant="soft"
                         color="primary"
-                        sx={{
-                          position: 'relative',
-                          height: '14px',
-                          width: 32,
-                          borderRadius: 'xs',
-                          mx: 0.5,
-                          ...(placement.match(/^(top|bottom)$/) && {
+                        sx={[
+                          {
+                            position: 'relative',
+                            height: '14px',
+                            width: 32,
+                            borderRadius: 'xs',
+                            mx: 0.5,
+                          },
+                          placement.match(/^(top|bottom)$/) && {
                             justifySelf: 'center',
-                          }),
-                          ...(placement.match(/^(top-end|bottom-end)$/) && {
+                          },
+                          placement.match(/^(top-end|bottom-end)$/) && {
                             justifySelf: 'flex-end',
-                          }),
-                        }}
+                          },
+                        ]}
                       >
                         <Radio
                           value={placement}
@@ -497,5 +566,44 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
         })}
       </Box>
     </Box>
+  );
+}
+
+function ControlledColorRadio(props: any) {
+  const { value, ...other } = props;
+  return (
+    <Paper
+      color={value}
+      sx={{
+        width: 28,
+        height: 28,
+        borderRadius: 'sm',
+        textTransform: 'capitalize',
+        position: 'relative',
+        bgcolor: value,
+      }}
+    >
+      <Radio
+        {...other}
+        value={value}
+        icon={<Check sx={{ opacity: 0 }} />}
+        checkedIcon={
+          <Check
+            fontSize="medium"
+            color="inherit"
+            sx={(theme) => ({
+              zIndex: 1,
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none',
+              color: theme.palette.background.default,
+            })}
+          />
+        }
+        sx={{ width: '100%', height: '100%', margin: 0 }}
+      />
+    </Paper>
   );
 }

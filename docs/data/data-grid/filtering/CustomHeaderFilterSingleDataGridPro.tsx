@@ -5,7 +5,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
   DataGridPro,
-  GridHeaderFilterCellProps,
+  GridRenderHeaderFilterProps,
   gridFilterModelSelector,
   useGridSelector,
   useGridApiContext,
@@ -14,7 +14,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const getDefaultFilter = (field: string) => ({ field, operator: 'is' });
 
-function AdminFilter(props: GridHeaderFilterCellProps) {
+function AdminFilter(props: GridRenderHeaderFilterProps) {
   const { colDef } = props;
   const apiRef = useGridApiContext();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
@@ -43,14 +43,18 @@ function AdminFilter(props: GridHeaderFilterCellProps) {
   const label = !value ? 'Filter' : 'Is admin';
 
   return (
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} fullWidth>
-      <InputLabel id="select-is-admin-label">{label}</InputLabel>
+    <FormControl variant="outlined" size="small" fullWidth>
+      <InputLabel id="select-is-admin-label" shrink>
+        {label}
+      </InputLabel>
       <Select
         labelId="select-is-admin-label"
         id="select-is-admin"
         value={value}
         onChange={handleChange}
         label={label}
+        inputProps={{ sx: { fontSize: 14 } }}
+        notched
       >
         <MenuItem value="">
           <em>None</em>
@@ -63,7 +67,7 @@ function AdminFilter(props: GridHeaderFilterCellProps) {
 }
 
 export default function CustomHeaderFilterSingleDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
     visibleFields: ['name', 'website', 'phone', 'isAdmin', 'salary'],
@@ -76,7 +80,7 @@ export default function CustomHeaderFilterSingleDataGridPro() {
           return {
             ...colDef,
             width: 200,
-            renderHeaderFilter: (params: GridHeaderFilterCellProps) => (
+            renderHeaderFilter: (params: GridRenderHeaderFilterProps) => (
               <AdminFilter {...params} />
             ),
           };
@@ -92,7 +96,13 @@ export default function CustomHeaderFilterSingleDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} columns={columns} disableColumnFilter headerFilters />
+      <DataGridPro
+        {...data}
+        loading={loading}
+        columns={columns}
+        disableColumnFilter
+        headerFilters
+      />
     </div>
   );
 }

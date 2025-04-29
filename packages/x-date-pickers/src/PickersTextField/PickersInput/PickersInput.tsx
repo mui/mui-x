@@ -1,21 +1,35 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { shouldForwardProp } from '@mui/system/createStyled';
+import { refType } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
-import { pickersInputClasses, getPickersInputUtilityClass } from './pickersInputClasses';
+import {
+  pickersInputClasses,
+  getPickersInputUtilityClass,
+  PickersInputClasses,
+} from './pickersInputClasses';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
+import { PickerTextFieldOwnerState } from '../../models/fields';
+import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
 }
 
+interface PickerInputOwnerState extends PickerTextFieldOwnerState {
+  /**
+   * `true` if the input has an underline, `false` otherwise.
+   */
+  inputHasUnderline: boolean;
+}
+
 const PickersInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme, ownerState }) => {
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
+})<{ ownerState: PickerInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
   let bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   if (theme.vars) {
@@ -25,66 +39,84 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
     'label + &': {
       marginTop: 16,
     },
-    ...(!ownerState.disableUnderline && {
-      '&::after': {
-        background: 'red',
+    variants: [
+      ...Object.keys((theme.vars ?? theme).palette)
         // @ts-ignore
-        borderBottom: `2px solid ${(theme.vars || theme).palette[ownerState.color].main}`,
-        left: 0,
-        bottom: 0,
-        // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
-        content: '""',
-        position: 'absolute',
-        right: 0,
-        transform: 'scaleX(0)',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shorter,
-          easing: theme.transitions.easing.easeOut,
-        }),
-        pointerEvents: 'none', // Transparent to the hover style.
-      },
-      [`&.${pickersInputClasses.focused}:after`]: {
-        // translateX(0) is a workaround for Safari transform scale bug
-        // See https://github.com/mui/material-ui/issues/31766
-        transform: 'scaleX(1) translateX(0)',
-      },
-      [`&.${pickersInputClasses.error}`]: {
-        '&:before, &:after': {
-          borderBottomColor: (theme.vars || theme).palette.error.main,
+        .filter((key) => (theme.vars ?? theme).palette[key].main)
+        .map((color) => ({
+          props: { inputColor: color },
+          style: {
+            '&::after': {
+              // @ts-ignore
+              borderBottom: `2px solid ${(theme.vars || theme).palette[color].main}`,
+            },
+          },
+        })),
+      {
+        props: { disableUnderline: false },
+        style: {
+          '&::after': {
+            background: 'red',
+            left: 0,
+            bottom: 0,
+            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            content: '""',
+            position: 'absolute',
+            right: 0,
+            transform: 'scaleX(0)',
+            transition: theme.transitions.create('transform', {
+              duration: theme.transitions.duration.shorter,
+              easing: theme.transitions.easing.easeOut,
+            }),
+            pointerEvents: 'none', // Transparent to the hover style.
+          },
+          [`&.${pickersInputClasses.focused}:after`]: {
+            // translateX(0) is a workaround for Safari transform scale bug
+            // See https://github.com/mui/material-ui/issues/31766
+            transform: 'scaleX(1) translateX(0)',
+          },
+          [`&.${pickersInputClasses.error}`]: {
+            '&:before, &:after': {
+              borderBottomColor: (theme.vars || theme).palette.error.main,
+            },
+          },
+          '&::before': {
+            borderBottom: `1px solid ${bottomLineColor}`,
+            left: 0,
+            bottom: 0,
+            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            content: '"\\00a0"',
+            position: 'absolute',
+            right: 0,
+            transition: theme.transitions.create('border-bottom-color', {
+              duration: theme.transitions.duration.shorter,
+            }),
+            pointerEvents: 'none', // Transparent to the hover style.
+          },
+          [`&:hover:not(.${pickersInputClasses.disabled}, .${pickersInputClasses.error}):before`]: {
+            borderBottom: `2px solid ${(theme.vars || theme).palette.text.primary}`,
+            // Reset on touch devices, it doesn't add specificity
+            '@media (hover: none)': {
+              borderBottom: `1px solid ${bottomLineColor}`,
+            },
+          },
+          [`&.${pickersInputClasses.disabled}:before`]: {
+            borderBottomStyle: 'dotted',
+          },
         },
       },
-      '&::before': {
-        borderBottom: `1px solid ${bottomLineColor}`,
-        left: 0,
-        bottom: 0,
-        // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
-        content: '"\\00a0"',
-        position: 'absolute',
-        right: 0,
-        transition: theme.transitions.create('border-bottom-color', {
-          duration: theme.transitions.duration.shorter,
-        }),
-        pointerEvents: 'none', // Transparent to the hover style.
-      },
-      [`&:hover:not(.${pickersInputClasses.disabled}, .${pickersInputClasses.error}):before`]: {
-        borderBottom: `2px solid ${(theme.vars || theme).palette.text.primary}`,
-        // Reset on touch devices, it doesn't add specificity
-        '@media (hover: none)': {
-          borderBottom: `1px solid ${bottomLineColor}`,
-        },
-      },
-      [`&.${pickersInputClasses.disabled}:before`]: {
-        borderBottomStyle: 'dotted',
-      },
-    }),
+    ],
   };
 });
 
-const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const { classes, disableUnderline } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<PickersInputClasses> | undefined,
+  ownerState: PickerInputOwnerState,
+) => {
+  const { inputHasUnderline } = ownerState;
 
   const slots = {
-    root: ['root', !disableUnderline && 'underline'],
+    root: ['root', !inputHasUnderline && 'underline'],
     input: ['input'],
   };
 
@@ -95,10 +127,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     ...composedClasses,
   };
 };
-
-interface OwnerStateType
-  extends FormControlState,
-    Omit<PickersInputProps, keyof FormControlState> {}
 
 /**
  * @ignore - internal component.
@@ -112,21 +140,26 @@ const PickersInput = React.forwardRef(function PickersInput(
     name: 'MuiPickersInput',
   });
 
-  const { label, autoFocus, ownerState: ownerStateProp, ...other } = props;
+  const {
+    label,
+    autoFocus,
+    disableUnderline = false,
+    ownerState: ownerStateProp,
+    classes: classesProp,
+    ...other
+  } = props;
 
-  const muiFormControl = useFormControl();
-
-  const ownerState = {
-    ...props,
-    ...ownerStateProp,
-    ...muiFormControl,
-    color: muiFormControl?.color || 'primary',
+  const pickerTextFieldOwnerState = usePickerTextFieldOwnerState();
+  const ownerState: PickerInputOwnerState = {
+    ...pickerTextFieldOwnerState,
+    inputHasUnderline: !disableUnderline,
   };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   return (
     <PickersInputBase
       slots={{ root: PickersInputRoot }}
+      slotProps={{ root: { disableUnderline } }}
       {...other}
       label={label}
       classes={classes}
@@ -138,7 +171,7 @@ const PickersInput = React.forwardRef(function PickersInput(
 PickersInput.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Is `true` if the current values equals the empty value.
@@ -147,16 +180,13 @@ PickersInput.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   disableUnderline: PropTypes.bool,
   /**
    * The elements to render.
@@ -174,20 +204,16 @@ PickersInput.propTypes = {
   fullWidth: PropTypes.bool,
   id: PropTypes.string,
   inputProps: PropTypes.object,
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
+  inputRef: refType,
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([
@@ -201,6 +227,11 @@ PickersInput.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   /**
    * The components used for each slot inside.
    *

@@ -1,9 +1,16 @@
 import * as React from 'react';
-import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui-internal/test-utils';
+import {
+  createRenderer,
+  ErrorBoundary,
+  fireEvent,
+  reactMajor,
+  screen,
+} from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Slots', () => {
   const { render } = createRenderer();
@@ -114,7 +121,7 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
       expect(onClick.callCount).to.equal(0);
-      const button = screen.getByRole('button', { name: /show filters/i });
+      const button = screen.getByRole('button', { name: /show filters/i, hidden: true });
       fireEvent.click(button);
       expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
       expect(onClick.lastCall.args[1]).to.have.property('target', button);
@@ -130,9 +137,7 @@ describe('<DataGrid /> - Slots', () => {
             hideFooter
             disableVirtualization
             slots={{
-              cell: ({ rowIndex, colIndex }) => (
-                <span role="gridcell" data-rowindex={rowIndex} data-colindex={colIndex} />
-              ),
+              cell: ({ colIndex }) => <span role="gridcell" data-colindex={colIndex} />,
             }}
           />
         </div>,
@@ -155,14 +160,9 @@ describe('<DataGrid /> - Slots', () => {
     });
   });
 
-  it('should throw if a component is used without providing the context', function test() {
-    // TODO is this fixed?
-    if (!/jsdom/.test(window.navigator.userAgent)) {
-      // can't catch render errors in the browser for unknown reason
-      // tried try-catch + error boundary + window onError preventDefault
-      this.skip();
-    }
-
+  // can't catch render errors in the browser for unknown reason
+  // tried try-catch + error boundary + window onError preventDefault
+  testSkipIf(!isJSDOM)('should throw if a component is used without providing the context', () => {
     expect(() => {
       render(
         <ErrorBoundary>
@@ -171,8 +171,9 @@ describe('<DataGrid /> - Slots', () => {
       );
     }).toErrorDev([
       'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
-      'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
-      'The above error occurred in the <ForwardRef(GridOverlay)> component',
+      reactMajor < 19 &&
+        'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
+      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });
 

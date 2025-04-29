@@ -15,7 +15,7 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
   const rootProps = useGridRootProps();
   const { item, applyValue, focusElementRef = null } = props;
 
-  const filterTimeout = React.useRef<any>();
+  const filterTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const [filterValueState, setFilterValueState] = React.useState<[string, string]>(
     item.value ?? '',
   );
@@ -111,7 +111,7 @@ const quantityOnlyOperators: GridFilterOperator<any, number>[] = [
 ];
 
 export default function CustomMultiValueOperator() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+  const { data, loading } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
@@ -144,6 +144,7 @@ export default function CustomMultiValueOperator() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         filterModel={filterModel}
         onFilterModelChange={(model) => setFilterModel(model)}

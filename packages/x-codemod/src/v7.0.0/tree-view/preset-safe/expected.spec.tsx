@@ -5,13 +5,22 @@ import { TreeItem, useTreeItemState } from '@mui/x-tree-view/TreeItem';
 
 const className = simpleTreeViewClasses.root;
 
+// prettier-ignore
 <SimpleTreeView
-  expandedNodes={[]}
-  defaultExpandedNodes={[]}
-  onExpandedNodesChange={expansionCallback}
-  selectedNodes={null}
-  defaultSelectedNodes={null}
-  onSelectedNodesChange={selectionCallback}
+  expandedItems={[]}
+  defaultExpandedItems={[]}
+  onExpandedItemsChange={expansionCallback}
+  selectedItems={null}
+  defaultSelectedItems={null}
+  onSelectedItemsChange={selectionCallback}
 >
-  <TreeItem nodeId="1" label="Item 1" />
+  <TreeItem
+    itemId="1"
+    label="Item 1"
+    slots={{
+      groupTransition: Fade,
+    }}
+    slotProps={{
+      groupTransition: { timeout: 600 },
+    }} />
 </SimpleTreeView>;

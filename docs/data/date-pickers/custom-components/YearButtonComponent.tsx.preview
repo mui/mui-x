@@ -1,0 +1,1 @@
+<DateCalendar slots={{ yearButton: CustomYearButton }} openTo="year" />

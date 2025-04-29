@@ -72,8 +72,9 @@ const lineChartsParams = {
       showMark: false,
     },
   ],
-  width: 600,
-  height: 400,
+  height: 300,
+  margin: { left: 0 },
+  yAxis: [{ width: 50 }],
 };
 
 const yearFormatter = (date: Date) => date.getFullYear().toString();
@@ -87,9 +88,9 @@ export default function Formatting() {
     <LineChart
       {...lineChartsParams}
       xAxis={[{ data: years, scaleType: 'time', valueFormatter: yearFormatter }]}
-      series={lineChartsParams.series.map((serie) => ({
-        ...serie,
-        valueFormatter: currencyFormatter,
+      series={lineChartsParams.series.map((series) => ({
+        ...series,
+        valueFormatter: (v) => (v === null ? '' : currencyFormatter(v)),
       }))}
     />
   );

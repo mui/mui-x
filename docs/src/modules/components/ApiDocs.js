@@ -7,7 +7,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
 const PrimaryHeading = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
@@ -22,9 +22,9 @@ const PrimaryHeading = styled(Typography)(({ theme }) => ({
 
 const SecondaryHeading = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   '& code': {
-    color: theme.palette.secondary.main,
+    color: (theme.vars || theme).palette.secondary.main,
   },
   [theme.breakpoints.down('sm')]: {
     display: 'none',

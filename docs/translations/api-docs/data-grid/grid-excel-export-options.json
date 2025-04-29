@@ -1,0 +1,35 @@
+{
+  "interfaceDescription": "The options to apply on the Excel export.",
+  "propertiesDescriptions": {
+    "allColumns": {
+      "description": "If <code>true</code>, the hidden columns will also be exported."
+    },
+    "columnsStyles": { "description": "Object mapping column field to Exceljs style" },
+    "escapeFormulas": {
+      "description": "If <code>false</code>, the formulas in the cells will not be escaped.<br />It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.<br />See <a href=\"https://owasp.org/www-community/attacks/CSV_Injection\">https://owasp.org/www-community/attacks/CSV_Injection</a> for more information."
+    },
+    "exceljsPostProcess": {
+      "description": "Method called after adding the rows to the workbook.<br />Not supported when <code>worker</code> is set.<br />To use with web workers, use the option in <code>setupExcelExportWebWorker</code>."
+    },
+    "exceljsPreProcess": {
+      "description": "Method called before adding the rows to the workbook.<br />Not supported when <code>worker</code> is set.<br />To use with web workers, use the option in <code>setupExcelExportWebWorker</code>."
+    },
+    "fields": {
+      "description": "The columns exported.<br />This should only be used if you want to restrict the columns exports."
+    },
+    "fileName": { "description": "The string used as the file name." },
+    "getRowsToExport": {
+      "description": "Function that returns the list of row ids to export on the order they should be exported."
+    },
+    "includeColumnGroupsHeaders": {
+      "description": "If <code>true</code>, the headers of the column groups will be added into the file."
+    },
+    "includeHeaders": {
+      "description": "If <code>true</code>, the first row of the file will include the headers of the grid."
+    },
+    "valueOptionsSheetName": {
+      "description": "Name given to the worksheet containing the columns valueOptions.<br />valueOptions are added to this worksheet if they are provided as an array."
+    },
+    "worker": { "description": "Function to return the Worker instance to be called." }
+  }
+}

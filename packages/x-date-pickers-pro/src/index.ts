@@ -1,10 +1,3 @@
-import { LicenseInfo as LicenseInfoExport } from '@mui/x-license';
-/**
- * @deprecated Use `@mui/x-license` package instead:
- * @example import { LicenseInfo } from '@mui/x-license';
- */
-export class LicenseInfo extends LicenseInfoExport {}
-
 export * from '@mui/x-date-pickers';
 
 export * from './DateRangePickerDay';
@@ -16,20 +9,19 @@ export * from './MultiInputDateTimeRangeField';
 export * from './SingleInputDateRangeField';
 export * from './SingleInputTimeRangeField';
 export * from './SingleInputDateTimeRangeField';
-export type {
-  RangeFieldSection,
-  BaseMultiInputFieldProps,
-  MultiInputFieldSlotTextFieldProps,
-} from './internals/models/fields';
 
 // Calendars
 export * from './DateRangeCalendar';
+export * from './PickersRangeCalendarHeader';
 
 // New pickers
 export * from './DateRangePicker';
 export * from './DesktopDateRangePicker';
 export * from './MobileDateRangePicker';
 export * from './StaticDateRangePicker';
+export * from './TimeRangePicker';
+export * from './DesktopTimeRangePicker';
+export * from './MobileTimeRangePicker';
 
 export * from './DateTimeRangePicker';
 export * from './DesktopDateTimeRangePicker';
@@ -38,6 +30,7 @@ export * from './MobileDateTimeRangePicker';
 // View renderers
 export * from './dateRangeViewRenderers';
 
-export type { UseDateRangeFieldProps } from './internals/models/dateRange';
-
 export * from './models';
+export * from './hooks';
+export * from './validation';
+export * from './managers';

@@ -1,31 +1,30 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 import {
   BaseClockProps,
   ExportedBaseClockProps,
   MultiSectionDigitalClockOnlyProps,
-} from '../internals/models/props/clock';
+} from '../internals/models/props/time';
 import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { PickerValidDate } from '../models';
 
-export interface MultiSectionDigitalClockOption<TValue> {
-  isDisabled?: (value: TValue) => boolean;
-  isSelected: (value: TValue) => boolean;
-  isFocused: (value: TValue) => boolean;
+export interface MultiSectionDigitalClockOption<TSectionValue extends number | string> {
+  isDisabled?: (value: TSectionValue) => boolean;
+  isSelected: (value: TSectionValue) => boolean;
+  isFocused: (value: TSectionValue) => boolean;
   label: string;
-  value: TValue;
+  value: TSectionValue;
   ariaLabel: string;
 }
 
-export interface ExportedMultiSectionDigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedBaseClockProps<TDate>,
+export interface ExportedMultiSectionDigitalClockProps
+  extends ExportedBaseClockProps,
     MultiSectionDigitalClockOnlyProps {}
 
-export interface MultiSectionDigitalClockViewProps<TValue>
-  extends Pick<MultiSectionDigitalClockSectionProps<TValue>, 'onChange' | 'items'> {}
+export interface MultiSectionDigitalClockViewProps<TSectionValue extends number | string>
+  extends Pick<MultiSectionDigitalClockSectionProps<TSectionValue>, 'onChange' | 'items'> {}
 
 export interface MultiSectionDigitalClockSlots {
   /**
@@ -39,9 +38,9 @@ export interface MultiSectionDigitalClockSlotProps {
   digitalClockSectionItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
 }
 
-export interface MultiSectionDigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedMultiSectionDigitalClockProps<TDate>,
-    BaseClockProps<TDate, TimeViewWithMeridiem> {
+export interface MultiSectionDigitalClockProps
+  extends ExportedMultiSectionDigitalClockProps,
+    BaseClockProps<TimeViewWithMeridiem> {
   /**
    * Available views.
    * @default ['hours', 'minutes']

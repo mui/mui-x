@@ -1,5 +1,19 @@
+/**
+ * Workaround for the codesadbox preview error.
+ *
+ * Once these issues are resolved
+ * https://github.com/mui/mui-x/issues/15765
+ * https://github.com/codesandbox/codesandbox-client/issues/8673
+ *
+ * `showError` can simply use `console.error` again.
+ */
+const isCodeSandbox =
+  typeof window !== 'undefined' && window.location.hostname.endsWith('.csb.app');
+
 function showError(message: string[]) {
-  console.error(
+  // eslint-disable-next-line no-console
+  const logger = isCodeSandbox ? console.log : console.error;
+  logger(
     [
       '*************************************************************',
       '',
@@ -25,10 +39,22 @@ export function showLicenseKeyPlanMismatchError() {
   showError([
     'MUI X: License key plan mismatch.',
     '',
-    'Your use of MUI X is not compatible with the plan of your license key. The feature you are trying to use is not included in the plan of your license key. This happens if you try to use `DataGridPremium` with a license key for the Pro plan.',
+    'Your use of MUI X is not compatible with the plan of your license key. The feature you are trying to use is not included in the plan of your license key. This happens if you try to use Data Grid Premium with a license key for the Pro plan.',
     '',
     'To solve the issue, you can upgrade your plan from Pro to Premium at https://mui.com/r/x-get-license?scope=premium.',
     "Of if you didn't intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.",
+  ]);
+}
+
+export function showNotAvailableInInitialProPlanError() {
+  showError([
+    'MUI X: Component not included in your license.',
+    '',
+    'The component you are trying to use is not included in the Pro Plan you purchased.',
+    '',
+    'Your license is from an old version of the Pro Plan that is only compatible with the `@mui/x-data-grid-pro` and `@mui/x-date-pickers-pro` commercial packages.',
+    '',
+    'To start using another Pro package, please consider reaching to our sales team to upgrade your license or visit https://mui.com/r/x-get-license to get a new license key.',
   ]);
 }
 
@@ -71,7 +97,7 @@ export function showExpiredAnnualGraceLicenseKeyError({
   showError([
     'MUI X: Expired license key.',
     '',
-    `Your annual license key to use MUI X ${plan}'s on non-production environments is expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
+    `Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
     '',
     'To solve the problem you can either:',
     '',
@@ -99,7 +125,7 @@ export function showExpiredAnnualLicenseKeyError({
     [
       'MUI X: Expired license key.',
       '',
-      `Your annual license key to use MUI X ${plan}'s on non-production environments is expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
+      `Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
       '',
       'To solve the problem you can either:',
       '',

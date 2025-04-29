@@ -1,10 +1,13 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import reactMajor from '@mui/x-internals/reactMajor';
+import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SeriesId } from '../models/seriesType/common';
+import { getSymbol } from '../internals/getSymbol';
 
 export interface LineHighlightElementClasses {
   /** Styles applied to the root element. */
@@ -13,7 +16,7 @@ export interface LineHighlightElementClasses {
 
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
-interface LineHighlightElementOwnerState {
+interface LineHighlightElementCommonProps {
   id: SeriesId;
   color: string;
   x: number;
@@ -30,7 +33,7 @@ export const lineHighlightElementClasses: LineHighlightElementClasses = generate
   ['root'],
 );
 
-const useUtilityClasses = (ownerState: LineHighlightElementOwnerState) => {
+const useUtilityClasses = (ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'id'>) => {
   const { classes, id } = ownerState;
   const slots = {
     root: ['root', `series-${id}`],
@@ -39,18 +42,12 @@ const useUtilityClasses = (ownerState: LineHighlightElementOwnerState) => {
   return composeClasses(slots, getHighlightElementUtilityClass, classes);
 };
 
-const HighlightElement = styled('circle', {
-  name: 'MuiHighlightElement',
-  slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: LineHighlightElementOwnerState }>(({ ownerState }) => ({
-  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
-  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
-  fill: ownerState.color,
-}));
-
-export type LineHighlightElementProps = LineHighlightElementOwnerState &
-  Omit<React.ComponentPropsWithoutRef<'circle'>, 'id'> & {};
+export type LineHighlightElementProps =
+  | (LineHighlightElementCommonProps &
+      ({ shape: 'circle' } & Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>))
+  | (LineHighlightElementCommonProps & {
+      shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
+    } & Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'>);
 
 /**
  * Demos:
@@ -63,25 +60,31 @@ export type LineHighlightElementProps = LineHighlightElementOwnerState &
  * - [LineHighlightElement API](https://mui.com/x/api/charts/line-highlight-element/)
  */
 function LineHighlightElement(props: LineHighlightElementProps) {
-  const { x, y, id, classes: innerClasses, color, ...other } = props;
+  const { x, y, id, classes: innerClasses, color, shape, ...other } = props;
 
-  const ownerState = {
-    id,
-    classes: innerClasses,
-    color,
-    x,
-    y,
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
+
+  const Element = shape === 'circle' ? 'circle' : 'path';
+
+  const additionalProps =
+    shape === 'circle'
+      ? { cx: 0, cy: 0, r: other.r === undefined ? 5 : other.r }
+      : {
+          d: d3Symbol(d3SymbolsFill[getSymbol(shape)])()!,
+        };
+
+  // React 18 does not recognize `transformOrigin` and React 19 does not recognize `transform-origin`
+  const transformOrigin =
+    reactMajor > 18 ? { transformOrigin: `${x} ${y}` } : { 'transform-origin': `${x} ${y}` };
 
   return (
-    <HighlightElement
+    <Element
       pointerEvents="none"
-      ownerState={ownerState}
       className={classes.root}
-      cx={0}
-      cy={0}
-      r={other.r === undefined ? 5 : other.r}
+      transform={`translate(${x} ${y})`}
+      fill={color}
+      {...transformOrigin}
+      {...additionalProps}
       {...other}
     />
   );
@@ -90,10 +93,12 @@ function LineHighlightElement(props: LineHighlightElementProps) {
 LineHighlightElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
+    .isRequired,
 } as any;
 
 export { LineHighlightElement };

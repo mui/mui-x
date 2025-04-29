@@ -1,5 +1,30 @@
 export type ChartsColorPaletteCallback = (mode: 'light' | 'dark') => string[];
 export type ChartsColorPalette = string[] | ChartsColorPaletteCallback;
+export type ChartsColorCallback = (mode: 'light' | 'dark') => string;
+export type ChartsColor = string | ChartsColorCallback;
+
+export const rainbowSurgePaletteLight = [
+  '#4254FB',
+  '#FFB422',
+  '#FA4F58',
+  '#0DBEFF',
+  '#22BF75',
+  '#FA83B4',
+  '#FF7511',
+];
+
+export const rainbowSurgePaletteDark = [
+  '#495AFB',
+  '#FFC758',
+  '#F35865',
+  '#30C8FF',
+  '#44CE8D',
+  '#F286B3',
+  '#FF8C39',
+];
+
+export const rainbowSurgePalette: ChartsColorPaletteCallback = (mode) =>
+  mode === 'dark' ? rainbowSurgePaletteDark : rainbowSurgePaletteLight;
 
 export const blueberryTwilightPaletteLight = [
   '#02B2AF',

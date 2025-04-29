@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
-import { createSvgIcon } from '@mui/material/utils';
 import {
   DataGrid,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridSortedRowIdsSelector,
-  GridToolbarContainer,
+  Toolbar,
   gridExpandedSortedRowIdsSelector,
   useGridApiContext,
+  GridDownloadIcon,
+  ToolbarButton,
 } from '@mui/x-data-grid';
 
 const getRowsFromCurrentPage = ({ apiRef }) =>
@@ -18,11 +19,6 @@ const getUnfilteredRows = ({ apiRef }) => gridSortedRowIdsSelector(apiRef);
 
 const getFilteredRows = ({ apiRef }) => gridExpandedSortedRowIdsSelector(apiRef);
 
-const ExportIcon = createSvgIcon(
-  <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />,
-  'SaveAlt',
-);
-
 function CustomToolbar() {
   const apiRef = useGridApiContext();
 
@@ -31,30 +27,30 @@ function CustomToolbar() {
   const buttonBaseProps = {
     color: 'primary',
     size: 'small',
-    startIcon: <ExportIcon />,
+    startIcon: <GridDownloadIcon />,
   };
 
   return (
-    <GridToolbarContainer>
-      <Button
-        {...buttonBaseProps}
+    <Toolbar>
+      <ToolbarButton
+        render={<Button {...buttonBaseProps} />}
         onClick={() => handleExport({ getRowsToExport: getRowsFromCurrentPage })}
       >
         Current page rows
-      </Button>
-      <Button
-        {...buttonBaseProps}
+      </ToolbarButton>
+      <ToolbarButton
+        render={<Button {...buttonBaseProps} />}
         onClick={() => handleExport({ getRowsToExport: getFilteredRows })}
       >
         Filtered rows
-      </Button>
-      <Button
-        {...buttonBaseProps}
+      </ToolbarButton>
+      <ToolbarButton
+        render={<Button {...buttonBaseProps} />}
         onClick={() => handleExport({ getRowsToExport: getUnfilteredRows })}
       >
         Unfiltered rows
-      </Button>
-    </GridToolbarContainer>
+      </ToolbarButton>
+    </Toolbar>
   );
 }
 
@@ -71,6 +67,7 @@ export default function CsvGetRowsToExport() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         pageSizeOptions={[10]}
         initialState={{
           ...data.initialState,

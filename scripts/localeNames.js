@@ -35,6 +35,7 @@ module.exports = {
   'ko-KR': 'Korean',
   mk: 'Macedonian',
   'nb-NO': 'Norwegian (Bokmål)',
+  'nn-NO': 'Norwegian (Nynorsk)',
   'fa-IR': 'Persian',
   'pl-PL': 'Polish',
   'pt-PT': 'Portuguese',

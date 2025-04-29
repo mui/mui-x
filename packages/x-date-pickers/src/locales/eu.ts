@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridianoa',
 };
 
-const euPickers: Partial<PickersLocaleText<any>> = {
+const euPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Azken hilabetea',
   nextMonth: 'Hurrengo hilabetea',
@@ -35,16 +35,18 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Garbitu',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Gaur',
+  nextStepButtonLabel: 'Hurrengo',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Data aukeratu',
   dateTimePickerToolbarTitle: 'Data eta ordua aukeratu',
   timePickerToolbarTitle: 'Ordua aukeratu',
   dateRangePickerToolbarTitle: 'Data tartea aukeratu',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Aukeratu ${views[view]}. ${time === null ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${adapter.format(time, 'fullTime')} da`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Aukeratu ${views[view]}. ${!formattedTime ? 'Ez da ordurik aukertau' : `Aukeratutako ordua ${formattedTime} da`}`,
   hoursClockNumberText: (hours) => `${hours} ordu`,
   minutesClockNumberText: (minutes) => `${minutes} minutu`,
   secondsClockNumberText: (seconds) => `${seconds} segundu`,
@@ -58,15 +60,12 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} astea`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Data aukeratu, aukeratutako data ${utils.format(value, 'fullDate')} da`
-      : 'Data aukeratu',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Ordua aukeratu, aukeratutako ordua ${utils.format(value, 'fullTime')} da`
-      : 'Ordua aukeratu',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Data aukeratu, aukeratutako data ${formattedDate} da` : 'Data aukeratu',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Ordua aukeratu, aukeratutako ordua ${formattedTime} da` : 'Ordua aukeratu',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Balioa garbitu',
 
   // Table labels
@@ -82,6 +81,19 @@ const euPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const eu = getPickersLocalization(euPickers);

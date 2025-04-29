@@ -1,28 +1,21 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
+import { describeSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
-const toMinutesLabel = (minutes: number | string) =>
-  `${Number(minutes) < 10 ? `0${minutes}` : minutes} minutes`;
+const toMinutesLabel = (minutes: number | string) => `${String(minutes).padStart(2, '0')} minutes`;
 
 export const testMinutesViewValidation: DescribeValidationTestSuite = (
   ElementToTest,
   getOption,
 ) => {
-  const { componentFamily, views, render, clock, withDate, withTime, variant } = getOption();
+  const { componentFamily, views, render, withDate, withTime, variant } = getOption();
 
-  if (
-    !views.includes('minutes') ||
-    !variant ||
-    componentFamily !== 'picker' ||
-    variant === 'desktop'
-  ) {
-    return;
-  }
-
-  describe('minutes view:', () => {
+  describeSkipIf(
+    !views.includes('minutes') || !variant || componentFamily !== 'picker' || variant === 'desktop',
+  )('minutes view:', () => {
     const defaultProps = {
       onChange: () => {},
       open: true,
@@ -32,12 +25,12 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       slotProps: { toolbar: { hidden: true } },
     };
 
-    it('should apply shouldDisableTime', function test() {
+    it('should apply shouldDisableTime', () => {
       render(
         <ElementToTest
           {...defaultProps}
           value={adapterToUse.date('2018-03-12T08:15:00')}
-          shouldDisableTime={(date) =>
+          shouldDisableTime={(date: any) =>
             adapterToUse.isAfter(date, adapterToUse.date('2018-03-12T08:20:00'))
           }
         />,
@@ -63,9 +56,9 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       );
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -99,7 +92,6 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       }
 
       setProps({ value: tomorrow });
-      clock.runToLast();
       expect(
         screen.getByRole('option', { name: toMinutesLabel(previousMinutesOptionValue) }),
       ).not.to.have.attribute('aria-disabled');
@@ -108,9 +100,9 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       ).not.to.have.attribute('aria-disabled');
     });
 
-    it('should apply disableFuture', function test() {
+    it('should apply disableFuture', () => {
       let now;
-      function WithFakeTimer(props) {
+      function WithFakeTimer(props: any) {
         now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
@@ -144,7 +136,6 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       }
 
       setProps({ value: yesterday });
-      clock.runToLast();
       expect(
         screen.getByRole('option', { name: toMinutesLabel(previousMinutesOptionValue) }),
       ).not.to.have.attribute('aria-disabled');
@@ -153,7 +144,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       ).not.to.have.attribute('aria-disabled');
     });
 
-    it('should apply maxTime', function test() {
+    it('should apply maxTime', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -175,7 +166,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       );
     });
 
-    it('should apply minTime', function test() {
+    it('should apply minTime', () => {
       render(
         <ElementToTest
           {...defaultProps}

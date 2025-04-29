@@ -2,7 +2,7 @@
 title: React Chart composition
 productId: x-charts
 githubLabel: 'component: charts'
-components: ChartContainer, ResponsiveChartContainer, ChartsGrid
+components: ChartContainer, ChartContainerPro, ChartsGrid, ChartDataProvider, ChartDataProviderPro, ChartsSurface
 packageName: '@mui/x-charts'
 ---
 
@@ -13,28 +13,92 @@ packageName: '@mui/x-charts'
 ## Overview
 
 The `@mui/x-charts` follows an architecture based on context providers.
-The overall idea is to pass your series and axes definitions to a single component: the `<ChartContainer />`.
-This component transforms the data and makes it available to its children.
+The overall idea is to pass your series and axes definitions to special components.
+This component transforms the data and makes it available to its children, which can be composed.
 
-Based on the data provided by the container, you can render some graphical elements with provided subcomponents, such as `<LinePlot />` or `<ChartsYAxis />`.
-Or you can [create your own components](/x/react-charts/components/).
+There are two main classes of components, which are used to create a chart.
+
+### Structural components
+
+These are used to define the chart's structure and data.
+
+#### The Data Provider and Surface components
+
+As the name suggests, the `ChartDataProvider` provides the data to the children components.
+While the `ChartsSurface` renders the SVG elements.
+
+```jsx
+<ChartDataProvider
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+>
+  <ChartsLegend />
+  <ChartsSurface
+    // Ref needs to be directly on the ChartsSurface
+    ref={mySvgRef}
+  >
+    {children}
+  </ChartsSurface>
+</ChartDataProvider>
+```
+
+:::info
+The demos here are using the `ChartContainer` component.
+To see demos using the separate `ChartDataProvider` and `ChartsSurface` components, check the [HTML components documentation](/x/react-charts/components/#html-components).
+:::
+
+#### The `ChartContainer` helper
+
+This component is a composition of the two previous components.
+It can be used instead of them when there is no need to customize anything outside the chart's graphical elements.
+
+```jsx
+<ChartContainer
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+  // Ref is forwarded internally to the ChartsSurface
+  ref={mySvgRef}
+>
+  {children}
+</ChartContainer>
+```
+
+### Graphical components
+
+These are any component that render the graphical elements of the chart.
+They are the children of the **Structural components** shown above.
+There are many of them, so they won't all be listed here.
+You can even [create your own components](/x/react-charts/components/).
+
+Some examples of graphical components are:
+
+- `LinePlot`
+- `BarPlot`
+- `ChartsXAxis`
+- `ChartsLegend`
+- `ChartsTooltip`
 
 ## Container options
 
 ### Responsive
 
-There are two types of Chart containers available: `<ChartContainer />` and `<ResponsiveChartContainer />`.
-As the names suggest, the only difference between them is responsiveness.
+The `<ChartContainer />` is responsive by default. The component automatically adjusts its dimensions to fit the available space defined by the parent element.
 
-The first container requires you to provide `width` and `height` props.
-In contrast, `<ResponsiveChartContainer />` automatically adjusts its dimensions to fit the available space defined by the parent element.
+To control the dimensions of the chart, the `width` and `height` props can be provided.
+The chart then renders with the specified dimensions.
 
 :::warning
 The parent element must have intrinsic dimensions.
 If the parent's dimensions rely on its content, the responsive charts will not render.
 :::
 
-The following demo lets you switch between a chart using `<ChartContainer />` with `width` set to `500` and `height` set to `300`, and a chart using `<ResponsiveChartContainer />`, so you can see how they differ.
+The following demo lets you switch between a chart using defined sizes, `<ChartContainer width={500} height={300} />`, and a chart without any sizes, `<ChartContainer />`, so you can see how they differ.
 
 {{"demo": "BasicComposition.js" }}
 
@@ -58,9 +122,11 @@ For example, the Bar Chart component assumes that `series` will be of type `'bar
 With composition, the chart container isn't able to guess the series type, so you must explicitly define it.
 
 ```jsx
-<BarChart series={[{
+<BarChart
+  series={[{
     data: [1, 2, 3] // No need to specify it is a bar series
-}]} />
+  }]}
+/>
 
 <ChartContainer
   series={[
@@ -79,7 +145,7 @@ In the next demo, the chart is made by composing the `<BarPlot />` and `<LinePlo
 By modifying the series `type` property, you can switch between rendering a line and a bar.
 
 ```jsx
-<ResponsiveChartContainer
+<ChartContainer
   series={[
     { type, data: [1, 2, 3, 2, 1] },
     { type, data: [4, 3, 1, 3, 4] },
@@ -87,30 +153,90 @@ By modifying the series `type` property, you can switch between rendering a line
 >
   <BarPlot />
   <LinePlot />
-  <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
-</ResponsiveChartContainer>
+  <ChartsXAxis label="X axis" axisId="x-axis-id" />
+</ChartContainer>
 ```
 
 {{"demo": "SwitchSeriesType.js" }}
 
 ## Subcomponents
 
+:::info
+The CSS `z-index` property does not exist on SVG elements.
+Elements rendered after overlap on top of elements rendered before.
+The order of elements in composition is the only way to define how they overlap.
+:::
+
 ### Plotting
 
 To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, etc.
 
+### Clipping
+
+To ensure chart elements stay confined to the designated drawing area, use the `ChartsClipPath` component.
+This component defines a rectangular clip path that acts as a boundary.
+
+1. **Define the Clip Path**: Use `<ChartsClipPath id={clipPathId} />` to establish the clip path for the drawing area. `clipPathId` must be a unique identifier.
+2. **Wrap the Chart**: Enclose the chart elements you want to clip within a `<g>` element. Set the `clipPath` attribute to `url(#${clipPathId})` to reference the previously defined clip path. Example: ``<g clipPath={`url(#${clipPathId})`}>``
+
+```jsx
+<ChartContainer>
+  <g clipPath={`url(#${clipPathId})`}>
+    // The plotting to clip in the drawing area.
+    <ScatterPlot />
+    <LinePlot />
+  </g>
+  <ChartsClipPath id={clipPathId} /> // Defines the clip path of the drawing area.
+</ChartContainer>
+```
+
+The following demo allows you to toggle clipping for scatter and line plots.
+Observe how line markers extend beyond the clip area, rendering on top of the axes.
+
+{{"demo": "LimitOverflow.js" }}
+
+:::warning
+The provided demo is generating a unique ID with `useId()`.
+
+```js
+const id = useId();
+const clipPathId = `${id}-clip-path`;
+```
+
+It's important to generate unique IDs for clip paths, especially when dealing with multiple charts on a page. Assigning a static ID like `"my-id"` would lead to conflicts.
+:::
+
 ### Axis
 
-To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
+To add axes, use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
 
 It takes an `axisId` prop that indicates which axis, defined in the container, should be rendered.
 If `axisId` is not provided it will pick the first one.
 
 ### Grid
 
-To add a grid, you can use the `<ChartsGrid />` component.
+To add a grid, use the `<ChartsGrid />` component.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+### Legend
+
+To add a legend, use the `<ChartsLegend />` component.
+
+:::warning
+The Charts Legend is an HTML element since v8.
+It must be rendered inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+
+```jsx
+<ChartDataProvider>
+  <ChartsLegend />
+  <ChartsSurface>{/* SVG components */}</ChartsSurface>
+</ChartDataProvider>
+```
+
+:::
+
+See [HTML components](/x/react-charts/components/#html-components) documentation for more information.
 
 ### Additional information
 
@@ -124,14 +250,14 @@ The demos use the `slotProps.legend` object, but with composition, you can pass 
 <BarChart
   slotProps={{
     legend: {
-      direction: 'row',
+      direction: 'horizontal',
     }
   }}
 />
 
 // With composition
 <ChartContainer>
-  <ChartsLegend direction="row" />
+  <ChartsLegend direction="horizontal" />
 </ChartContainer>
 ```
 

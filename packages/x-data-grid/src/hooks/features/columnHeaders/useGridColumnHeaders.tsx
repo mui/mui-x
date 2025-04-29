@@ -1,20 +1,23 @@
 import * as React from 'react';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
-import { GridRenderContext } from '../../../models/params/gridScrollParams';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
-import { gridDimensionsSelector } from '../dimensions';
 import {
-  gridOffsetsSelector,
-  gridRenderContextColumnsSelector,
-  gridVirtualizationColumnEnabledSelector,
-} from '../virtualization';
+  gridColumnsTotalWidthSelector,
+  gridGroupHeaderHeightSelector,
+  gridHasFillerSelector,
+  gridHeaderHeightSelector,
+  gridVerticalScrollbarWidthSelector,
+} from '../dimensions/gridDimensionsSelectors';
+import { gridRenderContextColumnsSelector } from '../virtualization';
+import { computeOffsetLeft } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -23,13 +26,22 @@ import { GridFilterActiveItemsLookup } from '../filter';
 import { GridColumnGroupIdentifier, GridColumnIdentifier } from '../focus';
 import { GridColumnMenuState } from '../columnMenu';
 import {
-  GridPinnedColumnPosition,
   GridColumnVisibilityModel,
+  gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
+  gridColumnLookupSelector,
 } from '../columns';
 import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
+import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
+import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';
+import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
+import {
+  shouldCellShowLeftBorder,
+  shouldCellShowRightBorder,
+} from '../../../utils/cellBorderUtils';
+import { PinnedColumnPosition } from '../../../internals/constants';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
@@ -42,7 +54,6 @@ interface HeaderInfo {
 }
 
 export interface UseGridColumnHeadersProps {
-  innerRef?: React.Ref<HTMLDivElement>;
   visibleColumns: GridStateColDef[];
   sortColumnLookup: GridSortColumnLookup;
   filterColumnLookup: GridFilterActiveItemsLookup;
@@ -58,34 +69,22 @@ export interface UseGridColumnHeadersProps {
 }
 
 export interface GetHeadersParams {
-  position?: GridPinnedColumnPosition;
-  renderContext?: GridRenderContext;
-  minFirstColumn?: number;
+  position?: PinnedColumnPosition;
+  renderContext?: GridColumnsRenderContext;
   maxLastColumn?: number;
 }
-
-const SpaceFiller = styled('div')({
-  /* GridRootStyles conflict */
-  '&&': {
-    padding: 0,
-    width: 'calc(var(--DataGrid-width) - var(--DataGrid-columnsTotalWidth))',
-  },
-});
 
 type OwnerState = DataGridProcessedProps;
 
 export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
-  overridesResolver: (_, styles) => styles.columnHeaderRow,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
-  height: 'var(--DataGrid-headerHeight)',
 });
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const {
-    innerRef: innerRefProp,
     visibleColumns,
     sortColumnLookup,
     filterColumnLookup,
@@ -105,18 +104,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
-
-  const innerRef = React.useRef<HTMLDivElement>(null);
-  const handleInnerRef = useForkRef(innerRefProp, innerRef);
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const offsets = useGridSelector(apiRef, gridOffsetsSelector);
+  const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
+  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
-  const visiblePinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-
-  React.useEffect(() => {
-    apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
-  }, [apiRef]);
+  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
+  const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
+  const headerHeight = useGridSelector(apiRef, gridHeaderHeightSelector);
+  const groupHeaderHeight = useGridSelector(apiRef, gridGroupHeaderHeightSelector);
+  const scrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
 
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     (params) => setResizeCol(params.field),
@@ -136,21 +134,35 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [],
   );
 
-  useGridApiEventHandler(apiRef, 'columnResizeStart', handleColumnResizeStart);
-  useGridApiEventHandler(apiRef, 'columnResizeStop', handleColumnResizeStop);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
+  const leftRenderContext = React.useMemo(() => {
+    return pinnedColumns.left.length
+      ? {
+          firstColumnIndex: 0,
+          lastColumnIndex: pinnedColumns.left.length,
+        }
+      : null;
+  }, [pinnedColumns.left.length]);
+
+  const rightRenderContext = React.useMemo(() => {
+    return pinnedColumns.right.length
+      ? {
+          firstColumnIndex: visibleColumns.length - pinnedColumns.right.length,
+          lastColumnIndex: visibleColumns.length,
+        }
+      : null;
+  }, [pinnedColumns.right.length, visibleColumns.length]);
+
+  useGridEvent(apiRef, 'columnResizeStart', handleColumnResizeStart);
+  useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
+  useGridEvent(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
+  useGridEvent(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {
-    const {
-      renderContext: currentContext = renderContext,
-      // TODO: `minFirstColumn` is not used anymore, could be refactored out.
-      maxLastColumn = visibleColumns.length,
-    } = params || {};
+    const { renderContext: currentContext = renderContext } = params || {};
 
-    const firstColumnToRender = !hasVirtualization ? 0 : currentContext.firstColumnIndex;
-    const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
+    const firstColumnToRender = currentContext.firstColumnIndex;
+    const lastColumnToRender = currentContext.lastColumnIndex;
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {
@@ -164,24 +176,37 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     params: GetHeadersParams | undefined,
     children: React.ReactNode,
     leftOverflow: number,
-    borderTop: boolean = false,
+    borderBottom: boolean = false,
   ) => {
-    const isPinnedRight = params?.position === GridPinnedColumnPosition.RIGHT;
+    const isPinnedRight = params?.position === PinnedColumnPosition.RIGHT;
     const isNotPinned = params?.position === undefined;
 
     const hasScrollbarFiller =
-      (visiblePinnedColumns.right.length > 0 && isPinnedRight) ||
-      (visiblePinnedColumns.right.length === 0 && isNotPinned);
+      (pinnedColumns.right.length > 0 && isPinnedRight) ||
+      (pinnedColumns.right.length === 0 && isNotPinned);
 
-    const leftOffsetWidth = offsets.left - leftOverflow;
+    const leftOffsetWidth = offsetLeft - leftOverflow;
 
     return (
       <React.Fragment>
         {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
         {children}
-        {isNotPinned && <SpaceFiller className={gridClasses.columnHeader} />}
+        {isNotPinned && (
+          <div
+            role="presentation"
+            className={clsx(
+              gridClasses.filler,
+              borderBottom && gridClasses['filler--borderBottom'],
+            )}
+          />
+        )}
         {hasScrollbarFiller && (
-          <ScrollbarFiller header borderTop={borderTop} pinnedRight={isPinnedRight} />
+          <ScrollbarFiller
+            header
+            pinnedRight={isPinnedRight}
+            borderBottom={borderBottom}
+            borderTop={false}
+          />
         )}
       </React.Fragment>
     );
@@ -203,6 +228,39 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           : -1;
       const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === colDef.field;
       const open = columnMenuState.open && columnMenuState.field === colDef.field;
+      const pinnedPosition = params?.position;
+
+      const pinnedOffset = getPinnedCellOffset(
+        pinnedPosition,
+        colDef.computedWidth,
+        columnIndex,
+        columnPositions,
+        columnsTotalWidth,
+        scrollbarWidth,
+      );
+
+      const siblingWithBorderingSeparator =
+        pinnedPosition === PinnedColumnPosition.RIGHT
+          ? renderedColumns[i - 1]
+          : renderedColumns[i + 1];
+      const isSiblingFocused = siblingWithBorderingSeparator
+        ? columnHeaderFocus !== null &&
+          columnHeaderFocus.field === siblingWithBorderingSeparator.field
+        : false;
+      const isLastUnpinned =
+        columnIndex + 1 === columnPositions.length - pinnedColumns.right.length;
+
+      const indexInSection = i;
+      const sectionLength = renderedColumns.length;
+
+      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showRightBorder = shouldCellShowRightBorder(
+        pinnedPosition,
+        indexInSection,
+        sectionLength,
+        rootProps.showColumnVerticalBorder,
+        gridHasFiller,
+      );
 
       columns.push(
         <GridColumnHeaderItem
@@ -212,34 +270,70 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           filterItemsCounter={
             filterColumnLookup[colDef.field] && filterColumnLookup[colDef.field].length
           }
-          headerHeight={dimensions.headerHeight}
+          headerHeight={headerHeight}
           isDragging={colDef.field === dragCol}
           colDef={colDef}
           colIndex={columnIndex}
           isResizing={resizeCol === colDef.field}
+          isLast={columnIndex === columnPositions.length - 1}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
+          pinnedPosition={pinnedPosition}
+          pinnedOffset={pinnedOffset}
+          isLastUnpinned={isLastUnpinned}
+          isSiblingFocused={isSiblingFocused}
+          showLeftBorder={showLeftBorder}
+          showRightBorder={showRightBorder}
           {...other}
         />,
       );
     }
 
+    return getFillers(params, columns, 0);
+  };
+
+  const getColumnHeadersRow = () => {
     return (
       <GridColumnHeaderRow
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
+        className={gridClasses['row--borderBottom']}
+        style={{ height: headerHeight }}
       >
-        {getFillers(params, columns, 0)}
+        {leftRenderContext &&
+          getColumnHeaders(
+            {
+              position: PinnedColumnPosition.LEFT,
+              renderContext: leftRenderContext,
+            },
+            { disableReorder: true },
+          )}
+        {getColumnHeaders({
+          renderContext,
+        })}
+        {rightRenderContext &&
+          getColumnHeaders(
+            {
+              position: PinnedColumnPosition.RIGHT,
+              renderContext: rightRenderContext,
+            },
+            {
+              disableReorder: true,
+              separatorSide: GridColumnHeaderSeparatorSides.Left,
+            },
+          )}
       </GridColumnHeaderRow>
     );
   };
 
-  const getColumnGroupHeaders = (params?: GetHeadersParams) => {
-    if (headerGroupingMaxDepth === 0) {
-      return null;
-    }
-
+  const getColumnGroupHeaders = ({
+    depth,
+    params,
+  }: {
+    depth: number;
+    params: GetHeadersParams;
+  }) => {
     const columnsToRender = getColumnsToRender(params);
     if (columnsToRender.renderedColumns.length === 0) {
       return null;
@@ -247,132 +341,173 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const { firstColumnToRender, lastColumnToRender } = columnsToRender;
 
-    const columns: React.JSX.Element[] = [];
+    const rowStructure = columnGroupsHeaderStructure[depth];
 
-    const headerToRender: {
-      leftOverflow: number;
-      elements: HeaderInfo[];
-    }[] = [];
+    const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
+    const firstGroupToRender = columnGroupsModel[firstColumnFieldToRender]?.[depth] ?? null;
 
-    for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
-      const rowStructure = columnGroupsHeaderStructure[depth];
+    const firstGroupIndex = rowStructure.findIndex(
+      ({ groupId, columnFields }) =>
+        groupId === firstGroupToRender && columnFields.includes(firstColumnFieldToRender),
+    );
 
-      const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
-      const firstGroupToRender =
-        apiRef.current.getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
+    const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
+    const lastGroupToRender = columnGroupsModel[lastColumnFieldToRender]?.[depth] ?? null;
 
-      const firstGroupIndex = rowStructure.findIndex(
-        ({ groupId, columnFields }) =>
-          groupId === firstGroupToRender && columnFields.includes(firstColumnFieldToRender),
-      );
+    const lastGroupIndex = rowStructure.findIndex(
+      ({ groupId, columnFields }) =>
+        groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
+    );
 
-      const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
-      const lastGroupToRender =
-        apiRef.current.getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
-      const lastGroupIndex = rowStructure.findIndex(
-        ({ groupId, columnFields }) =>
-          groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
-      );
-
-      const visibleColumnGroupHeader = rowStructure
-        .slice(firstGroupIndex, lastGroupIndex + 1)
-        .map((groupStructure) => {
-          return {
-            ...groupStructure,
-            columnFields: groupStructure.columnFields.filter(
-              (field) => columnVisibility[field] !== false,
-            ),
-          };
-        })
-        .filter((groupStructure) => groupStructure.columnFields.length > 0);
-
-      const firstVisibleColumnIndex =
-        visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
-      const hiddenGroupColumns = visibleColumnGroupHeader[0].columnFields.slice(
-        0,
-        firstVisibleColumnIndex,
-      );
-      const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
-        const column = apiRef.current.getColumn(field);
-        return acc + (column.computedWidth ?? 0);
-      }, 0);
-
-      let columnIndex = firstColumnToRender;
-      const elements = visibleColumnGroupHeader.map(({ groupId, columnFields }) => {
-        const hasFocus =
-          columnGroupHeaderFocus !== null &&
-          columnGroupHeaderFocus.depth === depth &&
-          columnFields.includes(columnGroupHeaderFocus.field);
-        const tabIndex: 0 | -1 =
-          columnGroupHeaderTabIndexState !== null &&
-          columnGroupHeaderTabIndexState.depth === depth &&
-          columnFields.includes(columnGroupHeaderTabIndexState.field)
-            ? 0
-            : -1;
-
-        const headerInfo: HeaderInfo = {
-          groupId,
-          width: columnFields.reduce(
-            (acc, field) => acc + apiRef.current.getColumn(field).computedWidth,
-            0,
+    const visibleColumnGroupHeader = rowStructure
+      .slice(firstGroupIndex, lastGroupIndex + 1)
+      .map((groupStructure) => {
+        return {
+          ...groupStructure,
+          columnFields: groupStructure.columnFields.filter(
+            (field) => columnVisibility[field] !== false,
           ),
-          fields: columnFields,
-          colIndex: columnIndex,
-          hasFocus,
-          tabIndex,
         };
+      })
+      .filter((groupStructure) => groupStructure.columnFields.length > 0);
 
-        columnIndex += columnFields.length;
-        return headerInfo;
-      });
+    const firstVisibleColumnIndex =
+      visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
+    const hiddenGroupColumns = visibleColumnGroupHeader[0].columnFields.slice(
+      0,
+      firstVisibleColumnIndex,
+    );
+    const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
+      const column = columnsLookup[field];
+      return acc + (column.computedWidth ?? 0);
+    }, 0);
 
-      headerToRender.push({ leftOverflow, elements });
-    }
+    let columnIndex = firstColumnToRender;
+    const children = visibleColumnGroupHeader.map(({ groupId, columnFields }, index) => {
+      const hasFocus =
+        columnGroupHeaderFocus !== null &&
+        columnGroupHeaderFocus.depth === depth &&
+        columnFields.includes(columnGroupHeaderFocus.field);
+      const tabIndex: 0 | -1 =
+        columnGroupHeaderTabIndexState !== null &&
+        columnGroupHeaderTabIndexState.depth === depth &&
+        columnFields.includes(columnGroupHeaderTabIndexState.field)
+          ? 0
+          : -1;
 
-    headerToRender.forEach((depthInfo, depthIndex) => {
-      const children = depthInfo.elements.map(
-        ({ groupId, width, fields, colIndex, hasFocus, tabIndex }, groupIndex) => {
-          return (
-            <GridColumnGroupHeader
-              key={groupIndex}
-              groupId={groupId}
-              width={width}
-              fields={fields}
-              colIndex={colIndex}
-              depth={depthIndex}
-              isLastColumn={colIndex === visibleColumns.length - fields.length}
-              maxDepth={headerToRender.length}
-              height={dimensions.headerHeight}
-              hasFocus={hasFocus}
-              tabIndex={tabIndex}
-            />
-          );
-        },
+      const headerInfo: HeaderInfo = {
+        groupId,
+        width: columnFields.reduce((acc, field) => acc + columnsLookup[field].computedWidth, 0),
+        fields: columnFields,
+        colIndex: columnIndex,
+        hasFocus,
+        tabIndex,
+      };
+
+      const pinnedPosition = params.position;
+      const pinnedOffset = getPinnedCellOffset(
+        pinnedPosition,
+        headerInfo.width,
+        columnIndex,
+        columnPositions,
+        columnsTotalWidth,
+        scrollbarWidth,
       );
 
-      columns.push(
-        <GridColumnHeaderRow
-          key={depthIndex}
-          role="row"
-          aria-rowindex={depthIndex + 1}
-          ownerState={rootProps}
-        >
-          {getFillers(params, children, depthInfo.leftOverflow)}
-        </GridColumnHeaderRow>,
+      columnIndex += columnFields.length;
+
+      let indexInSection = index;
+      if (pinnedPosition === PinnedColumnPosition.LEFT) {
+        // Group headers can expand to multiple columns, we need to adjust the index
+        indexInSection = columnIndex - 1;
+      }
+
+      return (
+        <GridColumnGroupHeader
+          key={index}
+          groupId={groupId}
+          width={headerInfo.width}
+          fields={headerInfo.fields}
+          colIndex={headerInfo.colIndex}
+          depth={depth}
+          isLastColumn={index === visibleColumnGroupHeader.length - 1}
+          maxDepth={headerGroupingMaxDepth}
+          height={groupHeaderHeight}
+          hasFocus={hasFocus}
+          tabIndex={tabIndex}
+          pinnedPosition={pinnedPosition}
+          pinnedOffset={pinnedOffset}
+          showLeftBorder={shouldCellShowLeftBorder(pinnedPosition, indexInSection)}
+          showRightBorder={shouldCellShowRightBorder(
+            pinnedPosition,
+            indexInSection,
+            visibleColumnGroupHeader.length,
+            rootProps.showColumnVerticalBorder,
+            gridHasFiller,
+          )}
+        />
       );
     });
-    return columns;
+
+    return getFillers(params, children, leftOverflow);
+  };
+
+  const getColumnGroupHeadersRows = () => {
+    if (headerGroupingMaxDepth === 0) {
+      return null;
+    }
+
+    const headerRows: React.JSX.Element[] = [];
+
+    for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
+      headerRows.push(
+        <GridColumnHeaderRow
+          key={depth}
+          role="row"
+          aria-rowindex={depth + 1}
+          ownerState={rootProps}
+          style={{ height: groupHeaderHeight }}
+        >
+          {leftRenderContext &&
+            getColumnGroupHeaders({
+              depth,
+              params: {
+                position: PinnedColumnPosition.LEFT,
+                renderContext: leftRenderContext,
+                maxLastColumn: leftRenderContext.lastColumnIndex,
+              },
+            })}
+          {getColumnGroupHeaders({ depth, params: { renderContext } })}
+          {rightRenderContext &&
+            getColumnGroupHeaders({
+              depth,
+              params: {
+                position: PinnedColumnPosition.RIGHT,
+                renderContext: rightRenderContext,
+                maxLastColumn: rightRenderContext.lastColumnIndex,
+              },
+            })}
+        </GridColumnHeaderRow>,
+      );
+    }
+
+    return headerRows;
   };
 
   return {
     renderContext,
+    leftRenderContext,
+    rightRenderContext,
+    pinnedColumns,
+    visibleColumns,
+    columnPositions,
     getFillers,
-    getColumnHeaders,
+    getColumnHeadersRow,
     getColumnsToRender,
-    getColumnGroupHeaders,
+    getColumnGroupHeadersRows,
+    getPinnedCellOffset,
     isDragging: !!dragCol,
     getInnerProps: () => ({
-      ref: handleInnerRef,
       role: 'rowgroup',
     }),
   };

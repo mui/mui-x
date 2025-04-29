@@ -23,7 +23,7 @@ To change the minimum width of a column, use the `minWidth` property available i
 Column fluidity or responsiveness can be achieved by setting the `flex` property in `GridColDef`.
 
 The `flex` property accepts a value between 0 and ∞.
-It works by dividing the remaining space in the data grid among all flex columns in proportion to their `flex` value.
+It works by dividing the remaining space in the Data Grid among all flex columns in proportion to their `flex` value.
 
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and the third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
@@ -34,15 +34,15 @@ To set a minimum and maximum width for a `flex` column set the `minWidth` and th
 Before using fluid width, note that:
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
-- `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the data grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
+- `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the Data Grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
 :::
 
 {{"demo": "ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Resizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Resizing
 
-By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
+By default, Data Grid allows all columns to be resized by dragging the right portion of the column separator.
 
 To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
@@ -58,9 +58,9 @@ To capture changes in the width of a column there are two callbacks that are cal
 - `onColumnResize`: Called while a column is being resized.
 - `onColumnWidthChange`: Called after the width of a column is changed, but not during resizing.
 
-## Autosizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Autosizing
 
-`DataGridPro` allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the datagrid.
+Data Grid allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the Data Grid.
 
 Autosizing can be used by one of the following methods:
 
@@ -75,7 +75,7 @@ Note that for the separator double-click method, the `autosizeOptions.columns` w
 In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be respected.
 
 ```tsx
-<DataGridPro
+<DataGrid
   {...otherProps}
   autosizeOptions={{
     columns: ['name', 'status', 'createdBy'],
@@ -88,12 +88,12 @@ In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be re
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
 :::warning
-The data grid can only autosize based on the currently rendered cells.
+The Data Grid can only autosize based on the currently rendered cells.
 
 DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
 :::
 
-### Autosizing asynchronously [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+### Autosizing asynchronously
 
 The `autosizeColumns` method from the `apiRef` can be used as well to adjust the column size on specified events, for example when receiving row data from the server.
 

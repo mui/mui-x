@@ -1,0 +1,7 @@
+<DatePicker
+  slotProps={{
+    openPickerIcon: {
+      color: 'primary',
+    },
+  }}
+/>

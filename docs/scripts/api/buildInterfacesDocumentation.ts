@@ -1,10 +1,9 @@
 import * as ts from 'typescript';
-import * as prettier from 'prettier';
+import { EOL } from 'os';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/internal-markdown';
 import {
-  escapeCell,
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
@@ -12,6 +11,7 @@ import {
   writePrettifiedFile,
   resolveExportSpecifier,
   DocumentedInterfaces,
+  escapeCell,
 } from './utils';
 import {
   XTypeScriptProjects,
@@ -31,60 +31,13 @@ interface ParsedProperty {
   name: string;
   description: string;
   tags: { [tagName: string]: ts.JSDocTagInfo };
-  isOptional: boolean;
+  required: boolean;
   typeStr: string;
   /**
    * Name of the projects on which the interface has this property
    */
   projects: XProjectNames[];
 }
-
-const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
-  'GridCellSelectionApi',
-  'GridColumnPinningApi',
-  'GridColumnResizeApi',
-  'GridCsvExportApi',
-  'GridDetailPanelApi',
-  'GridEditingApi',
-  'GridExcelExportApi',
-  'GridFilterApi',
-  'GridPaginationApi',
-  'GridPrintExportApi',
-  'GridRowGroupingApi',
-  'GridRowMultiSelectionApi',
-  'GridRowSelectionApi',
-  'GridScrollApi',
-  'GridSortApi',
-  'GridVirtualizationApi',
-];
-
-const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
-  // apiRef
-  'GridApi',
-
-  // Params
-  'GridCellParams',
-  'GridRowParams',
-  'GridRowClassNameParams',
-  'GridRowSpacingParams',
-  'GridExportStateParams',
-
-  // Others
-  'GridColDef',
-  'GridSingleSelectColDef',
-  'GridActionsColDef',
-  'GridCsvExportOptions',
-  'GridPrintExportOptions',
-  'GridExcelExportOptions',
-
-  // Filters
-  'GridFilterModel',
-  'GridFilterItem',
-  'GridFilterOperator',
-
-  // Aggregation
-  'GridAggregationFunction',
-];
 
 const parseProperty = async (
   propertySymbol: ts.Symbol,
@@ -93,7 +46,7 @@ const parseProperty = async (
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
-  isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+  required: !propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
   typeStr: await stringifySymbol(propertySymbol, project),
   projects: [project.name],
 });
@@ -107,11 +60,10 @@ interface ProjectInterface {
 
 const parseInterfaceSymbol = async (
   interfaceName: string,
-  documentedInterfaces: DocumentedInterfaces,
+  packagesWithThisInterface: XProjectNames[],
   projects: XTypeScriptProjects,
 ): Promise<ParsedObject | null> => {
-  const projectInterfaces = documentedInterfaces
-    .get(interfaceName)!
+  const projectInterfaces = packagesWithThisInterface
     .map((projectName) => {
       const project = projects.get(projectName)!;
 
@@ -151,11 +103,9 @@ const parseInterfaceSymbol = async (
   };
 
   const properties: Record<string, ParsedProperty> = {};
-  // eslint-disable-next-line no-restricted-syntax
   for (const { type, project } of projectInterfaces) {
     const propertiesOnProject = type.getProperties();
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const propertySymbol of propertiesOnProject) {
       if (properties[propertySymbol.name]) {
         properties[propertySymbol.name].projects.push(project.name);
@@ -173,142 +123,191 @@ const parseInterfaceSymbol = async (
   return parsedInterface;
 };
 
-function generateMarkdownFromProperties(
-  object: ParsedObject,
-  documentedInterfaces: DocumentedInterfaces,
-) {
-  const hasDefaultValue = object.properties.some((property) => {
-    return property.tags.default;
-  });
+const isPro = (project: string) => project.includes('-pro');
+const isPremium = (project: string) => project.includes('-premium');
 
-  const headers = hasDefaultValue
-    ? `
-| Name | Type | Default | Description |
-|:-----|:-----|:--------|:------------|`
-    : `
-| Name | Type | Description |
-|:-----|:-----|:------------|`;
-
-  let text = `${headers}\n`;
-
-  object.properties.forEach((property) => {
-    const defaultValue = property.tags.default?.text?.[0].text;
-
-    let planImg: string;
-    if (property.projects.includes('x-data-grid')) {
-      planImg = '';
-    } else if (property.projects.includes('x-data-grid-pro')) {
-      planImg =
-        ' [<span class="plan-pro" title="Pro plan"></span>](/x/introduction/licensing/#pro-plan)';
-    } else if (property.projects.includes('x-data-grid-premium')) {
-      planImg =
-        ' [<span class="plan-premium" title="Premium plan"></span>](/x/introduction/licensing/#premium-plan)';
-    } else {
-      throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
-    }
-
-    const formattedName = property.isOptional
-      ? `<span class="prop-name optional">${property.name}<sup><abbr title="optional">?</abbr></sup>${planImg}</span>`
-      : `<span class="prop-name">${property.name}${planImg}</span>`;
-
-    const formattedType = `<span class="prop-type">${escapeCell(property.typeStr)}</span>`;
-
-    const formattedDefaultValue =
-      defaultValue == null ? '' : `<span class="prop-default">${escapeCell(defaultValue)}</span>`;
-
-    const formattedDescription = escapeCell(
-      linkify(property.description, documentedInterfaces, 'markdown'),
-    );
-
-    if (hasDefaultValue) {
-      text += `| ${formattedName} | ${formattedType} | ${formattedDefaultValue} | ${formattedDescription} |\n`;
-    } else {
-      text += `| ${formattedName} | ${formattedType} | ${formattedDescription} |\n`;
-    }
-  });
-
-  return text;
+function getPlanLevel(property: ParsedProperty) {
+  if (property.projects.some((project) => !isPro(project) && !isPremium(project))) {
+    return '';
+  }
+  if (property.projects.some(isPro)) {
+    return 'pro';
+  }
+  if (property.projects.some(isPremium)) {
+    return 'premium';
+  }
+  throw new Error(`No valid plan found for ${property.name} property`);
 }
 
-async function generateImportStatement(objects: ParsedObject[], projects: XTypeScriptProjects) {
-  let imports = '```js\n';
+function getDefaultValue(property: ParsedProperty) {
+  const defaultValue = property.tags.default?.text?.[0].text;
+  if (defaultValue === undefined) {
+    return defaultValue;
+  }
+  return escapeCell(defaultValue);
+}
 
+function generateImportStatement(object: ParsedObject, projects: XTypeScriptProjects) {
   const projectImports = Array.from(projects.values())
     .map((project) => {
-      const objectsInProject = objects.filter((object) => {
-        return !!project.exports[object.name];
-      });
-
-      if (objectsInProject.length === 0) {
+      if (!project.exports[object.name]) {
         return null;
       }
 
-      return `import {${objectsInProject.map((object) => object.name)}} from '@mui/${
-        project.name
-      }'`;
+      return `import { ${object.name} } from '@mui/${project.name}'`;
     })
     .filter((el): el is string => !!el)
     // Display the imports from the pro packages above imports from the community packages
     .sort((a, b) => b.length - a.length);
-
-  imports += await prettier.format(projectImports.join('\n// or\n'), {
-    singleQuote: true,
-    semi: false,
-    trailingComma: 'none',
-    parser: 'typescript',
-  });
-  imports += '\n```';
-
-  return imports;
+  return projectImports;
 }
 
-async function generateMarkdown(
-  object: ParsedObject,
-  projects: XTypeScriptProjects,
-  documentedInterfaces: DocumentedInterfaces,
-) {
-  const demos = object.tags.demos;
-  const description = linkify(object.description, documentedInterfaces, 'html');
-  const imports = await generateImportStatement([object], projects);
-
-  let text = `# ${object.name} Interface\n`;
-  text += `<p class="description">${description}</p>\n\n`;
-
-  if (demos && demos.text && demos.text.length > 0) {
-    text += '## Demos\n\n';
-    text += ':::info\n';
-    text += 'For examples and details on the usage, check the following pages:\n\n';
-    demos.text.forEach((demoLink) => {
-      text += demoLink.text;
+function extractDemos(tagInfo: ts.JSDocTagInfo): { demos?: string } {
+  if (!tagInfo || !tagInfo.text) {
+    return {};
+  }
+  const demos = tagInfo.text
+    .map(({ text }) => text.matchAll(/\[(.*)\]\((.*)\)/g).next().value)
+    .map((match) => {
+      if (match) {
+        const [, text, url] = match;
+        return `<li><a href="${url}">${text}</a></li>`;
+      }
+      return '';
     });
-    text += '\n\n:::\n\n';
+
+  if (demos.length === 0) {
+    return {};
   }
 
-  text += '## Import\n\n';
-  text += `${imports}\n\n`;
-  text += '## Properties\n\n';
-  text += `${generateMarkdownFromProperties(object, documentedInterfaces)}`;
-
-  return text;
+  return { demos: `<ul>${demos.join('\n')}</ul>` };
 }
 
-interface BuildInterfacesDocumentationOptions {
+interface BuildInterfacesCommonOptions {
   projects: XTypeScriptProjects;
-  apiPagesFolder: string;
+  folder: string;
+  /**
+   * An array of the interfaces to process.
+   */
+  interfaces: string[];
 }
 
-export default async function buildInterfacesDocumentation(
-  options: BuildInterfacesDocumentationOptions,
+type BuildApiInterfacesJsonOptions = BuildInterfacesCommonOptions & {
+  apiPagesFolder: string;
+  interfacesWithDedicatedPage: DocumentedInterfaces;
+};
+
+export interface InterfaceApiContent {
+  /**
+   * The name of the documented interface.
+   */
+  name: string;
+  /**
+   * The array of way to import this interface.
+   */
+  imports: string[];
+  /**
+   * The HTML content of the demonstrations list.
+   */
+  demos?: string;
+  /**
+   * The mapping of property name to their typing.
+   */
+  properties: {
+    [property: string]: {
+      /**
+       * The initial type definition.
+       */
+      type: { description: string };
+      default?: string;
+      required?: true;
+      isProPlan?: true;
+      isPremiumPlan?: true;
+    };
+  };
+}
+
+export interface InterfaceApiTranslation {
+  interfaceDescription: string;
+  propertiesDescriptions: { [property: string]: { description: string } };
+}
+export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOptions) {
+  const { projects, apiPagesFolder, folder, interfaces, interfacesWithDedicatedPage } = options;
+
+  const allProjectsName = Array.from(projects.keys());
+
+  await Promise.all(
+    interfaces.map(async (interfaceName) => {
+      const packagesWithThisInterface = allProjectsName.filter(
+        (projectName) => !!projects.get(projectName)!.exports[interfaceName],
+      );
+
+      if (packagesWithThisInterface.length === 0) {
+        throw new Error(`Can't find symbol for ${interfaceName}`);
+      }
+
+      const project = projects.get(packagesWithThisInterface[0])!;
+      const parsedInterface = await parseInterfaceSymbol(
+        interfaceName,
+        packagesWithThisInterface,
+        projects,
+      );
+      if (!parsedInterface) {
+        return;
+      }
+
+      const slug = kebabCase(parsedInterface.name);
+
+      const json = {
+        name: parsedInterface.name,
+        description: linkify(
+          parsedInterface.description,
+          interfacesWithDedicatedPage,
+          'html',
+          folder,
+        ),
+        properties: parsedInterface.properties.map((property) => ({
+          name: property.name,
+          description: renderMarkdown(
+            linkify(property.description, interfacesWithDedicatedPage, 'html', folder),
+          ),
+          type: property.typeStr,
+        })),
+      };
+      await writePrettifiedFile(
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
+        JSON.stringify(json),
+        project,
+      );
+      // eslint-disable-next-line no-console
+      console.log('Built JSON file for', parsedInterface.name);
+    }),
+  );
+}
+
+type BuildInterfacesDocumentationPageOptions = BuildInterfacesCommonOptions & {
+  apiPagesDirectory: string;
+  translationPagesDirectory: string;
+  importTranslationPagesDirectory: string;
+};
+
+export async function buildInterfacesDocumentationPage(
+  options: BuildInterfacesDocumentationPageOptions,
 ) {
-  const { projects, apiPagesFolder } = options;
+  const {
+    projects,
+    apiPagesDirectory,
+    translationPagesDirectory,
+    importTranslationPagesDirectory,
+    folder,
+    interfaces,
+  } = options;
 
   const allProjectsName = Array.from(projects.keys());
 
   const documentedInterfaces: DocumentedInterfaces = new Map();
-  [
-    ...OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES,
-    ...GRID_API_INTERFACES_WITH_DEDICATED_PAGES,
-  ].forEach((interfaceName) => {
+
+  interfaces.forEach((interfaceName) => {
     const packagesWithThisInterface = allProjectsName.filter(
       (projectName) => !!projects.get(projectName)!.exports[interfaceName],
     );
@@ -320,7 +319,6 @@ export default async function buildInterfacesDocumentation(
     documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const [interfaceName, packagesWithThisInterface] of Array.from(
     documentedInterfaces.entries(),
   )) {
@@ -328,7 +326,7 @@ export default async function buildInterfacesDocumentation(
     // eslint-disable-next-line no-await-in-loop
     const parsedInterface = await parseInterfaceSymbol(
       interfaceName,
-      documentedInterfaces,
+      packagesWithThisInterface,
       projects,
     );
     if (!parsedInterface) {
@@ -337,51 +335,109 @@ export default async function buildInterfacesDocumentation(
 
     const slug = kebabCase(parsedInterface.name);
 
-    if (GRID_API_INTERFACES_WITH_DEDICATED_PAGES.includes(parsedInterface.name)) {
-      const json = {
-        name: parsedInterface.name,
-        description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
-        properties: parsedInterface.properties.map((property) => ({
-          name: property.name,
-          description: renderMarkdown(linkify(property.description, documentedInterfaces, 'html')),
-          type: property.typeStr,
-        })),
+    const content: InterfaceApiContent = {
+      name: parsedInterface.name,
+      imports: generateImportStatement(parsedInterface, projects),
+      ...extractDemos(parsedInterface.tags.demos),
+      properties: {},
+    };
+
+    const translations: InterfaceApiTranslation = {
+      interfaceDescription: renderMarkdown(
+        linkify(
+          escapeCell(parsedInterface.description || ''),
+          documentedInterfaces,
+          'html',
+          folder,
+        ),
+      ),
+      propertiesDescriptions: {},
+    };
+
+    parsedInterface.properties
+      .map((property) => ({
+        name: property.name,
+        description: renderMarkdown(
+          linkify(escapeCell(property.description), documentedInterfaces, 'html', folder),
+        ),
+        type: { description: escapeCell(property.typeStr) },
+        default: getDefaultValue(property),
+        planLevel: getPlanLevel(property),
+        required: property.required,
+      }))
+      .sort((a, b) => {
+        if ((a.required && b.required) || (!a.required && !b.required)) {
+          return a.name.localeCompare(b.name);
+        }
+        if (a.required) {
+          return -1;
+        }
+        return 1;
+      })
+      .forEach(({ name, description, type, default: defaultValue, required, planLevel }) => {
+        content.properties[name] = { type };
+        if (defaultValue) {
+          content.properties[name].default = defaultValue;
+        }
+        if (required) {
+          content.properties[name].required = required;
+        }
+        if (planLevel === 'pro') {
+          content.properties[name].isProPlan = true;
+        }
+        if (planLevel === 'premium') {
+          content.properties[name].isPremiumPlan = true;
+        }
+        translations.propertiesDescriptions[name] = { description };
+      });
+
+    // eslint-disable-next-line no-await-in-loop
+    await writePrettifiedFile(
+      path.resolve(apiPagesDirectory, `${slug}.json`),
+      JSON.stringify(content),
+      project,
+    );
+
+    // eslint-disable-next-line no-await-in-loop
+    await writePrettifiedFile(
+      path.resolve(translationPagesDirectory, `${slug}.json`),
+      JSON.stringify(translations),
+      project,
+    );
+
+    // eslint-disable-next-line no-await-in-loop
+    await writePrettifiedFile(
+      path.resolve(apiPagesDirectory, `${slug}.js`),
+      `import * as React from 'react';
+    import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
+    import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
+    import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+    import jsonPageContent from './${slug}.json';
+  
+    export default function Page(props) {
+      const { descriptions, pageContent } = props;
+      return <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
+    }
+    
+    Page.getInitialProps = () => {
+      const req = require.context(
+        '${importTranslationPagesDirectory}/',
+        false,
+        /\\.\\/${slug}.*.json$/,
+      );
+      const descriptions = mapApiPageTranslations(req);
+  
+      return {
+        descriptions,
+        pageContent: jsonPageContent,
       };
-      // eslint-disable-next-line no-await-in-loop
-      await writePrettifiedFile(
-        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
-        JSON.stringify(json),
-        project,
-      );
-      // eslint-disable-next-line no-console
-      console.log('Built JSON file for', parsedInterface.name);
-    } else {
-      // eslint-disable-next-line no-await-in-loop
-      const markdown = await generateMarkdown(parsedInterface, projects, documentedInterfaces);
-      // eslint-disable-next-line no-await-in-loop
-      await writePrettifiedFile(
-        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.md`),
-        markdown,
-        project,
-      );
+    };
+    `.replace(/\r?\n/g, EOL),
+      project,
+    );
 
-      // eslint-disable-next-line no-await-in-loop
-      await writePrettifiedFile(
-        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.js`),
-        `import * as React from 'react';
-    import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
-    import * as pageProps from './${slug}.md?@mui/markdown';
-
-    export default function Page() {
-      return <MarkdownDocs {...pageProps} />;
-    }
-        `,
-        project,
-      );
-
-      // eslint-disable-next-line no-console
-      console.log('Built API docs for', parsedInterface.name);
-    }
+    // eslint-disable-next-line no-console
+    console.log('Built API docs for', parsedInterface.name);
   }
 
   return documentedInterfaces;

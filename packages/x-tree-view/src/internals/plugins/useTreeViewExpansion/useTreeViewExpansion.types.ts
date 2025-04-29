@@ -1,54 +1,115 @@
 import * as React from 'react';
-import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature } from '../../models';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
+import { TreeViewItemId } from '../../../models';
+import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
-export interface UseTreeViewExpansionInstance {
-  isNodeExpanded: (nodeId: string) => boolean;
-  isNodeExpandable: (nodeId: string) => boolean;
-  toggleNodeExpansion: (event: React.SyntheticEvent, value: string) => void;
-  expandAllSiblings: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
+export interface UseTreeViewExpansionPublicAPI {
+  /**
+   * Change the expansion status of a given item.
+   * @param {object} parameters The parameters of the method.
+   * @param {string} parameters.itemId The id of the item to expand of collapse.
+   * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
+   * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed. If not defined, the item's expansion status will be the toggled.
+   */
+  setItemExpansion: (parameters: {
+    itemId: string;
+    event?: React.SyntheticEvent;
+    shouldBeExpanded?: boolean;
+  }) => void;
+}
+
+export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublicAPI {
+  /**
+   * Expand all the siblings (i.e.: the items that have the same parent) of a given item.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item whose siblings will be expanded.
+   */
+  expandAllSiblings: (event: React.KeyboardEvent, itemId: TreeViewItemId) => void;
+  /**
+   * APply the new expansion status of a given item.
+   * Is used by the `setItemExpansion` method and by the `useTreeViewLazyLoading` plugin.
+   * Unlike `setItemExpansion`, this method does not trigger the lazy loading.
+   * @param {object} parameters The parameters of the method.
+   * @param {string} parameters.itemId The id of the item to expand of collapse.
+   * @param {React.SyntheticEvent | null} parameters.event The DOM event that triggered the change.
+   * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
+   */
+  applyItemExpansion: (parameters: {
+    itemId: string;
+    event: React.SyntheticEvent | null;
+    shouldBeExpanded: boolean;
+  }) => void;
 }
 
 export interface UseTreeViewExpansionParameters {
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedNodes?: string[];
+  expandedItems?: string[];
   /**
-   * Expanded node ids.
+   * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedNodes?: string[];
+  defaultExpandedItems?: string[];
   /**
-   * Callback fired when tree items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
+   * Callback fired when Tree Items are expanded/collapsed.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
+   * @param {array} itemIds The ids of the expanded items.
    */
-  onExpandedNodesChange?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
+  onExpandedItemsChange?: (event: React.SyntheticEvent | null, itemIds: string[]) => void;
   /**
-   * Callback fired when a tree item is expanded or collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeId The nodeId of the modified node.
-   * @param {array} isExpanded `true` if the node has just been expanded, `false` if it has just been collapsed.
+   * Callback fired when a Tree Item is expanded or collapsed.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
+   * @param {array} itemId The itemId of the modified item.
+   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
-  onNodeExpansionToggle?: (
-    event: React.SyntheticEvent,
-    nodeId: string,
+  onItemExpansionToggle?: (
+    event: React.SyntheticEvent | null,
+    itemId: string,
     isExpanded: boolean,
   ) => void;
+  /**
+   * The slot that triggers the item's expansion when clicked.
+   * @default 'content'
+   */
+  expansionTrigger?: 'content' | 'iconContainer';
 }
 
 export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   UseTreeViewExpansionParameters,
-  'defaultExpandedNodes'
+  'defaultExpandedItems'
 >;
+
+export interface UseTreeViewExpansionState {
+  expansion: {
+    expandedItems: string[];
+    expansionTrigger: 'content' | 'iconContainer';
+  };
+}
+
+interface UseTreeViewExpansionEventLookup {
+  beforeItemToggleExpansion: {
+    params: {
+      isExpansionPrevented: boolean;
+      shouldBeExpanded: boolean;
+      event: React.SyntheticEvent | null;
+      itemId: TreeViewItemId;
+    };
+  };
+}
 
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   params: UseTreeViewExpansionParameters;
   defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
   instance: UseTreeViewExpansionInstance;
-  modelNames: 'expandedNodes';
-  dependantPlugins: [UseTreeViewNodesSignature];
+  publicAPI: UseTreeViewExpansionPublicAPI;
+  modelNames: 'expandedItems';
+  state: UseTreeViewExpansionState;
+  dependencies: [UseTreeViewItemsSignature];
+  optionalDependencies: [UseTreeViewLabelSignature];
+  events: UseTreeViewExpansionEventLookup;
 }>;
