@@ -433,8 +433,8 @@ yargs(hideBin(process.argv))
           type: 'string',
         })
         .option('release', {
-          // #default-branch-switch
-          // to be done when we branch off v8.x
+          // #target-branch-reference
+          // to be done when we branch off for a new major (e.g. v9)
           default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
