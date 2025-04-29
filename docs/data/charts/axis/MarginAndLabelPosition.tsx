@@ -7,6 +7,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function MarginAndLabelPosition() {
   const [fixMargin, setFixMargin] = React.useState(true);
+  const [disableTruncation, setDisableTruncation] = React.useState(false);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -17,6 +18,16 @@ export default function MarginAndLabelPosition() {
             <Checkbox onChange={(event) => setFixMargin(event.target.checked)} />
           }
           label="Increase axes size"
+          labelPlacement="end"
+        />
+        <FormControlLabel
+          checked={disableTruncation}
+          control={
+            <Checkbox
+              onChange={(event) => setDisableTruncation(event.target.checked)}
+            />
+          }
+          label="Disable truncation"
           labelPlacement="end"
         />
       </Stack>
@@ -32,6 +43,7 @@ export default function MarginAndLabelPosition() {
                 : usAirportPassengers.find((item) => item.code === value)!.fullName,
             label: 'airports',
             height: fixMargin ? 75 : undefined,
+            disableTruncation,
           },
         ]}
         // Other props
@@ -50,6 +62,7 @@ export default function MarginAndLabelPosition() {
             valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
             label: 'passengers',
             width: fixMargin ? 85 : undefined,
+            disableTruncation,
           },
         ]}
       />

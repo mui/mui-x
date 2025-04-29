@@ -135,6 +135,11 @@ export interface ChartsAxisProps extends TickParams {
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
   axis?: 'y';
+  /**
+   * When true, the tick labels will not be truncated.
+   * @default false
+   */
+  disableTruncation?: boolean;
 }
 
 export interface ChartsXAxisProps extends ChartsAxisProps {
@@ -145,6 +150,11 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
    * @default 4
    */
   tickLabelMinGap?: number;
+  /**
+   * When true, the tick labels will not be truncated.
+   * @default false
+   */
+  disableTruncation?: boolean;
 }
 
 type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends ChartsXAxisProps
