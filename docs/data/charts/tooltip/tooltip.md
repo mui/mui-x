@@ -165,7 +165,7 @@ import { chartsTooltipClasses } from '@mui/x-charts';
 
 <LineChart
   sx={{
-    [`& .${chartsTooltipClasses.valueCell}`]: {
+    [`& .${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
       color: 'red',
     },
   }}

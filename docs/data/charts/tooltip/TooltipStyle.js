@@ -16,7 +16,7 @@ export default function TooltipStyle() {
       slotProps={{
         tooltip: {
           sx: {
-            [`& .${chartsTooltipClasses.valueCell}`]: {
+            [`&.${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
               color: 'red',
             },
           },
