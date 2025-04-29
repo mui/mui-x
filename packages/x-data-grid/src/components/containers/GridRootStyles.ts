@@ -27,17 +27,6 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
-const columnHeaderStyles = {
-  [`& .${c.iconButtonContainer}`]: {
-    visibility: 'visible',
-    width: 'auto',
-  },
-  [`& .${c.menuIcon}`]: {
-    width: 'auto',
-    visibility: 'visible',
-  },
-};
-
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
@@ -398,7 +387,7 @@ export const GridRootStyles = styled('div', {
         visibility: 'visible',
         width: 'auto',
       },
-    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
+    [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortButton}`]: {
       opacity: 0,
       transition: t.transitions.create(['opacity'], {
         duration: t.transitions.duration.shorter,
@@ -466,13 +455,25 @@ export const GridRootStyles = styled('div', {
       width: 'var(--DataGrid-rowWidth)',
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortIcon}`]: {
+      [`& .${c.columnHeader}:hover`]: {
+        [`& .${c.menuIcon}`]: {
+          width: 'auto',
+          visibility: 'visible',
+        },
+        [`& .${c.iconButtonContainer}`]: {
+          visibility: 'visible',
+          width: 'auto',
+        },
+      },
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton}`]: {
         opacity: 0.5,
       },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeader} .${c.menuIcon}`]: {
+        width: 'auto',
+        visibility: 'visible',
+      },
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
