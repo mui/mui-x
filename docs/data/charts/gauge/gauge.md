@@ -1,5 +1,5 @@
 ---
-title: React Gauge
+title: React Gauge chart
 productId: x-charts
 components: Gauge, GaugeContainer
 packageName: '@mui/x-charts'
