@@ -148,7 +148,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11 = getCell(0, 0);
-    await user.click(within(cell11).getByRole('button'));
+    await user.click(within(cell11).getByRole('button', { hidden: true }));
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
