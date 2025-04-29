@@ -30,7 +30,6 @@ const walking = [
 ];
 const xAxis = {
   label: 'Distance between home and office (km)',
-  scaleType: 'band' as const,
   data: [
     '0-1',
     '1-2',

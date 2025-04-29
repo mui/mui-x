@@ -587,8 +587,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       markdown-to-jsx:
-        specifier: ^7.7.4
-        version: 7.7.4(react@19.0.0)
+        specifier: ^7.7.6
+        version: 7.7.6(react@19.0.0)
       moment:
         specifier: ^2.30.1
         version: 2.30.1
@@ -623,8 +623,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
       react-hook-form:
-        specifier: ^7.55.0
-        version: 7.55.0(react@19.0.0)
+        specifier: ^7.56.1
+        version: 7.56.1(react@19.0.0)
       react-router:
         specifier: ^7.5.2
         version: 7.5.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -8130,8 +8130,8 @@ packages:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
     hasBin: true
 
-  markdown-to-jsx@7.7.4:
-    resolution: {integrity: sha512-1bSfXyBKi+EYS3YY+e0Csuxf8oZ3decdfhOav/Z7Wrk89tjudyL5FOmwZQUoy0/qVXGUl+6Q3s2SWtpDEWITfQ==}
+  markdown-to-jsx@7.7.6:
+    resolution: {integrity: sha512-/PWFFoKKMidk4Ut06F5hs5sluq1aJ0CGvUJWsnCK6hx/LPM8vlhvKAxtGHJ+U+V2Il2wmnfO6r81ICD3xZRVaw==}
     engines: {node: '>= 10'}
     peerDependencies:
       react: '>= 0.14.0'
@@ -9296,8 +9296,8 @@ packages:
     peerDependencies:
       react: ^19.0.0
 
-  react-hook-form@7.55.0:
-    resolution: {integrity: sha512-XRnjsH3GVMQz1moZTW53MxfoWN7aDpUg/GpVNc4A3eXRVNdGXfbzJ4vM4aLQ8g6XCUh1nIbx70aaNCl7kxnjog==}
+  react-hook-form@7.56.1:
+    resolution: {integrity: sha512-qWAVokhSpshhcEuQDSANHx3jiAEFzu2HAaaQIzi/r9FNPm1ioAvuJSD4EuZzWd7Al7nTRKcKPnBKO7sRn+zavQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -18104,7 +18104,7 @@ snapshots:
       punycode.js: 2.3.1
       uc.micro: 2.1.0
 
-  markdown-to-jsx@7.7.4(react@19.0.0):
+  markdown-to-jsx@7.7.6(react@19.0.0):
     dependencies:
       react: 19.0.0
 
@@ -19547,7 +19547,7 @@ snapshots:
       react: 19.0.0
       scheduler: 0.25.0
 
-  react-hook-form@7.55.0(react@19.0.0):
+  react-hook-form@7.56.1(react@19.0.0):
     dependencies:
       react: 19.0.0
 

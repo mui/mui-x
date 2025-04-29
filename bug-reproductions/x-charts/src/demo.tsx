@@ -6,7 +6,7 @@ export default function Demo() {
   return (
     <Box sx={{ height: 520, width: '100%' }}>
       <BarChart
-        xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
+        xAxis={[{ data: ['group A', 'group B', 'group C'] }]}
         series={[
           { label: 'first', data: [4, 3, 5] },
           { label: 'second', data: [1, 6, 3] },
