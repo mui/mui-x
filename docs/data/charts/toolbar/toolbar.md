@@ -1,6 +1,7 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
+components: Toolbar, ToolbarButton, ChartsToolbarPro
 ---
 
 # Charts - Toolbar 🧪
@@ -22,3 +23,5 @@ For example, if the chart is not zoomable, the zoom buttons will not be displaye
 :::
 
 {{"demo": "ChartsToolbar.js"}}
+
+## Composition 🚧

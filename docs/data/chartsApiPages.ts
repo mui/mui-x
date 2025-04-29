@@ -101,6 +101,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-pro',
+    title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-tooltip',
     title: 'ChartsTooltip',
   },
@@ -271,6 +276,14 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/spark-line-chart',
     title: 'SparkLineChart',
+  },
+  {
+    pathname: '/x/api/charts/toolbar',
+    title: 'Toolbar',
+  },
+  {
+    pathname: '/x/api/charts/toolbar-button',
+    title: 'ToolbarButton',
   },
 ];
 export default chartsApiPages;

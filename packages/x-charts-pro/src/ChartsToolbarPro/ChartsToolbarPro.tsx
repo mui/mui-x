@@ -2,8 +2,8 @@ import { Toolbar } from '@mui/x-charts/Toolbar';
 import * as React from 'react';
 import { useChartContext, useSelector } from '@mui/x-charts/internals';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
-import { ChartsToolbarZoomInButton } from './ChartsToolbarZoomInButton';
-import { ChartsToolbarZoomOutButton } from './ChartsToolbarZoomOutButton';
+import { ChartsToolbarZoomInButton } from './internal/ChartsToolbarZoomInButton';
+import { ChartsToolbarZoomOutButton } from './internal/ChartsToolbarZoomOutButton';
 
 export function ChartsToolbarPro() {
   const { store } = useChartContext();
