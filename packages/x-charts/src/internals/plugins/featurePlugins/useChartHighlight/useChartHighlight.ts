@@ -45,6 +45,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
 };
 
 useChartHighlight.getDefaultizedParams = ({ params }) => ({
+  ...params,
   highlightedItem: params.highlightedItem ?? null,
 });
 
