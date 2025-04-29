@@ -34,14 +34,14 @@
   "dependencies": {
     "@babel/runtime": "^7.27.0",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
-    "@mui/utils": "^7.0.2",
+    "@mui/utils": "^7.0.0 || ^7.0.0-beta",
     "ci-info": "^4.2.0",
-    "conf": "^11.0.2",
+    "conf": "^11.0.0",
     "is-docker": "^3.0.0",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/internal-test-utils": "^2.0.4",
     "@types/device-uuid": "^1.0.3",
     "rimraf": "^6.0.1"
   },
