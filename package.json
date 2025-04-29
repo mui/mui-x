@@ -32,7 +32,7 @@
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
-    "test": "cross-env NODE_ENV=test TZ=UTC vitest",
+    "test": "pnpm test:unit:jsdom",
     "test:unit:browser": "cross-env NODE_ENV=test TZ=UTC BROWSER=true vitest",
     "test:unit:jsdom": "cross-env NODE_ENV=test TZ=UTC JSDOM=true vitest",
     "test:e2e": "pnpm run release:build && cd test/e2e && pnpm run start",
