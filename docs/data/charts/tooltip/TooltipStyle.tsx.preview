@@ -1,0 +1,12 @@
+<LineChart
+  {...params}
+  slotProps={{
+    tooltip: {
+      sx: {
+        [`&.${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
+          color: 'red',
+        },
+      },
+    },
+  }}
+/>
