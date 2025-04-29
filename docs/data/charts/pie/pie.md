@@ -122,3 +122,24 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 ```
 
 {{"demo": "PieAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide the `series` prop for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<PiePlot />` component that renders the pie slices and their labels.
+
+Here's how the Pie Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <PiePlot />
+      <ChartsOverlay />
+      <ChartsTooltip trigger="item" />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```
