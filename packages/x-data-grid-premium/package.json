@@ -52,7 +52,7 @@
     "@mui/x-license": "workspace:*",
     "@types/format-util": "^1.0.4",
     "clsx": "^2.1.1",
-    "exceljs": "^4.4.0",
+    "exceljs": "4.4.1-prerelease.0",
     "prop-types": "^15.8.1",
     "reselect": "^5.1.1"
   },

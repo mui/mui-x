@@ -67,7 +67,7 @@
     "date-fns-jalali": "^4.1.0-0",
     "dayjs": "^1.11.13",
     "doctrine": "^3.0.0",
-    "exceljs": "^4.4.0",
+    "exceljs": "4.4.1-prerelease.0",
     "fg-loadcss": "^3.1.0",
     "jscodeshift": "17.1.2",
     "lodash": "^4.17.21",
