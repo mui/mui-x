@@ -7,6 +7,7 @@ import { act, fireEvent } from '@mui/internal-test-utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 
 /**
  * All tests related to keyboard navigation (e.g.: expanding using "Enter" and "ArrowRight")
@@ -14,6 +15,10 @@ import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
  */
 describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin', ({ render }) => {
   describe('model props (expandedItems, defaultExpandedItems, onExpandedItemsChange)', () => {
+    beforeEach(() => {
+      clearWarningsCache();
+    });
+
     it('should not expand items when no default state and no control state are defined', () => {
       const view = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
