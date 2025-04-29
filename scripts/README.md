@@ -71,7 +71,7 @@ Push the working branch on the documentation release branch to deploy the docume
 pnpm docs:deploy
 ```
 
-<!-- #target-branch-reference --> 
+<!-- #target-branch-reference -->
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v8)
 Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v7` deployment.
