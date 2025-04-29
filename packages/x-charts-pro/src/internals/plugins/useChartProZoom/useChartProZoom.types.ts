@@ -53,6 +53,9 @@ export interface UseChartProZoomPublicApi {
    * @returns {void}
    */
   setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
+}
+
+export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
   /**
    * Zoom in the chart.
    */
@@ -61,9 +64,6 @@ export interface UseChartProZoomPublicApi {
    * Zoom out the chart.
    */
   zoomOut: () => void;
-}
-
-export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
   /**
    * Translate the zoom range (i.e., both start and end) for a specific axis.
    * @param {AxisId} axisId The id of the axis to move the zoom range for.
