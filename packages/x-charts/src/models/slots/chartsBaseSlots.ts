@@ -1,6 +1,7 @@
 import type * as React from 'react';
-import { TooltipProps } from './chartsBaseSlotProps';
+import { IconButtonProps, TooltipProps } from './chartsBaseSlotProps';
 
 export interface ChartsBaseSlots {
   baseTooltip: React.ComponentType<TooltipProps>;
+  baseIconButton: React.ComponentType<IconButtonProps>;
 }

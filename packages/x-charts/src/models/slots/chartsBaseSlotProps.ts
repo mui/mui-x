@@ -16,3 +16,7 @@ export type TooltipProps = CommonProps & {
   enterDelay?: number;
   title: React.ReactNode;
 };
+
+export type IconButtonProps = CommonProps & {
+  ref?: React.Ref<HTMLButtonElement>;
+};

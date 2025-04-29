@@ -21,7 +21,6 @@ interface ChartsToolbarZoomOutButtonProps {
 }
 
 export function ChartsToolbarZoomOutButton({ slots, slotProps }: ChartsToolbarZoomOutButtonProps) {
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
   const { instance } = useChartContext<[UseChartProZoomSignature]>();
   const ZoomOutIcon = slots?.zoomOutIcon ?? materialSlots.zoomOutIcon;
   const Tooltip = slots?.baseTooltip ?? materialSlots.baseTooltip;
@@ -29,7 +28,7 @@ export function ChartsToolbarZoomOutButton({ slots, slotProps }: ChartsToolbarZo
 
   return (
     <Tooltip title={localeText.zoomOut}>
-      <ToolbarButton ref={buttonRef} onClick={() => instance.zoomOut()}>
+      <ToolbarButton onClick={() => instance.zoomOut()}>
         <ZoomOutIcon {...slotProps?.zoomOutIcon} />
       </ToolbarButton>
     </Tooltip>

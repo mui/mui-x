@@ -353,6 +353,7 @@
   { "name": "strawberrySkyPaletteLight", "kind": "Variable" },
   { "name": "Toolbar", "kind": "Function" },
   { "name": "ToolbarButton", "kind": "Variable" },
+  { "name": "ToolbarButtonProps", "kind": "Interface" },
   { "name": "ToolbarProps", "kind": "Interface" },
   { "name": "Unstable_RadarChart", "kind": "Variable" },
   { "name": "Unstable_RadarDataProvider", "kind": "Function" },

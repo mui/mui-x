@@ -21,7 +21,6 @@ interface ChartsToolbarZoomInButtonProps {
 }
 
 export function ChartsToolbarZoomInButton({ slots, slotProps }: ChartsToolbarZoomInButtonProps) {
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
   const { instance } = useChartContext<[UseChartProZoomSignature]>();
   const ZoomInIcon = slots?.zoomInIcon ?? materialSlots.zoomInIcon;
   const Tooltip = slots?.baseTooltip ?? materialSlots.baseTooltip;
@@ -29,7 +28,7 @@ export function ChartsToolbarZoomInButton({ slots, slotProps }: ChartsToolbarZoo
 
   return (
     <Tooltip title={localeText.zoomIn}>
-      <ToolbarButton ref={buttonRef} onClick={() => instance.zoomIn()}>
+      <ToolbarButton onClick={() => instance.zoomIn()}>
         <ZoomInIcon {...slotProps?.zoomInIcon} />
       </ToolbarButton>
     </Tooltip>
