@@ -1,0 +1,14 @@
+{
+  "name": "@mui/x-test-typescript",
+  "private": true,
+  "dependencies": {
+    "@mui/x-charts": "workspace:*",
+    "@mui/x-data-grid": "workspace:*",
+    "@mui/x-date-pickers": "workspace:*",
+    "@mui/x-date-pickers-pro": "workspace:*",
+    "@mui/material": "7"
+  },
+  "scripts": {
+    "typescript": "tsc --noEmit"
+  }
+}

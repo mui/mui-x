@@ -1919,6 +1919,24 @@ importers:
         specifier: ^4.19.3
         version: 4.19.3
 
+  test/typescript:
+    dependencies:
+      '@mui/material':
+        specifier: '7'
+        version: 7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mui/x-charts':
+        specifier: workspace:*
+        version: link:../../packages/x-charts/build
+      '@mui/x-data-grid':
+        specifier: workspace:*
+        version: link:../../packages/x-data-grid/build
+      '@mui/x-date-pickers':
+        specifier: workspace:*
+        version: link:../../packages/x-date-pickers/build
+      '@mui/x-date-pickers-pro':
+        specifier: workspace:*
+        version: link:../../packages/x-date-pickers-pro/build
+
 packages:
 
   '@actions/core@1.11.1':

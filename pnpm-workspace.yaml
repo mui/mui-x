@@ -2,9 +2,7 @@ packages:
   - packages/*
   - docs
   - test
-  - test/e2e
-  - test/regressions
-  - test/performance-charts
+  - test/*
 ignoredBuiltDependencies:
   - '@mui/monorepo'
   - msw
