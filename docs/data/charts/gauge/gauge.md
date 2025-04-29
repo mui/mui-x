@@ -21,7 +21,7 @@ The Gauge displays a numeric value that varies within a defined range.
 
 ## Value range
 
-The Gauge's value is provided through the `value` prop, which accepts a value range between 0 and 100.
+The Gauge's eg value is provided through the `value` prop, which accepts a value range between 0 and 100.
 To modify it, use the `valueMin` and `valueMax` props.
 
 {{"demo": "GaugeValueRange.js"}}
