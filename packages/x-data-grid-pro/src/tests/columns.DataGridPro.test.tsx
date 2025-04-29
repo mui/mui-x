@@ -30,6 +30,8 @@ describe('<DataGridPro /> - Columns', () => {
       { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
+    height: 300,
+    width: 300,
   };
 
   function Test(props: Partial<DataGridProProps>) {
