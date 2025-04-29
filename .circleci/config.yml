@@ -155,7 +155,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm test:jsdom
+          command: pnpm test:unit:jsdom
 
   test_browser:
     <<: *default-job
@@ -172,14 +172,14 @@ jobs:
           steps:
             - run:
                 name: Test Browser
-                command: pnpm test:browser
+                command: pnpm test:unit:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 name: Test Browser + Coverage
-                command: pnpm test:browser --coverage
+                command: pnpm test:unit:browser --coverage
             - run:
                 name: Check coverage generated
                 command: |

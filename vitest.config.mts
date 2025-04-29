@@ -7,7 +7,7 @@ const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
 // Checking the environment variables simplifies the scripts in the package.json
 // We use `cross-env BROWSER=true vitest` instead of `vitest --project "browser/*"`
-// Which allows us to run `pnpm test:browser --project "browser/x-charts"` for example.
+// Which allows us to run `pnpm test:unit:browser --project "browser/x-charts"` for example.
 const getWorkspaces = () => {
   const getFill = () => {
     const isJSDOM = process.env.JSDOM === 'true';
