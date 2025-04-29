@@ -13,6 +13,10 @@
     "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },
+    "disableTickLabelOverlapPrevention": {
+      "type": { "description": "boolean" },
+      "default": "false"
+    },
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {

@@ -113,6 +113,13 @@ export interface ChartsAxisProps extends TickParams {
    */
   tickLabelInterval?: 'auto' | ((value: any, index: number) => boolean);
   /**
+   * When true, the tick labels will not be truncated nor hidden to avoid overlaps.
+   * If this property is enabled, you need to ensure that the axis has enough space to display all tick labels or
+   * implement your own logic to avoid overlaps.
+   * @default false
+   */
+  disableTickLabelOverlapPrevention?: boolean;
+  /**
    * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
    * @default 0
    */

@@ -295,6 +295,17 @@ To avoid this, you can use the `margin` prop to increase the space between the c
 
 {{"demo": "MarginAndLabelPosition.js"}}
 
+### Disabling tick label overlap prevention algorithm
+
+Tick labels are automatically truncated to avoid overlapping. In the x-axis, they are also hidden when there isn't enough space to display them.
+If you want to manage label overlap yourself, this logic can be disabled by enabling the `disableTickLabelOverlapPrevention` property of the axis configuration.
+
+Regardless of whether this property being enabled, tick labels outside the drawing area are never rendered.
+
+When this property is enabled, you can use `tickLabelInterval` to control which tick labels are displayed, or leverage `valueFormatter` to format labels accordingly.
+
+{{"demo": "DisableTickLabelOverlapPrevention.js"}}
+
 ### Rendering
 
 The demo below illustrates all of the props available to customize axis rendering:

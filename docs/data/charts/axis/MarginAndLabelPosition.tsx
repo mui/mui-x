@@ -30,7 +30,7 @@ export default function MarginAndLabelPosition() {
               context.location === 'tick'
                 ? value.split('').join('\n')
                 : usAirportPassengers.find((item) => item.code === value)!.fullName,
-            label: 'airports',
+            label: 'Airports',
             height: fixMargin ? 75 : undefined,
           },
         ]}
@@ -48,7 +48,7 @@ export default function MarginAndLabelPosition() {
         yAxis={[
           {
             valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
-            label: 'passengers',
+            label: 'Passengers',
             width: fixMargin ? 85 : undefined,
           },
         ]}
