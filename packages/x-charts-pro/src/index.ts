@@ -41,3 +41,4 @@ export * from './FunnelChart';
 export * from './ChartZoomSlider';
 export * from './ChartsToolbarPro';
 export * from './ChartZoomSlider';
+export * from './ChartsToolbarPro';

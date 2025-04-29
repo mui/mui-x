@@ -14,7 +14,6 @@ import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartZoomSlider } from '../ChartZoomSlider';
-import { ChartsToolbarPro } from '../ChartsToolbarPro/ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
