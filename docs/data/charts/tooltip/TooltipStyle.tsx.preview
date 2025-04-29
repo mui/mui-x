@@ -3,7 +3,7 @@
   slotProps={{
     tooltip: {
       sx: {
-        [`.${chartsTooltipClasses.valueCell}`]: {
+        [`& .${chartsTooltipClasses.valueCell}`]: {
           color: 'red',
         },
       },
