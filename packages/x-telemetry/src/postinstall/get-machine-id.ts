@@ -10,7 +10,7 @@ async function getRawMachineId(): Promise<string | null> {
 }
 
 export default async function getAnonymousMachineId(): Promise<string | null> {
-  const rawMachineId = await getRawMachineId();
+  const rawMachineId = await getRawMachineId().catch(() => null);
   if (!rawMachineId) {
     return null;
   }
