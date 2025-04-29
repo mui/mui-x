@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, waitFor, fireEvent } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -11,6 +11,7 @@ import {
   useGridApiRef,
   GridApi,
   GridRowSelectionModel,
+  GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -416,23 +417,26 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    it('should remove the selection from rows that are filtered out', async () => {
-      const { user } = render(<TestDataGridSelection checkboxSelection />);
+    testSkipIf(isJSDOM)('should remove the selection from rows that are filtered out', async () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      await user.click(selectAllCheckbox);
+      fireEvent.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      const idText = screen.getByRole('columnheader', { name: 'id' });
-      await user.hover(idText);
-      const idMenu = idText.querySelector('button[aria-label="id column menu"]')!;
-      await user.click(idMenu);
-
-      const filterButton = screen.getByText('Filter');
-      await user.click(filterButton);
-
-      await user.keyboard('1');
-
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
       await waitFor(() => {
         // Previous selection is cleaned with only the filtered rows
         expect(getSelectedRowIds()).to.deep.equal([1]);
@@ -441,38 +445,42 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
-      const { user } = render(<TestDataGridSelection checkboxSelection />);
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
 
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      await user.click(selectAllCheckbox);
+      fireEvent.click(selectAllCheckbox);
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      const idText = screen.getByRole('columnheader', { name: 'id' });
-      await user.hover(idText);
-      const idMenu = idText.querySelector('button[aria-label="id column menu"]')!;
-      await user.click(idMenu);
-
-      const filterButton = screen.getByText('Filter');
-      await user.click(filterButton);
-
-      await user.keyboard('1');
-
+      // Click on Menu in id header column
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
       await waitFor(() => {
         // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
-      await user.click(selectAllCheckbox); // Unselect all
+      fireEvent.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([]);
       });
       expect(grid('selectedRowCount')).to.equal(null);
 
-      await user.click(selectAllCheckbox); // Select all filtered rows
+      fireEvent.click(selectAllCheckbox); // Select all filtered rows
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
