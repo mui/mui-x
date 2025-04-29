@@ -4,36 +4,38 @@ title: React Data Grid - Server-side row grouping
 
 # Data Grid - Server-side row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Learn how to implement lazy-loading row grouping with a server-side data source.</p>
+<p class="description">Learn how to implement lazy-loading row grouping with the Data Source.</p>
 
-To dynamically load row grouping data from the server, including lazy-loading of children, create a Data Source and pass the `dataSource` prop to the Data Grid, as mentioned in the [overview](/x/react-data-grid/server-side-data/) section.
+To dynamically load row grouping data from the server, including lazy-loading of children, create a Data Source and pass the `dataSource` prop to the Data Grid, as described in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 :::info
 For row grouping on the client side, see [client-side row grouping](/x/react-data-grid/row-grouping/).
 :::
 
-Similar to the [tree data](/x/react-data-grid/server-side-data/tree-data/), you need to pass some additional properties to enable the data source row grouping feature:
+You must also pass these properties (as shown below) to enable row grouping with the Data Source:
 
 - `getGroupKey()`: Returns the group key for the row.
-- `getChildrenCount()`: Returns the number of children for the row. If the children count is not available for some reason, but there are some children, returns `-1`.
+- `getChildrenCount()`: Returns the number of children for the row; returns `-1` if there are children present but the count is not available.
 
 ```tsx
 const customDataSource: GridDataSource = {
   getRows: async (params) => {
-    // Fetch the data from the server.
+    // Fetch the data from the server
   },
   getGroupKey: (row) => {
-    // Return the group key for the row, e.g. `name`.
+    // Return the group key for the row, e.g. `name`
     return row.name;
   },
   getChildrenCount: (row) => {
-    // Return the number of children for the row.
+    // Return the number of children for the row
     return row.childrenCount;
   },
 };
 ```
 
-In addition to `groupKeys`, the `getRows()` callback receives a `groupFields` parameter. This corresponds to the current `rowGroupingModel`. Use `groupFields` on the server to group the data for each `getRows()` call.
+In addition to `groupKeys`, the `getRows()` callback receives a `groupFields` parameter.
+This corresponds to the current `rowGroupingModel`.
+Use `groupFields` on the server to group the data for each `getRows()` call.
 
 ```tsx
 const getRows: async (params) => {
@@ -58,28 +60,32 @@ const getRows: async (params) => {
 {{"demo": "ServerSideRowGroupingDataGrid.js", "bg": "inline"}}
 
 :::warning
-The method [`colDef.groupingValueGetter()`](/x/react-data-grid/row-grouping/#using-groupingvaluegetter-for-complex-grouping-value) is not supported in the server-side row grouping.
+Server-side row grouping does not support the [`colDef.groupingValueGetter()`](/x/react-data-grid/row-grouping/#using-groupingvaluegetter-for-complex-grouping-value) method.
 Use `dataSource.getGroupKey()` to compute the group key for the row instead.
 :::
 
 ## Error handling
 
-If an error occurs during a `getRows()` call, the Data Grid displays an error message in the row group cell. `onDataSourceError()` is also triggered with the error containing the params as mentioned in the [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling) section.
+If an error occurs during a `getRows()` call, the Data Grid displays an error message in the row group cell.
+`onDataSourceError()` is also triggered with an error containing the params described in [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
-This example shows error handling with toast notifications and default error messages in grouping cells. Caching is disabled for simplicity.
+The example below shows error handling with toast notifications and default error messages in grouping cells.
+Caching is disabled for simplicity.
 
 {{"demo": "ServerSideRowGroupingErrorHandling.js", "bg": "inline"}}
 
 ## Group expansion
 
-The group expansion works similar to the [data source tree data](/x/react-data-grid/server-side-data/tree-data/#group-expansion).
-The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all the groups.
+Group expansion with server-side row grouping works similarly to how it's described in the [client-side row grouping documentation](/x/react-data-grid/row-grouping/#group-expansion).
+The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` props in a waterfall manner.
+
+The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all groups by default.
 
 {{"demo": "ServerSideRowGroupingGroupExpansion.js", "bg": "inline"}}
 
 ## Demo
 
-In the following demo, use the auto generated data based on the `Commodities` dataset to simulate the server-side row grouping.
+THe following demo uses autogenerated data from the `Commodities` dataset to simulate server-side row grouping.
 
 {{"demo": "ServerSideRowGroupingFullDataGrid.js", "bg": "inline"}}
 
