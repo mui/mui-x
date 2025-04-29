@@ -1449,13 +1449,13 @@ importers:
         specifier: ^3.4.2
         version: 3.4.2
       '@mui/utils':
-        specifier: ^7.0.0 || ^7.0.0-beta
+        specifier: ^7.0.2
         version: 7.0.2(@types/react@19.0.12)(react@19.0.0)
       ci-info:
         specifier: ^4.2.0
         version: 4.2.0
       conf:
-        specifier: ^11.0.0
+        specifier: ^11.0.2
         version: 11.0.2
       is-docker:
         specifier: ^3.0.0
@@ -1465,7 +1465,7 @@ importers:
         version: 1.1.12
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^2.0.4
+        specifier: ^2.0.7
         version: 2.0.7(@babel/core@7.26.10)(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/device-uuid':
         specifier: ^1.0.3
