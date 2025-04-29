@@ -31,8 +31,8 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   endTime: 'Ora di fine',
 
   // Action bar
-  cancelButtonLabel: 'Cancellare',
-  clearButtonLabel: 'Sgomberare',
+  cancelButtonLabel: 'Annulla',
+  clearButtonLabel: 'Pulisci',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Oggi',
 
