@@ -1,12 +1,11 @@
 ---
-title: React Data Grid - Export component
 productId: x-data-grid
 components: ExportPrint, ExportCsv, ExportExcel
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Export
+# Data Grid - Export component
 
 <p class="description">Let users export the Data Grid for Excel, CSV, or printing.</p>
 
