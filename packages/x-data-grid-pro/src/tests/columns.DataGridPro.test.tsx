@@ -30,14 +30,12 @@ describe('<DataGridPro /> - Columns', () => {
       { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
-    height: 300,
-    width: 300,
   };
 
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
-      <div style={{ width: 300, height: 300 }}>
+      <div style={{ width: 300, height: 500 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
