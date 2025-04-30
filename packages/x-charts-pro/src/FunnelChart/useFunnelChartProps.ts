@@ -8,6 +8,7 @@ import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
+import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -158,7 +159,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     width,
     height,
     margin,
-    colors,
+    colors: colors ?? strawberrySkyPalette,
     xAxis: [xAxis],
     yAxis: [yAxis],
     sx,
