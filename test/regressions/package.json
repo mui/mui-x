@@ -1,6 +1,5 @@
 {
   "name": "@mui-x-internal/test-regressions",
-  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {

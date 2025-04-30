@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { CurveFactory, line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
+import { getCurveFactory, ComputedAxis, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
 import { FunnelItemIdentifier, FunnelDataPoints, FunnelCurveType } from './funnel.types';
@@ -70,7 +70,7 @@ const useAggregatedData = () => {
 
       const bandWidth =
         ((isXAxisBand || isYAxisBand) &&
-          (baseScaleConfig as AxisDefaultized<'band'>).scale?.bandwidth()) ||
+          (baseScaleConfig as ComputedAxis<'band'>).scale?.bandwidth()) ||
         0;
 
       const xScale = xAxis[xAxisId].scale;

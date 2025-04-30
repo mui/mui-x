@@ -75,7 +75,7 @@ export const useChartModels = <TSignatures extends readonly ChartAnyPluginSignat
         if (model.isControlled !== (controlled !== undefined)) {
           console.error(
             [
-              `MUI X: A component is changing the ${
+              `MUI X Charts: A component is changing the ${
                 model.isControlled ? '' : 'un'
               }controlled ${modelName} state of Chart to be ${
                 model.isControlled ? 'un' : ''
@@ -96,7 +96,7 @@ export const useChartModels = <TSignatures extends readonly ChartAnyPluginSignat
         if (!model.isControlled && defaultValue !== newDefaultValue) {
           console.error(
             [
-              `MUI X: A component is changing the default ${modelName} state of an uncontrolled Chart after being initialized. ` +
+              `MUI X Charts: A component is changing the default ${modelName} state of an uncontrolled Chart after being initialized. ` +
                 `To suppress this warning opt to use a controlled Chart.`,
             ].join('\n'),
           );

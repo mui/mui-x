@@ -80,8 +80,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2(@mui/material@7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@mui/internal-babel-plugin-resolve-imports':
-        specifier: 1.0.20
-        version: 1.0.20(@babel/core@7.26.10)
+        specifier: 2.0.0
+        version: 2.0.0(@babel/core@7.26.10)
       '@mui/internal-markdown':
         specifier: ^2.0.4
         version: 2.0.4
@@ -157,6 +157,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8.31.0
         version: 8.31.0(eslint@8.57.1)(typescript@5.8.3)
+      '@vvago/vale':
+        specifier: ^3.11.2
+        version: 3.11.2
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.3)
@@ -3341,8 +3344,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/internal-babel-plugin-resolve-imports@1.0.20':
-    resolution: {integrity: sha512-/gy7XVyQ+qq01gTiqlOzdqt521tOOHFDrND4bPnLlELvYW2cAvyCoKa7uQ0JpdLo4Op6WK6mAIIGRejqdxLlXw==}
+  '@mui/internal-babel-plugin-resolve-imports@2.0.0':
+    resolution: {integrity: sha512-5/ZeHUgYSvNip+vq/XrRPYVWzAd3HVnOZNPrbl3Zn2QCVNutZkA/b6ot5/0OjvdOgQyt/sDk3fV2s+zdlhsMkg==}
     peerDependencies:
       '@babel/core': '7'
 
@@ -4638,6 +4641,10 @@ packages:
 
   '@vitest/utils@3.1.2':
     resolution: {integrity: sha512-5GGd0ytZ7BH3H6JTj9Kw7Prn1Nbg0wZVrIvou+UWxm54d+WoXXgAgjFJ8wn3LdagWLFSEfpPeyYrByZaGEZHLg==}
+
+  '@vvago/vale@3.11.2':
+    resolution: {integrity: sha512-YJGghfJP8Bzbx8Uw4TlVyV6sPpMh+5DJoUtnw43SYSOCkM5G4DoNBFCPC374/nGT7FzjOPyX1O+aQNuC5kLFcA==}
+    hasBin: true
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -9499,6 +9506,10 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  rimraf@5.0.10:
+    resolution: {integrity: sha512-l0OE8wL34P4nJH/H2ffoaniAokM2qSmrtXHmlpvYr5AVVX8msAyW0l8NVJFDxlSK4u3Uh/f41cQheDVdnYijwQ==}
+    hasBin: true
+
   rimraf@6.0.1:
     resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
     engines: {node: 20 || >=22}
@@ -12491,7 +12502,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.12
 
-  '@mui/internal-babel-plugin-resolve-imports@1.0.20(@babel/core@7.26.10)':
+  '@mui/internal-babel-plugin-resolve-imports@2.0.0(@babel/core@7.26.10)':
     dependencies:
       '@babel/core': 7.26.10
       resolve: 1.22.10
@@ -13939,6 +13950,15 @@ snapshots:
       '@vitest/pretty-format': 3.1.2
       loupe: 3.1.3
       tinyrainbow: 2.0.0
+
+  '@vvago/vale@3.11.2':
+    dependencies:
+      axios: 1.8.4(debug@4.4.0)
+      rimraf: 5.0.10
+      tar: 6.2.1
+      unzipper: 0.10.14
+    transitivePeerDependencies:
+      - debug
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -19673,6 +19693,10 @@ snapshots:
   rimraf@4.4.1:
     dependencies:
       glob: 9.3.5
+
+  rimraf@5.0.10:
+    dependencies:
+      glob: 10.4.5
 
   rimraf@6.0.1:
     dependencies:

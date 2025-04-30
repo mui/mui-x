@@ -1,23 +1,26 @@
 import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import type {
-  AxisDefaultized,
+  ComputedAxis,
   ScaleName,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
   AxisId,
-  AxisConfig,
   ChartsAxisData,
   YAxis,
   XAxis,
+  DefaultedXAxis,
+  DefaultedYAxis,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 
-export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
-  [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
+/**
+ * The axes' configuration after computing.
+ * An axis in this state already contains a scale function and all the necessary properties to be rendered.
+ */
+export type ComputedAxisConfig<AxisProps extends ChartsAxisProps> = {
+  [axisId: AxisId]: ComputedAxis<ScaleName, any, AxisProps>;
 };
 
 export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName> {
@@ -41,7 +44,7 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
   /**
@@ -54,8 +57,8 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
 
 export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
   UseChartCartesianAxisParameters<S> & {
-    defaultizedXAxis: AxisConfig<S, any, ChartsXAxisProps>[];
-    defaultizedYAxis: AxisConfig<S, any, ChartsYAxisProps>[];
+    defaultizedXAxis: DefaultedXAxis<S>[];
+    defaultizedYAxis: DefaultedYAxis<S>[];
   };
 
 export interface DefaultizedZoomOptions extends Required<ZoomOptions> {
@@ -72,8 +75,8 @@ export interface UseChartCartesianAxisState {
     zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
-    x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
-    y: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    x: DefaultedXAxis[];
+    y: DefaultedYAxis[];
   };
 }
 
