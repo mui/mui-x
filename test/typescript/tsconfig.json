@@ -1,15 +1,24 @@
 {
   "compilerOptions": {
+    "baseUrl": "../..",
+    "lib": ["DOM", "ESNext"],
+    "target": "ESNext",
+    "paths": {
+      "@mui/x-charts/*": ["./packages/x-charts/build/esm/*"]
+      // "@mui/x-charts/*": ["./packages/x-charts/src/*"]
+    },
+    "strict": true,
     "allowJs": true,
     "isolatedModules": true,
     "moduleResolution": "bundler",
     "jsx": "react",
-    "module": "es2022",
+    "module": "ESNext",
     "noEmit": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["@mui/material/themeCssVarsAugmentation", "node"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
