@@ -102,6 +102,10 @@ export default function MuiColorTemplate() {
   const [colorScheme, setColorScheme] = React.useState('blueberryTwilight');
   const [colorMode, setColorMode] = React.useState(theme.palette.mode);
 
+  React.useEffect(() => {
+    setColorMode(theme.palette.mode);
+  }, [theme.palette.mode]);
+
   const newTheme = createTheme({ palette: { mode: colorMode } });
   return (
     <ThemeProvider theme={newTheme}>
