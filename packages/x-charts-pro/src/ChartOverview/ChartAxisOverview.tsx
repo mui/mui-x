@@ -1,7 +1,12 @@
 import * as React from 'react';
-import { AxisId } from '@mui/x-charts/internals';
+import {
+  AxisId,
+  selectorChartAxisZoomOptionsLookup,
+  useChartContext,
+  useSelector,
+} from '@mui/x-charts/internals';
 import { DEFAULT_ZOOM_OVERVIEW_SIZE } from '@mui/x-charts/constants';
-import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 import { ChartAxisZoomOverview } from './ChartAxisZoomOverview';
 
 export interface ChartAxisOverviewProps {
@@ -29,12 +34,10 @@ export function ChartAxisOverview({
   axisDirection,
   size = DEFAULT_ZOOM_OVERVIEW_SIZE,
 }: ChartAxisOverviewProps) {
-  const { xAxis } = useXAxes();
-  const { yAxis } = useYAxes();
+  const { store } = useChartContext<[UseChartProZoomSignature]>();
+  const { overview } = useSelector(store, selectorChartAxisZoomOptionsLookup, axisId);
 
-  const axis = axisDirection === 'x' ? xAxis[axisId] : yAxis[axisId];
-
-  if (typeof axis.zoom !== 'object' || !axis.zoom.overview?.enabled) {
+  if (!overview.enabled) {
     return null;
   }
 
