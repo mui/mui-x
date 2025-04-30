@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, screen, act, waitFor, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
