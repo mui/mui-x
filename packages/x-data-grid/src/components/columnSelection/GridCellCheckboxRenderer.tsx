@@ -5,8 +5,8 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { objectShallowCompare, useGridSelector } from '../../hooks/utils/useGridSelector';
-import { getCheckboxPropsSelector } from '../../hooks/features/rowSelection/utils';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { checkboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
@@ -68,16 +68,10 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
 
     const isSelectable = apiRef.current.isRowSelectable(id);
 
-    const checkboxPropsSelector = getCheckboxPropsSelector(
-      id,
-      rootProps.rowSelectionPropagation?.parents ?? false,
-    );
-    const { isIndeterminate, isChecked } = useGridSelector(
-      apiRef,
-      checkboxPropsSelector,
-      undefined,
-      objectShallowCompare,
-    );
+    const { isIndeterminate, isChecked } = useGridSelector(apiRef, checkboxPropsSelector, {
+      groupId: id,
+      autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
+    });
 
     if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
       return null;
