@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { config } from 'react-transition-group';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import {
@@ -9,6 +10,8 @@ import {
   isPickerRangeType,
   isPickerSingleInput,
   openPicker,
+  openPickerAsync,
+  PickerRangeComponentType,
 } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValueTestSuite } from './describeValue.types';
@@ -390,5 +393,48 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
+  });
+
+  testSkipIf(
+    !['date-range', 'time-range', 'date-time-range'].includes(pickerParams.type) ||
+      (pickerParams as any).fieldType !== 'single-input',
+  )('should return back to start range position after reopening a range picker', async () => {
+    const pickerType = pickerParams.type as PickerRangeComponentType;
+    // If transitions are disabled, the `onExited` event is not triggered
+    config.disabled = false;
+    const { user } = render(<ElementToTest slotProps={{ toolbar: { hidden: false } }} />);
+
+    await openPickerAsync(user, {
+      type: pickerType,
+      fieldType: 'single-input',
+      initialFocus: 'start',
+    });
+
+    const isDateTimeRangePicker = pickerParams.type === 'date-time-range';
+    if (isDateTimeRangePicker) {
+      // click the end date toolbar button
+      await user.click(screen.getAllByTestId('datetimepicker-toolbar-day')[1]);
+    } else {
+      const toolbarButtons = screen.getAllByTestId('toolbar-button');
+      // click the first button of the end toolbar
+      await user.click(toolbarButtons[toolbarButtons.length / 2]);
+    }
+
+    await user.keyboard('[Escape]');
+
+    // open the picker again
+    await openPickerAsync(user, {
+      type: pickerType,
+      fieldType: 'single-input',
+      initialFocus: 'start',
+    });
+
+    let toolbarButton: HTMLElement;
+    if (isDateTimeRangePicker) {
+      toolbarButton = screen.getAllByTestId('datetimepicker-toolbar-day')[0];
+    } else {
+      toolbarButton = screen.getAllByTestId('toolbar-button')[0];
+    }
+    expect(toolbarButton.querySelector('[data-selected="true"]')).to.not.equal(null);
   });
 };

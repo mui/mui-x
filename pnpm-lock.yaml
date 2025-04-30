@@ -1667,6 +1667,9 @@ importers:
       '@types/react-router':
         specifier: ^5.1.20
         version: 5.1.20
+      '@types/react-transition-group':
+        specifier: ^4.4.12
+        version: 4.4.12(@types/react@19.0.12)
       '@types/semver':
         specifier: ^7.7.0
         version: 7.7.0
