@@ -4,15 +4,19 @@ title: React Data Grid - Server-side tree data
 
 # Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Learn how to implement lazy-loading tree data with a server-side data source.</p>
+<p class="description">Implement lazy-loading server-side tree data in the Data Grid using the Data Source layer.</p>
 
-To dynamically load tree data from the server, including lazy-loading of children, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
+## Prerequisites
+
+To be able to dynamically load tree data from the server, including lazy-loading of children, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 :::info
 For tree data on the client side, see [Tree data (client side)](/x/react-data-grid/tree-data/).
 :::
 
-The Data Source also requires some additional props to handle tree data:
+## Implementation
+
+The Data Source requires the following props to handle tree data:
 
 - `getGroupKey()`: Returns the group key for the row.
 - `getChildrenCount()`: Returns the number of children for the row. If the children count is not available for some reason, but there are some children, returns `-1`.
@@ -69,10 +73,10 @@ Open the Info section of your browser console to see the requests being made and
 
 For each row group expansion, the Data Source is called to fetch the children.
 If an error occurs during the fetch, the Data Grid display an error message in the row group cell.
-`onDataSourceError()` is also triggered with an error object containing the params described in [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling).
+`onDataSourceError()` is also triggered with an error object containing the params described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
-The demo below shows a toast apart from the default error message in the grouping cell.
-Cache has been disabled for simplicity.
+The demo below renders a custom Snackbar component to display an error message when the requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.
+Caching has been disabled for simplicity.
 
 {{"demo": "ServerSideTreeDataErrorHandling.js", "bg": "inline"}}
 
@@ -89,7 +93,7 @@ The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all level
 
 The Data Source uses a cache by default to store the fetched data.
 Use the `dataSourceCache` prop to provide a custom cache if necessary.
-See [Server-side data—Data caching](/x/react-data-grid/server-side-data/#data-caching) for more info.
+See [Server-side data overview—Data caching](/x/react-data-grid/server-side-data/#data-caching) for more info.
 
 The following demo uses `QueryClient` from `@tanstack/react-core` as a Data Source cache.
 

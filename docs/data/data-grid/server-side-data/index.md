@@ -166,7 +166,7 @@ The following demo showcases this behavior.
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 :::info
-The Data Source demos throughout this doc use a `useMockServer()` utility function to simulate server-side data fetching.
+The Data Source demos use a `useMockServer()` utility function to simulate server-side data fetching.
 In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
@@ -320,6 +320,9 @@ Each error type has a corresponding `error.params` type which is passed as an ar
   }}
 />
 ```
+
+The demo below renders a custom Snackbar component to display an error message when the requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.
+Caching has been disabled for simplicity.
 
 {{"demo": "ServerSideErrorHandling.js", "bg": "inline"}}
 
