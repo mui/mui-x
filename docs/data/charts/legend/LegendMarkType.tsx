@@ -28,12 +28,7 @@ export default function LegendMarkType() {
             ...seriesItem,
             labelMarkType: props.markType,
           }))}
-          xAxis={[
-            {
-              scaleType: 'band',
-              data: ['A'],
-            },
-          ]}
+          xAxis={[{ data: ['A'] }]}
           height={200}
         />
       )}

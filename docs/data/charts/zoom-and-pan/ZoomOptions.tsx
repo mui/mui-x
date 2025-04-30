@@ -55,7 +55,6 @@ export default function ZoomOptions() {
             height={300}
             xAxis={[
               {
-                scaleType: 'band',
                 data: data.map((v, i) => i),
                 zoom: props,
               },

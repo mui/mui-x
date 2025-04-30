@@ -21,7 +21,6 @@ export const useGridDataSourceRowGroupingPreProcessors = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
-    | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'

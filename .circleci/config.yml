@@ -136,7 +136,7 @@ jobs:
       - run:
           name: '`pnpm dedupe` was run?'
           command: |
-            # #default-branch-switch
+            # #target-branch-reference
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
                 echo "No changes to dependencies detected. Skipping..."
@@ -187,7 +187,7 @@ jobs:
       - run:
           name: '`pnpm prettier` changes committed?'
           command: |
-            # #default-branch-switch
+            # #target-branch-reference
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
                 pnpm prettier --check
@@ -224,7 +224,7 @@ jobs:
       - run:
           name: '`pnpm @mui/x-charts-vendor build` was run?'
           command: |
-            # #default-branch-switch 
+            # #target-branch-reference 
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
             then
               echo "No changes to dependencies detected. Skipping..."

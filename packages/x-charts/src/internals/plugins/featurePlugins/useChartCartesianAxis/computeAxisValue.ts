@@ -16,7 +16,7 @@ import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { DefaultizedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
@@ -50,7 +50,7 @@ const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 export type ComputeResult<T extends ChartsAxisProps> = {
-  axis: DefaultizedAxisConfig<T>;
+  axis: ComputedAxisConfig<T>;
   axisIds: string[];
 };
 
@@ -102,7 +102,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     allAxis[0].id,
   );
 
-  const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
+  const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];

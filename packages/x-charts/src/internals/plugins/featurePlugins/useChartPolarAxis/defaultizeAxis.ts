@@ -26,7 +26,9 @@ export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
       } as PolarAxisConfig<TScale, any>;
     }
     if (dataset === undefined) {
-      throw new Error(`MUI X: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`);
+      throw new Error(
+        `MUI X Charts: ${axisName}-axis uses \`dataKey\` but no \`dataset\` is provided.`,
+      );
     }
 
     return {
