@@ -36,24 +36,24 @@ export function checkScaleErrors(
 
   if (!isBandScaleConfig(discreteAxisConfig)) {
     throw new Error(
-      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
     );
   }
   if (discreteAxisConfig.data === undefined) {
     throw new Error(
-      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
     );
   }
   if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
     throw new Error(
-      `MUI X: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
   }
   if (process.env.NODE_ENV !== 'production') {
     if (discreteAxisConfig.data.length < series.stackedData.length) {
       warnOnce(
         [
-          `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
+          `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
           'The axis data should have at least the same length than the series using it.',
         ],
         'error',

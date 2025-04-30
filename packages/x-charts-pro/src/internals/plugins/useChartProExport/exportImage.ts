@@ -10,7 +10,7 @@ export const getDrawDocument = async () => {
     return module.drawDocument;
   } catch (error) {
     throw new Error(
-      `MUI X: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
+      `MUI X Charts: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
       { cause: error },
     );
   }
@@ -79,11 +79,11 @@ export async function exportImage(
   try {
     blob = await blobPromise;
   } catch (error) {
-    throw new Error('MUI X: Failed to create blob from canvas.', { cause: error });
+    throw new Error('MUI X Charts: Failed to create blob from canvas.', { cause: error });
   }
 
   if (!blob) {
-    throw new Error('MUI X: Failed to create blob from canvas.');
+    throw new Error('MUI X Charts: Failed to create blob from canvas.');
     return;
   }
 
