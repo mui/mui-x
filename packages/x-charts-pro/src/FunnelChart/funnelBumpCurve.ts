@@ -1,13 +1,6 @@
 import { CurveFactory, CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
-/**
- * This is a custom "step" curve generator for the funnel chart.
- * It is used to draw the funnel using "rectangles" without having to rework the rendering logic.
- *
- * It is based on the d3-shape step curve generator.
- * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/step.js
- */
-class FunnelStep implements CurveGenerator {
+class FunnelBump implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private line: number = NaN;
@@ -37,21 +30,14 @@ class FunnelStep implements CurveGenerator {
   }
 
   lineStart(): void {
-    this.x = NaN;
-    this.y = NaN;
     this.currentPoint = 0;
   }
 
-  lineEnd(): void {
-    if (this.currentPoint === 2) {
-      this.context.lineTo(this.x, this.y);
-    }
+  lineEnd() {
     if (this.line || (this.line !== 0 && this.currentPoint === 1)) {
       this.context.closePath();
     }
-    if (this.line >= 0) {
-      this.line = 1 - this.line;
-    }
+    this.line = 1 - this.line;
   }
 
   point(x: number, y: number): void {
@@ -62,12 +48,13 @@ class FunnelStep implements CurveGenerator {
     if (this.isHorizontal) {
       if (this.currentPoint === 0) {
         this.context.moveTo(x + this.gap, y);
-      } else if (this.currentPoint === 1 || this.currentPoint === 2) {
-        this.context.lineTo(x - this.gap, this.y);
+        this.context.lineTo(x + this.gap, y);
+      } else if (this.currentPoint === 1) {
+        this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x - this.gap, y);
+      } else if (this.currentPoint === 2) {
         this.context.lineTo(x - this.gap, y);
       } else {
-        this.context.lineTo(this.x - this.gap, y);
-        this.context.lineTo(x + this.gap, y);
+        this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x + this.gap, y);
       }
 
       this.currentPoint += 1;
@@ -78,13 +65,15 @@ class FunnelStep implements CurveGenerator {
 
     // 0 is the top-right corner.
     if (this.currentPoint === 0) {
+      // X from Y
       this.context.moveTo(x, y + this.gap);
-    } else if (this.currentPoint === 3) {
-      this.context.lineTo(x, this.y - this.gap);
       this.context.lineTo(x, y + this.gap);
-    } else {
-      this.context.lineTo(this.x, y - this.gap);
+    } else if (this.currentPoint === 1) {
+      this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y - this.gap);
+    } else if (this.currentPoint === 2) {
       this.context.lineTo(x, y - this.gap);
+    } else {
+      this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y + this.gap);
     }
 
     this.currentPoint += 1;
@@ -97,18 +86,18 @@ interface FunnelCurveOptions {
   gap?: number;
 }
 
-const funnelHorizontalStepCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
+const funnelHorizontalBumpCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
   const { gap = 0 } = options;
   return (context) => {
-    return new FunnelStep(context as any, true, gap);
+    return new FunnelBump(context as any, true, gap);
   };
 };
 
-const funnelVerticalStepCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
+const funnelVerticalBumpCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
   const { gap = 0 } = options;
   return (context) => {
-    return new FunnelStep(context as any, false, gap);
+    return new FunnelBump(context as any, false, gap);
   };
 };
 
-export { funnelHorizontalStepCurve, funnelVerticalStepCurve, FunnelCurveOptions };
+export { funnelHorizontalBumpCurve, funnelVerticalBumpCurve, FunnelCurveOptions };
