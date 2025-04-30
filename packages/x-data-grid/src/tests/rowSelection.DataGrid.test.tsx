@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, waitFor, fireEvent } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -78,17 +78,17 @@ describe('<DataGrid /> - Row selection', () => {
         />
       );
     }
-    render(<TestDataGrid />);
-    fireEvent.click(getCell(0, 0).querySelector('input')!);
+    const { user } = render(<TestDataGrid />);
+    await user.click(getCell(0, 0).querySelector('input')!);
     expect(onRowSelectionModelChange.callCount).to.equal(1);
   });
 
   describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', async () => {
-      render(<TestDataGridSelection />);
-      fireEvent.click(getCell(0, 0));
+      const { user } = render(<TestDataGridSelection />);
+      await user.click(getCell(0, 0));
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireEvent.click(getCell(1, 0));
+      await user.click(getCell(1, 0));
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
