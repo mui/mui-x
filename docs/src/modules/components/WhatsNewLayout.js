@@ -273,7 +273,7 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
       },
       {
-        title: 'Sparkline Charts on the Data Grid ',
+        title: 'Sparkline charts on the Data Grid ',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#sparkline-as-a-column-type',
       },
     ],
