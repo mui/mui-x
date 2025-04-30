@@ -45,3 +45,4 @@ export type {
 
 export { useGridPivoting as unstable_useGridPivoting } from './hooks/features/pivoting/useGridPivoting';
 export type { GridPivotModel } from './hooks/features/pivoting/gridPivotingInterfaces';
+export { IS_SPEECH_RECOGNITION_SUPPORTED } from './utils/speechRecognition';

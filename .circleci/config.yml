@@ -115,7 +115,7 @@ commands:
             - run:
                 name: Install playwright & ffmpeg
                 command: |
-                  pnpx playwright@1.51.1 install --with-deps
+                  pnpx playwright install --with-deps
                   # Avoids installing a system version of ffmpeg
                   ffmpeg_bin=$(find ~/.cache/ms-playwright -regex '.*/ffmpeg-[0-9]*')
                   if [[ -z "$ffmpeg_bin" ]]; then
@@ -136,7 +136,7 @@ jobs:
       - run:
           name: '`pnpm dedupe` was run?'
           command: |
-            # #default-branch-switch
+            # #target-branch-reference
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
                 echo "No changes to dependencies detected. Skipping..."
@@ -187,7 +187,7 @@ jobs:
       - run:
           name: '`pnpm prettier` changes committed?'
           command: |
-            # #default-branch-switch
+            # #target-branch-reference
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
                 pnpm prettier --check
@@ -224,7 +224,7 @@ jobs:
       - run:
           name: '`pnpm @mui/x-charts-vendor build` was run?'
           command: |
-            # #default-branch-switch 
+            # #target-branch-reference 
             if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
             then
               echo "No changes to dependencies detected. Skipping..."

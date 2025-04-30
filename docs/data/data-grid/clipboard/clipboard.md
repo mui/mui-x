@@ -4,7 +4,7 @@
 
 ## Clipboard copy
 
-You can copy selected grid data to the clipboard using the <kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd> (<kbd class="key">⌘ Command</kbd>+<kbd class="key">C</kbd> on macOS) keyboard shortcut.
+You can copy selected grid data to the clipboard using the <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">C</kbd></kbd> on macOS) keyboard shortcut.
 The copied cell values are separated by a tab (`\t`) character and the rows are separated by a new line (`\n`) character.
 
 The priority of the data copied to the clipboard is the following, from highest to lowest:
@@ -39,7 +39,7 @@ so that the values can be parsed correctly during the paste operation.
 
 :::
 
-You can paste data from clipboard using the <kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd> (<kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd> on macOS) keyboard shortcut.
+You can paste data from clipboard using the <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd></kbd> on macOS) keyboard shortcut.
 The paste operation only affects cells in the columns that are [`editable`](/x/react-data-grid/editing/#making-a-column-editable).
 
 Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.

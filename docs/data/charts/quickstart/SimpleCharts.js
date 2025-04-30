@@ -8,7 +8,6 @@ export default function SimpleCharts() {
         {
           id: 'barCategories',
           data: ['bar A', 'bar B', 'bar C'],
-          scaleType: 'band',
         },
       ]}
       series={[

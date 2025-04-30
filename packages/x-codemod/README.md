@@ -10,10 +10,10 @@ This repository contains a collection of codemod scripts based for use with
 
 ## Setup & run
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next <codemod> <paths...>
+npx @mui/x-codemod@latest <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -29,8 +29,8 @@ Options:
   --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
-  npx @mui/x-codemod@next v8.0.0/preset-safe src
-  npx @mui/x-codemod@next v6.0.0/component-rename-prop src --
+  npx @mui/x-codemod@latest v8.0.0/preset-safe src
+  npx @mui/x-codemod@latest v6.0.0/component-rename-prop src --
   --component=DataGrid --from=prop --to=newProp
 ```
 
@@ -40,10 +40,10 @@ To pass more options directly to jscodeshift, use `--jscodeshift=...`. For examp
 
 ```bash
 # single option
-npx @mui/x-codemod@next --jscodeshift=--run-in-band
+npx @mui/x-codemod --jscodeshift=--run-in-band
 
 # multiple options
-npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
+npx @mui/x-codemod --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
@@ -54,7 +54,7 @@ Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument
 
 ```bash
-npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
 ## v8.0.0
@@ -66,10 +66,10 @@ A combination of all important transformers for migrating v7 to v8.
 It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
@@ -85,10 +85,10 @@ The corresponding sub-sections are listed below
 
 The `preset-safe` codemods for Tree View.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/tree-view/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -134,10 +134,10 @@ Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or u
 
 The `preset-safe` codemods for Charts.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/charts/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -315,10 +315,10 @@ If there are cases that the codemod cannot handle, you should see a comment with
 
 The `preset-safe` codemods for Data Grid.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -343,10 +343,10 @@ Remove feature flags for stabilized `experimentalFeatures`.
  />
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 #### `remove-props`
@@ -367,10 +367,10 @@ The list includes these props:
  />
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/remove-props <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-props <path>
 ```
 
 #### `rename-props`
@@ -409,10 +409,10 @@ The list includes these props:
  />
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/rename-props <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-props <path>
 ```
 
 #### `rename-imports`
@@ -427,10 +427,10 @@ This codemod renames the imports of the Data Grid components. The list includes 
 +import { gridRowSelectionIdsSelector, gridRowSelectionCountSelector } from '@mui/x-data-grid';
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/rename-imports <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-imports <path>
 ```
 
 #### `reform-row-selection-model`
@@ -450,10 +450,10 @@ Reforms the controlled `rowSelectionModel` prop value to the new one.
  />
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/reform-row-selection-model <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/reform-row-selection-model <path>
 ```
 
 #### `rename-package`
@@ -465,10 +465,10 @@ Reorganizes the imports moved from `@mui/x-data-grid-pro` and `@mui/x-data-grid-
 +import { LicenseInfo } from '@mui/x-license';
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/rename-package <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/rename-package <path>
 ```
 
 #### `add-showToolbar-prop`
@@ -484,10 +484,10 @@ Adds the `showToolbar` prop to the Data Grid components that are using `slots.to
  />
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/data-grid/add-showToolbar-prop <path>
+npx @mui/x-codemod@latest v8.0.0/data-grid/add-showToolbar-prop <path>
 ```
 
 ### Pickers codemods
@@ -496,10 +496,10 @@ npx @mui/x-codemod@next v8.0.0/data-grid/add-showToolbar-prop <path>
 
 The `preset-safe` codemods for Pickers.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
+npx @mui/x-codemod@latest v8.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -531,10 +531,10 @@ The list includes these transformers
   +import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
   ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-adapter-date-fns-imports <path>
+npx @mui/x-codemod@latest v8.0.0/pickers/rename-adapter-date-fns-imports <path>
 ```
 
 #### `rename-type-imports`
@@ -565,10 +565,10 @@ Renames:
  }
 ```
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@next v8.0.0/pickers/rename-type-imports <path>
+npx @mui/x-codemod@latest v8.0.0/pickers/rename-type-imports <path>
 ```
 
 ## v7.0.0

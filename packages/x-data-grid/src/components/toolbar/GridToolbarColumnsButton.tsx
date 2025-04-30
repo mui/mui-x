@@ -9,7 +9,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
+import { useGridPanelContext } from '../panel/GridPanelContext';
 
 interface GridToolbarColumnsButtonProps {
   /**
@@ -23,7 +23,7 @@ interface GridToolbarColumnsButtonProps {
 }
 
 /**
- * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/components/columns-panel/ Columns Panel Trigger} component instead. This component will be removed in a future major release.
+ * @deprecated Use the {@link https://mui.com/x/react-data-grid/components/columns-panel/ Columns Panel Trigger} component instead. This component will be removed in a future major release.
  */
 const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
@@ -35,7 +35,7 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const { columnsPanelTriggerRef } = useGridPreferencePanelContext();
+    const { columnsPanelTriggerRef } = useGridPanelContext();
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const handleRef = useForkRef(ref, columnsPanelTriggerRef);
 

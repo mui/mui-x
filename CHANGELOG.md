@@ -5,6 +5,298 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.1.0
+
+_Apr 24, 2025_
+
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Add API to print a chart or export it as PDF: `apiRef.exportAsPrint()`.
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@lhilgert9, @ArturAghakaryan, @sai6855.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @joserodolfofreitas, @KenanYusuf, @LukasTy, @mapache-salvaje, @oliviertassinari, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.1.0`
+
+- [DataGrid] Allow row deselection with multiple rows selected (#17473) @arminmeh
+- [DataGrid] Fix column title truncation on touch devices (#17375) @KenanYusuf
+- [DataGrid] Remove internal usage of `material` prop (#17513) @KenanYusuf
+- [DataGrid] Fix apiRef not being passed on onCellClick params (#17335) @sai6855
+- [DataGrid] Add Armenian (hy-AM) locale (#17527) @ArturAghakaryan
+
+#### `@mui/x-data-grid-pro@8.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.1.0`, plus:
+
+- [DataGridPro] Fix locales.ts export (#17433) @lhilgert9
+- [DataGridPro] Avoid proptypes warnings with header filters in React 17 (#17482) @cherniavskii
+- [DataGridPro] Fix expandable rows detail content height updates (#17394) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.1.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.1.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.1.0`
+
+- [pickers] Improve `PickersInputBase` owner state typing (#17478) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.1.0`.
+
+### Charts
+
+- Add API to print a chart or export it as PDF: `apiRef.exportAsPrint()`.
+
+#### `@mui/x-charts@8.1.0`
+
+- [charts] Add a localization provider (#17325) @alexfauquette
+- [charts] Add codemod for replacing legend's hidden slot prop (#17392) @bernardobelchior
+- [charts] Fix chart visual tests flakiness (#17469) @bernardobelchior
+- [charts] Fix tooltip position (#17440) @alexfauquette
+- [charts] Improve axis tooltip performances (#17398) @alexfauquette
+- [charts] Move radar from under development to preview (#17418) @alexfauquette
+- [charts] Advance time in charts regression tests (#17420) @bernardobelchior
+- [charts] Fix charts visuals flakiness (#17472) @bernardobelchior
+- [charts] Move `rafThrottle` on event handlers instead of setter (#17489) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.1.0`, plus:
+
+- [charts-pro] Add export as PDF/print functionality (#17285) @bernardobelchior
+- [charts-pro] Fix axis zoom being disabled when not specified in `initialZoom` (#17500) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.1.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.1.0`.
+
+### Docs
+
+- [docs] Fix AI Assistant Panel Trigger demo (#17426) @KenanYusuf
+- [docs] Fix DataGrid's master-detail demo for one expanded detail panel at a time (#17471) @arminmeh
+- [docs] Improve StackOverflow links (#17483) @oliviertassinari
+- [docs] Refine charts demos (#17417) @alexfauquette
+- [docs] Remove ad on paid docs pages (#17373) @oliviertassinari
+- [docs] Serve migration guides in raw markdown format (#17210) @cherniavskii
+- [docs] Fix heading structure (#17495) @oliviertassinari
+- [docs] Revise the Row Grouping doc (#16217) @mapache-salvaje
+- [docs] Fix ellipsis in the demo (#17476) @oliviertassinari
+- [docs] Add docs information for Legend HTML (#17502) @alexfauquette
+- [docs] Refine charts demos (#17417) @alexfauquette
+- [tree view][docs] Copyedit the Tree View Overview page (#17498) @mapache-salvaje
+
+### Core
+
+- [core] Bump `@types/node` (#17444) @LukasTy
+- [core] Remove `react-is` dependency (#17470) @LukasTy
+- [core] Remove redundant `overridesResolver` in `styled` components (#17466) @romgrk
+- [core] Update support table (#17425) @joserodolfofreitas
+- [code-infra] Ditch `@babel/node` (#17446) @LukasTy
+- [code-infra] Further remove `clock=fake` from pickers (#17253) @JCQuintas
+
+## 8.0.0
+
+_Apr 17, 2025_
+
+We're excited to [announce the first v8 stable release](https://mui.com/blog/mui-x-v8/)! 🎉🚀
+
+This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
+Migration guides are available with a complete list of the breaking changes:
+
+- [Data Grid](https://mui.com/x/migration/migration-data-grid-v7/)
+- [Date and Time Pickers](https://mui.com/x/migration/migration-pickers-v7/)
+- [Tree View](https://mui.com/x/migration/migration-tree-view-v7/)
+- [Charts](https://mui.com/x/migration/migration-charts-v7/)
+- [Material UI v7](https://mui.com/material-ui/migration/upgrade-to-v7/)
+
+Here are the highlights from alpha and beta releases included in this stable release:
+
+- ⚛️ React 19 support.
+- 🎁 `@mui/material@7` support – see the [Material UI v7 upgrade guide](https://mui.com/material-ui/migration/upgrade-to-v7/).
+
+- 🔄 [Pivoting](https://mui.com/x/react-data-grid/pivoting/).
+- 🤖 [AI Assistant](https://mui.com/x/react-data-grid/ai-assistant/).
+- 🛠️ New and improved Data Grid [Toolbar component](https://mui.com/x/react-data-grid/components/toolbar/).
+- 📦 Data Grid [data source](https://mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan.
+- 🚫 Add ["No columns" overlay](https://mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid.
+- 🍬 Improved design for Data Grid [Header filters](https://mui.com/x/react-data-grid/filtering/header-filters/).
+- 🔄 Add Data Grid [Scroll restoration](https://mui.com/x/react-data-grid/scrolling/#scroll-restoration).
+- 💫 Support [aggregation with server-side data](https://mui.com/x/react-data-grid/server-side-data/aggregation/).
+- 🎁 Support [server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
+- 📝 Support [editing with server-side Data Source](https://mui.com/x/react-data-grid/server-side-data/#updating-data).
+- 🎯 Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching).
+- 🏎️ Improved Data Grid aggregation, Excel export serialization, mount, resize and scrolling performance.
+- 🎨 Improved Data Grid theming and add default background color.
+
+- 📊 New Pro chart: [Funnel](https://mui.com/x/react-charts/funnel/).
+- 📊 New Community chart: [Radar](https://mui.com/x/react-charts/radar/) is available in preview for testing.
+- 📊 Charts legend is now an HTML element which can be styled more easily.
+- 📊 [Gauge charts](https://mui.com/x/react-charts/gauge/) animation.
+- 📊 Create [custom HTML components](https://mui.com/x/react-charts/components/#html-components) using chart data.
+- 📊 Refactor Charts [Tooltip customization](https://mui.com/x/react-charts/tooltip/#overriding-content).
+- 📊 Improved Charts [composition](https://mui.com/x/react-charts/composition/#overview).
+- 📊 Charts support server-side rendering under [some conditions](https://mui.com/x/react-charts/getting-started/#server-side-rendering).
+- 📊 Add a new API to support multiple axes (decouple `margin` and `axis-size`).
+- 🚫 Removed `react-spring` dependency from `@mui/x-charts`.
+
+- 🚀 New [Time Range Picker](https://mui.com/x/react-date-pickers/time-range-picker/) component.
+
+- 🔁 Support [automatic parents and children selection](https://mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
+- 🎛️ New [customization APIs](https://mui.com/x/migration/migration-tree-view-v7/#new-api-to-customize-the-tree-item) for the Tree Item component.
+
+Below are the changes since the last beta release:
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.0.0`
+
+- [DataGrid] Data source with editing (#16045) @MBilalShafi
+- [DataGrid] Deprecate old toolbar components (#17294) @KenanYusuf
+- [DataGrid] Refactor: add typings to icons (#17291) @romgrk
+- [DataGrid] Prevent scrollbars from showing on top (#17405) @romgrk
+- [l10n] Improve Polish (pl-PL) locale (#17336) (#17396) @sofortdagmbh
+- [l10n] Improve Swedish (sv-SE) locale (#17293) @ptuukkan
+
+#### `@mui/x-data-grid-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0`, plus:
+
+- [DataGridPro] Fix row virtualization not working in list view (#17399) @cherniavskii
+
+#### `@mui/x-data-grid-premium@8.0.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0`, plus:
+
+- [DataGridPremium] AI Assistant (#16992) @arminmeh
+- [DataGridPremium] Fix aggregated values sorting (#17326) @cherniavskii
+- [DataGridPremium] Fix cell display with custom renderers in pivot mode (#17323) @cherniavskii
+- [DataGridPremium] Fix stale aggregation results after filtering (#17296) @cherniavskii
+- [DataGridPremium] Pivoting (#9877) @cherniavskii
+- [DataGridPremium] Use `groupingValueGetter` for row grouping on the server (#17376) @cherniavskii
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- The view selection process has been updated to make it clear across all Pickers.
+  Pickers no longer automatically switch between **date** and **time views** or **start** and **end positions**.
+  Moving between views and range positions is achieved using the new "Next" action button.
+
+#### `@mui/x-date-pickers@8.0.0`
+
+- [fields] Fix the error message when a custom field with an `<input />` but the field expects the accessible DOM structure (#17237) @flaviendelangle
+- [fields] Fix to submit a form on `Enter` press with accessible DOM structure (#17328) @LukasTy
+- [fields] Prevent focusing the field or any section when `disabled=true` (#17215) @flaviendelangle
+- [l10n] Improve Czech (cs-CZ) locale (#17387) @lubka272
+- [l10n] Improve Slovak (sk-SK) locale (#17249) @lubka272
+- [pickers] Fix failing proptypes CI (#17413) @romgrk
+- [pickers] Fix to not process default prevented propagated events (#17312) @LukasTy
+- [pickers] Mark active range position field section with underline (#16938) @LukasTy
+- [pickers] Remove automatic switch between date and time or between range positions (#17166) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0`, plus:
+
+- [DateTimeRangePicker] Fix focused view behavior (#17313) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@8.0.0`
+
+- [charts] Add `slotProps.legend.hidden` to migration docs (#17379) @bernardobelchior
+- [charts] Add labels above bars example (#16860) @bernardobelchior
+- [charts] Add tooltip to the radar (#16950) @alexfauquette
+- [charts] Add uncertainty area to line with forecast demo (#17355) @bernardobelchior
+- [charts] Animate gauge chart (#17304) @bernardobelchior
+- [charts] Convert `AnimationContext` into a plugin (#17299) @bernardobelchior
+- [charts] Export 'series' class as part of `barElementClasses` (#17273) @10tacion
+- [charts] Expose axes types (#17309) @bernardobelchior
+- [charts] Expose higher level `useAnimate` hook (#17162) @bernardobelchior
+- [charts] Fix axis types not narrowing (#17321) @bernardobelchior
+- [charts] Fix bar chart with partial data (#17290) @alexfauquette
+- [charts] Fix `useAnimate` test flakiness (#17372) @bernardobelchior
+- [charts] Radar design refinement (#17165) @alexfauquette
+- [charts] Remove unused code (#17310) @bernardobelchior
+- [charts] Remove unused files (#17242) @JCQuintas
+- [charts] Use `useEventCallback` to memoize `onZoomChange` without triggering a re-render (#17233) @JCQuintas
+- [charts] Document series class name (#17362) @bernardobelchior
+- [charts] Add default plugins in `ChartDataProvider` (#17403) @bernardobelchior
+- [charts] Fix chart direction in docs (#17419) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0`, plus:
+
+- [charts-pro] Update zoom using `requestAnimationFrame` (#17137) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0`
+
+- [TreeView] Add React Compiler linting rules (#16357) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.0.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0`.
+
+### Docs
+
+- [docs] Add intro section for Telemetry (#17244) @prakhargupta1
+- [docs] Add migration guide for the picker's `ownerState` changes (#17151) @flaviendelangle
+- [docs] Add What's new section for MUI X v8 (#17397) @joserodolfofreitas
+- [docs] Fix ESM guide (#17280) @oliviertassinari
+- [docs] Fix Vale errors (#17281) @oliviertassinari
+- [docs] Fix country columns throwing on grouping (#17315) @cherniavskii
+- [docs] Fix paths in `ResponsiveChartContainer` migration guide (#17364) @MonstraG
+- [docs] Mention priority support on MUI X docs (#16467) @prakhargupta1
+- [docs] Match title side nav @oliviertassinari
+- [docs] Fix incorrect mention of PDF export (#17277) @oliviertassinari
+- [docs] Fix row spanning lab icon (#17278) @oliviertassinari
+- [docs] Fix header Sentence case consistency (#17274) @oliviertassinari
+- [docs] Flag experimental API (#17279) @oliviertassinari
+- [docs] Fix some 301 redirections @oliviertassinari
+- [docs] Update supported versions table (#17287) @joserodolfofreitas
+
+### Core
+
+- [core] Always use the correct babel runtime (#17241) @alexfauquette
+- [core] Document `TelemetryContextType` (#17282) @oliviertassinari
+- [core] Fix proptypes (#17378) @cherniavskii
+- [core] Remove modern bundles (#17359) @LukasTy
+- [core] Setup testing to work with CSS imports (#17214) @romgrk
+- [core] Testing setup fixes & lints (#17356) @romgrk
+- [core] Simplify the way `__RELEASE_INFO__` is managed (#17416) @LukasTy
+- [code-infra] Align build script with core to handle sideEffects (#17370) @Janpot
+- [code-infra] CI optimization: re-use ffmpeg (#17333) @romgrk
+- [code-infra] Charts `vitest` changes (#17247) @JCQuintas
+- [code-infra] Further datagrid changes for `vitest` (#17251) @JCQuintas
+- [code-infra] Prepare argos script call for required arg (#17371) @Janpot
+- [code-infra] Remove more `clock=fake` from pickers tests (#17225) @JCQuintas
+- [code-infra] Tentative fix for datagrid flaky test (#17289) @JCQuintas
+- [code-infra] Update MUI Internal and slightly cleanup regressions test setup (#17182) @LukasTy
+- [infra] Update support label from 'priority' to 'unknown' (#17288) @michelengelen
+- [release] Major release preparation (#17319) @michelengelen
+- [test] Fix flaky data source aggregation test (#17307, #17311, #17316) @KenanYusuf @cherniavskii @LukasTy
+- [test] Skip flaky aggregation test (#17391) @MBilalShafi
+
 ## 8.0.0-beta.3
 
 _Apr 3, 2025_
@@ -325,7 +617,7 @@ _Mar 18, 2025_
 
 We'd like to offer a big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Add [Time Range Picker](https://next.mui.com/x/react-date-pickers/time-range-picker/) component
+- 🚀 Add [Time Range Picker](https://mui.com/x/react-date-pickers/time-range-picker/) component
 - 🎁 Add support for `@mui/material` version 7 in all X packages
 - 🐞 Bugfixes
 - 🌍 Improve Chinese (zh-CN), (zh-HK), (zh-TW), Czech (cs-CZ), Korean (ko-KR) and Slovak (sk-Sk) locales on the Data Grid
@@ -350,27 +642,27 @@ Below are the highlights of the alpha releases leading up to this beta release:
 
 - ⚛️ React 19 support.
 
-- 🛠️ New and improved Data Grid [Toolbar component](https://next.mui.com/x/react-data-grid/components/toolbar/).
-- 📦 Data Grid [data source](https://next.mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan.
-- 🚫 Add ["No columns" overlay](https://next.mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid.
-- 🍬 Improved design for Data Grid [Header filters](https://next.mui.com/x/react-data-grid/filtering/header-filters/).
-- 🔄 Add Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration).
-- 💫 Support [aggregation with server-side data](https://next.mui.com/x/react-data-grid/server-side-data/aggregation/).
-- 🎁 Support [Server-side lazy loading](https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
-- 🎯 Improved [data caching](https://next.mui.com/x/react-data-grid/server-side-data/#data-caching).
+- 🛠️ New and improved Data Grid [Toolbar component](https://mui.com/x/react-data-grid/components/toolbar/).
+- 📦 Data Grid [data source](https://mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan.
+- 🚫 Add ["No columns" overlay](https://mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid.
+- 🍬 Improved design for Data Grid [Header filters](https://mui.com/x/react-data-grid/filtering/header-filters/).
+- 🔄 Add Data Grid [Scroll restoration](https://mui.com/x/react-data-grid/scrolling/#scroll-restoration).
+- 💫 Support [aggregation with server-side data](https://mui.com/x/react-data-grid/server-side-data/aggregation/).
+- 🎁 Support [Server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid.
+- 🎯 Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching).
 - 🏎️ Improve Data Grid aggregation, Excel export serialization, mount, resize and scrolling performance.
 - 🎨 Improve Data Grid theming and add default background color.
 
-- 📊 New Pro chart: [Funnel](https://next.mui.com/x/react-charts/funnel/).
-- 📊 New Community chart: [Radar](https://next.mui.com/x/react-charts/radar/) is available in preview for testing.
+- 📊 New Pro chart: [Funnel](https://mui.com/x/react-charts/funnel/).
+- 📊 New Community chart: [Radar](https://mui.com/x/react-charts/radar/) is available in preview for testing.
 - 📊 Charts legend is now an HTML element which can be styled more easily.
-- 📊 Create [custom HTML components](https://next.mui.com/x/react-charts/components/#html-components) using chart data.
-- 📊 Refactor Charts [Tooltip customization](https://next.mui.com/x/react-charts/tooltip/#overriding-content).
-- 📊 Improve Charts [composition](https://next.mui.com/x/react-charts/composition/#overview).
-- 📊 Charts support server-side rendering under [some conditions](https://next.mui.com/x/react-charts/getting-started/#server-side-rendering).
+- 📊 Create [custom HTML components](https://mui.com/x/react-charts/components/#html-components) using chart data.
+- 📊 Refactor Charts [Tooltip customization](https://mui.com/x/react-charts/tooltip/#overriding-content).
+- 📊 Improve Charts [composition](https://mui.com/x/react-charts/composition/#overview).
+- 📊 Charts support server-side rendering under [some conditions](https://mui.com/x/react-charts/getting-started/#server-side-rendering).
 - 📊 Add a new API to support multiple axes (decouple `margin` and `axis-size`)
 
-- 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
+- 🔁 Support [automatic parents and children selection](https://mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
 ### Data Grid
 
@@ -412,8 +704,8 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-beta.0`, plus:
 #### Breaking changes
 
 - The `useClearableField` hook has been removed.
-  The custom field component now receives the `clearable` and `onClear` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#useclearablefield).
-- The `ExportedUseClearableFieldProps`, `UseClearableFieldSlots`, `UseClearableFieldSlotProps`, and `UseClearableFieldResponse` types have been removed — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#removed-types).
+  The custom field component now receives the `clearable` and `onClear` props — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#useclearablefield).
+- The `ExportedUseClearableFieldProps`, `UseClearableFieldSlots`, `UseClearableFieldSlotProps`, and `UseClearableFieldResponse` types have been removed — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#removed-types).
 
 #### `@mui/x-date-pickers@8.0.0-beta.0`
 
@@ -508,7 +800,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🚀📊 New Pro Chart: It is now possible to create Funnel charts—perfect for visualizing conversions, sales pipelines and more!
   <img width="418" alt="Screenshot 2025-01-31 at 12 22 31" src="https://github.com/user-attachments/assets/8cd26821-5f11-46bf-a9bb-34d212880a47" />
 - 🎁 The first iteration of the radar chart is available. Features and refinements will be added in the coming weeks.
-- 🛠️ New and improved [Toolbar component](https://next.mui.com/x/react-data-grid/components/toolbar/) for the data grid
+- 🛠️ New and improved [Toolbar component](https://mui.com/x/react-data-grid/components/toolbar/) for the data grid
 - 🐞 Bugfixes
 
 Special thanks go out to the community member for their valuable contributions:
@@ -523,7 +815,7 @@ Following are all team members who have contributed to this release:
 
 #### Breaking changes
 
-- The density selector has been removed from the toolbar. It is still possible to set the density programmatically via the `density` prop. A density selector can be added to a custom toolbar passed to `slots.toolbar`. See [Toolbar component—Settings menu](https://next.mui.com/x/react-data-grid/components/toolbar/#settings-menu) for an example.
+- The density selector has been removed from the toolbar. It is still possible to set the density programmatically via the `density` prop. A density selector can be added to a custom toolbar passed to `slots.toolbar`. See [Toolbar component—Settings menu](https://mui.com/x/react-data-grid/components/toolbar/#settings-menu) for an example.
 - The quick filter is now shown in the toolbar by default. Use `slotProps={{ toolbar: { showQuickFilter: false } }}` to hide it.
 - The `<GridSaveAltIcon />` icon is not exported anymore. Import `SaveAlt` from `@mui/icons-material` instead.
 
@@ -548,7 +840,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.14`.
 #### Breaking changes
 
 - All Date Time Picker variants now use Digital Clock for time editing.
-- Stop passing invalid date to `onChange` when the date is partially filled — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange).
+- Stop passing invalid date to `onChange` when the date is partially filled — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#treat-partially-filled-date-as-null-in-onchange).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.14`
 
@@ -935,9 +1227,9 @@ _Feb 17, 2025_
 
 We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
-- 📦 Data Grid [data source](https://next.mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan
+- 📦 Data Grid [data source](https://mui.com/x/react-data-grid/server-side-data/) is now available in the Community plan
 - ⚡ Improve Data Grid Excel export serialization performance
-- 🚫 Add ["No columns" overlay](https://next.mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid
+- 🚫 Add ["No columns" overlay](https://mui.com/x/react-data-grid/overlays/#no-columns-overlay) to Data Grid
 - 🌍 Improve Polish (pl-PL) and Ukrainian (uk-UA) locales on the Data Grid
 - 🐞 Bugfixes
 
@@ -1038,7 +1330,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.12`, plus:
 
 #### Breaking changes
 
-- The `useSeries` hook family has been stabilized and renamed accordingly — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#stabilize-useseries-and-usexxxseries-hooks-✅)
+- The `useSeries` hook family has been stabilized and renamed accordingly — [Learn more](https://mui.com/x/migration/migration-charts-v7/#stabilize-useseries-and-usexxxseries-hooks-✅)
 
 #### `@mui/x-charts@8.0.0-alpha.12`
 
@@ -1280,8 +1572,8 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.10`.
 
 #### Breaking changes
 
-- The component passed to the `field` slot no longer receives the `ref`, `disabled`, `className`, `sx`, `label`, `name`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections`, `onSelectedSectionsChange` and `inputRef` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-field)
-- The `MuiPickersPopper` theme entry have been renamed `MuiPickerPopper` and some of its props have been removed — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#muipickerspopper)
+- The component passed to the `field` slot no longer receives the `ref`, `disabled`, `className`, `sx`, `label`, `name`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections`, `onSelectedSectionsChange` and `inputRef` props — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-field)
+- The `MuiPickersPopper` theme entry have been renamed `MuiPickerPopper` and some of its props have been removed — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#muipickerspopper)
 
 #### `@mui/x-date-pickers@8.0.0-alpha.10`
 
@@ -1434,12 +1726,12 @@ _Jan 16, 2025_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🍬 Improved design for Data Grid [Header filters](https://next.mui.com/x/react-data-grid/filtering/header-filters/)
+- 🍬 Improved design for Data Grid [Header filters](https://mui.com/x/react-data-grid/filtering/header-filters/)
 
   <img width="100%" alt="Data Grid Header filters" src="https://github.com/user-attachments/assets/74a50cd9-7a55-41fc-a2b8-f8a0d5b9120e" />
 
-- 🔄 Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration)
-- 📊 Charts support server-side rendering under [some conditions](https://next.mui.com/x/react-charts/getting-started/#server-side-rendering)
+- 🔄 Data Grid [Scroll restoration](https://mui.com/x/react-data-grid/scrolling/#scroll-restoration)
+- 📊 Charts support server-side rendering under [some conditions](https://mui.com/x/react-charts/getting-started/#server-side-rendering)
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -1477,9 +1769,9 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.8`.
 
 #### Breaking changes
 
-- The field is now editable if rendered inside a mobile Picker — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#field-editing-on-mobile-pickers)
-- The `useMultiInputDateRangeField`, `useMultiInputTimeRangeField`, and `useMultiInputDateTimeRangeField` hooks have been removed in favor of the new `useMultiInputRangeField` hook — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usemultiinputdaterangefield)
-- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-field)
+- The field is now editable if rendered inside a mobile Picker — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#field-editing-on-mobile-pickers)
+- The `useMultiInputDateRangeField`, `useMultiInputTimeRangeField`, and `useMultiInputDateTimeRangeField` hooks have been removed in favor of the new `useMultiInputRangeField` hook — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#usemultiinputdaterangefield)
+- The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `formatDensity`, `enableAccessibleFieldDOMStructure`, `selectedSections` and `onSelectedSectionsChange` props — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-field)
 
 #### `@mui/x-date-pickers@8.0.0-alpha.8`
 
@@ -1591,15 +1883,15 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.7`, plus:
 
 #### Breaking changes
 
-- The `date-fns` and `date-fns-jalali` date library adapters have been renamed to better align with the current stable major versions — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#✅-rename-date-fns-adapter-imports)
-- Update default `closeOnSelect` and Action Bar `actions` values - [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#update-default-closeonselect-and-action-bar-actions-values)
-- The component passed to the `layout` slot no longer receives the `value`, `onChange` and `onSelectShortcut` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-layout).
-- The component passed to the `toolbar` slot no longer receives the `value`, `onChange` and `isLandscape` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-toolbar).
-- The component passed to the `shortcuts` slot no longer receives the `onChange`, `isValid` and `isLandscape` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-shortcuts).
-- The `PickerShortcutChangeImportance` type has been renamed `PickerChangeImportance` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables-and-types).
-- The component passed to the `layout` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-layout).
-- The component passed to the `toolbar` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-toolbar).
-- The component passed to the `tabs` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slot-tabs).
+- The `date-fns` and `date-fns-jalali` date library adapters have been renamed to better align with the current stable major versions — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#✅-rename-date-fns-adapter-imports)
+- Update default `closeOnSelect` and Action Bar `actions` values - [Learn more](https://mui.com/x/migration/migration-pickers-v7/#update-default-closeonselect-and-action-bar-actions-values)
+- The component passed to the `layout` slot no longer receives the `value`, `onChange` and `onSelectShortcut` props — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-layout).
+- The component passed to the `toolbar` slot no longer receives the `value`, `onChange` and `isLandscape` props — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-toolbar).
+- The component passed to the `shortcuts` slot no longer receives the `onChange`, `isValid` and `isLandscape` props — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-shortcuts).
+- The `PickerShortcutChangeImportance` type has been renamed `PickerChangeImportance` — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#renamed-variables-and-types).
+- The component passed to the `layout` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-layout).
+- The component passed to the `toolbar` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-toolbar).
+- The component passed to the `tabs` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slot-tabs).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.7`
 
@@ -1626,11 +1918,11 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.7`.
 
 #### Breaking changes
 
-- Removed `DefaultChartsLegend` component, since it is now easier to create custom legends — [Learn more](https://next.mui.com/x/react-charts/components/#html-components).
+- Removed `DefaultChartsLegend` component, since it is now easier to create custom legends — [Learn more](https://mui.com/x/react-charts/components/#html-components).
 - The default legend is now an HTML element and can be styled more easily.
 - The `width` and `height` properties of the charts now only apply to the `svg` element, and not their wrappers, this might cause some layout shifts.
-- `slotProps.legend.direction` now accepts `'horizontal' | 'vertical'` instead of `'row' | 'column'` — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#legend-direction-value-change-✅).
-- The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#the-getseriestodisplay-function-was-removed).
+- `slotProps.legend.direction` now accepts `'horizontal' | 'vertical'` instead of `'row' | 'column'` — [Learn more](https://mui.com/x/migration/migration-charts-v7/#legend-direction-value-change-✅).
+- The `getSeriesToDisplay` function was removed in favor of the `useLegend` hook. — [Learn more](https://mui.com/x/migration/migration-charts-v7/#the-getseriestodisplay-function-was-removed).
 
 #### `@mui/x-charts@8.0.0-alpha.7`
 
@@ -1812,9 +2104,9 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.5`.
 
 #### Breaking changes
 
-- The `<PickersMonth />` component has been moved inside the Month Calendar component — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#month-calendar).
+- The `<PickersMonth />` component has been moved inside the Month Calendar component — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#month-calendar).
 
-- The `<PickersYear />` component has been moved inside the Year Calendar component — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#year-calendar).
+- The `<PickersYear />` component has been moved inside the Year Calendar component — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#year-calendar).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.5`
 
@@ -2035,7 +2327,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.3`, plus:
 
 #### Breaking changes
 
-- The `onOpen()` and `onClose()` methods of the `usePickerContext()` hook have been replaced with a single `setOpen` method — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usepickercontext).
+- The `onOpen()` and `onClose()` methods of the `usePickerContext()` hook have been replaced with a single `setOpen` method — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#usepickercontext).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.3`
 
@@ -2087,8 +2379,8 @@ _Nov 29, 2024_
 We'd like to offer a big thanks to the 17 contributors who made this release possible. Here are some highlights ✨:
 
 - 👨🏽‍💻 Improve resize performance on the Data Gird.
-- `<ChartDataProvider />` and `<ChartsSurface />` components are now fully divided — [Learn more](https://next.mui.com/x/react-charts/composition/#overview).
-- Users can create their own HTML components using chart data — [Learn more](https://next.mui.com/x/react-charts/components/#html-components).
+- `<ChartDataProvider />` and `<ChartsSurface />` components are now fully divided — [Learn more](https://mui.com/x/react-charts/composition/#overview).
+- Users can create their own HTML components using chart data — [Learn more](https://mui.com/x/react-charts/components/#html-components).
 - 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
 - 🌍 Improve Dutch locale on the Date and Time Pickers components.
 - 🐞 Bugfixes
@@ -2144,9 +2436,9 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.2`.
 
 #### Breaking changes
 
-- The props received by the `layout` and the `toolbar` slots have been reworked — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#do-not-pass-the-section-type-as-a-generic).
+- The props received by the `layout` and the `toolbar` slots have been reworked — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#do-not-pass-the-section-type-as-a-generic).
 
-- The `TSection` generic of the `FieldRef` type has been replaced with the `TValue` generic — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
+- The `TSection` generic of the `FieldRef` type has been replaced with the `TValue` generic — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
 
 #### `@mui/x-date-pickers@v8.0.0-alpha.2`
 
@@ -2192,6 +2484,8 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 
 ### Docs
 
+<!-- vale MUI.CorrectRererenceCased = NO -->
+
 - [docs] Fix 404 links (#15575) @oliviertassinari
 - [docs] Fix bash comments (#15571) @oliviertassinari
 - [docs] Fix Pickers theme augmentation example (#15672) @LukasTy
@@ -2200,6 +2494,8 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 - [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
 - [docs] Fix `anchorEl` API page for charts (#15625) @oliviertassinari
 - [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+
+<!-- vale MUI.CorrectRererenceCased = YES -->
 
 ### Core
 
@@ -2213,7 +2509,7 @@ _Nov 22, 2024_
 
 We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔧 Refactor Tooltip customisation for charts — [Learn more](https://next.mui.com/x/react-charts/tooltip/#overriding-content).
+- 🔧 Refactor Tooltip customisation for charts — [Learn more](https://mui.com/x/react-charts/tooltip/#overriding-content).
 - ⚛️ React 19 support
 - 🌍 Improve Chinese, Spanish, and Swedish locale on the Data Grid component
 - 🐞 Bugfixes
@@ -2255,8 +2551,8 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.1`, plus:
 
 #### Breaking change
 
-- The `FieldValueType` type has been renamed to `PickerValueType` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
-- The `toolbar` and `layout` slots no longer receive the `disabled` and `readOnly` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
+- The `FieldValueType` type has been renamed to `PickerValueType` — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#renamed-variables).
+- The `toolbar` and `layout` slots no longer receive the `disabled` and `readOnly` props — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
 
 #### `@mui/x-date-pickers@v8.0.0-alpha.1`
 
@@ -2295,7 +2591,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
   - The `theme.styleOverride` is removed for `MuiLineElement`, `MuiAreaElement`, and `MuiBarElement` to improve performance.
     You can still target those elements by using the `MuiLinePlot`, `MuiAreaPlot`, and `MuiBarPlot` and target the appropriate classes `lineElementClasses.root`, `areaElementClasses.root`, `barElementClasses.root`
 
-- Removed the `resolveSizeBeforeRender` prop from all chart components — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-resolvesizebeforerender-prop).
+- Removed the `resolveSizeBeforeRender` prop from all chart components — [Learn more](https://mui.com/x/migration/migration-charts-v7/#remove-resolvesizebeforerender-prop).
 - Removed `width` and `height` props from the `ChartsSurface` component.
 - Removed the `viewport` prop from all charts.
 
@@ -2320,7 +2616,7 @@ Same changes as in `@mui/x-charts@v8.0.0-alpha.1`.
 
 #### Breaking changes
 
-- The Tree Item component can no longer use `publicAPI` methods in the `render` because they are now memoized — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#stop-using-publicapi-methods-in-the-render).
+- The Tree Item component can no longer use `publicAPI` methods in the `render` because they are now memoized — [Learn more](https://mui.com/x/migration/migration-tree-view-v7/#stop-using-publicapi-methods-in-the-render).
 
 #### `@mui/x-tree-view@v8.0.0-alpha.1`
 
@@ -2357,7 +2653,7 @@ _Nov 14, 2024_
 
 We'd like to offer a big thanks to the 22 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
+- 🔁 Support [automatic parents and children selection](https://mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 - 🌍 Improve Greek (el-GR) locale on the Date and Time Pickers components
 - 🌍 Improve Polish (pl-PL) locale on the Data Grid component
 - 🐞 Bugfixes
@@ -2398,14 +2694,14 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 
 #### Breaking changes
 
-- The default DOM structure of the field has changed [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field).
+- The default DOM structure of the field has changed [Learn more](https://mui.com/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field).
 
   - Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
   - Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
 
-- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#stop-passing-utils-and-the-date-object-to-some-translation-keys).
+- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue` — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#stop-passing-utils-and-the-date-object-to-some-translation-keys).
 
-- The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#removed-types).
+- The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#removed-types).
 
   - `UseDateFieldComponentProps`
   - `UseTimeFieldComponentProps`
@@ -2414,11 +2710,11 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
   - `BaseMultiInputFieldProps`
   - `BasePickersTextFieldProps`
 
-- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#remove-tdate-generic).
+- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#remove-tdate-generic).
 
-- Renamed `usePickersTranslations` and `usePickersContext` hooks to have a coherent `Picker` prefix instead of `Pickers` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
+- Renamed `usePickersTranslations` and `usePickersContext` hooks to have a coherent `Picker` prefix instead of `Pickers` — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#renamed-variables).
 
-- The `LicenseInfo` object is no longer exported from the `@mui/x-date-pickers-pro` package — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#stop-using-licenseinfo-from-mui-x-date-pickers-pro).
+- The `LicenseInfo` object is no longer exported from the `@mui/x-date-pickers-pro` package — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#stop-using-licenseinfo-from-mui-x-date-pickers-pro).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.0`
 
@@ -2449,17 +2745,17 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `legend` prop has been removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#legend-props-propagation-✅).
+- The `legend` prop has been removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object — [Learn more](https://mui.com/x/migration/migration-charts-v7/#legend-props-propagation-✅).
 
 - The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
 
-- Removed or renamed multiple props from Series — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#series-properties-renaming).
+- Removed or renamed multiple props from Series — [Learn more](https://mui.com/x/migration/migration-charts-v7/#series-properties-renaming).
 
   - The `highlighted` and `faded` properties of highlightScope have been deprecated in favor of `highlight` and `fade`.
     The deprecated ones are now removed.
   - The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties have been deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
 
-- The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-pie-chart-axes).
+- The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us — [Learn more](https://mui.com/x/migration/migration-charts-v7/#remove-pie-chart-axes).
 
 #### `@mui/x-charts@8.0.0-alpha.0`
 
@@ -2482,15 +2778,15 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#new-api-to-customize-the-tree-item).
+- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook — [Learn more](https://mui.com/x/migration/migration-tree-view-v7/#new-api-to-customize-the-tree-item).
 
-- The `onClick` and `onMouseDown` callbacks of the Tree Item component are now passed to the root element instead of the content — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#behavior-change-on-the-onclick-and-onmousedown-props-of-treeitem).
+- The `onClick` and `onMouseDown` callbacks of the Tree Item component are now passed to the root element instead of the content — [Learn more](https://mui.com/x/migration/migration-tree-view-v7/#behavior-change-on-the-onclick-and-onmousedown-props-of-treeitem).
 
-- Rename the `<TreeItem2 />` component (and related utils) — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#✅-rename-the-treeitem2-and-related-utils).
+- Rename the `<TreeItem2 />` component (and related utils) — [Learn more](https://mui.com/x/migration/migration-tree-view-v7/#✅-rename-the-treeitem2-and-related-utils).
 
-- The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#✅-use-simple-tree-view-instead-of-tree-view).
+- The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API — [Learn more](https://mui.com/x/migration/migration-tree-view-v7/#✅-use-simple-tree-view-instead-of-tree-view).
 
-- The indentation of nested Tree Items is now applied on the content of the element — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#apply-the-indentation-on-the-item-content-instead-of-its-parents-group).
+- The indentation of nested Tree Items is now applied on the content of the element — [Learn more](https://mui.com/x/migration/migration-tree-view-v7/#apply-the-indentation-on-the-item-content-instead-of-its-parents-group).
 
 #### `@mui/x-tree-view@8.0.0-alpha.0`
 
@@ -3045,7 +3341,7 @@ _Jan 17, 2025_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔄 Data Grid [Scroll restoration](https://next.mui.com/x/react-data-grid/scrolling/#scroll-restoration)
+- 🔄 Data Grid [Scroll restoration](https://v7.mui.com/x/react-data-grid/scrolling/#scroll-restoration)
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -6728,9 +7024,9 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
    />
   ```
 
-- The headless field hooks (e.g.: `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
+- The headless field hooks (for example `useDateField()`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
   This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure.
-  Learn more about this new accessible DOM structure in the [v8 migration guide](https://next.mui.com/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field).
+  Learn more about this new accessible DOM structure in the [v8 migration guide](https://v7.mui.com/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field).
 
   When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
 
@@ -6832,11 +7128,11 @@ _Feb 16, 2024_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Charts get a [built in grid](https://next.mui.com/x/react-charts/axis/#grid)
+- 🎁 Charts get a [built in grid](https://v7.mui.com/x/react-charts/axis/#grid)
 
   <img src="https://github.com/mui/mui-x/assets/45398769/74299f54-f020-4135-b38c-dc88a230db30" width="510" alt="Charts Grid" />
 
-- 🎛️ Charts get a [Gauge component](https://next.mui.com/x/react-charts/gauge/).
+- 🎛️ Charts get a [Gauge component](https://v7.mui.com/x/react-charts/gauge/).
 
   <img src="https://github.com/mui/mui-x/assets/45398769/fb7a94b5-bef6-4fc2-a0cd-d6ff5b60fa8b" width="510" alt="Guage Chart" />
 
@@ -6848,7 +7144,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Breaking changes
 
-- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](https://next.mui.com/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in place.
+- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](https://v7.mui.com/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in place.
 
 #### `@mui/x-data-grid@7.0.0-beta.3`
 
@@ -6951,7 +7247,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.2`.
 
 #### Breaking changes
 
-- If you're using the [commercial license](https://next.mui.com/x/introduction/licensing), you need to update the import path:
+- If you're using the [commercial license](https://v7.mui.com/x/introduction/licensing), you need to update the import path:
 
   ```diff
   -import { LicenseInfo } from '@mui/x-license-pro';
@@ -7003,10 +7299,10 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🚀 All charts have click handlers (#11411) @alexfauquette
   Test their respective documentation demonstrations to know more about the data format:
 
-  - [Scatter Chart](https://next.mui.com/x/react-charts/scatter/#click-event)
-  - [Line Chart](https://next.mui.com/x/react-charts/lines/#click-event)
-  - [Bar Chart](https://next.mui.com/x/react-charts/bars/#click-event)
-  - [Pie Chart](https://next.mui.com/x/react-charts/pie/#click-event)
+  - [Scatter Chart](https://v7.mui.com/x/react-charts/scatter/#click-event)
+  - [Line Chart](https://v7.mui.com/x/react-charts/lines/#click-event)
+  - [Bar Chart](https://v7.mui.com/x/react-charts/bars/#click-event)
+  - [Pie Chart](https://v7.mui.com/x/react-charts/pie/#click-event)
 
   Big thanks to @giladappsforce and @yaredtsy for their contribution on exploring this feature.
 
@@ -7128,7 +7424,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.1`.
 
 - The line chart now have animation by default.
   You can disable it with `skipAnimation` prop.
-  See [animation documentation](next.mui.com/x/react-charts/lines/#animation) for more information.
+  See [animation documentation](v7.mui.com/x/react-charts/lines/#animation) for more information.
 
 - Pie charts `onClick` get renamed `onItemClick` for consistency with other charts click callback.
 
@@ -7163,7 +7459,7 @@ We are glad to announce MUI X v7 beta!
 This version has several improvements, bug fixes, and exciting features 🎉.
 We want to offer a big thanks to the 7 contributors who made this release possible ✨:
 
-- 🚀 Release the [Date Time Range Picker](https://next.mui.com/x/react-date-pickers/date-time-range-picker/) component (#9528) @LukasTy
+- 🚀 Release the [Date Time Range Picker](https://v7.mui.com/x/react-date-pickers/date-time-range-picker/) component (#9528) @LukasTy
 
   <img src="https://github.com/mui/mui-x/assets/4941090/122bb7bc-5e72-4e11-a8e5-96f3026de922" width="510" height="652" alt="Date Time Range Picker example" />
 
@@ -7178,7 +7474,7 @@ We want to offer a big thanks to the 7 contributors who made this release possib
 
 #### Breaking changes
 
-- The columns management component has been redesigned and the component was extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component above the headers as a panel. As a result, a new slot `columnsManagement` and the related prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](https://next.mui.com/material-ui/react-popper/) component under the hood.
+- The columns management component has been redesigned and the component was extracted from the `ColumnsPanel` which now only serves as a wrapper to display the component above the headers as a panel. As a result, a new slot `columnsManagement` and the related prop `slotProps.columnsManagement` have been introduced. The props corresponding to the columns management component which were previously passed to the prop `slotProps.columnsPanel` should now be passed to `slotProps.columnsManagement`. `slotProps.columnsPanel` could still be used to override props corresponding to the `Panel` component used in `ColumnsPanel` which uses [`Popper`](https://v7.mui.com/material-ui/react-popper/) component under the hood.
 
   ```diff
    <DataGrid
@@ -7262,7 +7558,7 @@ _Jan 19, 2024_
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 The Data Grid headers have been refactored to bring immense improvements to scrolling, state management, and overall performance of the grid.
-- ⚙️ The Data Grid disabled column-specific features like filtering, sorting, grouping, etc. could now be accessed programmatically. See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
+- ⚙️ The Data Grid disabled column-specific features like filtering, sorting, grouping, etc. could now be accessed programmatically. See the related [docs](https://v7.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
 - 🚀 Uplift the Simple Tree View customization examples (#11424) @noraleonte
 - 🌍 Add Croatian (hr-HR), Portuguese (pt-PT), and Chinese (Hong Kong) (zh-HK) locales (#11668) on the Data Grid @BCaspari
 - 🐞 Bugfixes
@@ -7295,10 +7591,10 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
      </div>
     ```
 
-  - When the [Tree data](https://next.mui.com/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
+  - When the [Tree data](https://v7.mui.com/x/react-data-grid/tree-data/) feature is used, the grid role is now `role="treegrid"` instead of `role="grid"`.
   - The Data Grid cells now have `role="gridcell"` instead of `role="cell"`.
 
-  - The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://next.mui.com/x/react-data-grid/components/#toolbar) for more details.
+  - The buttons in toolbar composable components `GridToolbarColumnsButton`, `GridToolbarFilterButton`, `GridToolbarDensity`, and `GridToolbarExport` are now wrapped with a tooltip component and have a consistent interface. To override some props corresponding to the toolbar buttons or their corresponding tooltips, you can use the `slotProps` prop. Following is an example diff. See [Toolbar section](https://v7.mui.com/x/react-data-grid/components/#toolbar) for more details.
 
     ```diff
       function CustomToolbar() {
@@ -7329,7 +7625,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - The column grouping selectors `gridFocusColumnGroupHeaderSelector` and `gridTabIndexColumnGroupHeaderSelector` are no longer prefixed with `unstable_`.
 
-- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://next.mui.com/x/react-data-grid/api-object/). See the related [docs](https://next.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
+- The disabled column specific features like `hiding`, `sorting`, `filtering`, `pinning`, `row grouping`, etc could now be controlled programmatically using `initialState`, respective controlled models, or the [API object](https://v7.mui.com/x/react-data-grid/api-object/). See the related [docs](https://v7.mui.com/x/react-data-grid/api-object/#access-the-disabled-column-features) section.
 
 #### `@mui/x-data-grid@7.0.0-alpha.9`
 
@@ -7924,7 +8220,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - The `instanceId` prop is now required for state selectors.
   This prop is used to distinguish between multiple Data Grid instances on the same page.
-  See [migration docs](https://next.mui.com/x/migration/migration-data-grid-v6/#instanceid-prop-is-required-for-state-selectors) for more details.
+  See [migration docs](https://v7.mui.com/x/migration/migration-data-grid-v6/#instanceid-prop-is-required-for-state-selectors) for more details.
 
 #### `@mui/x-data-grid@7.0.0-alpha.5`
 
@@ -8078,9 +8374,9 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 🚀 The scatter charts now use voronoi to trigger items
 
   Users needed to hover the item to highlight the scatter item or show the tooltip.
-  Now they can interact with data by triggering the closest element. See the [docs page](https://next.mui.com/x/react-charts/scatter/#interaction) for more info.
+  Now they can interact with data by triggering the closest element. See the [docs page](https://v7.mui.com/x/react-charts/scatter/#interaction) for more info.
 
-- 📚 Add [Pickers FAQ page](https://next.mui.com/x/react-date-pickers/faq/)
+- 📚 Add [Pickers FAQ page](https://v7.mui.com/x/react-date-pickers/faq/)
 - 🎉 The Data Grid Header filters feature is now stable
 - 🌍 Improve Danish (da-DK) locale on Data Grid
 - 🐞 Bugfixes
@@ -8090,7 +8386,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 #### Breaking changes
 
 - The header filters feature is now stable. `unstable_` prefix is removed from prop `headerFilters` and related exports.
-  See [migration docs](https://next.mui.com/x/migration/migration-data-grid-v6/#filtering) for more details.
+  See [migration docs](https://v7.mui.com/x/migration/migration-data-grid-v6/#filtering) for more details.
 
 - The `GridColDef['type']` has been narrowed down to only accept the built-in column types.
   TypeScript users need to use the `GridColDef` interface when defining columns:
@@ -8176,7 +8472,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - The clipboard related exports `ignoreValueFormatterDuringExport` and `splitClipboardPastedText` are no longer prefixed with `unstable_`.
 
-- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the Data Grid exports. Use the [`filterDebounceMs`](https://next.mui.com/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
+- The deprecated constants `SUBMIT_FILTER_STROKE_TIME` and `SUBMIT_FILTER_DATE_STROKE_TIME` have been removed from the Data Grid exports. Use the [`filterDebounceMs`](https://v7.mui.com/x/api/data-grid/data-grid/#data-grid-prop-filterDebounceMs) prop to customize filter debounce time.
 
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 
@@ -8201,7 +8497,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   | `unstable_setCellSelectionModel`   | `setCellSelectionModel`   |
 
 - The Quick Filter now ignores hidden columns by default.
-  See [including hidden columns](https://next.mui.com/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
+  See [including hidden columns](https://v7.mui.com/x/react-data-grid/filtering/quick-filter/#including-hidden-columns) section for more details.
 
 #### `@mui/x-data-grid@7.0.0-alpha.3`
 
@@ -8370,7 +8666,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.2`.
   The `shouldDisableClock` prop received `value` as a `number` of hours, minutes, or seconds.
   Instead, the `shouldDisableTime` prop receives the date object (based on the used adapter).
 
-  You can read more about the deprecation of this prop in [v6 migration guide](https://next.mui.com//x/migration/migration-pickers-v5/#%E2%9C%85-rename-or-refactor-shoulddisabletime-prop).
+  You can read more about the deprecation of this prop in [v6 migration guide](https://v7.mui.com/x/migration/migration-pickers-v5/#%E2%9C%85-rename-or-refactor-shoulddisabletime-prop).
 
   ```diff
    <DateTimePicker

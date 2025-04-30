@@ -6,7 +6,7 @@ components: SparkLineChart
 
 # Charts - Sparkline
 
-<p class="description">Sparkline charts can provide an overview of data trends.</p>
+<p class="description">Sparkline chart can provide an overview of data trends.</p>
 
 ## Basics
 

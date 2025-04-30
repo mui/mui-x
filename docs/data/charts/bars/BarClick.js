@@ -38,7 +38,7 @@ const barChartsParams = {
       },
     },
   ],
-  xAxis: [{ data: ['0', '3', '6', '9', '12'], scaleType: 'band', id: 'axis1' }],
+  xAxis: [{ data: ['0', '3', '6', '9', '12'], id: 'axis1' }],
   height: 400,
 };
 

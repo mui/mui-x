@@ -12,10 +12,7 @@ import {
   getDateRangePickerDayUtilityClass,
   dateRangePickerDayClasses,
 } from './dateRangePickerDayClasses';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { DateRangePickerDayOwnerState, DateRangePickerDayProps } from './DateRangePickerDay.types';
-
-const releaseInfo = getReleaseInfo();
 
 const useUtilityClasses = (
   classes: Partial<DateRangePickerDayClasses> | undefined,
@@ -283,7 +280,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     ...other
   } = props;
 
-  useLicenseVerifier('x-date-pickers-pro', releaseInfo);
+  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
   const utils = useUtils();
 
   const shouldRenderHighlight = isHighlighting && !outsideCurrentMonth;

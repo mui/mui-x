@@ -13,6 +13,8 @@ export type ChartContainerProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 > = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
+export type ChartApi = NonNullable<NonNullable<ChartContainerProps['apiRef']>['current']>;
+
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
@@ -104,6 +106,10 @@ ChartContainer.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.

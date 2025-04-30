@@ -109,7 +109,6 @@ const templateAreas = (reverse?: boolean) => {
 const RootElement = styled('ul', {
   name: 'MuiContinuousColorLegend',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ContinuousColorLegendProps }>(({ theme, ownerState }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
