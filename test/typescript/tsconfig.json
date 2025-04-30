@@ -3,7 +3,7 @@
     "allowJs": true,
     "isolatedModules": true,
     "moduleResolution": "bundler",
-    "jsx": "react-jsx",
+    "jsx": "react",
     "module": "es2022",
     "noEmit": true,
     "noUnusedLocals": true,
