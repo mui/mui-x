@@ -54,9 +54,3 @@ export function createXMochaHooks(coreMochaHooks = {}) {
 
   return mochaHooks;
 }
-
-// So we can mock files without having to have a global override in vitest
-// This shows an error locally, but pnpm eslint:ci doesn't flag it as an error...
-globalThis.vi = {
-  mock: () => {},
-};
