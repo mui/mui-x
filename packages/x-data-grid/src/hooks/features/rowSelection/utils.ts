@@ -48,55 +48,57 @@ function getGridRowGroupSelectableDescendants(
   return descendants;
 }
 
-export const checkboxPropsSelector = createSelector(
-  gridRowTreeSelector,
-  gridFilteredRowsLookupSelector,
-  gridRowSelectionManagerSelector,
-  (
-    rowTree,
-    filteredRowsLookup,
-    rowSelectionManager,
-    { groupId, autoSelectParents }: { groupId: GridRowId; autoSelectParents: boolean },
-  ) => {
-    const groupNode = rowTree[groupId];
-    if (!groupNode || groupNode.type !== 'group' || rowSelectionManager.has(groupId)) {
-      return {
-        isIndeterminate: false,
-        isChecked: rowSelectionManager.has(groupId),
-      };
-    }
+// TODO v8: Use `createSelectorV8`
+export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: boolean) {
+  return createSelector(
+    gridRowTreeSelector,
+    gridSortedRowIdsSelector,
+    gridFilteredRowsLookupSelector,
+    gridRowSelectionManagerSelector,
+    (rowTree, sortedRowIds, filteredRowsLookup, rowSelectionManager) => {
+      const groupNode = rowTree[groupId];
+      if (!groupNode || groupNode.type !== 'group') {
+        return {
+          isIndeterminate: false,
+          isChecked: rowSelectionManager.has(groupId),
+        };
+      }
 
-    let hasSelectedDescendant = false;
-    let hasUnSelectedDescendant = false;
+      if (rowSelectionManager.has(groupId)) {
+        return {
+          isIndeterminate: false,
+          isChecked: true,
+        };
+      }
 
-    const traverseDescendants = (itemToTraverseId: GridRowId) => {
-      if (
-        filteredRowsLookup[itemToTraverseId] === false ||
-        // Perf: Skip checking the rest of the descendants if we already
-        // know that there is a selected and an unselected descendant
-        (hasSelectedDescendant && hasUnSelectedDescendant)
+      let selectableDescendantsCount = 0;
+      let selectedDescendantsCount = 0;
+      const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
+      for (
+        let index = startIndex;
+        index < sortedRowIds.length && rowTree[sortedRowIds[index]]?.depth > groupNode.depth;
+        index += 1
       ) {
-        return;
+        const id = sortedRowIds[index];
+        if (filteredRowsLookup[id] !== false) {
+          selectableDescendantsCount += 1;
+          if (rowSelectionManager.has(id)) {
+            selectedDescendantsCount += 1;
+          }
+        }
       }
-      const node = rowTree[itemToTraverseId];
-      if (node?.type === 'group') {
-        node.children.forEach(traverseDescendants);
-      }
-      if (rowSelectionManager.has(itemToTraverseId)) {
-        hasSelectedDescendant = true;
-      } else {
-        hasUnSelectedDescendant = true;
-      }
-    };
-
-    traverseDescendants(groupId);
-
-    return {
-      isIndeterminate: hasSelectedDescendant && hasUnSelectedDescendant,
-      isChecked: autoSelectParents ? hasSelectedDescendant && !hasUnSelectedDescendant : false,
-    };
-  },
-);
+      return {
+        isIndeterminate:
+          selectedDescendantsCount > 0 &&
+          (selectedDescendantsCount < selectableDescendantsCount ||
+            !rowSelectionManager.has(groupId)),
+        isChecked: autoSelectParents
+          ? selectedDescendantsCount > 0
+          : rowSelectionManager.has(groupId),
+      };
+    },
+  );
+}
 
 export function isMultipleRowSelectionEnabled(
   props: Pick<
