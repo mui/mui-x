@@ -1,6 +1,14 @@
-import { CurveFactory, CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
-class FunnelBump implements CurveGenerator {
+/**
+ * This is a custom "bump" curve generator.
+ *
+ * It takes into account the gap between the points and draws a smooth curve between them.
+ *
+ * It is based on the d3-shape bump curve generator.
+ * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/bump.js
+ */
+export class Bump implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private line: number = NaN;
@@ -81,23 +89,3 @@ class FunnelBump implements CurveGenerator {
     this.y = y;
   }
 }
-
-interface FunnelCurveOptions {
-  gap?: number;
-}
-
-const funnelHorizontalBumpCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
-  const { gap = 0 } = options;
-  return (context) => {
-    return new FunnelBump(context as any, true, gap);
-  };
-};
-
-const funnelVerticalBumpCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
-  const { gap = 0 } = options;
-  return (context) => {
-    return new FunnelBump(context as any, false, gap);
-  };
-};
-
-export { funnelHorizontalBumpCurve, funnelVerticalBumpCurve, FunnelCurveOptions };

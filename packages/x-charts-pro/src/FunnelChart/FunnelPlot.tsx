@@ -1,22 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
-import { CurveFactory, line as d3Line } from '@mui/x-charts-vendor/d3-shape';
+import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { ComputedAxis, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
-import { FunnelItemIdentifier, FunnelDataPoints, FunnelCurveType } from './funnel.types';
+import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
-import {
-  funnelHorizontalStepCurve,
-  funnelVerticalStepCurve,
-  FunnelCurveOptions,
-} from './funnelStepCurve';
 import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
-import { funnelHorizontalBumpCurve, funnelVerticalBumpCurve } from './funnelBumpCurve';
-import { funnelHorizontalLinearCurve, funnelVerticalLinearCurve } from './funnelLinearCurve';
+import { getFunnelCurve } from './curves';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -36,22 +30,6 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
     funnelItemIdentifier: FunnelItemIdentifier,
   ) => void;
 }
-
-const getFunnelCurve = (
-  curve: FunnelCurveType | undefined,
-  isHorizontal: boolean,
-  gap: number = 0,
-): CurveFactory => {
-  const options: FunnelCurveOptions = { gap };
-  if (curve === 'step') {
-    return isHorizontal ? funnelHorizontalStepCurve(options) : funnelVerticalStepCurve(options);
-  }
-  if (curve === 'bump') {
-    return isHorizontal ? funnelHorizontalBumpCurve(options) : funnelVerticalBumpCurve(options);
-  }
-
-  return isHorizontal ? funnelHorizontalLinearCurve(options) : funnelVerticalLinearCurve(options);
-};
 
 const useAggregatedData = (gap: number | undefined) => {
   const seriesData = useFunnelSeriesContext();

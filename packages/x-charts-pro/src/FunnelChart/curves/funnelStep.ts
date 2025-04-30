@@ -1,13 +1,15 @@
-import { CurveFactory, CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 /**
  * This is a custom "step" curve generator for the funnel chart.
  * It is used to draw the funnel using "rectangles" without having to rework the rendering logic.
  *
+ * It takes into account the gap between the points and draws a smooth curve between them.
+ *
  * It is based on the d3-shape step curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/step.js
  */
-class FunnelStep implements CurveGenerator {
+export class FunnelStep implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private line: number = NaN;
@@ -92,23 +94,3 @@ class FunnelStep implements CurveGenerator {
     this.y = y;
   }
 }
-
-interface FunnelCurveOptions {
-  gap?: number;
-}
-
-const funnelHorizontalStepCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
-  const { gap = 0 } = options;
-  return (context) => {
-    return new FunnelStep(context as any, true, gap);
-  };
-};
-
-const funnelVerticalStepCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
-  const { gap = 0 } = options;
-  return (context) => {
-    return new FunnelStep(context as any, false, gap);
-  };
-};
-
-export { funnelHorizontalStepCurve, funnelVerticalStepCurve, FunnelCurveOptions };

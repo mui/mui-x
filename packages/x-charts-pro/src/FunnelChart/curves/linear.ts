@@ -1,4 +1,4 @@
-import { CurveFactory, CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 // From point1 to point2, get the x value from y
 const xFromY =
@@ -33,7 +33,15 @@ const yFromX =
     return Number.isNaN(result) ? 0 : result;
   };
 
-class FunnelLinear implements CurveGenerator {
+/**
+ * This is a custom "linear" curve generator.
+ *
+ * It takes into account the gap between the points and draws a smooth curve between them.
+ *
+ * It is based on the d3-shape linear curve generator.
+ * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/linear.js
+ */
+export class Linear implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private line: number = NaN;
@@ -126,23 +134,3 @@ class FunnelLinear implements CurveGenerator {
     this.y = y;
   }
 }
-
-interface FunnelCurveOptions {
-  gap?: number;
-}
-
-const funnelHorizontalLinearCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
-  const { gap = 0 } = options;
-  return (context) => {
-    return new FunnelLinear(context as any, true, gap);
-  };
-};
-
-const funnelVerticalLinearCurve = (options: FunnelCurveOptions = {}): CurveFactory => {
-  const { gap = 0 } = options;
-  return (context) => {
-    return new FunnelLinear(context as any, false, gap);
-  };
-};
-
-export { funnelHorizontalLinearCurve, funnelVerticalLinearCurve, FunnelCurveOptions };
