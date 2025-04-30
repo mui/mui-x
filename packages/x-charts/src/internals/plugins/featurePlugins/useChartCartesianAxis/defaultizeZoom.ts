@@ -11,7 +11,7 @@ const defaultZoomOptions = {
   maxSpan: 100,
   panning: true,
   filterMode: 'keep',
-  overview: { enabled: false, size: DEFAULT_ZOOM_SLIDER_SIZE },
+  slider: { enabled: false, size: DEFAULT_ZOOM_SLIDER_SIZE },
 } satisfies Omit<DefaultizedZoomOptions, 'axisId' | 'axisDirection'>;
 
 export const defaultizeZoom = (
@@ -28,7 +28,7 @@ export const defaultizeZoom = (
       axisId,
       axisDirection,
       ...defaultZoomOptions,
-      slider: { ...defaultZoomOptions.overview },
+      slider: { ...defaultZoomOptions.slider },
     };
   }
 
@@ -37,6 +37,6 @@ export const defaultizeZoom = (
     axisDirection,
     ...defaultZoomOptions,
     ...zoom,
-    slider: { ...defaultZoomOptions.overview, ...zoom.slider },
+    slider: { ...defaultZoomOptions.slider, ...zoom.slider },
   };
 };

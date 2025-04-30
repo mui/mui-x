@@ -64,7 +64,7 @@ export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = Sca
 export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slider'>> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
-  slider: NonNullable<ZoomOptions['slider']>;
+  slider: NonNullable<Required<ZoomOptions['slider']>>;
 }
 
 export interface UseChartCartesianAxisState {
