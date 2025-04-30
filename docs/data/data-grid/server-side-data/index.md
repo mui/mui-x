@@ -61,10 +61,9 @@ But this example only scratches the surface of the complexity when working with 
 
 - Performance optimization
 - Data caching and request deduping
-- More complex use cases on the server such as grouping and tree data
-- Server-side row editing
+- Row grouping and tree data
 - Lazy-loading data
-- Handling updates to the data such as row editing and row deletion
+- Handling updates to the data (row editing and deletion)
 - On-demand data refetching
 
 Trying to tackle each of these features invidually can make the code overly complex and difficult to maintain.
@@ -75,10 +74,10 @@ For the Data Grid, the solution to the situation described above is a centralize
 This provides an interface for communications between the Data Grid on the client and the actual data on the server.
 
 The Data Source has an initial set of required methods that you must implement.
-The Data Grid uses these methods internally to fetch subset of data as needed.
+The Data Grid uses these methods internally to fetch subsets of data as needed.
 
 The following code snippet illustrates a minimal `GridDataSource` interface configuration.
-More complex implementations with properties like `getChildrenCount()` and `getGroupKey()` are discussed in subsequent sections of this doc.
+More complex implementations with properties like `getChildrenCount()` and `getGroupKey()` are discussed in subsequent sections of this document.
 
 ```tsx
 interface GridDataSource {
@@ -179,9 +178,9 @@ The Data Source caches fetched data by default.
 This means that if the user navigates to a page or expands a node that has already been fetched, the Grid will not call the `getRows()` function again to avoid unnecessary calls to the server.
 
 By default, the Grid uses `GridDataSourceCacheDefault`, which is a simple in-memory cache that stores the data in a plain object.
-You can see its implemention in the [Data Source demo above](#with-data-source).
+You can see its implemention in the [Data Source demo above](#with-the-data-source).
 
-### Improving the cache hit rate
+### Improve the cache hit rate
 
 To increase the cache hit rate, the Data Grid splits `getRows()` results into chunks before storing them in the cache.
 For the requests that follow, chunks are combined as needed to recreate the response.
@@ -193,23 +192,23 @@ We recommend using values that are multiples of the lowest value—even better i
 
 Here are some examples:
 
-1. Best scenario - `pageSizeOptions={[5, 10, 50, 100]}`
+- **Best-case scenario** – `pageSizeOptions={[5, 10, 50, 100]}`
 
-   In this case the chunk size is 5, which means that with `pageSize={100}` there are 20 cache records stored.
-   Retrieving data for any other `pageSize` up to the first 100 records results in a cache hit, since the whole dataset can be made of the existing chunks.
+  In this case the chunk size is 5, which means that with `pageSize={100}` there are 20 cache records stored.
+  Retrieving data for any other `pageSize` up to the first 100 records results in a cache hit, since the whole dataset can be made of the existing chunks.
 
-2. Parts of the data missing - `pageSizeOptions={[10, 20, 50]}`
+- **Parts of the data missing** – `pageSizeOptions={[10, 20, 50]}`
 
-   Loading the first page with `pageSize={50}` results in 5 cache records.
-   This works well with `pageSize={10}`, but not as well with `pageSize={20}`.
-   Loading the third page with `pageSize={20}` results in a new request being made, even though half of the data is already in the cache.
+  Loading the first page with `pageSize={50}` results in 5 cache records.
+  This works well with `pageSize={10}`, but not as well with `pageSize={20}`.
+  Loading the third page with `pageSize={20}` results in a new request being made, even though half of the data is already in the cache.
 
-3. Incompatible page sizes - `pageSizeOptions={[7, 15, 40]}`
+- **Incompatible page sizes** – `pageSizeOptions={[7, 15, 40]}`
 
-   In this situation, the chunk size is 7.
-   Retrieving the first page with `pageSize={15}` creates chunks split into `[7, 7, 1]` records.
-   Loading the second page creates three new chunks (again `[7, 7, 1]`), but now the third chunk from the first request has an overlap of 1 record with the first chunk of the second request.
-   These chunks with 1 record can only be used as the last piece of a request for `pageSize={15}` and are useless in all other cases.
+  In this situation, the chunk size is 7.
+  Retrieving the first page with `pageSize={15}` creates chunks split into `[7, 7, 1]` records.
+  Loading the second page creates three new chunks (again `[7, 7, 1]`), but now the third chunk from the first request has an overlap of 1 record with the first chunk of the second request.
+  These chunks with 1 record can only be used as the last piece of a request for `pageSize={15}` and are useless in all other cases.
 
 In the examples above, `sortModel` and `filterModel` remain unchanged.
 Changing these would require a new response to be retrieved and stored in the chunks.
@@ -217,7 +216,7 @@ Changing these would require a new response to be retrieved and stored in the ch
 ### Customize the cache lifetime
 
 The `GridDataSourceCacheDefault` has a default time to live (TTL) of 5 minutes.
-To customize this, pass the `ttl` option with a numerical value in milliseconds to the `GridDataSourceCacheDefault` constructor, then pass that as the `dataSourceCache` prop.
+To customize this, pass the `ttl` option with a numerical value in milliseconds to the `GridDataSourceCacheDefault` constructor, then pass that to the `dataSourceCache` prop.
 
 ```tsx
 import { GridDataSourceCacheDefault } from '@mui/x-data-grid';
@@ -262,7 +261,7 @@ The Data Source supports an optional `updateRow()` method for updating data on t
 
 This method returns a promise that resolves when the row is updated.
 If the promise resolves, the Grid updates the row and mutates the cache.
-If there's an error, `onDataSourceError()` is triggered with the error object containing the params as mentioned in the [Error handling](#error-handling) section.
+If there's an error, `onDataSourceError()` is triggered with the error object containing the params described in the [Error handling section](#error-handling) that follows.
 
 ```diff
  const dataSource: GridDataSource = {
@@ -297,15 +296,13 @@ You can manually trigger a refetch by calling the `dataSource.fetchRows()` API m
 
 You can handle errors with the Data Source by providing an error handler function with `onDataSourceError()`.
 This gets called whenever there's an error in fetching or updating the data.
-
 This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
-
 Each error type has a corresponding `error.params` type which is passed as an argument to the callback:
 
-| Error type           | Type of `error.params` |
-| :------------------- | :--------------------- |
-| `GridGetRowsError`   | `GridGetRowsParams`    |
-| `GridUpdateRowError` | `GridUpdateRowParams`  |
+| **Error type**       | `error.params` **type** |
+| :------------------- | :---------------------- |
+| `GridGetRowsError`   | `GridGetRowsParams`     |
+| `GridUpdateRowError` | `GridUpdateRowParams`   |
 
 ```tsx
 <DataGrid
