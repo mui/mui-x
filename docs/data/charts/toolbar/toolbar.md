@@ -25,3 +25,11 @@ For example, if the chart is not zoomable, the zoom buttons will not be displaye
 {{"demo": "ChartsToolbar.js"}}
 
 ## Composition 🚧
+
+## Custom elements
+
+The toolbar can be customized to use custom elements instead of the default ones from Material UI.
+
+To do so, you can use the `slots` property of the `toolbar` slot to override the default elements.
+
+{{"demo": "ChartsToolbarCustomElements.js"}}
