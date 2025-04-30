@@ -11,6 +11,7 @@ import type {
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -534,7 +535,9 @@ export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = AxisConfi
   S,
   V,
   ChartsXAxisProps
->;
+> & {
+  zoom: DefaultizedZoomOptions | undefined;
+};
 /**
  * The y-axis configuration with missing values filled with default values.
  */
@@ -542,4 +545,6 @@ export type DefaultedYAxis<S extends ScaleName = ScaleName, V = any> = AxisConfi
   S,
   V,
   ChartsYAxisProps
->;
+> & {
+  zoom: DefaultizedZoomOptions | undefined;
+};

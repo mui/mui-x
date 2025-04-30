@@ -1,3 +1,5 @@
+import { defaultizeZoom } from './defaultizeZoom';
+import { ZoomOptions } from './zoom.types';
 import {
   DEFAULT_X_AXIS_KEY,
   DEFAULT_Y_AXIS_KEY,
@@ -10,8 +12,10 @@ import { XAxis, YAxis } from '../../../../models';
 import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
 
+type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
+
 export function defaultizeXAxis(
-  inAxes: readonly XAxis[] | undefined,
+  inAxes: readonly InXAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
 ): DefaultedXAxis[] {
   const offsets = {
@@ -34,23 +38,22 @@ export function defaultizeXAxis(
     const defaultHeight =
       DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
+    const id = axisConfig.id ?? `defaultized-x-axis-${index}`;
     const sharedConfig = {
-      id: `defaultized-x-axis-${index}`,
       offset: offsets[position],
       ...axisConfig,
+      id,
       position,
       height: axisConfig.height ?? defaultHeight,
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'x'),
     };
 
     // Increment the offset for the next axis
     if (position !== 'none') {
       offsets[position] += sharedConfig.height;
 
-      const overview = typeof axisConfig.zoom === 'object' ? axisConfig?.zoom?.overview : undefined;
-      const hasOverview = overview?.enabled;
-
-      if (hasOverview) {
-        offsets[position] += overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
+      if (sharedConfig.zoom?.overview?.enabled) {
+        offsets[position] += sharedConfig.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
       }
     }
 
@@ -73,8 +76,10 @@ export function defaultizeXAxis(
   return parsedAxes;
 }
 
+type InYAxis = YAxis & { zoom?: boolean | ZoomOptions };
+
 export function defaultizeYAxis(
-  inAxes: readonly YAxis[] | undefined,
+  inAxes: readonly InYAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
 ): DefaultedYAxis[] {
   const offsets = { right: 0, left: 0, none: 0 };
@@ -93,23 +98,22 @@ export function defaultizeYAxis(
     const defaultWidth =
       DEFAULT_AXIS_SIZE_WIDTH + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
+    const id = axisConfig.id ?? `defaultized-y-axis-${index}`;
     const sharedConfig = {
-      id: `defaultized-y-axis-${index}`,
       offset: offsets[position],
       ...axisConfig,
+      id,
       position,
       width: axisConfig.width ?? defaultWidth,
-    };
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'y'),
+    } satisfies DefaultedYAxis;
 
     // Increment the offset for the next axis
     if (position !== 'none') {
       offsets[position] += sharedConfig.width;
 
-      const overview = typeof axisConfig.zoom === 'object' ? axisConfig?.zoom?.overview : undefined;
-      const hasOverview = overview?.enabled;
-
-      if (hasOverview) {
-        offsets[position] += overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
+      if (sharedConfig.zoom?.overview?.enabled) {
+        offsets[position] += sharedConfig.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
       }
     }
 
