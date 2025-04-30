@@ -13,7 +13,7 @@ const ToolbarRoot = styled('div', {
   padding: theme.spacing(0.5),
   minHeight: 44,
   boxSizing: 'border-box',
-  border: `1px solid ${(theme.vars || theme).palette.grey[300]}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: 4,
 }));
 

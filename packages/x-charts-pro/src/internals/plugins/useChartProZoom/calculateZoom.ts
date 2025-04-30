@@ -25,7 +25,7 @@ export function calculateZoom<T extends Readonly<Pick<ZoomData, 'start' | 'end'>
   if (delta > 0) {
     delta = Math.min(delta, (span - minSpan) / 2);
   } else {
-    delta = Math.min(delta, (maxSpan - span) / 2);
+    delta = Math.max(delta, (span - maxSpan) / 2);
   }
 
   return {
