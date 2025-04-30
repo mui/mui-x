@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { config } from 'react-transition-group';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import {
   getExpectedOnChangeCount,
@@ -421,6 +421,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     }
 
     await user.keyboard('[Escape]');
+
+    await waitFor(() => expect(screen.queryByRole(viewWrapperRole)).to.equal(null));
 
     // open the picker again
     await openPickerAsync(user, {
