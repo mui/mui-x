@@ -53,7 +53,7 @@ export function defaultizeXAxis(
     }
 
     if (dataset === undefined) {
-      throw new Error(`MUI X: x-axis uses \`dataKey\` but no \`dataset\` is provided.`);
+      throw new Error(`MUI X Charts: x-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
     // If `dataKey` is provided
@@ -105,7 +105,7 @@ export function defaultizeYAxis(
     }
 
     if (dataset === undefined) {
-      throw new Error(`MUI X: y-axis uses \`dataKey\` but no \`dataset\` is provided.`);
+      throw new Error(`MUI X Charts: y-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
     // If `dataKey` is provided

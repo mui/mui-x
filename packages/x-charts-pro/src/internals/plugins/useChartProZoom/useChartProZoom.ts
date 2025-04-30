@@ -75,7 +75,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       if (process.env.NODE_ENV !== 'production' && !prevState.zoom.isControlled) {
         console.error(
           [
-            `MUI X: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
+            `MUI X Charts: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
             'Decide between using a controlled or uncontrolled for the lifetime of the component.',
             "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
