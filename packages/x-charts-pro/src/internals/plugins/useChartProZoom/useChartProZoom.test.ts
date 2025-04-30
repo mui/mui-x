@@ -15,6 +15,7 @@ describe('initializeZoomData', () => {
     filterMode: 'keep',
     slider: {
       enabled: false,
+      size: 30,
     },
   };
 
