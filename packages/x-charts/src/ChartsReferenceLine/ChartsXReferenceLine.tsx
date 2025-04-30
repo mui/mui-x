@@ -94,7 +94,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   if (xPosition === undefined) {
     if (process.env.NODE_ENV !== 'production') {
       warnOnce(
-        `MUI X: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
+        `MUI X Charts: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
         'error',
       );
     }

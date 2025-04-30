@@ -2,10 +2,22 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { ScatterChartPro } from './ScatterChartPro';
+
+const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
+  const axisData = Array.from(
+    document.querySelectorAll(
+      `.MuiChartsAxis-direction${axis.toUpperCase()} .MuiChartsAxis-tickContainer`,
+    ),
+  )
+    .map((v) => v.textContent)
+    .filter(Boolean);
+
+  return axisData as string[];
+};
 
 describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
   const { render } = createRenderer();
@@ -87,12 +99,8 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       options,
     );
 
-    expect(screen.queryByText('1')).not.to.equal(null);
-    expect(screen.queryByText('2')).not.to.equal(null);
-    expect(screen.queryByText('3')).not.to.equal(null);
-    expect(screen.queryByText('10')).not.to.equal(null);
-    expect(screen.queryByText('20')).not.to.equal(null);
-    expect(screen.queryByText('30')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
+    expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
 
     const svg = document.querySelector('svg')!;
 
@@ -112,12 +120,8 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     }
 
     expect(onZoomChange.callCount).to.equal(200);
-    expect(screen.queryByText('1')).to.equal(null);
-    expect(screen.queryByText('2')).not.to.equal(null);
-    expect(screen.queryByText('3')).to.equal(null);
-    expect(screen.queryByText('10')).to.equal(null);
-    expect(screen.queryByText('20')).not.to.equal(null);
-    expect(screen.queryByText('30')).to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['2']);
+    expect(getAxisTickValues('y')).to.deep.equal(['20']);
 
     // scroll back
     for (let i = 0; i < 200; i += 1) {
@@ -127,12 +131,8 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     }
 
     expect(onZoomChange.callCount).to.equal(400);
-    expect(screen.queryByText('1')).not.to.equal(null);
-    expect(screen.queryByText('2')).not.to.equal(null);
-    expect(screen.queryByText('3')).not.to.equal(null);
-    expect(screen.queryByText('10')).not.to.equal(null);
-    expect(screen.queryByText('20')).not.to.equal(null);
-    expect(screen.queryByText('30')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
+    expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
@@ -150,16 +150,10 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         options,
       );
 
-      expect(screen.queryByText('1.0')).to.equal(null);
-      expect(screen.queryByText('2.6')).not.to.equal(null);
-      expect(screen.queryByText('2.8')).not.to.equal(null);
-      expect(screen.queryByText('3.0')).not.to.equal(null);
-      expect(screen.queryByText('10')).to.equal(null);
-      expect(screen.queryByText('26')).not.to.equal(null);
-      expect(screen.queryByText('28')).not.to.equal(null);
-      expect(screen.queryByText('30')).not.to.equal(null);
-
       const svg = document.querySelector('svg')!;
+
+      expect(getAxisTickValues('x')).to.deep.equal(['2.6', '2.8', '3.0']);
+      expect(getAxisTickValues('y')).to.deep.equal(['26', '28', '30']);
 
       // we drag one position
       await user.pointer([
@@ -183,14 +177,8 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(1);
-      expect(screen.queryByText('1.0')).to.equal(null);
-      expect(screen.queryByText('2.0')).not.to.equal(null);
-      expect(screen.queryByText('2.2')).not.to.equal(null);
-      expect(screen.queryByText('2.4')).not.to.equal(null);
-      expect(screen.queryByText('10')).to.equal(null);
-      expect(screen.queryByText('20')).not.to.equal(null);
-      expect(screen.queryByText('22')).not.to.equal(null);
-      expect(screen.queryByText('24')).not.to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['2.0', '2.2', '2.4']);
+      expect(getAxisTickValues('y')).to.deep.equal(['20', '22', '24']);
 
       // we drag all the way to the left so 1 should be visible
       await user.pointer([
@@ -214,14 +202,8 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(2);
-      expect(screen.queryByText('2.0')).to.equal(null);
-      expect(screen.queryByText('1.0')).not.to.equal(null);
-      expect(screen.queryByText('1.2')).not.to.equal(null);
-      expect(screen.queryByText('1.4')).not.to.equal(null);
-      expect(screen.queryByText('20')).to.equal(null);
-      expect(screen.queryByText('10')).not.to.equal(null);
-      expect(screen.queryByText('12')).not.to.equal(null);
-      expect(screen.queryByText('14')).not.to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['1.0', '1.2', '1.4']);
+      expect(getAxisTickValues('y')).to.deep.equal(['10', '12', '14']);
     });
   });
 });

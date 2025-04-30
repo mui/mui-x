@@ -13,10 +13,11 @@ export const useChartDataProviderProProps = <
 >(
   props: ChartDataProviderProProps<TSeries, TSignatures>,
 ) => {
-  const { chartProviderProps, children } = useChartDataProviderProps(props);
+  const { chartProviderProps, localeText, children } = useChartDataProviderProps(props);
 
   return {
     children,
+    localeText,
     chartProviderProps,
   };
 };

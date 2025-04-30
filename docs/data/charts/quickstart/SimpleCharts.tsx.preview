@@ -3,7 +3,6 @@
     {
       id: 'barCategories',
       data: ['bar A', 'bar B', 'bar C'],
-      scaleType: 'band',
     },
   ]}
   series={[

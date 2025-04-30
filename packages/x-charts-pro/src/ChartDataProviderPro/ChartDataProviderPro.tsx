@@ -9,6 +9,7 @@ import {
   ChartProviderProps,
 } from '@mui/x-charts/internals';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
@@ -53,7 +54,7 @@ function ChartDataProviderPro<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProProps<TSeries, TSignatures>) {
-  const { children, chartProviderProps } = useChartDataProviderProProps({
+  const { children, localeText, chartProviderProps } = useChartDataProviderProProps({
     ...props,
     plugins: props.plugins ?? DEFAULT_PLUGINS,
   });
@@ -62,7 +63,7 @@ function ChartDataProviderPro<
 
   return (
     <ChartProvider {...chartProviderProps}>
-      {children}
+      <ChartsLocalizationProvider localeText={localeText}>{children}</ChartsLocalizationProvider>
       <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
     </ChartProvider>
   );
@@ -94,6 +95,10 @@ ChartDataProviderPro.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.

@@ -40,6 +40,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/quickFilter/QuickFilter.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/quick-filter\">Data Grid - Quick Filter component</a></li></ul>",
   "cssComponent": false
 }

@@ -85,6 +85,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
+    pathname: '/x/api/charts/charts-localization-provider',
+    title: 'ChartsLocalizationProvider',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },

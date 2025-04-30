@@ -23,7 +23,7 @@ describe('useSvgRef', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessages = [
-      'MUI X: Could not find the Chart context.',
+      'MUI X Charts: Could not find the Chart context.',
       'It looks like you rendered your component outside of a ChartDataProvider.',
       'The above error occurred in the <UseSvgRef> component',
     ];
@@ -39,7 +39,7 @@ describe('useSvgRef', () => {
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
-      'MUI X: Could not find the Chart context.',
+      'MUI X Charts: Could not find the Chart context.',
     );
   });
 

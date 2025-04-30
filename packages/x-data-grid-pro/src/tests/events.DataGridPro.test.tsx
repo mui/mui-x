@@ -124,6 +124,7 @@ describe('<DataGridPro /> - Events params', () => {
         hasFocus: false,
         tabIndex: -1,
       });
+      expect(eventArgs!.params.api).to.not.equal(null);
     });
 
     it('should include the correct params when grid is sorted', () => {

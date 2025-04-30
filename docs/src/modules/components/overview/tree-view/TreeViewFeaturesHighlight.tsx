@@ -10,9 +10,9 @@ import InfoCard from '../InfoCard';
 
 const featuredItems = [
   {
-    title: 'Customizable and  flexible',
+    title: 'Customizable and flexible',
     description:
-      'Easily adapt the look and feel and behavior to fit any brand, no matter your use case.',
+      'Easily adapt the look, feel, and behavior to fit any brand—no matter your use case.',
     icon: <FormatPaintIcon fontSize="small" color="primary" />,
   },
   {
@@ -37,7 +37,7 @@ export default function TreeViewFeaturesHighlight() {
         <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
           {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
-            Using MUI X Tree View
+            Using the MUI X Tree View
           </Typography>
           <Typography
             variant="h4"
@@ -51,7 +51,7 @@ export default function TreeViewFeaturesHighlight() {
           </Typography>
           {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary" textAlign="center">
-            A high-performance, customizable React component with the best possible developer
+            A highly performant, customizable React component with best-in-class developer
             experience.
           </Typography>
         </Stack>
