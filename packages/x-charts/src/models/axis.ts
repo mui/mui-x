@@ -471,6 +471,16 @@ export type ComputedAxis<
     : AxisProps extends ChartsYAxisProps
       ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
       : AxisSideConfig<AxisProps>);
+export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
+  S,
+  V,
+  ChartsXAxisProps
+>;
+export type ComputedYAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
+  S,
+  V,
+  ChartsYAxisProps
+>;
 
 export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,

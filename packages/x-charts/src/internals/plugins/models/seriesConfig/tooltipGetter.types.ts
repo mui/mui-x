@@ -6,13 +6,12 @@ import type {
 } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import {
-  ComputedAxis,
   AxisId,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
   PolarAxisDefaultized,
+  ComputedXAxis,
+  ComputedYAxis,
 } from '../../../../models/axis';
 import { ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
 import { ColorGetter } from './colorProcessor.types';
@@ -69,8 +68,8 @@ export type ItemTooltipWithMultipleValues<T extends 'radar' = 'radar'> = Pick<
 };
 
 export interface TooltipGetterAxesConfig {
-  x?: ComputedAxis<any, any, ChartsXAxisProps>;
-  y?: ComputedAxis<any, any, ChartsYAxisProps>;
+  x?: ComputedXAxis;
+  y?: ComputedYAxis;
   rotation?: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
   radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }

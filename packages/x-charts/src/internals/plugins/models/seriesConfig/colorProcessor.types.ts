@@ -1,4 +1,4 @@
-import type { ComputedAxis } from '../../../../models/axis';
+import type { ComputedXAxis, ComputedYAxis } from '../../../../models/axis';
 import type { DefaultizedSeriesType } from '../../../../models/seriesType';
 import type { ZAxisDefaultized } from '../../../../models/z-axis';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
@@ -20,7 +20,7 @@ export type ColorGetter<TSeriesType extends ChartSeriesType> = TSeriesType exten
  */
 export type ColorProcessor<TSeriesType extends ChartSeriesType> = (
   series: DefaultizedSeriesType<TSeriesType>,
-  xAxis?: ComputedAxis,
-  yAxis?: ComputedAxis,
+  xAxis?: ComputedXAxis,
+  yAxis?: ComputedYAxis,
   zAxis?: ZAxisDefaultized,
 ) => ColorGetter<TSeriesType>;
