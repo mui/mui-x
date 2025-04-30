@@ -9,8 +9,20 @@ title: Data Grid - Server-side aggregation
 ## Server-side aggregation
 
 The Data Grid Premium provides tools to give end users the ability to aggregate and compare row values.
-These features are fully documented in the [primary Aggregation doc](/x/react-data-grid/aggregation/) which covers client-side implementation.
-The information that follows here is specifically for implementing aggregation on the server side.
+The Grid can aggregate server-side data using the [Data Source layer](/x/react-data-grid/server-side-data/#the-solution-the-data-source-layer).
+
+:::info
+For aggregation functions on the client side, see [Aggregation (client side)](/x/react-data-grid/aggregation/).
+:::
+
+The demo below shows how to use the methods and patterns described in this document to implement server-side aggregation.
+
+{{"demo": "ServerSideDataGridAggregation.js", "bg": "inline"}}
+
+:::info
+The Data Source mock server (`useMockServer()`) mocks the built-in aggregation functions listed in [Aggregation (client-side)—Built-in functions](/x/react-data-grid/aggregation/#built-in-functions).
+Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
+:::
 
 ## Prerequisites
 
@@ -78,17 +90,6 @@ const dataSource = {
   },
 }
 ```
-
-## Server-side aggregation example
-
-The example below shows how to use the methods and patterns described above to implement server-side aggregation.
-
-{{"demo": "ServerSideDataGridAggregation.js", "bg": "inline"}}
-
-:::info
-The data source mock server (`useMockServer()`) mocks the built-in aggregation functions listed in the [built-in functions section](/x/react-data-grid/aggregation/#built-in-functions) of the client-side aggregation documentation.
-Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
-:::
 
 ## Usage with lazy loading
 

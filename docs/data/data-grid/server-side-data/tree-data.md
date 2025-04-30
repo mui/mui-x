@@ -9,17 +9,17 @@ title: Data Grid - Server-side tree data
 ## Server-side tree data
 
 Trees are hierarchical data structures that organize data into parent-child relationships.
-The Data Grid can handle server-side tree data to generate grouped rows with nested children.
-
-## Prerequisites
-
-To be able to dynamically load tree data from the server, including lazy-loading of children, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
+The Data Grid Pro can handle server-side tree data to render grouped rows with nested children using the [Data Source layer](/x/react-data-grid/server-side-data/#the-solution-the-data-source-layer).
 
 :::info
 For tree data on the client side, see [Tree data (client side)](/x/react-data-grid/tree-data/).
 :::
 
-## Implementation
+## Prerequisites
+
+To be able to dynamically load tree data from the server, including lazy-loading of children, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
+
+## Implementing server-side tree data
 
 The Data Source requires the following props to handle tree data:
 

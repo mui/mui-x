@@ -251,7 +251,7 @@ To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
 
-## Updating data
+## Updating server-side data
 
 The Data Source supports an optional `updateRow()` method for updating data on the server.
 
