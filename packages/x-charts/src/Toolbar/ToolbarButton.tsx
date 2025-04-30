@@ -1,15 +1,27 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { defaultSlotsMaterial } from '../internals/material';
-import { ChartBaseIconButtonProps } from '../models/slots/chartsBaseSlotProps';
+import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { ChartsSlotProps } from '../material';
+import { useChartToolbarSlots } from './ChartsToolbarSlotsContext';
 
-export interface ToolbarButtonProps extends ChartBaseIconButtonProps {}
+export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
+  /**
+   * A function to customize the rendering of the component.
+   */
+  render?: RenderProp<ChartsSlotProps['baseIconButton']>;
+};
 
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const IconButton = defaultSlotsMaterial.baseIconButton;
+    const { render, ...other } = props;
+    const { slots, slotProps } = useChartToolbarSlots();
+    const element = useComponentRenderer(slots.baseIconButton, render, {
+      ...slotProps?.baseIconButton,
+      ...other,
+      ref,
+    });
 
-    return <IconButton ref={ref} {...props} />;
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 
