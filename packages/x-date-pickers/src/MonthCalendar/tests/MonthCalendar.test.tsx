@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { spy, useFakeTimers, SinonFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { vi } from 'vitest';
 
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer();
@@ -28,12 +27,15 @@ describe('<MonthCalendar />', () => {
   });
 
   describe('with fake timers', () => {
+    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+    let timer: SinonFakeTimers | null = null;
+
     beforeEach(() => {
-      vi.setSystemTime(new Date(2019, 0, 1));
+      timer = useFakeTimers({ now: new Date(2019, 0, 1), toFake: ['Date'] });
     });
 
     afterEach(() => {
-      vi.useRealTimers();
+      timer?.restore();
     });
 
     it('should select start of month without time when no initial value is present', () => {
@@ -159,12 +161,15 @@ describe('<MonthCalendar />', () => {
     });
 
     describe('with fake timers', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+
       beforeEach(() => {
-        vi.setSystemTime(new Date(2019, 0, 1));
+        timer = useFakeTimers({ now: new Date(2019, 0, 1), toFake: ['Date'] });
       });
 
       afterEach(() => {
-        vi.useRealTimers();
+        timer?.restore();
       });
 
       it('should disable months after initial render when "disableFuture" prop changes', async () => {

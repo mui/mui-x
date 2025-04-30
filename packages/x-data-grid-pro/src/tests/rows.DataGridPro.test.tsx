@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor, reactMajor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { SinonFakeTimers, useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
-import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import {
   $,
@@ -177,12 +176,15 @@ describe('<DataGridPro /> - Rows', () => {
     }
 
     describe('throttling', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+
       beforeEach(() => {
-        vi.useFakeTimers();
+        timer = useFakeTimers();
       });
 
       afterEach(() => {
-        vi.useRealTimers();
+        timer?.restore();
       });
 
       it('should not throttle by default', () => {
@@ -199,15 +201,15 @@ describe('<DataGridPro /> - Rows', () => {
         await act(async () => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
 
         await act(async () => {
-          await vi.advanceTimersByTimeAsync(10);
+          await timer?.tickAsync(10);
         });
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
         await act(async () => {
-          await vi.advanceTimersByTimeAsync(100);
+          await timer?.tickAsync(100);
         });
-        // It seems that the trigger is not dependant only on timeout.
-        vi.useRealTimers();
+
+        timer?.restore();
         await waitFor(async () => {
           expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
         });
@@ -374,12 +376,15 @@ describe('<DataGridPro /> - Rows', () => {
     }
 
     describe('throttling', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+
       beforeEach(() => {
-        vi.useFakeTimers();
+        timer = useFakeTimers();
       });
 
       afterEach(() => {
-        vi.useRealTimers();
+        timer?.restore();
       });
 
       it('should not throttle by default', () => {
@@ -396,20 +401,20 @@ describe('<DataGridPro /> - Rows', () => {
         await act(() => apiRef.current?.setRows([{ id: 3, brand: 'Asics' }]));
 
         await act(async () => {
-          await vi.advanceTimersByTimeAsync(10);
+          await timer?.tickAsync(10);
         });
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         // React 18 seems to render twice
         const timerCount = reactMajor < 19 ? 2 : 1;
-        expect(vi.getTimerCount()).to.equal(timerCount);
+        expect(timer?.countTimers()).to.equal(timerCount);
 
         await act(async () => {
-          await vi.advanceTimersByTimeAsync(100);
+          await timer?.tickAsync(100);
         });
-        expect(vi.getTimerCount()).to.equal(0);
+        expect(timer?.countTimers()).to.equal(0);
 
         // It seems that the trigger is not dependant only on timeout.
-        vi.useRealTimers();
+        timer?.restore();
         await waitFor(async () => {
           expect(getColumnValues(0)).to.deep.equal(['Asics']);
         });

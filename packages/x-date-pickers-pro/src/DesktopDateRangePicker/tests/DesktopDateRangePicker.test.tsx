@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { spy, useFakeTimers, SinonFakeTimers } from 'sinon';
 import { fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -17,7 +17,6 @@ import {
   getTextbox,
 } from 'test/utils/pickers';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
@@ -697,12 +696,15 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   describe('disabled dates', () => {
+    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+    let timer: SinonFakeTimers | null = null;
+
     beforeEach(() => {
-      vi.setSystemTime(new Date(2018, 0, 10));
+      timer = useFakeTimers({ now: new Date(2018, 0, 10), toFake: ['Date'] });
     });
 
     afterEach(() => {
-      vi.useRealTimers();
+      timer?.restore();
     });
 
     it('should respect the disablePast prop', async () => {

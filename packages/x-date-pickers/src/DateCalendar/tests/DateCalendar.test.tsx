@@ -5,8 +5,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { spy } from 'sinon';
-import { vi } from 'vitest';
+import { SinonFakeTimers, useFakeTimers, spy } from 'sinon';
 
 describe('<DateCalendar />', () => {
   const { render } = createPickerRenderer();
@@ -128,12 +127,15 @@ describe('<DateCalendar />', () => {
   });
 
   describe('with fake timers', () => {
+    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+    let timer: SinonFakeTimers | null = null;
+
     beforeEach(() => {
-      vi.setSystemTime(new Date(2019, 0, 2));
+      timer = useFakeTimers({ now: new Date(2019, 0, 2), toFake: ['Date'] });
     });
 
     afterEach(() => {
-      vi.useRealTimers();
+      timer?.restore();
     });
 
     // test: https://github.com/mui/mui-x/issues/12373

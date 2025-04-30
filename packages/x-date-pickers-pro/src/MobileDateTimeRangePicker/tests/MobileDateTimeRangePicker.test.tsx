@@ -8,18 +8,21 @@ import {
   expectFieldValueV7,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
-import { vi } from 'vitest';
+import { SinonFakeTimers, useFakeTimers } from 'sinon';
 
 describe('<MobileDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer();
 
   describe('value selection', () => {
+    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+    let timer: SinonFakeTimers | null = null;
+
     beforeEach(() => {
-      vi.setSystemTime(new Date(2018, 0, 10, 10, 16, 0));
+      timer = useFakeTimers({ now: new Date(2018, 0, 10, 10, 16, 0), toFake: ['Date'] });
     });
 
     afterEach(() => {
-      vi.useRealTimers();
+      timer?.restore();
     });
 
     it('should cycle focused views among the visible step after selection', async () => {
