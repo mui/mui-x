@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   Toolbar,
+  ToolbarButton,
   useGridSelector,
   useGridApiContext,
   gridColumnLookupSelector,
@@ -99,20 +100,24 @@ function CustomToolbar() {
           {rowGroupingModel.map((field, index) => (
             <React.Fragment key={field}>
               {index > 0 && <ChevronRightIcon fontSize="small" color="action" />}
-              <Chip
-                key={field}
-                label={columnsLookup[field].headerName ?? field}
-                icon={<DragIndicatorIcon fontSize="small" />}
-                sx={{
-                  cursor: 'grab',
-                  opacity:
-                    draggedChip === field || draggedColumn === field ? 0.5 : 1,
-                }}
-                onDragStart={handleChipDragStart(field)}
-                onDragEnd={handleChipDragEnd}
-                onDragOver={handleChipDragOver(field)}
-                onDelete={() => removeRowGroup(field)}
-                draggable
+              <ToolbarButton
+                render={
+                  <Chip
+                    key={field}
+                    label={columnsLookup[field].headerName ?? field}
+                    icon={<DragIndicatorIcon fontSize="small" />}
+                    sx={{
+                      cursor: 'grab',
+                      opacity:
+                        draggedChip === field || draggedColumn === field ? 0.5 : 1,
+                    }}
+                    onDragStart={handleChipDragStart(field)}
+                    onDragEnd={handleChipDragEnd}
+                    onDragOver={handleChipDragOver(field)}
+                    onDelete={() => removeRowGroup(field)}
+                    draggable
+                  />
+                }
               />
             </React.Fragment>
           ))}
