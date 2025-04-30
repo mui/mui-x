@@ -1,6 +1,12 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { AxisDefaultized, AxisId, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import {
+  AxisId,
+  isBandScaleConfig,
+  isPointScaleConfig,
+  ComputedXAxis,
+  ComputedYAxis,
+} from '../models/axis';
 import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 import { SeriesId } from '../models/seriesType/common';
 
@@ -18,9 +24,9 @@ export function checkScaleErrors(
   seriesId: SeriesId,
   series: DefaultizedBarSeriesType & { stackedData: [number, number][] },
   xAxisId: AxisId,
-  xAxis: { [axisId: AxisId]: AxisDefaultized },
+  xAxis: { [axisId: AxisId]: ComputedXAxis },
   yAxisId: AxisId,
-  yAxis: { [axisId: AxisId]: AxisDefaultized },
+  yAxis: { [axisId: AxisId]: ComputedYAxis },
 ): void {
   const xAxisConfig = xAxis[xAxisId];
   const yAxisConfig = yAxis[yAxisId];
