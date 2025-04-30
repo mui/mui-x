@@ -1,29 +1,19 @@
 import { expect } from 'chai';
-import { AxisId, DefaultizedZoomOptions, ZoomData } from '@mui/x-charts/internals';
+import { ZoomData } from '@mui/x-charts/internals';
 import { initializeZoomData } from './useChartProZoom';
 
 describe('initializeZoomData', () => {
-  const defaultZoomOptions: DefaultizedZoomOptions = {
+  const defaultZoomOptions = {
     axisId: 'x',
-    axisDirection: 'x',
     minStart: 0,
     maxEnd: 100,
-    step: 5,
-    minSpan: 10,
-    maxSpan: 100,
-    panning: true,
-    filterMode: 'keep',
-    slider: {
-      enabled: false,
-      size: 30,
-    },
   };
 
   it('should initialize zoom data for all axes based on provided options when no zoom data is given', () => {
     const options = {
       x: { ...defaultZoomOptions, axisId: 'x', minStart: 0, maxEnd: 100 },
       y: { ...defaultZoomOptions, axisDirection: 'y', axisId: 'y', minStart: 10, maxEnd: 50 },
-    } satisfies Record<AxisId, DefaultizedZoomOptions>;
+    };
 
     const result = initializeZoomData(options);
 
@@ -37,7 +27,7 @@ describe('initializeZoomData', () => {
     const options = {
       x: { ...defaultZoomOptions, axisId: 'x', minStart: 0, maxEnd: 100 },
       y: { ...defaultZoomOptions, axisDirection: 'y', axisId: 'y', minStart: 10, maxEnd: 50 },
-    } satisfies Record<AxisId, DefaultizedZoomOptions>;
+    };
 
     const zoomData: readonly ZoomData[] = [{ axisId: 'x', start: 20, end: 60 }];
     const result = initializeZoomData(options, zoomData);
@@ -51,7 +41,7 @@ describe('initializeZoomData', () => {
   it('should ignore zoom data if its axisId is not present in options', () => {
     const options = {
       x: { ...defaultZoomOptions, axisId: 'x', minStart: 0, maxEnd: 100 },
-    } satisfies Record<AxisId, DefaultizedZoomOptions>;
+    };
 
     const zoomData: readonly ZoomData[] = [{ axisId: 'y', start: 10, end: 50 }];
     const result = initializeZoomData(options, zoomData);
@@ -67,7 +57,7 @@ describe('initializeZoomData', () => {
   it('should handle undefined zoomData gracefully', () => {
     const options = {
       x: { ...defaultZoomOptions, axisId: 'x', minStart: 0, maxEnd: 100 },
-    } satisfies Record<AxisId, DefaultizedZoomOptions>;
+    };
 
     const result = initializeZoomData(options, undefined);
 

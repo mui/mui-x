@@ -28,7 +28,7 @@ import {
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 export function initializeZoomData(
-  options: Record<AxisId, DefaultizedZoomOptions>,
+  options: Record<AxisId, Pick<DefaultizedZoomOptions, 'axisId' | 'minStart' | 'maxEnd'>>,
   zoomData?: readonly ZoomData[],
 ) {
   const zoomDataMap = new Map<AxisId, ZoomData>();
