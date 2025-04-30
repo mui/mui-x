@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { ToolbarProps } from '../Toolbar/ChartsToolbar.types';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
@@ -113,10 +114,13 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     legendDirection: props.slotProps?.legend?.direction,
   };
 
+  const chartToolbarProps: ToolbarProps = { slots, slotProps };
+
   return {
     chartsWrapperProps,
     chartContainerProps,
     chartsAxisProps,
+    chartToolbarProps,
     gridProps,
     scatterPlotProps,
     overlayProps,

@@ -1,16 +1,17 @@
 'use client';
 import * as React from 'react';
-import materialSlots, { ChartsSlots, ChartsSlotProps } from '../material';
+import materialSlots from '../material';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from './ChartsToolbar.types';
 
 export interface ChartsToolbarSlotsContextValue {
   /**
    * The slots used by the ChartsToolbar and descendants.
    */
-  slots: ChartsSlots;
+  slots: ChartsToolbarSlots;
   /**
    * The slot props used by the ChartsToolbar and descendants.
    */
-  slotProps: Partial<ChartsSlotProps>;
+  slotProps: Partial<ChartsToolbarSlotProps>;
 }
 
 export const ChartsToolbarSlotsContext = React.createContext<ChartsToolbarSlotsContextValue | null>(
@@ -22,8 +23,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export function useChartToolbarSlots(): {
-  slots: ChartsSlots;
-  slotProps: Partial<ChartsSlotProps>;
+  slots: ChartsToolbarSlots;
+  slotProps: Partial<ChartsToolbarSlotProps>;
 } {
   const context = React.useContext(ChartsToolbarSlotsContext);
 
@@ -44,11 +45,11 @@ interface ChartsToolbarSlotsProviderProps {
   /**
    * The slots used by the ChartsToolbar and descendants.
    */
-  slots?: Partial<ChartsSlots>;
+  slots?: Partial<ChartsToolbarSlots>;
   /**
    * The slot props used by the ChartsToolbar and descendants.
    */
-  slotProps?: Partial<ChartsSlotProps>;
+  slotProps?: Partial<ChartsToolbarSlotProps>;
 }
 
 export function ChartsToolbarSlotsProvider(
