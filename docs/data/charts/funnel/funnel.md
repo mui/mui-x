@@ -10,7 +10,7 @@ components: FunnelChart, FunnelPlot
 
 ## Basics
 
-Funnel charts series should contain a data property containing an array of objects.
+Funnel charts series must contain a `data` property containing an array of objects.
 Each object corresponds to a section of the funnel.
 It must contain a property `value` and can have other optional properties, like `label` and `id`.
 
@@ -21,7 +21,7 @@ It must contain a property `value` and can have other optional properties, like 
 The funnel chart displays a legend by default.
 The only requirement is to provide a `label` value in the data objects.
 
-To disable the legend, set the `hideLegend` property to `true`.
+To disable the legend, set the `hideLegend` prop to `true`.
 
 {{"demo": "FunnelLegend.js"}}
 

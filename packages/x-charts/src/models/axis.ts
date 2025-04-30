@@ -345,7 +345,9 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
  */
 type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
-   * Id used to identify the axis.
+   * ID used to identify the axis.
+   *
+   * The ID must be unique across all axes in this chart.
    */
   id: AxisId;
   /**

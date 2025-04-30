@@ -196,11 +196,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/components/export', title: 'Export' },
           { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
           {
-            pathname: '/x/react-data-grid/components/prompt-field',
-            title: 'Prompt Field',
-            plan: 'premium',
-          },
-          {
             pathname: '/x/react-data-grid/components/columns-panel',
             title: 'Columns Panel',
             planned: true,
@@ -209,6 +204,11 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/components/filter-panel',
             title: 'Filter Panel',
             planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/components/prompt-field',
+            title: 'Prompt Field',
+            plan: 'premium',
           },
           {
             pathname: '/x/react-data-grid/components/pivot-panel',

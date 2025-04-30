@@ -28,7 +28,7 @@ const dirname =
     return;
   }
 
-  const storage = TelemetryStorage.init({
+  const storage = await TelemetryStorage.init({
     distDir: process.cwd(),
   });
 

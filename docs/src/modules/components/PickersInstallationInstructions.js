@@ -1,11 +1,11 @@
 import * as React from 'react';
 import InstallationInstructions from './InstallationInstructions';
 
-// #default-branch-switch
+// #npm-tag-reference
 
 const packages = {
-  Community: '@mui/x-date-pickers@next',
-  Pro: '@mui/x-date-pickers-pro@next',
+  Community: '@mui/x-date-pickers',
+  Pro: '@mui/x-date-pickers-pro',
 };
 
 const peerDependency = {
