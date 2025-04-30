@@ -6,7 +6,7 @@ import type {
 } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import {
-  AxisDefaultized,
+  ComputedAxis,
   AxisId,
   ChartsXAxisProps,
   ChartsYAxisProps,
@@ -69,8 +69,8 @@ export type ItemTooltipWithMultipleValues<T extends 'radar' = 'radar'> = Pick<
 };
 
 export interface TooltipGetterAxesConfig {
-  x?: AxisDefaultized<any, any, ChartsXAxisProps>;
-  y?: AxisDefaultized<any, any, ChartsYAxisProps>;
+  x?: ComputedAxis<any, any, ChartsXAxisProps>;
+  y?: ComputedAxis<any, any, ChartsYAxisProps>;
   rotation?: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
   radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }

@@ -1,4 +1,3 @@
-import { MakeOptional } from '@mui/x-internals/types';
 import {
   DEFAULT_X_AXIS_KEY,
   DEFAULT_Y_AXIS_KEY,
@@ -6,14 +5,14 @@ import {
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
-import { AxisConfig, ScaleName } from '../../../../models';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
+import { XAxis, YAxis } from '../../../../models';
+import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeXAxis(
-  inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
+  inAxes: readonly XAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
-): Array<AxisConfig<ScaleName, any, ChartsXAxisProps>> {
+): DefaultedXAxis[] {
   const offsets = {
     top: 0,
     bottom: 0,
@@ -21,8 +20,8 @@ export function defaultizeXAxis(
   };
 
   const inputAxes =
-    inAxis && inAxis.length > 0
-      ? inAxis
+    inAxes && inAxes.length > 0
+      ? inAxes
       : [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' as const }];
 
   const parsedAxes = inputAxes.map((axisConfig, index) => {
@@ -67,14 +66,14 @@ export function defaultizeXAxis(
 }
 
 export function defaultizeYAxis(
-  inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
+  inAxes: readonly YAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
-): Array<AxisConfig<ScaleName, any, ChartsYAxisProps>> {
+): DefaultedYAxis[] {
   const offsets = { right: 0, left: 0, none: 0 };
 
   const inputAxes =
-    inAxis && inAxis.length > 0
-      ? inAxis
+    inAxes && inAxes.length > 0
+      ? inAxes
       : [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' as const }];
 
   const parsedAxes = inputAxes.map((axisConfig, index) => {

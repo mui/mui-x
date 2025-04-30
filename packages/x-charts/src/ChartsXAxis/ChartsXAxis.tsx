@@ -10,7 +10,7 @@ import { useIsHydrated } from '../hooks/useIsHydrated';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
+import { AxisConfig, ComputedAxis, ChartsXAxisProps, ScaleName } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -55,7 +55,7 @@ function getVisibleLabels(
     isMounted,
     isPointInside,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse'> & {
+    Pick<ComputedAxis<ScaleName, any, ChartsXAxisProps>, 'reverse'> & {
       isMounted: boolean;
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
       isPointInside: (position: number) => boolean;
