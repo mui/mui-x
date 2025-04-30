@@ -1,6 +1,6 @@
 export * from './ChartZoomSlider';
 export {
-  ChartAxisZoomSliderHandleClasses,
-  ChartAxisZoomSliderHandleClassKey,
+  type ChartAxisZoomSliderHandleClasses,
+  type ChartAxisZoomSliderHandleClassKey,
   chartAxisZoomSliderHandleClasses,
 } from './internals/chartAxisZoomSliderHandleClasses';
