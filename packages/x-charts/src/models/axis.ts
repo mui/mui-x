@@ -458,7 +458,7 @@ export type ComputedAxis<
   S extends ScaleName = ScaleName,
   V = any,
   AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = MakeRequired<Omit<AxisConfig<S, V, AxisProps>, 'scaleType'>, 'offset'> &
+> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**
@@ -529,22 +529,29 @@ export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'line
   : never;
 
 /**
- * The x-axis configuration with missing values filled with default values.
+ * The axis configuration with missing values filled with default values.
  */
-export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = AxisConfig<
-  S,
-  V,
-  ChartsXAxisProps
-> & {
+export type DefaultedAxis<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = AxisConfig<S, V, AxisProps> & {
   zoom: DefaultizedZoomOptions | undefined;
 };
 /**
+ * The x-axis configuration with missing values filled with default values.
+ */
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
+  S,
+  V,
+  ChartsXAxisProps
+>;
+
+/**
  * The y-axis configuration with missing values filled with default values.
  */
-export type DefaultedYAxis<S extends ScaleName = ScaleName, V = any> = AxisConfig<
+export type DefaultedYAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
   S,
   V,
   ChartsYAxisProps
-> & {
-  zoom: DefaultizedZoomOptions | undefined;
-};
+>;

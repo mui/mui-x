@@ -14,7 +14,7 @@ export function ChartOverview() {
       {xAxisIds.map((axisId) => {
         const xAxis = xAxes[axisId];
 
-        const overview = typeof xAxis?.zoom === 'object' ? xAxis.zoom.overview : undefined;
+        const overview = xAxis.zoom?.overview;
 
         if (!overview?.enabled) {
           return null;
@@ -27,7 +27,7 @@ export function ChartOverview() {
       {yAxisIds.map((axisId) => {
         const yAxis = yAxes[axisId];
 
-        const overview = typeof yAxis?.zoom === 'object' ? yAxis.zoom.overview : undefined;
+        const overview = yAxis.zoom?.overview;
 
         if (!overview?.enabled) {
           return null;

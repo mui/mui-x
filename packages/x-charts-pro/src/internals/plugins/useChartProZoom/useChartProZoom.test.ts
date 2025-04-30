@@ -13,6 +13,9 @@ describe('initializeZoomData', () => {
     maxSpan: 100,
     panning: true,
     filterMode: 'keep',
+    overview: {
+      enabled: false,
+    },
   };
 
   it('should initialize zoom data for all axes based on provided options when no zoom data is given', () => {
