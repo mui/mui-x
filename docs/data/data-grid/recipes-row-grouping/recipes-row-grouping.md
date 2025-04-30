@@ -18,6 +18,14 @@ Use `GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD` to pin a grouped column. In the de
 
 {{"demo": "RowGroupingPinning.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Creating and reordering groups with drag and drop
+
+The demo below shows how to add a custom toolbar that enables creating and reordering groups with drag and drop.
+
+Users can drag column headers into the toolbar to create groups, then reorder them by dragging the chips within the toolbar. Groups can be removed by clicking the delete button, or dragging the chip outside of the toolbar.
+
+{{"demo": "RowGroupingToolbar.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Sorting row groups by the number of child rows
 
 By default, the row grouping column uses `sortComparator` of the grouping column for sorting.
