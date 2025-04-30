@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
