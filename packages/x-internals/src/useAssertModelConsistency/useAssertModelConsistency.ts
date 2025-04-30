@@ -12,6 +12,10 @@ import { warnOnce } from '../warning';
  */
 function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
   /**
+   * The warning prefix indicating from which package the warning comes from.
+   */
+  warningPrefix?: string;
+  /**
    * The name of the component used in the warning message.
    */
   componentName: string;
@@ -28,7 +32,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
    */
   defaultValue: T;
 }) {
-  const { componentName, propName, controlled, defaultValue } = parameters;
+  const { componentName, propName, controlled, defaultValue, warningPrefix = 'MUI X' } = parameters;
   const [{ initialDefaultValue, isControlled }] = React.useState({
     initialDefaultValue: defaultValue,
     isControlled: controlled !== undefined,
@@ -37,7 +41,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
   if (isControlled !== (controlled !== undefined)) {
     warnOnce(
       [
-        `MUI X: A component is changing the ${
+        `${warningPrefix}: A component is changing the ${
           isControlled ? '' : 'un'
         }controlled ${propName} state of ${componentName} to be ${isControlled ? 'un' : ''}controlled.`,
         'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -53,7 +57,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
   if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
     warnOnce(
       [
-        `MUI X: A component is changing the default ${propName} state of an uncontrolled ${componentName} after being initialized. ` +
+        `${warningPrefix}: A component is changing the default ${propName} state of an uncontrolled ${componentName} after being initialized. ` +
           `To suppress this warning opt to use a controlled ${componentName}.`,
       ],
       'error',

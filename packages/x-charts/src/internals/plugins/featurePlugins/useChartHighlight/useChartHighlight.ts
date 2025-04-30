@@ -6,6 +6,7 @@ import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlig
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
   useAssertModelConsistency({
+    warningPrefix: 'MUI X Charts',
     componentName: 'Chart',
     propName: 'highlightedItem',
     controlled: params.highlightedItem,
