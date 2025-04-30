@@ -80,8 +80,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2(@mui/material@7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@mui/internal-babel-plugin-resolve-imports':
-        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-babel-plugin-resolve-imports@13fa2ac
-        version: https://pkg.pr.new/mui/material-ui/@mui/internal-babel-plugin-resolve-imports@13fa2ac(@babel/core@7.26.10)
+        specifier: 2.0.0
+        version: 2.0.0(@babel/core@7.26.10)
       '@mui/internal-markdown':
         specifier: ^2.0.4
         version: 2.0.4
@@ -3283,9 +3283,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/internal-babel-plugin-resolve-imports@https://pkg.pr.new/mui/material-ui/@mui/internal-babel-plugin-resolve-imports@13fa2ac':
-    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-babel-plugin-resolve-imports@13fa2ac}
-    version: 2.0.0
+  '@mui/internal-babel-plugin-resolve-imports@2.0.0':
+    resolution: {integrity: sha512-5/ZeHUgYSvNip+vq/XrRPYVWzAd3HVnOZNPrbl3Zn2QCVNutZkA/b6ot5/0OjvdOgQyt/sDk3fV2s+zdlhsMkg==}
     peerDependencies:
       '@babel/core': '7'
 
@@ -12354,7 +12353,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.12
 
-  '@mui/internal-babel-plugin-resolve-imports@https://pkg.pr.new/mui/material-ui/@mui/internal-babel-plugin-resolve-imports@13fa2ac(@babel/core@7.26.10)':
+  '@mui/internal-babel-plugin-resolve-imports@2.0.0(@babel/core@7.26.10)':
     dependencies:
       '@babel/core': 7.26.10
       resolve: 1.22.10
