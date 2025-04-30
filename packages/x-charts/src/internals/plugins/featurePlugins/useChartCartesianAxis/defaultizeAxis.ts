@@ -6,7 +6,7 @@ import {
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
-  DEFAULT_ZOOM_OVERVIEW_SIZE,
+  DEFAULT_ZOOM_SLIDER_SIZE,
 } from '../../../../constants';
 import { XAxis, YAxis } from '../../../../models';
 import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
@@ -52,8 +52,8 @@ export function defaultizeXAxis(
     if (position !== 'none') {
       offsets[position] += sharedConfig.height;
 
-      if (sharedConfig.zoom?.overview?.enabled) {
-        offsets[position] += sharedConfig.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
+      if (sharedConfig.zoom?.slider?.enabled) {
+        offsets[position] += sharedConfig.zoom?.slider?.size ?? DEFAULT_ZOOM_SLIDER_SIZE;
       }
     }
 
@@ -112,8 +112,8 @@ export function defaultizeYAxis(
     if (position !== 'none') {
       offsets[position] += sharedConfig.width;
 
-      if (sharedConfig.zoom?.overview?.enabled) {
-        offsets[position] += sharedConfig.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE;
+      if (sharedConfig.zoom?.slider?.enabled) {
+        offsets[position] += sharedConfig.zoom?.slider?.size ?? DEFAULT_ZOOM_SLIDER_SIZE;
       }
     }
 

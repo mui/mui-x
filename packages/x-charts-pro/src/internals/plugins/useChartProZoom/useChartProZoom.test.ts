@@ -13,7 +13,7 @@ describe('initializeZoomData', () => {
     maxSpan: 100,
     panning: true,
     filterMode: 'keep',
-    overview: {
+    slider: {
       enabled: false,
     },
   };

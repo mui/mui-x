@@ -18,7 +18,7 @@ import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
-} from '../internals/plugins/useChartProZoom';
+} from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderHandle } from './ChartAxisZoomSliderHandle';
 
 const BackgroundRect = styled('rect')(({ theme }) => ({
@@ -117,7 +117,7 @@ export function ChartAxisZoomSlider({ size, axisDirection, axisId }: ChartZoomSl
         height={axisDirection === 'x' ? size : drawingArea.height}
         width={axisDirection === 'x' ? drawingArea.width : size}
       />
-      <ChartAxisZoomOverviewSpan
+      <ChartAxisZoomSliderSpan
         size={size}
         zoomData={zoomData}
         axisId={axisId}
@@ -128,7 +128,7 @@ export function ChartAxisZoomSlider({ size, axisDirection, axisId }: ChartZoomSl
   );
 }
 
-function ChartAxisZoomOverviewSpan({
+function ChartAxisZoomSliderSpan({
   size,
   axisId,
   axisDirection,

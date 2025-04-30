@@ -3,4 +3,4 @@ export {
   ChartAxisZoomSliderHandleClasses,
   ChartAxisZoomSliderHandleClassKey,
   chartAxisZoomSliderHandleClasses,
-} from './chartAxisZoomSliderHandleClasses';
+} from './internals/chartAxisZoomSliderHandleClasses';

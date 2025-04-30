@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { calculateZoomEnd, calculateZoomStart } from './ChartAxisZoomSlider';
-import { ZoomData } from '../models';
+import { ZoomData } from '../../models';
 
 describe('ChartAxisZoomSlider', () => {
   describe('calculateZoomStart', () => {

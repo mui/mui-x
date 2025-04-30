@@ -13,7 +13,7 @@ const series2Data = Array.from({ length: dataLength }).map((_, i) => ({
 
 const xData = data.map((d) => d.x);
 
-export default function ZoomOverview() {
+export default function ZoomSlider() {
   return (
     <ScatterChartPro
       xAxis={[
@@ -24,7 +24,7 @@ export default function ZoomOverview() {
             filterMode: 'discard',
             minSpan: 10,
             panning: true,
-            overview: { enabled: true },
+            slider: { enabled: true },
           },
           valueFormatter: (v: number) => v.toLocaleString('en-US'),
         },
@@ -33,13 +33,13 @@ export default function ZoomOverview() {
           data: series2Data.map((d) => d.x),
           position: 'top',
           zoom: {
-            overview: { enabled: true },
+            slider: { enabled: true },
           },
         },
       ]}
       yAxis={[
-        { zoom: { overview: { enabled: true } } },
-        { id: 'y2', position: 'right', zoom: { overview: { enabled: true } } },
+        { zoom: { slider: { enabled: true } } },
+        { id: 'y2', position: 'right', zoom: { slider: { enabled: true } } },
       ]}
       series={[{ data }, { data: series2Data, xAxisId: 'x2', yAxisId: 'y2' }]}
       height={400}

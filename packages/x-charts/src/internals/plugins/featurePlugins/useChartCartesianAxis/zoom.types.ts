@@ -72,19 +72,19 @@ export interface ZoomOptions {
    */
   filterMode?: ZoomFilterMode;
   /**
-   * Configures the zoom overview. The overview is an element that shows the zoomed range and allows its manipulation.
+   * Configures the zoom slider. The slider is an element that shows the zoomed range and allows its manipulation.
    */
-  overview?: ZoomOverviewOptions;
+  slider?: ZoomSliderOptions;
 }
 
-export interface ZoomOverviewOptions {
+export interface ZoomSliderOptions {
   /**
-   * If `true`, the overview will be shown.
+   * If `true`, the slider will be shown.
    */
   enabled?: boolean;
   /**
-   * The size of the overview.
-   * This is the height of the overview for the x-axis and the width of the overview for the y-axis.
+   * The size of the slider.
+   * This is the height of the slider for the x-axis and the width of the slider for the y-axis.
    *
    * @default 30
    */

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { ChartAxisZoomSlider } from './ChartAxisZoomSlider';
+import { ChartAxisZoomSlider } from './internals/ChartAxisZoomSlider';
 
 /**
  * Renders the zoom slider for all x and y axes that have it enabled.
@@ -14,7 +14,7 @@ export function ChartZoomSlider() {
       {xAxisIds.map((axisId) => {
         const xAxis = xAxes[axisId];
 
-        const overview = xAxis.zoom?.overview;
+        const overview = xAxis.zoom?.slider;
 
         if (!overview?.enabled) {
           return null;
@@ -32,7 +32,7 @@ export function ChartZoomSlider() {
       {yAxisIds.map((axisId) => {
         const yAxis = yAxes[axisId];
 
-        const overview = yAxis.zoom?.overview;
+        const overview = yAxis.zoom?.slider;
 
         if (!overview?.enabled) {
           return null;

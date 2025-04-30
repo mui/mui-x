@@ -57,11 +57,6 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
-    pathname: '/x/api/charts/chart-overview',
-    title: 'ChartOverview',
-    plan: 'pro',
-  },
-  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -120,6 +115,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-y-axis',
     title: 'ChartsYAxis',
+  },
+  {
+    pathname: '/x/api/charts/chart-zoom-slider',
+    title: 'ChartZoomSlider',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/continuous-color-legend',

@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "ChartZoomSlider",
+  "imports": [
+    "import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';",
+    "import { ChartZoomSlider } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartZoomSlider",
+  "filename": "/packages/x-charts-pro/src/ChartZoomSlider/ChartZoomSlider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/zoom-and-pan/\">Charts - Zoom and pan <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

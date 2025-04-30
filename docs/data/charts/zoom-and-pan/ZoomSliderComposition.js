@@ -3,8 +3,8 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
-import { ChartOverview } from '@mui/x-charts-pro/ChartOverview';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 
 const xAxisData = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 const firstSeriesData = Array.from({ length: 26 }, () =>
@@ -14,7 +14,7 @@ const secondSeriesData = Array.from({ length: 26 }, () =>
   Math.floor(Math.random() * 11),
 );
 
-export default function ZoomOverviewComposition() {
+export default function ZoomSliderComposition() {
   const clipPathId = React.useId();
 
   return (
@@ -29,7 +29,7 @@ export default function ZoomOverviewComposition() {
           scaleType: 'band',
           id: 'x-axis-id',
           height: 45,
-          zoom: { overview: { enabled: true } },
+          zoom: { slider: { enabled: true } },
         },
       ]}
       height={200}
@@ -39,7 +39,7 @@ export default function ZoomOverviewComposition() {
         <LinePlot />
       </g>
       <ChartsXAxis label="X axis" axisId="x-axis-id" />
-      <ChartOverview />
+      <ChartZoomSlider />
       <ChartsClipPath id={clipPathId} />
     </ChartContainerPro>
   );

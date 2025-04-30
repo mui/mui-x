@@ -1,4 +1,4 @@
-import { DEFAULT_ZOOM_OVERVIEW_SIZE } from '../../../../constants';
+import { DEFAULT_ZOOM_SLIDER_SIZE } from '../../../../constants';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -11,9 +11,7 @@ export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis],
       axis.position === 'left'
         ? acc +
           (axis.width || 0) +
-          (axis.zoom?.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
-            : 0)
+          (axis.zoom?.slider?.enabled ? (axis.zoom?.slider?.size ?? DEFAULT_ZOOM_SLIDER_SIZE) : 0)
         : acc,
     0,
   ),
@@ -25,9 +23,7 @@ export const selectorChartRightAxisSize = createSelector([selectorChartRawYAxis]
       axis.position === 'right'
         ? acc +
           (axis.width || 0) +
-          (axis.zoom?.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
-            : 0)
+          (axis.zoom?.slider?.enabled ? (axis.zoom?.slider?.size ?? DEFAULT_ZOOM_SLIDER_SIZE) : 0)
         : acc,
     0,
   ),
@@ -39,9 +35,7 @@ export const selectorChartTopAxisSize = createSelector([selectorChartRawXAxis], 
       axis.position === 'top'
         ? acc +
           (axis.height || 0) +
-          (axis.zoom?.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
-            : 0)
+          (axis.zoom?.slider?.enabled ? (axis.zoom?.slider?.size ?? DEFAULT_ZOOM_SLIDER_SIZE) : 0)
         : acc,
     0,
   ),
@@ -53,9 +47,7 @@ export const selectorChartBottomAxisSize = createSelector([selectorChartRawXAxis
       axis.position === 'bottom'
         ? acc +
           (axis.height || 0) +
-          (axis.zoom?.overview?.enabled
-            ? (axis.zoom?.overview?.size ?? DEFAULT_ZOOM_OVERVIEW_SIZE)
-            : 0)
+          (axis.zoom?.slider?.enabled ? (axis.zoom?.slider?.size ?? DEFAULT_ZOOM_SLIDER_SIZE) : 0)
         : acc,
     0,
   ),
