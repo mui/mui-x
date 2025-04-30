@@ -13,6 +13,8 @@ export type ChartContainerProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 > = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
+export type ChartApi = NonNullable<NonNullable<ChartContainerProps['apiRef']>['current']>;
+
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *
@@ -105,6 +107,10 @@ ChartContainer.propTypes = {
    */
   id: PropTypes.string,
   /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *
@@ -123,7 +129,7 @@ ChartContainer.propTypes = {
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
   /**

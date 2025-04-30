@@ -1,7 +1,3 @@
----
-title: React Data Grid - Server-side data
----
-
 # Data Grid - Server-side data
 
 <p class="description">Learn how to work with server-side data in the Data Grid using the Data Source layer.</p>

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import InstallationInstructions from './InstallationInstructions';
 
-// #default-branch-switch
+// #npm-tag-reference
 
 const packages = {
-  Community: '@mui/x-tree-view@next',
-  Pro: '@mui/x-tree-view-pro@next',
+  Community: '@mui/x-tree-view',
+  Pro: '@mui/x-tree-view-pro',
 };
 
 export default function TreeViewInstallationInstructions() {
