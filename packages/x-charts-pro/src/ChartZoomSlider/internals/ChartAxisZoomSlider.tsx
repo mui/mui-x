@@ -256,17 +256,8 @@ function ChartAxisZoomSliderSpan({
 
     const point = getSVGPoint(element, event);
 
-    if (
-      !instance.isPointInside({
-        x: axisDirection === 'x' ? point.x : drawingArea.left,
-        y: axisDirection === 'x' ? drawingArea.top : point.y,
-      })
-    ) {
-      return;
-    }
-
     store.update((state) => {
-      const { left, bottom, width, height } = selectorChartDrawingArea(state);
+      const { left, top, width, height } = selectorChartDrawingArea(state);
 
       const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
 
@@ -281,7 +272,7 @@ function ChartAxisZoomSliderSpan({
               if (axisDirection === 'x') {
                 newStart = ((point.x - left) / width) * 100;
               } else {
-                newStart = ((point.y - bottom) / height) * 100;
+                newStart = ((top + height - point.y) / height) * 100;
               }
 
               if (reverse) {
@@ -312,17 +303,8 @@ function ChartAxisZoomSliderSpan({
 
     const point = getSVGPoint(element, event);
 
-    if (
-      !instance.isPointInside({
-        x: axisDirection === 'x' ? point.x : drawingArea.left,
-        y: axisDirection === 'x' ? drawingArea.top : point.y,
-      })
-    ) {
-      return;
-    }
-
     store.update((state) => {
-      const { left, bottom, width, height } = selectorChartDrawingArea(state);
+      const { left, top, width, height } = selectorChartDrawingArea(state);
 
       const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
 
@@ -337,7 +319,7 @@ function ChartAxisZoomSliderSpan({
               if (axisDirection === 'x') {
                 newEnd = ((point.x - left) / width) * 100;
               } else {
-                newEnd = ((point.y - bottom) / height) * 100;
+                newEnd = ((top + height - point.y) / height) * 100;
               }
 
               if (reverse) {

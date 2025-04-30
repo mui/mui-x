@@ -65,16 +65,17 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
     });
 
     const onPointerUp = () => {
-      document.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerup', onPointerUp);
+      handle.removeEventListener('pointermove', onPointerMove);
+      handle.removeEventListener('pointerup', onPointerUp);
     };
 
     const onPointerDown = (event: PointerEvent) => {
       // Prevent text selection when dragging the handle
       event.preventDefault();
       event.stopPropagation();
-      document.addEventListener('pointerup', onPointerUp);
-      document.addEventListener('pointermove', onPointerMove);
+      handle.setPointerCapture(event.pointerId);
+      handle.addEventListener('pointerup', onPointerUp);
+      handle.addEventListener('pointermove', onPointerMove);
     };
 
     handle.addEventListener('pointerdown', onPointerDown);
