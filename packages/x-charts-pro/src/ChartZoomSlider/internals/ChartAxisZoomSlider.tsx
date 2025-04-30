@@ -161,7 +161,7 @@ function ChartAxisZoomSliderSpan({
     let prevPointerZoom = 0;
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
-      const { left, bottom, height, width } = selectorChartDrawingArea(store.getSnapshot());
+      const { left, top, height, width } = selectorChartDrawingArea(store.getSnapshot());
       const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
       const element = svgRef.current;
 
@@ -175,7 +175,7 @@ function ChartAxisZoomSliderSpan({
       if (axisDirection === 'x') {
         pointerZoom = ((point.x - left) / width) * 100;
       } else {
-        pointerZoom = ((point.y - bottom) / height) * 100;
+        pointerZoom = ((top + height - point.y) / height) * 100;
       }
 
       if (reverse) {
@@ -191,15 +191,16 @@ function ChartAxisZoomSliderSpan({
     });
 
     const onPointerUp = () => {
-      document.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerup', onPointerUp);
+      activePreviewRect.removeEventListener('pointermove', onPointerMove);
+      activePreviewRect.removeEventListener('pointerup', onPointerUp);
     };
 
     const onPointerDown = (event: PointerEvent) => {
       // Prevent text selection when dragging
       event.preventDefault();
+      activePreviewRect.setPointerCapture(event.pointerId);
 
-      const { top, left, bottom, height, width } = selectorChartDrawingArea(store.getSnapshot());
+      const { left, top, height, width } = selectorChartDrawingArea(store.getSnapshot());
       const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
       const element = svgRef.current;
 
@@ -209,21 +210,12 @@ function ChartAxisZoomSliderSpan({
 
       const point = getSVGPoint(element, event);
 
-      if (
-        !instance.isPointInside({
-          x: axisDirection === 'x' ? point.x : left,
-          y: axisDirection === 'x' ? top : point.y,
-        })
-      ) {
-        return;
-      }
-
       // The corresponding value of zoom where the pointer was pressed
       let pointerDownZoom: number;
       if (axisDirection === 'x') {
         pointerDownZoom = ((point.x - left) / width) * 100;
       } else {
-        pointerDownZoom = ((point.y - bottom) / height) * 100;
+        pointerDownZoom = ((top + height - point.y) / height) * 100;
       }
 
       if (reverse) {
@@ -234,8 +226,8 @@ function ChartAxisZoomSliderSpan({
       pointerZoomMin = pointerDownZoom - axisZoomData.start;
       pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
 
-      document.addEventListener('pointerup', onPointerUp);
-      document.addEventListener('pointermove', onPointerMove);
+      activePreviewRect.addEventListener('pointerup', onPointerUp);
+      activePreviewRect.addEventListener('pointermove', onPointerMove);
     };
 
     activePreviewRect.addEventListener('pointerdown', onPointerDown);
