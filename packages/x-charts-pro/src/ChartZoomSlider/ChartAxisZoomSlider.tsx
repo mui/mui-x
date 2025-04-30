@@ -19,7 +19,7 @@ import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
-import { ChartAxisZoomOverviewHandle } from './ChartAxisZoomOverviewHandle';
+import { ChartAxisZoomSliderHandle } from './ChartAxisZoomSliderHandle';
 
 const BackgroundRect = styled('rect')(({ theme }) => ({
   '&': {
@@ -44,7 +44,7 @@ const ZoomRangePreviewRect = styled('rect')(({ theme }) => ({
 
 const PREVIEW_HANDLE_WIDTH = 4;
 
-interface ChartZoomOverviewProps {
+interface ChartZoomSliderProps {
   /**
    * The ID of the axis this overview refers to.
    */
@@ -61,10 +61,10 @@ interface ChartZoomOverviewProps {
 }
 
 /**
- * Renders the zoom overview for a specific axis.
+ * Renders the zoom slider for a specific axis.
  * @internal
  */
-export function ChartAxisZoomOverview({ size, axisDirection, axisId }: ChartZoomOverviewProps) {
+export function ChartAxisZoomSlider({ size, axisDirection, axisId }: ChartZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
@@ -422,7 +422,7 @@ function ChartAxisZoomOverviewSpan({
       {
         // TODO: In RTL languages, should we start from the right?
       }
-      <ChartAxisZoomOverviewHandle
+      <ChartAxisZoomSliderHandle
         x={startHandleX}
         y={startHandleY}
         width={previewHandleWidth}
@@ -431,7 +431,7 @@ function ChartAxisZoomOverviewSpan({
         onResize={onResizeStart}
         placement="start"
       />
-      <ChartAxisZoomOverviewHandle
+      <ChartAxisZoomSliderHandle
         x={endHandleX}
         y={endHandleY}
         width={previewHandleWidth}

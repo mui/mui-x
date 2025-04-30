@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { ChartAxisOverview } from './ChartAxisOverview';
+import { ChartAxisZoomSlider } from './ChartAxisZoomSlider';
 
 /**
- * Renders the overview for all x and y axes that have an overview enabled.
+ * Renders the zoom slider for all x and y axes that have it enabled.
  */
-export function ChartOverview() {
+export function ChartZoomSlider() {
   const { xAxisIds, xAxis: xAxes } = useXAxes();
   const { yAxisIds, yAxis: yAxes } = useYAxes();
 
@@ -21,7 +21,12 @@ export function ChartOverview() {
         }
 
         return (
-          <ChartAxisOverview key={axisId} size={overview.size} axisId={axisId} axisDirection="x" />
+          <ChartAxisZoomSlider
+            key={axisId}
+            size={overview.size}
+            axisId={axisId}
+            axisDirection="x"
+          />
         );
       })}
       {yAxisIds.map((axisId) => {
@@ -34,7 +39,12 @@ export function ChartOverview() {
         }
 
         return (
-          <ChartAxisOverview key={axisId} size={overview.size} axisId={axisId} axisDirection="y" />
+          <ChartAxisZoomSlider
+            key={axisId}
+            size={overview.size}
+            axisId={axisId}
+            axisDirection="y"
+          />
         );
       })}
     </React.Fragment>

@@ -1,9 +1,9 @@
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import type { ChartZoomOverviewHandleOwnerState } from './ChartAxisZoomOverviewHandle';
+import type { ChartZoomSliderHandleOwnerState } from './ChartAxisZoomSliderHandle';
 
-export interface ChartAxisZoomOverviewHandleClasses {
+export interface ChartAxisZoomSliderHandleClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element when it is horizontal. */
@@ -16,10 +16,10 @@ export interface ChartAxisZoomOverviewHandleClasses {
   end: string;
 }
 
-export type ChartAxisZoomOverviewHandleClassKey = keyof ChartAxisZoomOverviewHandleClasses;
+export type ChartAxisZoomSliderHandleClassKey = keyof ChartAxisZoomSliderHandleClasses;
 
-export const chartAxisZoomOverviewHandleClasses: ChartAxisZoomOverviewHandleClasses =
-  generateUtilityClasses('MuiChartAxisZoomOverviewHandle', [
+export const chartAxisZoomSliderHandleClasses: ChartAxisZoomSliderHandleClasses =
+  generateUtilityClasses('MuiChartAxisZoomSliderHandle', [
     'root',
     'horizontal',
     'vertical',
@@ -27,11 +27,11 @@ export const chartAxisZoomOverviewHandleClasses: ChartAxisZoomOverviewHandleClas
     'end',
   ]);
 
-export function getAxisZoomOverviewHandleUtilityClass(slot: string) {
-  return generateUtilityClass('MuiChartAxisZoomOverviewHandle', slot);
+export function getAxisZoomSliderHandleUtilityClass(slot: string) {
+  return generateUtilityClass('MuiChartAxisZoomSliderHandle', slot);
 }
 
-export const useUtilityClasses = (ownerState: ChartZoomOverviewHandleOwnerState) => {
+export const useUtilityClasses = (ownerState: ChartZoomSliderHandleOwnerState) => {
   const { orientation, placement } = ownerState;
   const slots = {
     root: [
@@ -41,5 +41,5 @@ export const useUtilityClasses = (ownerState: ChartZoomOverviewHandleOwnerState)
     ],
   };
 
-  return composeClasses(slots, getAxisZoomOverviewHandleUtilityClass);
+  return composeClasses(slots, getAxisZoomSliderHandleUtilityClass);
 };

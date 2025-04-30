@@ -6,42 +6,42 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import {
-  chartAxisZoomOverviewHandleClasses,
+  chartAxisZoomSliderHandleClasses,
   useUtilityClasses,
-} from './chartAxisZoomOverviewHandleClasses';
+} from './chartAxisZoomSliderHandleClasses';
 
 const Rect = styled('rect')(({ theme }) => ({
-  [`&.${chartAxisZoomOverviewHandleClasses.root}`]: {
+  [`&.${chartAxisZoomSliderHandleClasses.root}`]: {
     fill:
       theme.palette.mode === 'dark'
         ? (theme.vars || theme).palette.grey[700]
         : (theme.vars || theme).palette.grey[500],
   },
-  [`&.${chartAxisZoomOverviewHandleClasses.horizontal}`]: {
+  [`&.${chartAxisZoomSliderHandleClasses.horizontal}`]: {
     cursor: 'ew-resize',
   },
-  [`&.${chartAxisZoomOverviewHandleClasses.vertical}`]: {
+  [`&.${chartAxisZoomSliderHandleClasses.vertical}`]: {
     cursor: 'ns-resize',
   },
 }));
 
-export interface ChartZoomOverviewHandleOwnerState {
+export interface ChartZoomSliderHandleOwnerState {
   onResize: (event: PointerEvent) => void;
   orientation: 'horizontal' | 'vertical';
   placement: 'start' | 'end';
 }
 
-export interface ChartZoomOverviewHandleProps
+export interface ChartZoomSliderHandleProps
   extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'>,
-    ChartZoomOverviewHandleOwnerState {}
+    ChartZoomSliderHandleOwnerState {}
 
 /**
- * Renders the zoom overview handle, which is responsible for resizing the zoom range.
+ * Renders the zoom slider handle, which is responsible for resizing the zoom range.
  * @internal
  */
-export const ChartAxisZoomOverviewHandle = React.forwardRef<
+export const ChartAxisZoomSliderHandle = React.forwardRef<
   SVGRectElement,
-  ChartZoomOverviewHandleProps
+  ChartZoomSliderHandleProps
 >(function ChartPreviewHandle(
   { x, y, width, height, onResize, orientation, placement, rx = 2, ry = 2 },
   forwardedRef,
