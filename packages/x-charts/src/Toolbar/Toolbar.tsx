@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { ChartsToolbarSlotsProvider } from './ChartsToolbarSlotsContext';
+import { ChartsSlotProps, ChartsSlots } from '../material';
 
 const ToolbarRoot = styled('div', {
   name: 'MuiChartsToolbar',
@@ -17,8 +19,21 @@ const ToolbarRoot = styled('div', {
   borderRadius: 4,
 }));
 
-export interface ToolbarProps extends React.PropsWithChildren {}
+export interface ToolbarProps extends React.PropsWithChildren {
+  /**
+   * The slots used by the ChartsToolbar and descendants.
+   */
+  slots?: ChartsSlots;
+  /**
+   * The slot props used by the ChartsToolbar and descendants.
+   */
+  slotProps?: ChartsSlotProps;
+}
 
-export function Toolbar({ children }: ToolbarProps) {
-  return <ToolbarRoot>{children}</ToolbarRoot>;
+export function Toolbar({ slots, slotProps, children }: ToolbarProps) {
+  return (
+    <ChartsToolbarSlotsProvider slots={slots} slotProps={slotProps}>
+      <ToolbarRoot>{children}</ToolbarRoot>
+    </ChartsToolbarSlotsProvider>
+  );
 }
