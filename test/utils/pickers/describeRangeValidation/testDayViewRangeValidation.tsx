@@ -70,12 +70,15 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
       describe('with fake timers', () => {
         // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
         let timer: SinonFakeTimers | null = null;
+
         beforeEach(() => {
-          timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+          timer = useFakeTimers({ now: new Date(2018, 0, 5), toFake: ['Date'] });
         });
+
         afterEach(() => {
           timer?.restore();
         });
+
         it('should apply disablePast', () => {
           const { render } = getOptions();
 
