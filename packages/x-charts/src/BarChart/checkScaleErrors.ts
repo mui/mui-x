@@ -1,6 +1,12 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { AxisDefaultized, AxisId, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import {
+  AxisId,
+  isBandScaleConfig,
+  isPointScaleConfig,
+  ComputedXAxis,
+  ComputedYAxis,
+} from '../models/axis';
 import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 import { SeriesId } from '../models/seriesType/common';
 
@@ -18,9 +24,9 @@ export function checkScaleErrors(
   seriesId: SeriesId,
   series: DefaultizedBarSeriesType & { stackedData: [number, number][] },
   xAxisId: AxisId,
-  xAxis: { [axisId: AxisId]: AxisDefaultized },
+  xAxis: { [axisId: AxisId]: ComputedXAxis },
   yAxisId: AxisId,
-  yAxis: { [axisId: AxisId]: AxisDefaultized },
+  yAxis: { [axisId: AxisId]: ComputedYAxis },
 ): void {
   const xAxisConfig = xAxis[xAxisId];
   const yAxisConfig = yAxis[yAxisId];
@@ -36,24 +42,24 @@ export function checkScaleErrors(
 
   if (!isBandScaleConfig(discreteAxisConfig)) {
     throw new Error(
-      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
     );
   }
   if (discreteAxisConfig.data === undefined) {
     throw new Error(
-      `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
     );
   }
   if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
     throw new Error(
-      `MUI X: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
   }
   if (process.env.NODE_ENV !== 'production') {
     if (discreteAxisConfig.data.length < series.stackedData.length) {
       warnOnce(
         [
-          `MUI X: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
+          `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
           'The axis data should have at least the same length than the series using it.',
         ],
         'error',
