@@ -6,6 +6,14 @@ title: React Data Grid - Server-side lazy loading
 
 <p class="description">Implement lazy-loading rows with server-side data in the Data Grid using the Data Source layer.</p>
 
+## Server-side lazy loading
+
+Lazy loading is a technique for deferring the loading of resources until they are actually needed, rather than loading everything when a page is first requested.
+Lazy loading changes the way pagination works in the Data Grid by removing page controls and instead loading data dynamically (in a single list) as the user scrolls.
+
+This feature is fully documented in the [primary Lazy loading doc](/x/react-data-grid/lazy-loading/) which covers client-side implementation.
+The information that follows here is specifically for server-side implementation.
+
 ## Prerequisites
 
 To be able to lazy-load data from the server, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
@@ -19,8 +27,6 @@ To enable lazy loading, pass the `lazyLoading` prop to the Data Grid along with 
 ```
 
 ## How lazy loading works
-
-Lazy loading changes the way pagination works by removing page controls and instead loading data dynamically (in a single list) as the user scrolls through the Data Grid.
 
 Initially, data for the first page is fetched and displayed in the Grid.
 The value of the total row count determines when the next page's data is loaded:
