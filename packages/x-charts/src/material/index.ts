@@ -1,5 +1,6 @@
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import type * as React from 'react';
 import { ChartsBaseSlots } from '../models/slots/chartsBaseSlots';
 import { ChartsIconSlots } from '../models/slots/chartsIconSlots';
 import { ChartsZoomInIcon, ChartsZoomOutIcon } from './icons';
@@ -14,7 +15,11 @@ const iconSlots: ChartsIconSlots = {
   zoomOutIcon: ChartsZoomOutIcon,
 };
 
-export type ChartsSlots = ChartsBaseSlots & ChartsIconSlots;
+export interface ChartsSlots extends ChartsBaseSlots, ChartsIconSlots {}
+
+export type ChartsSlotProps = {
+  [key in keyof ChartsSlots]: React.ComponentProps<ChartsSlots[key]>;
+};
 
 const materialSlots: ChartsSlots = { ...baseSlots, ...iconSlots };
 
