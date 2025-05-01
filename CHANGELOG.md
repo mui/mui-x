@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.2
+
+_May 1, 2025_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Armenian (hy-AM) locale on the Data Grid
+- 🌍 Improve Italian (it-IT) locale on the Date and Time Pickers
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@ArturAghakaryan, @federico-ntr.
+
+Following are all team members who have contributed to this release:
+@arminmeh, @JCQuintas, @KenanYusuf, @MBilalShafi, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.2`
+
+- [DataGrid] Fix column title truncation on touch devices (#17497) @KenanYusuf
+- [DataGrid] Fix theme `defaultProps` causing unwanted re-renders (#17530) @KenanYusuf
+- [l10n] Add Armenian (hy-AM) locale (#17422) @ArturAghakaryan
+- [l10n] Fix l10n export (#17526) @arminmeh
+
+#### `@mui/x-data-grid-pro@7.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.2`.
+
+#### `@mui/x-data-grid-premium@7.29.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.2`
+
+- [l10n] Improve Italian (it-IT) locale (#17604) @federico-ntr
+
+#### `@mui/x-date-pickers-pro@7.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.2`.
+
+### Docs
+
+- [docs] Fix MUI X v7 install instructions (#17537) @oliviertassinari
+- [docs] Improve data grid export docs (#17553) @MBilalShafi
+
+### Core
+
+- [core] Fix root package 7.29.1 (#17523) @JCQuintas
+
 ## 7.29.1
 
 _Apr 23, 2025_
