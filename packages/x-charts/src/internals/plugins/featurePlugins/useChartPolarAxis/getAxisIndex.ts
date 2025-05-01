@@ -10,7 +10,7 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isBandScale(scale)) {
-    throw new Error('MUI X: getAxisValue is not implemented for polare continuous axes.');
+    throw new Error('MUI X Charts: getAxisValue is not implemented for polare continuous axes.');
   }
 
   if (!axisData) {

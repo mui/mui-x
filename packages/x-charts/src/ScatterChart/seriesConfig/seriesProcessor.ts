@@ -13,7 +13,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
       if (seriesData?.datasetKeys && missingKeys.length > 0) {
         throw new Error(
           [
-            `MUI X: scatter series with id='${seriesId}' has incomplete datasetKeys.`,
+            `MUI X Charts: scatter series with id='${seriesId}' has incomplete datasetKeys.`,
             `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
           ].join('\n'),
         );
