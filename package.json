@@ -190,7 +190,7 @@
     "typescript": "^5.8.3",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
-    "vite": "^6.3.3",
+    "vite": "^6.3.4",
     "vitest": "3.1.2",
     "vitest-fail-on-console": "^0.7.1",
     "webpack": "^5.99.7",
