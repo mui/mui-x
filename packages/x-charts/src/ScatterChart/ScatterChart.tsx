@@ -3,7 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar/ChartsToolbar.types';
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
+import { ChartsToolbarProps } from '../Toolbar';
+import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../material';
 import {
   ScatterPlot,
   ScatterPlotProps,
@@ -39,14 +41,25 @@ export interface ScatterChartSlots
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
-    ChartsToolbarSlots {}
+    Partial<ChartsToolbarSlots> {
+  /**
+   * Custom component for the toolbar.
+   * @default ChartsToolbar
+   */
+  toolbar?: React.ElementType<ChartsToolbarProps>;
+}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
-    ChartsToolbarSlotProps {}
+    Partial<ChartsToolbarSlotProps> {
+  /**
+   * Props for the toolbar component.
+   */
+  toolbar?: Partial<ChartsToolbarProps>;
+}
 
 export interface ScatterChartProps
   extends Omit<
@@ -95,6 +108,11 @@ export interface ScatterChartProps
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?: ScatterPlotProps['onItemClick'] | UseChartVoronoiSignature['params']['onItemClick'];
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
 }
 
 /**
@@ -121,6 +139,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
     overlayProps,
     legendProps,
     axisHighlightProps,
+    chartToolbarProps,
     children,
   } = useScatterChartProps(props);
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps(
@@ -129,10 +148,12 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar ? <Toolbar {...chartToolbarProps} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />

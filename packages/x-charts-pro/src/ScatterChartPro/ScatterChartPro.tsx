@@ -26,13 +26,7 @@ export interface ScatterChartProProps
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
-    > {
-  /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-}
+    > {}
 
 /**
  * Demos:
@@ -49,7 +43,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -78,11 +72,12 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {showToolbar ? <ChartsToolbarPro {...chartToolbarProps} /> : null}
+        {props.showToolbar ? <Toolbar {...chartToolbarProps} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
