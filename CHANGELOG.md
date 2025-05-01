@@ -1821,7 +1821,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.8`.
 - [docs] Add example for custom legend (#16169) @alexfauquette
 - [docs] Add full custom field creation example (#15194) @flaviendelangle
 - [docs] Copyedit the Data Grid cell selection page (#16099) @samuelsycamore
-- [docs] Fix demo rendering issue on Codesandbox (#16118) @arminmeh
+- [docs] Fix demo rendering issue on CodeSandbox (#16118) @arminmeh
 - [docs] Remove broken links (#16167) @alexfauquette
 - [docs] Split the Data Grid editing page (#14931) @MBilalShafi
 - [docs] Fix wrong props warnings (#16119) @JCQuintas
@@ -2268,7 +2268,7 @@ Releasing to benefit from license package fix (#15814).
 
 - [code-infra] Add Charts sandbox generation (#15830) @JCQuintas
 - [code-infra] Remove redundant `@type/react-test-renderer` dep (#15766) @LukasTy
-- [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15814) @arminmeh
+- [license] Use `console.log` for the error message on CodeSandbox to avoid rendering error (#15814) @arminmeh
 
 ## 8.0.0-alpha.3
 
@@ -3405,7 +3405,7 @@ Same changes as in `@mui/x-tree-view@7.24.0`.
 ### Docs
 
 - [docs] Copyedit the Data Grid cell selection page (#16213) @samuelsycamore
-- [docs] Fix demo rendering issue on Codesandbox (#16129) @arminmeh
+- [docs] Fix demo rendering issue on CodeSandbox (#16129) @arminmeh
 
 ### Core
 
@@ -3683,7 +3683,7 @@ Releasing to benefit from license package fix (#15818).
 ### Core
 
 - [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
-- [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15818) @arminmeh
+- [license] Use `console.log` for the error message on CodeSandbox to avoid rendering error (#15818) @arminmeh
 
 ## 7.23.1
 
