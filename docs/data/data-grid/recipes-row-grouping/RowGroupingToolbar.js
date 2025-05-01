@@ -8,6 +8,8 @@ import {
   gridColumnLookupSelector,
   gridColumnReorderDragColSelector,
   gridRowGroupingSanitizedModelSelector,
+  useGridApiRef,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Typography from '@mui/material/Typography';
@@ -83,6 +85,18 @@ function CustomToolbar() {
     }
   };
 
+  const moveRowGroup = (field, position) => {
+    if (position < 0 || position > rowGroupingModel.length) {
+      return;
+    }
+
+    const currentIndex = rowGroupingModel.indexOf(field);
+    const newModel = [...rowGroupingModel];
+    newModel.splice(currentIndex, 1);
+    newModel.splice(position, 0, field);
+    apiRef.current.setRowGroupingModel(newModel);
+  };
+
   const removeRowGroup = (field) => {
     apiRef.current.removeRowGroupingCriteria(field);
   };
@@ -95,30 +109,52 @@ function CustomToolbar() {
     >
       {rowGroupingModel.length > 0 ? (
         <React.Fragment>
-          {rowGroupingModel.map((field, index) => (
-            <React.Fragment key={field}>
-              {index > 0 && <ChevronRightIcon fontSize="small" color="action" />}
-              <ToolbarButton
-                render={
-                  <Chip
-                    key={field}
-                    label={columnsLookup[field].headerName ?? field}
-                    icon={<DragIndicatorIcon fontSize="small" />}
-                    sx={{
-                      cursor: 'grab',
-                      opacity:
-                        draggedChip === field || draggedColumn === field ? 0.5 : 1,
-                    }}
-                    onDragStart={handleChipDragStart(field)}
-                    onDragEnd={handleChipDragEnd}
-                    onDragOver={handleChipDragOver(field)}
-                    onDelete={() => removeRowGroup(field)}
-                    draggable
-                  />
-                }
-              />
-            </React.Fragment>
-          ))}
+          {rowGroupingModel.map((field, index) => {
+            const isDraggedField = draggedChip === field || draggedColumn === field;
+            return (
+              <React.Fragment key={field}>
+                {index > 0 && <ChevronRightIcon fontSize="small" color="action" />}
+                <ToolbarButton
+                  id={field}
+                  render={({
+                    children,
+                    color,
+                    size,
+                    ref,
+                    onKeyDown,
+                    ...chipProps
+                  }) => {
+                    // TODO: Fix keyboard navigation once re-ordereda
+                    const handleKeyDown = (event) => {
+                      if (event.key === 'ArrowRight' && event.shiftKey) {
+                        moveRowGroup(field, index + 1);
+                      } else if (event.key === 'ArrowLeft' && event.shiftKey) {
+                        moveRowGroup(field, index - 1);
+                      } else {
+                        onKeyDown?.(event);
+                      }
+                    };
+
+                    return (
+                      <Chip
+                        {...chipProps}
+                        ref={ref}
+                        label={columnsLookup[field].headerName ?? field}
+                        icon={<DragIndicatorIcon fontSize="small" />}
+                        sx={{ cursor: 'grab', opacity: isDraggedField ? 0.5 : 1 }}
+                        onDelete={() => removeRowGroup(field)}
+                        onKeyDown={handleKeyDown}
+                        onDragStart={handleChipDragStart(field)}
+                        onDragEnd={handleChipDragEnd}
+                        onDragOver={handleChipDragOver(field)}
+                        draggable
+                      />
+                    );
+                  }}
+                />
+              </React.Fragment>
+            );
+          })}
         </React.Fragment>
       ) : (
         <Typography variant="body2" color="textSecondary" sx={{ flex: 1 }} noWrap>
@@ -130,10 +166,21 @@ function CustomToolbar() {
 }
 
 export default function RowGroupingToolbar() {
+  const apiRef = useGridApiRef();
+
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
     maxColumns: 10,
+  });
+
+  const initialState = useKeepGroupedColumnsHidden({
+    apiRef,
+    initialState: {
+      rowGrouping: {
+        model: ['commodity', 'status'],
+      },
+    },
   });
 
   return (
@@ -142,11 +189,8 @@ export default function RowGroupingToolbar() {
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
-        initialState={{
-          rowGrouping: {
-            model: ['commodity', 'status'],
-          },
-        }}
+        initialState={initialState}
+        apiRef={apiRef}
         showToolbar
       />
     </div>

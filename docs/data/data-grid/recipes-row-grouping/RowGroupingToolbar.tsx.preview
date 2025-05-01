@@ -2,10 +2,7 @@
   {...data}
   loading={loading}
   slots={{ toolbar: CustomToolbar }}
-  initialState={{
-    rowGrouping: {
-      model: ['commodity', 'status'],
-    },
-  }}
+  initialState={initialState}
+  apiRef={apiRef}
   showToolbar
 />

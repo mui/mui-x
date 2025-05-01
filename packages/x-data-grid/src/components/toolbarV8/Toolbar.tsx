@@ -10,6 +10,7 @@ import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridC
 import { ToolbarContext } from './ToolbarContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { sortByDocumentPosition } from './utils';
 
 export type ToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
   /**
@@ -19,6 +20,11 @@ export type ToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 type OwnerState = DataGridProcessedProps;
+
+type Item = {
+  id: string;
+  ref: React.RefObject<HTMLButtonElement | null>;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -62,28 +68,10 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
-  const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
-  const [items, setItems] = React.useState<
-    { id: string; ref: React.RefObject<HTMLButtonElement | null> }[]
-  >([]);
-
-  const registerItem = React.useCallback(
-    (id: string, itemRef: React.RefObject<HTMLButtonElement | null>) => {
-      setItems((prevItems) => [...prevItems, { id, ref: itemRef }]);
-    },
-    [],
+  const [focusableItem, setFocusableItem] = React.useState<{ id: string; index: number } | null>(
+    null,
   );
-
-  const unregisterItem = React.useCallback(
-    (id: string) => {
-      setItems((prevItems) => prevItems.filter((i) => i.id !== id));
-
-      if (focusableItemId === id) {
-        setFocusableItemId(null);
-      }
-    },
-    [focusableItemId],
-  );
+  const [items, setItems] = React.useState<Item[]>([]);
 
   const findEnabledItem = React.useCallback(
     (startIndex: number, step: number, wrap = true): number => {
@@ -122,21 +110,31 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
     [items],
   );
 
+  const registerItem = React.useCallback(
+    (id: string, itemRef: React.RefObject<HTMLButtonElement | null>) => {
+      setItems((prevItems) => [...prevItems, { id, ref: itemRef }].sort(sortByDocumentPosition));
+    },
+    [],
+  );
+
+  const unregisterItem = React.useCallback((id: string) => {
+    setItems((prevItems) => prevItems.filter((i) => i.id !== id));
+  }, []);
+
   const onItemKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
-      if (!focusableItemId) {
+      if (!focusableItem) {
         return;
       }
 
-      const currentIndex = items.findIndex((item) => item.id === focusableItemId);
       let newIndex = -1;
 
       if (event.key === 'ArrowRight') {
         event.preventDefault();
-        newIndex = findEnabledItem(currentIndex, 1);
+        newIndex = findEnabledItem(focusableItem.index, 1);
       } else if (event.key === 'ArrowLeft') {
         event.preventDefault();
-        newIndex = findEnabledItem(currentIndex, -1);
+        newIndex = findEnabledItem(focusableItem.index, -1);
       } else if (event.key === 'Home') {
         event.preventDefault();
         newIndex = findEnabledItem(-1, 1, false);
@@ -145,22 +143,24 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
         newIndex = findEnabledItem(items.length, -1, false);
       }
 
+      // TODO: Check why this is necessary
       if (newIndex >= 0 && newIndex < items.length) {
         const item = items[newIndex];
-        setFocusableItemId(item.id);
+        setFocusableItem({ id: item.id, index: newIndex });
         item.ref.current?.focus();
       }
     },
-    [items, focusableItemId, findEnabledItem],
+    [items, focusableItem, findEnabledItem],
   );
 
   const onItemFocus = React.useCallback(
     (id: string) => {
-      if (focusableItemId !== id) {
-        setFocusableItemId(id);
+      if (focusableItem?.id !== id) {
+        const itemIndex = items.findIndex((item) => item.id === id);
+        setFocusableItem({ id, index: itemIndex });
       }
     },
-    [focusableItemId],
+    [focusableItem, items],
   );
 
   const onItemDisabled = React.useCallback(
@@ -169,23 +169,51 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
       const newIndex = findEnabledItem(currentIndex, 1);
       if (newIndex >= 0 && newIndex < items.length) {
         const item = items[newIndex];
-        setFocusableItemId(item.id);
+        setFocusableItem({ id: item.id, index: newIndex });
         item.ref.current?.focus();
       }
     },
     [items, findEnabledItem],
   );
 
+  React.useEffect(() => {
+    if (items.length > 0) {
+      if (!focusableItem) {
+        // Set initial focusable item
+        setFocusableItem({ id: items[0].id, index: 0 });
+        return;
+      }
+
+      const focusableItemIndex = items.findIndex((item) => item.id === focusableItem.id);
+
+      if (focusableItemIndex >= 0) {
+        // Item has been moved to a different position in the array
+        setFocusableItem({ id: focusableItem.id, index: focusableItemIndex });
+      } else {
+        // Item has been removed from the items array
+        const newIndex = focusableItem.index === 0 ? 0 : findEnabledItem(focusableItem.index, -1);
+        if (newIndex >= 0 && newIndex < items.length) {
+          const item = items[newIndex];
+          setFocusableItem({ id: item.id, index: newIndex });
+          item.ref.current?.focus();
+        } else {
+          setFocusableItem(null);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, findEnabledItem]);
+
   const contextValue = React.useMemo(
     () => ({
-      focusableItemId,
+      focusableItem,
       registerItem,
       unregisterItem,
       onItemKeyDown,
       onItemFocus,
       onItemDisabled,
     }),
-    [focusableItemId, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemDisabled],
+    [focusableItem, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemDisabled],
   );
 
   const element = useGridComponentRenderer(ToolbarRoot, render, {
@@ -196,12 +224,6 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
     ...other,
     ref,
   });
-
-  React.useEffect(() => {
-    if (items.length > 0) {
-      setFocusableItemId(items[0].id);
-    }
-  }, [items]);
 
   return <ToolbarContext.Provider value={contextValue}>{element}</ToolbarContext.Provider>;
 });
