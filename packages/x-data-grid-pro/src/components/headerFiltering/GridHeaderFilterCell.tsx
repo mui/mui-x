@@ -1,12 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
-} from '@mui/utils';
+import { useRtl } from '@mui/system/RtlProvider';
+import { unstable_useForkRef as useForkRef, unstable_capitalize as capitalize } from '@mui/utils';
+import { css, slot } from '@mui/x-internals/css';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
   GridFilterItem,
@@ -14,7 +11,6 @@ import {
   GridHeaderFilterEventLookup,
   GridColDef,
   gridVisibleColumnFieldsSelector,
-  getDataGridUtilityClass,
   useGridSelector,
   GridFilterInputValue,
   GridFilterInputDate,
@@ -23,12 +19,13 @@ import {
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
-  gridClasses,
 } from '@mui/x-data-grid';
 import {
   PinnedColumnPosition,
   GridStateColDef,
   GridFilterInputValueProps,
+  composeGridStyles,
+  useGridSlot,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
@@ -36,11 +33,8 @@ import {
   attachPinnedStyle,
   vars,
 } from '@mui/x-data-grid/internals';
-import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { inputBaseClasses } from '@mui/material/InputBase';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
@@ -67,69 +61,58 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   showRightBorder: boolean;
 }
 
-type OwnerState = DataGridProProcessedProps & {
-  colDef: GridColDef;
-  pinnedPosition?: PinnedColumnPosition;
-  showRightBorder: boolean;
-  showLeftBorder: boolean;
-};
+const rootStyles = css('MuiDataGrid-columnHeader', {
+  root: {},
+  filter: {},
+  alignLeft: {},
+  alignCenter: {},
+  alignRight: {},
+  withRightBorder: {},
+  withLeftBorder: {},
+  pinnedLeft: {},
+  pinnedRight: {},
+  withBorderColor: {
+    __class__: 'MuiDataGrid-withBorderColor',
+  },
+});
 
-const StyledInputComponent = styled(GridFilterInputValue, {
-  name: 'MuiDataGrid',
-  slot: 'ColumnHeaderFilterInput',
-})({
-  flex: 1,
-  marginRight: vars.spacing(0.5),
-  marginBottom: vars.spacing(-0.25),
-  '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
-    '&[value=""]:not(:focus)': {
-      color: 'transparent',
+const slotInput = slot(
+  {
+    name: 'MuiDataGrid',
+    slot: 'columnHeaderFilterInput',
+    as: GridFilterInputValue,
+  },
+  {
+    root: {
+      flex: 1,
+      marginRight: vars.spacing(0.5),
+      marginBottom: vars.spacing(-0.25),
+      '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
+        '&[value=""]:not(:focus)': {
+          color: 'transparent',
+        },
+      },
     },
   },
-  [`& .${inputBaseClasses.input}`]: {
-    fontSize: '14px',
+);
+
+const slotOperatorLabel = slot(
+  {
+    name: 'MuiDataGrid',
+    slot: 'columnHeaderFilterOperatorLabel',
+    as: 'span',
   },
-  [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
-    paddingTop: vars.spacing(0.5),
-    paddingBottom: vars.spacing(0.5),
-    height: 23,
+  {
+    root: {
+      flex: 1,
+      marginRight: vars.spacing(0.5),
+      color: vars.colors.foreground.muted,
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+    },
   },
-});
-
-const OperatorLabel = styled('span', {
-  name: 'MuiDataGrid',
-  slot: 'ColumnHeaderFilterOperatorLabel',
-})({
-  flex: 1,
-  marginRight: vars.spacing(0.5),
-  color: vars.colors.foreground.muted,
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-});
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
-
-  const slots = {
-    root: [
-      'columnHeader',
-      'columnHeader--filter',
-      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
-      'withBorderColor',
-      showRightBorder && 'columnHeader--withRightBorder',
-      showLeftBorder && 'columnHeader--withLeftBorder',
-      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
-      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
-    ],
-    input: ['columnHeaderFilterInput'],
-    operatorLabel: ['columnHeaderFilterOperatorLabel'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
+);
 
 const DEFAULT_INPUT_COMPONENTS: {
   [key in GridColType]: React.JSXElementConstructor<GridFilterInputValueProps> | null;
@@ -172,6 +155,9 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
   const handleRef = useForkRef(ref, cellRef);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
+
+  const input = useGridSlot(rootProps, slotInput);
+  const operatorLabel = useGridSlot(rootProps, slotOperatorLabel);
 
   const editingField = useGridSelector(apiRef, gridHeaderFilteringEditFieldSelector);
   const isEditing = editingField === colDef.field;
@@ -325,15 +311,19 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
     [onMouseDown, onKeyDown, publish],
   );
 
-  const ownerState: OwnerState = {
-    ...rootProps,
-    pinnedPosition,
-    colDef,
-    showLeftBorder,
-    showRightBorder,
-  };
-
-  const classes = useUtilityClasses(ownerState as OwnerState);
+  const classes = composeGridStyles(rootStyles, rootProps.classes);
+  const className = clsx(
+    classes.root,
+    classes.filter,
+    colDef.headerAlign === 'left' && classes.alignLeft,
+    colDef.headerAlign === 'center' && classes.alignCenter,
+    colDef.headerAlign === 'right' && classes.alignRight,
+    classes.withBorderColor,
+    showRightBorder && classes.withRightBorder,
+    showLeftBorder && classes.withLeftBorder,
+    pinnedPosition === PinnedColumnPosition.LEFT && classes.pinnedLeft,
+    pinnedPosition === PinnedColumnPosition.RIGHT && classes.pinnedRight,
+  );
 
   const label =
     currentOperator.headerLabel ??
@@ -366,7 +356,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
 
   return (
     <div
-      className={clsx(classes.root, headerClassName)}
+      className={clsx(className, headerClassName)}
       style={attachPinnedStyle(
         {
           height,
@@ -389,15 +379,17 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         <React.Fragment>
           {isNoInputOperator ? (
             <React.Fragment>
-              <OperatorLabel className={classes.operatorLabel}>{label}</OperatorLabel>
+              <operatorLabel.component className={operatorLabel.classes.root}>
+                {label}
+              </operatorLabel.component>
               {clearButton}
               {headerFilterMenu}
             </React.Fragment>
           ) : null}
           {InputComponent && !isNoInputOperator ? (
-            <StyledInputComponent
+            <input.component
               as={InputComponent}
-              className={classes.input}
+              className={input.classes.root}
               apiRef={apiRef}
               item={item}
               inputRef={inputRef}

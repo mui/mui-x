@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
+    "@mui/system": "^7.0.2",
     "@mui/utils": "^7.0.2"
   },
   "peerDependencies": {

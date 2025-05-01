@@ -4,30 +4,20 @@ import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
 import {
-  GridConfiguration,
   validateProps,
   useGridApiInitialization,
+  setupMaterialStyleSlots,
 } from '@mui/x-data-grid/internals';
-import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
-import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
+import { configuration } from './configuration';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
-  hooks: {
-    useCSSVariables: useMaterialCSSVariables,
-    useGridAriaAttributes,
-    useGridRowAriaAttributes,
-    useCellAggregationResult: () => null,
-  },
-};
 const releaseInfo = '__RELEASE_INFO__';
 const watermark = <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />;
 
@@ -42,6 +32,8 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   );
   useDataGridProComponent(privateApiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
+
+  setupMaterialStyleSlots();
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);

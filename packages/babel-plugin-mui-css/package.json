@@ -1,0 +1,43 @@
+{
+  "name": "babel-plugin-mui-css",
+  "version": "1.0.0",
+  "private": true,
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "tsc",
+    "test": "cross-env NODE_ENV=test mocha 'tests/**.test.*'",
+    "pretest": "pnpm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git"
+  },
+  "keywords": [
+    "babel",
+    "babel-plugin",
+    "plugin"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "pkg-dir": "^8.0.0",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.26.4",
+    "@babel/core": "^7.26.9",
+    "@mui/system": "^7.0.1",
+    "@types/node": "^20.17.19",
+    "chai": "^5.2.0",
+    "cross-env": "^5.0.0",
+    "mkdirp": "^3.0.1",
+    "mocha": "^11.1.0",
+    "outdent": "^0.8.0",
+    "rimraf": "^2.5.4",
+    "tsx": "^4.19.3"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  }
+}

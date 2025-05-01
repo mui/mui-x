@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import { css } from '@mui/x-internals/css';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -41,6 +42,7 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '../../../utils/cellBorderUtils';
+import { composeGridStyles } from '../../../utils/composeGridStyles';
 import { PinnedColumnPosition } from '../../../internals/constants';
 
 interface HeaderInfo {
@@ -79,8 +81,12 @@ type OwnerState = DataGridProcessedProps;
 export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
-})<{ ownerState: OwnerState }>({
-  display: 'flex',
+})<{ ownerState: OwnerState }>(null);
+
+export const rowStyles = css('MuiDataGrid-columnHeaderRow', {
+  root: {
+    display: 'flex',
+  },
 });
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
@@ -104,6 +110,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const rowClasses = composeGridStyles(rowStyles, rootProps.classes);
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -298,7 +305,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
         ownerState={rootProps}
-        className={gridClasses['row--borderBottom']}
+        className={clsx(gridClasses['row--borderBottom'], rowClasses.root)}
         style={{ height: headerHeight }}
       >
         {leftRenderContext &&
@@ -466,6 +473,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           role="row"
           aria-rowindex={depth + 1}
           ownerState={rootProps}
+          className={clsx(rowClasses.root)}
           style={{ height: groupHeaderHeight }}
         >
           {leftRenderContext &&
@@ -510,5 +518,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     getInnerProps: () => ({
       role: 'rowgroup',
     }),
+    rowClasses,
   };
 };

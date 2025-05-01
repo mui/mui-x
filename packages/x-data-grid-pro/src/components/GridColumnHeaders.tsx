@@ -1,14 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { css } from '@mui/x-internals/css';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
-const Filler = styled('div')({
-  flex: 1,
-  backgroundColor: vars.header.background.base,
-});
+const fillerClassName = css('MuiDataGrid-columnHeadersFiller', {
+  root: {
+    flex: 1,
+    backgroundColor: vars.header.background.base,
+  },
+}).root;
 
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -55,7 +57,7 @@ const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
         {getColumnGroupHeadersRows()}
         {getColumnHeadersRow()}
         {getColumnFiltersRow()}
-        <Filler />
+        <div className={fillerClassName} />
       </GridBaseColumnHeaders>
     );
   },

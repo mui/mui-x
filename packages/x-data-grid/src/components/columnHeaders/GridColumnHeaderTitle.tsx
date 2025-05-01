@@ -1,36 +1,29 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { slot } from '@mui/x-internals/css';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isOverflown } from '../../utils/domUtils';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { vars } from '../../constants/cssVariables';
+import { useGridSlot } from '../../hooks/utils/useGridSlot';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = DataGridProcessedProps;
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['columnHeaderTitle'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
-const GridColumnHeaderTitleRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'ColumnHeaderTitle',
-})<{ ownerState: OwnerState }>({
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  fontWeight: 'var(--unstable_DataGrid-headWeight)',
-  lineHeight: 'normal',
-});
+const slotColumnHeaderTitle = slot(
+  {
+    as: 'div',
+    name: 'MuiDataGrid',
+    slot: 'columnHeaderTitle',
+  },
+  {
+    root: {
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      fontWeight: vars.typography.fontWeight.medium,
+      lineHeight: 'normal',
+    },
+  },
+);
 
 const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function ColumnHeaderInnerTitle(props, ref) {
@@ -38,12 +31,12 @@ const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<H
     // See https://github.com/mui/mui-x/pull/14482
     const { className, 'aria-label': ariaLabel, ...other } = props;
     const rootProps = useGridRootProps();
-    const classes = useUtilityClasses(rootProps);
+    const columnHeaderTitle = useGridSlot(rootProps, slotColumnHeaderTitle);
 
     return (
-      <GridColumnHeaderTitleRoot
-        className={clsx(classes.root, className)}
+      <columnHeaderTitle.component
         ownerState={rootProps}
+        className={clsx(columnHeaderTitle.classes.root, className)}
         {...other}
         ref={ref}
       />

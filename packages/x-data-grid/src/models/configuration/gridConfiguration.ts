@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { StyleSlot } from '@mui/x-internals/css';
 import { GridRowAriaAttributesInternalHook } from './gridRowConfiguration';
 import type { GridCSSVariablesInterface } from '../../constants/cssVariables';
 import type { GridRowId } from '../gridRows';
@@ -19,4 +20,5 @@ export interface GridInternalHook
 
 export interface GridConfiguration {
   hooks: GridInternalHook;
+  styleSlots: Record<string, StyleSlot<any, any, any>>;
 }

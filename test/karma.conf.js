@@ -81,7 +81,7 @@ module.exports = function setKarmaConfig(config) {
           },
           {
             test: /\.css$/,
-            loader: 'null-loader',
+            use: ['style-loader', 'css-loader'],
           },
         ],
       },
