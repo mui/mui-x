@@ -12,6 +12,11 @@ The demo below illustrates this feature with a large and complex hierarchical da
 
 {{"demo": "TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::info
+This document covers client-side implementation.
+For tree data on the server side, see [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/).
+:::
+
 ## Rendering tree data
 
 To work with client-side tree data, pass the `treeData` and `getTreeDataPath` props to the Data Grid.
@@ -20,10 +25,6 @@ The `getTreeDataPath` function returns an array of strings representing the path
 ```tsx
 <DataGridPro treeData getTreeDataPath={getTreeDataPath} />
 ```
-
-:::info
-For tree data on the server side, see [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/).
-:::
 
 Both examples that follow will render a tree that looks like this:
 
