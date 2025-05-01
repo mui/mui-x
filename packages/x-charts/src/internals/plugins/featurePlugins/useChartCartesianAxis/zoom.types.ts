@@ -77,7 +77,7 @@ export interface ZoomOptions {
   slider?: ZoomSliderOptions;
 }
 
-interface ZoomSliderOptions {
+export interface ZoomSliderOptions {
   /**
    * If `true`, the slider will be shown.
    */

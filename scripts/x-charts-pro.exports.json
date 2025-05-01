@@ -438,5 +438,9 @@
   { "name": "useZAxis", "kind": "Function" },
   { "name": "useZColorScale", "kind": "Function" },
   { "name": "XAxis", "kind": "TypeAlias" },
-  { "name": "YAxis", "kind": "TypeAlias" }
+  { "name": "YAxis", "kind": "TypeAlias" },
+  { "name": "ZoomData", "kind": "TypeAlias" },
+  { "name": "ZoomFilterMode", "kind": "TypeAlias" },
+  { "name": "ZoomOptions", "kind": "Interface" },
+  { "name": "ZoomSliderOptions", "kind": "Interface" }
 ]
