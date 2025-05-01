@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-tree-view-pro",
   "version": "8.2.0",
-  "description": "The Pro plan edition of the Tree View components (MUI X).",
   "author": "MUI Team",
+  "description": "The Pro plan edition of the MUI X Tree View components.",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {

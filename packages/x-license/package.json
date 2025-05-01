@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-license",
   "version": "8.2.0",
-  "description": "MUI X License verification",
   "author": "MUI Team",
+  "description": "MUI X License verification.",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {

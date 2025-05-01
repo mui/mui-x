@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-internals",
   "version": "8.2.0",
-  "description": "Utility functions for the MUI X packages (internal use only).",
   "author": "MUI Team",
+  "description": "Utility functions for the MUI X packages (internal use only).",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"

@@ -1,10 +1,9 @@
 {
   "name": "@mui/x-codemod",
   "version": "8.2.0",
-  "bin": "./codemod.js",
-  "private": false,
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
+  "bin": "./codemod.js",
   "keywords": [
     "react",
     "react-component",
