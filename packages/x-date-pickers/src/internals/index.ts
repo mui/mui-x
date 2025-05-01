@@ -31,6 +31,7 @@ export type {
   PickerPopperSlots,
   PickerPopperSlotProps,
 } from './components/PickerPopper/PickerPopper';
+export { pickerPopperClasses } from './components/PickerPopper/pickerPopperClasses';
 export { PickersToolbar } from './components/PickersToolbar';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
@@ -154,6 +155,7 @@ export type {
   InferNonNullablePickerValue,
   PickerValidValue,
 } from './models/value';
+export type { ComponentsOverrides } from './models/helpers';
 
 export { createStepNavigation } from './utils/createStepNavigation';
 export {
