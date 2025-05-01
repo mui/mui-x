@@ -1,5 +1,7 @@
 {
-  "props": {},
+  "props": {
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
   "name": "ToolbarButton",
   "imports": [
     "import { ToolbarButton } from '@mui/x-charts/Toolbar';",

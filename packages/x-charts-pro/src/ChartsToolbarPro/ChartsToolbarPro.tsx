@@ -1,4 +1,5 @@
 import { Toolbar, ChartsToolbarProps } from '@mui/x-charts/Toolbar';
+import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useChartContext, useSelector, useChartToolbarSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
@@ -6,7 +7,10 @@ import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom
 import { ChartsToolbarZoomInButton } from './ChartsToolbarZoomInButton';
 import { ChartsToolbarZoomOutButton } from './ChartsToolbarZoomOutButton';
 
-export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarProps>) {
+/**
+ * The chart toolbar component.
+ */
+function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarProps>) {
   const { slots, slotProps } = useChartToolbarSlots();
   const { store } = useChartContext();
   const { localeText } = useChartsLocalization();
@@ -41,3 +45,13 @@ export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarPro
 
   return <Toolbar {...props}>{children}</Toolbar>;
 }
+
+ChartsToolbarPro.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+} as any;
+
+export { ChartsToolbarPro };

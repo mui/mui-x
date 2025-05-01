@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { ChartsToolbarSlotProps } from '../material';
-import { useChartToolbarSlots } from './ChartsSlotsContext';
+import { useChartToolbarSlots } from '../context/ChartsSlotsContext';
 
 export type ToolbarButtonProps = ChartsToolbarSlotProps['baseIconButton'] & {
   /**
@@ -31,6 +31,10 @@ ToolbarButton.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  /**
+   * A function to customize the rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   style: PropTypes.object,
 } as any;
 

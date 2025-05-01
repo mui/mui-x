@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "The zoom-in button for the chart toolbar.",
   "propDescriptions": {
     "render": { "description": "A function to customize the rendering of the component." }
   },
