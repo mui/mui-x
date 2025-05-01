@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
-import materialSlots from '../material';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from './ChartsToolbar.types';
+import materialSlots, { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
 
 export interface ChartsToolbarSlotsContextValue {
   /**
@@ -22,16 +21,13 @@ if (process.env.NODE_ENV !== 'production') {
   ChartsToolbarSlotsContext.displayName = 'ChartsToolbarSlotsContext';
 }
 
-export function useChartToolbarSlots(): {
-  slots: ChartsToolbarSlots;
-  slotProps: Partial<ChartsToolbarSlotProps>;
-} {
+export function useChartToolbarSlots(): ChartsToolbarSlotsContextValue {
   const context = React.useContext(ChartsToolbarSlotsContext);
 
   if (context == null) {
     throw new Error(
       [
-        'MUI X: Could not find the Charts Toolbar Slots context.',
+        'MUI X Charts: Could not find the Charts Toolbar Slots context.',
         'It looks like you rendered your component outside of a Toolbar.',
         'This can also happen if you are bundling multiple versions of the library.',
       ].join('\n'),
