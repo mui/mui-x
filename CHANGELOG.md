@@ -11,7 +11,7 @@ _May 1, 2025_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 `<FunnelChart/>` now uses our `strawberrySky` sequential color palette by default.
+- 📊 `<FunnelChart/>` now uses the `strawberrySky` sequential color palette by default.
   <img width="481" alt="Screenshot 2025-04-29 at 13 55 21" src="https://github.com/user-attachments/assets/182085d1-a7ce-4e4d-9d8d-a4fe87f27167" />
 - 📊 Add API to export a chart as an image: `apiRef.exportAsImage` — [Learn more](https://mui.com/x/react-charts/export/#export-as-image).
 
@@ -46,6 +46,7 @@ Same changes as in `@mui/x-data-grid-pro@8.2.0`.
 #### `@mui/x-date-pickers@8.2.0`
 
 - [l10n] Improve Italian (it-IT) locale (#17600) @federico-ntr
+- [pickers] Refactor owner state typing (#17517) @LukasTy
 
 #### `@mui/x-date-pickers-pro@8.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
