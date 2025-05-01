@@ -261,7 +261,7 @@ export const useGridVirtualScroller = () => {
         previousRowContext.current = nextRenderContext;
 
         if (!isFirstRenderContextHydration) {
-            apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
+          apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
         }
       }
 
