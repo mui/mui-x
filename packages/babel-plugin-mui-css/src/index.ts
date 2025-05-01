@@ -1,15 +1,13 @@
 import * as vm from 'node:vm';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { dirname, basename, resolve as resolvePath } from 'node:path';
-import { packageDirectorySync } from 'pkg-dir';
 import * as Babel from '@babel/core';
-import * as ts from 'typescript';
-import { stylesToString } from './css/stylesToString.js';
+import { getConfig, type ProjectConfig } from './config';
+import { stylesToString } from './css/stylesToString';
 
 type BabelT = typeof Babel;
 
 const PLUGIN_NAME = 'mui-css';
-const CONFIG_FILENAME = 'mui-css.config.json';
 
 type State = {
   enabled: boolean;
@@ -17,14 +15,6 @@ type State = {
   config: ProjectConfig;
   rules: { content: string }[];
 };
-
-type ProjectConfig = {
-  configPath: string;
-  data: any;
-  variablesCode: string | undefined;
-};
-
-const configsByPath = new Map<string, ProjectConfig | null>();
 
 export default function transformCSS({ types: t }: BabelT) {
   return {
@@ -187,65 +177,10 @@ function generateClassName(prefix: string, className: string, cssStyles: Record<
   return `${prefix}--${className}`;
 }
 
-function getConfigPath(filepath: string) {
-  const configPath = resolvePath(packageDirectorySync({ cwd: dirname(filepath) }), CONFIG_FILENAME);
-  return configPath;
-}
-
-function getConfig(filepath: string) {
-  const configPath = getConfigPath(filepath);
-  let config = configsByPath.get(configPath);
-  if (config !== undefined) {
-    return config;
-  }
-
-  if (!existsSync(configPath)) {
-    configsByPath.set(configPath, null);
-    return null;
-  }
-
-  const data = JSON.parse(readFileSync(configPath).toString());
-  config = {
-    configPath,
-    data,
-    variablesCode: getCSSVariablesCode(
-      data.cssVariables ? resolvePath(dirname(configPath), data.cssVariables) : undefined,
-    ),
-  };
-  configsByPath.set(configPath, config);
-  return config;
-}
-
 function findSelf(plugins) {
   return plugins.find((p) => p.key === PLUGIN_NAME);
 }
 
 function formatLocation(file: Babel.BabelFile, node: Babel.Node) {
   return `${file.opts.filename}:${node.loc.start.line}:${node.loc.start.column}`;
-}
-
-function getCSSVariablesCode(filepath: string | undefined) {
-  if (filepath === undefined) {
-    return '';
-  }
-
-  const code = readFileSync(filepath).toString();
-
-  const result = ts.transpileModule(code, {
-    fileName: filepath,
-    compilerOptions: {
-      module: ts.ModuleKind.CommonJS,
-      target: ts.ScriptTarget.ES2016,
-    },
-  });
-
-  if (result.diagnostics.length > 0) {
-    console.error(`[mui-css] Errors compiling ${filepath}`);
-    console.error(result.diagnostics);
-  }
-
-  return `const vars = (function(exports) {
-    ${result.outputText}
-    return exports
-  })({}).vars;`;
 }
