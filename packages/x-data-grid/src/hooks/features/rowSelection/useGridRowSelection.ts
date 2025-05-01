@@ -199,11 +199,6 @@ export const useGridRowSelection = (
         return false;
       }
 
-      if (!apiRef.current.getRow(id)) {
-        // The row could have been removed
-        return false;
-      }
-
       if (propIsRowSelectable && !propIsRowSelectable(apiRef.current.getRowParams(id))) {
         return false;
       }
