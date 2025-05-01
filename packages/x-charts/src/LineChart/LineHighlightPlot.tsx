@@ -94,7 +94,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X: ${
+              `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`

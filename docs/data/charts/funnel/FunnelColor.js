@@ -6,7 +6,7 @@ export default function FunnelColor() {
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>
       <FunnelChart
-        colors={['lightcoral', 'red']} // Use custom colors
+        colors={['hotpink', 'red']} // Use custom colors
         series={[
           {
             data: [

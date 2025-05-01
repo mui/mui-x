@@ -5,7 +5,7 @@ productId: x-charts
 
 # Charts - Treemap 🚧
 
-<p class="description">Treemap chart allows to display data with a hierarchical structure.</p>
+<p class="description">Treemap allows to display data with a hierarchical structure.</p>
 
 :::warning
 The Treemap component isn't available yet, but you can upvote [**this GitHub issue**](https://github.com/mui/mui-x/issues/7924) to see it arrive sooner.

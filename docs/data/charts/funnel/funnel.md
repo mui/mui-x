@@ -49,7 +49,9 @@ It also accepts a function that receives the data object and should return the l
 
 {{"demo": "FunnelLabelPositioning.js"}}
 
-## Curve interpolation
+## Styling
+
+### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'` and `'step'`.
@@ -58,7 +60,14 @@ This series property adds the option to control the interpolation of a series.
 
 {{"demo": "FunnelCurves.js"}}
 
-## Colors
+### Gap
+
+The gap between the sections can be customized by the `gap` property.
+It accepts a number that represents the gap in pixels.
+
+{{"demo": "FunnelGap.js"}}
+
+### Colors
 
 The funnel colors can be customized in two ways.
 

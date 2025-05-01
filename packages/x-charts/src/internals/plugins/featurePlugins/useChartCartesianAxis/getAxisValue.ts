@@ -1,5 +1,5 @@
 import { isBandScale } from '../../../isBandScale';
-import { AxisDefaultized } from '../../../../models/axis';
+import { ComputedAxis } from '../../../../models/axis';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
@@ -9,7 +9,7 @@ function getAsANumber(value: number | Date) {
  * For a pointer coordinate, this function returns the dataIndex associated.
  * Returns `-1` if no dataIndex matches.
  */
-export function getAxisIndex(axisConfig: AxisDefaultized, pointerValue: number): number {
+export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isBandScale(scale)) {
@@ -61,7 +61,7 @@ export function getAxisIndex(axisConfig: AxisDefaultized, pointerValue: number):
  * Returns `null` if the coordinate has no value associated.
  */
 export function getAxisValue(
-  axisConfig: AxisDefaultized,
+  axisConfig: ComputedAxis,
   pointerValue: number,
   dataIndex: number,
 ): number | Date | null {

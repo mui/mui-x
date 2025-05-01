@@ -1,5 +1,5 @@
 <FunnelChart
-  colors={['lightcoral', 'red']} // Use custom colors
+  colors={['hotpink', 'red']} // Use custom colors
   series={[
     {
       data: [

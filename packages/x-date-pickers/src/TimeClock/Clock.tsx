@@ -50,7 +50,7 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProp
   classes?: Partial<ClockClasses>;
 }
 
-interface ClockOwnerState extends PickerOwnerState {
+export interface ClockOwnerState extends PickerOwnerState {
   /**
    * `true` if the clock is disabled, `false` otherwise.
    */

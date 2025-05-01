@@ -43,7 +43,7 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   role?: string;
 }
 
-interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
   /**
    * `true` if this is not the initial render of the digital clock.
    */
