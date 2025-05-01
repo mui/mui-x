@@ -1,8 +1,6 @@
 {
   "props": {
     "dataIndex": { "type": { "name": "number" }, "required": true },
-    "isFaded": { "type": { "name": "bool" }, "required": true },
-    "isHighlighted": { "type": { "name": "bool" }, "required": true },
     "shape": {
       "type": {
         "name": "enum",
@@ -10,6 +8,8 @@
       },
       "required": true
     },
+    "isFaded": { "type": { "name": "bool" }, "default": "false" },
+    "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } }
   },
   "name": "MarkElement",

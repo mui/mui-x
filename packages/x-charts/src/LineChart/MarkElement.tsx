@@ -39,12 +39,14 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
     dataIndex: number;
     /**
      * If `true`, the marker is faded.
+     * @default false
      */
-    isFaded: boolean;
+    isFaded?: boolean;
     /**
      * If `true`, the marker is highlighted.
+     * @default false
      */
-    isHighlighted: boolean;
+    isHighlighted?: boolean;
   };
 
 /**
@@ -68,8 +70,8 @@ function MarkElement(props: MarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
-    isFaded,
-    isHighlighted,
+    isFaded = false,
+    isHighlighted = false,
     ...other
   } = props;
 
@@ -115,12 +117,14 @@ MarkElement.propTypes = {
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, the marker is faded.
+   * @default false
    */
-  isFaded: PropTypes.bool.isRequired,
+  isFaded: PropTypes.bool,
   /**
    * If `true`, the marker is highlighted.
+   * @default false
    */
-  isHighlighted: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool,
   /**
    * The shape of the marker.
    */

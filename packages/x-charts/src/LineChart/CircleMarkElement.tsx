@@ -19,12 +19,14 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
     dataIndex: number;
     /**
      * If `true`, the marker is faded.
+     * @default false
      */
-    isFaded: boolean;
+    isFaded?: boolean;
     /**
      * If `true`, the marker is highlighted.
+     * @default false
      */
-    isHighlighted: boolean;
+    isHighlighted?: boolean;
   };
 
 const Circle = styled('circle')({
@@ -57,8 +59,8 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
-    isFaded,
-    isHighlighted,
+    isFaded = false,
+    isHighlighted = false,
     ...other
   } = props;
 
