@@ -26,6 +26,7 @@
       "default": "rainbowSurgePalette"
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" }, "default": "false" },
     "highlightedItem": {

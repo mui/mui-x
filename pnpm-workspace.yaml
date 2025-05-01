@@ -3,6 +3,10 @@ packages:
   - docs
   - test
   - test/*
+
 ignoredBuiltDependencies:
   - '@mui/monorepo'
   - msw
+
+onlyBuiltDependencies:
+  - '@vvago/vale'
