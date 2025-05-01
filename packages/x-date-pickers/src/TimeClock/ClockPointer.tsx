@@ -21,7 +21,7 @@ export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> 
   classes?: Partial<ClockPointerClasses>;
 }
 
-interface ClockPointerOwnerState extends PickerOwnerState {
+export interface ClockPointerOwnerState extends PickerOwnerState {
   /**
    * `true` if the clock pointer should animate.
    */

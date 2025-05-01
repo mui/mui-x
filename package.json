@@ -1,5 +1,5 @@
 {
-  "version": "8.1.0",
+  "version": "8.2.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -189,7 +189,7 @@
     "typescript": "^5.8.3",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
-    "vite": "^6.3.3",
+    "vite": "^6.3.4",
     "webpack": "^5.99.7",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
@@ -204,6 +204,14 @@
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
       "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "@vvago/vale",
+      "core-js",
+      "esbuild",
+      "nx",
+      "sharp"
+    ]
   }
 }
