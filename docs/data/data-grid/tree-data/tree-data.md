@@ -19,7 +19,7 @@ For tree data on the server side, see [Server-side data—Tree data](/x/react-da
 
 ## Rendering tree data
 
-To work with client-side tree data, pass the `treeData` and `getTreeDataPath` props to the Data Grid.
+To work with client-side tree data, pass the `treeData` and `getTreeDataPath` props to the `<DataGridPro />` component.
 The `getTreeDataPath` function returns an array of strings representing the path to a given row.
 
 ```tsx
