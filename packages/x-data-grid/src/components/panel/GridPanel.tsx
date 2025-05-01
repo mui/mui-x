@@ -55,7 +55,6 @@ const GridPanelContent = styled('div', {
   boxShadow: vars.shadows.overlay,
   display: 'flex',
   maxWidth: `calc(100vw - ${vars.spacing(2)})`,
-  margin: vars.spacing(1),
   overflow: 'auto',
 });
 
