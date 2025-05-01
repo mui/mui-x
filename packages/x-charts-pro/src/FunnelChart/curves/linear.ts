@@ -2,13 +2,8 @@ import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 // From point1 to point2, get the x value from y
 const xFromY =
-  (point1: { x: number; y: number }, point2: { x: number; y: number }) =>
+  (x1: number, y1: number, x2: number, y2: number) =>
   (y: number): number => {
-    const x1 = point1.x;
-    const y1 = point1.y;
-    const x2 = point2.x;
-    const y2 = point2.y;
-
     if (y1 === y2) {
       return x1;
     }
@@ -20,12 +15,8 @@ const xFromY =
 
 // From point1 to point2, get the y value from x
 const yFromX =
-  (point1: { x: number; y: number }, point2: { x: number; y: number }) =>
+  (x1: number, y1: number, x2: number, y2: number) =>
   (x: number): number => {
-    const x1 = point1.x;
-    const y1 = point1.y;
-    const x2 = point2.x;
-    const y2 = point2.y;
     if (x1 === x2) {
       return y1;
     }
@@ -85,50 +76,50 @@ export class Linear implements CurveGenerator {
     x = +x;
     y = +y;
 
-    // 0 is the top-left corner.
+    // We draw the lines only at currentPoint 1 & 3 because we need
+    // The data of a pair of points to draw the lines.
+    // Hence currentPoint 1 draws a line from point 0 to point 1 and point 1 to point 2.
+    // currentPoint 3 draws a line from point 2 to point 3 and point 3 to point 0.
+
     if (this.isHorizontal) {
-      const yGetter = yFromX({ x: this.x, y: this.y }, { x, y });
+      const yGetter = yFromX(this.x, this.y, x, y);
       let xGap = 0;
 
-      if (this.currentPoint === 0) {
-        xGap = x + this.gap;
-        this.context.moveTo(xGap, y);
-        this.context.lineTo(xGap, y);
-      } else if (this.currentPoint === 1) {
+      // 0 is the top-left corner.
+      if (this.currentPoint === 1) {
+        xGap = this.x + this.gap;
+        this.context.moveTo(xGap, yGetter(xGap));
+        this.context.lineTo(xGap, yGetter(xGap));
         xGap = x - this.gap;
         this.context.lineTo(xGap, yGetter(xGap));
-      } else if (this.currentPoint === 2) {
+      } else if (this.currentPoint === 3) {
         xGap = this.x - this.gap;
-        this.context.lineTo(xGap, y);
-      } else {
+        this.context.lineTo(xGap, yGetter(xGap));
         xGap = x + this.gap;
         this.context.lineTo(xGap, yGetter(xGap));
       }
-
-      this.currentPoint += 1;
-      this.x = x;
-      this.y = y;
-      return;
     }
 
-    const xGetter = xFromY({ x: this.x, y: this.y }, { x, y });
-    let yGap = 0;
-    // 0 is the top-right corner.
-    if (this.currentPoint === 0) {
-      yGap = y + this.gap;
-      this.context.moveTo(x, yGap);
-      this.context.lineTo(x, yGap);
-    } else if (this.currentPoint === 1) {
-      yGap = y - this.gap;
-      this.context.lineTo(xGetter(yGap), yGap);
-    } else if (this.currentPoint === 2) {
-      yGap = this.y - this.gap;
-      this.context.lineTo(x, yGap);
-    } else {
-      yGap = y + this.gap;
-      this.context.lineTo(xGetter(yGap), yGap);
+    if (!this.isHorizontal) {
+      const xGetter = xFromY(this.x, this.y, x, y);
+      let yGap = 0;
+
+      // 0 is the top-right corner.
+      if (this.currentPoint === 1) {
+        yGap = this.y + this.gap;
+        this.context.moveTo(xGetter(yGap), yGap);
+        this.context.lineTo(xGetter(yGap), yGap);
+        yGap = y - this.gap;
+        this.context.lineTo(xGetter(yGap), yGap);
+      } else if (this.currentPoint === 3) {
+        yGap = this.y - this.gap;
+        this.context.lineTo(xGetter(yGap), yGap);
+        yGap = y + this.gap;
+        this.context.lineTo(xGetter(yGap), yGap);
+      }
     }
 
+    // Increment the values
     this.currentPoint += 1;
     this.x = x;
     this.y = y;
