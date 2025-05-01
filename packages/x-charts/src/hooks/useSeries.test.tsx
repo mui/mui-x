@@ -18,7 +18,7 @@ describe('useSeries', () => {
   testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
-    const errorMessage1 = 'MUI X: Could not find the Chart context.';
+    const errorMessage1 = 'MUI X Charts: Could not find the Chart context.';
     const errorMessage2 =
       'It looks like you rendered your component outside of a ChartDataProvider.';
     const errorMessage3 = 'The above error occurred in the <UseSeries> component:';

@@ -85,7 +85,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
-    "@mui/internal-babel-plugin-resolve-imports": "1.0.20",
+    "@mui/internal-babel-plugin-resolve-imports": "2.0.0",
     "@mui/internal-markdown": "^2.0.4",
     "@mui/internal-test-utils": "^2.0.7",
     "@mui/material": "^7.0.2",
@@ -204,6 +204,14 @@
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
       "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "@vvago/vale",
+      "core-js",
+      "esbuild",
+      "nx",
+      "sharp"
+    ]
   }
 }

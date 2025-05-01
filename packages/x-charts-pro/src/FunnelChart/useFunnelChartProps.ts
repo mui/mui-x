@@ -43,7 +43,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     ) {
       warnOnce(
         [
-          `MUI X: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
+          `MUI X Charts: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
           `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
         ],
         'warning',
@@ -126,6 +126,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     hideLegend,
     axisHighlight,
     apiRef,
+    gap,
     ...rest
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
@@ -170,6 +171,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   };
 
   const funnelPlotProps: FunnelPlotProps = {
+    gap,
     onItemClick,
     slots,
     slotProps,
