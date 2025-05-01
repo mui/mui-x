@@ -1,48 +1,62 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, resolve as resolvePath } from 'node:path';
 import { packageDirectorySync } from 'pkg-dir';
 import * as ts from 'typescript';
 
 const CONFIG_FILENAME = 'mui-css.config.json';
 
+export enum BuildTarget {
+  EMOTION = 'emotion',
+  CSS = 'css',
+};
+
+export type PluginOptions = {
+  target: BuildTarget;
+};
+
+/** mui-css.config.json options */ 
+export type ProjectOptions = {
+  cssVariables: string;
+};
+
 export type ProjectConfig = {
   configPath: string;
-  data: any;
+  options: ProjectOptions;
   variablesCode: string | undefined;
 };
 
 const configsByPath = new Map<string, ProjectConfig | null>();
 
-function getConfigPath(filepath: string) {
-  const configPath = resolvePath(packageDirectorySync({ cwd: dirname(filepath) }), CONFIG_FILENAME);
-  return configPath;
-}
-
 export function getConfig(filepath: string) {
   const configPath = getConfigPath(filepath);
+  if (!configPath) {
+    return undefined;
+  }
+
   let config = configsByPath.get(configPath);
   if (config !== undefined) {
     return config;
   }
 
-  if (!existsSync(configPath)) {
-    configsByPath.set(configPath, null);
-    return null;
-  }
-
-  const data = JSON.parse(readFileSync(configPath).toString());
+  const options = JSON.parse(readFileSync(configPath).toString());
   config = {
     configPath,
-    data,
-    variablesCode: getCSSVariablesCode(
-      data.cssVariables ? resolvePath(dirname(configPath), data.cssVariables) : undefined,
+    options,
+    variablesCode: readCSSVariables(
+      options.cssVariables ? resolvePath(dirname(configPath), options.cssVariables) : undefined,
     ),
   };
   configsByPath.set(configPath, config);
   return config;
 }
 
-function getCSSVariablesCode(filepath: string | undefined) {
+function getConfigPath(filepath: string) {
+  const rootPath = packageDirectorySync({ cwd: dirname(filepath) });
+  if (!rootPath) { return undefined; }
+  return resolvePath(rootPath, CONFIG_FILENAME);
+}
+
+function readCSSVariables(filepath: string | undefined) {
   if (filepath === undefined) {
     return '';
   }
