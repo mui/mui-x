@@ -43,14 +43,6 @@ export default defineConfig({
         find: 'test/utils',
         replacement: new URL('./test/utils', import.meta.url).pathname,
       },
-      {
-        find: '@mui/x-charts-vendor',
-        replacement: new URL('./packages/x-charts-vendor/es', import.meta.url).pathname,
-      },
-      {
-        find: 'moment/locale',
-        replacement: 'moment/dist/locale',
-      },
     ],
   },
   test: {
