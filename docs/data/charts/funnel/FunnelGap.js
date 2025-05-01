@@ -12,6 +12,7 @@ export default function FunnelGap() {
           },
         ]}
         height={300}
+        gap={10}
       />
     </Box>
   );
