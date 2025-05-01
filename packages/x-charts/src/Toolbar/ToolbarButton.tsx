@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { ChartsToolbarSlotProps } from '../material';
-import { useChartToolbarSlots } from './ChartsToolbarSlotsContext';
+import { useChartToolbarSlots } from './ChartsSlotsContext';
 
 export type ToolbarButtonProps = ChartsToolbarSlotProps['baseIconButton'] & {
   /**

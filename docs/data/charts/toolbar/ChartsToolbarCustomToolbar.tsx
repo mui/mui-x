@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Cached from '@mui/icons-material/Cached';
+import ZoomIn from '@mui/icons-material/ZoomIn';
+import ZoomOut from '@mui/icons-material/ZoomOut';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import {
   ChartsToolbarZoomInButton,
@@ -11,6 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
+import Button from '@mui/material/Button';
 import { data } from './randomData';
 
 const params = {
@@ -27,23 +29,24 @@ const params = {
   ],
 };
 
-function ResetZoomButton() {
-  const api = useChartApiContext<ChartProApi<'scatter'>>();
+const ResetZoomButton = React.forwardRef<HTMLButtonElement, React.PropsWithChildren>(
+  function ResetZoomButton(props, ref) {
+    const api = useChartApiContext<ChartProApi<'scatter'>>();
 
-  return (
-    <Tooltip title="Reset zoom">
+    return (
       <ToolbarButton
+        {...props}
+        ref={ref}
         onClick={() => {
           api.setZoomData((prev) =>
             prev.map((zoom) => ({ ...zoom, start: 0, end: 100 })),
           );
         }}
-      >
-        <Cached />
-      </ToolbarButton>
-    </Tooltip>
-  );
-}
+        render={(buttonProps) => <Button {...buttonProps} />}
+      />
+    );
+  },
+);
 
 function CustomToolbar() {
   return (
@@ -57,9 +60,18 @@ function CustomToolbar() {
         Chart with Custom Toolbar
       </Typography>
       <Stack direction="row" flex={1} justifyContent={{ xs: 'center', sm: 'end' }}>
-        <ChartsToolbarZoomInButton />
-        <ChartsToolbarZoomOutButton />
-        <ResetZoomButton />
+        <Tooltip title="Zoom in">
+          <ChartsToolbarZoomInButton>
+            <ZoomIn />
+          </ChartsToolbarZoomInButton>
+        </Tooltip>
+        <Tooltip title="Zoom out">
+          <ChartsToolbarZoomOutButton>
+            <ZoomOut />
+          </ChartsToolbarZoomOutButton>
+        </Tooltip>
+
+        <ResetZoomButton>Reset</ResetZoomButton>
       </Stack>
     </Toolbar>
   );
