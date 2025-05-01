@@ -138,7 +138,7 @@ export default function TreeDataDisableChildrenFiltering() {
           }
           label={
             <Typography component="span">
-              Enable <code>disableChildrenFiltering</code>
+              Apply <code>disableChildrenFiltering</code>
             </Typography>
           }
         />

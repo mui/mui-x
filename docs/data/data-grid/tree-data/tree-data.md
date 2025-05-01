@@ -8,18 +8,22 @@ title: Data Grid - Tree data
 
 Trees are hierarchical data structures that organize data into parent-child relationships.
 The Data Grid Pro can use tree data to render grouped rows with nested children.
-The demo below illustrates this feature:
+The demo below illustrates this feature with a large and complex hierarchical dataset:
 
-{{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Rendering tree data
 
-To work with tree data, pass the `treeData` and `getTreeDataPath` props to the Data Grid.
+To work with client-side tree data, pass the `treeData` and `getTreeDataPath` props to the Data Grid.
 The `getTreeDataPath` function returns an array of strings representing the path to a given row.
 
 ```tsx
 <DataGridPro treeData getTreeDataPath={getTreeDataPath} />
 ```
+
+:::info
+For tree data on the server side, see [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/).
+:::
 
 Both examples that follow will render a tree that looks like this:
 
@@ -121,28 +125,24 @@ If some entries are missing to build the full tree, the Data Grid Pro will autom
 
 {{"demo": "TreeDataWithGap.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Filtering
+## Filtering tree data
 
-A node is included if one of the following criteria is met:
+When a filter is applied, a node is included if it _or_ any of its descendents passes.
 
-- at least one of its descendants is passing the filters
-- it is passing the filters
-
-By default, the filtering is applied to every depth of the tree.
-You can limit the filtering to the top-level rows with the `disableChildrenFiltering` prop.
+By default, filtering is applied at every level of the tree.
+You can limit it to top-level rows with the `disableChildrenFiltering` prop.
 
 {{"demo": "TreeDataDisableChildrenFiltering.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Sorting
+## Sorting tree data
 
-By default, the sorting is applied to every depth of the tree.
-You can limit the sorting to the top-level rows with the `disableChildrenSorting` prop.
+By default, sorting is applied to every depth of the tree.
+You can limit it to top-level rows with the `disableChildrenSorting` prop.
 
 {{"demo": "TreeDataDisableChildrenSorting.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-If you are using `sortingMode="server"`, the children of a row must always immediately follow their parent.
-For instance:
+When using `sortingMode="server"`, a child must always immediately follow its parent:
 
 ```ts
 // ✅ The row A.A is immediately after its parent
@@ -154,13 +154,9 @@ const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
 
 :::
 
-## Children lazy-loading
+## Lazy-loading tree data children
 
-Check the [Server-side tree data](/x/react-data-grid/server-side-data/tree-data/) section for more information about lazy-loading tree data children.
-
-## Full example
-
-{{"demo": "TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
+See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/) for details on lazy-loading tree data children.
 
 ## API
 
