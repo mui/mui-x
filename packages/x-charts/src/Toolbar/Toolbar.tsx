@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
+import { chartsToolbarClasses } from './chartToolbarClasses';
 
 const ToolbarRoot = styled('div', {
   name: 'MuiChartsToolbar',
@@ -17,8 +19,10 @@ const ToolbarRoot = styled('div', {
   borderRadius: 4,
 }));
 
-export interface ChartsToolbarProps extends React.PropsWithChildren {}
+export interface ChartsToolbarProps extends React.PropsWithChildren {
+  className?: string;
+}
 
-export function Toolbar({ children }: ChartsToolbarProps) {
-  return <ToolbarRoot>{children}</ToolbarRoot>;
+export function Toolbar({ className, ...other }: ChartsToolbarProps) {
+  return <ToolbarRoot className={clsx(chartsToolbarClasses.root, className)} {...other} />;
 }
