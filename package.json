@@ -207,6 +207,14 @@
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
       "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "@vvago/vale",
+      "core-js",
+      "esbuild",
+      "nx",
+      "sharp"
+    ]
   }
 }

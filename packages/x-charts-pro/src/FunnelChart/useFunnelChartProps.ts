@@ -126,6 +126,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     hideLegend,
     axisHighlight,
     apiRef,
+    gap,
     ...rest
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
@@ -170,6 +171,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   };
 
   const funnelPlotProps: FunnelPlotProps = {
+    gap,
     onItemClick,
     slots,
     slotProps,
