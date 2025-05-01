@@ -178,27 +178,34 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
 
   React.useEffect(() => {
     if (items.length > 0) {
+      // Set initial focusable item
       if (!focusableItem) {
-        // Set initial focusable item
         setFocusableItem({ id: items[0].id, index: 0 });
+        return;
+      }
+
+      // Last item has been removed from the items array
+      if (!items[focusableItem.index]) {
+        const item = items[items.length - 1];
+        if (item) {
+          setFocusableItem({ id: item.id, index: items.length - 1 });
+          item.ref.current?.focus();
+        }
         return;
       }
 
       const focusableItemIndex = items.findIndex((item) => item.id === focusableItem.id);
 
-      if (focusableItemIndex >= 0) {
-        // Item has been moved to a different position in the array
-        setFocusableItem({ id: focusableItem.id, index: focusableItemIndex });
-      } else {
-        // Item has been removed from the items array
-        const newIndex = focusableItem.index === 0 ? 0 : findEnabledItem(focusableItem.index, -1);
-        if (newIndex >= 0 && newIndex < items.length) {
-          const item = items[newIndex];
-          setFocusableItem({ id: item.id, index: newIndex });
+      if (focusableItemIndex === -1) {
+        // Focused item has been removed from the items array
+        const item = items[focusableItem.index];
+        if (item) {
+          setFocusableItem({ id: item.id, index: focusableItem.index });
           item.ref.current?.focus();
-        } else {
-          setFocusableItem(null);
         }
+      } else if (focusableItem.index !== focusableItemIndex) {
+        // Focused item has moved to a different position in the array
+        setFocusableItem({ id: focusableItem.id, index: focusableItemIndex });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
