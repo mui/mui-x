@@ -13,7 +13,7 @@ The demo below illustrates this feature with a large and complex hierarchical da
 {{"demo": "TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-This document covers client-side implementation.
+This document covers client-side data.
 For tree data on the server side, see [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/).
 :::
 
