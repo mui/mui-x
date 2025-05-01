@@ -4,3 +4,4 @@ export type {
   HighlightItemData,
   HighlightOptions,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+export * from './useChartApiContext';
