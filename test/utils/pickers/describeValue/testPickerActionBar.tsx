@@ -224,7 +224,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
     describe('today action', () => {
       beforeEach(() => {
-        vi.setSystemTime(new Date(2020, 0, 1));
+        vi.setSystemTime(new Date(2018, 0, 1));
       });
 
       afterEach(() => {

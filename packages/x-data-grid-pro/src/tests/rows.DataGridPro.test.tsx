@@ -572,8 +572,8 @@ describe('<DataGridPro /> - Rows', () => {
       let firstColumn = $$(firstRow, '[role="gridcell"]')[0];
       expect(firstColumn).to.have.attr('data-colindex', '0');
       await act(async () => virtualScroller.scrollTo({ left: columnThresholdPx }));
-      firstColumn = $(renderingZone, '[role="row"] > [role="gridcell"]')!;
       await waitFor(() => {
+        firstColumn = $(renderingZone, '[role="row"] > [role="gridcell"]')!;
         expect(firstColumn).to.have.attr('data-colindex', '1');
       });
     });

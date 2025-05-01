@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
-import { SinonFakeTimers, useFakeTimers } from 'sinon';
+import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const isDisabled = (el: HTMLElement) => el.getAttribute('disabled') !== null;
@@ -68,15 +68,12 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       describe('with fake timers', () => {
-        // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-        let timer: SinonFakeTimers | null = null;
-
         beforeEach(() => {
-          timer = useFakeTimers({ now: new Date(2018, 0, 5), toFake: ['Date'] });
+          vi.setSystemTime(new Date(2018, 0, 5));
         });
 
         afterEach(() => {
-          timer?.restore();
+          vi.useRealTimers();
         });
 
         it('should apply disablePast', () => {
