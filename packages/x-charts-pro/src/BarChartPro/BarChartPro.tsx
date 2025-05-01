@@ -23,14 +23,8 @@ export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig'
-    > {
-  /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-}
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+    > {}
 
 /**
  * Demos:
@@ -79,11 +73,12 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {showToolbar ? <ChartsToolbarPro /> : null}
+        {showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />

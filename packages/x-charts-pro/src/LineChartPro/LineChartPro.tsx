@@ -29,14 +29,8 @@ export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef'>,
     Omit<
       ChartContainerProProps<'line', LineChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig'
-    > {
-  /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-}
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+    > {}
 
 /**
  * Demos:
@@ -86,11 +80,12 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {showToolbar ? <ChartsToolbarPro /> : null}
+        {showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />

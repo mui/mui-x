@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { ChartsToolbarProps } from '../Toolbar/ChartsToolbar.types';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
@@ -71,6 +70,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
       : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
     className,
     plugins: SCATTER_CHART_PLUGINS,
+    slots,
+    slotProps,
   };
 
   const chartsAxisProps: ChartsAxisProps = {
@@ -112,13 +113,10 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     legendDirection: props.slotProps?.legend?.direction,
   };
 
-  const chartToolbarProps: ChartsToolbarProps = { slots, slotProps };
-
   return {
     chartsWrapperProps,
     chartContainerProps,
     chartsAxisProps,
-    chartToolbarProps,
     gridProps,
     scatterPlotProps,
     overlayProps,

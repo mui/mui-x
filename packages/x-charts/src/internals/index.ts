@@ -53,7 +53,7 @@ export * from './defaultizeMargin';
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
 export * from '../context/ChartProvider';
-export * from '../Toolbar/ChartsToolbarSlotsContext';
+export * from '../Toolbar/ChartsSlotsContext';
 
 // series configuration
 export * from '../models/seriesType/config';

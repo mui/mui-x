@@ -22,6 +22,8 @@ import {
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
+import { ChartsToolbarProps } from '@mui/x-charts/Toolbar';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/material';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
@@ -30,7 +32,16 @@ import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip/HeatmapToo
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 
-export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
+export interface HeatmapSlots
+  extends ChartsAxisSlots,
+    ChartsOverlaySlots,
+    HeatmapItemSlots,
+    Partial<ChartsToolbarSlots> {
+  /**
+   * Custom component for the toolbar.
+   * @default ChartsToolbar
+   */
+  toolbar?: React.ElementType<ChartsToolbarProps>;
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
@@ -40,14 +51,19 @@ export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, Heatm
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
-    HeatmapItemSlotProps {
+    HeatmapItemSlotProps,
+    Partial<ChartsToolbarSlotProps> {
+  /**
+   * Props for the toolbar component.
+   */
+  toolbar?: Partial<ChartsToolbarProps>;
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation'
+      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation' | 'slots' | 'slotProps'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {

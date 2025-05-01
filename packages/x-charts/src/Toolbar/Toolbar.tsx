@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { chartsToolbarClasses } from './chartToolbarClasses';
 import { ChartsToolbarProps } from './ChartsToolbar.types';
-import { ChartsToolbarSlotsProvider } from './ChartsToolbarSlotsContext';
 
 const ToolbarRoot = styled('div', {
   name: 'MuiChartsToolbar',
@@ -21,15 +20,6 @@ const ToolbarRoot = styled('div', {
   borderRadius: 4,
 }));
 
-export function Toolbar({
-  className,
-  slots,
-  slotProps,
-  ...other
-}: React.PropsWithChildren<ChartsToolbarProps>) {
-  return (
-    <ChartsToolbarSlotsProvider slots={slots} slotProps={slotProps}>
-      <ToolbarRoot className={clsx(chartsToolbarClasses.root, className)} {...other} />
-    </ChartsToolbarSlotsProvider>
-  );
+export function Toolbar({ className, ...other }: React.PropsWithChildren<ChartsToolbarProps>) {
+  return <ToolbarRoot className={clsx(chartsToolbarClasses.root, className)} {...other} />;
 }

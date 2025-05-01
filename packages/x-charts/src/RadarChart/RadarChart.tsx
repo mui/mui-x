@@ -18,16 +18,31 @@ import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
 import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
+import { ChartsToolbarProps } from '../Toolbar';
 
 export interface RadarChartSlots
   extends ChartsTooltipSlots,
     ChartsOverlaySlots,
-    ChartsLegendSlots {}
+    ChartsLegendSlots,
+    Partial<ChartsToolbarSlots> {
+  /**
+   * Custom component for the toolbar.
+   * @default ChartsToolbar
+   */
+  toolbar?: React.ElementType<ChartsToolbarProps>;
+}
 
 export interface RadarChartSlotProps
   extends ChartsTooltipSlotProps,
     ChartsOverlaySlotProps,
-    ChartsLegendSlotProps {}
+    ChartsLegendSlotProps,
+    Partial<ChartsToolbarSlotProps> {
+  /**
+   * Props for the toolbar component.
+   */
+  toolbar?: Partial<ChartsToolbarProps>;
+}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,

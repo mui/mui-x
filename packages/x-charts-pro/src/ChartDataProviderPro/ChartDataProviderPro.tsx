@@ -7,6 +7,7 @@ import {
   ChartSeriesType,
   ChartAnyPluginSignature,
   ChartProviderProps,
+  ChartsSlotsProvider,
 } from '@mui/x-charts/internals';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
@@ -54,16 +55,21 @@ function ChartDataProviderPro<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProProps<TSeries, TSignatures>) {
-  const { children, localeText, chartProviderProps } = useChartDataProviderProProps({
-    ...props,
-    plugins: props.plugins ?? DEFAULT_PLUGINS,
-  });
+  const { children, localeText, chartProviderProps, slots, slotProps } =
+    useChartDataProviderProProps({
+      ...props,
+      plugins: props.plugins ?? DEFAULT_PLUGINS,
+    });
 
   useLicenseVerifier(packageIdentifier, releaseInfo);
 
   return (
     <ChartProvider {...chartProviderProps}>
-      <ChartsLocalizationProvider localeText={localeText}>{children}</ChartsLocalizationProvider>
+      <ChartsLocalizationProvider localeText={localeText}>
+        <ChartsSlotsProvider slots={slots} slotProps={slotProps}>
+          {children}
+        </ChartsSlotsProvider>
+      </ChartsLocalizationProvider>
       <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
     </ChartProvider>
   );

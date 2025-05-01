@@ -36,7 +36,7 @@ export default function ChartsToolbarCustomElements() {
       slots={{ baseIconButton: CustomIconButton }}
       sx={{
         [`& .${chartsToolbarClasses.root}`]: {
-          gap: 2,
+          gap: 1,
           padding: 1,
           minHeight: 52,
         },

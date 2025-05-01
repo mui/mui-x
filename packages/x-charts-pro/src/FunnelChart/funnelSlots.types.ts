@@ -2,6 +2,8 @@ import { ChartsOverlaySlotProps, ChartsOverlaySlots } from '@mui/x-charts/Charts
 import { ChartsTooltipSlotProps, ChartsTooltipSlots } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '@mui/x-charts/internals';
 import { ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/material';
+import { ChartsToolbarProps } from '@mui/x-charts/Toolbar';
 import { FunnelPlotSlotProps, FunnelPlotSlots } from './funnelPlotSlots.types';
 
 export interface FunnelChartSlots
@@ -10,14 +12,27 @@ export interface FunnelChartSlots
     ChartsLegendSlots,
     ChartsTooltipSlots,
     ChartsOverlaySlots,
-    ChartsAxisSlots {}
+    ChartsAxisSlots,
+    Partial<ChartsToolbarSlots> {
+  /**
+   * Custom component for the toolbar.
+   * @default ChartsToolbar
+   */
+  toolbar?: React.ElementType<ChartsToolbarProps>;
+}
 export interface FunnelChartSlotProps
   extends ChartsAxisSlotProps,
     FunnelPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsTooltipSlotProps,
     ChartsOverlaySlotProps,
-    ChartsAxisSlotProps {}
+    ChartsAxisSlotProps,
+    Partial<ChartsToolbarSlotProps> {
+  /**
+   * Props for the toolbar component.
+   */
+  toolbar?: Partial<ChartsToolbarProps>;
+}
 
 export interface FunnelChartSlotExtension {
   /**
