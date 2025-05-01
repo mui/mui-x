@@ -242,6 +242,11 @@ FunnelChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * The gap, in pixels, between funnel sections.
+   * @default 0
+   */
+  gap: PropTypes.number,
+  /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
