@@ -49,6 +49,7 @@ export default defineConfig({
     globals: true,
     setupFiles: [new URL('test/setupVitest.ts', import.meta.url).pathname],
     // Required for some tests that contain early returns or conditional tests.
+    passWithNoTests: true,
     env: {
       NODE_ENV: 'test',
       VITEST: 'true',
