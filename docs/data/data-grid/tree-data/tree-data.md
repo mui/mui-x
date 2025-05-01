@@ -4,21 +4,37 @@ title: Data Grid - Tree data
 
 # Data Grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Use Tree data to handle rows with parent / child relationship.</p>
+<p class="description">Use tree data to render grouped rows in the Data Grid.</p>
 
-To enable the Tree data, you simply have to use the `treeData` prop as well as provide a `getTreeDataPath` prop.
-The `getTreeDataPath` function returns an array of strings which represents the path to a given row.
+Trees are hierarchical data structures that organize data into parent-child relationships.
+The Data Grid Pro can use tree data to render grouped rows with nested children.
+The demo below illustrates this feature:
+
+{{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Rendering tree data
+
+To work with tree data, pass the `treeData` and `getTreeDataPath` props to the Data Grid.
+The `getTreeDataPath` function returns an array of strings representing the path to a given row.
 
 ```tsx
-// The following examples will both render the same tree
+<DataGridPro treeData getTreeDataPath={getTreeDataPath} />
+```
+
+Both examples that follow will render a tree that looks like this:
+
+```tsx
 // - Sarah
 //     - Thomas
 //         - Robert
 //         - Karen
+```
 
+1. Without transformation:
+
+```tsx
 const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
 
-// Without transformation
 const rows: GridRowsProp = [
   { path: ['Sarah'], jobTitle: 'CEO', id: 0 },
   { path: ['Sarah', 'Thomas'], jobTitle: 'Head of Sales', id: 1 },
@@ -34,8 +50,13 @@ const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
   rows={rows}
   columns={columns}
 />;
+```
 
-// With transformation
+2. With transformation:
+
+```tsx
+const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
+
 const rows: GridRowsProp = [
   { path: 'Sarah', jobTitle: 'CEO', id: 0 },
   { path: 'Sarah/Thomas', jobTitle: 'Head of Sales', id: 1 },
@@ -56,20 +77,21 @@ const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) =>
 
 :::warning
 The `getTreeDataPath` prop should keep the same reference between two renders.
-If it changes, the Data Grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
+If it changes, the Data Grid assumes that the data itself has changed and recomputes the tree, causing all rows to collapse.
 :::
 
-{{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
+## Customizing grouping columns with tree data
 
-## Custom grouping column
+For complete details on customizing grouping columns, see [Row grouping—Grouping columns](/x/react-data-grid/row-grouping/#grouping-columns).
+The implementation and behavior are the same when working with tree data, but note that the `leafField` and `mainGroupingCriteria` props are not applicable.
 
-Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#grouping-columns) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree data.
+The demo below customizes the **Hierarchy** grouping column:
 
 {{"demo": "TreeDataCustomGroupingColumn.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Accessing the grouping column field
 
-If you want to access the grouping column field, for instance, to use it with column pinning, the `GRID_TREE_DATA_GROUPING_FIELD` constant is available.
+To access the grouping column field—for example, to use it with [column pinning](/x/react-data-grid/column-pinning/)—the Grid provides the `GRID_TREE_DATA_GROUPING_FIELD` constant:
 
 ```tsx
 <DataGridPro
@@ -83,13 +105,15 @@ If you want to access the grouping column field, for instance, to use it with co
 />
 ```
 
-## Group expansion
+## Group expansion with tree data
 
-Group expansion for tree data works similarly to how it's described in [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
+For complete details on customizing the group expansion experience, see [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
+The implementation and behavior are the same when working with tree data.
 
-## Automatic parent and child selection
+## Automatic parent and child selection with tree data
 
-The behavior for automatic parent and child selection is the same as for row grouping—see [the relevant section](/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection) in that feature's documentation for details.
+For complete details on automatic parent and child selection, see [Row grouping—Automatic parent and child selection](/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection).
+The implementation and behavior are the same when working with tree data.
 
 ## Gaps in the tree
 
