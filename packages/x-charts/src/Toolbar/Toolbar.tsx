@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { chartsToolbarClasses } from './chartToolbarClasses';
@@ -26,3 +27,11 @@ export interface ChartsToolbarProps extends React.PropsWithChildren {
 export function Toolbar({ className, ...other }: ChartsToolbarProps) {
   return <ToolbarRoot className={clsx(chartsToolbarClasses.root, className)} {...other} />;
 }
+
+Toolbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+} as any;

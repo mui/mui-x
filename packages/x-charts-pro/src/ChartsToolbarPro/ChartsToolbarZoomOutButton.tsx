@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useChartContext, useChartToolbarSlots } from '@mui/x-charts/internals';
 import { ChartsToolbarSlotProps } from '@mui/x-charts/material';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
@@ -13,7 +14,10 @@ interface ChartsToolbarZoomOutButtonProps {
   render?: RenderProp<ChartsToolbarSlotProps['baseIconButton']>;
 }
 
-export const ChartsToolbarZoomOutButton = React.forwardRef<
+/**
+ * The zoom-out button for the chart toolbar.
+ */
+const ChartsToolbarZoomOutButton = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarZoomOutButtonProps>
 >(function ChartsToolbarZoomOutButton({ render, ...other }, ref) {
@@ -28,3 +32,16 @@ export const ChartsToolbarZoomOutButton = React.forwardRef<
 
   return <React.Fragment>{element}</React.Fragment>;
 });
+
+ChartsToolbarZoomOutButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * A function to customize the rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+} as any;
+
+export { ChartsToolbarZoomOutButton };

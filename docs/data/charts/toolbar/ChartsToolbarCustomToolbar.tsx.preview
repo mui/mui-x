@@ -1,7 +1,0 @@
-<ScatterChartPro
-  {...params}
-  xAxis={[{ zoom: true }]}
-  yAxis={[{ zoom: true }]}
-  showToolbar
-  slots={{ toolbar: CustomToolbar }}
-/>

@@ -4,4 +4,11 @@
   yAxis={[{ zoom: true }]}
   showToolbar
   slots={{ baseIconButton: CustomIconButton }}
+  sx={{
+    [`& .${chartsToolbarClasses.root}`]: {
+      gap: 1,
+      padding: 1,
+      minHeight: 52,
+    },
+  }}
 />
