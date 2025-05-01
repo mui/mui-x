@@ -16,7 +16,7 @@ cartesianSeriesTypes.addType('funnel');
 
 export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   /**
-   * The gap between funnel sections.
+   * The gap, in pixels, between funnel sections.
    * @default 0
    */
   gap?: number;
@@ -209,7 +209,7 @@ FunnelPlot.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The gap between funnel sections.
+   * The gap, in pixels, between funnel sections.
    * @default 0
    */
   gap: PropTypes.number,
