@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { SinonFakeTimers, useFakeTimers, spy } from 'sinon';
+import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
@@ -17,6 +17,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { vi } from 'vitest';
 
 describe('<DataGridPro /> - Row editing', () => {
   const { render } = createRenderer();
@@ -409,15 +410,12 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
-        // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-        let timer: SinonFakeTimers | null = null;
-
         beforeEach(() => {
-          timer = useFakeTimers();
+          vi.useFakeTimers();
         });
 
         afterEach(() => {
-          timer?.restore();
+          vi.useRealTimers();
         });
 
         it('should debounce multiple changes if debounceMs > 0', async () => {
@@ -447,7 +445,7 @@ describe('<DataGridPro /> - Row editing', () => {
           expect(renderEditCell.callCount).to.equal(0);
 
           await act(async () => {
-            await timer?.tickAsync(100);
+            await vi.advanceTimersByTimeAsync(100);
           });
           expect(renderEditCell.callCount).not.to.equal(0);
           expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
