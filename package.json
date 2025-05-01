@@ -118,7 +118,6 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-optimize-clsx": "^2.6.2",
     "babel-plugin-react-remove-properties": "^0.3.0",
-    "babel-plugin-replace-imports": "^1.0.2",
     "babel-plugin-search-and-replace": "^1.1.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
@@ -132,7 +131,7 @@
     "danger": "^13.0.4",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.3",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -205,8 +204,7 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
-      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
+      "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch"
     },
     "onlyBuiltDependencies": [
       "@swc/core",
