@@ -5,13 +5,16 @@ import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
+import { Chance } from 'chance';
+
+const chance = new Chance(42);
 
 const xAxisData = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 const firstSeriesData = Array.from({ length: 26 }, () =>
-  Math.floor(Math.random() * 11),
+  chance.integer({ min: 0, max: 10 }),
 );
 const secondSeriesData = Array.from({ length: 26 }, () =>
-  Math.floor(Math.random() * 11),
+  chance.integer({ min: 0, max: 10 }),
 );
 
 export default function ZoomSliderComposition() {
