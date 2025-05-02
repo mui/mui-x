@@ -154,62 +154,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [onZoomChange, store, removeIsInteracting],
   );
 
-  const setZoomStart = React.useCallback(
-    (axisId: AxisId, value: number) => {
-      setZoomDataCallback((prevZoomData) => {
-        return prevZoomData.map((zoom) => {
-          if (zoom.axisId !== axisId) {
-            return zoom;
-          }
-
-          const options = optionsLookup[axisId];
-
-          if (!options) {
-            return zoom;
-          }
-
-          const start = Math.max(zoom.start + value, options.minStart);
-          const span = zoom.end - start;
-
-          if (span < options.minSpan || span > options.maxSpan) {
-            return zoom;
-          }
-
-          return { ...zoom, start };
-        });
-      });
-    },
-    [optionsLookup, setZoomDataCallback],
-  );
-
-  const setZoomEnd = React.useCallback(
-    (axisId: AxisId, value: number) => {
-      setZoomDataCallback((prevZoomData) => {
-        return prevZoomData.map((zoom) => {
-          if (zoom.axisId !== axisId) {
-            return zoom;
-          }
-
-          const options = optionsLookup[axisId];
-
-          if (!options) {
-            return zoom;
-          }
-
-          const end = Math.min(zoom.end + value, options.maxEnd);
-          const span = end - zoom.start;
-
-          if (span < options.minSpan || span > options.maxSpan) {
-            return zoom;
-          }
-
-          return { ...zoom, end };
-        });
-      });
-    },
-    [optionsLookup, setZoomDataCallback],
-  );
-
   const moveZoomRange = React.useCallback(
     (axisId: AxisId, by: number) => {
       setZoomDataCallback((prevZoomData) => {
@@ -547,8 +491,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     },
     instance: {
       setZoomData: setZoomDataCallback,
-      setZoomStart,
-      setZoomEnd,
       moveZoomRange,
     },
   };

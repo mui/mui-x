@@ -14,37 +14,27 @@ export function ChartZoomSlider() {
       {xAxisIds.map((axisId) => {
         const xAxis = xAxes[axisId];
 
-        const overview = xAxis.zoom?.slider;
+        const slider = xAxis.zoom?.slider;
 
-        if (!overview?.enabled) {
+        if (!slider?.enabled) {
           return null;
         }
 
         return (
-          <ChartAxisZoomSlider
-            key={axisId}
-            size={overview.size}
-            axisId={axisId}
-            axisDirection="x"
-          />
+          <ChartAxisZoomSlider key={axisId} size={slider.size} axisId={axisId} axisDirection="x" />
         );
       })}
       {yAxisIds.map((axisId) => {
         const yAxis = yAxes[axisId];
 
-        const overview = yAxis.zoom?.slider;
+        const slider = yAxis.zoom?.slider;
 
-        if (!overview?.enabled) {
+        if (!slider?.enabled) {
           return null;
         }
 
         return (
-          <ChartAxisZoomSlider
-            key={axisId}
-            size={overview.size}
-            axisId={axisId}
-            axisDirection="y"
-          />
+          <ChartAxisZoomSlider key={axisId} size={slider.size} axisId={axisId} axisDirection="y" />
         );
       })}
     </React.Fragment>

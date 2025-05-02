@@ -248,41 +248,33 @@ function ChartAxisZoomSliderSpan({
 
     const point = getSVGPoint(element, event);
 
-    store.update((state) => {
-      const { left, top, width, height } = selectorChartDrawingArea(state);
+    instance.setZoomData((prevZoomData) => {
+      const { left, top, width, height } = selectorChartDrawingArea(store.value);
 
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.value, axisId);
 
-      const newState = {
-        ...state,
-        zoom: {
-          ...state.zoom,
-          zoomData: state.zoom.zoomData.map((zoom) => {
-            if (zoom.axisId === axisId) {
-              let newStart: number;
+      return prevZoomData.map((zoom) => {
+        if (zoom.axisId === axisId) {
+          let newStart: number;
 
-              if (axisDirection === 'x') {
-                newStart = ((point.x - left) / width) * 100;
-              } else {
-                newStart = ((top + height - point.y) / height) * 100;
-              }
+          if (axisDirection === 'x') {
+            newStart = ((point.x - left) / width) * 100;
+          } else {
+            newStart = ((top + height - point.y) / height) * 100;
+          }
 
-              if (reverse) {
-                newStart = 100 - newStart;
-              }
+          if (reverse) {
+            newStart = 100 - newStart;
+          }
 
-              return {
-                ...zoom,
-                start: calculateZoomStart(newStart, zoom, zoomOptions),
-              };
-            }
+          return {
+            ...zoom,
+            start: calculateZoomStart(newStart, zoom, zoomOptions),
+          };
+        }
 
-            return zoom;
-          }),
-        },
-      };
-
-      return newState;
+        return zoom;
+      });
     });
   };
 
@@ -295,41 +287,33 @@ function ChartAxisZoomSliderSpan({
 
     const point = getSVGPoint(element, event);
 
-    store.update((state) => {
-      const { left, top, width, height } = selectorChartDrawingArea(state);
+    instance.setZoomData((prevZoomData) => {
+      const { left, top, width, height } = selectorChartDrawingArea(store.value);
 
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(state, axisId);
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.value, axisId);
 
-      const newState = {
-        ...state,
-        zoom: {
-          ...state.zoom,
-          zoomData: state.zoom.zoomData.map((zoom) => {
-            if (zoom.axisId === axisId) {
-              let newEnd: number;
+      return prevZoomData.map((zoom) => {
+        if (zoom.axisId === axisId) {
+          let newEnd: number;
 
-              if (axisDirection === 'x') {
-                newEnd = ((point.x - left) / width) * 100;
-              } else {
-                newEnd = ((top + height - point.y) / height) * 100;
-              }
+          if (axisDirection === 'x') {
+            newEnd = ((point.x - left) / width) * 100;
+          } else {
+            newEnd = ((top + height - point.y) / height) * 100;
+          }
 
-              if (reverse) {
-                newEnd = 100 - newEnd;
-              }
+          if (reverse) {
+            newEnd = 100 - newEnd;
+          }
 
-              return {
-                ...zoom,
-                end: calculateZoomEnd(newEnd, zoom, zoomOptions),
-              };
-            }
+          return {
+            ...zoom,
+            end: calculateZoomEnd(newEnd, zoom, zoomOptions),
+          };
+        }
 
-            return zoom;
-          }),
-        },
-      };
-
-      return newState;
+        return zoom;
+      });
     });
   };
 
