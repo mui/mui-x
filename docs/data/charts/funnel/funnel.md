@@ -67,6 +67,21 @@ It accepts a number that represents the gap in pixels.
 
 {{"demo": "FunnelGap.js"}}
 
+### Border radius
+
+The border radius of the sections can be customized by the `borderRadius` property.
+It accepts a number that represents the radius in pixels.
+
+- The `bump` curve interpolation will not respect the border radius.
+- The `linear` curve will respect the border radius to some extent due to the angle of the sections.
+- The `step` curve will respect the border radius.
+
+You can play with this in the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
+
+The `borderRadius` property will also behave differently depending if the `gap` property is bigger than 0 or not.
+
+{{"demo": "FunnelBorderRadius.js"}}
+
 ### Colors
 
 The funnel colors can be customized in two ways.

@@ -22,6 +22,12 @@ export default function FunnelCurves() {
           min: 0,
           max: 20,
         },
+        borderRadius: {
+          knob: 'slider',
+          defaultValue: 0,
+          min: 0,
+          max: 20,
+        },
       }}
       renderDemo={(props) => (
         <Stack sx={{ width: '100%' }}>
@@ -34,6 +40,7 @@ export default function FunnelCurves() {
               },
             ]}
             gap={props.gap}
+            borderRadius={props.borderRadius}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -46,6 +53,7 @@ export default function FunnelCurves() {
               },
             ]}
             gap={props.gap}
+            borderRadius={props.borderRadius}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -57,6 +65,7 @@ export default function FunnelCurves() {
 <FunnelChart
   series={[{ curve: '${props.curveType}' }]}
   gap={${props.gap}}
+  ${props.curveType === 'bump' ? '// ' : ''}borderRadius={${props.borderRadius}}
 />
 `;
       }}

@@ -67,7 +67,7 @@ export default function FunnelCurves() {
 <FunnelChart
   series={[{ curve: '${props.curveType}' }]}
   gap={${props.gap}}
-  borderRadius={${props.borderRadius}}
+  ${props.curveType === 'bump' ? '// ' : ''}borderRadius={${props.borderRadius}}
 />
 `;
       }}
