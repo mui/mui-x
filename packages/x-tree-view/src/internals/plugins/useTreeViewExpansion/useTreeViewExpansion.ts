@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewPlugin } from '../../models';
@@ -18,7 +19,6 @@ import {
   selectorItemOrderedChildrenIds,
 } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { useAssertModelConsistency } from '../../utils/models';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
@@ -26,7 +26,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   params,
 }) => {
   useAssertModelConsistency({
-    state: 'expandedItems',
+    componentName: 'Tree View',
+    propName: 'expandedItems',
     controlled: params.expandedItems,
     defaultValue: params.defaultExpandedItems,
   });

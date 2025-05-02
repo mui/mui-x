@@ -15,7 +15,7 @@ import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateCont
 
 export type SlideDirection = 'right' | 'left';
 
-interface PickerSlideTransitionOwnerState extends PickerOwnerState {
+export interface PickerSlideTransitionOwnerState extends PickerOwnerState {
   slideDirection: SlideDirection;
 }
 
@@ -70,7 +70,7 @@ const PickersSlideTransitionRoot = styled(TransitionGroup, {
         styles['slideExitActiveLeft-right'],
     },
   ],
-})<TransitionGroupProps>(({ theme }) => {
+})<TransitionGroupProps & { ownerState?: PickerSlideTransitionOwnerState }>(({ theme }) => {
   const slideTransition = theme.transitions.create('transform', {
     duration: theme.transitions.duration.complex,
     easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
@@ -156,6 +156,7 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
         })
       }
       role="presentation"
+      ownerState={ownerState}
     >
       <CSSTransition
         mountOnEnter

@@ -1,25 +1,41 @@
-import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
+import { ComponentsProps } from '@mui/material/styles';
+import { ComponentsOverrides, PickerToolbarOwnerState } from '@mui/x-date-pickers/internals';
+import { FieldOwnerState, PickerOwnerState } from '@mui/x-date-pickers/models';
+import { DateRangeCalendarOwnerState } from '../DateRangeCalendar/DateRangeCalendar.types';
+import { DateRangePickerDayOwnerState } from '../DateRangePickerDay/DateRangePickerDay.types';
 
 export interface PickersProComponents<Theme = unknown> {
   MuiDateRangeCalendar?: {
     defaultProps?: ComponentsProps['MuiDateRangeCalendar'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangeCalendar'];
+    styleOverrides?: ComponentsOverrides<
+      Theme,
+      DateRangeCalendarOwnerState
+    >['MuiDateRangeCalendar'];
   };
   MuiDateRangePickerDay?: {
     defaultProps?: ComponentsProps['MuiDateRangePickerDay'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerDay'];
+    styleOverrides?: ComponentsOverrides<
+      Theme,
+      DateRangePickerDayOwnerState
+    >['MuiDateRangePickerDay'];
   };
   MuiDateTimeRangePickerTabs?: {
     defaultProps?: ComponentsProps['MuiDateTimeRangePickerTabs'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimeRangePickerTabs'];
+    styleOverrides?: ComponentsOverrides<Theme, PickerOwnerState>['MuiDateTimeRangePickerTabs'];
   };
   MuiDateRangePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiDateRangePickerToolbar'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerToolbar'];
+    styleOverrides?: ComponentsOverrides<
+      Theme,
+      PickerToolbarOwnerState
+    >['MuiDateRangePickerToolbar'];
   };
   MuiDateTimeRangePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiDateTimeRangePickerToolbar'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimeRangePickerToolbar'];
+    styleOverrides?: ComponentsOverrides<
+      Theme,
+      PickerToolbarOwnerState
+    >['MuiDateTimeRangePickerToolbar'];
   };
   MuiPickersRangeCalendarHeader?: {
     defaultProps?: ComponentsProps['MuiPickersRangeCalendarHeader'];
@@ -28,15 +44,15 @@ export interface PickersProComponents<Theme = unknown> {
   // Multi input range fields
   MuiMultiInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme, FieldOwnerState>['MuiMultiInputDateRangeField'];
   };
   MuiMultiInputDateTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateTimeRangeField'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputDateTimeRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme, FieldOwnerState>['MuiMultiInputDateTimeRangeField'];
   };
   MuiMultiInputTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputTimeRangeField'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputTimeRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme, FieldOwnerState>['MuiMultiInputTimeRangeField'];
   };
 
   // Single input range fields

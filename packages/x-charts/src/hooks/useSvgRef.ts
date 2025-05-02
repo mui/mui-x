@@ -12,7 +12,7 @@ export function useSvgRef(): React.RefObject<SVGSVGElement | null> {
   if (!context) {
     throw new Error(
       [
-        'MUI X: Could not find the svg ref context.',
+        'MUI X Charts: Could not find the svg ref context.',
         'It looks like you rendered your component outside of a ChartContainer parent component.',
       ].join('\n'),
     );

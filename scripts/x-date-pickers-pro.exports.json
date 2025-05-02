@@ -157,6 +157,7 @@
   { "name": "ExportedDigitalClockProps", "kind": "Interface" },
   { "name": "ExportedMultiSectionDigitalClockSectionProps", "kind": "Interface" },
   { "name": "ExportedPickersCalendarHeaderProps", "kind": "TypeAlias" },
+  { "name": "ExportedPickersFadeTransitionGroupProps", "kind": "Interface" },
   { "name": "ExportedPickersLayoutSlotProps", "kind": "Interface" },
   { "name": "ExportedPickersLayoutSlots", "kind": "Interface" },
   { "name": "ExportedPickersRangeCalendarHeaderProps", "kind": "Interface" },

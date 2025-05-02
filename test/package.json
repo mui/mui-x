@@ -1,6 +1,5 @@
 {
   "name": "@mui-x-internal/test",
-  "version": "7.8.0",
   "private": true,
   "scripts": {
     "typescript": "tsc -p tsconfig.json"
@@ -34,7 +33,7 @@
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.5.1",
+    "react-router": "^7.5.2",
     "react-transition-group": "^4.4.5",
     "semver": "^7.7.1",
     "stylis": "^4.3.6",

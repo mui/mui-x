@@ -81,6 +81,6 @@ const chartSettingsH: Partial<BarChartProps> = {
 };
 const chartSettingsV: Partial<BarChartProps> = {
   ...chartSettingsH,
-  xAxis: [{ scaleType: 'band', dataKey: 'order' }],
+  xAxis: [{ dataKey: 'order' }],
   yAxis: undefined,
 };

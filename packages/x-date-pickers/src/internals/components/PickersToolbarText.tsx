@@ -33,6 +33,7 @@ const PickersToolbarTextRoot = styled(Typography, {
   slot: 'Root',
 })<{
   component?: React.ElementType;
+  ownerState: PickersToolbarTextProps;
 }>(({ theme }) => ({
   transition: theme.transitions.create('color'),
   color: (theme.vars || theme).palette.text.secondary,
@@ -52,6 +53,7 @@ export const PickersToolbarText = React.forwardRef<HTMLSpanElement, PickersToolb
         ref={ref}
         className={clsx(classes.root, className)}
         component="span"
+        ownerState={props}
         {...(selected && { 'data-selected': true })}
         {...other}
       >

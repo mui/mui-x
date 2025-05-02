@@ -25,7 +25,7 @@ export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> 
   classes?: Partial<ClockNumberClasses>;
 }
 
-interface ClockNumberOwnerState extends PickerOwnerState {
+export interface ClockNumberOwnerState extends PickerOwnerState {
   /**
    * `true` if the clock number is in the inner clock ring.
    * When used with meridiem, all the hours are in the outer ring.
