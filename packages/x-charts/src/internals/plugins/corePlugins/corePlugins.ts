@@ -21,5 +21,4 @@ export type ChartCorePluginSignatures = [
   UseChartAnimationSignature,
 ];
 
-
 export interface ChartCorePluginParameters extends UseChartIdParameters {}
