@@ -48,7 +48,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the funnel chart. An array of [[FunnelSeriesType]] objects."
+      "description": "The series to display in the funnel chart. An array of FunnelSeriesType objects."
     },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."

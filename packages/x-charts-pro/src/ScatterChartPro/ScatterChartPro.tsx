@@ -112,8 +112,6 @@ ScatterChartPro.propTypes = {
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
-      zoomIn: PropTypes.func.isRequired,
-      zoomOut: PropTypes.func.isRequired,
     }),
   }),
   /**
