@@ -117,6 +117,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
+    pathname: '/x/api/charts/chart-zoom-slider',
+    title: 'ChartZoomSlider',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/continuous-color-legend',
     title: 'ContinuousColorLegend',
   },
