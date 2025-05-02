@@ -28,7 +28,7 @@ import {
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 export function initializeZoomData(
-  options: Record<AxisId, DefaultizedZoomOptions>,
+  options: Record<AxisId, Pick<DefaultizedZoomOptions, 'axisId' | 'minStart' | 'maxEnd'>>,
   zoomData?: readonly ZoomData[],
 ) {
   const zoomDataMap = new Map<AxisId, ZoomData>();
@@ -152,6 +152,40 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       });
     },
     [onZoomChange, store, removeIsInteracting],
+  );
+
+  const moveZoomRange = React.useCallback(
+    (axisId: AxisId, by: number) => {
+      setZoomDataCallback((prevZoomData) => {
+        return prevZoomData.map((zoom) => {
+          if (zoom.axisId !== axisId) {
+            return zoom;
+          }
+
+          const options = optionsLookup[axisId];
+
+          if (!options) {
+            return zoom;
+          }
+
+          let start: number = zoom.start;
+          let end: number = zoom.end;
+
+          if (by > 0) {
+            const span = end - start;
+            end = Math.min(end + by, options.maxEnd);
+            start = end - span;
+          } else {
+            const span = end - start;
+            start = Math.max(start + by, options.minStart);
+            end = start + span;
+          }
+
+          return { ...zoom, start, end };
+        });
+      });
+    },
+    [optionsLookup, setZoomDataCallback],
   );
 
   React.useEffect(() => {
@@ -457,6 +491,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      moveZoomRange,
     },
   };
 };

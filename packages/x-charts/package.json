@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.1.0",
-  "description": "The community edition of the Charts components (MUI X).",
+  "version": "8.2.0",
   "author": "MUI Team",
+  "description": "The community edition of MUI X Charts components.",
   "main": "src/index.js",
   "license": "MIT",
   "bugs": {
