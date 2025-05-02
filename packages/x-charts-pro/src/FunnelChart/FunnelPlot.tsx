@@ -21,6 +21,18 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
    */
   gap?: number;
   /**
+   * Defines if the funnel sections are filled or outlined.
+   *
+   * An `outlined` funnel will have a stroke around the sections and a transparent fill.
+   * A `filled` funnel will have a solid fill and no stroke.
+   *
+   * Additionally, the `outlined` variant will use a single color by default,
+   * although you can override the color for each section.
+   *
+   * @default 'filled'
+   */
+  variant?: 'filled' | 'outlined';
+  /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
