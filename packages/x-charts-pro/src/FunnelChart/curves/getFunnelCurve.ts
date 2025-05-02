@@ -1,12 +1,12 @@
 import { CurveFactory } from '@mui/x-charts-vendor/d3-shape';
 import { FunnelCurveType } from './curve.types';
-import { FunnelStep } from './funnelStep';
+import { Step } from './step';
 import { Linear } from './linear';
 import { Bump } from './bump';
 
 const curveConstructor = (curve: FunnelCurveType | undefined) => {
   if (curve === 'step') {
-    return FunnelStep;
+    return Step;
   }
   if (curve === 'bump') {
     return Bump;

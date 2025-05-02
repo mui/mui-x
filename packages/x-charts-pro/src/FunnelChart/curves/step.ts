@@ -19,7 +19,7 @@ const min = (numbers: number[]) => Math.min(...numbers, Infinity);
  * It is based on the d3-shape step curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/step.js
  */
-export class FunnelStep implements CurveGenerator {
+export class Step implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private isHorizontal: boolean = false;
