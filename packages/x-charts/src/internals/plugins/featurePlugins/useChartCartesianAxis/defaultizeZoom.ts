@@ -28,7 +28,6 @@ export const defaultizeZoom = (
       axisId,
       axisDirection,
       ...defaultZoomOptions,
-      slider: { ...defaultZoomOptions.slider },
     };
   }
 
