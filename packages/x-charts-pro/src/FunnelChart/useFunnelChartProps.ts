@@ -199,6 +199,8 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
 
   const clipPathProps: ChartsClipPathProps = {
     id: clipPathId,
+    // Else the stroke will be cut off when variant is outlined
+    offset: { top: 1, bottom: 1 },
   };
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {

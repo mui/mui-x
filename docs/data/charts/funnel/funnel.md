@@ -67,6 +67,18 @@ It accepts a number that represents the gap in pixels.
 
 {{"demo": "FunnelGap.js"}}
 
+### Variant
+
+The funnel sections can be displayed in two different styles using the `variant` property:
+
+- `'filled'` (default): Sections have a solid fill and no stroke.
+- `'outlined'`: Sections have a translucent fill with a colored stroke around them.
+
+The `outlined` variant creates a more lightweight visual style. And by default it uses a
+single color for the fill and stroke.
+
+{{"demo": "FunnelVariant.js"}}
+
 ### Colors
 
 The funnel colors can be customized in two ways.

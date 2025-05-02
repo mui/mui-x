@@ -9,7 +9,7 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'funnel'> = (
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     ...seriesData,
     data: seriesData.data.map((d, index) => ({
-      color: colors[index % colors.length],
+      color: seriesData.variant === 'outlined' ? colors[0] : colors[index % colors.length],
       ...d,
     })),
   };

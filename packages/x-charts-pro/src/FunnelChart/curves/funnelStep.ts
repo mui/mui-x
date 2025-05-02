@@ -72,6 +72,9 @@ export class FunnelStep implements CurveGenerator {
         this.context.lineTo(x + this.gap, y);
       }
 
+      if (this.currentPoint === 3) {
+        this.context.closePath();
+      }
       this.currentPoint += 1;
       this.x = x;
       this.y = y;
@@ -89,6 +92,9 @@ export class FunnelStep implements CurveGenerator {
       this.context.lineTo(x, y - this.gap);
     }
 
+    if (this.currentPoint === 3) {
+      this.context.closePath();
+    }
     this.currentPoint += 1;
     this.x = x;
     this.y = y;

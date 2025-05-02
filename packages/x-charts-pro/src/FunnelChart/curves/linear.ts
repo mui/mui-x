@@ -119,6 +119,9 @@ export class Linear implements CurveGenerator {
       }
     }
 
+    if (this.currentPoint === 3) {
+      this.context.closePath();
+    }
     // Increment the values
     this.currentPoint += 1;
     this.x = x;
