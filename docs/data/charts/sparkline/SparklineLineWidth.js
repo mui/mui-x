@@ -18,7 +18,7 @@ const settings = {
 export default function SparklineLineWidth() {
   const [strokeWidth, setStrokeWidth] = React.useState(2);
   const [disableClipping, setDisableClipping] = React.useState(false);
-  const [clipAreaOffset, setClipAreaOffset] = React.useState(0);
+  const [clipAreaOffset, setClipAreaOffset] = React.useState(1);
 
   return (
     <Stack sx={{ width: '100%' }} direction="column" gap={1}>
@@ -50,7 +50,7 @@ export default function SparklineLineWidth() {
           labelPlacement="top"
         />
         <FormControlLabel
-          value={clipAreaOffset ?? 0}
+          value={clipAreaOffset}
           control={
             <Slider
               aria-label="Clip Area Offset"
