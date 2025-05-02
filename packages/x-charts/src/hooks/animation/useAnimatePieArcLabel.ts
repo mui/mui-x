@@ -13,7 +13,11 @@ type UseAnimatePieArcLabelParams = Pick<
   | 'innerRadius'
   | 'outerRadius'
   | 'skipAnimation'
-> & { ref?: React.Ref<SVGTextElement> };
+> & {
+  ref?: React.Ref<SVGTextElement>;
+  innerRadius: number;
+  outerRadius: number;
+};
 type UseAnimatePieArcLabelReturn = {
   ref: React.Ref<SVGTextElement>;
   x: number;
