@@ -123,19 +123,6 @@ export class Linear implements CurveGenerator {
       return 0;
     };
 
-    if (this.borderRadius > 0) {
-      borderRadiusPolygon(this.context, this.points, getBorderRadius());
-    } else {
-      this.context.moveTo(this.points[0].x, this.points[0].y);
-      this.points.forEach((point, index) => {
-        if (index === 0) {
-          this.context.moveTo(point.x, point.y);
-        }
-        this.context.lineTo(point.x, point.y);
-        if (index === this.points.length - 1) {
-          this.context.closePath();
-        }
-      });
-    }
+    borderRadiusPolygon(this.context, this.points, getBorderRadius());
   }
 }
