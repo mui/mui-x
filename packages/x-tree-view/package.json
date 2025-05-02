@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "8.1.0",
-  "description": "The community edition of the Tree View components (MUI X).",
+  "version": "8.2.0",
   "author": "MUI Team",
+  "description": "The community edition of the MUI X Tree View components.",
   "main": "src/index.ts",
   "license": "MIT",
   "bugs": {

@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "8.1.0",
-  "description": "The Pro plan edition of the Data Grid components (MUI X).",
+  "version": "8.2.0",
   "author": "MUI Team",
+  "description": "The Pro plan edition of the MUI X Data Grid components.",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {

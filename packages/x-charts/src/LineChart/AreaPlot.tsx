@@ -93,7 +93,7 @@ const useAggregatedData = () => {
           if (process.env.NODE_ENV !== 'production') {
             if (xData === undefined) {
               throw new Error(
-                `MUI X: ${
+                `MUI X Charts: ${
                   xAxisId === DEFAULT_X_AXIS_KEY
                     ? 'The first `xAxis`'
                     : `The x-axis with id "${xAxisId}"`
@@ -102,7 +102,7 @@ const useAggregatedData = () => {
             }
             if (xData.length < stackedData.length) {
               throw new Error(
-                `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+                `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
               );
             }
           }

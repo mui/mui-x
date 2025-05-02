@@ -28,7 +28,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
     } else if (dataset === undefined) {
       throw new Error(
         [
-          `MUI X: bar series with id='${id}' has no data.`,
+          `MUI X Charts: bar series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -69,7 +69,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
                 if (process.env.NODE_ENV !== 'production') {
                   if (value !== null) {
                     warnOnce([
-                      `MUI X: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
+                      `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
                       'Bar plots only support numbers and null values.',
                     ]);
                   }

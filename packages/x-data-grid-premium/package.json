@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "8.1.0",
-  "description": "The Premium plan edition of the Data Grid Components (MUI X).",
+  "version": "8.2.0",
   "author": "MUI Team",
+  "description": "The Premium plan edition of the MUI X Data Grid Components.",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {

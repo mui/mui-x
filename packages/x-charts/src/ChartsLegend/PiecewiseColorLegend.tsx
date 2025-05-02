@@ -15,7 +15,7 @@ import {
 } from './piecewiseColorLegendClasses';
 import { ColorLegendSelector } from './colorLegend.types';
 import { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
-import { AxisDefaultized } from '../models/axis';
+import { ComputedAxis } from '../models/axis';
 import { useAxis } from './useAxis';
 import { PiecewiseColorLegendItemContext } from './legendContext.types';
 import { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
@@ -182,7 +182,7 @@ const PiecewiseColorLegend = consumeThemeProps(
       return null;
     }
     const valueFormatter = (v: number | Date) =>
-      (axisItem as AxisDefaultized).valueFormatter?.(v, {
+      (axisItem as ComputedAxis).valueFormatter?.(v, {
         location: 'legend',
       }) ?? v.toLocaleString();
 
