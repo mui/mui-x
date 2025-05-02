@@ -9,19 +9,18 @@ import {
   gridColumnReorderDragColSelector,
   gridRowGroupingSanitizedModelSelector,
   useGridApiRef,
-  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MoveUpIcon from '@mui/icons-material/MoveUp';
 import { styled } from '@mui/material/styles';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   justifyContent: 'flex-start',
   overflow: 'auto',
-  padding: theme.spacing(1),
+  padding: theme.spacing(1, 1.5),
   gap: theme.spacing(1),
 }));
 
@@ -109,6 +108,7 @@ function CustomToolbar() {
       onDragOver={handleToolbarDragOver}
       onDragLeave={handleToolbarDragLeave}
     >
+      <MoveUpIcon fontSize="small" color="action" sx={{ mr: 1 }} />
       {rowGroupingModel.length > 0 ? (
         <React.Fragment>
           {rowGroupingModel.map((field, index) => {
@@ -143,7 +143,6 @@ function CustomToolbar() {
                         {...chipProps}
                         ref={ref as React.Ref<HTMLDivElement>}
                         label={columnsLookup[field].headerName ?? field}
-                        icon={<DragIndicatorIcon fontSize="small" />}
                         sx={{ cursor: 'grab', opacity: isDraggedField ? 0.5 : 1 }}
                         onDelete={() => removeRowGroup(field)}
                         onKeyDown={handleKeyDown}
@@ -177,22 +176,12 @@ export default function RowGroupingToolbar() {
     maxColumns: 10,
   });
 
-  const initialState = useKeepGroupedColumnsHidden({
-    apiRef,
-    initialState: {
-      rowGrouping: {
-        model: ['commodity', 'status'],
-      },
-    },
-  });
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
         loading={loading}
         slots={{ toolbar: CustomToolbar }}
-        initialState={initialState}
         apiRef={apiRef}
         showToolbar
       />

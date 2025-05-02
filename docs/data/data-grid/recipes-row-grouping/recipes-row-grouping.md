@@ -22,7 +22,7 @@ Use `GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD` to pin a grouped column. In the de
 
 The demo below shows how to add a custom toolbar that enables creating and reordering groups with drag and drop.
 
-Users can drag column headers into the toolbar to create groups, then reorder them by dragging the chips within the toolbar. Groups can be removed by clicking the delete button, or dragging the chip outside of the toolbar.
+Users can drag column headers into the toolbar to create groups, then reorder them by dragging the chips within the toolbar. Groups can be removed by clicking the delete button.
 
 {{"demo": "RowGroupingToolbar.js", "bg": "inline", "defaultCodeOpen": false}}
 

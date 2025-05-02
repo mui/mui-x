@@ -2,7 +2,6 @@
   {...data}
   loading={loading}
   slots={{ toolbar: CustomToolbar }}
-  initialState={initialState}
   apiRef={apiRef}
   showToolbar
 />
