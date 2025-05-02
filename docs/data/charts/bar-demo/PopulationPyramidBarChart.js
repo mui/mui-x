@@ -1,6 +1,7 @@
 import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { Stack, Typography } from '@mui/material';
 
 const ageGroups = [
   '0-4 yrs',
@@ -38,9 +39,29 @@ const female = [
   168603, 36739, 5770,
 ];
 
-const numberFormatter = Intl.NumberFormat(undefined, {
+const numberFormatter = Intl.NumberFormat('en-US', {
   useGrouping: true,
 });
+
+function formatWithSuffix(number) {
+  const suffixes = [
+    { value: 1e6, symbol: 'M' },
+    { value: 1e3, symbol: 'k' },
+  ];
+
+  const suffix = suffixes.find((s) => Math.abs(number) >= s.value);
+
+  if (!suffix) {
+    return new Intl.NumberFormat('en-US').format(number);
+  }
+
+  const formattedValue = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 1,
+  }).format(number / suffix.value);
+
+  return formattedValue + suffix.symbol;
+}
 
 export default function PopulationPyramidBarChart() {
   return (
@@ -75,7 +96,7 @@ export default function PopulationPyramidBarChart() {
         ]}
         xAxis={[
           {
-            valueFormatter: (d) => `${numberFormatter.format(Math.abs(d))}`,
+            valueFormatter: (d) => formatWithSuffix(Math.abs(d)),
             disableLine: true,
             disableTicks: true,
           },
