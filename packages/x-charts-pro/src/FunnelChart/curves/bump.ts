@@ -3,10 +3,10 @@ import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 /**
  * This is a custom "bump" curve generator.
+ * It draws smooth curves for the 4 provided points,
+ * with the option to add a gap between sections while also properly handling the border radius.
  *
- * It takes into account the gap between the points and draws a smooth curve between them.
- *
- * It is based on the d3-shape bump curve generator.
+ * The implementation is based on the d3-shape bump curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/bump.js
  */
 export class Bump implements CurveGenerator {

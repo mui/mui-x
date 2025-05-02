@@ -29,10 +29,10 @@ const yFromX =
 
 /**
  * This is a custom "linear" curve generator.
+ * It draws straight lines for the 4 provided points,
+ * with the option to add a gap between sections while also properly handling the border radius.
  *
- * It takes into account the gap between the points and draws a smooth curve between them.
- *
- * It is based on the d3-shape linear curve generator.
+ * The implementation is based on the d3-shape linear curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/linear.js
  */
 export class Linear implements CurveGenerator {

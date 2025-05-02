@@ -8,15 +8,12 @@ const min = (numbers: number[]) => Math.min(...numbers, Infinity);
 
 /**
  * This is a custom "step" curve generator.
- * It is used to draw "rectangles" from 4 points without having to rework the rendering logic.
- *
- * It expects points to be passed in the following order: top-left, top-right, bottom-right, bottom-left.
+ * It is used to draw "rectangles" from 4 points without having to rework the rendering logic,
+ * with the option to add a gap between sections while also properly handling the border radius.
  *
  * It takes the min and max of the x and y coordinates of the points to create a rectangle.
  *
- * It takes into account the gap between sections and the border radius.
- *
- * It is based on the d3-shape step curve generator.
+ * The implementation is based on the d3-shape step curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/step.js
  */
 export class Step implements CurveGenerator {
