@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
@@ -29,13 +29,15 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
     isHighlighted?: boolean;
   };
 
-const Circle = styled('circle')({
+const Circle = styled('circle')(({ theme }) => ({
+  fill: (theme.vars || theme).palette.background.paper,
+
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'cx, cy',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
-});
+}));
 
 /**
  * The line mark element that only render circle for performance improvement.
@@ -64,7 +66,6 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     ...other
   } = props;
 
-  const theme = useTheme();
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
 
   const ownerState = {
@@ -83,7 +84,6 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       cx={x}
       cy={y}
       r={5}
-      fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
       strokeWidth={2}
       className={classes.root}
