@@ -1,4 +1,7 @@
+/* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { Point } from './curve.types';
+import { borderRadiusPolygon } from './borderRadiusPolygon';
 
 /**
  * This is a custom "step" curve generator for the funnel chart.
@@ -12,85 +15,103 @@ import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 export class FunnelStep implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
-  private line: number = NaN;
-
-  private x: number = NaN;
-
-  private y: number = NaN;
-
-  private currentPoint: number = 0;
-
   private isHorizontal: boolean = false;
 
   private gap: number = 0;
 
-  constructor(context: CanvasRenderingContext2D, isHorizontal: boolean, gap: number = 0) {
+  private borderRadius: number = 0;
+
+  private position: number = 0;
+
+  private sections: number = 0;
+
+  private points: Point[] = [];
+
+  constructor(
+    context: CanvasRenderingContext2D,
+    {
+      isHorizontal,
+      gap,
+      position,
+      sections,
+      borderRadius,
+    }: {
+      isHorizontal: boolean;
+      gap?: number;
+      position?: number;
+      sections?: number;
+      borderRadius?: number;
+    },
+  ) {
     this.context = context;
     this.isHorizontal = isHorizontal;
-    this.gap = gap / 2;
+    this.gap = (gap ?? 0) / 2;
+    this.position = position ?? 0;
+    this.sections = sections ?? 1;
+    this.borderRadius = borderRadius ?? 0;
   }
 
-  areaStart(): void {
-    this.line = 0;
-  }
+  areaStart(): void {}
 
-  areaEnd(): void {
-    this.line = NaN;
-  }
+  areaEnd(): void {}
 
-  lineStart(): void {
-    this.x = NaN;
-    this.y = NaN;
-    this.currentPoint = 0;
-  }
+  lineStart(): void {}
 
-  lineEnd(): void {
-    if (this.currentPoint === 2) {
-      this.context.lineTo(this.x, this.y);
-    }
-    if (this.line || (this.line !== 0 && this.currentPoint === 1)) {
-      this.context.closePath();
-    }
-    if (this.line >= 0) {
-      this.line = 1 - this.line;
-    }
-  }
+  lineEnd(): void {}
 
-  point(x: number, y: number): void {
-    x = +x;
-    y = +y;
-
-    // 0 is the top-left corner.
-    if (this.isHorizontal) {
-      if (this.currentPoint === 0) {
-        this.context.moveTo(x + this.gap, y);
-      } else if (this.currentPoint === 1 || this.currentPoint === 2) {
-        this.context.lineTo(x - this.gap, this.y);
-        this.context.lineTo(x - this.gap, y);
-      } else {
-        this.context.lineTo(this.x - this.gap, y);
-        this.context.lineTo(x + this.gap, y);
-      }
-
-      this.currentPoint += 1;
-      this.x = x;
-      this.y = y;
+  point(xIn: number, yIn: number): void {
+    this.points.push({ x: xIn, y: yIn });
+    if (this.points.length < 4) {
       return;
     }
 
-    // 0 is the top-right corner.
-    if (this.currentPoint === 0) {
-      this.context.moveTo(x, y + this.gap);
-    } else if (this.currentPoint === 3) {
-      this.context.lineTo(x, this.y - this.gap);
-      this.context.lineTo(x, y + this.gap);
-    } else {
-      this.context.lineTo(this.x, y - this.gap);
-      this.context.lineTo(x, y - this.gap);
-    }
+    // Ensure we have rectangles instead of trapezoids.
+    this.points = this.points.map((point, index) => {
+      if (this.isHorizontal) {
+        return {
+          x: point.x,
+          y: index <= 1 ? this.points.at(0)!.y : this.points.at(-1)!.y,
+        };
+      }
+      return {
+        x: index <= 1 ? this.points.at(0)!.x : this.points.at(-1)!.x,
+        y: point.y,
+      };
+    });
 
-    this.currentPoint += 1;
-    this.x = x;
-    this.y = y;
+    // Add gaps where they are needed.
+    this.points = this.points.map((point, index) => {
+      if (this.isHorizontal) {
+        return {
+          x: point.x + (index === 0 || index === 3 ? this.gap : -this.gap),
+          y: point.y,
+        };
+      }
+      return {
+        x: point.x,
+        y: point.y + (index === 0 || index === 3 ? this.gap : -this.gap),
+      };
+    });
+
+    if (this.borderRadius > 0) {
+      borderRadiusPolygon(
+        this.context,
+        this.points,
+        this.gap > 0 || this.position === 0
+          ? this.borderRadius
+          : [this.borderRadius, this.borderRadius],
+      );
+    } else {
+      this.context.moveTo(this.points[0].x, this.points[0].y);
+      this.points.forEach((point, index) => {
+        if (index === 0) {
+          this.context.moveTo(point.x, point.y);
+        }
+        this.context.lineTo(point.x, point.y);
+        if (index === this.points.length - 1) {
+          this.context.closePath();
+        }
+      });
+    }
   }
 }

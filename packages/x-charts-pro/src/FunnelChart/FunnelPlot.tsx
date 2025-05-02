@@ -21,6 +21,11 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
    */
   gap?: number;
   /**
+   * The radius of the corners of the funnel sections.
+   * @default 0
+   */
+  borderRadius?: number;
+  /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
@@ -31,7 +36,7 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const useAggregatedData = (gap: number | undefined) => {
+const useAggregatedData = (gap: number | undefined, borderRadius: number | undefined) => {
   const seriesData = useFunnelSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -66,8 +71,6 @@ const useAggregatedData = (gap: number | undefined) => {
 
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
-
-      const curve = getFunnelCurve(currentSeries.curve, isHorizontal, gap);
 
       const xPosition = (
         value: number,
@@ -107,6 +110,15 @@ const useAggregatedData = (gap: number | undefined) => {
               })
             : currentSeries.sectionLabel;
 
+        const curve = getFunnelCurve(
+          currentSeries.curve,
+          isHorizontal,
+          gap,
+          dataIndex,
+          currentSeries.dataPoints.length,
+          borderRadius,
+        );
+
         const line = d3Line<FunnelDataPoints>()
           .x((d) =>
             xPosition(d.x, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
@@ -142,16 +154,16 @@ const useAggregatedData = (gap: number | undefined) => {
     });
 
     return result.flat();
-  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, gap]);
+  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, gap, borderRadius]);
 
   return allData;
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { onItemClick, gap, ...other } = props;
+  const { onItemClick, gap, borderRadius, ...other } = props;
   const theme = useTheme();
 
-  const data = useAggregatedData(gap);
+  const data = useAggregatedData(gap, borderRadius);
 
   return (
     <React.Fragment>

@@ -6,3 +6,8 @@ export type FunnelCurveOptions = {
   gap?: number;
 };
 export type FunnelCurveType = 'linear' | 'step' | 'bump';
+
+export type Point = {
+  x: number;
+  y: number;
+};

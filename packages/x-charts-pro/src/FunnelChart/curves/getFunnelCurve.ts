@@ -17,7 +17,17 @@ const curveConstructor = (curve: FunnelCurveType | undefined) => {
 export const getFunnelCurve = (
   curve: FunnelCurveType | undefined,
   isHorizontal: boolean,
-  gap: number = 0,
+  gap: number | undefined,
+  dataIndex: number,
+  totalDataPoints: number,
+  borderRadius: number | undefined,
 ): CurveFactory => {
-  return (context) => new (curveConstructor(curve))(context as any, isHorizontal, gap);
+  return (context) =>
+    new (curveConstructor(curve))(context as any, {
+      isHorizontal,
+      gap,
+      position: dataIndex,
+      sections: totalDataPoints,
+      borderRadius,
+    });
 };

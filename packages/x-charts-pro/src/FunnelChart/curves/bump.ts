@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 /**
@@ -11,8 +12,6 @@ import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 export class Bump implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
-  private line: number = NaN;
-
   private x: number = NaN;
 
   private y: number = NaN;
@@ -23,30 +22,22 @@ export class Bump implements CurveGenerator {
 
   private gap: number = 0;
 
-  constructor(context: CanvasRenderingContext2D, isHorizontal: boolean, gap: number = 0) {
+  constructor(
+    context: CanvasRenderingContext2D,
+    { isHorizontal, gap }: { isHorizontal: boolean; gap?: number },
+  ) {
     this.context = context;
     this.isHorizontal = isHorizontal;
-    this.gap = gap / 2;
+    this.gap = (gap ?? 0) / 2;
   }
 
-  areaStart(): void {
-    this.line = 0;
-  }
+  areaStart(): void {}
 
-  areaEnd(): void {
-    this.line = NaN;
-  }
+  areaEnd(): void {}
 
-  lineStart(): void {
-    this.currentPoint = 0;
-  }
+  lineStart(): void {}
 
-  lineEnd() {
-    if (this.line || (this.line !== 0 && this.currentPoint === 1)) {
-      this.context.closePath();
-    }
-    this.line = 1 - this.line;
-  }
+  lineEnd(): void {}
 
   point(x: number, y: number): void {
     x = +x;
