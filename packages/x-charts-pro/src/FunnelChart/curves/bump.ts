@@ -56,6 +56,9 @@ export class Bump implements CurveGenerator {
         this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x + this.gap, y);
       }
 
+      if (this.currentPoint === 3) {
+        this.context.closePath();
+      }
       this.currentPoint += 1;
       this.x = x;
       this.y = y;
@@ -75,6 +78,9 @@ export class Bump implements CurveGenerator {
       this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y + this.gap);
     }
 
+    if (this.currentPoint === 3) {
+      this.context.closePath();
+    }
     this.currentPoint += 1;
     this.x = x;
     this.y = y;
