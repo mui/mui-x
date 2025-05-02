@@ -89,7 +89,6 @@ export function useDateRangePickerDefaultizedProps<Props extends BaseDateRangePi
     ...themeProps,
     ...validationProps,
     localeText,
-    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     slots: {
       toolbar: DateRangePickerToolbar,
       ...themeProps.slots,

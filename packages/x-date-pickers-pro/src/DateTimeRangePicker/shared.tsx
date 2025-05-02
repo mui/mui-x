@@ -163,7 +163,6 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
     thresholdToRenderTimeInASingleColumn,
     views,
     ampm,
-    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     slots: {
       tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,

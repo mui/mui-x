@@ -9,6 +9,7 @@ import {
   dateTimeRangePickerTabsClasses,
   dateTimeRangePickerToolbarClasses,
 } from '../DateTimeRangePicker';
+import { enhancedDateRangePickerDayClasses } from '../EnhancedDateRangePickerDay';
 
 createTheme({
   components: {
@@ -46,6 +47,26 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiDateTimePickerToolbar class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+
+    MuiEnhancedDateRangePickerDay: {
+      defaultProps: {
+        color: 'red',
+        // @ts-expect-error invalid MuiDateRangePickerDay prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${enhancedDateRangePickerDayClasses.root}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiEnhancedDateRangePickerDay class key
         content: {
           backgroundColor: 'blue',
         },

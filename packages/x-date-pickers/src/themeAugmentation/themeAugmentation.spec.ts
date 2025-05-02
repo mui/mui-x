@@ -24,6 +24,7 @@ import {
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
 import { pickersInputBaseClasses } from '../PickersTextField';
+import { enhancedPickersDayClasses } from '../EnhancedPickersDay';
 
 createTheme({
   components: {
@@ -346,6 +347,25 @@ createTheme({
         root: {
           backgroundColor: 'red',
           [`.${pickersDayClasses.today}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiPickersDay class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiEnhancedPickersDay: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickersDay prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${enhancedPickersDayClasses.today}`]: {
             backgroundColor: 'green',
           },
         },

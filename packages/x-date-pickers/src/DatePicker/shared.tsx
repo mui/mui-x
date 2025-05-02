@@ -96,7 +96,6 @@ export function useDatePickerDefaultizedProps<Props extends BaseDatePickerProps>
       defaultViews: ['year', 'day'],
       defaultOpenTo: 'day',
     }),
-    enableEnhancedDaySlot: themeProps?.enableEnhancedDaySlot ?? false,
     slots: { toolbar: DatePickerToolbar, ...themeProps.slots },
   };
 }
