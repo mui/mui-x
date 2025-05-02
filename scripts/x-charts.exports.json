@@ -80,6 +80,8 @@
   { "name": "ChartsColorCallback", "kind": "TypeAlias" },
   { "name": "ChartsColorPalette", "kind": "TypeAlias" },
   { "name": "ChartsColorPaletteCallback", "kind": "TypeAlias" },
+  { "name": "ChartsContrastingText", "kind": "Function" },
+  { "name": "ChartsContrastingTextProps", "kind": "TypeAlias" },
   { "name": "ChartsGrid", "kind": "Function" },
   { "name": "chartsGridClasses", "kind": "Variable" },
   { "name": "ChartsGridClasses", "kind": "Interface" },

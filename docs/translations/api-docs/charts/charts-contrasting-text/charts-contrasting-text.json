@@ -1,0 +1,15 @@
+{
+  "componentDescription": "A text component that displays with a contrasting color against its background.",
+  "propDescriptions": {
+    "component": {
+      "description": "The component used for the root node. Either a string to use a DOM element or a component."
+    },
+    "textBackground": {
+      "description": "The background color to contrast against. Used to calculate the text color for optimal readability."
+    },
+    "textFill": {
+      "description": "Optional fill color for the text. If provided, it overrides the automatically calculated contrasting color."
+    }
+  },
+  "classDescriptions": {}
+}

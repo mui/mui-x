@@ -1,6 +1,7 @@
 ---
 title: Charts - Animation
 productId: x-charts
+components: ChartsContrastingText
 ---
 
 # Charts - Animation

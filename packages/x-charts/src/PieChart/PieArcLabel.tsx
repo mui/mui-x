@@ -113,7 +113,6 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       isFaded,
       style,
       skipAnimation,
-
       ...other
     } = props;
 

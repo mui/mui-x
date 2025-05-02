@@ -99,6 +99,11 @@ BarLabel.propTypes = {
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**
+   * The background color to contrast against.
+   * Used to calculate the text color for optimal readability.
+   */
+  textBackground: PropTypes.string.isRequired,
+  /**
    * Width of the bar this label belongs to.
    */
   width: PropTypes.number.isRequired,
