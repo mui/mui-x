@@ -8,6 +8,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
 import { PieItemId } from '../models/seriesType/pie';
+import { ChartsContrastingText } from '../ChartsText';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
@@ -63,11 +64,10 @@ const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
   return composeClasses(slots, getPieArcLabelUtilityClass, classes);
 };
 
-const PieArcLabelRoot = styled('text', {
+const PieArcLabelRoot = styled(ChartsContrastingText, {
   name: 'MuiPieArcLabel',
   slot: 'Root',
-})(({ theme }) => ({
-  fill: (theme.vars || theme).palette.text.primary,
+})(() => ({
   textAnchor: 'middle',
   dominantBaseline: 'middle',
   pointerEvents: 'none',
@@ -113,6 +113,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       isFaded,
       style,
       skipAnimation,
+
       ...other
     } = props;
 
@@ -138,7 +139,12 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     });
 
     return (
-      <PieArcLabelRoot className={classes.root} {...other} {...animatedProps}>
+      <PieArcLabelRoot
+        className={classes.root}
+        {...other}
+        {...animatedProps}
+        textBackground={color}
+      >
         {formattedArcLabel}
       </PieArcLabelRoot>
     );
