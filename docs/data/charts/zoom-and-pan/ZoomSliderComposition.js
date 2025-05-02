@@ -11,10 +11,10 @@ const chance = new Chance(42);
 
 const xAxisData = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 const firstSeriesData = Array.from({ length: 26 }, () =>
-  chance.floating({ min: 0, max: 11 }),
+  chance.integer({ min: 0, max: 11 }),
 );
 const secondSeriesData = Array.from({ length: 26 }, () =>
-  chance.floating({ min: 0, max: 11 }),
+  chance.integer({ min: 0, max: 11 }),
 );
 
 export default function ZoomSliderComposition() {
