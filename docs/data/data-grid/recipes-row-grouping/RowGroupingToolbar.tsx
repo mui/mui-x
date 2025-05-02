@@ -126,7 +126,6 @@ function CustomToolbar() {
                     onKeyDown,
                     ...chipProps
                   }) => {
-                    // TODO: Fix keyboard navigation once re-ordereda
                     const handleKeyDown = (
                       event: React.KeyboardEvent<HTMLDivElement>,
                     ) => {

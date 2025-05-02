@@ -124,7 +124,6 @@ function CustomToolbar() {
                     onKeyDown,
                     ...chipProps
                   }) => {
-                    // TODO: Fix keyboard navigation once re-ordereda
                     const handleKeyDown = (event) => {
                       if (event.key === 'ArrowRight' && event.shiftKey) {
                         moveRowGroup(field, index + 1);
