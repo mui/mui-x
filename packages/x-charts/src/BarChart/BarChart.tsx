@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
 import { ChartsToolbarProps } from '../Toolbar';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
@@ -141,10 +142,12 @@ const BarChart = React.forwardRef(function BarChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
 
   return (
     <ChartDataProvider<'bar', BarChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />

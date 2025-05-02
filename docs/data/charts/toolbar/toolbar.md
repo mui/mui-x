@@ -14,6 +14,8 @@ This feature is unstable and its API, visuals and/or behavior may change in futu
 
 Charts provide a toolbar that can be enabled to give users quick access to certain features.
 
+The toolbar is available on scatter, bar, line, pie and radar charts.
+
 To enable the toolbar, set the `showToolbar` prop to `true` on the chart component.
 
 :::info

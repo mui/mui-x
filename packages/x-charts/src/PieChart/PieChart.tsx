@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsToolbarProps } from '../Toolbar';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
 import { ChartContainerProps } from '../ChartContainer';
@@ -71,6 +72,11 @@ export interface PieChartProps
    */
   onItemClick?: PiePlotProps['onItemClick'];
   /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -116,6 +122,7 @@ const PieChart = React.forwardRef(function PieChart(
     highlightedItem,
     onHighlightChange,
     className,
+    showToolbar,
     ...other
   } = props;
   const margin = defaultizeMargin(marginProps, defaultMargin);
@@ -141,6 +148,8 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
+
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
@@ -148,6 +157,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
       >
+        {showToolbar ? <Toolbar /> : null}
         {!hideLegend && (
           <ChartsLegend
             direction={props?.slotProps?.legend?.direction ?? 'vertical'}
@@ -246,6 +256,11 @@ PieChart.propTypes = {
    * An array of [[PieSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsToolbarProps } from '../Toolbar';
 import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../material';
 import {
@@ -34,6 +33,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -93,6 +93,11 @@ export interface ScatterChartProps
    */
   hideLegend?: boolean;
   /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -108,11 +113,6 @@ export interface ScatterChartProps
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick?: ScatterPlotProps['onItemClick'] | UseChartVoronoiSignature['params']['onItemClick'];
-  /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
 }
 
 /**
@@ -147,7 +147,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
 
   return (
     <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
