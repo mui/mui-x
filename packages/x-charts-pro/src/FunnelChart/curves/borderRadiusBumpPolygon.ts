@@ -24,88 +24,107 @@ export function borderRadiusBumpPolygon(
 
   radius = Array.isArray(radius) ? radius : Array(numPoints).fill(radius);
 
-  const corners: [Point, Point, Point, Point | null, Point | null][] = [];
+  const corners: Point[][] = [];
   for (let i = 0; i < numPoints; i += 1) {
-    const secondToLastPoint = points.at(i - 1)!;
     const lastPoint = points[i];
     const thisPoint = points[(i + 1) % numPoints];
     const nextPoint = points[(i + 2) % numPoints];
 
-    const lastEdgeLength = distance(lastPoint, thisPoint);
-    const lastOffsetDistance = Math.min(lastEdgeLength / 2, radius[i] ?? 0);
-    const start = lerp2D(thisPoint, lastPoint, lastOffsetDistance / lastEdgeLength);
+    // Regular corners
+    if (i === 0 || i === 2) {
+      const lastEdgeLength = distance(lastPoint, thisPoint);
+      const lastOffsetDistance = Math.min(lastEdgeLength / 2, radius[i] ?? 0);
+      const start = lerp2D(thisPoint, lastPoint, lastOffsetDistance / lastEdgeLength);
 
-    const nextEdgeLength = distance(nextPoint, thisPoint);
-    const nextOffsetDistance = Math.min(nextEdgeLength / 2, radius[i] ?? 0);
-    const end = lerp2D(thisPoint, nextPoint, nextOffsetDistance / nextEdgeLength);
+      const nextEdgeLength = distance(nextPoint, thisPoint);
+      const nextOffsetDistance = Math.min(nextEdgeLength / 2, radius[i] ?? 0);
+      const end = lerp2D(thisPoint, nextPoint, nextOffsetDistance / nextEdgeLength);
 
-    const lastEndEdgeLength = distance(lastPoint, secondToLastPoint);
-    const lastEndOffsetDistance = Math.min(lastEndEdgeLength / 2, radius[i] ?? 0);
-    const lastEndPoint = lerp2D(
-      lastPoint,
-      secondToLastPoint,
-      lastEndOffsetDistance / lastEndEdgeLength,
-    );
+      corners.push([start, thisPoint, end]);
+    } else {
+      // Start bump, from last point to the middle of the edge
+      const lastEdgeLength = distance(lastPoint, thisPoint);
+      const lastOffsetDistance = Math.min(lastEdgeLength / 2, radius[i] ?? 0);
+      const startBumpStart = lerp2D(thisPoint, lastPoint, lastOffsetDistance / lastEdgeLength);
 
-    const angle = Math.abs(
-      (Math.atan2(thisPoint.x - nextPoint.x, thisPoint.y - nextPoint.y) * 180) / Math.PI,
-    );
-    const isHorizontal = angle < 45 || angle > 135;
+      const midPoint = {
+        x: (thisPoint.x + lastPoint.x) / 2,
+        y: (thisPoint.y + lastPoint.y) / 2,
+      };
+      const startBumpEdgeLength = distance(midPoint, thisPoint);
+      const startBumpOffsetDistance = Math.min(startBumpEdgeLength / 2, radius[i] ?? 0);
+      const startBumpEnd = lerp2D(
+        thisPoint,
+        nextPoint,
+        startBumpOffsetDistance / startBumpEdgeLength,
+      );
 
-    const midPoint = {
-      x: (lastPoint.x + thisPoint.x) / 2,
-      y: (lastPoint.y + thisPoint.y) / 2,
-    };
+      const angle = Math.abs(
+        (Math.atan2(thisPoint.x - lastPoint.x, thisPoint.y - lastPoint.y) * 180) / Math.PI,
+      );
+      const isHorizontal = angle < 45 || angle > 135;
 
-    const controlPoint1 = {
-      x: isHorizontal ? midPoint.x : lastEndPoint.x,
-      y: isHorizontal ? lastEndPoint.y : midPoint.y,
-    };
+      const controlPoint = {
+        x: isHorizontal ? midPoint.x : lastPoint.x,
+        y: isHorizontal ? lastPoint.y : midPoint.y,
+      };
 
-    const controlPoint2 = {
-      x: isHorizontal ? midPoint.x : start.x,
-      y: isHorizontal ? start.y : midPoint.y,
-    };
+      corners.push([startBumpStart, controlPoint, startBumpEnd]);
 
-    const isBumpEdge = i === 0 || i === 2;
-    corners.push([
-      start,
-      thisPoint,
-      end,
-      isBumpEdge ? controlPoint1 : null,
-      isBumpEdge ? controlPoint2 : null,
-    ]);
+      // End bump, from the middle of the edge to the next point
+      const lastBumpEdgeLength = distance(thisPoint, nextPoint);
+
+      // const edgeCp2 = {
+      //   x: isHorizontal ? (lastPoint.x + thisPoint.x) / 2 : thisPoint.x,
+      //   y: isHorizontal ? thisPoint.y : (lastPoint.y + thisPoint.y) / 2,
+      // };
+    }
+
+    //   } else if (this.currentPoint === 1) {
+    //     this.context.bezierCurveTo(
+    //       (this.x + x - this.gap) / 2,
+    //       this.y,
+    //       (this.x + x - this.gap) / 2,
+    //       y,
+    //       x - this.gap,
+    //       y,
+    //     );
+    //   } else if (this.currentPoint === 3) {
+    //     this.context.bezierCurveTo(
+    //       (this.x + x - this.gap) / 2,
+    //       this.y,
+    //       (this.x + x - this.gap) / 2,
+    //       y,
+    //       x + this.gap,
+    //       y,
+    //     );
+    //   }
+
+    // } else if (this.currentPoint === 1) {
+    //   this.context.bezierCurveTo(
+    //     this.x,
+    //     (this.y + y - this.gap) / 2,
+    //     x,
+    //     (this.y + y - this.gap) / 2,
+    //     x,
+    //     y - this.gap,
+    //   );
+    // } else if (this.currentPoint === 3) {
+    //   this.context.bezierCurveTo(
+    //     this.x,
+    //     (this.y + y - this.gap) / 2,
+    //     x,
+    //     (this.y + y - this.gap) / 2,
+    //     x,
+    //     y + this.gap,
+    //   );
+    // }
   }
 
-  //     this.context.bezierCurveTo(
-  //       (this.x + x ) / 2,
-  //       this.y,
-  //       (this.x + x ) / 2,
-  //       y,
-  //       x,
-  //       y,
-  //     );
-
-  //   this.context.bezierCurveTo(
-  //     this.x,
-  //     (this.y + y ) / 2,
-  //     x,
-  //     (this.y + y ) / 2,
-  //     x,
-  //     y,
-  //   );
-
   ctx.moveTo(corners[0][0].x, corners[0][0].y);
-  for (let i = 0; i < corners.length; i += 1) {
-    const [start, ctrl, end, cp1, cp2] = corners[i];
-
-    if (cp1 === null || cp2 === null) {
-      ctx.lineTo(start.x, start.y);
-      ctx.quadraticCurveTo(ctrl.x, ctrl.y, end.x, end.y);
-    } else {
-      ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, start.x, start.y);
-      ctx.quadraticCurveTo(ctrl.x, ctrl.y, end.x, end.y);
-    }
+  for (const [start, ctrl, end] of corners) {
+    ctx.lineTo(start.x, start.y);
+    ctx.quadraticCurveTo(ctrl.x, ctrl.y, end.x, end.y);
   }
 
   ctx.closePath();
