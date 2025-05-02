@@ -40,26 +40,9 @@ const female = [
 const numberFormatter = Intl.NumberFormat('en-US', {
   useGrouping: true,
 });
-
-function formatWithSuffix(number: number) {
-  const suffixes = [
-    { value: 1e6, symbol: 'M' },
-    { value: 1e3, symbol: 'k' },
-  ];
-
-  const suffix = suffixes.find((s) => Math.abs(number) >= s.value);
-
-  if (!suffix) {
-    return new Intl.NumberFormat('en-US').format(number);
-  }
-
-  const formattedValue = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 1,
-  }).format(number / suffix.value);
-
-  return formattedValue + suffix.symbol;
-}
+const numberWithSuffixFormatter = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+});
 
 export default function PopulationPyramidBarChart() {
   return (
@@ -94,7 +77,8 @@ export default function PopulationPyramidBarChart() {
         ]}
         xAxis={[
           {
-            valueFormatter: (d: number) => formatWithSuffix(Math.abs(d)),
+            valueFormatter: (d: number) =>
+              numberWithSuffixFormatter.format(Math.abs(d)),
             disableLine: true,
             disableTicks: true,
           },
