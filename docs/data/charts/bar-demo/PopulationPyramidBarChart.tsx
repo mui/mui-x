@@ -63,10 +63,19 @@ export default function PopulationPyramidBarChart() {
             stack: 'stack',
           },
         ]}
-        yAxis={[{ data: ageGroups, width: 70 }]}
+        yAxis={[
+          {
+            data: ageGroups,
+            width: 70,
+            disableLine: true,
+            disableTicks: true,
+          },
+        ]}
         xAxis={[
           {
             valueFormatter: (d: number) => `${numberFormatter.format(Math.abs(d))}`,
+            disableLine: true,
+            disableTicks: true,
           },
         ]}
         layout="horizontal"
