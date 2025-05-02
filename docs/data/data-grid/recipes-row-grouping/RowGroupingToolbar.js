@@ -21,7 +21,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   justifyContent: 'flex-start',
   overflow: 'auto',
   padding: theme.spacing(1, 1.5),
-  gap: theme.spacing(1),
+  gap: theme.spacing(0.75),
 }));
 
 function CustomToolbar() {
@@ -37,18 +37,20 @@ function CustomToolbar() {
   const handleToolbarDragOver = (event) => {
     event.preventDefault();
 
-    const draggedField = draggedChip || draggedColumn;
-    if (draggedField && !rowGroupingModel.includes(draggedField)) {
-      apiRef.current.addRowGroupingCriteria(draggedField);
+    if (
+      draggedColumn &&
+      !rowGroupingModel.includes(draggedColumn) &&
+      columnsLookup[draggedColumn].groupable
+    ) {
+      apiRef.current.addRowGroupingCriteria(draggedColumn);
     }
   };
 
   const handleToolbarDragLeave = (event) => {
     event.preventDefault();
 
-    const draggedField = draggedChip || draggedColumn;
-    if (draggedField && !event.currentTarget.contains(event.relatedTarget)) {
-      apiRef.current.removeRowGroupingCriteria(draggedField);
+    if (draggedColumn && !event.currentTarget.contains(event.relatedTarget)) {
+      apiRef.current.removeRowGroupingCriteria(draggedColumn);
     }
   };
 
@@ -97,7 +99,9 @@ function CustomToolbar() {
   };
 
   const removeRowGroup = (field) => {
-    apiRef.current.removeRowGroupingCriteria(field);
+    if (columnsLookup[field].groupable) {
+      apiRef.current.removeRowGroupingCriteria(field);
+    }
   };
 
   return (
@@ -106,11 +110,14 @@ function CustomToolbar() {
       onDragOver={handleToolbarDragOver}
       onDragLeave={handleToolbarDragLeave}
     >
-      <MoveUpIcon fontSize="small" color="action" sx={{ mr: 1 }} />
+      <MoveUpIcon fontSize="small" color="action" sx={{ mr: 0.75 }} />
       {rowGroupingModel.length > 0 ? (
         <React.Fragment>
           {rowGroupingModel.map((field, index) => {
             const isDraggedField = draggedChip === field || draggedColumn === field;
+            const isGroupable = columnsLookup[field].groupable;
+            const label = columnsLookup[field].headerName ?? field;
+
             return (
               <React.Fragment key={field}>
                 {index > 0 && <ChevronRightIcon fontSize="small" color="action" />}
@@ -138,9 +145,10 @@ function CustomToolbar() {
                       <Chip
                         {...chipProps}
                         ref={ref}
-                        label={columnsLookup[field].headerName ?? field}
+                        label={label}
                         sx={{ cursor: 'grab', opacity: isDraggedField ? 0.5 : 1 }}
                         onDelete={() => removeRowGroup(field)}
+                        deleteIcon={!isGroupable ? <span /> : undefined}
                         onKeyDown={handleKeyDown}
                         onDragStart={handleChipDragStart(field)}
                         onDragEnd={handleChipDragEnd}
