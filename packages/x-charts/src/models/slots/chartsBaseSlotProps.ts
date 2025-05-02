@@ -7,16 +7,16 @@ type CommonProps<T = HTMLElement> = React.DOMAttributes<T> & {
   [k: `data-${string}`]: any;
 };
 
-export type IconProps = CommonProps<SVGSVGElement> & {
+export type ChartBaseIconProps = CommonProps<SVGSVGElement> & {
   titleAccess?: string;
 };
 
-export type TooltipProps = CommonProps & {
+export type ChartBaseTooltipProps = CommonProps & {
   children: React.ReactElement<any, any>;
   enterDelay?: number;
   title: React.ReactNode;
 };
 
-export type IconButtonProps = CommonProps & {
+export type ChartBaseIconButtonProps = CommonProps & {
   ref?: React.Ref<HTMLButtonElement>;
 };

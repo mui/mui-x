@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createSvgIcon } from '../../internals/createSvgIcon';
+import { createSvgIcon } from '../../createSvgIcon';
 
 export const ChartsZoomInIcon = createSvgIcon(
   <React.Fragment>

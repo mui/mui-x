@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import materialSlots from '../material';
-import { IconButtonProps } from '../models/slots/chartsBaseSlotProps';
+import { materialSlots } from '../internals/material';
+import { ChartBaseIconButtonProps } from '../models/slots/chartsBaseSlotProps';
 
-export interface ToolbarButtonProps extends IconButtonProps {}
+export interface ToolbarButtonProps extends ChartBaseIconButtonProps {}
 
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {

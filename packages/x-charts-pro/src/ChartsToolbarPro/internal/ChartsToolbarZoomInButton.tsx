@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import { useChartContext } from '@mui/x-charts/internals';
-import materialSlots, { type ChartsSlots } from '@mui/x-charts/material';
+import { materialSlots, type ChartsSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 
