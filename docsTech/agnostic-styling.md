@@ -62,7 +62,7 @@ const trigger = useGridStyleSlot(rootProps, triggerSlot)
 />
 ```
 
-#### Proposed compilation (emotion/styled)
+#### Proposed compilation (emotion)
 
 ```javascript.jsx
 const triggerSlot = {

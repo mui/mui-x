@@ -8,13 +8,13 @@ const CONFIG_FILENAME = 'mui-css.config.json';
 export enum BuildTarget {
   EMOTION = 'emotion',
   CSS = 'css',
-};
+}
 
 export type PluginOptions = {
   target: BuildTarget;
 };
 
-/** mui-css.config.json options */ 
+/** mui-css.config.json options */
 export type ProjectOptions = {
   cssVariables: string;
 };
@@ -52,7 +52,9 @@ export function getConfig(filepath: string) {
 
 function getConfigPath(filepath: string) {
   const rootPath = packageDirectorySync({ cwd: dirname(filepath) });
-  if (!rootPath) { return undefined; }
+  if (!rootPath) {
+    return undefined;
+  }
   return resolvePath(rootPath, CONFIG_FILENAME);
 }
 
