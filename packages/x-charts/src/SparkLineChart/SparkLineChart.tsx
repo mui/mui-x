@@ -130,11 +130,9 @@ export interface SparkLineChartProps
   disableClipping?: boolean;
 
   /**
-   * Offset the clipped area by this amount in pixels on each side.
+   * The clipped area offset in pixels.
    *
-   * This is particularly useful when lines of line charts are clipped due to being drawn at the drawing area edges.
-   * This can happen because the default stroke width of lines is 2 px, so a line drawn at the edge of the chart will
-   * have half the stroke width clipped.
+   * This prevents partial clipping of lines when they are drawn on the edge of the drawing area.
    *
    * @default { top: 1, right: 1, bottom: 1, left: 1 }
    */
@@ -254,10 +252,10 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           <React.Fragment>
             <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
             <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
-            <LineHighlightPlot slots={slots} slotProps={slotProps} />
           </React.Fragment>
         )}
       </g>
+      {plotType === 'line' && <LineHighlightPlot slots={slots} slotProps={slotProps} />}
       {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
       <ChartsAxisHighlight {...axisHighlight} />
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
@@ -288,11 +286,9 @@ SparkLineChart.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
-   * Offset the clipped area by this amount in pixels on each side.
+   * The clipped area offset in pixels.
    *
-   * This is particularly useful when lines of line charts are clipped due to being drawn at the drawing area edges.
-   * This can happen because the default stroke width of lines is 2 px, so a line drawn at the edge of the chart will
-   * have half the stroke width clipped.
+   * This prevents partial clipping of lines when they are drawn on the edge of the drawing area.
    *
    * @default { top: 1, right: 1, bottom: 1, left: 1 }
    */

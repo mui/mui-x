@@ -5,7 +5,7 @@
       "description": "Set to <code>true</code> to fill spark line area. Has no effect if plotType=&#39;bar&#39;."
     },
     "clipAreaOffset": {
-      "description": "Offset the clipped area by this amount in pixels on each side.<br>This is particularly useful when lines of line charts are clipped due to being drawn at the drawing area edges. This can happen because the default stroke width of lines is 2 px, so a line drawn at the edge of the chart will have half the stroke width clipped."
+      "description": "The clipped area offset in pixels.<br>This prevents partial clipping of lines when they are drawn on the edge of the drawing area."
     },
     "color": { "description": "Color used to colorize the sparkline." },
     "data": { "description": "Data to plot." },
