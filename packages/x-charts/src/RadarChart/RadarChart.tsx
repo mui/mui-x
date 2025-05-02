@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsToolbar } from '@mui/x-charts/Toolbar/internals/ChartsToolbar';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
