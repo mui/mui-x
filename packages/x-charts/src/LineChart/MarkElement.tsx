@@ -6,14 +6,7 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import {
-  UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxisIndex,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
@@ -44,6 +37,16 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    /**
+     * If `true`, the marker is faded.
+     * @default false
+     */
+    isFaded?: boolean;
+    /**
+     * If `true`, the marker is highlighted.
+     * @default false
+     */
+    isHighlighted?: boolean;
   };
 
 /**
@@ -67,21 +70,17 @@ function MarkElement(props: MarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
+    isFaded = false,
+    isHighlighted = false,
     ...other
   } = props;
 
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
-
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
+    isHighlighted,
     isFaded,
     color,
     skipAnimation,
@@ -116,6 +115,16 @@ MarkElement.propTypes = {
    */
   dataIndex: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If `true`, the marker is faded.
+   * @default false
+   */
+  isFaded: PropTypes.bool,
+  /**
+   * If `true`, the marker is highlighted.
+   * @default false
+   */
+  isHighlighted: PropTypes.bool,
   /**
    * The shape of the marker.
    */

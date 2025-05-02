@@ -1,6 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { selectorChartsInteractionXAxisIndex } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianInteraction.selectors';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartId } from '../hooks/useChartId';
@@ -12,8 +13,9 @@ import { CircleMarkElement } from './CircleMarkElement';
 import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
-import { useXAxes, useYAxes } from '../hooks';
+import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { useSelector } from '../internals/store/useSelector';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -67,7 +69,9 @@ function MarkPlot(props: MarkPlotProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const chartId = useChartId();
-  const { instance } = useChartContext();
+  const { instance, store } = useChartContext();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
   if (seriesData === undefined) {
     return null;
@@ -112,6 +116,9 @@ function MarkPlot(props: MarkPlotProps) {
           const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
 
           const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
+
+          const isSeriesHighlighted = isHighlighted({ seriesId });
+          const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
 
           return (
             <g key={seriesId} clipPath={`url(#${clipId})`}>
@@ -162,6 +169,8 @@ function MarkPlot(props: MarkPlotProps) {
                         ((event) =>
                           onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
                       }
+                      isHighlighted={xAxisInteractionIndex === index || isSeriesHighlighted}
+                      isFaded={isSeriesFaded}
                       {...slotProps?.mark}
                     />
                   );

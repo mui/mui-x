@@ -8,6 +8,8 @@
       },
       "required": true
     },
+    "isFaded": { "type": { "name": "bool" }, "default": "false" },
+    "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } }
   },
   "name": "MarkElement",
