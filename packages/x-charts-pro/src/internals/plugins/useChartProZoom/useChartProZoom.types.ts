@@ -57,14 +57,6 @@ export interface UseChartProZoomPublicApi {
 
 export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
   /**
-   * Zoom in the chart.
-   */
-  zoomIn: () => void;
-  /**
-   * Zoom out the chart.
-   */
-  zoomOut: () => void;
-  /**
    * Translate the zoom range (i.e., both start and end) for a specific axis.
    * @param {AxisId} axisId The id of the axis to move the zoom range for.
    * @param {number} by The amount to move the zoom range by. Ranges from 0 to 100.
