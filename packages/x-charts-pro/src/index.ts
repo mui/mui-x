@@ -40,3 +40,4 @@ export * from './LineChartPro';
 export * from './FunnelChart';
 export * from './ChartZoomSlider';
 export * from './ChartsToolbarPro';
+export * from './ChartZoomSlider';
