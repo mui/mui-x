@@ -35,3 +35,7 @@ components: BarChart, BarElement, BarPlot
 ## BiaxialBarChart
 
 {{"demo": "BiaxialBarChart.js"}}
+
+## Population pyramid
+
+{{"demo": "PopulationPyramidBarChart.js"}}
