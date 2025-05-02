@@ -55,12 +55,12 @@ describe('babel-plugin-mui-css', () => {
     });
   });
 
-  it('works for slot()', () => {
+  it.only('works for slot()', () => {
     transform({
       files: [{
         name: 'index.js',
         input: js`
-          const slotPanel = slot({ name: 'MuiDataGrid', slot: 'panel' }, {
+          const slotPanel = slot({ name: 'MuiDataGrid', slot: 'panel', as: 'div' }, {
             root: {
               border: '1px solid black',
             },

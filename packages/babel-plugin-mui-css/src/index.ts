@@ -75,14 +75,15 @@ export default function transformCSS({ types: t }: BabelT) {
           t.objectExpression([
             t.objectProperty(t.identifier('name'), nameNode.value),
             t.objectProperty(t.identifier('slot'), slotNode.value),
-          ])
+          ]),
         ]);
 
-        const rootStylesNode = findObjectProperty(stylesNode, 'root').value as Babel.types.ObjectExpression;
+        const rootStylesNode = findObjectProperty(stylesNode, 'root')
+          .value as Babel.types.ObjectExpression;
         const emotionStylesNode = t.cloneNode(rootStylesNode);
-        stylesNode.properties.forEach(propertyNode => {
-          if (propertyNode.type !== 'ObjectProperty' || propertyNode.key.type !== 'Identifier' ) {
-            return
+        stylesNode.properties.forEach((propertyNode) => {
+          if (propertyNode.type !== 'ObjectProperty' || propertyNode.key.type !== 'Identifier') {
+            return;
           }
           if (propertyNode.key.name === 'root') {
             return;
@@ -90,23 +91,17 @@ export default function transformCSS({ types: t }: BabelT) {
           const modifier = propertyNode.key.name;
           const className = generateClassName(prefix, modifier, styles[modifier]);
           emotionStylesNode.properties.push(
-            t.objectProperty(
-              t.stringLiteral(`&.${className}`),
-              t.cloneNode(propertyNode.value),
-            )
-          )
+            t.objectProperty(t.stringLiteral(`&.${className}`), t.cloneNode(propertyNode.value)),
+          );
         });
 
-        const styledCallNode = t.callExpression(
-          styledNode,
-          [emotionStylesNode]
-        )
+        const styledCallNode = t.callExpression(styledNode, [emotionStylesNode]);
 
         // const classesNode = buildClassesNode(params.file.metadata.muiCSS, prefix, styles);
 
         switch (calleeName) {
           case 'css': {
-            throw new Error('todo')
+            throw new Error('todo');
           }
           case 'slot': {
             path.replaceWith(styledCallNode);
@@ -269,9 +264,12 @@ function evaluateStyles(state: State, source: string) {
   );
 }
 
-function findObjectProperty(node: Babel.types.ObjectExpression, property: string): Babel.types.ObjectProperty {
+function findObjectProperty(
+  node: Babel.types.ObjectExpression,
+  property: string,
+): Babel.types.ObjectProperty {
   if (!node.properties) {
-    throw new Error('Node is not an object:' + JSON.stringify(node))
+    throw new Error('Node is not an object:' + JSON.stringify(node));
   }
   const result = node.properties.find(
     (p) => p.type === 'ObjectProperty' && p.key.type === 'Identifier' && p.key.name === property,
