@@ -1,5 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { Point } from './curve.types';
+import { borderRadiusBumpPolygon } from './borderRadiusBumpPolygon';
 
 /**
  * This is a custom "bump" curve generator.
@@ -12,23 +14,26 @@ import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 export class Bump implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
-  private x: number = NaN;
-
-  private y: number = NaN;
-
-  private currentPoint: number = 0;
-
   private isHorizontal: boolean = false;
 
   private gap: number = 0;
 
+  private borderRadius: number = 0;
+
+  private points: Point[] = [];
+
   constructor(
     context: CanvasRenderingContext2D,
-    { isHorizontal, gap }: { isHorizontal: boolean; gap?: number },
+    {
+      isHorizontal,
+      gap,
+      borderRadius,
+    }: { isHorizontal: boolean; gap?: number; borderRadius?: number },
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal;
     this.gap = (gap ?? 0) / 2;
+    this.borderRadius = borderRadius ?? 0;
   }
 
   areaStart(): void {}
@@ -39,44 +44,26 @@ export class Bump implements CurveGenerator {
 
   lineEnd(): void {}
 
-  point(x: number, y: number): void {
-    x = +x;
-    y = +y;
-
-    // 0 is the top-left corner.
-    if (this.isHorizontal) {
-      if (this.currentPoint === 0) {
-        this.context.moveTo(x + this.gap, y);
-        this.context.lineTo(x + this.gap, y);
-      } else if (this.currentPoint === 1) {
-        this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x - this.gap, y);
-      } else if (this.currentPoint === 2) {
-        this.context.lineTo(x - this.gap, y);
-      } else {
-        this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x + this.gap, y);
-      }
-
-      this.currentPoint += 1;
-      this.x = x;
-      this.y = y;
+  point(xIn: number, yIn: number): void {
+    this.points.push({ x: xIn, y: yIn });
+    if (this.points.length < 4) {
       return;
     }
 
-    // 0 is the top-right corner.
-    if (this.currentPoint === 0) {
-      // X from Y
-      this.context.moveTo(x, y + this.gap);
-      this.context.lineTo(x, y + this.gap);
-    } else if (this.currentPoint === 1) {
-      this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y - this.gap);
-    } else if (this.currentPoint === 2) {
-      this.context.lineTo(x, y - this.gap);
-    } else {
-      this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y + this.gap);
-    }
+    // Add gaps where they are needed.
+    this.points = this.points.map((point, index) => {
+      if (this.isHorizontal) {
+        return {
+          x: point.x + (index === 0 || index === 3 ? this.gap : -this.gap),
+          y: point.y,
+        };
+      }
+      return {
+        x: point.x,
+        y: point.y + (index === 0 || index === 3 ? this.gap : -this.gap),
+      };
+    });
 
-    this.currentPoint += 1;
-    this.x = x;
-    this.y = y;
+    borderRadiusBumpPolygon(this.context, this.points, this.borderRadius);
   }
 }
