@@ -6,7 +6,8 @@ import { xFromY, yFromX } from './utils';
 
 /**
  * This is a custom "pyramid" curve generator.
- * It draws straight lines for the 4 provided points,
+ * It draws straight lines for the 4 provided points. The slopes are calculated
+ * based on the min and max values of the x and y axes.
  * with the option to add a gap between sections while also properly handling the border radius.
  */
 export class Pyramid implements CurveGenerator {
