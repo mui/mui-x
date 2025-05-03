@@ -21,11 +21,6 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
    */
   gap?: number;
   /**
-   * The radius, in pixels, of the corners of the funnel sections.
-   * @default 0
-   */
-  borderRadius?: number;
-  /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
@@ -36,7 +31,7 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const useAggregatedData = (gap: number | undefined, borderRadius: number | undefined) => {
+const useAggregatedData = (gap: number | undefined) => {
   const seriesData = useFunnelSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -134,7 +129,7 @@ const useAggregatedData = (gap: number | undefined, borderRadius: number | undef
           gap,
           position: dataIndex,
           sections: currentSeries.dataPoints.length,
-          borderRadius,
+          borderRadius: currentSeries.borderRadius,
           min: minPoint,
           max: maxPoint,
         });
@@ -174,16 +169,16 @@ const useAggregatedData = (gap: number | undefined, borderRadius: number | undef
     });
 
     return result.flat();
-  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, gap, borderRadius]);
+  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, gap]);
 
   return allData;
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { onItemClick, gap, borderRadius, ...other } = props;
+  const { onItemClick, gap, ...other } = props;
   const theme = useTheme();
 
-  const data = useAggregatedData(gap, borderRadius);
+  const data = useAggregatedData(gap);
 
   return (
     <React.Fragment>
