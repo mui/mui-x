@@ -59,6 +59,11 @@ export interface FunnelSeriesType
    */
   curve?: FunnelCurveType;
   /**
+   * The radius, in pixels, of the corners of the funnel sections.
+   * @default 0
+   */
+  borderRadius?: number;
+  /**
    * The label configuration for the funnel plot.
    * Allows to customize the position and margin of the label that is displayed on the funnel sections.
    *
