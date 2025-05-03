@@ -54,7 +54,7 @@ It also accepts a function that receives the data object and should return the l
 ### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'` and `'step'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'`, `'pyramid'` and `'step'`.
 
 This series property adds the option to control the interpolation of a series.
 

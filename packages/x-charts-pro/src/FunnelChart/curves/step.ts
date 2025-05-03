@@ -1,10 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { Point } from './curve.types';
+import { CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
-
-const max = (numbers: number[]) => Math.max(...numbers, -Infinity);
-const min = (numbers: number[]) => Math.min(...numbers, Infinity);
+import { max, min } from './utils';
 
 /**
  * This is a custom "step" curve generator.
@@ -31,21 +29,10 @@ export class Step implements CurveGenerator {
 
   constructor(
     context: CanvasRenderingContext2D,
-    {
-      isHorizontal,
-      gap,
-      position,
-      borderRadius,
-    }: {
-      isHorizontal: boolean;
-      gap?: number;
-      position?: number;
-      sections?: number;
-      borderRadius?: number;
-    },
+    { isHorizontal, gap, position, borderRadius }: CurveOptions,
   ) {
     this.context = context;
-    this.isHorizontal = isHorizontal;
+    this.isHorizontal = isHorizontal ?? false;
     this.gap = (gap ?? 0) / 2;
     this.position = position ?? 0;
     this.borderRadius = borderRadius ?? 0;
