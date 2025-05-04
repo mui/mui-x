@@ -85,6 +85,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
+    pathname: '/x/api/charts/charts-localization-provider',
+    title: 'ChartsLocalizationProvider',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -111,6 +115,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-y-axis',
     title: 'ChartsYAxis',
+  },
+  {
+    pathname: '/x/api/charts/chart-zoom-slider',
+    title: 'ChartZoomSlider',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/continuous-color-legend',

@@ -43,13 +43,11 @@ const useUtilityClasses = (classes: Partial<DatePickerToolbarClasses> | undefine
 const DatePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDatePickerToolbar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({});
 
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
-  overridesResolver: (_, styles) => styles.title,
 })<{ ownerState: PickerToolbarOwnerState }>({
   variants: [
     {

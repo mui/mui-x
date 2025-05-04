@@ -81,9 +81,7 @@ export default function TickPlacementBars() {
       />
       <BarChart
         dataset={dataset}
-        xAxis={[
-          { scaleType: 'band', dataKey: 'month', tickPlacement, tickLabelPlacement },
-        ]}
+        xAxis={[{ dataKey: 'month', tickPlacement, tickLabelPlacement }]}
         {...chartSetting}
       />
     </div>

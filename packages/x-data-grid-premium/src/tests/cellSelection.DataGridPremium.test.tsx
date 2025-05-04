@@ -455,8 +455,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const gridRect = grid('root')!.getBoundingClientRect();
 
       await act(async () => {
-        virtualScroller.scrollTop = 30;
-        virtualScroller.dispatchEvent(new Event('scroll'));
+        virtualScroller.scrollTo({ top: 30 });
       });
       expect(virtualScroller.scrollTop).to.equal(30);
 

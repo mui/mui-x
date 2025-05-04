@@ -43,7 +43,7 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   role?: string;
 }
 
-interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
   /**
    * `true` if this is not the initial render of the digital clock.
    */
@@ -62,7 +62,6 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
   width: 56,
@@ -104,7 +103,6 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
-  overridesResolver: (_, styles) => styles.item,
 })(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',

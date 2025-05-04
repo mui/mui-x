@@ -40,9 +40,9 @@ type TreeViewLogExpandedSignature = TreeViewPluginSignature<{
 
 const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
   params,
-  models,
+  store,
 }) => {
-  const expandedStr = JSON.stringify(models.expandedItems.value);
+  const expandedStr = JSON.stringify(store.value.expansion.expandedItems);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {

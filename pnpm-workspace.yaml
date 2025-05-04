@@ -2,7 +2,13 @@ packages:
   - packages/*
   - docs
   - test
+  - test/e2e
+  - test/regressions
   - test/performance-charts
+
 ignoredBuiltDependencies:
   - '@mui/monorepo'
   - msw
+
+onlyBuiltDependencies:
+  - '@vvago/vale'

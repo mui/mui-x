@@ -17,7 +17,7 @@ With the Data Grid Premium, you can apply the `cellSelection` prop to let users 
 
 ## Selecting cells
 
-With the `cellSelection` prop applied, users can select a single cell by clicking on it, or by pressing <kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd> when the cell is in focus.
+With the `cellSelection` prop applied, users can select a single cell by clicking on it, or by pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> when the cell is in focus.
 Select multiple cells by holding <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows) while clicking on them.
 Hold <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows) and click on a selected cell to deselect it.
 

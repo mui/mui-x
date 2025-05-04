@@ -1,3 +1,4 @@
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector } from '../../utils/selectors';
 import { AxisId, ChartsAxisProps } from '../../../../models/axis';
 import {
@@ -109,8 +110,21 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
 
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
-      .map((axisId) => ({ axisId, dataIndex: getAxisIndex(axes.axis[axisId], value) }))
+      .map(
+        (axisId): AxisItemIdentifier => ({
+          axisId,
+          dataIndex: getAxisIndex(axes.axis[axisId], value),
+        }),
+      )
       .filter(({ dataIndex }) => dataIndex >= 0);
+  },
+  {
+    memoizeOptions: {
+      // Keep the same reference if array content is the same.
+      // If possible, avoid this pattern by creating selectors that
+      // uses string/number as arguments.
+      resultEqualityCheck: isDeepEqual,
+    },
   },
 );
 
@@ -126,8 +140,21 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
 
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
-      .map((axisId) => ({ axisId, dataIndex: getAxisIndex(axes.axis[axisId], value) }))
+      .map(
+        (axisId): AxisItemIdentifier => ({
+          axisId,
+          dataIndex: getAxisIndex(axes.axis[axisId], value),
+        }),
+      )
       .filter(({ dataIndex }) => dataIndex >= 0);
+  },
+  {
+    memoizeOptions: {
+      // Keep the same reference if array content is the same.
+      // If possible, avoid this pattern by creating selectors that
+      // uses string/number as arguments.
+      resultEqualityCheck: isDeepEqual,
+    },
   },
 );
 
@@ -138,3 +165,5 @@ export const selectorChartsInteractionAxisTooltip = createSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
+
+export type AxisItemIdentifier = { axisId: string; dataIndex: number };

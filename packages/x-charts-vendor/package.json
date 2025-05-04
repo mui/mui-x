@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "8.0.0-beta.3",
-  "description": "Vendored dependencies for MUI X Charts",
+  "version": "8.0.0",
   "author": "MUI Team",
+  "description": "Vendored dependencies for MUI X Charts.",
   "keywords": [
     "data visualization",
     "React",

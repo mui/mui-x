@@ -28,4 +28,4 @@ export const DEFAULT_PLUGINS = [
   useChartInteraction,
   useChartHighlight,
   useChartVoronoi,
-];
+] as const;

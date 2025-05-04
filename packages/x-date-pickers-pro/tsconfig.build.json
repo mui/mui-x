@@ -8,8 +8,7 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
-    "rootDir": "./src",
-    "types": ["node", "@mui/material/themeCssVarsAugmentation"]
+    "rootDir": "./src"
   },
   "references": [
     { "path": "../x-date-pickers/tsconfig.build.json" },

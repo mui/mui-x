@@ -13,6 +13,18 @@
       "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
       "default": "\"filtered\""
     },
+    "aiAssistant": { "type": { "name": "bool" }, "default": "false" },
+    "aiAssistantActiveConversationIndex": { "type": { "name": "number" } },
+    "aiAssistantConversations": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
+      }
+    },
+    "aiAssistantSuggestions": {
+      "type": { "name": "arrayOf", "description": "Array&lt;{ value: string }&gt;" }
+    },
+    "allowAiAssistantDataSampling": { "type": { "name": "bool" } },
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -257,6 +269,20 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onAiAssistantActiveConversationIndexChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(aiAssistantActiveConversationIndex: number) => void",
+        "describedArgs": ["aiAssistantActiveConversationIndex"]
+      }
+    },
+    "onAiAssistantConversationsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(conversations: Array<Conversation>) => void",
+        "describedArgs": ["conversations"]
+      }
+    },
     "onBeforeClipboardPasteStart": {
       "type": { "name": "func" },
       "signature": { "type": "function(params: object) => void", "describedArgs": ["params"] }
@@ -424,7 +450,7 @@
     "onFetchRows": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead.",
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead.",
       "signature": {
         "type": "function(params: GridFetchRowsParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -511,6 +537,14 @@
       "type": { "name": "func" },
       "signature": { "type": "function(error: any) => void", "describedArgs": ["error"] }
     },
+    "onPrompt": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(prompt: string, promptContext: string, conversationId: string) => Promise<PromptResponse>",
+        "describedArgs": ["prompt", "promptContext", "conversationId"],
+        "returned": "Promise<PromptResponse>"
+      }
+    },
     "onResize": {
       "type": { "name": "func" },
       "signature": {
@@ -581,7 +615,7 @@
     "onRowsScrollEnd": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
       "signature": {
         "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -670,7 +704,7 @@
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\"",
       "deprecated": true,
-      "deprecationInfo": "Use the {@link <a href=\"https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead."
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead."
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
@@ -719,6 +753,12 @@
     "import { DataGridPremium } from '@mui/x-data-grid-premium';"
   ],
   "slots": [
+    {
+      "name": "aiAssistantPanel",
+      "description": "Component rendered when AI Assistant panel is open. Only needed when `aiAssistant` prop is passed to the grid.\nPass `GridAiAssistantPanel` to render the default AI Assistant panel.",
+      "default": "null",
+      "class": "MuiDataGridPremium-aiAssistantPanel"
+    },
     {
       "name": "emptyPivotOverlay",
       "description": "Component rendered when pivot mode is enabled but no rows are defined.",
@@ -881,6 +921,12 @@
       "class": null
     },
     {
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
       "name": "baseCircularProgress",
       "description": "The custom CircularProgress component used in the grid.",
       "default": "CircularProgress",
@@ -977,12 +1023,6 @@
       "class": null
     },
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
-      "class": null
-    },
-    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -1016,12 +1056,6 @@
       "name": "columnSelectorIcon",
       "description": "Icon displayed on the column menu selector tab.",
       "default": "GridColumnIcon",
-      "class": null
-    },
-    {
-      "name": "columnUnsortedIcon",
-      "description": "Icon displayed on the side of the column header title when unsorted.",
-      "default": "GridColumnUnsortedIcon",
       "class": null
     },
     {
@@ -1235,18 +1269,6 @@
       "class": null
     },
     {
-      "name": "toolbarPromptSendIcon",
-      "description": "Icon used for the button that sends a prompt",
-      "default": "GridFunctionsIcon",
-      "class": null
-    },
-    {
-      "name": "toolbarPromptRecordIcon",
-      "description": "Icon used for the button that starts/stops recording the prompt",
-      "default": "GridFunctionsIcon",
-      "class": null
-    },
-    {
       "name": "pivotIcon",
       "description": "Icon used for the pivot icon",
       "default": "GridPivotIcon",
@@ -1317,6 +1339,102 @@
       "description": "Icon displayed in the collapsible to indicate if it is open or closed.",
       "default": "GridExpandMoreIcon",
       "class": "MuiDataGridPremium-collapsibleIcon"
+    },
+    {
+      "name": "aiAssistantIcon",
+      "description": "Icon used for the AI Assistant button",
+      "default": "GridAssistantIcon",
+      "class": null
+    },
+    {
+      "name": "aiAssistantPanelCloseIcon",
+      "description": "Icon used for the AI Assistant panel close button",
+      "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "aiAssistantPanelNewConversationIcon",
+      "description": "Icon used for the AI Assistant panel new conversation button",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "aiAssistantPanelHistoryIcon",
+      "description": "Icon used for the AI Assistant panel history icon",
+      "default": "GridHistoryIcon",
+      "class": null
+    },
+    {
+      "name": "promptIcon",
+      "description": "Icon used for the prompt",
+      "default": "GridPromptIcon",
+      "class": "MuiDataGridPremium-promptIcon"
+    },
+    {
+      "name": "promptSendIcon",
+      "description": "Icon used for the button that sends a prompt",
+      "default": "GridSendIcon",
+      "class": null
+    },
+    {
+      "name": "promptSpeechRecognitionIcon",
+      "description": "Icon used for the button that starts and stops recording the prompt",
+      "default": "GridMicIcon",
+      "class": null
+    },
+    {
+      "name": "promptSpeechRecognitionOffIcon",
+      "description": "Icon used for when speech recognition is not supported",
+      "default": "GridMicOffIcon",
+      "class": null
+    },
+    {
+      "name": "promptRerunIcon",
+      "description": "Icon used for the button that reruns a prompt",
+      "default": "GridRerunIcon",
+      "class": null
+    },
+    {
+      "name": "promptSortAscIcon",
+      "description": "Icon used to display sort ascending changes",
+      "default": "GridArrowUpwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptSortDescIcon",
+      "description": "Icon used to display sort descending changes",
+      "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptGroupIcon",
+      "description": "Icon used to display group changes",
+      "default": "GridGroupWorkIcon",
+      "class": null
+    },
+    {
+      "name": "promptFilterIcon",
+      "description": "Icon used to display filter changes",
+      "default": "GridFilterAltIcon",
+      "class": null
+    },
+    {
+      "name": "promptPivotIcon",
+      "description": "Icon used to display pivot changes",
+      "default": "GridPivotIcon",
+      "class": null
+    },
+    {
+      "name": "promptAggregationIcon",
+      "description": "Icon used to display aggregation changes",
+      "default": "GridFunctionsIcon",
+      "class": null
+    },
+    {
+      "name": "promptChangesToggleIcon",
+      "description": "Icon used on the toggle button of the changes list",
+      "default": "GridExpandMoreIcon",
+      "class": "MuiDataGridPremium-promptChangesToggleIcon"
     }
   ],
   "classes": [
@@ -1360,6 +1478,84 @@
       "key": "aggregationRowOverlayWrapper",
       "className": "MuiDataGridPremium-aggregationRowOverlayWrapper",
       "description": "Styles applied to the aggregation row overlay wrapper.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelBody",
+      "className": "MuiDataGridPremium-aiAssistantPanelBody",
+      "description": "Styles applied to the AI assistant panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversation",
+      "className": "MuiDataGridPremium-aiAssistantPanelConversation",
+      "description": "Styles applied to the AI assistant panel conversation.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationList",
+      "className": "MuiDataGridPremium-aiAssistantPanelConversationList",
+      "description": "Styles applied to the AI assistant panel conversation list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationTitle",
+      "className": "MuiDataGridPremium-aiAssistantPanelConversationTitle",
+      "description": "Styles applied to the AI assistant panel conversation title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelEmptyText",
+      "className": "MuiDataGridPremium-aiAssistantPanelEmptyText",
+      "description": "Styles applied to the AI assistant panel empty text.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelFooter",
+      "className": "MuiDataGridPremium-aiAssistantPanelFooter",
+      "description": "Styles applied to the AI assistant panel footer.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHeader",
+      "className": "MuiDataGridPremium-aiAssistantPanelHeader",
+      "description": "Styles applied to the AI assistant panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestions",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestions",
+      "description": "Styles applied to the AI assistant panel suggestions.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsItem",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestionsItem",
+      "description": "Styles applied to the AI assistant panel suggestions item.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsLabel",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestionsLabel",
+      "description": "Styles applied to the AI assistant panel suggestions label.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsList",
+      "className": "MuiDataGridPremium-aiAssistantPanelSuggestionsList",
+      "description": "Styles applied to the AI assistant panel suggestions list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitle",
+      "className": "MuiDataGridPremium-aiAssistantPanelTitle",
+      "description": "Styles applied to the AI assistant panel title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitleContainer",
+      "className": "MuiDataGridPremium-aiAssistantPanelTitleContainer",
+      "description": "Styles applied to the AI assistant panel title container.",
       "isGlobal": false
     },
     {
@@ -2077,6 +2273,60 @@
       "isGlobal": false
     },
     {
+      "key": "prompt",
+      "className": "MuiDataGridPremium-prompt",
+      "description": "Styles applied to the prompt root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptAction",
+      "className": "MuiDataGridPremium-promptAction",
+      "description": "Styles applied to the prompt action element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangeList",
+      "className": "MuiDataGridPremium-promptChangeList",
+      "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggle",
+      "className": "MuiDataGridPremium-promptChangesToggle",
+      "description": "Styles applied to the prompt changes toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptContent",
+      "className": "MuiDataGridPremium-promptContent",
+      "description": "Styles applied to the prompt content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptError",
+      "className": "MuiDataGridPremium-promptError",
+      "description": "Styles applied to the prompt error element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptFeedback",
+      "className": "MuiDataGridPremium-promptFeedback",
+      "description": "Styles applied to the prompt feedback element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIconContainer",
+      "className": "MuiDataGridPremium-promptIconContainer",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptText",
+      "className": "MuiDataGridPremium-promptText",
+      "description": "Styles applied to the prompt text element.",
+      "isGlobal": false
+    },
+    {
       "key": "resizablePanelHandle",
       "className": "MuiDataGridPremium-resizablePanelHandle",
       "description": "Styles applied to resizable panel handles.",
@@ -2293,36 +2543,6 @@
       "isGlobal": false
     },
     {
-      "key": "toolbarPromptControl",
-      "className": "MuiDataGridPremium-toolbarPromptControl",
-      "description": "Styles applied to the toolbar prompt control element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControl--recording",
-      "className": "MuiDataGridPremium-toolbarPromptControl--recording",
-      "description": "Styles applied to the toolbar prompt control element when recording.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordButton",
-      "className": "MuiDataGridPremium-toolbarPromptControlRecordButton",
-      "description": "Styles applied to the toolbar prompt control record button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlRecordingIndicator",
-      "className": "MuiDataGridPremium-toolbarPromptControlRecordingIndicator",
-      "description": "Styles applied to the toolbar prompt control recording indicator element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarPromptControlSendButton",
-      "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
-      "description": "Styles applied to the toolbar prompt control send button element.",
-      "isGlobal": false
-    },
-    {
       "key": "toolbarQuickFilter",
       "className": "MuiDataGridPremium-toolbarQuickFilter",
       "description": "Styles applied to the toolbar quick filter root element.",
@@ -2399,6 +2619,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

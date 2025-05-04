@@ -1,0 +1,10 @@
+[
+  {
+    "languageTag": "fr-FR",
+    "importName": "frFR",
+    "localeName": "French",
+    "missingKeysCount": 0,
+    "totalKeysCount": 2,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/frFR.ts"
+  }
+]

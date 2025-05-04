@@ -178,6 +178,12 @@ const pages: MuiPage[] = [
               },
             ],
           },
+          {
+            pathname: '/x/react-data-grid/ai-assistant',
+            plan: 'premium',
+            newFeature: true,
+            title: 'AI Assistant',
+          },
         ],
       },
       {
@@ -200,8 +206,19 @@ const pages: MuiPage[] = [
             planned: true,
           },
           {
+            pathname: '/x/react-data-grid/components/prompt-field',
+            title: 'Prompt Field',
+            plan: 'premium',
+          },
+          {
             pathname: '/x/react-data-grid/components/pivot-panel',
             title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/ai-assistant-panel',
+            title: 'AI Assistant Panel',
             planned: true,
             plan: 'premium',
           },
@@ -514,6 +531,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/composition' },
               { pathname: '/x/react-charts/label' },
               { pathname: '/x/react-charts/legend' },
+              { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip' },
@@ -521,6 +539,11 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-charts/zoom-and-pan',
                 title: 'Zoom and pan',
+                plan: 'pro',
+              },
+              {
+                pathname: '/x/react-charts/export',
+                title: 'Export',
                 plan: 'pro',
               },
             ],
@@ -588,7 +611,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
-          { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          {
+            pathname: '/x/react-tree-view/rich-tree-view/editing',
+            title: 'Label editing',
+            newFeature: true,
+          },
           {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',

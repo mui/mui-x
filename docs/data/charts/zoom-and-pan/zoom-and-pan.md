@@ -1,10 +1,10 @@
 ---
-title: Charts - Zooming and panning
+title: Charts - Zoom and pan
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro
+components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider
 ---
 
-# Charts - Zooming and panning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Zoom and pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Enables zooming and panning on specific charts or axis.</p>
 
@@ -51,6 +51,24 @@ You can make the zoom of an axis affect one or more axes extremums by setting th
 See how the secondary axis adapts to the visible part of the primary axis in the following example.
 
 {{"demo": "ZoomFilterMode.js"}}
+
+## Zoom slider 🧪
+
+:::warning
+This feature is unstable and its API, visuals and/or behavior may change in future minor or patch releases.
+:::
+
+You can provide an overview and allow the manipulation of the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
+
+{{"demo": "ZoomSlider.js"}}
+
+Optionally, you can set the `zoom.slider.size` property to customize the zoom slider's size, that is, the height on an x-axis and the width on a y-axis.
+
+### Composition
+
+When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.
+
+{{"demo": "ZoomSliderComposition.js"}}
 
 ## Zoom management
 

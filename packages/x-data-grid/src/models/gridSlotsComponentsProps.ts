@@ -23,6 +23,7 @@ import type {
   BadgeProps,
   ButtonProps,
   CheckboxProps,
+  ChipProps,
   CircularProgressProps,
   DividerProps,
   IconButtonProps,
@@ -38,7 +39,7 @@ import type {
   SwitchProps,
   TooltipProps,
   TextFieldProps,
-  ChipProps,
+  IconProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -48,6 +49,7 @@ type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`,
 export interface BaseAutocompletePropsOverrides {}
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
+export interface BaseChipPropsOverrides {}
 export interface BaseCircularProgressPropsOverrides {}
 export interface BaseDividerPropsOverrides {}
 export interface BaseLinearProgressPropsOverrides {}
@@ -65,7 +67,7 @@ export interface BaseInputPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseSkeletonPropsOverrides {}
-export interface BaseChipPropsOverrides {}
+export interface BaseIconPropsOverrides {}
 
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
@@ -111,6 +113,8 @@ interface BaseSlotProps {
   baseSelectOption: SelectOptionProps & BaseSelectOptionPropsOverrides;
   baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
 }
+
+export type GridBaseIconProps = IconProps & BaseIconPropsOverrides;
 
 interface ElementSlotProps {
   bottomContainer: GridBottomContainerProps & BottomContainerPropsOverrides;

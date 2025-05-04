@@ -1,7 +1,7 @@
-import { unstable_PromptResponse as PromptResponse } from '@mui/x-data-grid-premium';
+import { PromptResponse } from '@mui/x-data-grid-premium';
 import { mockPrompts } from '../constants/prompts';
 
-export const mockPromptResolver = (_: string, query: string) => {
+export const mockPromptResolver = (query: string, _: string) => {
   const resolved = mockPrompts.get(query.toLowerCase().trim());
 
   return new Promise<PromptResponse>((resolve, reject) => {
@@ -9,7 +9,8 @@ export const mockPromptResolver = (_: string, query: string) => {
       if (resolved) {
         resolve(resolved);
       } else {
-        reject(new Error('Unknown query'));
+        console.error(`Unsupported query: ${query}`);
+        reject(new Error('Could not process prompt'));
       }
     }, 1000);
   });

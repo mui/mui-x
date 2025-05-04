@@ -19,13 +19,10 @@ import {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
-import { getReleaseInfo } from '../../utils/releaseInfo';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { getRangeFieldType } from '../../utils/date-fields-utils';
 import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
-
-const releaseInfo = getReleaseInfo();
 
 export const useMobileRangePicker = <
   TView extends DateOrTimeViewWithMeridiem,
@@ -41,7 +38,7 @@ export const useMobileRangePicker = <
   steps,
   ...pickerParams
 }: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
-  useLicenseVerifier('x-date-pickers-pro', releaseInfo);
+  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
 
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 

@@ -46,7 +46,7 @@ export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedPro
 
 export interface UseTreeViewLabelState {
   label: {
-    isItemEditable: (item: any) => boolean;
+    isItemEditable: ((item: any) => boolean) | boolean;
     editedItemId: string | null;
   };
 }
