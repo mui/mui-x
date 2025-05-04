@@ -36,17 +36,10 @@ export const usePanOnDrag = (
       return () => {};
     }
 
-    // Store the initial zoom data in the event detail
-    // This way we can simplify the logic by using the deltas for full calculation
-    // instead of always calculating the new zoom data based on the current zoom data
-    const panStartHandler = instance.addInteractionListener('panStart', (event) => {
-      event.detail.customData.zoomData = store.getSnapshot().zoom.zoomData;
-    });
-
-    const rafThrottledCallback = rafThrottle(
-      (event: PanEvent<{ zoomData: readonly ZoomData[] }>) => {
+    const rafThrottledCallback = rafThrottle((event: PanEvent) => {
+      setZoomDataCallback((prev) => {
         const newZoomData = translateZoom(
-          event.detail.customData.zoomData,
+          prev,
           { x: event.detail.deltaX, y: -event.detail.deltaY },
           {
             width: drawingArea.width,
@@ -54,18 +47,13 @@ export const usePanOnDrag = (
           },
           optionsLookup,
         );
+        return newZoomData;
+      });
+    });
 
-        setZoomDataCallback(newZoomData);
-      },
-    );
-
-    const panHandler = instance.addInteractionListener<{ zoomData: readonly ZoomData[] }>(
-      'pan',
-      rafThrottledCallback,
-    );
+    const panHandler = instance.addInteractionListener('pan', rafThrottledCallback);
 
     return () => {
-      panStartHandler.cleanup();
       panHandler.cleanup();
       rafThrottledCallback.clear();
     };
