@@ -236,11 +236,6 @@ FunnelPlot.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The radius, in pixels, of the corners of the funnel sections.
-   * @default 0
-   */
-  borderRadius: PropTypes.number,
-  /**
    * The gap, in pixels, between funnel sections.
    * @default 0
    */

@@ -134,11 +134,6 @@ FunnelChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
-   * The radius, in pixels, of the corners of the funnel sections.
-   * @default 0
-   */
-  borderRadius: PropTypes.number,
-  /**
    * The configuration of the category axis.
    *
    * @default { position: 'none' }

@@ -1,9 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "borderRadius": {
-      "description": "The radius, in pixels, of the corners of the funnel sections."
-    },
     "gap": { "description": "The gap, in pixels, between funnel sections." },
     "onItemClick": {
       "description": "Callback fired when a funnel item is clicked.",

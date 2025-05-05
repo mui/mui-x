@@ -42,7 +42,7 @@ A custom plugins contains 2 required elements:
 
 ### Params default value
 
-Use the `getDefaultizedParams` property to set a default value to your plugin params:
+Use the `applyDefaultValuesToParams` property to set a default value to your plugin params:
 
 ```ts
 const useCustomPlugin = ({ params }) => {
@@ -55,7 +55,7 @@ const useCustomPlugin = ({ params }) => {
 
 useCustomPlugin.params = { customParam: true };
 
-useCustomPlugin.getDefaultizedParams = ({ params }) => ({
+useCustomPlugin.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   customParam: params.customParam ?? false,
 });
@@ -214,10 +214,10 @@ This type contains the following information:
 
 ```ts
 type UseCustomPluginSignature = TreeViewPluginSignature<{
-  // The params specific to your plugin before running `getDefaultizedParams`
+  // The params specific to your plugin before running `applyDefaultValuesToParams`
   params: UseCustomPluginParams;
-  // The params specific to your plugins after running `getDefaultizedParams`
-  defaultizedParams: UseCustomPluginDefaultizedParams;
+  // The params specific to your plugins after running `applyDefaultValuesToParams`
+  paramsWithDefaults: UseCustomPluginParamsWithDefaults;
   // The methods added to the Tree View instance by your plugin
   instance: UseCustomPluginInstance;
   // The events emitted by your plugin
@@ -244,8 +244,8 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
     customModel?: boolean;
     defaultCustomModel?: boolean;
   };
-  // `customParam` and `defaultCustomModel` have a default value defined in `getDefaultizedParams`
-  defaultizedParams: {
+  // `customParam` and `defaultCustomModel` have a default value defined in `applyDefaultValuesToParams`
+  paramsWithDefaults: {
     customParam: boolean;
     customModel?: boolean;
     defaultCustomModel: boolean;

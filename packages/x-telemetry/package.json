@@ -32,7 +32,7 @@
     "directory": "packages/x-telemetry"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
     "@mui/utils": "^7.0.2",
     "ci-info": "^4.2.0",
