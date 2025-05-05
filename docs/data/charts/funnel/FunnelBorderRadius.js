@@ -9,20 +9,20 @@ export default function FunnelBorderRadius() {
         series={[
           {
             data: [{ value: 200 }, { value: 180 }, { value: 90 }, { value: 50 }],
+            borderRadius: 10,
           },
         ]}
         height={300}
-        borderRadius={10}
       />
       <FunnelChart
         series={[
           {
             data: [{ value: 200 }, { value: 180 }, { value: 90 }, { value: 50 }],
+            borderRadius: 10,
           },
         ]}
         height={300}
         gap={10}
-        borderRadius={10}
       />
     </Box>
   );

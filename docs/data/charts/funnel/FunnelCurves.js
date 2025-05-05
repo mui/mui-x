@@ -36,11 +36,11 @@ export default function FunnelCurves() {
               {
                 curve: props.curveType,
                 layout: 'vertical',
+                borderRadius: props.borderRadius,
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
             gap={props.gap}
-            borderRadius={props.borderRadius}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -49,11 +49,11 @@ export default function FunnelCurves() {
               {
                 curve: props.curveType,
                 layout: 'horizontal',
+                borderRadius: props.borderRadius,
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
             gap={props.gap}
-            borderRadius={props.borderRadius}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />

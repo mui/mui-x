@@ -1,6 +1,5 @@
 {
   "props": {
-    "borderRadius": { "type": { "name": "number" }, "default": "0" },
     "gap": { "type": { "name": "number" }, "default": "0" },
     "onItemClick": {
       "type": { "name": "func" },

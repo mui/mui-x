@@ -5,9 +5,6 @@
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "borderRadius": {
-      "description": "The radius, in pixels, of the corners of the funnel sections."
-    },
     "categoryAxis": { "description": "The configuration of the category axis." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "disableAxisListener": {
