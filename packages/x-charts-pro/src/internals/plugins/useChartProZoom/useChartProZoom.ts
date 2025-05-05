@@ -5,6 +5,8 @@ import {
   AxisId,
   DefaultizedZoomOptions,
   ZoomData,
+  useSelector,
+  selectorChartZoomOptionsLookup,
   createZoomLookup,
 } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
@@ -50,6 +52,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
+  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
 
   // Manage controlled state
   React.useEffect(() => {
