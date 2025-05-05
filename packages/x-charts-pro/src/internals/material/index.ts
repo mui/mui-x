@@ -14,9 +14,9 @@ const iconSlots: Omit<ChartsIconSlotsPro, keyof ChartsIconSlots> = {
   zoomOutIcon: ChartsZoomOutIcon,
 };
 
-export type ChartsSlotsPro = ChartsBaseSlotsPro & ChartsIconSlotsPro;
+export type ChartsToolbarSlotsPro = ChartsBaseSlotsPro & ChartsIconSlotsPro;
 
-export const materialSlots: ChartsSlotsPro = {
+export const materialSlots: ChartsToolbarSlotsPro = {
   ...communityMaterialSlots,
   ...baseSlots,
   ...iconSlots,

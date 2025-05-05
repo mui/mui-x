@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
+import materialSlots, { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
 import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
@@ -68,7 +68,7 @@ function ChartDataProvider<
   return (
     <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
       <ChartsLocalizationProvider localeText={localeText}>
-        <ChartsSlotsProvider slots={slots} slotProps={slotProps}>
+        <ChartsSlotsProvider slots={slots} slotProps={slotProps} defaultSlots={materialSlots}>
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>

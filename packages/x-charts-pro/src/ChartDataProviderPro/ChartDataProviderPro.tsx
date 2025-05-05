@@ -12,6 +12,7 @@ import {
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { materialSlots } from '../internals/material';
 import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 
@@ -66,7 +67,7 @@ function ChartDataProviderPro<
   return (
     <ChartProvider {...chartProviderProps}>
       <ChartsLocalizationProvider localeText={localeText}>
-        <ChartsSlotsProvider slots={slots} slotProps={slotProps}>
+        <ChartsSlotsProvider slots={slots} slotProps={slotProps} defaultSlots={materialSlots}>
           {children}
         </ChartsSlotsProvider>
       </ChartsLocalizationProvider>

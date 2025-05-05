@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import materialSlots, { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
 
 export interface ChartsSlotsContextValue {
   slots: ChartsToolbarSlots;
@@ -32,14 +32,15 @@ export function useChartToolbarSlots(): ChartsSlotsContextValue {
 interface ChartsSlotsProviderProps {
   slots?: Partial<ChartsToolbarSlots>;
   slotProps?: Partial<ChartsToolbarSlotProps>;
+  defaultSlots: ChartsToolbarSlots;
 }
 
 export function ChartsSlotsProvider(props: React.PropsWithChildren<ChartsSlotsProviderProps>) {
-  const { slots, slotProps = {}, children } = props;
+  const { slots, slotProps = {}, defaultSlots, children } = props;
 
   const value = React.useMemo(
-    () => ({ slots: { ...materialSlots, ...slots }, slotProps }),
-    [slots, slotProps],
+    () => ({ slots: { ...defaultSlots, ...slots }, slotProps }),
+    [defaultSlots, slots, slotProps],
   );
 
   return <ChartsSlotsContext.Provider value={value}>{children}</ChartsSlotsContext.Provider>;
