@@ -128,6 +128,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         options: {
           offset: () => {
             if (pointerType?.pointerType !== 'touch') {
+              // The popper offset: [skidding, distance]
               return [0, 8];
             }
             return [0, 64];

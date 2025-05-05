@@ -159,10 +159,8 @@ Their is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 :::
 
-### Composition
-
-If you're using composition, you can get those click event as follows.
-Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
+Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
 <ChartContainer onAxisClick={onAxisClick}>
@@ -188,3 +186,30 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 ```
 
 {{"demo": "BarAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
+
+Here's how the Bar Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <ChartsTooltip />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```

@@ -37,7 +37,7 @@ export const selectorChartZoomIsInteracting = createSelector(
   (zoom) => zoom?.isInteracting,
 );
 
-const selectorChartZoomMap = createSelector(
+export const selectorChartZoomMap = createSelector(
   selectorChartZoomState,
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
@@ -63,6 +63,15 @@ export const selectorChartZoomOptionsLookup = createSelector(
       resultEqualityCheck: isDeepEqual,
     },
   },
+);
+
+export const selectorChartAxisZoomOptionsLookup = createSelector(
+  [
+    selectorChartXZoomOptionsLookup,
+    selectorChartYZoomOptionsLookup,
+    (state, axisId: AxisId) => axisId,
+  ],
+  (xLookup, yLookup, axisId) => xLookup[axisId] ?? yLookup[axisId],
 );
 
 const selectorChartXFilter = createSelector(

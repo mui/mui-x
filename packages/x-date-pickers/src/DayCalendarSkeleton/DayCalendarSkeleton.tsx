@@ -39,7 +39,7 @@ const useUtilityClasses = (classes: Partial<DayCalendarSkeletonClasses> | undefi
 const DayCalendarSkeletonRoot = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Root',
-})({
+})<{ ownerState: DayCalendarSkeletonProps }>({
   alignSelf: 'start',
 });
 
@@ -90,7 +90,11 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
   const classes = useUtilityClasses(classesProp);
 
   return (
-    <DayCalendarSkeletonRoot className={clsx(classes.root, className)} {...other}>
+    <DayCalendarSkeletonRoot
+      className={clsx(classes.root, className)}
+      ownerState={props}
+      {...other}
+    >
       {monthMap.map((week, index) => (
         <DayCalendarSkeletonWeek key={index} className={classes.week}>
           {week.map((dayInMonth, index2) => (
