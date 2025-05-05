@@ -17,4 +17,11 @@ export type {
 export type { PropsFromSlot } from '@mui/x-internals/slots';
 export type { Position } from './position';
 export type { CurveType } from './curve';
-export type { ChartBaseIconProps } from './slots';
+export type {
+  ChartBaseCommonProps,
+  ChartBaseIconProps,
+  ChartsIconSlots,
+  ChartsBaseSlots,
+  ChartsBaseSlotsExtension,
+  ChartsIconSlotsExtension,
+} from './slots';

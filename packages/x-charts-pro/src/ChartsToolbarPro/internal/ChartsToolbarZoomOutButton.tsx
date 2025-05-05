@@ -3,8 +3,9 @@
 import * as React from 'react';
 import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import { useChartContext } from '@mui/x-charts/internals';
-import { materialSlots, type ChartsSlots } from '@mui/x-charts/internals';
+import { type ChartsSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
+import { materialSlots } from '../../internals/material';
 import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 
 type ChartsToolbarZoomOutButtonSlots = Partial<Pick<ChartsSlots, 'baseTooltip' | 'zoomOutIcon'>>;

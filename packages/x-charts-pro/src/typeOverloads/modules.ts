@@ -2,18 +2,19 @@ import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import { AxisId, ZoomOptions } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { ChartBaseIconProps } from '@mui/x-charts/models';
-import {
-  HeatmapItemIdentifier,
-  HeatmapSeriesType,
-  DefaultizedHeatmapSeriesType,
-  HeatmapValueType,
-} from '../models/seriesType/heatmap';
+import { ChartBaseTooltipProps } from '../internals/slots/chartBaseSlotProps';
 import {
   DefaultizedFunnelSeriesType,
   FunnelItemIdentifier,
   FunnelSeriesType,
   FunnelValueType,
 } from '../FunnelChart/funnel.types';
+import {
+  HeatmapItemIdentifier,
+  HeatmapSeriesType,
+  DefaultizedHeatmapSeriesType,
+  HeatmapValueType,
+} from '../models/seriesType/heatmap';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -47,7 +48,7 @@ declare module '@mui/x-charts/internals' {
   }
 }
 
-declare module '@mui/x-charts/models/slots' {
+declare module '@mui/x-charts/models' {
   interface ChartsIconSlotsExtension {
     /**
      * Icon displayed on the toolbar's zoom in button.
@@ -59,5 +60,9 @@ declare module '@mui/x-charts/models/slots' {
      * @default ChartsZoomOutIcon
      */
     zoomOutIcon: React.ComponentType<ChartBaseIconProps>;
+  }
+
+  interface ChartsBaseSlotsExtension {
+    baseTooltip: React.ComponentType<ChartBaseTooltipProps>;
   }
 }

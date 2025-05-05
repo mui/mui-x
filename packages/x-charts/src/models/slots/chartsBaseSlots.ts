@@ -1,7 +1,7 @@
-import type * as React from 'react';
-import { ChartBaseIconButtonProps, ChartBaseTooltipProps } from './chartsBaseSlotProps';
+import * as React from 'react';
+import { ChartBaseIconButtonProps } from './chartsBaseSlotProps';
 
-export interface ChartsBaseSlots {
-  baseTooltip: React.ComponentType<ChartBaseTooltipProps>;
+export interface ChartsBaseSlotsExtension {}
+export interface ChartsBaseSlots extends ChartsBaseSlotsExtension {
   baseIconButton: React.ComponentType<ChartBaseIconButtonProps>;
 }
