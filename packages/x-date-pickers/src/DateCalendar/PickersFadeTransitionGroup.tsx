@@ -52,12 +52,10 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
   if (reduceAnimations) {
     return children;
   }
-  const ownerState = { ...other };
-
   return (
     <PickersFadeTransitionGroupRoot
       className={clsx(classes.root, className)}
-      ownerState={ownerState}
+      ownerState={other}
     >
       <Fade
         appear={false}
