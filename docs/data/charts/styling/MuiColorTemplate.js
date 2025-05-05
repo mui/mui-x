@@ -15,7 +15,19 @@ import {
   blueberryTwilightPalette,
   mangoFusionPalette,
   cheerfulFiestaPalette,
+  strawberrySkyPalette,
+  rainbowSurgePalette,
+  bluePalette,
+  greenPalette,
+  purplePalette,
+  redPalette,
+  orangePalette,
+  yellowPalette,
+  cyanPalette,
+  pinkPalette,
 } from '@mui/x-charts/colorPalettes';
+import Divider from '@mui/material/Divider';
+import ListSubheader from '@mui/material/ListSubheader';
 
 const chance = new Chance(42);
 
@@ -62,16 +74,37 @@ const series = [
   valueFormatter: (v) => v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
-const categories = {
+const categorical = {
+  rainbowSurge: rainbowSurgePalette,
   blueberryTwilight: blueberryTwilightPalette,
   mangoFusion: mangoFusionPalette,
   cheerfulFiesta: cheerfulFiestaPalette,
+};
+const sequential = {
+  strawberrySky: strawberrySkyPalette,
+  purple: purplePalette,
+  blue: bluePalette,
+  cyan: cyanPalette,
+  green: greenPalette,
+  yellow: yellowPalette,
+  orange: orangePalette,
+  red: redPalette,
+  pink: pinkPalette,
+};
+
+const categories = {
+  ...categorical,
+  ...sequential,
 };
 
 export default function MuiColorTemplate() {
   const theme = useTheme();
   const [colorScheme, setColorScheme] = React.useState('blueberryTwilight');
   const [colorMode, setColorMode] = React.useState(theme.palette.mode);
+
+  React.useEffect(() => {
+    setColorMode(theme.palette.mode);
+  }, [theme.palette.mode]);
 
   const newTheme = createTheme({ palette: { mode: colorMode } });
   return (
@@ -110,9 +143,42 @@ export default function MuiColorTemplate() {
               value={colorScheme}
               onChange={(event) => setColorScheme(event.target.value)}
             >
-              {Object.entries(categories).map(([name, colors]) => (
+              <ListSubheader>Categorical</ListSubheader>
+              {Object.entries(categorical).map(([name, colors]) => (
                 <MenuItem key={name} value={name}>
-                  <Stack direction="row" alignItems="center">
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    width={'100%'}
+                  >
+                    <Typography sx={{ mr: 2 }}>{name}</Typography>
+                    <div style={{ width: 200, height: 20 }}>
+                      {colors(colorMode).map((c) => (
+                        <div
+                          key={c}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            backgroundColor: c,
+                            display: 'inline-block',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </Stack>
+                </MenuItem>
+              ))}
+              <Divider />
+              <ListSubheader>Sequential</ListSubheader>
+              {Object.entries(sequential).map(([name, colors]) => (
+                <MenuItem key={name} value={name}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    width={'100%'}
+                  >
                     <Typography sx={{ mr: 2 }}>{name}</Typography>
                     <div style={{ width: 200, height: 20 }}>
                       {colors(colorMode).map((c) => (
