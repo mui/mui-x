@@ -76,9 +76,12 @@ It accepts a number that represents the radius in pixels.
 - The `linear` curve respects the border radius to some extent due to the angle of the sections.
 - The `step` curve will respect the border radius.
 
-You can play with this in the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
+To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
 
 The `borderRadius` property will also behave differently depending if the `gap` property is bigger than 0 or not.
+
+- If the `gap` is 0, the border radius will be applied to the corners of the sections that are not connected to another section.
+- If the `gap` is bigger than 0, the border radius will be applied to all the corners of the sections.
 
 {{"demo": "FunnelBorderRadius.js"}}
 
