@@ -10,9 +10,9 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 ## Basics
 
-To plot a pie chart, a series must have a data property containing an array of objects.
-Those objects should contain a property `value`.
-They can also have a `label` property.
+Pie charts series must contain a `data` property containing an array of objects.
+Each object corresponds to a slice of the pie.
+It must contain a property `value` and can have other optional properties like `label`.
 
 If you plan to update/reorder those data, you should add an `id` property which is used for `key` props.
 
@@ -107,10 +107,9 @@ const onItemClick = (
 
 ## Animation
 
-To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 ```jsx
 // For a single component chart
@@ -123,3 +122,24 @@ Charts containers already use the `useReducedMotion()` from `@react-spring/web` 
 ```
 
 {{"demo": "PieAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide the `series` prop for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<PiePlot />` component that renders the pie slices and their labels.
+
+Here's how the Pie Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <PiePlot />
+      <ChartsOverlay />
+      <ChartsTooltip trigger="item" />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```

@@ -32,18 +32,39 @@ export type QuickFilterControlProps = Omit<GridSlotProps['baseTextField'], 'clas
  */
 const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>(
   function QuickFilterControl(props, ref) {
-    const { render, className, ...other } = props;
+    const { render, className, slotProps, onKeyDown, onChange, ...other } = props;
     const rootProps = useGridRootProps();
-    const { state, controlRef, onValueChange, clearValue } = useQuickFilterContext();
+    const { state, controlId, controlRef, onValueChange, onExpandedChange, clearValue } =
+      useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(controlRef, ref);
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Escape') {
-        clearValue();
+        if (state.value === '') {
+          onExpandedChange(false);
+        } else {
+          clearValue();
+        }
       }
 
-      props.onKeyDown?.(event);
+      onKeyDown?.(event);
+    };
+
+    const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+      if (state.value === '') {
+        onExpandedChange(false);
+      }
+
+      slotProps?.htmlInput?.onBlur?.(event);
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!state.expanded) {
+        onExpandedChange(true);
+      }
+      onValueChange(event);
+      onChange?.(event);
     };
 
     const element = useGridComponentRenderer(
@@ -54,15 +75,18 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
         slotProps: {
           htmlInput: {
             role: 'searchbox',
-            ...props.slotProps?.htmlInput,
+            id: controlId,
+            tabIndex: state.expanded ? undefined : -1,
+            ...slotProps?.htmlInput,
+            onBlur: handleBlur,
           },
-          ...props.slotProps,
+          ...slotProps,
         },
         value: state.value,
         className: resolvedClassName,
-        onChange: onValueChange,
-        onKeyDown: handleKeyDown,
         ...other,
+        onChange: handleChange,
+        onKeyDown: handleKeyDown,
         ref: handleRef,
       },
       state,
@@ -78,6 +102,7 @@ QuickFilterControl.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   autoComplete: PropTypes.string,
+  autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -95,8 +120,7 @@ QuickFilterControl.propTypes = {
     }),
   ]),
   label: PropTypes.node,
-  onChange: PropTypes.func,
-  onKeyDown: PropTypes.func,
+  multiline: PropTypes.bool,
   placeholder: PropTypes.string,
   /**
    * A function to customize rendering of the component.

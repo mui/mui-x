@@ -18,6 +18,11 @@ export interface AreaElementClasses {
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type AreaElementClassKey = keyof AreaElementClasses;
@@ -39,6 +44,7 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
   'root',
   'highlighted',
   'faded',
+  'series',
 ]);
 
 const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
@@ -101,7 +107,7 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
@@ -121,7 +127,7 @@ function AreaElement(props: AreaElementProps) {
     elementType: Area,
     externalSlotProps: slotProps?.area,
     additionalProps: {
-      ...getInteractionItemProps({ type: 'line', seriesId: id }),
+      ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
     },

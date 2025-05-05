@@ -2,14 +2,13 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { DateOrTimeView, DateTimeValidationError } from '../models';
-import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
+import { useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlots,
   DateCalendarSlotProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
-import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from './DateTimePickerTabs';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
@@ -33,6 +32,7 @@ import {
   MultiSectionDigitalClockSlotProps,
   MultiSectionDigitalClockSlots,
 } from '../MultiSectionDigitalClock';
+import { useApplyDefaultValuesToDateTimeValidationProps } from '../managers/useDateTimeManager';
 
 export interface BaseDateTimePickerSlots
   extends DateCalendarSlots,
@@ -125,12 +125,12 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
   name: string,
 ): UseDateTimePickerDefaultizedProps<Props> {
   const utils = useUtils();
-  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
+  const validationProps = useApplyDefaultValuesToDateTimeValidationProps(themeProps);
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
@@ -165,6 +165,7 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
 
   return {
     ...themeProps,
+    ...validationProps,
     timeSteps,
     openTo,
     shouldRenderTimeInASingleColumn,
@@ -173,30 +174,6 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
-    // TODO: Remove from public API
-    disableIgnoringDatePartForTimeValidation:
-      themeProps.disableIgnoringDatePartForTimeValidation ??
-      Boolean(
-        themeProps.minDateTime ||
-          themeProps.maxDateTime ||
-          // allow time clock to correctly check time validity: https://github.com/mui/mui-x/issues/8520
-          themeProps.disablePast ||
-          themeProps.disableFuture,
-      ),
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(
-      utils,
-      themeProps.minDateTime ?? themeProps.minDate,
-      defaultDates.minDate,
-    ),
-    maxDate: applyDefaultDate(
-      utils,
-      themeProps.maxDateTime ?? themeProps.maxDate,
-      defaultDates.maxDate,
-    ),
-    minTime: themeProps.minDateTime ?? themeProps.minTime,
-    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
     slots: {
       toolbar: DateTimePickerToolbar,
       tabs: DateTimePickerTabs,

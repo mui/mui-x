@@ -9,6 +9,11 @@ const tooltipGetter: TooltipGetter<'pie'> = (params) => {
   }
 
   const point = series.data[identifier.dataIndex];
+
+  if (point == null) {
+    return null;
+  }
+
   const label = getLabel(point.label, 'tooltip');
   const value = { ...point, label };
   const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });

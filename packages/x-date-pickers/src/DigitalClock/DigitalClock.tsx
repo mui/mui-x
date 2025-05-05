@@ -18,7 +18,7 @@ import { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types'
 import { useViews } from '../internals/hooks/useViews';
 import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
@@ -37,10 +37,10 @@ const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) =>
 const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DigitalClockOwnerState }>({
   overflowY: 'auto',
   width: '100%',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },
@@ -60,15 +60,14 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
   slot: 'List',
-  overridesResolver: (props, styles) => styles.list,
 })({
   padding: 0,
 });
 
-const DigitalClockItem = styled(MenuItem, {
+export const DigitalClockItem = styled(MenuItem, {
   name: 'MuiDigitalClock',
   slot: 'Item',
-  overridesResolver: (props, styles) => styles.item,
+  shouldForwardProp: (prop) => prop !== 'itemValue' && prop !== 'formattedValue',
 })(({ theme }) => ({
   padding: '8px 16px',
   margin: '2px 4px',
@@ -159,7 +158,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useControlledValueWithTimezone({
+  } = useControlledValue({
     name: 'DigitalClock',
     timezone: timezoneProp,
     value: valueProp,
@@ -345,25 +344,29 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
         onKeyDown={handleKeyDown}
       >
         {timeOptions.map((option, index) => {
-          if (skipDisabled && isTimeDisabled(option)) {
+          const optionDisabled = isTimeDisabled(option);
+          if (skipDisabled && optionDisabled) {
             return null;
           }
           const isSelected = utils.isEqual(option, value);
           const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
-          const tabIndex =
-            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
+          const isFocused =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0);
+          const tabIndex = isFocused ? 0 : -1;
           return (
             <ClockItem
               key={`${option.valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
-              disabled={disabled || isTimeDisabled(option)}
+              disabled={disabled || optionDisabled}
               disableRipple={readOnly}
               role="option"
               // aria-readonly is not supported here and does not have any effect
               aria-disabled={readOnly}
               aria-selected={isSelected}
               tabIndex={tabIndex}
+              itemValue={option}
+              formattedValue={formattedValue}
               {...clockItemProps}
             >
               {formattedValue}

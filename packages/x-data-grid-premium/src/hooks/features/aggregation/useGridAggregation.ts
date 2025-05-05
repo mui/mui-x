@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  gridColumnLookupSelector,
-  useGridApiEventHandler,
-  useGridApiMethod,
-} from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, useGridEvent, useGridApiMethod } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   GridStateInitializer,
@@ -135,13 +131,9 @@ export const useGridAggregation = (
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
-    if (!areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
-      if (props.dataSource) {
-        apiRef.current.dataSource.fetchRows();
-      } else {
-        apiRef.current.requestPipeProcessorsApplication('hydrateRows');
-        applyAggregation();
-      }
+    if (!props.dataSource && !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
+      apiRef.current.requestPipeProcessorsApplication('hydrateRows');
+      applyAggregation();
     }
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
@@ -156,9 +148,9 @@ export const useGridAggregation = (
     props.dataSource,
   ]);
 
-  useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
-  useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);
-  useGridApiEventHandler(apiRef, 'filteredRowsSet', applyAggregation);
+  useGridEvent(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
+  useGridEvent(apiRef, 'columnsChange', checkAggregationRulesDiff);
+  useGridEvent(apiRef, 'filteredRowsSet', applyAggregation);
 
   /**
    * EFFECTS

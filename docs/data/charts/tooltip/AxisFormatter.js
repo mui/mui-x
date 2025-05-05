@@ -44,6 +44,7 @@ const chartParams = {
         }).format((v || 0) * 1_000_000),
     },
   ],
+  margin: { left: 0 },
   hideLegend: true,
   dataset,
   height: 400,

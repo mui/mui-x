@@ -11,7 +11,7 @@ import { RowModel } from '../types';
 export interface RenameDialogProps {
   params: Pick<GridRowParams<RowModel>, 'row'> | null;
   open: boolean;
-  container?: () => HTMLElement;
+  container?: HTMLElement;
   onSave: (id: GridRowId, value: string) => void;
   onClose: () => void;
 }

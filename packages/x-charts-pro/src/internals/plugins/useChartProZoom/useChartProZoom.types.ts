@@ -4,6 +4,7 @@ import {
   UseChartCartesianAxisSignature,
   UseChartCartesianAxisDefaultizedParameters,
   ZoomData,
+  AxisId,
 } from '@mui/x-charts/internals';
 
 export interface UseChartProZoomParameters {
@@ -54,7 +55,14 @@ export interface UseChartProZoomPublicApi {
   setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
 }
 
-export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {}
+export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
+  /**
+   * Translate the zoom range (i.e., both start and end) for a specific axis.
+   * @param {AxisId} axisId The id of the axis to move the zoom range for.
+   * @param {number} by The amount to move the zoom range by. Ranges from 0 to 100.
+   */
+  moveZoomRange: (axisId: AxisId, by: number) => void;
+}
 
 export type UseChartProZoomSignature = ChartPluginSignature<{
   params: UseChartProZoomParameters;

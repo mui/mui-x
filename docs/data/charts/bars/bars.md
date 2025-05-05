@@ -12,7 +12,7 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 Bar charts series should contain a `data` property containing an array of values.
 
-You can customize bar ticks with the `xAxis`.
+You can specify bar ticks with the `xAxis` prop.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
 {{"demo": "BasicBars.js"}}
@@ -111,7 +111,7 @@ It works with any positive value and is properly applied to horizontal layouts, 
 ## Labels
 
 You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
 It can either get a function that gets the bar item and some context.
 Or you can pass `'value'` to display the raw value of the bar.
 
@@ -126,6 +126,12 @@ Labels are not displayed if the function returns `null`.
 In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
 
 {{"demo": "CustomLabels.js"}}
+
+You can further customize the labels by providing a component to the `barLabel` slot.
+
+In the example below, we position the labels above the bars they refer to.
+
+{{"demo": "LabelsAboveBars.js"}}
 
 ## Click event
 
@@ -153,10 +159,8 @@ Their is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 :::
 
-### Composition
-
-If you're using composition, you can get those click event as follows.
-Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
+Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
 <ChartContainer onAxisClick={onAxisClick}>
@@ -167,10 +171,9 @@ Notice that the `onAxisClick` will handle both bar and line series if you mix th
 
 ## Animation
 
-To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 ```jsx
 // For a single component chart
@@ -183,3 +186,30 @@ Charts containers already use the `useReducedMotion()` from `@react-spring/web` 
 ```
 
 {{"demo": "BarAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
+
+Here's how the Bar Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <ChartsTooltip />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```

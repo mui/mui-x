@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Tree View - Quickstart
-components: SimpleTreeView, RichTreeView, TreeItem, TreeView
+components: SimpleTreeView, RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -14,8 +14,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ## Installation
 
 Install the Tree View package that best suits your needs—Community or Pro:
-
-<!-- #default-branch-switch -->
 
 {{"component": "modules/components/TreeViewInstallationInstructions.js"}}
 

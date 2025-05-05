@@ -24,7 +24,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridIconButtonContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'IconButtonContainer',
-  overridesResolver: (props, styles) => styles.iconButtonContainer,
 })<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
   visibility: 'hidden',

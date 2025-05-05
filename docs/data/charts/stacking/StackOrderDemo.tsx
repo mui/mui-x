@@ -30,7 +30,6 @@ const walking = [
 ];
 const xAxis = {
   label: 'Distance between home and office (km)',
-  scaleType: 'band' as const,
   data: [
     '0-1',
     '1-2',
@@ -111,7 +110,7 @@ export default function StackOrderDemo() {
                 dominantBaseline: 'hanging',
                 textAnchor: 'start',
               },
-              height: 60,
+              height: 65,
             },
           ]}
           yAxis={[{ min: 0, max: 100 }]}

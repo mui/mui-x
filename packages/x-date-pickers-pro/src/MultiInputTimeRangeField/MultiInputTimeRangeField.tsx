@@ -44,6 +44,7 @@ const MultiInputTimeRangeField = createMultiInputTimeRangeField({
   name: 'MuiMultiInputTimeRangeField',
   getUtilityClass: getMultiInputTimeRangeFieldUtilityClass,
   useManager: useTimeRangeManager,
+  allowTriggerShifting: true,
 }) as MultiInputTimeRangeFieldComponent;
 
 MultiInputTimeRangeField.propTypes = {

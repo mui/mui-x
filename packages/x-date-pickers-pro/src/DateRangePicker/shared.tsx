@@ -3,12 +3,10 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
-  useDefaultDates,
-  useUtils,
-  applyDefaultDate,
   BasePickerInputProps,
   PickerViewRendererLookup,
   PickerRangeValue,
+  useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../models';
 import {
@@ -69,12 +67,12 @@ export function useDateRangePickerDefaultizedProps<Props extends BaseDateRangePi
   props: Props,
   name: string,
 ): UseDateRangePickerDefaultizedProps<Props> {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
   });
+
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -89,11 +87,8 @@ export function useDateRangePickerDefaultizedProps<Props extends BaseDateRangePi
 
   return {
     ...themeProps,
+    ...validationProps,
     localeText,
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: {
       toolbar: DateRangePickerToolbar,
       ...themeProps.slots,

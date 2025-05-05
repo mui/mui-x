@@ -56,13 +56,13 @@ Pass the `showToolbar` prop to the `<DataGrid />` component to enable the defaul
 
 You can also compose your own toolbar using the [Toolbar component](/x/react-data-grid/components/toolbar/).
 
-#### Legacy toolbar components
+### Legacy toolbar
 
 :::warning
 
-The examples below use the `<GridToolbar />`, `<GridToolbarContainer />`, and various toolbar button components.
-These components will be deprecated in v8 and replaced by the new [Toolbar component](/x/react-data-grid/components/toolbar/).
-
+The examples below use the `<GridToolbar />`, `<GridToolbarContainer>`, and various toolbar button components.
+They were deprecated in v8 and will be removed in v9.
+These components are now replaced by the new [Toolbar component](/x/react-data-grid/components/toolbar/).
 :::
 
 Each button in the toolbar is wrapped with a tooltip component.
@@ -134,6 +134,10 @@ Try it by hovering a cell with the mouse and it should display the number of cha
 As any component slot, every icon can be customized. However, it is not yet possible to use the `slotProps` with icons.
 
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
+
+:::warning
+Material UI icons need to be passed like `Icon as any` due to typing issues that might be resolved in a later version.
+:::
 
 ### Overlays
 

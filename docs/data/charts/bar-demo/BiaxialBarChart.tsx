@@ -34,8 +34,11 @@ export default function BiaxialBarChart() {
           yAxisId: 'rightAxisId',
         },
       ]}
-      xAxis={[{ data: xLabels, scaleType: 'band' }]}
-      yAxis={[{ id: 'leftAxisId' }, { id: 'rightAxisId', position: 'right' }]}
+      xAxis={[{ data: xLabels }]}
+      yAxis={[
+        { id: 'leftAxisId', width: 50 },
+        { id: 'rightAxisId', position: 'right' },
+      ]}
     />
   );
 }

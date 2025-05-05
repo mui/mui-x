@@ -14,9 +14,8 @@ type DataSource<R extends {}> = {
    * @template R
    * @param {R} item The item to check.
    * @returns {number} The number of children.
-   * @default (item) => number
    */
-  getChildrenCount?: (item: R) => number;
+  getChildrenCount: (item: R) => number;
   /**
    * Method used for fetching the items.
    * Only relevant for lazy-loaded tree views.
@@ -25,7 +24,7 @@ type DataSource<R extends {}> = {
    * @param {TreeViewItemId} parentId The id of the item the children belong to.
    * @returns { Promise<R[]>} The children of the item.
    */
-  getTreeItems?: (parentId?: TreeViewItemId) => Promise<R[]>;
+  getTreeItems: (parentId?: TreeViewItemId) => Promise<R[]>;
 };
 
 export interface UseTreeViewLazyLoadingPublicAPI {}
@@ -65,7 +64,7 @@ export interface UseTreeViewLazyLoadingParameters<R extends {}> {
   dataSource?: DataSource<R>;
   dataSourceCache?: DataSourceCache;
 }
-export type UseTreeViewLazyLoadingDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewLazyLoadingParametersWithDefaults<R extends {}> = DefaultizedProps<
   UseTreeViewLazyLoadingParameters<R>,
   'dataSource'
 >;
@@ -82,11 +81,10 @@ export interface UseTreeViewLazyLoadingState {
 
 export type UseTreeViewLazyLoadingSignature = TreeViewPluginSignature<{
   params: UseTreeViewLazyLoadingParameters<any>;
-  defaultizedParams: UseTreeViewLazyLoadingDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewLazyLoadingParametersWithDefaults<any>;
   publicAPI: UseTreeViewLazyLoadingPublicAPI;
   instance: UseTreeViewLazyLoadingInstance;
   state: UseTreeViewLazyLoadingState;
-  experimentalFeatures: 'lazyLoading';
   dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,

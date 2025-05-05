@@ -17,7 +17,7 @@ import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -34,7 +34,6 @@ const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
 const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -44,7 +43,6 @@ const TimeClockRoot = styled(PickerViewRoot, {
 const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
-  overridesResolver: (props, styles) => styles.arrowSwitcher,
 })<{ ownerState: PickerOwnerState }>({
   position: 'absolute',
   right: 12,
@@ -110,7 +108,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'TimeClock',
     timezone: timezoneProp,
     value: valueProp,

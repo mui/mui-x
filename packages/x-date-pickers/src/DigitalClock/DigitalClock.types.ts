@@ -7,7 +7,7 @@ import {
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
 } from '../internals/models/props/time';
-import { PickerOwnerState, TimeView } from '../models';
+import { PickerOwnerState, TimeView, PickerValidDate } from '../models';
 
 export interface ExportedDigitalClockProps extends ExportedBaseClockProps, DigitalClockOnlyProps {}
 
@@ -16,7 +16,7 @@ export interface DigitalClockSlots {
    * Component responsible for rendering a single digital clock item.
    * @default MenuItem from '@mui/material'
    */
-  digitalClockItem?: React.ElementType;
+  digitalClockItem?: React.JSXElementConstructor<DigitalClockItemProps>;
 }
 
 export interface DigitalClockSlotProps {
@@ -52,4 +52,15 @@ export interface DigitalClockOwnerState extends PickerOwnerState {
    * `true` if this is not the initial render of the digital clock.
    */
   hasDigitalClockAlreadyBeenRendered: boolean;
+}
+
+export interface DigitalClockItemProps {
+  itemValue: PickerValidDate;
+  formattedValue: string;
+  onClick: () => void;
+  selected: boolean;
+  disabled: boolean;
+  readOnly?: boolean;
+  tabIndex: number;
+  [x: `data-${string}`]: string;
 }

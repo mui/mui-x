@@ -1,9 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { animated, useTransition } from '@react-spring/web';
 import type { LineElementOwnerState } from './LineElement';
-import { useStringInterpolator } from '../internals/useStringInterpolator';
+import { useAnimateLine } from '../hooks';
 import { AppearingMask } from './AppearingMask';
 
 export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'> {
@@ -26,25 +25,15 @@ export interface AnimatedLineProps extends React.ComponentPropsWithoutRef<'path'
  *
  * - [AnimatedLine API](https://mui.com/x/api/charts/animated-line/)
  */
-function AnimatedLine(props: AnimatedLineProps) {
-  const { d, skipAnimation, ownerState, ...other } = props;
+const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
+  function AnimatedLine(props, ref) {
+    const { skipAnimation, ownerState, ...other } = props;
 
-  const stringInterpolator = useStringInterpolator(d);
+    const animateProps = useAnimateLine({ ...props, ref });
 
-  const transitionChange = useTransition([stringInterpolator], {
-    from: skipAnimation ? undefined : { value: 0 },
-    to: { value: 1 },
-    enter: { value: 1 },
-    reset: false,
-    immediate: skipAnimation,
-  });
-
-  return (
-    <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
-      {transitionChange((style, interpolator) => (
-        <animated.path
-          // @ts-expect-error
-          d={style.value.to(interpolator)}
+    return (
+      <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
+        <path
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
@@ -52,11 +41,12 @@ function AnimatedLine(props: AnimatedLineProps) {
           filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
           opacity={ownerState.isFaded ? 0.3 : 1}
           {...other}
+          {...animateProps}
         />
-      ))}
-    </AppearingMask>
-  );
-}
+      </AppearingMask>
+    );
+  },
+);
 
 AnimatedLine.propTypes = {
   // ----------------------------- Warning --------------------------------

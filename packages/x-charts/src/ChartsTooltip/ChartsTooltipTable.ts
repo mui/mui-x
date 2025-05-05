@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 /**
@@ -7,7 +8,7 @@ import { chartsTooltipClasses } from './chartsTooltipClasses';
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Container',
-  overridesResolver: (props, styles) => styles.paper,
+  overridesResolver: (props, styles) => styles.paper, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
@@ -21,11 +22,21 @@ export const ChartsTooltipPaper = styled('div', {
 export const ChartsTooltipTable = styled('table', {
   name: 'MuiChartsTooltip',
   slot: 'Table',
-  overridesResolver: (props, styles) => styles.table,
 })(({ theme }) => ({
   borderSpacing: 0,
-  '& thead td': {
+  [`& .${chartsTooltipClasses.markContainer}`]: {
+    display: 'inline-block',
+    width: `calc(20px + ${theme.spacing(1.5)})`,
+    verticalAlign: 'middle',
+  },
+  '& caption': {
     borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
+    padding: theme.spacing(0.5, 1.5),
+    textAlign: 'start',
+    whiteSpace: 'nowrap',
+    '& span': {
+      marginRight: theme.spacing(1.5),
+    },
   },
 }));
 
@@ -35,7 +46,6 @@ export const ChartsTooltipTable = styled('table', {
 export const ChartsTooltipRow = styled('tr', {
   name: 'MuiChartsTooltip',
   slot: 'Row',
-  overridesResolver: (props, styles) => styles.row,
 })(({ theme }) => ({
   'tr:first-of-type& td': {
     paddingTop: theme.spacing(0.5),
@@ -48,19 +58,20 @@ export const ChartsTooltipRow = styled('tr', {
 /**
  * @ignore - internal component.
  */
-export const ChartsTooltipCell = styled('td', {
+export const ChartsTooltipCell = styled(Typography, {
   name: 'MuiChartsTooltip',
   slot: 'Cell',
-  overridesResolver: (props, styles) => styles.cell,
-})(({ theme }) => ({
+})<{ component?: React.ElementType }>(({ theme }) => ({
   verticalAlign: 'middle',
   color: (theme.vars || theme).palette.text.secondary,
-  [`&.${chartsTooltipClasses.labelCell}`]: {
+  textAlign: 'start',
+  [`&.${chartsTooltipClasses.cell}`]: {
     paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1.5),
+    paddingRight: theme.spacing(1),
+  },
+  [`&.${chartsTooltipClasses.labelCell}`]: {
     fontWeight: theme.typography.fontWeightRegular,
   },
-
   [`&.${chartsTooltipClasses.valueCell}, &.${chartsTooltipClasses.axisValueCell}`]: {
     color: (theme.vars || theme).palette.text.primary,
     fontWeight: theme.typography.fontWeightMedium,
@@ -69,10 +80,10 @@ export const ChartsTooltipCell = styled('td', {
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
   },
-  'td:first-of-type&': {
+  'td:first-of-type&, th:first-of-type&': {
     paddingLeft: theme.spacing(1.5),
   },
-  'td:last-of-type&': {
+  'td:last-of-type&, th:last-of-type&': {
     paddingRight: theme.spacing(1.5),
   },
 }));

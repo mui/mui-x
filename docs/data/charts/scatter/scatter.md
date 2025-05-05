@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ScatterMarker
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
 ---
 
 # Charts - Scatter
@@ -122,7 +122,7 @@ For circles, the `markerSize` is the radius of the point in pixels.
 
 {{"demo": "ScatterCustomSize.js"}}
 
-## Plot Customization
+## Plot customization
 
 You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
 
@@ -132,3 +132,36 @@ This hook returns the order of the series and information about the series thems
 See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
 
 {{"demo": "CustomScatter.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
+
+Here's how the Scatter Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsAxis />
+      <ChartsGrid />
+      <g data-drawing-container>
+        {/* Elements able to overflow the drawing area. */}
+        <ScatterPlot />
+      </g>
+      <ChartsOverlay />
+      <ChartsAxisHighlight />
+      <ChartsTooltip trigger="item" />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
+
+See the [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
+:::

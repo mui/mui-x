@@ -84,7 +84,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
 };
 
 describe('<DataGridPro /> - State persistence', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -294,7 +294,7 @@ describe('<DataGridPro /> - State persistence', () => {
           },
         }),
       );
-      clock.runToLast();
+
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
   });

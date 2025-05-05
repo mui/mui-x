@@ -1,13 +1,17 @@
-import { MuiPickersAdapter, PickerValidDate, TimeView } from '../../models';
+import { MuiPickersAdapter, PickerValidDate } from '../../models';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
-const timeViews = ['hours', 'minutes', 'seconds'];
-export const isTimeView = (view: DateOrTimeViewWithMeridiem) => timeViews.includes(view);
+export const EXPORTED_TIME_VIEWS = ['hours', 'minutes', 'seconds'] as const;
+
+export const TIME_VIEWS = ['hours', 'minutes', 'seconds', 'meridiem'] as const;
+
+export const isTimeView = (view: DateOrTimeViewWithMeridiem) =>
+  EXPORTED_TIME_VIEWS.includes(view as any);
 
 export const isInternalTimeView = (
   view: DateOrTimeViewWithMeridiem,
-): view is TimeViewWithMeridiem => timeViews.includes(view) || view === 'meridiem';
+): view is TimeViewWithMeridiem => TIME_VIEWS.includes(view as any);
 
 export type Meridiem = 'am' | 'pm';
 
@@ -59,7 +63,11 @@ export const createIsAfterIgnoreDatePart =
 
 export const resolveTimeFormat = (
   utils: MuiPickersAdapter,
-  { format, views, ampm }: { format?: string; views: readonly TimeView[]; ampm: boolean },
+  {
+    format,
+    views,
+    ampm,
+  }: { format?: string; views: readonly TimeViewWithMeridiem[]; ampm: boolean },
 ) => {
   if (format != null) {
     return format;

@@ -2,9 +2,9 @@ import { GRID_ROOT_GROUP_ID, GridGroupNode, GridRowId, GridRowTreeConfig } from 
 import {
   GridRowTreeCreationValue,
   GridTreeDepths,
-  isDeepEqual,
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridTreePathDuplicateHandler, RowTreeBuilderNode } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import { removeDataRowFromTree } from './removeDataRowFromTree';

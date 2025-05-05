@@ -2,6 +2,7 @@
   "interfaceDescription": "The full grid API.",
   "propertiesDescriptions": {
     "addRowGroupingCriteria": { "description": "Adds the field to the row grouping model." },
+    "aiAssistant": { "description": "The AI assistant API." },
     "applySorting": { "description": "Applies the current sort model to the rows." },
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
@@ -69,6 +70,9 @@
     },
     "getLocaleText": { "description": "Returns the translation for the <code>key</code>." },
     "getPinnedColumns": { "description": "Returns which columns are pinned." },
+    "getPropagatedRowSelectionModel": {
+      "description": "Returns the modified selection model after applying row selection propagation.<br /><br />Use this to achieve proper <code>rowSelectionPropagation</code> behavior when setting the selection model using <code>setRowSelectionModel</code>."
+    },
     "getRootDimensions": { "description": "Returns the dimensions of the grid" },
     "getRow": { "description": "Gets the row data with a given id." },
     "getRowElement": {
@@ -188,6 +192,9 @@
       "description": "Sets the <code>paginationModel</code> to a new value."
     },
     "setPinnedColumns": { "description": "Changes the pinned columns." },
+    "setPivotActive": { "description": "Sets whether the pivot mode is active." },
+    "setPivotModel": { "description": "Sets the pivot model to use in the pivot mode." },
+    "setPivotPanelOpen": { "description": "Sets whether the pivot panel is open." },
     "setQuickFilterValues": {
       "description": "Set the quick filter values to the one given by <code>values</code>"
     },
@@ -202,7 +209,7 @@
     },
     "setRows": { "description": "Sets a new set of rows." },
     "setRowSelectionModel": {
-      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.<br />Any row already selected will be unselected."
+      "description": "Sets the new row selection model.<br /><br />⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically.<br />Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation."
     },
     "setSortModel": { "description": "Updates the sort model and triggers the sorting of rows." },
     "showColumnMenu": {

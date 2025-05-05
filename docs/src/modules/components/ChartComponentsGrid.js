@@ -51,7 +51,6 @@ function getComponents() {
       srcLight: '/static/x/component-illustrations/radar-light.png',
       srcDark: '/static/x/component-illustrations/radar-dark.png',
       href: '/x/react-charts/radar/',
-      planned: true,
     },
     {
       title: 'Treemap',
@@ -97,7 +96,7 @@ export default function ChartComponentsGrid() {
   return (
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {getComponents().map((component) => (
-        <Grid item xs={12} sm={4} sx={{ flexGrow: 1 }} key={component.title}>
+        <Grid size={{ xs: 12, sm: 4 }} sx={{ flexGrow: 1 }} key={component.title}>
           <Card
             component={Link}
             noLinkStyle

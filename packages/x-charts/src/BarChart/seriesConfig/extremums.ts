@@ -28,8 +28,8 @@ const getValueExtremum =
 
     return Object.keys(series)
       .filter((seriesId) => {
-        const yAxisId = series[seriesId].yAxisId;
-        return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
+        const axisId = direction === 'x' ? series[seriesId].xAxisId : series[seriesId].yAxisId;
+        return axisId === axis.id || (isDefaultAxis && axisId === undefined);
       })
       .reduce(
         (acc, seriesId) => {

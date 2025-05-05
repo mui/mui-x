@@ -1,0 +1,27 @@
+{
+  "props": {
+    "onSubmit": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(prompt: string) => void", "describedArgs": ["prompt"] }
+    },
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "onRecordError": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(error: string) => void", "describedArgs": ["error"] }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "PromptField",
+  "imports": [
+    "import { PromptField } from '@mui/x-data-grid-premium/components';",
+    "import { PromptField } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiPromptField",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/promptField/PromptField.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/prompt-field\">Data Grid - Prompt Field component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

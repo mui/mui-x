@@ -1,4 +1,4 @@
-# Data Grid - Row spanning 🧪
+# Data Grid - Row spanning
 
 <p class="description">Span cells across several rows.</p>
 

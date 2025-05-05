@@ -3,10 +3,10 @@ import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy, restore } from 'sinon';
-import { getColumnValues, sleep } from 'test/utils/helperFn';
+import { getColumnValues } from 'test/utils/helperFn';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
-describe('<DataGridPro /> - Infnite loader', () => {
+describe('<DataGridPro /> - Infinite loader', () => {
   afterEach(() => {
     restore();
   });
@@ -40,11 +40,8 @@ describe('<DataGridPro /> - Infnite loader', () => {
       const { container, setProps } = render(<TestCase rows={baseRows} />);
       const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
 
-      await act(async () => {
-        // arbitrary number to make sure that the bottom of the grid window is reached.
-        virtualScroller.scrollTop = 12345;
-        virtualScroller.dispatchEvent(new Event('scroll'));
-      });
+      // arbitrary number to make sure that the bottom of the grid window is reached.
+      await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
 
       await waitFor(() => {
         expect(handleRowsScrollEnd.callCount).to.equal(1);
@@ -65,10 +62,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
 
       expect(handleRowsScrollEnd.callCount).to.equal(1);
 
-      await act(async () => {
-        virtualScroller.scrollTop = 12345;
-        virtualScroller.dispatchEvent(new Event('scroll'));
-      });
+      await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
 
       await waitFor(() => {
         expect(handleRowsScrollEnd.callCount).to.equal(2);
@@ -194,12 +188,11 @@ describe('<DataGridPro /> - Infnite loader', () => {
       // on the initial render, last row is not visible and the `observe` method is not called
       expect(observe.callCount).to.equal(0);
       // arbitrary number to make sure that the bottom of the grid window is reached.
-      virtualScroller.scrollTop = 12345;
-      virtualScroller.dispatchEvent(new Event('scroll'));
-      // wait for the next render cycle
-      await sleep(0);
+      await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
       // observer was attached
-      expect(observe.callCount).to.equal(1);
+      await waitFor(() => {
+        expect(observe.callCount).to.equal(1);
+      });
     },
   );
 });

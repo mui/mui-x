@@ -3,13 +3,13 @@ import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridLogger,
-  useGridApiEventHandler,
+  useGridEvent,
   GridEventListener,
   getDataGridUtilityClass,
   useGridSelector,
   gridSortModelSelector,
   gridRowMaximumTreeDepthSelector,
-  useGridApiOptionHandler,
+  useGridEventPriority,
   gridRowNodeSelector,
   GridRowId,
 } from '@mui/x-data-grid';
@@ -196,9 +196,9 @@ export const useGridRowReorder = (
     [apiRef, dragRowId, isRowReorderDisabled, logger, sortedRowIndexLookup],
   );
 
-  useGridApiEventHandler(apiRef, 'rowDragStart', handleDragStart);
-  useGridApiEventHandler(apiRef, 'rowDragOver', handleDragOver);
-  useGridApiEventHandler(apiRef, 'rowDragEnd', handleDragEnd);
-  useGridApiEventHandler(apiRef, 'cellDragOver', handleDragOver);
-  useGridApiOptionHandler(apiRef, 'rowOrderChange', props.onRowOrderChange);
+  useGridEvent(apiRef, 'rowDragStart', handleDragStart);
+  useGridEvent(apiRef, 'rowDragOver', handleDragOver);
+  useGridEvent(apiRef, 'rowDragEnd', handleDragEnd);
+  useGridEvent(apiRef, 'cellDragOver', handleDragOver);
+  useGridEventPriority(apiRef, 'rowOrderChange', props.onRowOrderChange);
 };

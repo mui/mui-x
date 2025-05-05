@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { PickerTextFieldOwnerState } from './PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../models/fields';
 
 export const PickerTextFieldOwnerStateContext =
   React.createContext<PickerTextFieldOwnerState | null>(null);

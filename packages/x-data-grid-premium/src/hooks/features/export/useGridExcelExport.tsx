@@ -4,7 +4,7 @@ import {
   useGridApiMethod,
   useGridLogger,
   GridExportDisplayOptions,
-  useGridApiOptionHandler,
+  useGridEventPriority,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
@@ -207,5 +207,5 @@ export const useGridExcelExport = (
 
   useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
 
-  useGridApiOptionHandler(apiRef, 'excelExportStateChange', props.onExcelExportStateChange);
+  useGridEventPriority(apiRef, 'excelExportStateChange', props.onExcelExportStateChange);
 };

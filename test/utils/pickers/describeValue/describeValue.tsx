@@ -25,7 +25,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
   const options = getOptions();
-  const { defaultProps, render, clock, componentFamily } = options;
+  const { defaultProps, render, componentFamily } = options;
 
   function WrappedElementToTest(
     props: BasePickerInputProps<TValue, any, any> & UsePickerNonStaticProps & { hook?: any },
@@ -37,7 +37,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
 
   let renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   if (componentFamily === 'field' || componentFamily === 'picker') {
-    const interactions = buildFieldInteractions({ clock, render, Component: ElementToTest });
+    const interactions = buildFieldInteractions({ render, Component: ElementToTest });
 
     renderWithProps = (props: any, config?: any) =>
       interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });
@@ -54,6 +54,11 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
         },
         selectSection: () => {
           throw new Error('You can only use `selectSection` on components that render a field');
+        },
+        selectSectionAsync: () => {
+          throw new Error(
+            'You can only use `selectSectionAsync` on components that render a field',
+          );
         },
         getHiddenInput: () => {
           throw new Error('You can only use `getHiddenInput` on components that render a field');

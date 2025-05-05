@@ -1,0 +1,16 @@
+<DataGrid
+  {...data}
+  showToolbar
+  slots={{
+    noResultsOverlay: CustomNoResultsOverlay,
+  }}
+  initialState={{
+    ...data.initialState,
+    filter: {
+      filterModel: {
+        items: [],
+        quickFilterValues: ['abc'],
+      },
+    },
+  }}
+/>

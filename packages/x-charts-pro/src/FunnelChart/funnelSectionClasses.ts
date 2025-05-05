@@ -12,6 +12,11 @@ export interface FunnelSectionClasses {
   faded: string;
   /** Styles applied to the label element. */
   label: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${funnelSectionClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 function getFunnelSectionUtilityClass(slot: string) {
@@ -33,5 +38,5 @@ export const useUtilityClasses = (props: FunnelSectionProps) => {
 
 export const funnelSectionClasses: FunnelSectionClasses = generateUtilityClasses(
   'MuiFunnelSection',
-  ['root', 'highlighted', 'faded', 'label'],
+  ['root', 'highlighted', 'faded', 'label', 'series'],
 );

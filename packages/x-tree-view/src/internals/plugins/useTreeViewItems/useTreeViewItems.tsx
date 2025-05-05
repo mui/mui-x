@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
-  UseTreeViewItemsDefaultizedParameters,
+  UseTreeViewItemsParametersWithDefaults,
   UseTreeViewItemsState,
   AddItemsParameters,
 } from './useTreeViewItems.types';
@@ -22,7 +22,7 @@ import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/use
 
 interface ProcessItemsLookupsParameters
   extends Pick<
-    UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
+    UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'disabledItemsFocusable'
   > {
   initialDepth?: number;
@@ -350,20 +350,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   ]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
-  const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: string) => {
+  const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: TreeViewItemId) => {
     if (params.onItemClick) {
       params.onItemClick(event, itemId);
     }
   });
-
-  const pluginContextValue = React.useMemo(
-    () => ({
-      items: {
-        onItemClick: handleItemClick,
-      },
-    }),
-    [handleItemClick],
-  );
 
   return {
     getRootProps: () => ({
@@ -390,8 +381,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       setTreeViewLoading,
       setTreeViewError,
       removeChildren,
+      handleItemClick,
     },
-    contextValue: pluginContextValue,
   };
 };
 
@@ -409,7 +400,7 @@ useTreeViewItems.getInitialState = (params) => ({
   },
 });
 
-useTreeViewItems.getDefaultizedParams = ({ params }) => ({
+useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',

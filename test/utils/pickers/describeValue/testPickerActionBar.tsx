@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { SinonFakeTimers, spy, useFakeTimers } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
   expectPickerChangeHandlerValue,
+  isPickerRangeType,
 } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 
@@ -28,7 +29,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     return;
   }
 
-  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
+  const isRangeType = isPickerRangeType(pickerParams.type);
 
   describe('Picker action bar', () => {
     describe('clear action', () => {
@@ -93,8 +94,8 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           onAccept,
           onClose,
           open: true,
-          value: values[0],
-          slotProps: { actionBar: { actions: ['cancel'] } },
+          defaultValue: values[0],
+          slotProps: { actionBar: { actions: ['cancel', 'nextOrAccept'] } },
           closeOnSelect: false,
         });
 
@@ -155,7 +156,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           onClose,
           open: true,
           defaultValue: values[0],
-          slotProps: { actionBar: { actions: ['accept'] } },
+          slotProps: { actionBar: { actions: ['accept', 'nextOrAccept'] } },
           closeOnSelect: false,
         });
 
@@ -163,7 +164,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
-        fireEvent.click(screen.getByText(/ok/i));
+        fireEvent.click(screen.getAllByRole('button', { name: 'OK' })[0]);
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
@@ -221,6 +222,15 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('today action', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+      beforeEach(() => {
+        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+      });
+      afterEach(() => {
+        timer?.restore();
+      });
+
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();
         const onAccept = spy();

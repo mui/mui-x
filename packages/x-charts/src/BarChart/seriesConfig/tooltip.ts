@@ -1,5 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
-import type { TooltipGetter } from '../../internals/plugins/models';
+import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
 
 const tooltipGetter: TooltipGetter<'bar'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -10,6 +10,11 @@ const tooltipGetter: TooltipGetter<'bar'> = (params) => {
 
   const label = getLabel(series.label, 'tooltip');
   const value = series.data[identifier.dataIndex];
+
+  if (value == null) {
+    return null;
+  }
+
   const formattedValue = series.valueFormatter(value as any, { dataIndex: identifier.dataIndex });
 
   return {
@@ -20,6 +25,14 @@ const tooltipGetter: TooltipGetter<'bar'> = (params) => {
     formattedValue,
     markType: series.labelMarkType,
   };
+};
+
+export const axisTooltipGetter: AxisTooltipGetter<'bar', 'x' | 'y'> = (series) => {
+  return Object.values(series).map((s) =>
+    s.layout === 'horizontal'
+      ? { direction: 'y', axisId: s.yAxisId }
+      : { direction: 'x', axisId: s.xAxisId },
+  );
 };
 
 export default tooltipGetter;

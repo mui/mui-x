@@ -5,24 +5,23 @@ import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pi
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<YearCalendar /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'calendar'>(YearCalendar, () => ({
     render,
-    clock,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-01')],
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
       const activeYear = screen
         .queryAllByRole('radio')
-        .find((cell) => cell.getAttribute('tabindex') === '0');
-      expect(activeYear).not.to.equal(null);
+        .find((cell) => cell.getAttribute('aria-checked') === 'true');
+
       if (expectedValue == null) {
-        expect(activeYear).to.have.text(adapterToUse.getYear(adapterToUse.date()).toString());
+        expect(activeYear).to.equal(undefined);
       } else {
+        expect(activeYear).not.to.equal(undefined);
         expect(activeYear).to.have.text(adapterToUse.getYear(expectedValue).toString());
-        expect(activeYear).to.have.attribute('aria-checked', 'true');
       }
     },
     setNewValue: (value) => {

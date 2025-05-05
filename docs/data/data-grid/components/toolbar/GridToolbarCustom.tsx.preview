@@ -1,8 +1,10 @@
-<TailwindDemoContainer documentBody={documentBody}>
-  <DataGrid
-    {...data}
-    loading={loading}
-    slots={{ toolbar: CustomToolbar }}
-    showToolbar
-  />
-</TailwindDemoContainer>
+<ThemeProvider theme={theme}>
+  <TailwindDemoContainer documentBody={documentBody}>
+    <DataGrid
+      {...data}
+      loading={loading}
+      slots={{ toolbar: CustomToolbar }}
+      showToolbar
+    />
+  </TailwindDemoContainer>
+</ThemeProvider>

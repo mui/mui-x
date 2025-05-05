@@ -8,7 +8,7 @@ import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { ChartState } from '../../models/chart';
 import { computeAxisValue } from './computeAxisValue';
 
-export const selectorChartPolarAxisState = (state: ChartState<[UseChartPolarAxisSignature]>) =>
+export const selectorChartPolarAxisState = (state: ChartState<[], [UseChartPolarAxisSignature]>) =>
   state.polarAxis;
 
 export const selectorChartRawRotationAxis = createSelector(
@@ -57,4 +57,12 @@ export const selectorChartRadiusAxis = createSelector(
       seriesConfig,
       axisDirection: 'radius',
     }),
+);
+
+export const selectorChartPolarCenter = createSelector(
+  [selectorChartDrawingArea],
+  (drawingArea) => ({
+    cx: drawingArea.left + drawingArea.width / 2,
+    cy: drawingArea.top + drawingArea.height / 2,
+  }),
 );

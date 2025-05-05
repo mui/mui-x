@@ -30,7 +30,3 @@ export function getWindowStorageItem(type: WindowStorageType, key: string): stri
 
   return null;
 }
-
-export function isWindowStorageAvailable(type: WindowStorageType): boolean {
-  return typeof window !== 'undefined' && !!window[type];
-}

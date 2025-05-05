@@ -69,15 +69,15 @@ export default function ScrollPlayground() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ width: 300, margin: '0 auto 16px' }}>
         <Grid container justifyContent="center">
-          <Grid item>
+          <Grid>
             <Button onClick={handleClick('top')}>top</Button>
           </Grid>
         </Grid>
         <Grid container textAlign="center">
-          <Grid item xs={4}>
+          <Grid size={{ xs: 4 }}>
             <Button onClick={handleClick('left')}>left</Button>
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={{ xs: 4 }}>
             <IconButton
               color="primary"
               aria-label="home"
@@ -86,12 +86,12 @@ export default function ScrollPlayground() {
               <HomeIcon />
             </IconButton>
           </Grid>
-          <Grid item xs={4}>
+          <Grid size={{ xs: 4 }}>
             <Button onClick={handleClick('right')}>right</Button>
           </Grid>
         </Grid>
         <Grid container justifyContent="center">
-          <Grid item>
+          <Grid>
             <Button onClick={handleClick('bottom')}>bottom</Button>
           </Grid>
         </Grid>

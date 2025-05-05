@@ -15,7 +15,15 @@
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
     },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
+    "highlight": {
+      "type": {
+        "name": "enum",
+        "description": "'axis'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series'"
+      },
+      "default": "'axis'"
+    },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -23,6 +31,7 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
@@ -49,6 +58,6 @@
   "muiName": "MuiRadarDataProvider",
   "filename": "/packages/x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🧪</a></li></ul>",
   "cssComponent": false
 }

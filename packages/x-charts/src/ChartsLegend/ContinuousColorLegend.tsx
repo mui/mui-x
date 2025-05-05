@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
 import { AppendKeys } from '@mui/x-internals/types';
-import { AxisDefaultized } from '../models/axis';
+import { ComputedAxis } from '../models/axis';
 import { useAxis } from './useAxis';
 import { ColorLegendSelector } from './colorLegend.types';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
@@ -109,7 +109,6 @@ const templateAreas = (reverse?: boolean) => {
 const RootElement = styled('ul', {
   name: 'MuiContinuousColorLegend',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ContinuousColorLegendProps }>(({ theme, ownerState }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
@@ -180,8 +179,8 @@ const getText = (
   }
   return label?.({ value, formattedValue }) ?? formattedValue;
 };
-const isZAxis = (axis: AxisDefaultized | ZAxisDefaultized): axis is ZAxisDefaultized =>
-  (axis as AxisDefaultized).scale === undefined;
+const isZAxis = (axis: ComputedAxis | ZAxisDefaultized): axis is ZAxisDefaultized =>
+  (axis as ComputedAxis).scale === undefined;
 
 const ContinuousColorLegend = consumeThemeProps(
   'MuiContinuousColorLegend',

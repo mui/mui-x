@@ -4,13 +4,13 @@ productId: x-charts
 components: FunnelChart, FunnelPlot
 ---
 
-# Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
 
 <p class="description">Funnel charts allow to express quantity evolution along a process, such as audience engagement, population education levels or yields of multiple processes.</p>
 
 ## Basics
 
-Funnel charts series should contain a data property containing an array of objects.
+Funnel charts series must contain a `data` property containing an array of objects.
 Each object corresponds to a section of the funnel.
 It must contain a property `value` and can have other optional properties, like `label` and `id`.
 
@@ -21,7 +21,7 @@ It must contain a property `value` and can have other optional properties, like 
 The funnel chart displays a legend by default.
 The only requirement is to provide a `label` value in the data objects.
 
-To disable the legend, set the `hideLegend` property to `true`.
+To disable the legend, set the `hideLegend` prop to `true`.
 
 {{"demo": "FunnelLegend.js"}}
 
@@ -49,7 +49,9 @@ It also accepts a function that receives the data object and should return the l
 
 {{"demo": "FunnelLabelPositioning.js"}}
 
-## Curve interpolation
+## Styling
+
+### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'` and `'step'`.
@@ -58,7 +60,14 @@ This series property adds the option to control the interpolation of a series.
 
 {{"demo": "FunnelCurves.js"}}
 
-## Colors
+### Gap
+
+The gap between the sections can be customized by the `gap` property.
+It accepts a number that represents the gap in pixels.
+
+{{"demo": "FunnelGap.js"}}
+
+### Colors
 
 The funnel colors can be customized in two ways.
 

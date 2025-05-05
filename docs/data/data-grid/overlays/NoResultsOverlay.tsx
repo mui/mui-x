@@ -24,11 +24,6 @@ export default function NoResultsOverlay() {
           },
         }}
         showToolbar
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-          },
-        }}
       />
     </Box>
   );

@@ -26,7 +26,6 @@ export default function LowTTLCache() {
     <Box sx={{ width: '300px' }}>
       <RichTreeViewPro
         items={[]}
-        experimentalFeatures={{ lazyLoading: true }}
         dataSource={{
           getChildrenCount: (item) => item?.childrenCount,
           getTreeItems: fetchData,

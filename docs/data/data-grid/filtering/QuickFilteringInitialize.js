@@ -31,11 +31,6 @@ export default function QuickFilteringInitialize() {
         disableDensitySelector
         columns={columns}
         showToolbar
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-          },
-        }}
       />
     </Box>
   );

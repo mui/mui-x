@@ -42,16 +42,16 @@ export function useYScale<S extends ScaleName>(axisId?: AxisId): AxisScaleConfig
 
 export function useRotationScale<S extends ScaleName>(
   identifier?: number | string,
-): AxisScaleConfig[S]['scale'] {
+): AxisScaleConfig[S]['scale'] | undefined {
   const axis = useRotationAxis(identifier);
 
-  return axis.scale;
+  return axis?.scale;
 }
 
 export function useRadiusScale<S extends ScaleName>(
   identifier?: number | string,
-): AxisScaleConfig[S]['scale'] {
+): AxisScaleConfig[S]['scale'] | undefined {
   const axis = useRadiusAxis(identifier);
 
-  return axis.scale;
+  return axis?.scale;
 }

@@ -15,7 +15,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;
@@ -24,7 +24,6 @@ export interface PickersOutlinedInputProps extends PickersInputBaseProps {
 const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersOutlinedInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
@@ -76,7 +75,6 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
 const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsContainer, {
   name: 'MuiPickersOutlinedInput',
   slot: 'SectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: PickerTextFieldOwnerState }>({
   padding: '16.5px 0',
   variants: [
@@ -168,16 +166,13 @@ PickersOutlinedInput.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
@@ -204,7 +199,7 @@ PickersOutlinedInput.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([

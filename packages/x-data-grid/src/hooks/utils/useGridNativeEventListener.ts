@@ -1,7 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
 import { useGridLogger } from './useGridLogger';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { useGridApiOptionHandler } from './useGridApiEventHandler';
+import { useGridEventPriority } from './useGridEvent';
 
 export const useGridNativeEventListener = <
   PrivateApi extends GridPrivateApiCommon,
@@ -15,7 +15,7 @@ export const useGridNativeEventListener = <
 ) => {
   const logger = useGridLogger(apiRef, 'useNativeEventListener');
 
-  useGridApiOptionHandler(apiRef, 'rootMount', () => {
+  useGridEventPriority(apiRef, 'rootMount', () => {
     const targetElement = ref();
 
     if (!targetElement || !eventName) {

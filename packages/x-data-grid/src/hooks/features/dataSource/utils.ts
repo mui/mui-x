@@ -1,4 +1,4 @@
-import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
+import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export enum DataSourceRowsUpdateStrategy {
   Default = 'set-new-rows',

@@ -9,13 +9,10 @@ import {
 import { PickerManager, DateValidationError } from '../models';
 import { validateDate } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
-import {
-  ExportedValidateDateProps,
-  ValidateDatePropsToDefault,
-  ValidateDateProps,
-} from '../validation/validateDate';
+import { ExportedValidateDateProps, ValidateDateProps } from '../validation/validateDate';
 import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
+import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
 export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -30,35 +27,65 @@ export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolea
       internal_valueManager: singleItemValueManager,
       internal_fieldValueManager: singleItemFieldValueManager,
       internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
-      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
-        ...internalProps,
-        ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
-      }),
-      internal_getOpenPickerButtonAriaLabel: ({ value, utils, localeText }) => {
-        const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
-        return localeText.openDatePickerDialogue(formattedValue);
-      },
+      internal_useApplyDefaultValuesToFieldInternalProps:
+        useApplyDefaultValuesToDateFieldInternalProps,
+      internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
     [enableAccessibleFieldDOMStructure],
   );
 }
 
-/**
- * Private utility function to get the default internal props for the fields with date editing.
- * Is used by the `useDateManager` and `useDateRangeManager` hooks.
- */
-export function getDateFieldInternalPropsDefaults(
-  parameters: GetDateFieldInternalPropsDefaultsParameters,
-): GetDateFieldInternalPropsDefaultsReturnValue {
-  const { defaultDates, utils, internalProps } = parameters;
+function useOpenPickerButtonAriaLabel(value: PickerValue) {
+  const utils = useUtils();
+  const translations = usePickerTranslations();
 
-  return {
-    format: internalProps.format ?? utils.formats.keyboardDate,
-    disablePast: internalProps.disablePast ?? false,
-    disableFuture: internalProps.disableFuture ?? false,
-    minDate: applyDefaultDate(utils, internalProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, internalProps.maxDate, defaultDates.maxDate),
-  };
+  return React.useMemo(() => {
+    const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+    return translations.openDatePickerDialogue(formattedValue);
+  }, [value, translations, utils]);
+}
+
+function useApplyDefaultValuesToDateFieldInternalProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  internalProps: DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+): PickerManagerFieldInternalPropsWithDefaults<
+  UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
+  const utils = useUtils();
+  const validationProps = useApplyDefaultValuesToDateValidationProps(internalProps);
+
+  return React.useMemo(
+    () => ({
+      ...internalProps,
+      ...validationProps,
+      format: internalProps.format ?? utils.formats.keyboardDate,
+    }),
+    [internalProps, validationProps, utils],
+  );
+}
+
+type SharedDateAndDateRangeValidationProps =
+  | 'disablePast'
+  | 'disableFuture'
+  | 'minDate'
+  | 'maxDate';
+
+export function useApplyDefaultValuesToDateValidationProps(
+  props: Pick<ExportedValidateDateProps, SharedDateAndDateRangeValidationProps>,
+): Pick<ValidateDateProps, SharedDateAndDateRangeValidationProps> {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
+
+  return React.useMemo(
+    () => ({
+      disablePast: props.disablePast ?? false,
+      disableFuture: props.disableFuture ?? false,
+      minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+      maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
+    }),
+    [props.minDate, props.maxDate, props.disableFuture, props.disablePast, utils, defaultDates],
+  );
 }
 
 export interface UseDateManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
@@ -80,16 +107,3 @@ export interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructur
       'format'
     >,
     ExportedValidateDateProps {}
-
-type DateManagerFieldPropsToDefault = 'format' | ValidateDatePropsToDefault;
-
-interface GetDateFieldInternalPropsDefaultsParameters
-  extends Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> {
-  internalProps: Pick<DateManagerFieldInternalProps<true>, DateManagerFieldPropsToDefault>;
-}
-
-interface GetDateFieldInternalPropsDefaultsReturnValue
-  extends Pick<
-    PickerManagerFieldInternalPropsWithDefaults<UseDateManagerReturnValue<true>>,
-    DateManagerFieldPropsToDefault
-  > {}

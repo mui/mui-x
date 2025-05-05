@@ -2,32 +2,38 @@ import { ChartPluginSignature } from '../../models';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import {
   ScaleName,
-  AxisId,
   AxisConfig,
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
+  RadiusAxis,
+  RotationAxis,
 } from '../../../../models/axis';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { DefaultizedAxisConfig } from '../useChartCartesianAxis';
+import { UseChartInteractionSignature } from '../useChartInteraction';
 
-export type PolarAxisState = {
+export interface UseChartPolarAxisInstance {
   /**
-   * Mapping from rotation-axis key to scaling configuration.
+   * Transform (rotation, radius) to the SVG (x, y).
+   * @param {number} radius The radius.
+   * @param {number} rotation The rotation angle in radian.
+   * @returns {[number, number]} [x, y] the SVG coordinate.
    */
-  rotationAxis: DefaultizedAxisConfig<ChartsRotationAxisProps>;
+  polar2svg: (radius: number, rotation: number) => [number, number];
   /**
-   * Mapping from radius-axis key to scaling configuration.
+   * Transform the SVG (x, y) to the (rotation, radius) coordinates.
+   * @param {number} x The SVG x coordinate.
+   * @param {number} y The SVG y coordinate.
+   * @returns {[number, number]} [radius, rotation] the polar coordinate. Warning, the radius is a the power 2
    */
-  radiusAxis: DefaultizedAxisConfig<ChartsRadiusAxisProps>;
+  svg2polar: (x: number, y: number) => [number, number];
   /**
-   * The rotation-axes IDs sorted by order they were provided.
+   * Only compute the rotation from SVG coordinates.
+   * @param {number} x The SVG x coordinate.
+   * @param {number} y The SVG y coordinate.
+   * @returns {number} rotation The rotation angle in radian.
    */
-  rotationAxisIds: AxisId[];
-  /**
-   * The radius-axes IDs sorted by order they were provided.
-   */
-  radiusAxisIds: AxisId[];
-};
+  svg2rotation: (x: number, y: number) => number;
+}
 
 export interface UseChartPolarAxisParameters {
   /**
@@ -35,17 +41,23 @@ export interface UseChartPolarAxisParameters {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  rotationAxis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+  rotationAxis?: RotationAxis[];
   /**
    * The configuration of the radial-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  radiusAxis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+  radiusAxis?: RadiusAxis[];
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset?: Readonly<DatasetType>;
+  /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
+  disableAxisListener?: boolean;
 }
 
 export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters & {};
@@ -57,12 +69,11 @@ export interface UseChartPolarAxisState {
   };
 }
 
-export interface UseChartPolarAxisInstance {}
-
 export type UseChartPolarAxisSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartPolarAxisParameters;
     defaultizedParams: UseChartPolarAxisDefaultizedParameters;
     state: UseChartPolarAxisState;
-    dependencies: [UseChartSeriesSignature<SeriesType>];
+    instance: UseChartPolarAxisInstance;
+    dependencies: [UseChartInteractionSignature, UseChartSeriesSignature<SeriesType>];
   }>;

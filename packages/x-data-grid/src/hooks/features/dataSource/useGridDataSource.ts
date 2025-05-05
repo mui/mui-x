@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridRegisterStrategyProcessor } from '../../core/strategyProcessing/useGridRegisterStrategyProcessor';
-import { useGridApiEventHandler as addEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent as addEventHandler } from '../../utils/useGridEvent';
 import { useGridDataSourceBase } from './useGridDataSourceBase';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';

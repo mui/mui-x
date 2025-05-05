@@ -57,7 +57,6 @@ export default function BasicLazyLoading() {
       </Box>
       <RichTreeViewPro
         items={[]}
-        experimentalFeatures={{ lazyLoading: true }}
         dataSource={{
           getChildrenCount: (item) => item?.childrenCount,
           getTreeItems: fetchData,

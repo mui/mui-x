@@ -1,5 +1,12 @@
 {
-  "props": {},
+  "props": {
+    "height": { "type": { "name": "number" }, "required": true },
+    "width": { "type": { "name": "number" }, "required": true },
+    "x": { "type": { "name": "number" }, "required": true },
+    "xOrigin": { "type": { "name": "number" }, "required": true },
+    "y": { "type": { "name": "number" }, "required": true },
+    "yOrigin": { "type": { "name": "number" }, "required": true }
+  },
   "name": "BarLabel",
   "imports": [
     "import { BarLabel } from '@mui/x-charts/BarChart';",
@@ -16,6 +23,12 @@
   ],
   "classes": [
     {
+      "key": "animate",
+      "className": "MuiBarLabel-animate",
+      "description": "Styles applied to the root element if it is animated.",
+      "isGlobal": false
+    },
+    {
       "key": "faded",
       "className": "MuiBarLabel-faded",
       "description": "Styles applied to the root element if it is faded.",
@@ -31,6 +44,12 @@
       "key": "root",
       "className": "MuiBarLabel-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiBarLabel-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${barLabelClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

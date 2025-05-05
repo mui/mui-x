@@ -31,7 +31,7 @@ export default function MarginAndLabelPosition() {
                 ? value.split('').join('\n')
                 : usAirportPassengers.find((item) => item.code === value)!.fullName,
             label: 'airports',
-            height: fixMargin ? 85 : undefined,
+            height: fixMargin ? 75 : undefined,
           },
         ]}
         // Other props
@@ -47,7 +47,7 @@ export default function MarginAndLabelPosition() {
         hideLegend
         yAxis={[
           {
-            valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+            valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
             label: 'passengers',
             width: fixMargin ? 85 : undefined,
           },

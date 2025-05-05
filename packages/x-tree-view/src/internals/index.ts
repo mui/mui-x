@@ -20,7 +20,6 @@ export type {
   MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewState,
-  TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
   TreeViewItemPlugin,
@@ -48,11 +47,6 @@ export type {
 } from './plugins/useTreeViewFocus';
 export { useTreeViewKeyboardNavigation } from './plugins/useTreeViewKeyboardNavigation';
 export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeViewKeyboardNavigation';
-export { useTreeViewIcons } from './plugins/useTreeViewIcons';
-export type {
-  UseTreeViewIconsSignature,
-  UseTreeViewIconsParameters,
-} from './plugins/useTreeViewIcons';
 export {
   useTreeViewItems,
   buildSiblingIndexes,
@@ -70,6 +64,10 @@ export type {
   UseTreeViewItemsState,
 } from './plugins/useTreeViewItems';
 export { useTreeViewLabel } from './plugins/useTreeViewLabel';
+export {
+  selectorIsItemBeingEdited,
+  selectorIsAnyItemBeingEdited,
+} from './plugins/useTreeViewLabel/useTreeViewLabel.selectors';
 export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
@@ -91,3 +89,9 @@ export type {
 export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';
 export { TreeViewStore } from './utils/TreeViewStore';
+
+export type {
+  TreeViewClasses,
+  TreeViewSlots,
+  TreeViewSlotProps,
+} from './TreeViewProvider/TreeViewStyleContext';

@@ -9,14 +9,17 @@ function App() {
       <DataGrid
         indeterminateCheckboxAction="deselect"
         rowPositionsDebounceMs={100}
+        resetPageOnSortFilter
       />
       <DataGridPro
         indeterminateCheckboxAction="select"
         rowPositionsDebounceMs={100}
+        resetPageOnSortFilter
       />
       <DataGridPremium
         indeterminateCheckboxAction="deselect"
         rowPositionsDebounceMs={100}
+        resetPageOnSortFilter
       />
     </React.Fragment>
   );

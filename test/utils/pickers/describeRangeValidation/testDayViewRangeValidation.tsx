@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
+import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const isDisabled = (el: HTMLElement) => el.getAttribute('disabled') !== null;
 
@@ -31,7 +33,10 @@ const testMonthSwitcherAreDisable = (areDisable: [boolean, boolean]) => {
   }
 };
 
-export function testDayViewRangeValidation(ElementToTest, getOptions) {
+export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
+  ElementToTest,
+  getOptions,
+) => {
   const { componentFamily, views, variant = 'desktop' } = getOptions();
   describeSkipIf(!views.includes('day') || componentFamily === 'field')(
     'validation in day view:',
@@ -52,7 +57,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         render(
           <ElementToTest
             {...defaultProps}
-            shouldDisableDate={(date) =>
+            shouldDisableDate={(date: any) =>
               adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
             }
           />,
@@ -62,76 +67,84 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         testDisabledDate('11', [true, true], !isDesktop || includesTimeView);
       });
 
-      it('should apply disablePast', () => {
-        const { render, clock } = getOptions();
+      describe('with fake timers', () => {
+        // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+        let timer: SinonFakeTimers | null = null;
+        beforeEach(() => {
+          timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+        });
+        afterEach(() => {
+          timer?.restore();
+        });
+        it('should apply disablePast', () => {
+          const { render } = getOptions();
 
-        let now;
-        function WithFakeTimer(props) {
-          now = adapterToUse.date();
-          const { referenceDate, ...otherProps } = props;
-          return <ElementToTest value={[now, null]} {...otherProps} />;
-        }
-        const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
+          let now;
+          function WithFakeTimer(props: any) {
+            now = adapterToUse.date();
+            const { referenceDate, ...otherProps } = props;
+            return <ElementToTest value={[now, null]} {...otherProps} />;
+          }
+          const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
-        const tomorrow = adapterToUse.addDays(now, 1);
-        const yesterday = adapterToUse.addDays(now, -1);
+          const tomorrow = adapterToUse.addDays(now, 1);
+          const yesterday = adapterToUse.addDays(now, -1);
 
-        testDisabledDate(
-          adapterToUse.format(now, 'dayOfMonth'),
-          [false, false],
-          !isDesktop || includesTimeView,
-        );
-        testDisabledDate(
-          adapterToUse.format(tomorrow, 'dayOfMonth'),
-          [false, false],
-          !isDesktop || includesTimeView,
-        );
+          testDisabledDate(
+            adapterToUse.format(now, 'dayOfMonth'),
+            [false, false],
+            !isDesktop || includesTimeView,
+          );
+          testDisabledDate(
+            adapterToUse.format(tomorrow, 'dayOfMonth'),
+            [false, false],
+            !isDesktop || includesTimeView,
+          );
 
-        if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
-          setProps({ value: [yesterday, null] });
-          clock.runToLast();
-        }
-        testDisabledDate(
-          adapterToUse.format(yesterday, 'dayOfMonth'),
-          [true, false],
-          !isDesktop || includesTimeView,
-        );
-      });
+          if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
+            setProps({ value: [yesterday, null] });
+          }
+          testDisabledDate(
+            adapterToUse.format(yesterday, 'dayOfMonth'),
+            [true, false],
+            !isDesktop || includesTimeView,
+          );
+        });
 
-      it('should apply disableFuture', () => {
-        const { render, clock } = getOptions();
+        it('should apply disableFuture', () => {
+          const { render } = getOptions();
 
-        let now;
-        function WithFakeTimer(props) {
-          now = adapterToUse.date();
-          const { referenceDate, ...otherProps } = props;
-          return <ElementToTest value={[now, null]} {...otherProps} />;
-        }
-        const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
+          let now;
+          function WithFakeTimer(props: any) {
+            now = adapterToUse.date();
+            const { referenceDate, ...otherProps } = props;
+            return <ElementToTest value={[now, null]} {...otherProps} />;
+          }
+          const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
-        const tomorrow = adapterToUse.addDays(now, 1);
-        const yesterday = adapterToUse.addDays(now, -1);
+          const tomorrow = adapterToUse.addDays(now, 1);
+          const yesterday = adapterToUse.addDays(now, -1);
 
-        testDisabledDate(
-          adapterToUse.format(now, 'dayOfMonth'),
-          [false, true],
-          !isDesktop || includesTimeView,
-        );
-        testDisabledDate(
-          adapterToUse.format(tomorrow, 'dayOfMonth'),
-          [true, true],
-          !isDesktop || includesTimeView,
-        );
+          testDisabledDate(
+            adapterToUse.format(now, 'dayOfMonth'),
+            [false, true],
+            !isDesktop || includesTimeView,
+          );
+          testDisabledDate(
+            adapterToUse.format(tomorrow, 'dayOfMonth'),
+            [true, true],
+            !isDesktop || includesTimeView,
+          );
 
-        if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
-          setProps({ value: [yesterday, null] });
-          clock.runToLast();
-        }
-        testDisabledDate(
-          adapterToUse.format(yesterday, 'dayOfMonth'),
-          [false, true],
-          !isDesktop || includesTimeView,
-        );
+          if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
+            setProps({ value: [yesterday, null] });
+          }
+          testDisabledDate(
+            adapterToUse.format(yesterday, 'dayOfMonth'),
+            [false, true],
+            !isDesktop || includesTimeView,
+          );
+        });
       });
 
       it('should apply minDate', () => {
@@ -173,4 +186,4 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       });
     },
   );
-}
+};

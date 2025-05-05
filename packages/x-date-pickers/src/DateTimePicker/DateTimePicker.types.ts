@@ -48,6 +48,6 @@ export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends 
 }
 
 /**
- * Props the field can receive when used inside a date time picker (<DateTimePicker />, <DesktopDateTimePicker /> or <MobileDateTimePicker /> component).
+ * Props the field can receive when used inside a Date Time Picker (<DateTimePicker />, <DesktopDateTimePicker /> or <MobileDateTimePicker /> component).
  */
 export type DateTimePickerFieldProps = ValidateDateTimeProps & BaseSingleInputFieldProps;

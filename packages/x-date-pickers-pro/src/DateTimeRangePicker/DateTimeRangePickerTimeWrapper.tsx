@@ -2,7 +2,6 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickerSelectionState,
   PickerViewRenderer,
-  isInternalTimeView,
   useUtils,
   TimeViewWithMeridiem,
   BaseClockProps,
@@ -51,7 +50,7 @@ function DateTimeRangePickerTimeWrapper<
   const { viewRenderer, value, onChange, defaultValue, onViewChange, views, className, ...other } =
     props;
 
-  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
+  const { rangePosition } = usePickerRangePositionContext();
 
   if (!viewRenderer) {
     return null;
@@ -75,12 +74,6 @@ function DateTimeRangePickerTimeWrapper<
       rangePosition,
     });
     const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
-    const timeViews = views.filter(isInternalTimeView);
-    // reset view to the first time view and swap range position after selecting the last time view (start or end position)
-    if (selectedView === timeViews[timeViews.length - 1] && onViewChange) {
-      onViewChange(views[0]);
-      setRangePosition(rangePosition === 'start' ? 'end' : 'start');
-    }
     onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);
   };
 

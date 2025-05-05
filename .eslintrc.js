@@ -24,7 +24,7 @@ const ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID =
 const ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS =
   process.env.ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ?? false;
 const ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW =
-  process.env.ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ?? false;
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ?? true;
 
 const isAnyReactCompilerPluginEnabled =
   ENABLE_REACT_COMPILER_PLUGIN ||
@@ -259,6 +259,7 @@ module.exports = {
               'useDateTimePickerDefaultizedProps',
               'useDateRangePickerDefaultizedProps',
               'useDateTimeRangePickerDefaultizedProps',
+              'useTimeRangePickerDefaultizedProps',
               'useDateCalendarDefaultizedProps',
               'useMonthCalendarDefaultizedProps',
               'useYearCalendarDefaultizedProps',

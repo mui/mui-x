@@ -4,6 +4,11 @@
   filterModel={filterModel}
   onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
   slots={{ toolbar: CustomToolbar }}
-  slotProps={{ toolbar: { onRemoveFilter } }}
+  slotProps={{
+    toolbar: { onRemoveFilter },
+    basePopper: {
+      placement: 'bottom-start',
+    },
+  }}
   showToolbar
 />

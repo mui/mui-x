@@ -8,7 +8,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
-  GridListColDef,
+  GridListViewColDef,
   GridGetRowsError,
   GridUpdateRowError,
 } from '@mui/x-data-grid';
@@ -136,7 +136,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: GridFeatureMode;
   /**
@@ -159,9 +159,9 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
   lazyLoadingRequestThrottleMs: number;
   /**
    * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
+   * Use in combination with `listViewColumn`.
    */
-  unstable_listView: boolean;
+  listView: boolean;
 }
 interface DataGridProRegularProps<R extends GridValidRowModel> {
   /**
@@ -202,7 +202,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
   /**
@@ -254,7 +254,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**
@@ -266,9 +266,9 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   slotProps?: GridProSlotProps;
   /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   * Definition of the column rendered when the `listView` prop is enabled.
    */
-  unstable_listColumn?: GridListColDef<R>;
+  listViewColumn?: GridListViewColDef<R>;
   /**
    * The data source of the Data Grid Pro.
    */

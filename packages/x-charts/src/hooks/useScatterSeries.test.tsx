@@ -1,8 +1,8 @@
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useScatterSeries, useScatterSeriesContext } from './useScatterSeries';
-import { ScatterSeriesType } from '../models';
+import { DefaultizedScatterSeriesType, ScatterSeriesType } from '../models';
 import { ScatterChart } from '../ScatterChart';
 
 const mockSeries: ScatterSeriesType[] = [
@@ -63,13 +63,16 @@ describe('useScatterSeries', () => {
 
   it('should return undefined series when invalid seriesIds are provided', () => {
     const message = [
-      `MUI X: The following ids provided to "useScatterSeries" could not be found: "3".`,
+      `MUI X Charts: The following ids provided to "useScatterSeries" could not be found: "3".`,
       `Make sure that they exist and their series are using the "scatter" series type.`,
     ].join('\n');
 
-    expect(() => renderHook(() => useScatterSeries(['1', '3']), options)).toWarnDev(message);
+    let render: RenderHookResult<DefaultizedScatterSeriesType[], unknown> | undefined;
 
-    const { result } = renderHook(() => useScatterSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(() => {
+      render = renderHook(() => useScatterSeries(['1', '3']), options);
+    }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });

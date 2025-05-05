@@ -6,7 +6,7 @@ components: SparkLineChart
 
 # Charts - Sparkline
 
-<p class="description">Sparkline charts can provide an overview of data trends.</p>
+<p class="description">Sparkline chart can provide an overview of data trends.</p>
 
 ## Basics
 
@@ -67,7 +67,7 @@ They always display the same data, going from -15 to 92, but with different `dom
 
 {{"demo": "CustomDomainYAxis.js"}}
 
-## Color Customization
+## Color customization
 
 You can customize the color of the sparkline by providing a color to the `color` prop.
 

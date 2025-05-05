@@ -15,10 +15,10 @@ import {
   PickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import {
-  RangeOnlyPickerProps,
-  UseRangePickerParams,
+  NonStaticRangePickerProps,
+  NonStaticRangePickerHookParameters,
   UseRangePickerProps,
-} from '../models/useRangePicker';
+} from '../../models';
 
 export interface UseMobileRangePickerSlots
   extends PickersModalDialogSlots,
@@ -48,7 +48,7 @@ export interface UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructur
   extends ExportedUseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<PickerRangeValue>, 'toolbar'> {}
 
-export interface MobileRangeOnlyPickerProps extends RangeOnlyPickerProps {}
+export interface MobileRangeOnlyPickerProps extends NonStaticRangePickerProps {}
 
 export interface UseMobileRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
@@ -77,4 +77,4 @@ export interface UseMobileRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps> {}
+> extends NonStaticRangePickerHookParameters<TView, TExternalProps> {}

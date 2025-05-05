@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import moment from 'moment/moment';
+import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { fireEvent } from '@mui/internal-test-utils';
 import {
@@ -15,6 +15,7 @@ import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,
 } from '../internals/hooks/useField/useField.utils';
+import 'moment/locale/fa';
 
 const testDate = '2018-05-15T09:35:10';
 
@@ -56,8 +57,7 @@ const adapterToTest = [
 ] as const;
 
 describe(`RTL - test arrows navigation`, () => {
-  const { render, clock, adapter } = createPickerRenderer({
-    clock: 'fake',
+  const { render, adapter } = createPickerRenderer({
     adapterName: 'moment-jalaali',
   });
 
@@ -69,7 +69,7 @@ describe(`RTL - test arrows navigation`, () => {
     moment.locale('en');
   });
 
-  const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+  const { renderWithProps } = buildFieldInteractions({ render, Component: DateTimeField });
 
   it('should move selected section to the next section respecting RTL order in empty field', () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
@@ -208,12 +208,11 @@ describe(`RTL - test arrows navigation`, () => {
 
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
-    const { render, clock, adapter } = createPickerRenderer({
-      clock: 'fake',
+    const { render, adapter } = createPickerRenderer({
       adapterName,
     });
 
-    before(() => {
+    beforeEach(() => {
       if (adapterName === 'moment-jalaali') {
         jMoment.loadPersian();
       } else if (adapterName === 'moment') {
@@ -221,13 +220,13 @@ adapterToTest.forEach((adapterName) => {
       }
     });
 
-    after(() => {
+    afterEach(() => {
       if (adapterName === 'moment-jalaali') {
         moment.locale('en');
       }
     });
 
-    const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+    const { renderWithProps } = buildFieldInteractions({ render, Component: DateTimeField });
 
     const cleanValueStr = (
       valueStr: string,

@@ -40,7 +40,6 @@ export interface ChartsLegendProps {
 const RootElement = styled('ul', {
   name: 'MuiChartsLegend',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLegendProps }>(({ ownerState, theme }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
@@ -86,7 +85,10 @@ const ChartsLegend = consumeSlots(
     omitProps: ['position'],
     classesResolver: useUtilityClasses,
   },
-  function ChartsLegend(props: ChartsLegendProps, ref: React.Ref<HTMLUListElement>) {
+  React.forwardRef(function ChartsLegend(
+    props: ChartsLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
     const data = useLegend();
     const { direction, onItemClick, className, classes, ...other } = props;
 
@@ -129,7 +131,7 @@ const ChartsLegend = consumeSlots(
         })}
       </RootElement>
     );
-  },
+  }),
 );
 
 ChartsLegend.propTypes = {

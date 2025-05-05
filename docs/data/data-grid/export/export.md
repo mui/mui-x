@@ -1,6 +1,6 @@
 # Data Grid - Export
 
-<p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
+<p class="description">Export the rows in CSV or Excel formats, or use the browser's print dialog to print or save as PDF.</p>
 
 ## Enabling export
 
@@ -16,14 +16,14 @@ See the [Export component](/x/react-data-grid/components/export/) for examples o
 
 ## Export options
 
-By default, the toolbar displays all the available export formats, according to your license, which are
+Following are the available export options:
 
 - [Print](#print-export)
 - [CSV](#csv-export)
+- [Clipboard](#clipboard)
 - [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') (🚧 Not delivered yet)
 
-You can customize their respective behavior by passing an options object either to `slots.toolbar` or to the Export trigger itself if you have a custom toolbar:
+Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
 
 ```tsx
 // Default toolbar:
@@ -178,7 +178,7 @@ With media query, you have to start your `sx` object with `@media print` key, su
 />
 ```
 
-With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity).
+With `pageStyle` option, you can override the main content color with a [more specific selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity).
 
 ```jsx
 // Default toolbar:

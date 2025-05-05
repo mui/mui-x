@@ -10,7 +10,7 @@ function save(lines) {
   fse.writeFileSync(path.join(docsSpaceRoot, '.link-check-errors.txt'), fileContents);
 }
 
-const UNSUPPORTED_PATHS = ['/careers/', '/store/'];
+const UNSUPPORTED_PATHS = ['/careers/', '/store/', '/system/styles/'];
 
 const buffer = [];
 

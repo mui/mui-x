@@ -32,6 +32,10 @@ export type ChartContextValue<
    * The ref to the <svg />.
    */
   svgRef: React.RefObject<SVGSVGElement | null>;
+  /**
+   * The ref to the chart root element.
+   */
+  chartRootRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
@@ -48,9 +52,8 @@ export interface ChartProviderProps<
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
   pluginParams?: ChartPluginParams<TSignatures>;
   /**
-   * The configuration helpers used to compute attributes according to the serries type.
+   * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
   seriesConfig?: ChartSeriesConfig<TSeries>;
-  children: React.ReactNode;
 }

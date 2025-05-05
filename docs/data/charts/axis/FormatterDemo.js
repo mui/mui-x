@@ -108,6 +108,7 @@ export default function FormatterDemo() {
             context.location === 'tick'
               ? `${month.slice(0, 3)} \n2023`
               : `${month} 2023`,
+          height: 40,
         },
       ]}
       series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}

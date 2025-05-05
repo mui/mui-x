@@ -39,7 +39,7 @@ export default function InfoCard(props: InfoCardProps) {
         justifyContent: 'center',
         textAlign: 'left',
         flexGrow: 1,
-        height: '100%',
+        minHeight: '100%',
         boxShadow: 'transparent',
         background:
           backgroundColor === 'gradient'

@@ -1,12 +1,11 @@
 ---
-title: React Data Grid - Export component
 productId: x-data-grid
 components: ExportPrint, ExportCsv, ExportExcel
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Export
+# Data Grid - Export component
 
 <p class="description">Let users export the Data Grid for Excel, CSV, or printing.</p>
 
@@ -19,7 +18,8 @@ The demo below shows how to add export triggers to a custom toolbar.
 ## Anatomy
 
 ```tsx
-import { ExportPrint, ExportCsv, ExportExcel } from '@mui/x-data-grid';
+import { ExportPrint, ExportCsv } from '@mui/x-data-grid';
+import { ExportExcel } from '@mui/x-data-grid-premium';
 
 <ExportPrint />
 <ExportCsv />
@@ -36,7 +36,7 @@ It renders the `baseButton` slot.
 `<ExportCsv />` is a button that triggers a CSV export.
 It renders the `baseButton` slot.
 
-### Export Excel
+### Export Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 `<ExportExcel />` is a button that triggers an Excel export.
 It renders the `baseButton` slot.

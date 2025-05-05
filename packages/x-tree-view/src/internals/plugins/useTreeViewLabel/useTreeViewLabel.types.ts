@@ -39,34 +39,36 @@ export interface UseTreeViewLabelParameters<R extends {}> {
   isItemEditable?: boolean | ((item: R) => boolean);
 }
 
-export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewLabelParametersWithDefaults<R extends {}> = DefaultizedProps<
   UseTreeViewLabelParameters<R>,
   'isItemEditable'
 >;
 
 export interface UseTreeViewLabelState {
   label: {
+    isItemEditable: ((item: any) => boolean) | boolean;
     editedItemId: string | null;
   };
 }
 
-export interface UseTreeViewLabelContextValue {
-  label: Pick<UseTreeViewLabelDefaultizedParameters<any>, 'isItemEditable'>;
-}
-
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   params: UseTreeViewLabelParameters<any>;
-  defaultizedParams: UseTreeViewLabelDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewLabelParametersWithDefaults<any>;
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
-  contextValue: UseTreeViewLabelContextValue;
   dependencies: [UseTreeViewItemsSignature];
 }>;
 
 export interface UseTreeItemLabelInputSlotPropsFromLabelEditing extends TreeItemLabelInputProps {}
 
+export interface UseTreeItemLabelSlotPropsFromLabelEditing {
+  editable?: boolean;
+}
+
 declare module '@mui/x-tree-view/useTreeItem' {
   interface UseTreeItemLabelInputSlotOwnProps
     extends UseTreeItemLabelInputSlotPropsFromLabelEditing {}
+
+  interface UseTreeItemLabelSlotOwnProps extends UseTreeItemLabelSlotPropsFromLabelEditing {}
 }

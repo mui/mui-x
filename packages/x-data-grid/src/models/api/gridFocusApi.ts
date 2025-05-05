@@ -1,5 +1,5 @@
+import { MuiBaseEvent } from '@mui/x-internals/types';
 import { GridRowId } from '../gridRows';
-import { MuiBaseEvent } from '../muiEvent';
 import { GridColumnGroupIdentifier } from '../../hooks/features/focus';
 
 export interface GridFocusApi {

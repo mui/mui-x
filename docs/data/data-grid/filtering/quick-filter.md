@@ -6,7 +6,7 @@ Quick filter allows filtering rows by multiple columns with a single text input.
 
 By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
 
-The quick filter is displayed by default when `showToolbar` is passed to the `<DataGrid/>` component. See the [Quick Filter component](/x/react-data-grid/filtering/quick-filter/) for examples on how to add the quick filter to a custom toolbar.
+The quick filter is displayed by default when `showToolbar` is passed to the `<DataGrid/>` component. See the [Quick Filter component](/x/react-data-grid/components/quick-filter/) for examples on how to add the quick filter to a custom toolbar.
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 

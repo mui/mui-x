@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useTicks } from '../hooks/useTicks';
-import { AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
+import { ComputedXAxis } from '../models/axis';
 import { GridLine } from './styledComponents';
 import { ChartsGridClasses } from './chartsGridClasses';
 
 interface ChartsGridVerticalProps {
-  axis: AxisDefaultized<ScaleName, any, ChartsXAxisProps>;
+  axis: ComputedXAxis;
   start: number;
   end: number;
   classes: Partial<ChartsGridClasses>;
@@ -25,7 +25,7 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
     <React.Fragment>
       {xTicks.map(({ value, offset }) => (
         <GridLine
-          key={`vertical-${value}`}
+          key={`vertical-${value.getTime?.() ?? value}`}
           y1={start}
           y2={end}
           x1={offset}

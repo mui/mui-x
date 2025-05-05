@@ -10,11 +10,10 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DesktopDateTimePicker /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'picker'>(DesktopDateTimePicker, () => ({
     render,
-    clock,
     componentFamily: 'picker',
     type: 'date-time',
     variant: 'desktop',
@@ -53,8 +52,6 @@ describe('<DesktopDateTimePicker /> - Describe Value', () => {
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
-          // meridiem is an extra view on `DesktopDateTimePicker`
-          // we need to click it to finish selection
           fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
       } else {

@@ -46,7 +46,7 @@ const GridAggregationFunctionLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeaderLabel',
 })<{ ownerState: OwnerState }>({
-  fontSize: vars.typography.small.fontSize,
+  font: vars.typography.font.small,
   lineHeight: 'normal',
   color: vars.colors.foreground.muted,
   marginTop: -1,

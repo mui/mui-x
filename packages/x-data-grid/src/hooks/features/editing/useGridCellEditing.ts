@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { warnOnce } from '@mui/x-internals/warning';
-import {
-  useGridApiEventHandler,
-  useGridApiOptionHandler,
-} from '../../utils/useGridApiEventHandler';
+import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
@@ -39,6 +36,7 @@ import {
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
 import { getDefaultCellValue } from './utils';
+import { GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridCellEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -52,6 +50,7 @@ export const useGridCellEditing = (
     | 'onCellModesModelChange'
     | 'onProcessRowUpdateError'
     | 'signature'
+    | 'dataSource'
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
@@ -240,15 +239,15 @@ export const useGridCellEditing = (
       }
     };
 
-  useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
-  useGridApiEventHandler(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
-  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
+  useGridEvent(apiRef, 'cellFocusOut', runIfEditModeIsCell(handleCellFocusOut));
+  useGridEvent(apiRef, 'cellKeyDown', runIfEditModeIsCell(handleCellKeyDown));
 
-  useGridApiEventHandler(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
-  useGridApiEventHandler(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
+  useGridEvent(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
+  useGridEvent(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
 
-  useGridApiOptionHandler(apiRef, 'cellEditStart', props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
+  useGridEventPriority(apiRef, 'cellEditStart', props.onCellEditStart);
+  useGridEventPriority(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
 
   const getCellMode = React.useCallback<GridCellEditingApi['getCellMode']>(
     (id, field) => {
@@ -411,6 +410,7 @@ export const useGridCellEditing = (
 
       const editingState = gridEditRowsStateSelector(apiRef);
       const { error, isProcessingProps } = editingState[id][field];
+      const row = apiRef.current.getRow(id)!;
 
       if (error || isProcessingProps) {
         // Attempt to change cell mode to "view" was not successful
@@ -423,7 +423,29 @@ export const useGridCellEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field);
 
-      if (processRowUpdate) {
+      if (props.dataSource?.updateRow) {
+        if (row[field] === rowUpdate[field]) {
+          finishCellEditMode();
+          return;
+        }
+        const handleError = () => {
+          prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
+          // Revert the mode in the cellModesModel prop back to "edit"
+          updateFieldInCellModesModel(id, field, { mode: GridCellModes.Edit });
+        };
+
+        const updateRowParams: GridUpdateRowParams = {
+          rowId: id,
+          updatedRow: rowUpdate,
+          previousRow: row,
+        };
+        try {
+          await apiRef.current.dataSource.editRow(updateRowParams);
+          finishCellEditMode();
+        } catch {
+          handleError();
+        }
+      } else if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
           prevCellModesModel.current[id][field].mode = GridCellModes.Edit;
           // Revert the mode in the cellModesModel prop back to "edit"
@@ -444,7 +466,6 @@ export const useGridCellEditing = (
         };
 
         try {
-          const row = apiRef.current.getRow(id)!;
           Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);

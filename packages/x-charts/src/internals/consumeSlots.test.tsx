@@ -23,7 +23,7 @@ const SlotsWrapper = consumeSlots(
       root: ['wrapper-root', props.data, props.shouldOmit ? 'shouldOmit' : ''].join(' '),
     }),
   },
-  function SlotsWrapper(props: WrapperProps, ref: React.Ref<HTMLDivElement>) {
+  React.forwardRef(function SlotsWrapper(props: WrapperProps, ref: React.Ref<HTMLDivElement>) {
     return (
       <div ref={ref}>
         <div className="data">{props.data}</div>
@@ -31,7 +31,7 @@ const SlotsWrapper = consumeSlots(
         <div className="classes">{props.classes?.root}</div>
       </div>
     );
-  },
+  }),
 );
 
 describe('consumeSlots', () => {
@@ -91,9 +91,9 @@ describe('consumeSlots', () => {
     render(
       <SlotsWrapper
         slots={{
-          wrapper: (_, ref: React.Ref<HTMLDivElement>) => (
+          wrapper: React.forwardRef((_, ref: React.Ref<HTMLDivElement>) => (
             <div ref={ref}>props and ref arguments</div>
-          ),
+          )),
         }}
       />,
     );

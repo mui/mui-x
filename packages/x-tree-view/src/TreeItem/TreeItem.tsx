@@ -11,25 +11,20 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { TreeItemProps, TreeItemOwnerState } from './TreeItem.types';
-import {
-  useTreeItem,
-  UseTreeItemContentSlotOwnProps,
-  UseTreeItemLabelSlotOwnProps,
-  UseTreeItemStatus,
-} from '../useTreeItem';
-import { getTreeItemUtilityClass } from './treeItemClasses';
+import { TreeItemProps } from './TreeItem.types';
+import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
+import { getTreeItemUtilityClass, TreeItemClasses } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
 export const TreeItemRoot = styled('li', {
   name: 'MuiTreeItem',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({
   listStyle: 'none',
   margin: 0,
@@ -40,7 +35,6 @@ export const TreeItemRoot = styled('li', {
 export const TreeItemContent = styled('div', {
   name: 'MuiTreeItem',
   slot: 'Content',
-  overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
 })<{ status: UseTreeItemStatus }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
@@ -61,58 +55,45 @@ export const TreeItemContent = styled('div', {
       backgroundColor: 'transparent',
     },
   },
-  variants: [
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
-      style: {
-        opacity: (theme.vars || theme).palette.action.disabledOpacity,
-        backgroundColor: 'transparent',
-      },
-    },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.focused,
-      style: { backgroundColor: (theme.vars || theme).palette.action.focus },
-    },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected,
-      style: {
+  '&[data-disabled]': {
+    opacity: (theme.vars || theme).palette.action.disabledOpacity,
+    backgroundColor: 'transparent',
+  },
+  '&[data-focused]': {
+    backgroundColor: (theme.vars || theme).palette.action.focus,
+  },
+  '&[data-selected]': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
+        : alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+          ),
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
         backgroundColor: theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover': {
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
-            : alpha(
-                theme.palette.primary.main,
-                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-              ),
-          // Reset on touch devices, it doesn't add specificity
-          '@media (hover: none)': {
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
-              : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-          },
-        },
       },
     },
-    {
-      props: ({ status }: UseTreeItemContentSlotOwnProps) => status.selected && status.focused,
-      style: {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
-          : alpha(
-              theme.palette.primary.main,
-              theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-            ),
-      },
-    },
-  ],
+  },
+  '&[data-selected][data-focused]': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))`
+      : alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+        ),
+  },
 }));
 
 export const TreeItemLabel = styled('div', {
   name: 'MuiTreeItem',
   slot: 'Label',
-  overridesResolver: (props, styles) => styles.label,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'editable',
 })<{ editable?: boolean }>(({ theme }) => ({
   width: '100%',
@@ -135,7 +116,6 @@ export const TreeItemLabel = styled('div', {
 export const TreeItemIconContainer = styled('div', {
   name: 'MuiTreeItem',
   slot: 'IconContainer',
-  overridesResolver: (props, styles) => styles.iconContainer,
 })({
   width: 16,
   display: 'flex',
@@ -159,7 +139,6 @@ export const TreeItemGroupTransition = styled(Collapse, {
 export const TreeItemErrorContainer = styled('div', {
   name: 'MuiTreeItem',
   slot: 'ErrorIcon',
-  overridesResolver: (props, styles) => styles.errorIcon,
 })({
   position: 'absolute',
   right: -3,
@@ -172,7 +151,6 @@ export const TreeItemErrorContainer = styled('div', {
 export const TreeItemLoadingContainer = styled(CircularProgress, {
   name: 'MuiTreeItem',
   slot: 'LoadingIcon',
-  overridesResolver: (props, styles) => styles.loadingIcon,
 })({
   color: 'text.primary',
 });
@@ -191,24 +169,34 @@ export const TreeItemCheckbox = styled(
   {
     name: 'MuiTreeItem',
     slot: 'Checkbox',
-    overridesResolver: (props, styles) => styles.checkbox,
   },
 )({
   padding: 0,
 });
 
-const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classesProp: Partial<TreeItemClasses> | undefined) => {
+  const { classes: classesFromTreeView } = useTreeViewStyleContext();
+
+  const classes = {
+    ...classesProp,
+    root: clsx(classesProp?.root, classesFromTreeView.root),
+    content: clsx(classesProp?.content, classesFromTreeView.itemContent),
+    iconContainer: clsx(classesProp?.iconContainer, classesFromTreeView.itemIconContainer),
+    checkbox: clsx(classesProp?.checkbox, classesFromTreeView.itemCheckbox),
+    label: clsx(classesProp?.label, classesFromTreeView.itemLabel),
+    groupTransition: clsx(classesProp?.groupTransition, classesFromTreeView.itemGroupTransition),
+    labelInput: clsx(classesProp?.labelInput, classesFromTreeView.itemLabelInput),
+    dragAndDropOverlay: clsx(
+      classesProp?.dragAndDropOverlay,
+      classesFromTreeView.itemDragAndDropOverlay,
+    ),
+    errorIcon: clsx(classesProp?.errorIcon, classesFromTreeView.itemErrorIcon),
+    loadingIcon: clsx(classesProp?.loadingIcon, classesFromTreeView.itemLoadingIcon),
+  };
 
   const slots = {
     root: ['root'],
     content: ['content'],
-    expanded: ['expanded'],
-    editing: ['editing'],
-    editable: ['editable'],
-    selected: ['selected'],
-    focused: ['focused'],
-    disabled: ['disabled'],
     iconContainer: ['iconContainer'],
     checkbox: ['checkbox'],
     label: ['label'],
@@ -217,6 +205,12 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     dragAndDropOverlay: ['dragAndDropOverlay'],
     errorIcon: ['errorIcon'],
     loadingIcon: ['loadingIcon'],
+    expanded: ['expanded'],
+    editing: ['editing'],
+    editable: ['editable'],
+    selected: ['selected'],
+    focused: ['focused'],
+    disabled: ['disabled'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -242,7 +236,17 @@ export const TreeItem = React.forwardRef(function TreeItem(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
 
-  const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
+  const {
+    id,
+    itemId,
+    label,
+    disabled,
+    children,
+    slots = {},
+    slotProps = {},
+    classes: classesProp,
+    ...other
+  } = props;
 
   const {
     getContextProviderProps,
@@ -265,12 +269,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     disabled,
   });
 
-  const ownerState: TreeItemOwnerState = {
-    ...props,
-    ...status,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const Root: React.ElementType = slots.root ?? TreeItemRoot;
   const rootProps = useSlotProps({

@@ -21,7 +21,7 @@ import { spy } from 'sinon';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
     rows: [
@@ -124,6 +124,7 @@ describe('<DataGridPro /> - Events params', () => {
         hasFocus: false,
         tabIndex: -1,
       });
+      expect(eventArgs!.params.api).to.not.equal(null);
     });
 
     it('should include the correct params when grid is sorted', () => {
@@ -175,8 +176,6 @@ describe('<DataGridPro /> - Events params', () => {
   });
 
   describe('onCellClick', () => {
-    clock.withFakeTimers();
-
     let eventStack: string[] = [];
     const push = (name: string) => () => {
       eventStack.push(name);
@@ -282,8 +281,8 @@ describe('<DataGridPro /> - Events params', () => {
       expect(eventStack).to.deep.equal([]);
     });
 
-    it('should not be called when clicking in an action', () => {
-      render(
+    it('should not be called when clicking in an action', async () => {
+      const { user } = render(
         <TestEvents
           onRowClick={push('rowClick')}
           rows={[{ id: 0 }]}
@@ -296,7 +295,7 @@ describe('<DataGridPro /> - Events params', () => {
           ]}
         />,
       );
-      fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
+      await user.click(screen.getByRole('menuitem', { name: 'print' }));
       expect(eventStack).to.deep.equal([]);
     });
 

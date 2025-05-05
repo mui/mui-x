@@ -5,11 +5,10 @@ import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<MonthCalendar /> - Describe Value', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describeValue<PickerValue, 'calendar'>(MonthCalendar, () => ({
     render,
-    clock,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-02-01')],
     emptyValue: null,
@@ -19,9 +18,7 @@ describe('<MonthCalendar /> - Describe Value', () => {
         .find((cell) => cell.getAttribute('tabindex') === '0');
       expect(activeMonth).not.to.equal(null);
       if (expectedValue == null) {
-        expect(activeMonth).to.have.text(
-          adapterToUse.format(adapterToUse.date(), 'monthShort').toString(),
-        );
+        expect(activeMonth).to.have.attribute('aria-checked', 'false');
       } else {
         expect(activeMonth).to.have.text(
           adapterToUse.format(expectedValue, 'monthShort').toString(),

@@ -1,8 +1,8 @@
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useLineSeries, useLineSeriesContext } from './useLineSeries';
-import { LineSeriesType } from '../models';
+import { DefaultizedLineSeriesType, LineSeriesType } from '../models';
 import { LineChart } from '../LineChart';
 
 const mockSeries: LineSeriesType[] = [
@@ -57,13 +57,16 @@ describe('useLineSeries', () => {
 
   it('should return undefined series when invalid seriesIds are provided', () => {
     const message = [
-      `MUI X: The following ids provided to "useLineSeries" could not be found: "3".`,
+      `MUI X Charts: The following ids provided to "useLineSeries" could not be found: "3".`,
       `Make sure that they exist and their series are using the "line" series type.`,
     ].join('\n');
 
-    expect(() => renderHook(() => useLineSeries(['1', '3']), options)).toWarnDev(message);
+    let render: RenderHookResult<DefaultizedLineSeriesType[], unknown> | undefined;
 
-    const { result } = renderHook(() => useLineSeries(['1', '3']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(() => {
+      render = renderHook(() => useLineSeries(['1', '3']), options);
+    }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 });

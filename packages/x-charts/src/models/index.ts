@@ -7,6 +7,10 @@ export type {
   ScaleName,
   ContinuousScaleName,
   ChartsAxisData,
+  XAxis,
+  YAxis,
+  RadiusAxis,
+  RotationAxis,
 } from './axis';
 
 // Utils shared across the X packages

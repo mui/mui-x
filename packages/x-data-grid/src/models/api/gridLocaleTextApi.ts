@@ -1,14 +1,5 @@
 import * as React from 'react';
-import type { ComponentsPropsList } from '@mui/material/styles';
-import type { WrappedLabelDisplayedRows } from '../../components/GridPagination';
 import type { GridColDef } from '../colDef';
-
-export type MuiTablePaginationLocalizedProps = Omit<
-  ComponentsPropsList['MuiTablePagination'],
-  'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange' | 'labelDisplayedRows'
-> & {
-  labelDisplayedRows?: WrappedLabelDisplayedRows;
-};
 
 /**
  * Set the types of the texts in the grid.
@@ -19,6 +10,7 @@ export interface GridLocaleText {
   noResultsOverlayLabel: string;
   noColumnsOverlayLabel: string;
   noColumnsOverlayManageColumns: string;
+  emptyPivotOverlayLabel: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
@@ -43,23 +35,18 @@ export interface GridLocaleText {
   toolbarQuickFilterLabel: string;
   toolbarQuickFilterDeleteIconLabel: string;
 
-  // Prompt control toolbar field
-  toolbarPromptControlPlaceholder: string;
-  toolbarPromptControlWithRecordingPlaceholder: string;
-  toolbarPromptControlRecordingPlaceholder: string;
-  toolbarPromptControlLabel: string;
-  toolbarPromptControlRecordButtonDefaultLabel: string;
-  toolbarPromptControlRecordButtonActiveLabel: string;
-  toolbarPromptControlSendActionLabel: string;
-  toolbarPromptControlSendActionAriaLabel: string;
-  toolbarPromptControlErrorMessage: string;
-
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
   toolbarExportCSV: React.ReactNode;
   toolbarExportPrint: React.ReactNode;
   toolbarExportExcel: string;
+
+  // Toolbar pivot button
+  toolbarPivot: string;
+
+  // Toolbar AI Assistant button
+  toolbarAssistant: React.ReactNode;
 
   // Columns management text
   columnsManagementSearchTitle: string;
@@ -134,6 +121,7 @@ export interface GridLocaleText {
 
   // Column menu text
   columnMenuLabel: string;
+  columnMenuAriaLabel: (columnName: string) => string;
   columnMenuShowColumns: React.ReactNode;
   columnMenuManageColumns: React.ReactNode;
   columnMenuFilter: React.ReactNode;
@@ -141,6 +129,7 @@ export interface GridLocaleText {
   columnMenuUnsort: React.ReactNode;
   columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
+  columnMenuManagePivot: string;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
@@ -201,8 +190,82 @@ export interface GridLocaleText {
   aggregationFunctionLabelMax: string;
   aggregationFunctionLabelSize: string;
 
-  // Used core components translation keys
-  MuiTablePagination: MuiTablePaginationLocalizedProps;
+  // Pagination
+  paginationRowsPerPage: string;
+  paginationDisplayedRows: (params: {
+    from: number;
+    to: number;
+    count: number;
+    estimated: number | undefined;
+  }) => string;
+  paginationItemAriaLabel: (type: 'first' | 'last' | 'previous' | 'next') => string;
+
+  // Pivot
+  pivotToggleLabel: string;
+  pivotCloseButton: string;
+  pivotSearchButton: string;
+  pivotSearchControlPlaceholder: string;
+  pivotSearchControlLabel: string;
+  pivotSearchControlClear: string;
+  pivotNoFields: string;
+  pivotRows: string;
+  pivotColumns: string;
+  pivotValues: string;
+  pivotMenuMoveUp: string;
+  pivotMenuMoveDown: string;
+  pivotMenuMoveToTop: string;
+  pivotMenuMoveToBottom: string;
+  pivotMenuRows: string;
+  pivotMenuColumns: string;
+  pivotMenuValues: string;
+  pivotMenuOptions: string;
+  pivotMenuAddToRows: string;
+  pivotMenuAddToColumns: string;
+  pivotMenuAddToValues: string;
+  pivotMenuRemove: string;
+  pivotDragToRows: string;
+  pivotDragToColumns: string;
+  pivotDragToValues: string;
+  pivotYearColumnHeaderName: string;
+  pivotQuarterColumnHeaderName: string;
+
+  // AI Assistant panel
+  aiAssistantPanelTitle: string;
+  aiAssistantPanelClose: string;
+  aiAssistantPanelConversationHistory: string;
+  aiAssistantPanelNewConversation: string;
+  aiAssistantPanelEmptyConversation: string;
+  aiAssistantSuggestions: string;
+
+  // Prompt
+  promptRerun: string;
+  promptProcessing: string;
+  promptAppliedChanges: string;
+
+  // Prompt changes
+  promptChangeGroupDescription: (column: string) => string;
+  promptChangeAggregationLabel: (column: string, aggregation: string) => string;
+  promptChangeAggregationDescription: (column: string, aggregation: string) => string;
+  promptChangeFilterLabel: (column: string, operator: string, value: string) => string;
+  promptChangeFilterDescription: (column: string, operator: string, value: string) => string;
+  promptChangeSortDescription: (column: string, direction: string) => string;
+  promptChangePivotEnableLabel: string;
+  promptChangePivotEnableDescription: string;
+  promptChangePivotColumnsLabel: (count: number) => string;
+  promptChangePivotColumnsDescription: (column: string, direction: string) => string;
+  promptChangePivotRowsLabel: (count: number) => string;
+  promptChangePivotValuesLabel: (count: number) => string;
+  promptChangePivotValuesDescription: (column: string, aggregation: string) => string;
+
+  // Prompt field
+  promptFieldLabel: string;
+  promptFieldPlaceholder: string;
+  promptFieldPlaceholderWithRecording: string;
+  promptFieldPlaceholderListening: string;
+  promptFieldSpeechRecognitionNotSupported: string;
+  promptFieldSend: string;
+  promptFieldRecord: string;
+  promptFieldStopRecording: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

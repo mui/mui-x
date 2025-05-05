@@ -34,8 +34,6 @@ const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> |
   return composeClasses(slots, getDateTimeRangePickerToolbarUtilityClass, classes);
 };
 
-type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
-
 export interface DateTimeRangePickerToolbarProps
   extends BaseToolbarProps,
     ExportedDateTimeRangePickerToolbarProps {
@@ -52,7 +50,6 @@ export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToo
 const DateTimeRangePickerToolbarRoot = styled('div', {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickerToolbarOwnerState;
 }>({
@@ -63,7 +60,6 @@ const DateTimeRangePickerToolbarRoot = styled('div', {
 const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
-  overridesResolver: (_, styles) => styles.startToolbar,
 })<{ ownerState?: PickerToolbarOwnerState }>({
   borderBottom: 'none',
   paddingBottom: 0,
@@ -72,7 +68,6 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
 const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
-  overridesResolver: (_, styles) => styles.endToolbar,
 })<{ ownerState?: PickerToolbarOwnerState }>({});
 
 type DateTimeRangePickerToolbarComponent = ((
@@ -89,7 +84,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   const {
     className,
     classes: classesProp,
-    classes: inClasses,
     ampm,
     hidden,
     toolbarFormat,
@@ -99,10 +93,8 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     ...other
   } = props;
 
-  const { value, setValue, disabled, readOnly, view, setView, views } = usePickerContext<
-    PickerRangeValue,
-    DateTimeRangeViews
-  >();
+  const { value, setValue, disabled, readOnly, view, setView, views } =
+    usePickerContext<PickerRangeValue>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const { rangePosition, setRangePosition } = usePickerRangePositionContext();

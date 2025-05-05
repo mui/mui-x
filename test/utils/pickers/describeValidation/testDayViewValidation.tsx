@@ -3,10 +3,11 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
-  const { componentFamily, views, render, clock, withDate, withTime } = getOptions();
+  const { componentFamily, views, render, withDate, withTime } = getOptions();
 
   describeSkipIf(componentFamily === 'field' || !views.includes('day'))('day view:', () => {
     const defaultProps = {
@@ -48,7 +49,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
 
       setProps({ value: adapterToUse.date('2019-01-01') });
-      clock.runToLast();
 
       expect(screen.getByRole('gridcell', { name: '1' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '15' })).not.to.have.attribute('disabled');
@@ -69,75 +69,80 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByRole('gridcell', { name: '30' })).to.have.attribute('disabled');
 
       setProps({ value: adapterToUse.date('2018-02-01') });
-      clock.runToLast();
 
       expect(screen.getByRole('gridcell', { name: '1' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '15' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '28' })).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', () => {
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
-      }
-      const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
+    describe('with fake timers', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+      beforeEach(() => {
+        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+      });
+      afterEach(() => {
+        timer?.restore();
+      });
+      it('should apply disablePast', () => {
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={now} {...props} />;
+        }
+        const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
-      const tomorrow = adapterToUse.addDays(now, 1);
-      const yesterday = adapterToUse.addDays(now, -1);
+        const tomorrow = adapterToUse.addDays(now, 1);
+        const yesterday = adapterToUse.addDays(now, -1);
 
-      expect(
-        screen.getByRole('gridcell', { name: adapterToUse.format(now, 'dayOfMonth') }),
-      ).not.to.have.attribute('disabled');
+        expect(
+          screen.getByRole('gridcell', { name: adapterToUse.format(now, 'dayOfMonth') }),
+        ).not.to.have.attribute('disabled');
 
-      if (!adapterToUse.isSameMonth(now, tomorrow)) {
-        setProps({ value: tomorrow });
-        clock.runToLast();
-      }
-      expect(
-        screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
-      ).not.to.have.attribute('disabled');
+        if (!adapterToUse.isSameMonth(now, tomorrow)) {
+          setProps({ value: tomorrow });
+        }
+        expect(
+          screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
+        ).not.to.have.attribute('disabled');
 
-      if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
-        setProps({ value: yesterday });
-        clock.runToLast();
-      }
-      expect(
-        screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),
-      ).to.have.attribute('disabled');
-    });
+        if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
+          setProps({ value: yesterday });
+        }
+        expect(
+          screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),
+        ).to.have.attribute('disabled');
+      });
 
-    it('should apply disableFuture', () => {
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
-      }
-      const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
+      it('should apply disableFuture', () => {
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={now} {...props} />;
+        }
+        const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
-      const tomorrow = adapterToUse.addDays(now, 1);
-      const yesterday = adapterToUse.addDays(now, -1);
+        const tomorrow = adapterToUse.addDays(now, 1);
+        const yesterday = adapterToUse.addDays(now, -1);
 
-      expect(
-        screen.getByRole('gridcell', { name: adapterToUse.format(now, 'dayOfMonth') }),
-      ).not.to.have.attribute('disabled');
+        expect(
+          screen.getByRole('gridcell', { name: adapterToUse.format(now, 'dayOfMonth') }),
+        ).not.to.have.attribute('disabled');
 
-      if (!adapterToUse.isSameMonth(now, tomorrow)) {
-        setProps({ value: tomorrow });
-        clock.runToLast();
-      }
-      expect(
-        screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
-      ).to.have.attribute('disabled');
+        if (!adapterToUse.isSameMonth(now, tomorrow)) {
+          setProps({ value: tomorrow });
+        }
+        expect(
+          screen.getByRole('gridcell', { name: adapterToUse.format(tomorrow, 'dayOfMonth') }),
+        ).to.have.attribute('disabled');
 
-      if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
-        setProps({ value: yesterday });
-        clock.runToLast();
-      }
-      expect(
-        screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),
-      ).not.to.have.attribute('disabled');
+        if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
+          setProps({ value: yesterday });
+        }
+        expect(
+          screen.getByRole('gridcell', { name: adapterToUse.format(yesterday, 'dayOfMonth') }),
+        ).not.to.have.attribute('disabled');
+      });
     });
 
     it('should apply minDate', () => {

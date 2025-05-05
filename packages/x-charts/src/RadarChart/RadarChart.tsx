@@ -2,22 +2,37 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsLegend } from '../ChartsLegend';
-import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
-import { RadarGrid, RadarGridProps } from './RadarGrid/RadarGrid';
+import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesPlot } from './RadarSeriesPlot';
+import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
+import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
+import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
 
-export interface RadarChartSlots {}
-export interface RadarChartSlotProps {}
+export interface RadarChartSlots
+  extends ChartsTooltipSlots,
+    ChartsOverlaySlots,
+    ChartsLegendSlots {}
+
+export interface RadarChartSlotProps
+  extends ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps,
+    ChartsLegendSlotProps {}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
-    RadarGridProps,
+    Omit<RadarGridProps, 'classes'>,
+    Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * If `true`, the legend is not rendered.
@@ -47,8 +62,11 @@ const RadarChart = React.forwardRef(function RadarChart(
     radarGrid,
     overlayProps,
     legendProps,
+    highlight,
     children,
   } = useRadarChartProps(props);
+
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
     <RadarDataProvider {...radarDataProviderProps}>
@@ -57,8 +75,11 @@ const RadarChart = React.forwardRef(function RadarChart(
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
-          <RadarSeriesPlot />
+          <RadarSeriesArea />
+          {highlight === 'axis' && <RadarAxisHighlight />}
+          <RadarSeriesMarks />
           <ChartsOverlay {...overlayProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
       </ChartsWrapper>
@@ -83,6 +104,12 @@ RadarChart.propTypes = {
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
   /**
+   * If `true`, the charts will not listen to the mouse move event.
+   * It might break interactive features, but will improve performance.
+   * @default false
+   */
+  disableAxisListener: PropTypes.bool,
+  /**
    * The number of divisions in the radar grid.
    * @default 5
    */
@@ -95,6 +122,11 @@ RadarChart.propTypes = {
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
+  /**
+   * Indicates if the chart should highlight items per axis or per series.
+   * @default 'axis'
+   */
+  highlight: PropTypes.oneOf(['axis', 'none', 'series']),
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
@@ -113,6 +145,10 @@ RadarChart.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
@@ -159,6 +195,11 @@ RadarChart.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * The grid shape.
+   * @default 'sharp'
+   */
+  shape: PropTypes.oneOf(['circular', 'sharp']),
+  /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
@@ -173,6 +214,13 @@ RadarChart.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Get stripe fill color. Set it to `null` to remove stripes
+   * @param {number} index The index of the stripe band.
+   * @returns {string} The color to fill the stripe.
+   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'
+   */
+  stripeColor: PropTypes.func,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

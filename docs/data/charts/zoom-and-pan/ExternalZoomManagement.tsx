@@ -14,9 +14,7 @@ const initialZoomData: ZoomData[] = [
   },
 ];
 export default function ExternalZoomManagement() {
-  const apiRef = React.useRef(undefined) as React.MutableRefObject<
-    ChartPublicAPI<[any]> | undefined
-  >;
+  const apiRef = React.useRef<ChartPublicAPI<[any]>>(undefined);
   const [zoomData, setZoomData] = React.useState(initialZoomData);
 
   return (
@@ -25,7 +23,7 @@ export default function ExternalZoomManagement() {
         {...chartProps}
         initialZoom={initialZoomData}
         apiRef={apiRef}
-        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        onZoomChange={setZoomData}
         xAxis={[
           {
             zoom: true,

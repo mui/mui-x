@@ -4,9 +4,4 @@
   disableRowSelectionOnClick
   keepNonExistentRowsSelected
   showToolbar
-  slotProps={{
-    toolbar: {
-      showQuickFilter: true,
-    },
-  }}
 />

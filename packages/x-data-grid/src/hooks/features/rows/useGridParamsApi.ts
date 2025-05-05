@@ -75,7 +75,7 @@ export function useGridParamsApi(
         value,
         formattedValue: value,
         isEditable: false,
-        api: null as any,
+        api: apiRef.current,
       };
       if (colDef && colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
@@ -102,7 +102,7 @@ export function useGridParamsApi(
 
       return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, {
         colDef:
-          props.unstable_listView && props.unstable_listColumn?.field === field
+          props.listView && props.listViewColumn?.field === field
             ? gridListColumnSelector(apiRef)!
             : apiRef.current.getColumn(field),
         rowNode,
@@ -111,7 +111,7 @@ export function useGridParamsApi(
         cellMode,
       });
     },
-    [apiRef, props.unstable_listView, props.unstable_listColumn?.field],
+    [apiRef, props.listView, props.listViewColumn?.field],
   );
 
   const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(

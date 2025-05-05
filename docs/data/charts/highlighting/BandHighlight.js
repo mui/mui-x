@@ -9,18 +9,13 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const barChartsParams = {
-  xAxis: [
-    {
-      data: ['page A', 'page B', 'page C', 'page D', 'page E'],
-      scaleType: 'band',
-    },
-  ],
+  xAxis: [{ data: ['page A', 'page B', 'page C', 'page D', 'page E'] }],
   series: [
     { data: [2, 5, 3, 4, 1], stack: '1', label: 'Series x' },
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series y' },
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'Series z' },
   ],
-  margin: { top: 10, right: 10 },
+  margin: { right: 10 },
   sx: {
     [`& .${legendClasses.root}`]: {
       display: 'none',
@@ -57,7 +52,7 @@ export default function BandHighlight() {
         sx={{ m: 2 }}
       >
         <FormControl>
-          <FormLabel id="x-highlight-label">x highligh</FormLabel>
+          <FormLabel id="x-highlight-label">x highlight</FormLabel>
           <RadioGroup
             aria-labelledby="x-highlight-label"
             value={xHighlight}
@@ -69,7 +64,7 @@ export default function BandHighlight() {
           </RadioGroup>
         </FormControl>
         <FormControl>
-          <FormLabel id="y-highlight-label">y highligh</FormLabel>
+          <FormLabel id="y-highlight-label">y highlight</FormLabel>
           <RadioGroup
             aria-labelledby="y-highlight-label"
             value={yHighlight}

@@ -48,7 +48,6 @@ export function FetchChildren() {
   return (
     <RichTreeViewPro
       items={[]}
-      experimentalFeatures={{ lazyLoading: true }}
       dataSource={{
         getChildrenCount: (item) => item?.childrenCount,
         getTreeItems: fetchData,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridEventListener,
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiMethod,
   gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
@@ -60,7 +60,6 @@ export const useGridRowGrouping = (
     | 'onRowGroupingModelChange'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
     | 'slotProps'
@@ -284,12 +283,9 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
-  useGridApiEventHandler(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
-  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
-  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () =>
-    apiRef.current.dataSource.fetchRows(),
-  );
+  useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridEvent(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
+  useGridEvent(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
 
   /*
    * EFFECTS
