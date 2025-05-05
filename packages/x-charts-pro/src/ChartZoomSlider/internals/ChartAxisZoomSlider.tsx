@@ -15,7 +15,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { ZOOM_SLIDER_SIZE } from '@mui/x-charts/constants';
+import { ZOOM_SLIDER_MARGIN } from '@mui/x-charts/constants';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -54,8 +54,14 @@ interface ChartZoomSliderProps {
 
 const ZOOM_SLIDER_BACKGROUND_SIZE = 8;
 const ZOOM_SLIDER_FOREGROUND_SIZE = 10;
-const ZOOM_SLIDER_HANDLE_HEIGHT = ZOOM_SLIDER_SIZE;
+const ZOOM_SLIDER_HANDLE_HEIGHT = 20;
 const ZOOM_SLIDER_HANDLE_WIDTH = 10;
+const ZOOM_SLIDER_SIZE = Math.max(
+  ZOOM_SLIDER_BACKGROUND_SIZE,
+  ZOOM_SLIDER_FOREGROUND_SIZE,
+  ZOOM_SLIDER_HANDLE_HEIGHT,
+  ZOOM_SLIDER_HANDLE_WIDTH,
+);
 
 /**
  * Renders the zoom slider for a specific axis.
@@ -88,8 +94,8 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
     x = drawingArea.left;
     y =
       axis.position === 'bottom'
-        ? drawingArea.top + drawingArea.height + axis.offset + axisSize
-        : drawingArea.top - axis.offset - axisSize - ZOOM_SLIDER_SIZE;
+        ? drawingArea.top + drawingArea.height + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
+        : drawingArea.top - axis.offset - axisSize - ZOOM_SLIDER_SIZE - ZOOM_SLIDER_MARGIN;
     reverse = axis.reverse ?? false;
   } else {
     const axis = yAxis[axisId];
@@ -102,13 +108,13 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
 
     x =
       axis.position === 'right'
-        ? drawingArea.left + drawingArea.width + axis.offset + axisSize
-        : drawingArea.left - axis.offset - axisSize - ZOOM_SLIDER_SIZE;
+        ? drawingArea.left + drawingArea.width + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
+        : drawingArea.left - axis.offset - axisSize - ZOOM_SLIDER_SIZE - ZOOM_SLIDER_MARGIN;
     y = drawingArea.top;
     reverse = axis.reverse ?? false;
   }
 
-  const backgroundRectOffset = (ZOOM_SLIDER_FOREGROUND_SIZE - ZOOM_SLIDER_BACKGROUND_SIZE) / 2;
+  const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_BACKGROUND_SIZE) / 2;
 
   return (
     <g transform={`translate(${x} ${y})`}>
@@ -338,9 +344,9 @@ function ChartAxisZoomSliderSpan({
     previewHeight = size;
 
     startHandleX = (zoomData.start / 100) * drawingArea.width;
-    startHandleY = (size - previewHandleHeight) / 2;
+    startHandleY = 0;
     endHandleX = (zoomData.end / 100) * drawingArea.width;
-    endHandleY = (size - previewHandleHeight) / 2;
+    endHandleY = 0;
 
     if (reverse) {
       previewX = drawingArea.width - previewX - previewWidth;
@@ -357,9 +363,9 @@ function ChartAxisZoomSliderSpan({
     previewWidth = size;
     previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / 100;
 
-    startHandleX = (size - previewHandleWidth) / 2;
+    startHandleX = 0;
     startHandleY = drawingArea.height - (zoomData.start / 100) * drawingArea.height;
-    endHandleX = (size - previewHandleWidth) / 2;
+    endHandleX = 0;
     endHandleY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
 
     if (reverse) {
@@ -373,12 +379,14 @@ function ChartAxisZoomSliderSpan({
     endHandleY -= previewHandleHeight / 2;
   }
 
+  const previewOffset = (ZOOM_SLIDER_HANDLE_HEIGHT - ZOOM_SLIDER_FOREGROUND_SIZE) / 2;
+
   return (
     <React.Fragment>
       <ZoomRangePreviewRect
         ref={activePreviewRectRef}
-        x={previewX}
-        y={previewY}
+        x={previewX + (axisDirection === 'x' ? 0 : previewOffset)}
+        y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
         width={previewWidth}
         height={previewHeight}
       />
