@@ -20,7 +20,7 @@ export default function HighlightFunnel() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              } satisfies HighlightScope,
             },
           ]}
           {...funnelChartParams}
@@ -33,7 +33,7 @@ export default function HighlightFunnel() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              } satisfies HighlightScope,
             },
           ]}
           {...funnelChartParams}
