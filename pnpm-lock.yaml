@@ -611,8 +611,8 @@ importers:
         specifier: ^7.56.1
         version: 7.56.1(react@19.0.0)
       react-router:
-        specifier: ^7.5.2
-        version: 7.5.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ^7.5.3
+        version: 7.5.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-runner:
         specifier: ^1.0.5
         version: 1.0.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1695,8 +1695,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
       react-router:
-        specifier: ^7.5.2
-        version: 7.5.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ^7.5.3
+        version: 7.5.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1782,8 +1782,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
       react-router:
-        specifier: ^7.5.2
-        version: 7.5.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ^7.5.3
+        version: 7.5.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1917,8 +1917,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
       react-router:
-        specifier: ^7.5.2
-        version: 7.5.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ^7.5.3
+        version: 7.5.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -9129,8 +9129,8 @@ packages:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
 
-  react-router@7.5.2:
-    resolution: {integrity: sha512-9Rw8r199klMnlGZ8VAsV/I8WrIF6IyJ90JQUdboupx1cdkgYqwnrYjH+I/nY/7cA1X5zia4mDJqH36npP7sxGQ==}
+  react-router@7.5.3:
+    resolution: {integrity: sha512-3iUDM4/fZCQ89SXlDa+Ph3MevBrozBAI655OAfWQlTm9nBR0IKlrmNwFow5lPHttbwvITZfkeeeZFP6zt3F7pw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -19232,7 +19232,7 @@ snapshots:
 
   react-refresh@0.17.0: {}
 
-  react-router@7.5.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  react-router@7.5.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       cookie: 1.0.2
       react: 19.0.0
