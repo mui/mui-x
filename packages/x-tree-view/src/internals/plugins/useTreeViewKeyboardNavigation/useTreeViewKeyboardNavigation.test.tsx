@@ -139,7 +139,7 @@ describeTreeView<
         expect(view.getFocusedItemId()).to.equal('1.1');
       });
 
-      it("should move the focus to the last visible and enabled descendant of the previous sibling", () => {
+      it('should move the focus to the last visible and enabled descendant of the previous sibling', () => {
         const view = render({
           items: [
             {
@@ -148,11 +148,7 @@ describeTreeView<
                 { id: '1-1' },
                 {
                   id: '1-2',
-                  children: [
-                    { id: '1-2-1' },
-                    { id: '1-2-2' },
-                    { id: '1-2-3' },
-                  ],
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3' }],
                 },
               ],
             },
@@ -160,7 +156,7 @@ describeTreeView<
           ],
           defaultExpandedItems: ['1', '1-2'],
         });
-      
+
         act(() => {
           view.getItemRoot('2').focus();
         });
@@ -168,7 +164,7 @@ describeTreeView<
         expect(view.getFocusedItemId()).to.equal('1-2-3');
       });
 
-      it("should move the focus to the last visible descendant of the previous sibling, skipping disabled items", () => {
+      it('should move the focus to the last visible descendant of the previous sibling, skipping disabled items', () => {
         const view = render({
           items: [
             {
@@ -177,11 +173,7 @@ describeTreeView<
                 { id: '1-1' },
                 {
                   id: '1-2',
-                  children: [
-                    { id: '1-2-1' },
-                    { id: '1-2-2' },
-                    { id: '1-2-3', disabled: true},
-                  ],
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3', disabled: true }],
                 },
               ],
             },
@@ -189,12 +181,12 @@ describeTreeView<
           ],
           defaultExpandedItems: ['1', '1-2'],
         });
-      
+
         act(() => {
           view.getItemRoot('2').focus();
         });
         fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
-              expect(view.getFocusedItemId()).to.equal('1-2-2');
+        expect(view.getFocusedItemId()).to.equal('1-2-2');
       });
 
       it('should skip disabled items', () => {
