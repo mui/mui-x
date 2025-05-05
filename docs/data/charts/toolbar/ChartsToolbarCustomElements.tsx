@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { ChartsBaseIconButtonProps } from '@mui/x-charts/models';
+import { ChartBaseIconButtonProps } from '@mui/x-charts/models';
 import Button from '@mui/material/Button';
 import { chartsToolbarClasses } from '@mui/x-charts/Toolbar';
 import { data } from './randomData';
@@ -21,7 +21,7 @@ const params = {
 
 const CustomIconButton = React.forwardRef<
   HTMLButtonElement,
-  ChartsBaseIconButtonProps
+  ChartBaseIconButtonProps
 >(function CustomIconButton(props, ref) {
   return <Button ref={ref} {...props} variant="contained" />;
 });
