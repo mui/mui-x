@@ -8,8 +8,7 @@
       "mocha",
       "node"
     ],
-    "skipLibCheck": true,
-    "strict": true
+    "skipLibCheck": true
   },
   "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
 }
