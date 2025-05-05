@@ -15,7 +15,6 @@ import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInte
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
-import { useChartModels } from './useChartModels';
 
 let globalId = 0;
 
@@ -58,7 +57,6 @@ export function useCharts<
   });
   pluginParams.id = pluginParams.id ?? chartId;
 
-  const models = useChartModels<TSignatures>(plugins, pluginParams);
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
@@ -94,11 +92,10 @@ export function useCharts<
       svgRef: innerSvgRef,
       chartRootRef: innerChartRootRef,
       seriesConfig,
-      models,
     });
 
     if (pluginResponse.publicAPI) {
-      Object.assign(publicAPI, pluginResponse.publicAPI);
+      Object.assign(publicAPI.current, pluginResponse.publicAPI);
     }
 
     if (pluginResponse.instance) {
@@ -112,7 +109,7 @@ export function useCharts<
     () => ({
       store: storeRef.current as ChartStore<TSignaturesWithCorePluginSignatures> &
         UseChartInteractionState,
-      publicAPI,
+      publicAPI: publicAPI.current,
       instance,
       svgRef: innerSvgRef,
       chartRootRef: innerChartRootRef,
@@ -123,18 +120,21 @@ export function useCharts<
   return { contextValue };
 }
 
+function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
+  if (inputApiRef.current == null) {
+    inputApiRef.current = {} as T;
+  }
+  return inputApiRef as React.RefObject<T>;
+}
+
 export function useChartApiInitialization<T>(
   inputApiRef: React.RefObject<T | undefined> | undefined,
-): T {
+): React.RefObject<T> {
   const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
   if (inputApiRef) {
-    if (inputApiRef.current == null) {
-      // eslint-disable-next-line react-compiler/react-compiler
-      inputApiRef.current = {} as T;
-    }
-    return inputApiRef.current;
+    return initializeInputApiRef(inputApiRef);
   }
 
-  return fallbackPublicApiRef.current;
+  return fallbackPublicApiRef;
 }
