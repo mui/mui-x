@@ -27,7 +27,7 @@ const BackgroundRect = styled('rect')(({ theme }) => ({
     fill:
       theme.palette.mode === 'dark'
         ? (theme.vars || theme).palette.grey[800]
-        : (theme.vars || theme).palette.grey[400],
+        : (theme.vars || theme).palette.grey[300],
   },
 }));
 
@@ -127,7 +127,6 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         ry={ZOOM_SLIDER_BACKGROUND_SIZE / 2}
       />
       <ChartAxisZoomSliderSpan
-        size={ZOOM_SLIDER_FOREGROUND_SIZE}
         zoomData={zoomData}
         axisId={axisId}
         axisDirection={axisDirection}
@@ -138,13 +137,11 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
 }
 
 function ChartAxisZoomSliderSpan({
-  size,
   axisId,
   axisDirection,
   zoomData,
   reverse,
 }: {
-  size: number;
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   zoomData: ZoomData;
@@ -341,7 +338,7 @@ function ChartAxisZoomSliderSpan({
     previewX = (zoomData.start / 100) * drawingArea.width;
     previewY = 0;
     previewWidth = (drawingArea.width * (zoomData.end - zoomData.start)) / 100;
-    previewHeight = size;
+    previewHeight = ZOOM_SLIDER_FOREGROUND_SIZE;
 
     startHandleX = (zoomData.start / 100) * drawingArea.width;
     startHandleY = 0;
@@ -360,7 +357,7 @@ function ChartAxisZoomSliderSpan({
   } else {
     previewX = 0;
     previewY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
-    previewWidth = size;
+    previewWidth = ZOOM_SLIDER_FOREGROUND_SIZE;
     previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / 100;
 
     startHandleX = 0;
