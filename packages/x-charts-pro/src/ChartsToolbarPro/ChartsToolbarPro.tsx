@@ -6,12 +6,13 @@ import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInButton } from './ChartsToolbarZoomInButton';
 import { ChartsToolbarZoomOutButton } from './ChartsToolbarZoomOutButton';
+import { ChartsSlotsPro } from '../internals/material';
 
 /**
  * The chart toolbar component for the pro package.
  */
 export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarProps>) {
-  const { slots, slotProps } = useChartSlots();
+  const { slots, slotProps } = useChartSlots<ChartsSlotsPro>();
   const { store } = useChartContext();
   const { localeText } = useChartsLocalization();
   const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
