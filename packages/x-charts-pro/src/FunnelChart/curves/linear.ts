@@ -90,9 +90,14 @@ export class Linear implements CurveGenerator {
 
     // Add gaps where they are needed.
     this.points = this.points.map((point, index) => {
-      const slopeStart = this.points.at(index <= 1 ? 0 : 2)!;
-      const slopeEnd = this.points.at(index <= 1 ? 1 : 3)!;
-      const yGetter = yFromX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+      const slopeStart = this.points.at(index <= 1 ? 0 : 3)!;
+      const slopeEnd = this.points.at(index <= 1 ? 1 : 2)!;
+      const yGetter = yFromX(
+        slopeStart.x - this.gap,
+        slopeStart.y,
+        slopeEnd.x - this.gap,
+        slopeEnd.y,
+      );
       if (this.isHorizontal) {
         const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
 
@@ -102,7 +107,12 @@ export class Linear implements CurveGenerator {
         };
       }
 
-      const xGetter = xFromY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+      const xGetter = xFromY(
+        slopeStart.x,
+        slopeStart.y - this.gap,
+        slopeEnd.x,
+        slopeEnd.y - this.gap,
+      );
       const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
       return {
         x: xGetter(yGap),
