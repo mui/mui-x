@@ -3,12 +3,11 @@
 import * as React from 'react';
 import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import { useChartContext } from '@mui/x-charts/internals';
-import { type ChartsSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
-import { materialSlots } from '../../internals/material';
+import { ChartsSlotsPro, materialSlots } from '../../internals/material';
 import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 
-type ChartsToolbarZoomInButtonSlots = Partial<Pick<ChartsSlots, 'baseTooltip' | 'zoomInIcon'>>;
+type ChartsToolbarZoomInButtonSlots = Partial<Pick<ChartsSlotsPro, 'baseTooltip' | 'zoomInIcon'>>;
 
 type ChartsToolbarZoomInButtonSlotProps = {
   [K in keyof Required<ChartsToolbarZoomInButtonSlots>]: React.ComponentProps<

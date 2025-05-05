@@ -22,6 +22,4 @@ export type {
   ChartBaseIconProps,
   ChartsIconSlots,
   ChartsBaseSlots,
-  ChartsBaseSlotsExtension,
-  ChartsIconSlotsExtension,
 } from './slots';
