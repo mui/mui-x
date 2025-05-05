@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["mocha", "node"]
+    "types": ["mocha"]
   },
   "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"],
   "exclude": ["es", "lib", "jest.config.ts"]
