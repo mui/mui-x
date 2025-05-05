@@ -1,14 +1,14 @@
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import * as React from 'react';
 
-const dataLength = 790;
+const dataLength = 800;
 const data = Array.from({ length: dataLength }).map((_, i) => ({
   x: i,
   y: 50 + Math.sin(i / 5) * 25,
 }));
 const series2Data = Array.from({ length: dataLength }).map((_, i) => ({
-  x: i + 10,
-  y: 50 + Math.sin(i / 5) * 25,
+  x: i,
+  y: 50 + Math.sin(i / 10) * 25,
 }));
 
 const xData = data.map((d) => d.x);
