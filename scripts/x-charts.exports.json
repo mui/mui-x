@@ -428,7 +428,5 @@
   { "name": "YAxis", "kind": "TypeAlias" },
   { "name": "yellowPalette", "kind": "Variable" },
   { "name": "yellowPaletteDark", "kind": "Variable" },
-  { "name": "yellowPaletteLight", "kind": "Variable" },
-  { "name": "ZOOM_SLIDER_MARGIN", "kind": "Variable" },
-  { "name": "ZOOM_SLIDER_SIZE", "kind": "Variable" }
+  { "name": "yellowPaletteLight", "kind": "Variable" }
 ]

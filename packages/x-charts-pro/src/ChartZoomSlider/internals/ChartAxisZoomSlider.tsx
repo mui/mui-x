@@ -11,11 +11,11 @@ import {
   useSelector,
   useStore,
   ZoomData,
+  ZOOM_SLIDER_MARGIN,
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { ZOOM_SLIDER_MARGIN } from '@mui/x-charts/constants';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,

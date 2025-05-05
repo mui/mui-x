@@ -1,3 +1,4 @@
+import { ZOOM_SLIDER_SIZE } from '../../../constants';
 import { defaultizeZoom } from './defaultizeZoom';
 import { ZoomOptions } from './zoom.types';
 import {
@@ -6,7 +7,6 @@ import {
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
-  ZOOM_SLIDER_SIZE,
 } from '../../../../constants';
 import { XAxis, YAxis } from '../../../../models';
 import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';

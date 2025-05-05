@@ -1,4 +1,4 @@
-import { ZOOM_SLIDER_SIZE } from '../../../../constants';
+import { ZOOM_SLIDER_SIZE } from '../../../constants';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
