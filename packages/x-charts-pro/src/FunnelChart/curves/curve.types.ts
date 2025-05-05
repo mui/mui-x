@@ -31,7 +31,7 @@ export type CurveOptions = {
    */
   max?: Point;
 };
-export type FunnelCurveType = 'linear' | 'step' | 'bump' | 'pyramid';
+export type FunnelCurveType = 'linear' | 'step' | 'bump' | 'pyramid' | 'step-pyramid';
 
 export type Point = {
   x: number;

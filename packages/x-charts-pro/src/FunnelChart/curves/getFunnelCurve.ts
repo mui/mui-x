@@ -4,6 +4,7 @@ import { Step } from './step';
 import { Linear } from './linear';
 import { Bump } from './bump';
 import { Pyramid } from './pyramid';
+import { StepPyramid } from './step-pyramid';
 
 const curveConstructor = (curve: FunnelCurveType | undefined) => {
   if (curve === 'step') {
@@ -14,6 +15,9 @@ const curveConstructor = (curve: FunnelCurveType | undefined) => {
   }
   if (curve === 'pyramid') {
     return Pyramid;
+  }
+  if (curve === 'step-pyramid') {
+    return StepPyramid;
   }
   return Linear;
 };

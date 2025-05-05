@@ -4,7 +4,7 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
-const curveTypes = ['bump', 'linear', 'step', 'pyramid'] as const;
+const curveTypes = ['bump', 'linear', 'step', 'pyramid', 'step-pyramid'] as const;
 
 export default function FunnelCurves() {
   return (
