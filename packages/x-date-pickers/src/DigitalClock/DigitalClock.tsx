@@ -9,6 +9,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -213,7 +214,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     setValueAndGoToNextView(newValue, 'finish');
   });
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (containerRef.current === null) {
       return;
     }
