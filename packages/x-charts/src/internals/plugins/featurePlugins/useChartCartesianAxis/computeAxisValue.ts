@@ -7,6 +7,9 @@ import {
   isBandScaleConfig,
   isPointScaleConfig,
   AxisId,
+  DefaultedXAxis,
+  DefaultedYAxis,
+  DefaultedAxis,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -16,7 +19,7 @@ import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { DefaultizedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
@@ -50,7 +53,7 @@ const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 export type ComputeResult<T extends ChartsAxisProps> = {
-  axis: DefaultizedAxisConfig<T>;
+  axis: ComputedAxisConfig<T>;
   axisIds: string[];
 };
 
@@ -65,13 +68,13 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
 
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    axis?: DefaultedYAxis[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+    axis?: DefaultedXAxis[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsXAxisProps>;
@@ -85,7 +88,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomOptions,
   getFilters,
 }: ComputeCommonParams<T> & {
-  axis?: AxisConfig[];
+  axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
 }) {
   if (allAxis === undefined) {
@@ -102,9 +105,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
     allAxis[0].id,
   );
 
-  const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
+  const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
