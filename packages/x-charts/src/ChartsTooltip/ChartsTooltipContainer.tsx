@@ -6,7 +6,8 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
-import { useSvgRef } from '../hooks/useSvgRef';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { PointerGestureEventData } from '@web-gestures/core';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
@@ -16,6 +17,7 @@ import {
   selectorChartsInteractionAxisTooltip,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useChartContext } from '../context/ChartProvider';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 
@@ -60,8 +62,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     name: 'MuiChartsTooltipContainer',
   });
   const { trigger = 'axis', classes, children, ...other } = props;
+  const { instance } = useChartContext();
 
-  const svgRef = useSvgRef();
   const pointerType = usePointerType();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
@@ -70,7 +72,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const axisSystem = useAxisSystem();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const isOpen = useSelector(
+  const hasData = useSelector(
     store,
     trigger === 'axis'
       ? (axisSystem === 'polar' && selectorChartsInteractionPolarAxisTooltip) ||
@@ -79,26 +81,28 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       : selectorChartsInteractionItemIsDefined,
   );
 
-  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
+  const popperOpen = pointerType !== null && hasData; // tooltipHasData;
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
+    const update = rafThrottle(() => popperRef.current?.update());
 
-    const handleMove = (event: PointerEvent) => {
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: event.clientX, y: event.clientY };
-      popperRef.current?.update();
+      positionRef.current = { x: event.detail.centroid.x, y: event.detail.centroid.y };
+      update();
     };
 
-    element.addEventListener('pointermove', handleMove);
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const quickPressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
-      element.removeEventListener('pointermove', handleMove);
+      moveHandler.cleanup();
+      panHandler.cleanup();
+      quickPressHandler.cleanup();
+      update.clear();
     };
-  }, [svgRef, positionRef]);
+  }, [positionRef, instance]);
 
   const anchorEl = React.useMemo(
     () => ({

@@ -18,3 +18,6 @@ window.getComputedStyle = function getComputedStyleMock() {
 };
 
 module.exports = { ...coreExports, mochaHooks };
+
+globalThis.Event = window.Event;
+globalThis.CustomEvent = window.CustomEvent;
