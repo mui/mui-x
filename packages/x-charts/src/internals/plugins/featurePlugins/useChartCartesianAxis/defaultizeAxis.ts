@@ -6,6 +6,7 @@ import {
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
+  ZOOM_SLIDER_SIZE,
 } from '../../../../constants';
 import { XAxis, YAxis } from '../../../../models';
 import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
@@ -52,7 +53,7 @@ export function defaultizeXAxis(
       offsets[position] += sharedConfig.height;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += sharedConfig.zoom.slider.size;
+        offsets[position] += ZOOM_SLIDER_SIZE;
       }
     }
 
@@ -112,7 +113,7 @@ export function defaultizeYAxis(
       offsets[position] += sharedConfig.width;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += sharedConfig.zoom.slider.size;
+        offsets[position] += ZOOM_SLIDER_SIZE;
       }
     }
 

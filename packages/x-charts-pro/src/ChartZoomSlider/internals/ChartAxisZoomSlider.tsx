@@ -15,6 +15,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { ZOOM_SLIDER_SIZE } from '@mui/x-charts/constants';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -25,9 +26,8 @@ const BackgroundRect = styled('rect')(({ theme }) => ({
   '&': {
     fill:
       theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[900]
-        : (theme.vars || theme).palette.grey[300],
-    opacity: 0.8,
+        ? (theme.vars || theme).palette.grey[800]
+        : (theme.vars || theme).palette.grey[400],
   },
 }));
 
@@ -35,14 +35,11 @@ const ZoomRangePreviewRect = styled('rect')(({ theme }) => ({
   '&': {
     fill:
       theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[800]
-        : (theme.vars || theme).palette.grey[500],
-    opacity: 0.4,
+        ? (theme.vars || theme).palette.grey[500]
+        : (theme.vars || theme).palette.grey[600],
     cursor: 'grab',
   },
 }));
-
-const PREVIEW_HANDLE_WIDTH = 4;
 
 interface ChartZoomSliderProps {
   /**
@@ -53,18 +50,18 @@ interface ChartZoomSliderProps {
    * The direction of the axis.
    */
   axisDirection: 'x' | 'y';
-  /**
-   * The size of the overview.
-   * This represents the height if the axis is an x-axis, or the width if the axis is a y-axis.
-   */
-  size: number;
 }
+
+const ZOOM_SLIDER_BACKGROUND_SIZE = 8;
+const ZOOM_SLIDER_FOREGROUND_SIZE = 10;
+const ZOOM_SLIDER_HANDLE_HEIGHT = ZOOM_SLIDER_SIZE;
+const ZOOM_SLIDER_HANDLE_WIDTH = 10;
 
 /**
  * Renders the zoom slider for a specific axis.
  * @internal
  */
-export function ChartAxisZoomSlider({ size, axisDirection, axisId }: ChartZoomSliderProps) {
+export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
@@ -92,7 +89,7 @@ export function ChartAxisZoomSlider({ size, axisDirection, axisId }: ChartZoomSl
     y =
       axis.position === 'bottom'
         ? drawingArea.top + drawingArea.height + axis.offset + axisSize
-        : drawingArea.top - axis.offset - axisSize - size;
+        : drawingArea.top - axis.offset - axisSize - ZOOM_SLIDER_SIZE;
     reverse = axis.reverse ?? false;
   } else {
     const axis = yAxis[axisId];
@@ -106,19 +103,25 @@ export function ChartAxisZoomSlider({ size, axisDirection, axisId }: ChartZoomSl
     x =
       axis.position === 'right'
         ? drawingArea.left + drawingArea.width + axis.offset + axisSize
-        : drawingArea.left - axis.offset - axisSize - size;
+        : drawingArea.left - axis.offset - axisSize - ZOOM_SLIDER_SIZE;
     y = drawingArea.top;
     reverse = axis.reverse ?? false;
   }
 
+  const backgroundRectOffset = (ZOOM_SLIDER_FOREGROUND_SIZE - ZOOM_SLIDER_BACKGROUND_SIZE) / 2;
+
   return (
     <g transform={`translate(${x} ${y})`}>
       <BackgroundRect
-        height={axisDirection === 'x' ? size : drawingArea.height}
-        width={axisDirection === 'x' ? drawingArea.width : size}
+        x={axisDirection === 'x' ? 0 : backgroundRectOffset}
+        y={axisDirection === 'x' ? backgroundRectOffset : 0}
+        height={axisDirection === 'x' ? ZOOM_SLIDER_BACKGROUND_SIZE : drawingArea.height}
+        width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_BACKGROUND_SIZE}
+        rx={ZOOM_SLIDER_BACKGROUND_SIZE / 2}
+        ry={ZOOM_SLIDER_BACKGROUND_SIZE / 2}
       />
       <ChartAxisZoomSliderSpan
-        size={size}
+        size={ZOOM_SLIDER_FOREGROUND_SIZE}
         zoomData={zoomData}
         axisId={axisId}
         axisDirection={axisDirection}
@@ -145,8 +148,10 @@ function ChartAxisZoomSliderSpan({
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
-  const previewHandleWidth = axisDirection === 'x' ? PREVIEW_HANDLE_WIDTH : 0.6 * size;
-  const previewHandleHeight = axisDirection === 'x' ? 0.6 * size : PREVIEW_HANDLE_WIDTH;
+  const previewHandleWidth =
+    axisDirection === 'x' ? ZOOM_SLIDER_HANDLE_WIDTH : ZOOM_SLIDER_HANDLE_HEIGHT;
+  const previewHandleHeight =
+    axisDirection === 'x' ? ZOOM_SLIDER_HANDLE_HEIGHT : ZOOM_SLIDER_HANDLE_WIDTH;
 
   React.useEffect(() => {
     const activePreviewRect = activePreviewRectRef.current;

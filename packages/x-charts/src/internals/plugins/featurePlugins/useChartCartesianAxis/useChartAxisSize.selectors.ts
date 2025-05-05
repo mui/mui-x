@@ -1,3 +1,4 @@
+import { ZOOM_SLIDER_SIZE } from '../../../../constants';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -8,7 +9,7 @@ export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis],
   (yAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'left'
-        ? acc + (axis.width || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0)
+        ? acc + (axis.width || 0) + (axis.zoom?.slider.enabled ? ZOOM_SLIDER_SIZE : 0)
         : acc,
     0,
   ),
@@ -18,7 +19,7 @@ export const selectorChartRightAxisSize = createSelector([selectorChartRawYAxis]
   (yAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'right'
-        ? acc + (axis.width || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0)
+        ? acc + (axis.width || 0) + (axis.zoom?.slider.enabled ? ZOOM_SLIDER_SIZE : 0)
         : acc,
     0,
   ),
@@ -28,7 +29,7 @@ export const selectorChartTopAxisSize = createSelector([selectorChartRawXAxis], 
   (xAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'top'
-        ? acc + (axis.height || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0)
+        ? acc + (axis.height || 0) + (axis.zoom?.slider.enabled ? ZOOM_SLIDER_SIZE : 0)
         : acc,
     0,
   ),
@@ -38,7 +39,7 @@ export const selectorChartBottomAxisSize = createSelector([selectorChartRawXAxis
   (xAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'bottom'
-        ? acc + (axis.height || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0)
+        ? acc + (axis.height || 0) + (axis.zoom?.slider.enabled ? ZOOM_SLIDER_SIZE : 0)
         : acc,
     0,
   ),
