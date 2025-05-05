@@ -81,7 +81,7 @@ The following example shows a white line if this page is in dark mode, or a blac
 
 ## Line Width
 
-The lines in a sparkline chart have a stroke width of 2px by default.
+Lines in Sparkline have a stroke width of 2px by default.
 When clipping is enabled and the line is drawn on the edge of the chart, it might be partially clipped.
 
 By default, the sparkline has clipping enabled, but the `clipAreaOffset` prop defaults to 1 to prevent clipping.

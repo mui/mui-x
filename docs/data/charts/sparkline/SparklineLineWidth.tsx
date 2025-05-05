@@ -52,10 +52,12 @@ export default function SparklineLineWidth() {
 
         <FormControlLabel
           value={clipAreaOffset}
+          disabled={disableClipping}
           control={
             <Slider
               aria-label="Clip Area Offset"
               valueLabelDisplay="auto"
+              disabled={disableClipping}
               step={1}
               marks
               min={0}
