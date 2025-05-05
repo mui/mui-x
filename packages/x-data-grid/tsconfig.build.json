@@ -10,7 +10,7 @@
     "outDir": "build/esm",
     "rootDir": "./src",
     "types": [
-      "../../extends.d.ts",
+      "../../mui-env.d.ts",
       "@mui/material/themeCssVarsAugmentation",
       "@emotion/styled",
       "@mui/types"
