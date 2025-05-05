@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { ChartsToolbarSlotsPro } from '@mui/x-charts-pro/internals/material';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
 
 type SlotProps<T extends Record<keyof T, React.ComponentType<any>>> = {
