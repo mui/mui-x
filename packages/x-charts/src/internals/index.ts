@@ -62,3 +62,5 @@ export * from '../models/z-axis';
 export * from '../models/axis';
 
 export * from './plugins/models';
+export * from './material';
+export * from './createSvgIcon';
