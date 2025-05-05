@@ -305,6 +305,12 @@ jobs:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
       - run:
+          name: Build packages for fixtures
+          command: pnpm release:build
+      - run:
+          name: Run tests to run after release:build
+          command: pnpm -r release:test
+      - run:
           name: Upload screenshots to Argos CI
           command: pnpm test:argos
   run_danger:

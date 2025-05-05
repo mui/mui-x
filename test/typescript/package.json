@@ -9,6 +9,6 @@
     "@mui/material": "7"
   },
   "scripts": {
-    "typescript": "tsc --noEmit"
+    "release:test": "tsc --noEmit"
   }
 }
