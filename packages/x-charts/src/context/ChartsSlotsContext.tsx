@@ -1,10 +1,17 @@
 'use client';
 import * as React from 'react';
+import { ChartsToolbarSlotsPro } from '@mui/x-charts-pro/internals/material';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
 
-export interface ChartsSlotsContextValue {
-  slots: ChartsToolbarSlots;
-  slotProps: Partial<ChartsToolbarSlotProps>;
+type SlotProps<T extends Record<keyof T, React.ComponentType<any>>> = {
+  [key in keyof T]: React.ComponentProps<T[key]>;
+};
+
+export interface ChartsSlotsContextValue<
+  T extends ChartsToolbarSlots & Record<keyof T, React.ComponentType<any>> = ChartsToolbarSlots,
+> {
+  slots: T;
+  slotProps: Partial<SlotProps<T>>;
 }
 
 export const ChartsSlotsContext = React.createContext<ChartsSlotsContextValue | null>(null);
@@ -13,7 +20,9 @@ if (process.env.NODE_ENV !== 'production') {
   ChartsSlotsContext.displayName = 'ChartsSlotsContext';
 }
 
-export function useChartToolbarSlots(): ChartsSlotsContextValue {
+export function useChartToolbarSlots<
+  T extends ChartsToolbarSlots & Record<keyof T, React.ComponentType<any>> = ChartsToolbarSlots,
+>(): ChartsSlotsContextValue<T> {
   const context = React.useContext(ChartsSlotsContext);
 
   if (context == null) {
@@ -26,7 +35,7 @@ export function useChartToolbarSlots(): ChartsSlotsContextValue {
     );
   }
 
-  return context;
+  return context as ChartsSlotsContextValue<T>;
 }
 
 interface ChartsSlotsProviderProps {
