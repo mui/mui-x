@@ -193,16 +193,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     slotProps,
   };
 
-  const clipPathGroupProps = {
-    clipPath: `url(#${clipPathId})`,
-  };
-
-  const clipPathProps: ChartsClipPathProps = {
-    id: clipPathId,
-    // Else the stroke will be cut off when variant is outlined
-    offset: { top: 1, bottom: 1 },
-  };
-
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
     legendPosition: props.slotProps?.legend?.position,
@@ -219,8 +209,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     overlayProps,
     chartsAxisProps,
     legendProps,
-    clipPathGroupProps,
-    clipPathProps,
     chartsWrapperProps,
     axisHighlightProps,
     children,

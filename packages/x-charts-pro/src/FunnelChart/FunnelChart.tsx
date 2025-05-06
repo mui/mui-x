@@ -77,9 +77,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     funnelPlotProps,
     overlayProps,
     legendProps,
-    clipPathGroupProps,
     chartsAxisProps,
-    clipPathProps,
     chartsWrapperProps,
     axisHighlightProps,
     children,
@@ -96,14 +94,11 @@ const FunnelChart = React.forwardRef(function FunnelChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          <g {...clipPathGroupProps}>
-            <FunnelPlot {...funnelPlotProps} />
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-          </g>
+          <FunnelPlot {...funnelPlotProps} />
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
           {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
       </ChartsWrapper>

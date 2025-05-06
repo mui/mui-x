@@ -10,7 +10,7 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'funnel'> = (
     ...seriesData,
     borderRadius: seriesData.borderRadius ?? 8,
     data: seriesData.data.map((d, index) => ({
-      color: seriesData.variant === 'outlined' ? colors[0] : colors[index % colors.length],
+      color: colors[index % colors.length],
       ...d,
     })),
   };
