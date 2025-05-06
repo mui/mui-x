@@ -36,7 +36,7 @@ export function GridCSSVariablesContext(props: { children: any }) {
       </style>
     );
     return { className, tag };
-  }, [description]);
+  }, [rootProps.nonce, description]);
 
   return (
     <CSSVariablesContext.Provider value={context}>{props.children}</CSSVariablesContext.Provider>
