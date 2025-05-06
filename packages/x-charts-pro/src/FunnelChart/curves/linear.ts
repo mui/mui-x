@@ -47,6 +47,19 @@ export class Linear implements CurveGenerator {
 
   lineEnd(): void {}
 
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
+    }
+    if (this.position === 0) {
+      return [0, 0, this.borderRadius, this.borderRadius];
+    }
+    if (this.position === this.sections - 1) {
+      return [this.borderRadius, this.borderRadius];
+    }
+    return 0;
+  }
+
   point(xIn: number, yIn: number): void {
     this.points.push({ x: xIn, y: yIn });
     if (this.points.length < 4) {
@@ -85,19 +98,6 @@ export class Linear implements CurveGenerator {
       };
     });
 
-    const getBorderRadius = () => {
-      if (this.gap > 0) {
-        return this.borderRadius;
-      }
-      if (this.position === 0) {
-        return [0, 0, this.borderRadius, this.borderRadius];
-      }
-      if (this.position === this.sections - 1) {
-        return [this.borderRadius, this.borderRadius];
-      }
-      return 0;
-    };
-
-    borderRadiusPolygon(this.context, this.points, getBorderRadius());
+    borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
 }

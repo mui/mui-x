@@ -47,6 +47,12 @@ export class StepPyramid implements CurveGenerator {
 
   lineEnd(): void {}
 
+  protected getBorderRadius(): number | number[] {
+    return this.gap > 0 || this.position === 0
+      ? this.borderRadius
+      : [this.borderRadius, this.borderRadius];
+  }
+
   point(xIn: number, yIn: number): void {
     this.points.push({ x: xIn, y: yIn });
     if (this.points.length < 4) {
@@ -97,12 +103,6 @@ export class StepPyramid implements CurveGenerator {
       };
     });
 
-    const getBorderRadius = () => {
-      return this.gap > 0 || this.position === 0
-        ? this.borderRadius
-        : [this.borderRadius, this.borderRadius];
-    };
-
-    borderRadiusPolygon(this.context, this.points, getBorderRadius());
+    borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
 }
