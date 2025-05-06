@@ -14,7 +14,15 @@ export const useChartDataProviderProps = <
 >(
   props: ChartDataProviderProps<TSeries, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
-  const { children, localeText, plugins = DEFAULT_PLUGINS, seriesConfig, ...other } = props;
+  const {
+    children,
+    localeText,
+    plugins = DEFAULT_PLUGINS,
+    seriesConfig,
+    slots,
+    slotProps,
+    ...other
+  } = props;
 
   const theme = useTheme();
 
@@ -34,5 +42,7 @@ export const useChartDataProviderProps = <
     children,
     localeText,
     chartProviderProps,
+    slots,
+    slotProps,
   };
 };
