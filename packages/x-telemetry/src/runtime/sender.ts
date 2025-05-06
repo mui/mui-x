@@ -35,7 +35,7 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
       return;
     }
 
-    const { default: getTelemetryContext } = await import('./get-context');
+    const { default: getTelemetryContext } = await import('./get-context.js');
     const telemetryContext = await getTelemetryContext();
     if (!event || !shouldSendTelemetry(telemetryContext)) {
       return;
