@@ -5,6 +5,7 @@ import getColor from './getColor';
 import legendGetter from './legend';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
+import { xRangeGetter, yRangeGetter } from './getRange';
 
 export const seriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   seriesProcessor,
@@ -13,5 +14,7 @@ export const seriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   tooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
+  xRangeGetter,
+  yRangeGetter,
   getSeriesWithDefaultValues,
 };

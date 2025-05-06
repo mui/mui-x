@@ -6,6 +6,7 @@ import type {
 } from '../../../../models/seriesType/config';
 import type { ColorProcessor } from './colorProcessor.types';
 import type { CartesianExtremumGetter } from './cartesianExtremumGetter.types';
+import type { CartesianRangeGetter } from './cartesianRangeGetter.types';
 import type { LegendGetter } from './legendGetter.types';
 import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
 import { PolarExtremumGetter } from './polarExtremumGetter.types';
@@ -21,6 +22,8 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
       yExtremumGetter: CartesianExtremumGetter<TSeriesType>;
+      xRangeGetter?: CartesianRangeGetter<TSeriesType>;
+      yRangeGetter?: CartesianRangeGetter<TSeriesType>;
       axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'x' | 'y'>;
     }
   : {}) &

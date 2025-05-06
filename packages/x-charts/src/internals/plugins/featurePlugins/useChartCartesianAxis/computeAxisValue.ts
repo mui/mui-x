@@ -17,25 +17,13 @@ import { getTickNumber } from '../../../../hooks/useTicks';
 import { getScale } from '../../../getScale';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
+import { getAxisRange } from './getAxisRange';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-
-function getRange(
-  drawingArea: ChartDrawingArea,
-  axisDirection: 'x' | 'y', // | 'rotation' | 'radius',
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
-): [number, number] {
-  const range: [number, number] =
-    axisDirection === 'x'
-      ? [drawingArea.left, drawingArea.left + drawingArea.width]
-      : [drawingArea.top + drawingArea.height, drawingArea.top];
-
-  return axis.reverse ? [range[1], range[0]] : range;
-}
 
 const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] instanceof Date;
 
@@ -111,15 +99,12 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
-    const range = getRange(drawingArea, axisDirection, axis);
-
-    const [minData, maxData] = getAxisExtremum(
-      axis,
+    const range = getAxisRange(
+      drawingArea,
       axisDirection,
+      axis,
       seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
-      axisIndex,
       formattedSeries,
-      zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
 
     const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
@@ -190,6 +175,15 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const scaleType = axis.scaleType ?? ('linear' as const);
 
     const domainLimit = axis.domainLimit ?? 'nice';
+
+    const [minData, maxData] = getAxisExtremum(
+      axis,
+      axisDirection,
+      seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+      axisIndex,
+      formattedSeries,
+      zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
+    );
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
 

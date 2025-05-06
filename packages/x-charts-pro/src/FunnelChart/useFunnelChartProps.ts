@@ -17,18 +17,21 @@ function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
+  gap: number,
   direction: 'y',
 ): YAxis;
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
+  gap: number,
   direction: 'x',
 ): XAxis;
 function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
+  gap: number,
   direction: D,
 ): XAxis | YAxis {
   const maxSeriesLength = Math.max(...series.map((s) => (s.data ?? []).length), 0);
@@ -62,6 +65,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
   // If the scaleType is not defined or is 'band', our job is simple.
   if (!categoryAxis?.scaleType || categoryAxis.scaleType === 'band') {
     return {
+      gap,
       categoryGapRatio: 0,
       // Use the categories as the domain if they are defined.
       data: categoryAxis?.categories
@@ -85,6 +89,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
   ];
 
   return {
+    gap,
     domainLimit: 'strict',
     tickLabelPlacement: 'middle',
     tickInterval: tickValues,
@@ -144,11 +149,11 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   } as const;
 
   const xAxis = isHorizontal
-    ? getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'x')
+    ? getCategoryAxisConfig(categoryAxis, series, isHorizontal, gap ?? 0, 'x')
     : valueAxisConfig;
   const yAxis = isHorizontal
     ? valueAxisConfig
-    : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
+    : getCategoryAxisConfig(categoryAxis, series, isHorizontal, gap ?? 0, 'y');
 
   const chartContainerProps: ChartContainerProProps<'funnel'> = {
     ...rest,
