@@ -10,4 +10,4 @@ const iconSlots: ChartsIconSlots = {};
 
 export type ChartsSlots = ChartsBaseSlots & ChartsIconSlots;
 
-export const materialSlots: ChartsSlots = { ...baseSlots, ...iconSlots };
+export const defaultSlotsMaterial: ChartsSlots = { ...baseSlots, ...iconSlots };

@@ -82,13 +82,6 @@ export interface ZoomSliderOptions {
    * If `true`, the slider will be shown.
    */
   enabled?: boolean;
-  /**
-   * The size of the slider.
-   * This is the height of the slider for the x-axis and the width of the slider for the y-axis.
-   *
-   * @default 30
-   */
-  size?: number;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

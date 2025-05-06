@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import { useChartContext } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
-import { ChartsSlotsPro, materialSlots } from '../../internals/material';
+import { ChartsSlotsPro, defaultSlotsMaterial } from '../../internals/material';
 import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 
 type ChartsToolbarZoomOutButtonSlots = Partial<Pick<ChartsSlotsPro, 'baseTooltip' | 'zoomOutIcon'>>;
@@ -22,8 +22,8 @@ interface ChartsToolbarZoomOutButtonProps {
 
 export function ChartsToolbarZoomOutButton({ slots, slotProps }: ChartsToolbarZoomOutButtonProps) {
   const { instance } = useChartContext<[UseChartProZoomSignature]>();
-  const ZoomOutIcon = slots?.zoomOutIcon ?? materialSlots.zoomOutIcon;
-  const Tooltip = slots?.baseTooltip ?? materialSlots.baseTooltip;
+  const ZoomOutIcon = slots?.zoomOutIcon ?? defaultSlotsMaterial.zoomOutIcon;
+  const Tooltip = slots?.baseTooltip ?? defaultSlotsMaterial.baseTooltip;
   const { localeText } = useChartsLocalization();
 
   return (

@@ -14,7 +14,11 @@ const Rect = styled('rect')(({ theme }) => ({
   [`&.${chartAxisZoomSliderHandleClasses.root}`]: {
     fill:
       theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[700]
+        ? (theme.vars || theme).palette.grey[300]
+        : (theme.vars || theme).palette.common.white,
+    stroke:
+      theme.palette.mode === 'dark'
+        ? (theme.vars || theme).palette.grey[600]
         : (theme.vars || theme).palette.grey[500],
   },
   [`&.${chartAxisZoomSliderHandleClasses.horizontal}`]: {
@@ -43,7 +47,7 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
   SVGRectElement,
   ChartZoomSliderHandleProps
 >(function ChartPreviewHandle(
-  { x, y, width, height, onResize, orientation, placement, rx = 2, ry = 2 },
+  { x, y, width, height, onResize, orientation, placement, rx = 4, ry = 4 },
   forwardedRef,
 ) {
   const classes = useUtilityClasses({ onResize, orientation, placement });
