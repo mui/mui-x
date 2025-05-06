@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -18,16 +19,31 @@ import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
 import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../internals/material';
+import { ChartsToolbarProps } from '../Toolbar';
 
 export interface RadarChartSlots
   extends ChartsTooltipSlots,
     ChartsOverlaySlots,
-    ChartsLegendSlots {}
+    ChartsLegendSlots,
+    Partial<ChartsToolbarSlots> {
+  /**
+   * Custom component for the toolbar.
+   * @default ChartsToolbar
+   */
+  toolbar?: React.ElementType<ChartsToolbarProps>;
+}
 
 export interface RadarChartSlotProps
   extends ChartsTooltipSlotProps,
     ChartsOverlaySlotProps,
-    ChartsLegendSlotProps {}
+    ChartsLegendSlotProps,
+    Partial<ChartsToolbarSlotProps> {
+  /**
+   * Props for the toolbar component.
+   */
+  toolbar?: Partial<ChartsToolbarProps>;
+}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
@@ -38,6 +54,11 @@ export interface RadarChartProps
    * If `true`, the legend is not rendered.
    */
   hideLegend?: boolean;
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -67,10 +88,12 @@ const RadarChart = React.forwardRef(function RadarChart(
   } = useRadarChartProps(props);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
 
   return (
     <RadarDataProvider {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
@@ -199,6 +222,11 @@ RadarChart.propTypes = {
    * @default 'sharp'
    */
   shape: PropTypes.oneOf(['circular', 'sharp']),
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

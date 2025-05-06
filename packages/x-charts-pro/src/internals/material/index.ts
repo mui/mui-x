@@ -1,6 +1,7 @@
 import { ChartsBaseSlots, ChartsIconSlots } from '@mui/x-charts/models';
 import Tooltip from '@mui/material/Tooltip';
 import { materialSlots as communityMaterialSlots } from '@mui/x-charts/internals';
+import type * as React from 'react';
 import { ChartsBaseSlotsPro } from '../slots/chartsBaseSlots';
 import { ChartsZoomInIcon, ChartsZoomOutIcon } from './icons';
 import { ChartsIconSlotsPro } from '../slots/chartsIconSlots';
@@ -14,9 +15,13 @@ const iconSlots: Omit<ChartsIconSlotsPro, keyof ChartsIconSlots> = {
   zoomOutIcon: ChartsZoomOutIcon,
 };
 
-export type ChartsSlotsPro = ChartsBaseSlotsPro & ChartsIconSlotsPro;
+export type ChartsToolbarSlotsPro = ChartsBaseSlotsPro & ChartsIconSlotsPro;
 
-export const materialSlots: ChartsSlotsPro = {
+export type ChartsToolbarSlotPropsPro = {
+  [key in keyof ChartsToolbarSlotsPro]: React.ComponentProps<ChartsToolbarSlotsPro[key]>;
+};
+
+export const materialSlots: ChartsToolbarSlotsPro = {
   ...communityMaterialSlots,
   ...baseSlots,
   ...iconSlots,

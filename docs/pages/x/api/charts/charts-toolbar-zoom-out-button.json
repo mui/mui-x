@@ -1,0 +1,16 @@
+{
+  "props": {
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ChartsToolbarZoomOutButton",
+  "imports": [
+    "import { ChartsToolbarZoomOutButton } from '@mui/x-charts-pro/ChartsToolbarPro';",
+    "import { ChartsToolbarZoomOutButton } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsToolbarZoomOutButton",
+  "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarZoomOutButton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar 🧪</a></li></ul>",
+  "cssComponent": false
+}

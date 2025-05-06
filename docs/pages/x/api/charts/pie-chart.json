@@ -34,6 +34,7 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -50,6 +51,7 @@
     "import { PieChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
+    { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
@@ -70,6 +72,12 @@
     },
     { "name": "pieArc", "description": "", "class": null },
     { "name": "pieArcLabel", "description": "", "class": null },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
     {
       "name": "tooltip",
       "description": "Custom component for the tooltip popper.",

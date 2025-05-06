@@ -1,4 +1,5 @@
 import IconButton from '@mui/material/IconButton';
+import type * as React from 'react';
 import { ChartsBaseSlots } from '../../models/slots/chartsBaseSlots';
 import { ChartsIconSlots } from '../../models/slots/chartsIconSlots';
 
@@ -8,6 +9,10 @@ const baseSlots: ChartsBaseSlots = {
 
 const iconSlots: ChartsIconSlots = {};
 
-export type ChartsSlots = ChartsBaseSlots & ChartsIconSlots;
+export type ChartsToolbarSlots = ChartsBaseSlots & ChartsIconSlots;
 
-export const materialSlots: ChartsSlots = { ...baseSlots, ...iconSlots };
+export type ChartsToolbarSlotProps = {
+  [key in keyof ChartsToolbarSlots]: React.ComponentProps<ChartsToolbarSlots[key]>;
+};
+
+export const materialSlots: ChartsToolbarSlots = { ...baseSlots, ...iconSlots };

@@ -1,7 +1,7 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
-components: Toolbar, ToolbarButton, ChartsToolbarPro
+components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInButton, ChartsToolbarZoomOutButton
 ---
 
 # Charts - Toolbar 🧪
@@ -14,6 +14,8 @@ This feature is unstable and its API, visuals and/or behavior may change in futu
 
 Charts provide a toolbar that can be enabled to give users quick access to certain features.
 
+The toolbar is available on scatter, bar, line, pie and radar charts.
+
 To enable the toolbar, set the `showToolbar` prop to `true` on the chart component.
 
 :::info
@@ -25,3 +27,15 @@ For example, if the chart is not zoomable, the zoom buttons will not be displaye
 {{"demo": "ChartsToolbar.js"}}
 
 ## Composition 🚧
+
+## Custom elements
+
+The toolbar can be customized to use custom elements instead of the default ones.
+
+That is achievable by passing the custom elements to `slots` prop of the chart.
+
+{{"demo": "ChartsToolbarCustomElements.js"}}
+
+If you want to add or further customize the toolbar's functionality, you can also partially or entirely replace it and use a custom implementation.
+
+{{"demo": "ChartsToolbarCustomToolbar.js"}}
