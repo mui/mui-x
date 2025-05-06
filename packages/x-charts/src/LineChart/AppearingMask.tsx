@@ -44,13 +44,13 @@ const AnimatedRect = styled('rect')({
 export function AppearingMask(props: AppearingMaskProps) {
   const drawingArea = useDrawingArea();
   const chartId = useChartId();
-
   const clipId = cleanId(`${chartId}-${props.id}`);
+
   return (
     <React.Fragment>
       <clipPath id={clipId}>
         <AnimatedRect
-          className={clsx(!props.skipAnimation && appearingMaskClasses.animate)}
+          className={props.skipAnimation ? '' : appearingMaskClasses.animate}
           x={0}
           y={0}
           width={drawingArea.left + drawingArea.width + drawingArea.right}
