@@ -2,7 +2,7 @@
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 import { CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
-import { xFromY, yFromX } from './utils';
+import { lerpX, lerpY } from './utils';
 
 /**
  * This is a custom "pyramid" curve generator.
@@ -87,7 +87,7 @@ export class Pyramid implements CurveGenerator {
                 x: this.min.x,
                 y: this.max.y,
               };
-        const yGetter = yFromX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+        const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
         const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
 
         return {
@@ -107,7 +107,7 @@ export class Pyramid implements CurveGenerator {
               y: this.min.y,
             }
           : this.min;
-      const xGetter = xFromY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+      const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
       const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
       return {
         x: xGetter(yGap),

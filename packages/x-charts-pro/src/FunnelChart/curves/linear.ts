@@ -2,7 +2,7 @@
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 import { CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
-import { xFromY, yFromX } from './utils';
+import { lerpX, lerpY } from './utils';
 
 /**
  * This is a custom "linear" curve generator.
@@ -71,7 +71,7 @@ export class Linear implements CurveGenerator {
       const slopeStart = this.points.at(index <= 1 ? 0 : 2)!;
       const slopeEnd = this.points.at(index <= 1 ? 1 : 3)!;
       if (this.isHorizontal) {
-        const yGetter = yFromX(
+        const yGetter = lerpY(
           slopeStart.x - this.gap,
           slopeStart.y,
           slopeEnd.x - this.gap,
@@ -85,7 +85,7 @@ export class Linear implements CurveGenerator {
         };
       }
 
-      const xGetter = xFromY(
+      const xGetter = lerpX(
         slopeStart.x,
         slopeStart.y - this.gap,
         slopeEnd.x,

@@ -1,7 +1,7 @@
 export const max = (numbers: number[]) => Math.max(...numbers, -Infinity);
 export const min = (numbers: number[]) => Math.min(...numbers, Infinity);
 // From point1 to point2, get the x value from y
-export const xFromY =
+export const lerpX =
   (x1: number, y1: number, x2: number, y2: number) =>
   (y: number): number => {
     if (y1 === y2) {
@@ -14,7 +14,7 @@ export const xFromY =
   };
 
 // From point1 to point2, get the y value from x
-export const yFromX =
+export const lerpY =
   (x1: number, y1: number, x2: number, y2: number) =>
   (x: number): number => {
     if (x1 === x2) {
