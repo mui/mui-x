@@ -122,7 +122,7 @@ describe('<DesktopDateTimePicker />', () => {
     expect(onClose.callCount).to.equal(1);
   });
 
-  it.only('should cycle focused views among the visible step after selection', async () => {
+  it('should cycle focused views among the visible step after selection', async () => {
     const { user } = render(
       <DesktopDateTimePicker referenceDate={adapterToUse.date('2018-01-10')} />,
     );
