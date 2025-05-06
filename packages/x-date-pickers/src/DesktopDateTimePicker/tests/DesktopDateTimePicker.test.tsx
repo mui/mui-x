@@ -11,7 +11,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
@@ -108,24 +108,22 @@ describe('<DesktopDateTimePicker />', () => {
     expect(onClose.callCount).to.equal(1);
   });
 
-  it('should cycle focused views among the visible step after selection', async () => {
-    const { user } = render(
-      <DesktopDateTimePicker referenceDate={adapterToUse.date('2018-01-10')} />,
-    );
+  it('should cycle focused views among the visible step after selection', () => {
+    render(<DesktopDateTimePicker referenceDate={adapterToUse.date('2018-01-10')} />);
 
-    await user.click(screen.getByLabelText(/Choose date/));
+    openPicker({ type: 'date-time', variant: 'desktop' });
 
     const day = screen.getByRole('gridcell', { name: '10' });
     expect(day).toHaveFocus();
-    await user.click(day);
+    fireEvent.click(day);
 
     const hours = screen.getByRole('option', { name: '12 hours' });
     expect(hours).toHaveFocus();
-    await user.click(hours);
+    fireEvent.click(hours);
 
     const minutes = screen.getByRole('option', { name: '0 minutes' });
     expect(minutes).toHaveFocus();
-    await user.click(minutes);
+    fireEvent.click(minutes);
 
     const meridiem = screen.getByRole('option', { name: 'AM' });
     expect(meridiem).toHaveFocus();
