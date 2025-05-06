@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { materialSlots } from '../internals/material';
+import { defaultSlotsMaterial } from '../internals/material';
 import { ChartBaseIconButtonProps } from '../models/slots/chartsBaseSlotProps';
 
 export interface ToolbarButtonProps extends ChartBaseIconButtonProps {}
 
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const IconButton = materialSlots.baseIconButton;
+    const IconButton = defaultSlotsMaterial.baseIconButton;
 
     return <IconButton ref={ref} {...props} />;
   },
