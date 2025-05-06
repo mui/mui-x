@@ -8428,11 +8428,6 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  marked@15.0.7:
-    resolution: {integrity: sha512-dgLIeKGLx5FwziAnsk4ONoGwHwGPJzselimvlVskE9XLN4Orv9u2VA3GWw/lYUqjfA0rUT/6fqKwfZJapP9BEg==}
-    engines: {node: '>= 18'}
-    hasBin: true
-
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
@@ -13105,7 +13100,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.27.1
       lodash: 4.17.21
-      marked: 15.0.7
+      marked: 15.0.11
       prismjs: 1.30.0
 
   '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown':
@@ -18974,8 +18969,6 @@ snapshots:
       - supports-color
 
   marked@15.0.11: {}
-
-  marked@15.0.7: {}
 
   math-intrinsics@1.1.0: {}
 
