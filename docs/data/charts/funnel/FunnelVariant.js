@@ -7,7 +7,7 @@ export default function FunnelVariant() {
     { value: 200, label: 'Leads' },
     { value: 150, label: 'Calls' },
     { value: 90, label: 'Meetings' },
-    { value: 40, label: 'Deals', color: 'hotpink' },
+    { value: 40, label: 'Deals' },
   ];
 
   return (
