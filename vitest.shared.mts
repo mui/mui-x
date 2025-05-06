@@ -9,7 +9,6 @@ export default defineConfig({
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
-    'process.env.VITEST': '"true"',
     LICENSE_DISABLE_CHECK: 'false',
   },
   esbuild: {
@@ -52,7 +51,6 @@ export default defineConfig({
     passWithNoTests: true,
     env: {
       NODE_ENV: 'test',
-      VITEST: 'true',
     },
     browser: {
       isolate: false,
