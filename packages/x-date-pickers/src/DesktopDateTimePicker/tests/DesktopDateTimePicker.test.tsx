@@ -7,13 +7,11 @@ import {
   adapterToUse,
   createPickerRenderer,
   openPicker,
-  openPickerAsync,
-  getFieldSectionsContainer,
-  expectFieldValueV7,
+  expectFieldValueV6,
 } from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
@@ -115,7 +113,7 @@ describe('<DesktopDateTimePicker />', () => {
       <DesktopDateTimePicker referenceDate={adapterToUse.date('2018-01-10')} />,
     );
 
-    await openPickerAsync(user, { type: 'date-time' });
+    await user.click(screen.getByLabelText(/Choose date/));
 
     const day = screen.getByRole('gridcell', { name: '10' });
     expect(day).toHaveFocus();
@@ -131,8 +129,7 @@ describe('<DesktopDateTimePicker />', () => {
 
     const meridiem = screen.getByRole('option', { name: 'AM' });
     expect(meridiem).toHaveFocus();
-    const sectionsContainer = getFieldSectionsContainer();
-    expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM');
+    expectFieldValueV6(screen.getByRole('textbox'), '01/10/2018 12:00 AM');
   });
 
   describe('prop: timeSteps', () => {
