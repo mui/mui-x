@@ -1,8 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
-import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
@@ -47,6 +45,8 @@ export interface SparkLineChartProps
     | 'margin'
     | 'plugins'
     | 'colors'
+    | 'slots'
+    | 'slotProps'
   > {
   /**
    * The xAxis configuration.
@@ -121,22 +121,6 @@ export interface SparkLineChartProps
    * @default rainbowSurgePalette[0]
    */
   color?: ChartsColor;
-
-  /**
-   * When `true`, the chart's drawing area will not be clipped and elements within can visually overflow the chart.
-   *
-   * @default false
-   */
-  disableClipping?: boolean;
-
-  /**
-   * The clipped area offset in pixels.
-   *
-   * This prevents partial clipping of lines when they are drawn on the edge of the drawing area.
-   *
-   * @default { top: 1, right: 1, bottom: 1, left: 1 }
-   */
-  clipAreaOffset?: { top?: number; right?: number; bottom?: number; left?: number };
 }
 
 const SPARK_LINE_DEFAULT_MARGIN = 5;
@@ -174,18 +158,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     area,
     curve = 'linear',
     className,
-    disableClipping,
-    clipAreaOffset,
     ...other
   } = props;
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
-  const clipPathOffset = {
-    top: clipAreaOffset?.top ?? 1,
-    right: clipAreaOffset?.right ?? 1,
-    bottom: clipAreaOffset?.bottom ?? 1,
-    left: clipAreaOffset?.left ?? 1,
-  };
 
   const defaultXHighlight: { x: 'band' | 'none' } =
     showHighlight && plotType === 'bar' ? { x: 'band' } : { x: 'none' };
@@ -245,18 +219,16 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         axisHighlight?.y === 'none'
       }
     >
-      <g clipPath={`url(#${clipPathId})`}>
-        {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
+      {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
 
-        {plotType === 'line' && (
-          <React.Fragment>
-            <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
-            <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
-          </React.Fragment>
-        )}
-      </g>
-      {plotType === 'line' && <LineHighlightPlot slots={slots} slotProps={slotProps} />}
-      {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
+      {plotType === 'line' && (
+        <React.Fragment>
+          <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
+          <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
+          <LineHighlightPlot slots={slots} slotProps={slotProps} />
+        </React.Fragment>
+      )}
+
       <ChartsAxisHighlight {...axisHighlight} />
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
 
@@ -285,19 +257,6 @@ SparkLineChart.propTypes = {
   }),
   children: PropTypes.node,
   className: PropTypes.string,
-  /**
-   * The clipped area offset in pixels.
-   *
-   * This prevents partial clipping of lines when they are drawn on the edge of the drawing area.
-   *
-   * @default { top: 1, right: 1, bottom: 1, left: 1 }
-   */
-  clipAreaOffset: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
   /**
    * Color used to colorize the sparkline.
    * @default rainbowSurgePalette[0]
@@ -333,12 +292,6 @@ SparkLineChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * When `true`, the chart's drawing area will not be clipped and elements within can visually overflow the chart.
-   *
-   * @default false
-   */
-  disableClipping: PropTypes.bool,
   /**
    * If true, the voronoi interaction are ignored.
    */

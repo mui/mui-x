@@ -3,6 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { ChartsToolbarProps } from '../Toolbar';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
@@ -26,19 +28,33 @@ import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { BarChartPluginsSignatures } from './BarChart.plugins';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    Partial<ChartsSlots> {
+  /**
+   * Custom component for the toolbar.
+   * @default ChartsToolbar
+   */
+  toolbar?: React.ElementType<ChartsToolbarProps>;
+}
 export interface BarChartSlotProps
   extends ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    Partial<ChartsSlotProps> {
+  /**
+   * Props for the toolbar component.
+   */
+  toolbar?: Partial<ChartsToolbarProps>;
+}
 
 export interface BarChartProps
   extends Omit<
@@ -84,6 +100,11 @@ export interface BarChartProps
    * @default 'vertical'
    */
   layout?: BarSeriesType['layout'];
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
 }
 
 /**
@@ -121,10 +142,12 @@ const BarChart = React.forwardRef(function BarChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
 
   return (
     <ChartDataProvider<'bar', BarChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
