@@ -132,7 +132,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
   const id = useId();
-  const clipPathId = `${id}-clip-path`;
 
   const isHorizontal = series.some((s) => s.layout === 'horizontal');
 
