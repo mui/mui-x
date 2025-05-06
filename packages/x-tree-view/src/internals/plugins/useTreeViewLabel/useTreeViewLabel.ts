@@ -62,7 +62,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
 
 useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
 
-useTreeViewLabel.getDefaultizedParams = ({ params }) => ({
+useTreeViewLabel.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   isItemEditable: params.isItemEditable ?? false,
 });

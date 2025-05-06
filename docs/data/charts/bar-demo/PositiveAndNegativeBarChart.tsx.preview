@@ -1,0 +1,9 @@
+<BarChart
+  height={300}
+  series={[
+    { data: pData, label: 'pv' },
+    { data: uData, label: 'uv' },
+  ]}
+  xAxis={[{ data: xLabels }]}
+  yAxis={[{ width: 60, max: 10000 }]}
+/>

@@ -1,12 +1,12 @@
 ---
-title: React Data Grid - AI Assistant Panel component
+title: Data Grid - AI Assistant Panel component
 productId: x-data-grid
 components: AiAssistantPanelTrigger
 packageName: '@mui/x-data-grid-premium'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - AI Assistant Panel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
+# Data Grid - AI Assistant Panel component [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 
 <p class="description">Customize the Data Grid's AI assistant panel.</p>
 

@@ -8,18 +8,12 @@ components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSerie
 
 <p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
 
-:::warning
-🚧 This component is under development 🚧
-
-Not all the feature are implemented and its API might change in the future if needed to integrate the upcoming features.
-:::
-
 ## Basics
 
-A radar chart is defined by two main props:
+Radar charts series should contain a `data` property containing an array of values.
 
-- The `series` prop which provides the values to display thanks to the `data` property.
-- The `radar` prop which defines the radar axes.
+Radar charts also require a `radar` prop with a `metrics` property containing an array of string or objects.
+Each item of this array define a metric of the radar.
 
 {{"demo": "BasicRadar.js"}}
 
@@ -35,7 +29,7 @@ Radar series support `hideMark` and `fillArea` parameter to modify the rendering
 
 {{"demo": "DemoRadarVisualisation.js"}}
 
-## Axis
+## Metrics
 
 The `metrics` property of `radar` takes an array with one item per corner of the radar.
 This item can either be:
@@ -100,19 +94,30 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 
 ## Composition
 
-For composition, use the `RadarDataProvider` to provide `series` and `radar` props.
+Use the `<RadarDataProvider />` to provide `series` and `radar` props for composition.
 
-The `RadarGrid` and `RadarMetricLabels` components render the grid and the labels.
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
 
-The `RadarSeriesPlot` renders series (the area and the marks) on top of each other.
-The `RadarSeriesArea` and `RadarSeriesMarks` provide an alternative by rendering all series areas in the first component and all the marks in the second.
-The second approach allows rendering some elements on top of areas and below marks.
+- For axes:
+  - `<RadarGrid />` renders the grid and stripes.
+  - `<RadarMetricLabels />` renders metric labels around the grid.
+- For data:
+  - `<RadarSeriesPlot />` renders series (the area and the marks) on top of each other.
+  - `<RadarSeriesArea />` renders the series area.
+  - `<RadarSeriesMarks />` renders series marks.
+- For interaction:
+  - `<RadarAxisHighlight />` renders line and marks along the highlighted axis.
 
-The `RadarAxisHighlight` component displays the axis highlight.
+:::info
+The `<RadarSeriesPlot />` renders all series together, such that the area of the second series is on top of the marks of the first one.
+
+The `<RadarSeriesArea />` and `<RadarSeriesMarks />` components make it possible to render all marks on top of all areas.
+You can also use them to render components between the areas and the marks.
+:::
 
 {{"demo": "CompositionExample.js" }}
 
-For info here is the composition of the `RadarChart` component.
+Here's how the Radar Chart is composed:
 
 ```jsx
 <RadarDataProvider>
@@ -128,7 +133,7 @@ For info here is the composition of the `RadarChart` component.
       <RadarSeriesMarks />
       {/* Other components */}
       <ChartsOverlay />
-      <Tooltip />
+      <ChartsTooltip />
     </ChartsSurface>
   </ChartsWrapper>
 </RadarDataProvider>
