@@ -149,6 +149,7 @@ const useAggregatedData = (gap: number | undefined) => {
           id,
           seriesId,
           dataIndex,
+          variant: currentSeries.variant,
           label: sectionLabel !== false && {
             ...positionLabel({
               ...sectionLabel,
@@ -182,7 +183,7 @@ function FunnelPlot(props: FunnelPlotProps) {
 
   return (
     <React.Fragment>
-      {data.map(({ d, color, id, seriesId, dataIndex }) => (
+      {data.map(({ d, color, id, seriesId, dataIndex, variant }) => (
         <FunnelSection
           {...other}
           d={d}
@@ -190,6 +191,7 @@ function FunnelPlot(props: FunnelPlotProps) {
           key={id}
           dataIndex={dataIndex}
           seriesId={seriesId}
+          variant={variant}
           onClick={
             onItemClick &&
             ((event) => {
