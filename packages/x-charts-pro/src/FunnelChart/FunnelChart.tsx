@@ -7,7 +7,6 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
