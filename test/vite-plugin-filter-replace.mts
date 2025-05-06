@@ -102,7 +102,9 @@ export default function pluginFilterReplace(
   }
 
   function replace(code: string, id: string): string;
+  // eslint-disable-next-line no-redeclare
   function replace(code: string, id: string, sourcemap: boolean): { code: string; map: SourceMap };
+  // eslint-disable-next-line no-redeclare
   function replace(
     code: string,
     id: string,
