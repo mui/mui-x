@@ -386,6 +386,8 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.click(cell);
       expect(cell).toHaveFocus();
 
+      editRowSpy.resetHistory();
+
       // edit the cell
       await user.keyboard('{Enter}{Enter}');
 
