@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
-import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../material';
+import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../internals/material';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import { ChartContainerProps } from '../ChartContainer';

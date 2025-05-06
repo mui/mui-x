@@ -19,7 +19,7 @@ import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
 import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../internals/material';
 import { ChartsToolbarProps } from '../Toolbar';
 
 export interface RadarChartSlots

@@ -5,7 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsToolbarProps } from '../Toolbar';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../material';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../internals/material';
 import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
