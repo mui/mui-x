@@ -17,6 +17,18 @@ export default function FunnelCurves() {
             options: curveTypes,
             defaultValue: curveTypes[0],
           },
+          gap: {
+            knob: 'slider',
+            defaultValue: 0,
+            min: 0,
+            max: 20,
+          },
+          borderRadius: {
+            knob: 'slider',
+            defaultValue: 0,
+            min: 0,
+            max: 20,
+          },
         } as const
       }
       renderDemo={(props) => (
@@ -25,10 +37,12 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'vertical',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -36,10 +50,12 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'horizontal',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -49,7 +65,11 @@ export default function FunnelCurves() {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
-  series={[{ curve: '${props.curveType}' }]}
+  series={[{ 
+    curve: '${props.curveType}',
+    ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
+  }]}
+  gap={${props.gap}}
 />
 `;
       }}

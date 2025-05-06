@@ -10,7 +10,7 @@ components: FunnelChart, FunnelPlot
 
 ## Basics
 
-Funnel charts series should contain a data property containing an array of objects.
+Funnel charts series must contain a `data` property containing an array of objects.
 Each object corresponds to a section of the funnel.
 It must contain a property `value` and can have other optional properties, like `label` and `id`.
 
@@ -21,7 +21,7 @@ It must contain a property `value` and can have other optional properties, like 
 The funnel chart displays a legend by default.
 The only requirement is to provide a `label` value in the data objects.
 
-To disable the legend, set the `hideLegend` property to `true`.
+To disable the legend, set the `hideLegend` prop to `true`.
 
 {{"demo": "FunnelLegend.js"}}
 
@@ -49,7 +49,9 @@ It also accepts a function that receives the data object and should return the l
 
 {{"demo": "FunnelLabelPositioning.js"}}
 
-## Curve interpolation
+## Styling
+
+### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'` and `'step'`.
@@ -58,7 +60,32 @@ This series property adds the option to control the interpolation of a series.
 
 {{"demo": "FunnelCurves.js"}}
 
-## Colors
+### Gap
+
+The gap between the sections can be customized by the `gap` property.
+It accepts a number that represents the gap in pixels.
+
+{{"demo": "FunnelGap.js"}}
+
+### Border radius
+
+The border radius of the sections can be customized by the `borderRadius` property.
+It accepts a number that represents the radius in pixels.
+
+- The `bump` curve interpolation will not respect the border radius.
+- The `linear` curve respects the border radius to some extent due to the angle of the sections.
+- The `step` curve will respect the border radius.
+
+To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
+
+The `borderRadius` property will also behave differently depending on whether the `gap` property is greater than 0.
+
+- If the `gap` is 0, the border radius will be applied to the corners of the sections that are not connected to another section.
+- If the `gap` is greater than 0, the border radius will be applied to all the corners of the sections.
+
+{{"demo": "FunnelBorderRadius.js"}}
+
+### Colors
 
 The funnel colors can be customized in two ways.
 

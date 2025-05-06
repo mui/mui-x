@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
-import { hash } from '@mui/x-internals/hash';
+import { hash, stringify } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
 
 export function useMaterialCSSVariables() {
   const theme = useTheme();
   return React.useMemo(() => {
-    const id = hash(JSON.stringify(theme));
+    const id = hash(stringify(theme));
     const variables = transformTheme(theme);
     return { id, variables };
   }, [theme]);

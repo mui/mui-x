@@ -19,21 +19,10 @@ export default function PositiveAndNegativeBarChart() {
     <BarChart
       height={300}
       series={[
-        {
-          data: pData,
-          label: 'pv',
-        },
-        {
-          data: uData,
-          label: 'uv',
-        },
+        { data: pData, label: 'pv' },
+        { data: uData, label: 'uv' },
       ]}
-      xAxis={[
-        {
-          data: xLabels,
-          scaleType: 'band',
-        },
-      ]}
+      xAxis={[{ data: xLabels }]}
       yAxis={[{ width: 60, max: 10000 }]}
     />
   );

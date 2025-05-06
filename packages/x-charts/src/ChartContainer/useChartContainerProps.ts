@@ -49,6 +49,7 @@ export const useChartContainerProps = <
     skipAnimation,
     seriesConfig,
     plugins,
+    localeText,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
@@ -80,6 +81,7 @@ export const useChartContainerProps = <
     skipAnimation,
     width,
     height,
+    localeText,
     seriesConfig,
     plugins: plugins ?? DEFAULT_PLUGINS,
   } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;

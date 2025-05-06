@@ -10,10 +10,12 @@ import {
   ZoomData,
   createZoomLookup,
   selectorChartZoomOptionsLookup,
+  selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { useEventCallback } from '@mui/material/utils';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
+import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import {
   getDiff,
@@ -28,7 +30,7 @@ import {
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 export function initializeZoomData(
-  options: Record<AxisId, DefaultizedZoomOptions>,
+  options: Record<AxisId, Pick<DefaultizedZoomOptions, 'axisId' | 'minStart' | 'maxEnd'>>,
   zoomData?: readonly ZoomData[],
 ) {
   const zoomDataMap = new Map<AxisId, ZoomData>();
@@ -75,7 +77,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       if (process.env.NODE_ENV !== 'production' && !prevState.zoom.isControlled) {
         console.error(
           [
-            `MUI X: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
+            `MUI X Charts: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
             'Decide between using a controlled or uncontrolled for the lifetime of the component.',
             "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
@@ -152,6 +154,40 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
       });
     },
     [onZoomChange, store, removeIsInteracting],
+  );
+
+  const moveZoomRange = React.useCallback(
+    (axisId: AxisId, by: number) => {
+      setZoomDataCallback((prevZoomData) => {
+        return prevZoomData.map((zoom) => {
+          if (zoom.axisId !== axisId) {
+            return zoom;
+          }
+
+          const options = optionsLookup[axisId];
+
+          if (!options) {
+            return zoom;
+          }
+
+          let start: number = zoom.start;
+          let end: number = zoom.end;
+
+          if (by > 0) {
+            const span = end - start;
+            end = Math.min(end + by, options.maxEnd);
+            start = end - span;
+          } else {
+            const span = end - start;
+            start = Math.max(start + by, options.minStart);
+            end = start + span;
+          }
+
+          return { ...zoom, start, end };
+        });
+      });
+    },
+    [optionsLookup, setZoomDataCallback],
   );
 
   React.useEffect(() => {
@@ -451,12 +487,36 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     };
   }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
 
+  const zoom = React.useCallback(
+    (step: number) => {
+      setZoomDataCallback((prev) =>
+        prev.map((zoomData) => {
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(
+            store.getSnapshot(),
+            zoomData.axisId,
+          );
+
+          return calculateZoom(zoomData, step, zoomOptions);
+        }),
+      );
+    },
+    [setZoomDataCallback, store],
+  );
+
+  const zoomIn = React.useCallback(() => zoom(0.1), [zoom]);
+  const zoomOut = React.useCallback(() => zoom(-0.1), [zoom]);
+
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      zoomIn,
+      zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      moveZoomRange,
+      zoomIn,
+      zoomOut,
     },
   };
 };

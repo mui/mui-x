@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-const defaultXAxis = {
-  scaleType: 'band',
-  dataKey: 'code',
-  height: 45,
-};
+const defaultXAxis = { dataKey: 'code', height: 45 };
 
 const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
 

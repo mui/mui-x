@@ -5,12 +5,11 @@ import {
   CommonDefaultizedProps,
   SeriesId,
 } from '@mui/x-charts/internals';
-import { CurveType, Position } from '@mui/x-charts/models';
+import { Position } from '@mui/x-charts/models';
 import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import { FunnelCurveType } from './curves';
 
 export type FunnelItemId = string | number;
-
-export type FunnelCurveType = Extract<CurveType, 'linear' | 'step'> | 'bump';
 
 export type FunnelValueType = {
   /**
@@ -59,6 +58,11 @@ export interface FunnelSeriesType
    * @default 'linear'
    */
   curve?: FunnelCurveType;
+  /**
+   * The radius, in pixels, of the corners of the funnel sections.
+   * @default 8
+   */
+  borderRadius?: number;
   /**
    * The label configuration for the funnel plot.
    * Allows to customize the position and margin of the label that is displayed on the funnel sections.
