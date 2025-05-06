@@ -4,7 +4,7 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
-const curveTypes = ['bump', 'linear', 'step', 'pyramid'];
+const curveTypes = ['bump', 'linear', 'step', 'pyramid', 'step-pyramid'];
 
 export default function FunnelCurves() {
   return (
@@ -37,7 +37,6 @@ export default function FunnelCurves() {
                 curve: props.curveType,
                 borderRadius: props.borderRadius,
                 layout: 'vertical',
-                borderRadius: props.borderRadius,
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -51,7 +50,6 @@ export default function FunnelCurves() {
                 curve: props.curveType,
                 borderRadius: props.borderRadius,
                 layout: 'horizontal',
-                borderRadius: props.borderRadius,
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -70,7 +68,6 @@ export default function FunnelCurves() {
     ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
   }]}
   gap={${props.gap}}
-  ${props.curveType === 'bump' ? '// ' : ''}borderRadius={${props.borderRadius}}
 />
 `;
       }}
