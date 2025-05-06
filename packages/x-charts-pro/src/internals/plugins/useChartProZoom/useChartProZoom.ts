@@ -10,10 +10,12 @@ import {
   ZoomData,
   createZoomLookup,
   selectorChartZoomOptionsLookup,
+  selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { useEventCallback } from '@mui/material/utils';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
+import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import {
   getDiff,
@@ -485,13 +487,36 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     };
   }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
 
+  const zoom = React.useCallback(
+    (step: number) => {
+      setZoomDataCallback((prev) =>
+        prev.map((zoomData) => {
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(
+            store.getSnapshot(),
+            zoomData.axisId,
+          );
+
+          return calculateZoom(zoomData, step, zoomOptions);
+        }),
+      );
+    },
+    [setZoomDataCallback, store],
+  );
+
+  const zoomIn = React.useCallback(() => zoom(0.1), [zoom]);
+  const zoomOut = React.useCallback(() => zoom(-0.1), [zoom]);
+
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      zoomIn,
+      zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
       moveZoomRange,
+      zoomIn,
+      zoomOut,
     },
   };
 };

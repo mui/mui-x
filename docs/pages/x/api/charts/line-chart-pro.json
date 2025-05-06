@@ -72,6 +72,7 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
