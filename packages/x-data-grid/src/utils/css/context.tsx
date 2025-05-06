@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 
 const CLASSNAME_PREFIX = 'MuiDataGridVariables';
@@ -23,12 +24,17 @@ export function GridPortalWrapper({ children }: { children: React.ReactNode }) {
 
 export function GridCSSVariablesContext(props: { children: any }) {
   const config = useGridConfiguration();
+  const rootProps = useGridRootProps();
   const description = config.hooks.useCSSVariables();
 
   const context = React.useMemo(() => {
     const className = `${CLASSNAME_PREFIX}-${description.id}`;
     const cssString = `.${className}{${variablesToString(description.variables)}}`;
-    const tag = <style href={`/${className}`}>{cssString}</style>;
+    const tag = (
+      <style href={`/${className}`} nonce={rootProps.nonce}>
+        {cssString}
+      </style>
+    );
     return { className, tag };
   }, [description]);
 
