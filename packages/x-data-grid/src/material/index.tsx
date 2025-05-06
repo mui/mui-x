@@ -511,7 +511,14 @@ function BasePopper(props: P['basePopper']) {
   } = props;
 
   const modifiers = React.useMemo(() => {
-    const result = [] as NonNullable<MUIPopperProps['modifiers']>;
+    const result: MUIPopperProps['modifiers'] = [
+      {
+        name: 'preventOverflow',
+        options: {
+          padding: 8,
+        },
+      },
+    ];
     if (flip) {
       result.push({
         name: 'flip',

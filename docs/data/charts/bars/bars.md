@@ -12,7 +12,7 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 Bar charts series should contain a `data` property containing an array of values.
 
-You can customize bar ticks with the `xAxis`.
+You can specify bar ticks with the `xAxis` prop.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
 {{"demo": "BasicBars.js"}}
@@ -111,7 +111,7 @@ It works with any positive value and is properly applied to horizontal layouts, 
 ## Labels
 
 You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
 It can either get a function that gets the bar item and some context.
 Or you can pass `'value'` to display the raw value of the bar.
 
@@ -159,10 +159,8 @@ Their is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 :::
 
-### Composition
-
-If you're using composition, you can get those click event as follows.
-Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
+Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
 <ChartContainer onAxisClick={onAxisClick}>
@@ -188,3 +186,30 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 ```
 
 {{"demo": "BarAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
+
+Here's how the Bar Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <ChartsTooltip />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
+```

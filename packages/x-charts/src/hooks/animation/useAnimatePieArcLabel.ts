@@ -6,14 +6,19 @@ import type { PieArcLabelProps } from '../../PieChart';
 
 type UseAnimatePieArcLabelParams = Pick<
   PieArcLabelProps,
-  | 'startAngle'
-  | 'endAngle'
-  | 'cornerRadius'
-  | 'paddingAngle'
-  | 'innerRadius'
-  | 'outerRadius'
-  | 'skipAnimation'
-> & { ref?: React.Ref<SVGTextElement> };
+  'startAngle' | 'endAngle' | 'cornerRadius' | 'paddingAngle' | 'skipAnimation'
+> & {
+  ref?: React.Ref<SVGTextElement>;
+  arcLabelRadius?: number;
+  /**
+   * @deprecated Use `arcLabelRadius` instead. This prop will be removed in the next major version.
+   */
+  innerRadius: PieArcLabelProps['innerRadius'];
+  /**
+   * @deprecated Use `arcLabelRadius` instead. This prop will be removed in the next major version.
+   */
+  outerRadius: PieArcLabelProps['outerRadius'];
+};
 type UseAnimatePieArcLabelReturn = {
   ref: React.Ref<SVGTextElement>;
   x: number;
@@ -56,8 +61,8 @@ export function useAnimatePieArcLabel(
   const initialProps = {
     startAngle: (props.startAngle + props.endAngle) / 2,
     endAngle: (props.startAngle + props.endAngle) / 2,
-    innerRadius: props.innerRadius,
-    outerRadius: props.outerRadius,
+    innerRadius: props.arcLabelRadius ?? props.innerRadius,
+    outerRadius: props.arcLabelRadius ?? props.outerRadius,
     paddingAngle: props.paddingAngle,
     cornerRadius: props.cornerRadius,
   };
@@ -66,8 +71,8 @@ export function useAnimatePieArcLabel(
     {
       startAngle: props.startAngle,
       endAngle: props.endAngle,
-      innerRadius: props.innerRadius,
-      outerRadius: props.outerRadius,
+      innerRadius: props?.arcLabelRadius ?? props.innerRadius,
+      outerRadius: props?.arcLabelRadius ?? props.outerRadius,
       paddingAngle: props.paddingAngle,
       cornerRadius: props.cornerRadius,
     },

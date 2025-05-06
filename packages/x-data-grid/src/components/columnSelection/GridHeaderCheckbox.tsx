@@ -87,6 +87,12 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
       const candidates = new Set<GridRowId>();
       for (let i = 0; i < rowIds.length; i += 1) {
         const id = rowIds[i];
+
+        if (!apiRef.current.getRow(id)) {
+          // The row could have been removed
+          continue;
+        }
+
         if (apiRef.current.isRowSelectable(id)) {
           candidates.add(id);
         }

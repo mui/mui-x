@@ -11,17 +11,6 @@ import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 
-const columnHeaderStyles = {
-  [`& .${c.iconButtonContainer}`]: {
-    visibility: 'visible',
-    width: 'auto',
-  },
-  [`& .${c.menuIcon}`]: {
-    width: 'auto',
-    visibility: 'visible',
-  },
-};
-
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
@@ -445,7 +434,16 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
     '@media (hover: hover)': {
-      [`& .${c.columnHeader}:hover`]: columnHeaderStyles,
+      [`& .${c.columnHeader}:hover`]: {
+        [`& .${c.menuIcon}`]: {
+          width: 'auto',
+          visibility: 'visible',
+        },
+        [`& .${c.iconButtonContainer}`]: {
+          visibility: 'visible',
+          width: 'auto',
+        },
+      },
       [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
@@ -454,7 +452,10 @@ export const GridRootStyles = styled('div', {
         },
     },
     '@media (hover: none)': {
-      [`& .${c.columnHeader}`]: columnHeaderStyles,
+      [`& .${c.columnHeader} .${c.menuIcon}`]: {
+        width: 'auto',
+        visibility: 'visible',
+      },
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {

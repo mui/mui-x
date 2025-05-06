@@ -32,9 +32,9 @@ export const useGridEditing = (
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
 
-  const debounceMap = React.useRef<Record<GridRowId, Record<string, [NodeJS.Timeout, () => void]>>>(
-    {},
-  );
+  const debounceMap = React.useRef<
+    Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => void]>>
+  >({});
 
   const { isCellEditable: isCellEditableProp } = props;
 

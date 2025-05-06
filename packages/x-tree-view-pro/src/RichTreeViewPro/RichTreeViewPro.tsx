@@ -42,7 +42,6 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 export const RichTreeViewProRoot = styled('ul', {
   name: 'MuiRichTreeViewPro',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: RichTreeViewProProps<any, any> }>({
   padding: 0,
   margin: 0,
@@ -202,14 +201,6 @@ RichTreeViewPro.propTypes = {
    * @default 'content'
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures: PropTypes.shape({
-    lazyLoading: PropTypes.bool,
-  }),
   /**
    * Used to determine the id of a given item.
    *

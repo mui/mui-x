@@ -1,20 +1,25 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
-import { CurveFactory, line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { getCurveFactory, AxisDefaultized, cartesianSeriesTypes } from '@mui/x-charts/internals';
+import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
+import { ComputedAxis, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
-import { FunnelItemIdentifier, FunnelDataPoints, FunnelCurveType } from './funnel.types';
+import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
-import { funnelHorizontalStepCurve, funnelVerticalStepCurve } from './funnelStepCurve';
 import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
+import { getFunnelCurve } from './curves';
 
 cartesianSeriesTypes.addType('funnel');
 
 export interface FunnelPlotProps extends FunnelPlotSlotExtension {
+  /**
+   * The gap, in pixels, between funnel sections.
+   * @default 0
+   */
+  gap?: number;
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -26,21 +31,7 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const getFunnelCurve = (
-  curve: FunnelCurveType | undefined,
-  isHorizontal: boolean,
-): CurveFactory => {
-  if (curve === 'step') {
-    return isHorizontal ? funnelHorizontalStepCurve : funnelVerticalStepCurve;
-  }
-  if (curve === 'bump') {
-    return isHorizontal ? getCurveFactory('bumpX') : getCurveFactory('bumpY');
-  }
-
-  return getCurveFactory(curve ?? 'linear');
-};
-
-const useAggregatedData = () => {
+const useAggregatedData = (gap: number | undefined) => {
   const seriesData = useFunnelSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -70,13 +61,13 @@ const useAggregatedData = () => {
 
       const bandWidth =
         ((isXAxisBand || isYAxisBand) &&
-          (baseScaleConfig as AxisDefaultized<'band'>).scale?.bandwidth()) ||
+          (baseScaleConfig as ComputedAxis<'band'>).scale?.bandwidth()) ||
         0;
 
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const curve = getFunnelCurve(currentSeries.curve, isHorizontal);
+      const curve = getFunnelCurve(currentSeries.curve, isHorizontal, gap);
 
       const xPosition = (
         value: number,
@@ -151,16 +142,16 @@ const useAggregatedData = () => {
     });
 
     return result.flat();
-  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds]);
+  }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, gap]);
 
   return allData;
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { onItemClick, ...other } = props;
+  const { onItemClick, gap, ...other } = props;
   const theme = useTheme();
 
-  const data = useAggregatedData();
+  const data = useAggregatedData(gap);
 
   return (
     <React.Fragment>
@@ -217,6 +208,11 @@ FunnelPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The gap, in pixels, between funnel sections.
+   * @default 0
+   */
+  gap: PropTypes.number,
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

@@ -49,9 +49,7 @@ You can browse the documentation, find an example close to your use case, and th
 
 You can use a starter template to build a reproduction case with:
 
-<!-- #default-branch-switch -->
-<!-- TODO: Change this in the "old" version branches and remove this comment there. -->
-<!-- Afterwards replace this comment with "version-branch-off" -->
+<!-- #target-branch-reference -->
 
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
@@ -60,14 +58,14 @@ You can use a starter template to build a reproduction case with:
 
 We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
 
-You can search through existing questions and answers to see if someone has asked a similar question using one of [these tags](https://stackoverflow.com/questions/tagged/mui-x-charts+or+mui-x-data-grid+or+mui-x-date-picker+or+mui-x-tree-view):
+You can search through existing questions and answers to see if someone has asked a similar question using one of these tags:
 
-- mui-x-data-grid
-- mui-x-date-picker
-- mui-x-charts
-- mui-x-tree-view
+- [mui-x-data-grid](https://stackoverflow.com/questions/tagged/mui-x-data-grid)
+- [mui-x-date-picker](https://stackoverflow.com/questions/tagged/mui-x-date-picker)
+- [mui-x-charts](https://stackoverflow.com/questions/tagged/mui-x-charts)
+- [mui-x-tree-view](https://stackoverflow.com/questions/tagged/mui-x-tree-view)
 
-If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
+If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs) using the relevant tags.
 
 ## Technical support
 

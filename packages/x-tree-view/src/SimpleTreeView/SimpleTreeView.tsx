@@ -39,7 +39,6 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
 export const SimpleTreeViewRoot = styled('ul', {
   name: 'MuiSimpleTreeView',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: SimpleTreeViewProps<any> }>({
   padding: 0,
   margin: 0,
@@ -179,12 +178,6 @@ SimpleTreeView.propTypes = {
    * @default 'content'
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures: PropTypes.object,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
