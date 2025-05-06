@@ -67,8 +67,6 @@ const useAggregatedData = (gap: number | undefined) => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const curve = getFunnelCurve(currentSeries.curve, isHorizontal, gap);
-
       const xPosition = (
         value: number,
         bandIndex: number,
@@ -106,6 +104,15 @@ const useAggregatedData = (gap: number | undefined) => {
                 value: currentSeries.data[dataIndex].value,
               })
             : currentSeries.sectionLabel;
+
+        const curve = getFunnelCurve(
+          currentSeries.curve,
+          isHorizontal,
+          gap,
+          dataIndex,
+          currentSeries.dataPoints.length,
+          currentSeries.borderRadius,
+        );
 
         const line = d3Line<FunnelDataPoints>()
           .x((d) =>

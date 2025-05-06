@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import { useChartContext } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
-import { ChartsSlotsPro, materialSlots } from '../../internals/material';
+import { ChartsSlotsPro, defaultSlotsMaterial } from '../../internals/material';
 import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 
 type ChartsToolbarZoomInButtonSlots = Partial<Pick<ChartsSlotsPro, 'baseTooltip' | 'zoomInIcon'>>;
@@ -22,8 +22,8 @@ interface ChartsToolbarZoomInButtonProps {
 
 export function ChartsToolbarZoomInButton({ slots, slotProps }: ChartsToolbarZoomInButtonProps) {
   const { instance } = useChartContext<[UseChartProZoomSignature]>();
-  const ZoomInIcon = slots?.zoomInIcon ?? materialSlots.zoomInIcon;
-  const Tooltip = slots?.baseTooltip ?? materialSlots.baseTooltip;
+  const ZoomInIcon = slots?.zoomInIcon ?? defaultSlotsMaterial.zoomInIcon;
+  const Tooltip = slots?.baseTooltip ?? defaultSlotsMaterial.baseTooltip;
   const { localeText } = useChartsLocalization();
 
   return (
