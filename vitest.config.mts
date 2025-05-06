@@ -5,6 +5,14 @@ import { defineConfig } from 'vitest/config';
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
+declare global {
+  interface MUIEnv {
+    JSDOM?: string;
+    BROWSER?: string;
+    CI?: string;
+  }
+}
+
 // Checking the environment variables simplifies the scripts in the package.json
 // We use `cross-env BROWSER=true vitest` instead of `vitest --project "browser/*"`
 // Which allows us to run `pnpm test:browser --project "x-charts"` for example.

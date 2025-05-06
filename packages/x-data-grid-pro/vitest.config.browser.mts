@@ -12,10 +12,6 @@ export default mergeConfig(sharedConfig, {
       instances: [
         {
           browser: 'chromium',
-          launch: {
-            // Required for tests which use scrollbars.
-            ignoreDefaultArgs: ['--hide-scrollbars'],
-          },
         },
       ],
     },
