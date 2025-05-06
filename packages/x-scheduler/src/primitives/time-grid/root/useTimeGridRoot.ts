@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../utils/adapter/types';
 
 export function useTimeGridRoot(parameters: useTimeGridRoot.Parameters) {
   // eslint-disable-next-line no-empty-pattern
@@ -14,6 +14,6 @@ export namespace useTimeGridRoot {
   export interface Parameters {}
 
   export interface ChildrenParameters {
-    days: PickerValidDate[];
+    days: SchedulerValidDate[];
   }
 }

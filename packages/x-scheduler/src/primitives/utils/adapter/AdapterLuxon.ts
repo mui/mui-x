@@ -6,7 +6,7 @@ import {
   DateBuilderReturnType,
   FieldFormatTokenMap,
   Adapter,
-  PickersTimezone,
+  SchedulerTimezone,
 } from './types';
 
 const formatTokenMap: FieldFormatTokenMap = {
@@ -140,7 +140,7 @@ export class AdapterLuxon implements Adapter<string> {
 
   public date = <T extends string | null | undefined>(
     value?: T,
-    timezone: PickersTimezone = 'default',
+    timezone: SchedulerTimezone = 'default',
   ): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
     if (value === null) {
@@ -167,7 +167,7 @@ export class AdapterLuxon implements Adapter<string> {
     return value.zoneName!;
   };
 
-  public setTimezone = (value: DateTime, timezone: PickersTimezone): DateTime => {
+  public setTimezone = (value: DateTime, timezone: SchedulerTimezone): DateTime => {
     if (!value.zone.equals(Info.normalizeZone(timezone))) {
       return value.setZone(timezone);
     }

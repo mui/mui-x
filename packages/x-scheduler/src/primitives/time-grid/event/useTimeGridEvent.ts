@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../utils/adapter/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import { useTimeGridColumnContext } from '../column/TImeGridColumnContext';
@@ -72,11 +72,11 @@ export namespace useTimeGridEvent {
     /**
      * The time at which the event starts.
      */
-    start: PickerValidDate;
+    start: SchedulerValidDate;
     /**
      * The time at which the event ends.
      */
-    end: PickerValidDate;
+    end: SchedulerValidDate;
   }
 
   export interface State {

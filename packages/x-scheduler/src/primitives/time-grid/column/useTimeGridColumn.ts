@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../utils/adapter/types';
 import { TimeGridColumnContext } from './TImeGridColumnContext';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 
@@ -20,6 +20,6 @@ export function useTimeGridColumn(parameters: useTimeGridColumn.Parameters) {
 
 export namespace useTimeGridColumn {
   export interface Parameters {
-    value: PickerValidDate;
+    value: SchedulerValidDate;
   }
 }

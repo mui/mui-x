@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../utils/adapter/types';
 
 export interface TimeGridColumnContext {
   /**
    * The start date and time of the column
    */
-  start: PickerValidDate;
+  start: SchedulerValidDate;
   /**
    * The end date and time of the column
    */
-  end: PickerValidDate;
+  end: SchedulerValidDate;
 }
 
 export const TimeGridColumnContext = React.createContext<TimeGridColumnContext | undefined>(

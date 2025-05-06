@@ -14,9 +14,9 @@ type FieldSectionType =
 type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
 
 // TODO: Add correct type if we support several date libraries
-export type PickerValidDate = DateTime;
+export type SchedulerValidDate = DateTime;
 
-export type PickersTimezone = 'default' | 'system' | 'UTC' | string;
+export type SchedulerTimezone = 'default' | 'system' | 'UTC' | string;
 
 export interface AdapterFormats {
   // Token formats
@@ -161,7 +161,7 @@ export type AdapterOptions<TLocale, TInstance> = {
 
 export type DateBuilderReturnType<T extends string | null | undefined> = [T] extends [null]
   ? null
-  : PickerValidDate;
+  : SchedulerValidDate;
 
 export interface Adapter<TLocale = any> {
   /**
@@ -188,45 +188,45 @@ export interface Adapter<TLocale = any> {
    * If no `value` parameter is provided, creates a date with the current timestamp.
    * If a `value` parameter is provided, pass it to the date library to try to parse it.
    * @param {string | null | undefined} value The optional value to parse.
-   * @param {PickersTimezone} timezone The timezone of the date. Default: "default"
-   * @returns {PickerValidDate | null} The parsed date.
+   * @param {SchedulerTimezone} timezone The timezone of the date. Default: "default"
+   * @returns {SchedulerValidDate | null} The parsed date.
    */
   date<T extends string | null | undefined>(
     value?: T,
-    timezone?: PickersTimezone,
+    timezone?: SchedulerTimezone,
   ): DateBuilderReturnType<T>;
   /**
    * Creates an invalid date in the date library format.
    * @deprecated This method will be removed in the next major release (v9.0.0).
-   * @returns {PickerValidDate} The invalid date.
+   * @returns {SchedulerValidDate} The invalid date.
    */
-  getInvalidDate(): PickerValidDate;
+  getInvalidDate(): SchedulerValidDate;
   /**
    * Extracts the timezone from a date.
-   * @param {PickerValidDate | null} value The date from which we want to get the timezone.
-   * @returns {PickerValidDate} The timezone of the date.
+   * @param {SchedulerValidDate | null} value The date from which we want to get the timezone.
+   * @returns {SchedulerValidDate} The timezone of the date.
    */
-  getTimezone(value: PickerValidDate | null): PickersTimezone;
+  getTimezone(value: SchedulerValidDate | null): SchedulerTimezone;
   /**
    * Convert a date to another timezone.
-   * @param {PickerValidDate} value The date to convert.
-   * @param {PickersTimezone} timezone The timezone to convert the date to.
-   * @returns {PickerValidDate} The converted date.
+   * @param {SchedulerValidDate} value The date to convert.
+   * @param {SchedulerTimezone} timezone The timezone to convert the date to.
+   * @returns {SchedulerValidDate} The converted date.
    */
-  setTimezone(value: PickerValidDate, timezone: PickersTimezone): PickerValidDate;
+  setTimezone(value: SchedulerValidDate, timezone: SchedulerTimezone): SchedulerValidDate;
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
-   * @param {PickerValidDate} value The value to convert.
-   * @returns {PickerValidDate} the JavaScript date.
+   * @param {SchedulerValidDate} value The value to convert.
+   * @returns {SchedulerValidDate} the JavaScript date.
    */
-  toJsDate(value: PickerValidDate): Date;
+  toJsDate(value: SchedulerValidDate): Date;
   /**
    * Parse a string date in a specific format.
    * @param {string} value The string date to parse.
    * @param {string} format The format in which the string date is.
-   * @returns {PickerValidDate | null} The parsed date.
+   * @returns {SchedulerValidDate | null} The parsed date.
    */
-  parse(value: string, format: string): PickerValidDate | null;
+  parse(value: string, format: string): SchedulerValidDate | null;
   /**
    * Get the code of the locale currently used by the adapter.
    * @returns {string} The code of the locale.
@@ -245,24 +245,24 @@ export interface Adapter<TLocale = any> {
   expandFormat(format: string): string;
   /**
    * Check if the date is valid.
-   * @param {PickerValidDate | null} value The value to test.
+   * @param {SchedulerValidDate | null} value The value to test.
    * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: PickerValidDate | null): value is PickerValidDate;
+  isValid(value: SchedulerValidDate | null): value is SchedulerValidDate;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
-   * @param {PickerValidDate} value The date to format.
+   * @param {SchedulerValidDate} value The date to format.
    * @param {keyof AdapterFormats} formatKey The formatKey to use.
    * @returns {string} The stringify date.
    */
-  format(value: PickerValidDate, formatKey: keyof AdapterFormats): string;
+  format(value: SchedulerValidDate, formatKey: keyof AdapterFormats): string;
   /**
    * Format a date using a format of the date library.
-   * @param {PickerValidDate} value The date to format.
+   * @param {SchedulerValidDate} value The date to format.
    * @param {string} formatString The format to use.
    * @returns {string} The stringify date.
    */
-  formatByString(value: PickerValidDate, formatString: string): string;
+  formatByString(value: SchedulerValidDate, formatString: string): string;
   /**
    * Format a number to be rendered in the clock.
    * Is being used in hijri and jalali adapters.
@@ -272,310 +272,313 @@ export interface Adapter<TLocale = any> {
   formatNumber(numberToFormat: string): string;
   /**
    * Check if the two dates are equal (which means they represent the same timestamp).
-   * @param {PickerValidDate | null} value The reference date.
-   * @param {PickerValidDate | null} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate | null} value The reference date.
+   * @param {SchedulerValidDate | null} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
    */
-  isEqual(value: PickerValidDate | null, comparing: PickerValidDate | null): boolean;
+  isEqual(value: SchedulerValidDate | null, comparing: SchedulerValidDate | null): boolean;
   /**
    * Check if the two dates are in the same year (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same year.
    */
-  isSameYear(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isSameYear(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   /**
    * Check if the two dates are in the same month (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same month.
    */
-  isSameMonth(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isSameMonth(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   /**
    * Check if the two dates are in the same day (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same day.
    */
-  isSameDay(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isSameDay(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   /**
    * Check if the two dates are at the same hour (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same hour.
    */
-  isSameHour(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isSameHour(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   /**
    * Check if the reference date is after the second date.
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the reference date is after the second date.
    */
-  isAfter(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isAfter(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
    * Check if the year of the reference date is after the year of the second date (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the year of the reference date is after the year of the second date.
    */
-  isAfterYear(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isAfterYear(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
    * Check if the day of the reference date is after the day of the second date (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the day of the reference date is after the day of the second date.
    */
-  isAfterDay(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isAfterDay(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   /**
    * Check if the reference date is before the second date.
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the reference date is before the second date.
    */
-  isBefore(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isBefore(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
    * Check if the year of the reference date is before the year of the second date (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the year of the reference date is before the year of the second date.
    */
-  isBeforeYear(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isBeforeYear(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
    * Check if the day of the reference date is before the day of the second date (using the timezone of the reference date).
-   * @param {PickerValidDate} value The reference date.
-   * @param {PickerValidDate} comparing The date to compare with the reference date.
+   * @param {SchedulerValidDate} value The reference date.
+   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the day of the reference date is before the day of the second date.
    */
-  isBeforeDay(value: PickerValidDate, comparing: PickerValidDate): boolean;
+  isBeforeDay(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
   /**
    * Check if the value is within the provided range.
-   * @param {PickerValidDate} value The value to test.
-   * @param {[PickerValidDate, PickerValidDate]} range The range in which the value should be.
+   * @param {SchedulerValidDate} value The value to test.
+   * @param {[SchedulerValidDate, SchedulerValidDate]} range The range in which the value should be.
    * @returns {boolean} `true` if the value is within the provided range.
    */
-  isWithinRange(value: PickerValidDate, range: [PickerValidDate, PickerValidDate]): boolean;
+  isWithinRange(
+    value: SchedulerValidDate,
+    range: [SchedulerValidDate, SchedulerValidDate],
+  ): boolean;
   /**
    * Return the start of the year for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The start of the year of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The start of the year of the given date.
    */
-  startOfYear(value: PickerValidDate): PickerValidDate;
+  startOfYear(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Return the start of the month for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The start of the month of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The start of the month of the given date.
    */
-  startOfMonth(value: PickerValidDate): PickerValidDate;
+  startOfMonth(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Return the start of the week for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The start of the week of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The start of the week of the given date.
    */
-  startOfWeek(value: PickerValidDate): PickerValidDate;
+  startOfWeek(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Return the start of the day for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The start of the day of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The start of the day of the given date.
    */
-  startOfDay(value: PickerValidDate): PickerValidDate;
+  startOfDay(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Return the end of the year for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The end of the year of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The end of the year of the given date.
    */
-  endOfYear(value: PickerValidDate): PickerValidDate;
+  endOfYear(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Return the end of the month for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The end of the month of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The end of the month of the given date.
    */
-  endOfMonth(value: PickerValidDate): PickerValidDate;
+  endOfMonth(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Return the end of the week for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The end of the week of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The end of the week of the given date.
    */
-  endOfWeek(value: PickerValidDate): PickerValidDate;
+  endOfWeek(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Return the end of the day for the given date.
-   * @param {PickerValidDate} value The original date.
-   * @returns {PickerValidDate} The end of the day of the given date.
+   * @param {SchedulerValidDate} value The original date.
+   * @returns {SchedulerValidDate} The end of the day of the given date.
    */
-  endOfDay(value: PickerValidDate): PickerValidDate;
+  endOfDay(value: SchedulerValidDate): SchedulerValidDate;
   /**
    * Add the specified number of years to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} amount The amount of years to be added.
-   * @returns {PickerValidDate} The new date with the years added.
+   * @returns {SchedulerValidDate} The new date with the years added.
    */
-  addYears(value: PickerValidDate, amount: number): PickerValidDate;
+  addYears(value: SchedulerValidDate, amount: number): SchedulerValidDate;
   /**
    * Add the specified number of months to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} amount The amount of months to be added.
-   * @returns {PickerValidDate} The new date with the months added.
+   * @returns {SchedulerValidDate} The new date with the months added.
    */
-  addMonths(value: PickerValidDate, amount: number): PickerValidDate;
+  addMonths(value: SchedulerValidDate, amount: number): SchedulerValidDate;
   /**
    * Add the specified number of weeks to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} amount The amount of weeks to be added.
-   * @returns {PickerValidDate} The new date with the weeks added.
+   * @returns {SchedulerValidDate} The new date with the weeks added.
    */
-  addWeeks(value: PickerValidDate, amount: number): PickerValidDate;
+  addWeeks(value: SchedulerValidDate, amount: number): SchedulerValidDate;
   /**
    * Add the specified number of days to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} amount The amount of days to be added.
-   * @returns {PickerValidDate} The new date with the days added.
+   * @returns {SchedulerValidDate} The new date with the days added.
    */
-  addDays(value: PickerValidDate, amount: number): PickerValidDate;
+  addDays(value: SchedulerValidDate, amount: number): SchedulerValidDate;
   /**
    * Add the specified number of hours to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} amount The amount of hours to be added.
-   * @returns {PickerValidDate} The new date with the hours added.
+   * @returns {SchedulerValidDate} The new date with the hours added.
    */
-  addHours(value: PickerValidDate, amount: number): PickerValidDate;
+  addHours(value: SchedulerValidDate, amount: number): SchedulerValidDate;
   /**
    * Add the specified number of minutes to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} amount The amount of minutes to be added.
-   * @returns {PickerValidDate} The new date with the minutes added.
+   * @returns {SchedulerValidDate} The new date with the minutes added.
    */
-  addMinutes(value: PickerValidDate, amount: number): PickerValidDate;
+  addMinutes(value: SchedulerValidDate, amount: number): SchedulerValidDate;
   /**
    * Add the specified number of seconds to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} amount The amount of seconds to be added.
-   * @returns {PickerValidDate} The new date with the seconds added.
+   * @returns {SchedulerValidDate} The new date with the seconds added.
    */
-  addSeconds(value: PickerValidDate, amount: number): PickerValidDate;
+  addSeconds(value: SchedulerValidDate, amount: number): SchedulerValidDate;
   /**
    * Get the year of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The year of the given date.
    */
-  getYear(value: PickerValidDate): number;
+  getYear(value: SchedulerValidDate): number;
   /**
    * Get the month of the given date.
    * The value is 0-based, in the Gregorian calendar January = 0, February = 1, ...
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The month of the given date.
    */
-  getMonth(value: PickerValidDate): number;
+  getMonth(value: SchedulerValidDate): number;
   /**
    * Get the date (day in the month) of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The date of the given date.
    */
-  getDate(value: PickerValidDate): number;
+  getDate(value: SchedulerValidDate): number;
   /**
    * Get the hours of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The hours of the given date.
    */
-  getHours(value: PickerValidDate): number;
+  getHours(value: SchedulerValidDate): number;
   /**
    * Get the minutes of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The minutes of the given date.
    */
-  getMinutes(value: PickerValidDate): number;
+  getMinutes(value: SchedulerValidDate): number;
   /**
    * Get the seconds of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The seconds of the given date.
    */
-  getSeconds(value: PickerValidDate): number;
+  getSeconds(value: SchedulerValidDate): number;
   /**
    * Get the milliseconds of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The milliseconds of the given date.
    */
-  getMilliseconds(value: PickerValidDate): number;
+  getMilliseconds(value: SchedulerValidDate): number;
   /**
    * Set the year to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} year The year of the new date.
-   * @returns {PickerValidDate} The new date with the year set.
+   * @returns {SchedulerValidDate} The new date with the year set.
    */
-  setYear(value: PickerValidDate, year: number): PickerValidDate;
+  setYear(value: SchedulerValidDate, year: number): SchedulerValidDate;
   /**
    * Set the month to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} month The month of the new date.
-   * @returns {PickerValidDate} The new date with the month set.
+   * @returns {SchedulerValidDate} The new date with the month set.
    */
-  setMonth(value: PickerValidDate, month: number): PickerValidDate;
+  setMonth(value: SchedulerValidDate, month: number): SchedulerValidDate;
   /**
    * Set the date (day in the month) to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} date The date of the new date.
-   * @returns {PickerValidDate} The new date with the date set.
+   * @returns {SchedulerValidDate} The new date with the date set.
    */
-  setDate(value: PickerValidDate, date: number): PickerValidDate;
+  setDate(value: SchedulerValidDate, date: number): SchedulerValidDate;
   /**
    * Set the hours to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} hours The hours of the new date.
-   * @returns {PickerValidDate} The new date with the hours set.
+   * @returns {SchedulerValidDate} The new date with the hours set.
    */
-  setHours(value: PickerValidDate, hours: number): PickerValidDate;
+  setHours(value: SchedulerValidDate, hours: number): SchedulerValidDate;
   /**
    * Set the minutes to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} minutes The minutes of the new date.
-   * @returns {PickerValidDate} The new date with the minutes set.
+   * @returns {SchedulerValidDate} The new date with the minutes set.
    */
-  setMinutes(value: PickerValidDate, minutes: number): PickerValidDate;
+  setMinutes(value: SchedulerValidDate, minutes: number): SchedulerValidDate;
   /**
    * Set the seconds to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} seconds The seconds of the new date.
-   * @returns {PickerValidDate} The new date with the seconds set.
+   * @returns {SchedulerValidDate} The new date with the seconds set.
    */
-  setSeconds(value: PickerValidDate, seconds: number): PickerValidDate;
+  setSeconds(value: SchedulerValidDate, seconds: number): SchedulerValidDate;
   /**
    * Set the milliseconds to the given date.
-   * @param {PickerValidDate} value The date to be changed.
+   * @param {SchedulerValidDate} value The date to be changed.
    * @param {number} milliseconds The milliseconds of the new date.
-   * @returns {PickerValidDate} The new date with the milliseconds set.
+   * @returns {SchedulerValidDate} The new date with the milliseconds set.
    */
-  setMilliseconds(value: PickerValidDate, milliseconds: number): PickerValidDate;
+  setMilliseconds(value: SchedulerValidDate, milliseconds: number): SchedulerValidDate;
   /**
    * Get the number of days in a month of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The number of days in the month
    */
-  getDaysInMonth(value: PickerValidDate): number;
+  getDaysInMonth(value: SchedulerValidDate): number;
   /**
    * Create a nested list with all the days of the month of the given date grouped by week.
-   * @param {PickerValidDate} value The given date.
-   * @returns {PickerValidDate[][]} A nested list with all the days of the month grouped by week.
+   * @param {SchedulerValidDate} value The given date.
+   * @returns {SchedulerValidDate[][]} A nested list with all the days of the month grouped by week.
    */
-  getWeekArray(value: PickerValidDate): PickerValidDate[][];
+  getWeekArray(value: SchedulerValidDate): SchedulerValidDate[][];
   /**
    * Get the number of the week of the given date.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The number of the week of the given date.
    */
-  getWeekNumber(value: PickerValidDate): number;
+  getWeekNumber(value: SchedulerValidDate): number;
   /**
    * Get the number of the day of the week of the given date.
    * The value is 1-based, 1 - first day of the week, 7 - last day of the week.
-   * @param {PickerValidDate} value The given date.
+   * @param {SchedulerValidDate} value The given date.
    * @returns {number} The number of the day of the week of the given date.
    */
-  getDayOfWeek(value: PickerValidDate): number;
+  getDayOfWeek(value: SchedulerValidDate): number;
   /**
    * Create a list with all the years between the start and the end date.
-   * @param {[PickerValidDate, PickerValidDate]} range The range of year to create.
-   * @returns {PickerValidDate[]} List of all the years between the start end the end date.
+   * @param {[SchedulerValidDate, SchedulerValidDate]} range The range of year to create.
+   * @returns {SchedulerValidDate[]} List of all the years between the start end the end date.
    */
-  getYearRange(range: [PickerValidDate, PickerValidDate]): PickerValidDate[];
+  getYearRange(range: [SchedulerValidDate, SchedulerValidDate]): SchedulerValidDate[];
 }
