@@ -16,6 +16,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { ChartsZoomValueTooltip } from './ChartsZoomValueTooltip';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -81,11 +82,12 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   let x: number;
   let y: number;
   let reverse: boolean;
+  let position: 'top' | 'bottom' | 'left' | 'right';
 
   if (axisDirection === 'x') {
     const axis = xAxis[axisId];
 
-    if (!axis) {
+    if (!axis || axis.position === 'none') {
       return null;
     }
 
@@ -97,10 +99,11 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         ? drawingArea.top + drawingArea.height + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
         : drawingArea.top - axis.offset - axisSize - ZOOM_SLIDER_SIZE - ZOOM_SLIDER_MARGIN;
     reverse = axis.reverse ?? false;
+    position = axis.position ?? 'bottom';
   } else {
     const axis = yAxis[axisId];
 
-    if (!axis) {
+    if (!axis || axis.position === 'none') {
       return null;
     }
 
@@ -112,6 +115,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         : drawingArea.left - axis.offset - axisSize - ZOOM_SLIDER_SIZE - ZOOM_SLIDER_MARGIN;
     y = drawingArea.top;
     reverse = axis.reverse ?? false;
+    position = axis.position ?? 'left';
   }
 
   const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_BACKGROUND_SIZE) / 2;
@@ -129,6 +133,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
       <ChartAxisZoomSliderSpan
         zoomData={zoomData}
         axisId={axisId}
+        position={position}
         axisDirection={axisDirection}
         reverse={reverse}
       />
@@ -136,21 +141,32 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   );
 }
 
+const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
+const zoomValueFormatter = (value: number) => formatter.format(value);
+
 function ChartAxisZoomSliderSpan({
   axisId,
   axisDirection,
+  position,
   zoomData,
   reverse,
+  valueFormatter = zoomValueFormatter,
 }: {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
+  position: 'top' | 'bottom' | 'left' | 'right';
   zoomData: ZoomData;
   reverse: boolean;
+  valueFormatter?: (value: number) => string;
 }) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
+  const [startHandleEl, setStartHandleEl] = React.useState<SVGRectElement | null>(null);
+  const [endHandleEl, setEndHandleEl] = React.useState<SVGRectElement | null>(null);
+  const [showTooltip, setShowTooltip] = React.useState<null | 'start' | 'end' | 'both'>(null);
+
   const previewHandleWidth =
     axisDirection === 'x' ? ZOOM_SLIDER_HANDLE_WIDTH : ZOOM_SLIDER_HANDLE_HEIGHT;
   const previewHandleHeight =
@@ -201,6 +217,7 @@ function ChartAxisZoomSliderSpan({
     const onPointerUp = () => {
       activePreviewRect.removeEventListener('pointermove', onPointerMove);
       activePreviewRect.removeEventListener('pointerup', onPointerUp);
+      setShowTooltip(null);
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -234,6 +251,7 @@ function ChartAxisZoomSliderSpan({
       pointerZoomMin = pointerDownZoom - axisZoomData.start;
       pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
 
+      setShowTooltip('both');
       activePreviewRect.addEventListener('pointerup', onPointerUp);
       activePreviewRect.addEventListener('pointermove', onPointerMove);
     };
@@ -387,27 +405,44 @@ function ChartAxisZoomSliderSpan({
         width={previewWidth}
         height={previewHeight}
       />
-      {
-        // TODO: In RTL languages, should we start from the right?
-      }
       <ChartAxisZoomSliderHandle
+        ref={setStartHandleEl}
         x={startHandleX}
         y={startHandleY}
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onResize={onResizeStart}
+        onPointerEnter={() => setShowTooltip('start')}
+        onPointerLeave={() => setShowTooltip(null)}
         placement="start"
       />
       <ChartAxisZoomSliderHandle
+        ref={setEndHandleEl}
         x={endHandleX}
         y={endHandleY}
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onResize={onResizeEnd}
+        onPointerEnter={() => setShowTooltip('end')}
+        onPointerLeave={() => setShowTooltip(null)}
         placement="end"
       />
+      <ChartsZoomValueTooltip
+        anchorEl={startHandleEl}
+        open={showTooltip === 'start' || showTooltip === 'both'}
+        placement={position}
+      >
+        {valueFormatter(zoomData.start)}
+      </ChartsZoomValueTooltip>
+      <ChartsZoomValueTooltip
+        anchorEl={endHandleEl}
+        open={showTooltip === 'end' || showTooltip === 'both'}
+        placement={position}
+      >
+        {valueFormatter(zoomData.end)}
+      </ChartsZoomValueTooltip>
     </React.Fragment>
   );
 }
