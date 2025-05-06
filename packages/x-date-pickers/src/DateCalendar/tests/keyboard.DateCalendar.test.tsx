@@ -5,7 +5,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DateCalendar /> keyboard interactions', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
@@ -22,10 +22,10 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(key, () => {
+      it(key, async () => {
         render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
-        act(() => screen.getByText('13').focus());
+        await act(async () => screen.getByText('13').focus());
         // Don't care about what's focused.
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
@@ -36,10 +36,10 @@ describe('<DateCalendar /> keyboard interactions', () => {
       });
     });
 
-    it('should manage a sequence of keyboard interactions', () => {
+    it('should manage a sequence of keyboard interactions', async () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
-      act(() => screen.getByText('13').focus());
+      await act(async () => screen.getByText('13').focus());
       const interactions = [
         { key: 'End', expectFocusedDay: '15' },
         { key: 'ArrowLeft', expectFocusedDay: '14' },
@@ -68,15 +68,14 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
-      it(key, () => {
+      it(key, async () => {
         render(<DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />);
 
-        act(() => screen.getByText(`${Number(initialDay)}`).focus());
+        await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
         // Don't care about what's focused.
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
-        clock.runToLast();
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
@@ -100,7 +99,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         { initialDay: '03', key: 'ArrowLeft', expectFocusedDay: '30' },
         { initialDay: '30', key: 'ArrowRight', expectFocusedDay: '2' },
       ].forEach(({ initialDay, key, expectFocusedDay }) => {
-        it(key, () => {
+        it(key, async () => {
           render(
             <DateCalendar
               defaultValue={adapterToUse.date(`2020-01-${initialDay}`)}
@@ -110,12 +109,11 @@ describe('<DateCalendar /> keyboard interactions', () => {
             />,
           );
 
-          act(() => screen.getByText(`${Number(initialDay)}`).focus());
+          await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
           // Don't care about what's focused.
           // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
           fireEvent.keyDown(document.activeElement!, { key });
 
-          clock.runToLast();
           // Based on column header, screen reader should pronounce <Day Number> <Week Day>
           // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
           expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
@@ -124,16 +122,15 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     describe('navigate months', () => {
-      it('should keep focus on arrow when switching month', () => {
+      it('should keep focus on arrow when switching month', async () => {
         render(<DateCalendar />);
 
         const nextMonthButton = screen.getByRole('button', { name: 'Next month' });
-        act(() => nextMonthButton.focus());
+        await act(async () => nextMonthButton.focus());
         // Don't care about what's focused.
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
 
-        clock.runToLast();
         expect(document.activeElement).toHaveAccessibleName('Next month');
       });
     });

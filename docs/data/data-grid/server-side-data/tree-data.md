@@ -1,5 +1,5 @@
 ---
-title: React Data Grid - Server-side tree data
+title: Data Grid - Server-side tree data
 ---
 
 # Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -78,7 +78,7 @@ Cache has been disabled in this demo for simplicity.
 
 ## Group expansion
 
-The idea behind the group expansion is the same as explained in the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion) section.
+Group expansion of server-side tree data works similarly to how it's described in [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
 The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` in a waterfall manner.
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all levels of the tree by default.

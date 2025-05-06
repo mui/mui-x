@@ -433,14 +433,15 @@ yargs(hideBin(process.argv))
           type: 'string',
         })
         .option('release', {
-          // #default-branch-switch
+          // #target-branch-reference
+          // to be done when we branch off for a new major (e.g. v9)
           default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         })
         .option('nextVersion', {
           describe:
-            'The version expected to be released e.g. `5.2.0`. Replaces `_VERSION__` placeholder in the changelog.',
+            'The version expected to be released e.g. `5.2.0`. Replaces `__VERSION__` placeholder in the changelog.',
           type: 'string',
         });
     },

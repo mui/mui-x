@@ -55,7 +55,7 @@ function getZAxisState(
       return;
     }
     if (dataset === undefined) {
-      throw new Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
+      throw new Error('MUI X Charts: z-axis uses `dataKey` but no `dataset` is provided.');
     }
     zAxisLookup[defaultizedId] = processColorMap(
       addDefaultId(

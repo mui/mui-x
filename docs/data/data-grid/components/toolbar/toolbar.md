@@ -1,12 +1,11 @@
 ---
-title: React Data Grid - Toolbar component
 productId: x-data-grid
 components: Toolbar, ToolbarButton
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Toolbar
+# Data Grid - Toolbar component
 
 <p class="description">Add custom actions and controls to the Data Grid.</p>
 
@@ -58,7 +57,7 @@ The demo below shows how to display active filter chips on the toolbar.
 
 Use the `render` prop to replace default elements. See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details.
 
-The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
+The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 
 {{"demo": "GridToolbarCustom.js", "bg": "inline", "defaultCodeOpen": false, "iframe": true}}
 
@@ -79,11 +78,19 @@ The component follows the WAI-ARIA authoring practices.
 The Toolbar component supports keyboard navigation.
 It implements the roving tabindex pattern.
 
-|                                                    Keys | Description                              |
-| ------------------------------------------------------: | :--------------------------------------- |
-|                              <kbd class="key">Tab</kbd> | Moves focus into and out of the toolbar. |
-| <kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd> | Moves focus into and out of the toolbar. |
-|                             <kbd class="key">Left</kbd> | Moves focus to the previous button.      |
-|                            <kbd class="key">Right</kbd> | Moves focus to the next button.          |
-|                             <kbd class="key">Home</kbd> | Moves focus to the first button.         |
-|                              <kbd class="key">End</kbd> | Moves focus to the last button.          |
+|                                                               Keys | Description                              |
+| -----------------------------------------------------------------: | :--------------------------------------- |
+|                                         <kbd class="key">Tab</kbd> | Moves focus into and out of the toolbar. |
+| <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> | Moves focus into and out of the toolbar. |
+|                                        <kbd class="key">Left</kbd> | Moves focus to the previous button.      |
+|                                       <kbd class="key">Right</kbd> | Moves focus to the next button.          |
+|                                        <kbd class="key">Home</kbd> | Moves focus to the first button.         |
+|                                         <kbd class="key">End</kbd> | Moves focus to the last button.          |
+
+## Legacy toolbar
+
+:::warning
+Deprecated API.
+:::
+
+The components above replaced the [legacy toolbar](/x/react-data-grid/components/#legacy-toolbar), for example`<GridToolbarContainer>`.

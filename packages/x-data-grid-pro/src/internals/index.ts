@@ -44,12 +44,14 @@ export {
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 export { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
+export { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSideLazyLoader/useGridInfiniteLoadingIntersection';
 export { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourcePro';
 export { useGridDataSourceBasePro } from '../hooks/features/dataSource/useGridDataSourceBasePro';
 export {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
 } from '../hooks/features/dataSource/gridDataSourceSelector';
+export { getGroupKeys } from '../hooks/features/dataSource/utils';
 
 export type {
   GridExperimentalProFeatures,

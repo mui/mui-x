@@ -11,10 +11,9 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
+import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
-import { getCell, spyApi } from 'test/utils/helperFn';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { getCell, spyApi, sleep } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
 
 /**
@@ -40,7 +39,7 @@ const generateDate = (
 };
 
 describe('<DataGridPro /> - Edit components', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -61,17 +60,18 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'brand', type: 'string', editable: true }];
     });
 
-    it('should call setEditCellValue with debounce', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with debounce', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
       expect(input.value).to.equal('Nike');
 
-      fireEvent.change(input, { target: { value: 'Puma' } });
+      await user.type(input, '[Backspace>4]Puma');
+
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
         field: 'brand',
@@ -91,34 +91,36 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
       expect(input.value).to.equal('Nike');
 
-      fireEvent.change(input, { target: { value: 'Puma' } });
+      await user.type(input, '[Backspace>4]Puma');
       expect(input.value).to.equal('PUMA');
     });
 
     describe('with fake timers', () => {
-      clock.withFakeTimers();
-
       it('should display a indicator while processing the props', async () => {
         defaultData.columns[0].preProcessEditCellProps = ({ props }) =>
           new Promise((resolve) => {
             setTimeout(() => resolve(props), 500);
           });
-        render(<TestCase />);
+        const { user } = render(<TestCase />);
 
         const cell = getCell(0, 0);
-        fireEvent.doubleClick(cell);
+        await user.dblClick(cell);
 
         const input = within(cell).getByRole<HTMLInputElement>('textbox');
         expect(input.value).to.equal('Nike');
 
         expect(screen.queryByTestId('LoadIcon')).to.equal(null);
-        fireEvent.change(input, { target: { value: 'Puma' } });
+        await user.type(input, '[Backspace>4]Puma');
 
-        clock.tick(200);
+        await act(async () => {
+          await sleep(200);
+        });
         expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
 
-        clock.tick(500);
-        await act(() => Promise.resolve());
+        await act(async () => {
+          await sleep(500);
+        });
+
         expect(screen.queryByTestId('LoadIcon')).to.equal(null);
       });
     });
@@ -129,16 +131,15 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditInputCell({ ...params, onValueChange });
 
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.dblClick(cell);
+      await user.dblClick(cell);
 
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
-      fireEvent.change(input, { target: { value: 'Puma' } });
-      await act(() => Promise.resolve());
+      await user.type(input, '[Backspace>4]Puma');
 
-      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.callCount).to.equal(8);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
     });
   });
@@ -149,17 +150,17 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'quantity', type: 'number', editable: true }];
     });
 
-    it('should call setEditCellValue with debounce', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with debounce', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
       expect(input.value).to.equal('100');
 
-      fireEvent.change(input, { target: { value: '110' } });
+      await user.type(input, '[Backspace>2]10');
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
         field: 'quantity',
@@ -178,7 +179,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
       expect(input.value).to.equal('100');
 
-      fireEvent.change(input, { target: { value: '110' } });
+      await user.type(input, '[Backspace>2]10');
       expect(input.value).to.equal('110');
     });
 
@@ -193,35 +194,37 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
       expect(input.value).to.equal('100');
 
-      fireEvent.change(input, { target: { value: '110' } });
+      await user.type(input, '[Backspace>2]10');
       await waitFor(() =>
         expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110),
       );
     });
 
     describe('with fake timers', () => {
-      clock.withFakeTimers();
-
       it('should display a indicator while processing the props', async () => {
         defaultData.columns[0].preProcessEditCellProps = ({ props }) =>
           new Promise((resolve) => {
             setTimeout(() => resolve(props), 500);
           });
-        render(<TestCase />);
+        const { user } = render(<TestCase />);
 
         const cell = getCell(0, 0);
-        fireEvent.doubleClick(cell);
+        await user.dblClick(cell);
 
         const input = within(cell).getByRole<HTMLInputElement>('spinbutton');
         expect(input.value).to.equal('100');
 
         expect(screen.queryByTestId('LoadIcon')).to.equal(null);
-        fireEvent.change(input, { target: { value: 110 } });
-        clock.tick(200);
+        await user.type(input, '110');
+        await act(async () => {
+          await sleep(200);
+        });
         expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
 
-        clock.tick(500);
-        await act(() => Promise.resolve());
+        await act(async () => {
+          await sleep(500);
+        });
+
         expect(screen.queryByTestId('LoadIcon')).to.equal(null);
       });
     });
@@ -243,33 +246,39 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
 
-      fireEvent.change(input, { target: { value: '2022-02-10' } });
+      await user.type(input, '2022-02-10', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: Infinity,
+      });
 
       expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
       expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
       expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
-      expect((spiedSetEditCellValue.lastCall.args[0].value! as Date).toISOString()).to.equal(
+      expect(spiedSetEditCellValue.lastCall.args[0].value?.toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
     });
 
-    it('should call setEditCellValue with null when entered an empty value', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with null when entered an empty value', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
-      fireEvent.change(input, { target: { value: '' } });
+      await user.type(input, '[Backspace]', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: Infinity,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value).to.equal(null);
     });
 
     it('should pass the value prop to the input', async () => {
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
@@ -283,45 +292,69 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(input.value).to.equal('2022-02-10');
     });
 
-    it('should handle correctly dates with partial years', () => {
-      render(<TestCase />);
+    it('should handle correctly dates with partial years', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
         [GridEditCellValueParams & { value: Date }]
       >;
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
 
-      fireEvent.change(input, { target: { value: '2021-01-05' } });
-      expect(spiedSetEditCellValue.lastCall.args[0].value!.getTime()).to.equal(
+      // 2021-01-05T14:30
+      await user.type(input, '2021-01-05', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 10,
+      });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(2021, 0, 5),
       );
 
-      fireEvent.change(input, { target: { value: '2021-01-01' } });
-      expect(spiedSetEditCellValue.lastCall.args[0].value!.getTime()).to.equal(
+      // 2021-01-01T14:30
+      await user.type(input, '01', {
+        initialSelectionStart: 8,
+        initialSelectionEnd: 10,
+      });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(2021, 0, 1),
       );
 
-      fireEvent.change(input, { target: { value: '0001-01-01' } });
-      expect(spiedSetEditCellValue.lastCall.args[0].value!.getTime()).to.equal(
+      // 0001-01-01T14:30
+      await user.type(input, '0001', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(1, 0, 1),
       );
 
-      fireEvent.change(input, { target: { value: '0019-01-01' } });
-      expect(spiedSetEditCellValue.lastCall.args[0].value!.getTime()).to.equal(
+      // 0019-01-01T14:30
+      await user.type(input, '0019', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(19, 0, 1),
       );
 
-      fireEvent.change(input, { target: { value: '0199-01-01' } });
-      expect(spiedSetEditCellValue.lastCall.args[0].value!.getTime()).to.equal(
+      // 0199-01-01T14:30
+      await user.type(input, '0199', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(199, 0, 1),
       );
 
-      fireEvent.change(input, { target: { value: '1999-01-01' } });
-      expect(spiedSetEditCellValue.lastCall.args[0].value!.getTime()).to.equal(
+      // 1999-01-01T14:30
+      await user.type(input, '1999', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1),
       );
     });
@@ -332,14 +365,16 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditDateCell({ ...params, onValueChange });
 
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
-      fireEvent.change(input, { target: { value: '2022-02-10' } });
-      await act(() => Promise.resolve());
+      await user.type(input, '2022-02-10', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 10,
+      });
 
       expect(onValueChange.callCount).to.equal(1);
       expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
@@ -364,7 +399,10 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
 
-      fireEvent.change(input, { target: { value: '2022-02-10T15:30:00' } });
+      await user.type(input, '2022-02-10T15:30:00', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 16,
+      });
 
       expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
       expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
@@ -374,23 +412,23 @@ describe('<DataGridPro /> - Edit components', () => {
       );
     });
 
-    it('should call setEditCellValue with null when entered an empty value', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue with null when entered an empty value', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
-      fireEvent.change(input, { target: { value: '' } });
+      await user.type(input, '[Backspace]');
       expect(spiedSetEditCellValue.lastCall.args[0].value).to.equal(null);
     });
 
     it('should pass the value prop to the input', async () => {
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
@@ -404,59 +442,95 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(input.value).to.equal('2022-02-10T15:10');
     });
 
-    it('should handle correctly dates with partial years', () => {
-      render(<TestCase />);
+    it('should handle correctly dates with partial years', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
         [GridEditCellValueParams & { value: Date }]
       >;
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
 
-      fireEvent.change(input, { target: { value: '2021-01-05T14:30' } });
+      // 2021-01-05T14:30
+      await user.type(input, '2021-01-05', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 10,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(2021, 0, 5, 14, 30),
       );
 
-      fireEvent.change(input, { target: { value: '2021-01-01T14:30' } });
+      // 2021-01-01T14:30
+      await user.type(input, '01', {
+        initialSelectionStart: 8,
+        initialSelectionEnd: 10,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(2021, 0, 1, 14, 30),
       );
 
-      fireEvent.change(input, { target: { value: '0001-01-01T14:30' } });
+      // 0001-01-01T14:30
+      await user.type(input, '0001', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(1, 0, 1, 14, 30),
       );
 
-      fireEvent.change(input, { target: { value: '0019-01-01T14:30' } });
+      // 0019-01-01T14:30
+      await user.type(input, '0019', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(19, 0, 1, 14, 30),
       );
 
-      fireEvent.change(input, { target: { value: '0199-01-01T14:30' } });
+      // 0199-01-01T14:30
+      await user.type(input, '0199', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(199, 0, 1, 14, 30),
       );
 
-      fireEvent.change(input, { target: { value: '1999-01-01T14:30' } });
+      // 1999-01-01T14:30
+      await user.type(input, '1999', {
+        initialSelectionStart: 0,
+        initialSelectionEnd: 4,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 14, 30),
       );
 
-      fireEvent.change(input, { target: { value: '1999-01-01T20:30' } });
+      // 1999-01-01T20:30
+      await user.type(input, '20:30', {
+        initialSelectionStart: 11,
+        initialSelectionEnd: 16,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 20, 30),
       );
 
-      fireEvent.change(input, { target: { value: '1999-01-01T20:02' } });
+      // 1999-01-01T20:02
+      await user.type(input, '02', {
+        initialSelectionStart: 14,
+        initialSelectionEnd: 16,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 20, 2),
       );
 
-      fireEvent.change(input, { target: { value: '1999-01-01T20:25' } });
+      // 1999-01-01T20:25
+      await user.type(input, '25', {
+        initialSelectionStart: 14,
+        initialSelectionEnd: 16,
+      });
       expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 20, 25),
       );
@@ -537,10 +611,10 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should pass the value prop to the select', async () => {
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
       await act(async () => {
@@ -555,12 +629,11 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditSingleSelectCell({ ...params, onValueChange });
 
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
-      await act(() => Promise.resolve());
+      await user.dblClick(cell);
+      await user.click(screen.queryAllByRole('option')[1]);
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
@@ -569,7 +642,7 @@ describe('<DataGridPro /> - Edit components', () => {
     it('should call onCellEditStop', async () => {
       const onCellEditStop = spy();
 
-      render(
+      const { user } = render(
         <div>
           <TestCase onCellEditStop={onCellEditStop} />
           <div id="outside-grid" />
@@ -577,23 +650,16 @@ describe('<DataGridPro /> - Edit components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      fireUserEvent.mousePress(document.getElementById('outside-grid')!);
-      await act(() => Promise.resolve());
+      await user.dblClick(cell);
+      await user.click(document.getElementById('outside-grid')!);
 
       expect(onCellEditStop.callCount).to.equal(1);
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
-      let resolveCallback: () => void;
-      const processRowUpdate = (newRow: any) =>
-        new Promise((resolve) => {
-          resolveCallback = () => resolve(newRow);
-        });
-
       defaultData.columns[0].renderEditCell = (params) => renderEditSingleSelectCell(params);
 
-      const { user } = render(<TestCase processRowUpdate={processRowUpdate} />);
+      const { user } = render(<TestCase />);
 
       const cell = getCell(0, 0);
       await user.dblClick(cell);
@@ -604,9 +670,6 @@ describe('<DataGridPro /> - Edit components', () => {
       });
       await user.keyboard('{Enter}');
       expect(screen.queryByRole('listbox')).to.equal(null);
-
-      resolveCallback!();
-      await act(() => Promise.resolve());
     });
   });
 
@@ -616,17 +679,17 @@ describe('<DataGridPro /> - Edit components', () => {
       defaultData.columns = [{ field: 'isAdmin', type: 'boolean', editable: true }];
     });
 
-    it('should call setEditCellValue', () => {
-      render(<TestCase />);
+    it('should call setEditCellValue', async () => {
+      const { user } = render(<TestCase />);
       const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
 
       const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
+      await user.dblClick(cell);
 
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       expect(input.checked).to.equal(false);
 
-      fireEvent.click(input);
+      await user.click(input);
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
         field: 'isAdmin',

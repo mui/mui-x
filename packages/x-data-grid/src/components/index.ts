@@ -19,6 +19,7 @@ export { GridPagination } from './GridPagination';
 export * from './GridRowCount';
 export * from './GridRow';
 export * from './GridSelectedRowCount';
+export * from './GridShadowScrollArea';
 
 export * from './columnsPanel';
 export * from './export';

@@ -55,6 +55,11 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
         selectSection: () => {
           throw new Error('You can only use `selectSection` on components that render a field');
         },
+        selectSectionAsync: () => {
+          throw new Error(
+            'You can only use `selectSectionAsync` on components that render a field',
+          );
+        },
         getHiddenInput: () => {
           throw new Error('You can only use `getHiddenInput` on components that render a field');
         },

@@ -7,9 +7,19 @@ export type {
   ScaleName,
   ContinuousScaleName,
   ChartsAxisData,
+  XAxis,
+  YAxis,
+  RadiusAxis,
+  RotationAxis,
 } from './axis';
 
 // Utils shared across the X packages
 export type { PropsFromSlot } from '@mui/x-internals/slots';
 export type { Position } from './position';
 export type { CurveType } from './curve';
+export type {
+  ChartBaseCommonProps,
+  ChartBaseIconProps,
+  ChartsIconSlots,
+  ChartsBaseSlots,
+} from './slots';

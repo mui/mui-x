@@ -79,14 +79,14 @@ export interface UseTreeViewExpansionParameters {
   expansionTrigger?: 'content' | 'iconContainer';
 }
 
-export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
+export type UseTreeViewExpansionParametersWithDefaults = DefaultizedProps<
   UseTreeViewExpansionParameters,
   'defaultExpandedItems'
 >;
 
 export interface UseTreeViewExpansionState {
   expansion: {
-    expandedItemsMap: Map<string, true>;
+    expandedItems: string[];
     expansionTrigger: 'content' | 'iconContainer';
   };
 }
@@ -104,7 +104,7 @@ interface UseTreeViewExpansionEventLookup {
 
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   params: UseTreeViewExpansionParameters;
-  defaultizedParams: UseTreeViewExpansionDefaultizedParameters;
+  paramsWithDefaults: UseTreeViewExpansionParametersWithDefaults;
   instance: UseTreeViewExpansionInstance;
   publicAPI: UseTreeViewExpansionPublicAPI;
   modelNames: 'expandedItems';

@@ -6,8 +6,6 @@ export interface RadarAxisHighlightClasses {
   root: string;
   /** Styles applied to the highlighted axis line element. */
   line: string;
-  /** Styles applied to every highlight slice. */
-  slice: string;
   /** Styles applied to every highlight dot. */
   dot: string;
 }
@@ -19,5 +17,5 @@ export function getRadarAxisHighlightUtilityClass(slot: string) {
 }
 export const chartsAxisHighlightClasses: RadarAxisHighlightClasses = generateUtilityClasses(
   'MuiRadarAxisHighlight',
-  ['root', 'line', 'slice', 'dot'],
+  ['root', 'line', 'dot'],
 );

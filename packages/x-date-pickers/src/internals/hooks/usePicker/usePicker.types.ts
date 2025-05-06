@@ -34,7 +34,10 @@ export interface UsePickerBaseProps<
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
 > extends OnErrorProps<TValue, TError>,
-    Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
+    Omit<
+      UseViewsOptions<any, TView>,
+      'onChange' | 'onFocusedViewChange' | 'focusedView' | 'getStepNavigation'
+    >,
     TimezoneProps,
     FormProps {
   /**
@@ -116,7 +119,7 @@ export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextV
   format?: string;
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
-   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker?: boolean;
@@ -173,6 +176,7 @@ export interface UsePickerParameters<
   >;
   props: TExternalProps;
   getStepNavigation: CreateStepNavigationReturnValue;
+  onPopperExited?: () => void;
 }
 
 export interface UsePickerReturnValue<TValue extends PickerValidValue> {

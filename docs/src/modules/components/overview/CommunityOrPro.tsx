@@ -36,7 +36,7 @@ export default function CommunityOrPro({
           </Typography>
           <Typography
             variant="h4"
-            component="h3"
+            component="h2"
             fontWeight="semiBold"
             color="text.primary"
             fontSize="1.625rem"

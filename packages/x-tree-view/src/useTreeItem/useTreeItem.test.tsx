@@ -98,6 +98,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>(
       function ConditionallyMountedItem(props) {
         const [mounted, setMounted] = React.useState(true);
         if (props.itemId === '2') {
+          // eslint-disable-next-line react-compiler/react-compiler
           setActiveItemMounted = setMounted;
         }
 

@@ -33,7 +33,6 @@ const GridOverlayWrapperRoot = styled('div', {
   slot: 'OverlayWrapper',
   shouldForwardProp: (prop) =>
     prop !== 'overlayType' && prop !== 'loadingOverlayVariant' && prop !== 'right',
-  overridesResolver: (props, styles) => styles.overlayWrapper,
 })<GridOverlayWrapperRootProps>(({ overlayType, loadingOverlayVariant, right }) =>
   // Skeleton overlay should flow with the scroll container and not be sticky
   loadingOverlayVariant !== 'skeleton'
@@ -56,7 +55,6 @@ const GridOverlayWrapperInner = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapperInner',
   shouldForwardProp: (prop) => prop !== 'overlayType' && prop !== 'loadingOverlayVariant',
-  overridesResolver: (props, styles) => styles.overlayWrapperInner,
 })({});
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -120,5 +118,6 @@ GridOverlayWrapper.propTypes = {
     'noResultsOverlay',
     'noRowsOverlay',
     'noColumnsOverlay',
+    'emptyPivotOverlay',
   ]),
 } as any;

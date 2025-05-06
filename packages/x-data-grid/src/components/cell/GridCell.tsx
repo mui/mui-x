@@ -43,6 +43,7 @@ import {
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { attachPinnedStyle } from '../../internals/utils';
+import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 
 export const gridPinnedColumnPositionLookup = {
   [PinnedColumnPosition.LEFT]: GridPinnedColumnPosition.LEFT,
@@ -172,6 +173,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     },
   );
 
+  const config = useGridConfiguration();
+  const cellAggregationResult = config.hooks.useCellAggregationResult(rowId, field);
   const cellMode: GridCellModes = editCellState ? GridCellModes.Edit : GridCellModes.View;
 
   const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
@@ -193,6 +196,13 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     }),
   });
   cellParams.api = apiRef.current;
+
+  if (cellAggregationResult) {
+    cellParams.value = cellAggregationResult.value;
+    cellParams.formattedValue = column.valueFormatter
+      ? column.valueFormatter(cellParams.value as never, row, column, apiRef)
+      : cellParams.value;
+  }
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {

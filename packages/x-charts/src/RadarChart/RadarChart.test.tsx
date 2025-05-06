@@ -48,7 +48,7 @@ describe('<RadarChart />', () => {
     const onHighlightChange = spy();
     const { user } = render(<RadarChart {...radarConfig} onHighlightChange={onHighlightChange} />);
 
-    const path = document.querySelector<HTMLElement>('svg .MuiRadarSeriesPlot-root path')!;
+    const path = document.querySelector<HTMLElement>('svg .MuiRadarSeriesPlot-area')!;
     await user.pointer({ target: path });
 
     expect(onHighlightChange.callCount).to.equal(1);

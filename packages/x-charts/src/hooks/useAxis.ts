@@ -1,5 +1,4 @@
 'use client';
-import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -30,7 +29,7 @@ import {
  * @returns `{ xAxis, xAxisIds }` - The x-axes and their IDs.
  */
 export function useXAxes() {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useStore();
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
 
   return { xAxis, xAxisIds };
@@ -47,7 +46,7 @@ export function useXAxes() {
  * @returns `{ yAxis, yAxisIds }` - The y-axes and their IDs.
  */
 export function useYAxes() {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useStore();
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
   return { yAxis, yAxisIds };
@@ -59,7 +58,7 @@ export function useYAxes() {
  * @returns The X axis.
  */
 export function useXAxis(axisId?: AxisId) {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useStore();
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
 
   const id = axisId ?? xAxisIds[0];
@@ -73,7 +72,7 @@ export function useXAxis(axisId?: AxisId) {
  * @returns The Y axis.
  */
 export function useYAxis(axisId?: AxisId) {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useStore();
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
   const id = axisId ?? yAxisIds[0];
@@ -82,7 +81,7 @@ export function useYAxis(axisId?: AxisId) {
 }
 
 export function useRotationAxes() {
-  const store = useStore<[UseChartPolarAxisSignature]>();
+  const store = useStore();
   const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
     store,
     selectorChartRotationAxis,
@@ -92,7 +91,7 @@ export function useRotationAxes() {
 }
 
 export function useRadiusAxes() {
-  const store = useStore<[UseChartPolarAxisSignature]>();
+  const store = useStore();
   const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
 
   return { radiusAxis, radiusAxisIds };

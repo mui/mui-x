@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
+import { FormControlOwnProps } from '@mui/material/FormControl';
 import type { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldReturnValue } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
@@ -87,6 +88,10 @@ export interface FieldSection {
    * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
   endSeparator: string;
+  /**
+   * If `true`, the `endSeparator` is a format separator (i.e. ":" or "/").
+   */
+  isEndFormatSeparator?: boolean;
 }
 
 // If `PickerValidDate` contains `any`, then `TValue extends PickerRangeValue` will return true, so we have to handle this edge case first.
@@ -202,3 +207,45 @@ export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extend
         | 'type'
       >
     : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
+
+export interface PickerTextFieldOwnerState extends FieldOwnerState {
+  // Should be moved to FieldOwnerState once we drop the textField slot.
+  /**
+   * `true` if the value of the field is currently empty.
+   */
+  isFieldValueEmpty: boolean;
+  // Should be moved to FieldOwnerState once we drop the textField slot.
+  /**
+   * `true` if the field is focused, `false` otherwise.
+   */
+  isFieldFocused: boolean;
+  // Should be moved to FieldOwnerState once we drop the textField slot.
+  /**
+   * `true` if the field has an error, `false` otherwise.
+   */
+  hasFieldError: boolean;
+  /**
+   * The size of the input.
+   */
+  inputSize: Exclude<FormControlOwnProps['size'], undefined>;
+  /**
+   * The color of the input.
+   */
+  inputColor: Exclude<FormControlOwnProps['color'], undefined>;
+  /**
+   * `true` if the input takes up the full width of its container.
+   */
+  isInputInFullWidth: boolean;
+  /**
+   * `true` if the input has a start adornment, `false` otherwise.
+   */
+  hasStartAdornment: boolean;
+  /**
+   * `true` if the input has an end adornment, `false` otherwise.
+   */
+  hasEndAdornment: boolean;
+  /**
+   * `true` if the input has a label, `false` otherwise.
+   */
+  inputHasLabel: boolean;
+}

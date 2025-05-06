@@ -4,14 +4,7 @@ import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { useSelector } from '../internals/store/useSelector';
-import {
-  UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxisIndex,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
@@ -24,6 +17,16 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    /**
+     * If `true`, the marker is faded.
+     * @default false
+     */
+    isFaded?: boolean;
+    /**
+     * If `true`, the marker is highlighted.
+     * @default false
+     */
+    isHighlighted?: boolean;
   };
 
 const Circle = styled('circle')({
@@ -56,22 +59,18 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
+    isFaded = false,
+    isHighlighted = false,
     ...other
   } = props;
 
   const theme = useTheme();
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
-
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisInteractionIndex === dataIndex || isHighlighted,
+    isHighlighted,
     isFaded,
     color,
     skipAnimation,

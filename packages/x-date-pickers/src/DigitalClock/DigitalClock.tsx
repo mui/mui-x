@@ -9,6 +9,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -37,7 +38,6 @@ const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) =>
 const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DigitalClockOwnerState }>({
   overflowY: 'auto',
   width: '100%',
@@ -61,7 +61,6 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
   slot: 'List',
-  overridesResolver: (props, styles) => styles.list,
 })({
   padding: 0,
 });
@@ -70,7 +69,6 @@ export const DigitalClockItem = styled(MenuItem, {
   name: 'MuiDigitalClock',
   slot: 'Item',
   shouldForwardProp: (prop) => prop !== 'itemValue' && prop !== 'formattedValue',
-  overridesResolver: (props, styles) => styles.item,
 })(({ theme }) => ({
   padding: '8px 16px',
   margin: '2px 4px',
@@ -216,7 +214,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     setValueAndGoToNextView(newValue, 'finish');
   });
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (containerRef.current === null) {
       return;
     }

@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 
-const defaultXAxis = {
-  scaleType: 'band',
-  dataKey: 'code',
-  height: 45,
-} as const;
+const defaultXAxis = { dataKey: 'code', height: 45 } as const;
 
 const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
 
@@ -39,7 +35,7 @@ export default function XAxisAnchorBaselineDefaults() {
       hideLegend
       yAxis={[
         {
-          valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+          valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
           width: 60,
         },
       ]}
