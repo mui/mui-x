@@ -1,6 +1,6 @@
 export type CurveOptions = {
   /**
-   * The gap between each segments.
+   * The gap between each segment.
    * @default 0
    */
   gap?: number;
