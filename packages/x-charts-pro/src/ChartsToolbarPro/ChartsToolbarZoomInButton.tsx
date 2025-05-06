@@ -2,8 +2,11 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useChartContext, useChartToolbarSlots } from '@mui/x-charts/internals';
-import { ChartsToolbarSlotProps } from '@mui/x-charts/material';
+import {
+  useChartContext,
+  useChartToolbarSlots,
+  ChartsToolbarSlotProps,
+} from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 

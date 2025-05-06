@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import { ChartsBaseSlots } from '../../models/slots/chartsBaseSlots';
 import { ChartsIconSlots } from '../../models/slots/chartsIconSlots';
