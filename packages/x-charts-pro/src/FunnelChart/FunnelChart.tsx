@@ -33,6 +33,8 @@ export interface FunnelChartProps
       | 'xAxis'
       | 'rotationAxis'
       | 'radiusAxis'
+      | 'slots'
+      | 'slotProps'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
