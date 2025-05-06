@@ -62,8 +62,6 @@ You can provide an overview and allow the manipulation of the zoomed area by set
 
 {{"demo": "ZoomSlider.js"}}
 
-Optionally, you can set the `zoom.slider.size` property to customize the zoom slider's size, that is, the height on an x-axis and the width on a y-axis.
-
 ### Composition
 
 When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.
