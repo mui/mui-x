@@ -1,13 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   enhancedPickersDayClasses,
@@ -17,7 +15,6 @@ import {
 import { useUtils } from '../internals/hooks/useUtils';
 import { EnhancedPickersDayOwnerState, EnhancedPickersDayProps } from './EnhancedPickersDay.types';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
-import '@mui/system';
 
 const DAY_SIZE = 36;
 
@@ -45,22 +42,24 @@ const useUtilityClasses = (ownerState: EnhancedPickersDayOwnerState) => {
   return composeClasses(slots, getEnhancedPickersDayUtilityClass, {});
 };
 
-const overridesResolver = (
-  props: { ownerState: EnhancedPickersDayOwnerState },
-  styles: Record<EnhancedPickersDayClassKey, CSSInterpolation>,
-) => {
-  const { ownerState } = props;
-  return [
-    styles.root,
-    !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
-    !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
-    ownerState.isDayFillerCell && styles.fillerCell,
-  ];
-};
-
 const SET_MARGIN = DAY_MARGIN; // should be working with any given margin
 
-const styleArg = ({ theme }: { theme: Theme }) => ({
+const EnhancedPickersDayRoot = styled(ButtonBase, {
+  name: 'MuiEnhancedPickersDay',
+  slot: 'Root',
+  overridesResolver: (
+    props: { ownerState: EnhancedPickersDayOwnerState },
+    styles: Record<EnhancedPickersDayClassKey, CSSInterpolation>,
+  ) => {
+    const { ownerState } = props;
+    return [
+      styles.root,
+      !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
+      !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
+      ownerState.isDayFillerCell && styles.fillerCell,
+    ];
+  },
+})<{ ownerState: EnhancedPickersDayOwnerState }>(({ theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
@@ -135,13 +134,7 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       },
     },
   ],
-});
-
-const EnhancedPickersDayRoot = styled(ButtonBase, {
-  name: 'MuiEnhancedPickersDay',
-  slot: 'Root',
-  overridesResolver,
-})<{ ownerState: EnhancedPickersDayOwnerState }>(styleArg);
+}));
 
 type EnhancedPickersDayComponent = ((
   props: EnhancedPickersDayProps & React.RefAttributes<HTMLButtonElement>,
@@ -259,7 +252,7 @@ const EnhancedPickersDayRaw = React.forwardRef(function EnhancedPickersDay(
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >
-      {!children ? utils.format(day, 'dayOfMonth') : children}
+      {children ?? utils.format(day, 'dayOfMonth')}
     </EnhancedPickersDayRoot>
   );
 });

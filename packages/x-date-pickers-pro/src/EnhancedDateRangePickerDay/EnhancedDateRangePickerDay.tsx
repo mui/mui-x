@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { usePickerDayOwnerState, useUtils } from '@mui/x-date-pickers/internals';
 import {
   EnhancedDateRangePickerDayOwnerState,
@@ -69,29 +67,6 @@ const useUtilityClasses = (ownerState: EnhancedDateRangePickerDayOwnerState) => 
   return composeClasses(slots, getEnhancedDateRangePickerDayUtilityClass, {});
 };
 
-const overridesResolver = (
-  props: { ownerState: EnhancedDateRangePickerDayOwnerState },
-  styles: Record<EnhancedDateRangePickerDayClassKey, CSSInterpolation>,
-) => {
-  const { ownerState } = props;
-  return [
-    styles.root,
-    !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
-    !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
-    ownerState.isDayFillerCell && styles.fillerCell,
-    ownerState.isDaySelected && !ownerState.isDayInsideSelection && styles.selected,
-    ownerState.isDayPreviewStart && styles.previewStart,
-    ownerState.isDayPreviewEnd && styles.previewEnd,
-    ownerState.isDayInsidePreview && styles.insidePreviewing,
-    ownerState.isDaySelectionStart && styles.selectionStart,
-    ownerState.isDaySelectionEnd && styles.selectionEnd,
-    ownerState.isDayInsideSelection && styles.insideSelection,
-    ownerState.isDayDraggable && styles.draggable,
-    ownerState.isDayStartOfWeek && styles.startOfWeek,
-    ownerState.isDayEndOfWeek && styles.endOfWeek,
-  ];
-};
-
 const SET_MARGIN = '2px'; // should be working with any given margin
 const highlightStyles = (theme: Theme) => ({
   content: '""' /* Creates an empty element */,
@@ -137,7 +112,28 @@ const selectedDayStyles = (theme: Theme) => ({
 const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiEnhancedDateRangePickerDay',
   slot: 'Root',
-  overridesResolver,
+  overridesResolver: (
+    props: { ownerState: EnhancedDateRangePickerDayOwnerState },
+    styles: Record<EnhancedDateRangePickerDayClassKey, CSSInterpolation>,
+  ) => {
+    const { ownerState } = props;
+    return [
+      styles.root,
+      !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
+      !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
+      ownerState.isDayFillerCell && styles.fillerCell,
+      ownerState.isDaySelected && !ownerState.isDayInsideSelection && styles.selected,
+      ownerState.isDayPreviewStart && styles.previewStart,
+      ownerState.isDayPreviewEnd && styles.previewEnd,
+      ownerState.isDayInsidePreview && styles.insidePreviewing,
+      ownerState.isDaySelectionStart && styles.selectionStart,
+      ownerState.isDaySelectionEnd && styles.selectionEnd,
+      ownerState.isDayInsideSelection && styles.insideSelection,
+      ownerState.isDayDraggable && styles.draggable,
+      ownerState.isDayStartOfWeek && styles.startOfWeek,
+      ownerState.isDayEndOfWeek && styles.endOfWeek,
+    ];
+  },
 })<{ ownerState: EnhancedDateRangePickerDayOwnerState }>(({ theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
@@ -464,7 +460,7 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
         ownerState={ownerState}
         className={clsx(classes.root, className)}
       >
-        {!children ? utils.format(day, 'dayOfMonth') : children}
+        {children ?? utils.format(day, 'dayOfMonth')}
       </EnhancedDateRangePickerDayRoot>
     </EnhancedDateRangePickerDayContainer>
   );

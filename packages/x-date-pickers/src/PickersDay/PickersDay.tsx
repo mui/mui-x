@@ -272,7 +272,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
       {...other}
       ownerState={ownerState}
     >
-      {!children ? utils.format(day, 'dayOfMonth') : children}
+      {children ?? utils.format(day, 'dayOfMonth')}
     </PickersDayRoot>
   );
 });
