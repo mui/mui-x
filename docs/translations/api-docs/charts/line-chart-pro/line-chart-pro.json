@@ -71,5 +71,24 @@
     "zAxis": { "description": "The configuration of the z-axes." },
     "zoomData": { "description": "The list of zoom data related to each axis." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "area": "The component that renders the area.",
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "baseIconButton": "",
+    "baseTooltip": "",
+    "legend": "Custom rendering of the legend.",
+    "line": "The component that renders the line.",
+    "lineHighlight": "",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "mark": "",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip popper.",
+    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
+    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
+  }
 }
