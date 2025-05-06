@@ -12,7 +12,11 @@ import {
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { materialSlots } from '../internals/material';
+import {
+  ChartsToolbarSlotPropsPro,
+  ChartsToolbarSlotsPro,
+  materialSlots,
+} from '../internals/material';
 import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 
@@ -23,7 +27,16 @@ export type ChartDataProviderProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = ChartDataProviderProps<TSeries, TSignatures> &
-  ChartProviderProps<TSeries, TSignatures>['pluginParams'];
+  ChartProviderProps<TSeries, TSignatures>['pluginParams'] & {
+    /**
+     * Slots to customize charts' components.
+     */
+    slots?: Partial<ChartsToolbarSlotsPro>;
+    /**
+     * The props for the slots.
+     */
+    slotProps?: Partial<ChartsToolbarSlotPropsPro>;
+  };
 
 /**
  * Orchestrates the data providers for the chart components and hooks.

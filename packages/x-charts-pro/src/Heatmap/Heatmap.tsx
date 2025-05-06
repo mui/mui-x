@@ -23,7 +23,7 @@ import {
 } from '@mui/x-charts/ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import { ChartsToolbarProps } from '@mui/x-charts/Toolbar';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/material';
+import { ChartsToolbarSlotPropsPro, ChartsToolbarSlotsPro } from '../internals/material';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
@@ -36,7 +36,7 @@ export interface HeatmapSlots
   extends ChartsAxisSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots,
-    Partial<ChartsToolbarSlots> {
+    Partial<ChartsToolbarSlotsPro> {
   /**
    * Custom component for the toolbar.
    * @default ChartsToolbar
@@ -52,7 +52,7 @@ export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
-    Partial<ChartsToolbarSlotProps> {
+    Partial<ChartsToolbarSlotPropsPro> {
   /**
    * Props for the toolbar component.
    */
