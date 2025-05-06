@@ -2,7 +2,7 @@ import { AxisId } from '../../../../models/axis';
 import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ZoomOptions } from './zoom.types';
 
-const defaultZoomOptions: Required<ZoomOptions> = {
+const defaultZoomOptions = {
   minStart: 0,
   maxEnd: 100,
   step: 5,
@@ -10,7 +10,8 @@ const defaultZoomOptions: Required<ZoomOptions> = {
   maxSpan: 100,
   panning: true,
   filterMode: 'keep',
-};
+  slider: { enabled: false },
+} satisfies Omit<DefaultizedZoomOptions, 'axisId' | 'axisDirection'>;
 
 export const defaultizeZoom = (
   zoom: boolean | ZoomOptions | undefined,
@@ -34,5 +35,6 @@ export const defaultizeZoom = (
     axisDirection,
     ...defaultZoomOptions,
     ...zoom,
+    slider: { ...defaultZoomOptions.slider, ...zoom.slider },
   };
 };

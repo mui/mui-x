@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -43,7 +44,7 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   role?: string;
 }
 
-interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
   /**
    * `true` if this is not the initial render of the digital clock.
    */
@@ -177,7 +178,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
 
-    React.useEffect(() => {
+    useEnhancedEffect(() => {
       if (containerRef.current === null) {
         return;
       }

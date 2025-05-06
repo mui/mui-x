@@ -67,8 +67,6 @@ const useAggregatedData = (gap: number | undefined) => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const curve = getFunnelCurve(currentSeries.curve, isHorizontal, gap);
-
       const xPosition = (
         value: number,
         bandIndex: number,
@@ -107,6 +105,15 @@ const useAggregatedData = (gap: number | undefined) => {
               })
             : currentSeries.sectionLabel;
 
+        const curve = getFunnelCurve(
+          currentSeries.curve,
+          isHorizontal,
+          gap,
+          dataIndex,
+          currentSeries.dataPoints.length,
+          currentSeries.borderRadius,
+        );
+
         const line = d3Line<FunnelDataPoints>()
           .x((d) =>
             xPosition(d.x, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
@@ -122,6 +129,7 @@ const useAggregatedData = (gap: number | undefined) => {
           id,
           seriesId,
           dataIndex,
+          variant: currentSeries.variant,
           label: sectionLabel !== false && {
             ...positionLabel({
               ...sectionLabel,
@@ -155,7 +163,7 @@ function FunnelPlot(props: FunnelPlotProps) {
 
   return (
     <React.Fragment>
-      {data.map(({ d, color, id, seriesId, dataIndex }) => (
+      {data.map(({ d, color, id, seriesId, dataIndex, variant }) => (
         <FunnelSection
           {...other}
           d={d}
@@ -163,6 +171,7 @@ function FunnelPlot(props: FunnelPlotProps) {
           key={id}
           dataIndex={dataIndex}
           seriesId={seriesId}
+          variant={variant}
           onClick={
             onItemClick &&
             ((event) => {
