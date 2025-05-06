@@ -8,6 +8,7 @@ import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
+import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -42,7 +43,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     ) {
       warnOnce(
         [
-          `MUI X: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
+          `MUI X Charts: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
           `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
         ],
         'warning',
@@ -125,6 +126,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     hideLegend,
     axisHighlight,
     apiRef,
+    gap,
     ...rest
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
@@ -158,7 +160,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     width,
     height,
     margin,
-    colors,
+    colors: colors ?? strawberrySkyPalette,
     xAxis: [xAxis],
     yAxis: [yAxis],
     sx,
@@ -169,6 +171,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   };
 
   const funnelPlotProps: FunnelPlotProps = {
+    gap,
     onItemClick,
     slots,
     slotProps,

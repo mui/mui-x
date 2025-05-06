@@ -64,7 +64,7 @@ describe('ChartsTooltip', () => {
             { dataKey: 'v1', id: 's1', label: 'S1' },
             { dataKey: 'v2', id: 's2', label: 'S2' },
           ]}
-          xAxis={[{ scaleType: 'band', dataKey: 'x', position: 'none' }]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
           slotProps={{ tooltip: { trigger: 'axis' } }}
         />,
         { wrapper },
@@ -184,7 +184,7 @@ describe('ChartsTooltip', () => {
             { dataKey: 'v1', id: 's1', label: 'S1' },
             { dataKey: 'v2', id: 's2', label: 'S2' },
           ]}
-          xAxis={[{ scaleType: 'band', dataKey: 'x', position: 'none' }]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
           slotProps={{ tooltip: { trigger: 'item' } }}
         />,
         { wrapper },

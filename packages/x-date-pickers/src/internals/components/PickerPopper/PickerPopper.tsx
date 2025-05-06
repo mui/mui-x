@@ -26,7 +26,7 @@ import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
 import { PickerOwnerState } from '../../../models';
 import { usePickerContext } from '../../../hooks';
 
-interface PickerPopperOwnerState extends PickerOwnerState {
+export interface PickerPopperOwnerState extends PickerOwnerState {
   popperPlacement: PopperPlacementType;
 }
 

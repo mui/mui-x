@@ -17,6 +17,12 @@ export default function FunnelCurves() {
             options: curveTypes,
             defaultValue: curveTypes[0],
           },
+          gap: {
+            knob: 'slider',
+            defaultValue: 0,
+            min: 0,
+            max: 20,
+          },
         } as const
       }
       renderDemo={(props) => (
@@ -29,6 +35,7 @@ export default function FunnelCurves() {
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -40,6 +47,7 @@ export default function FunnelCurves() {
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -50,6 +58,7 @@ export default function FunnelCurves() {
 
 <FunnelChart
   series={[{ curve: '${props.curveType}' }]}
+  gap={${props.gap}}
 />
 `;
       }}

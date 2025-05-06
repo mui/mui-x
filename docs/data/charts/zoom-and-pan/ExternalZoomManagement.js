@@ -15,7 +15,6 @@ const initialZoomData = [
 
 export default function ExternalZoomManagement() {
   const apiRef = React.useRef(undefined);
-
   const [zoomData, setZoomData] = React.useState(initialZoomData);
 
   return (

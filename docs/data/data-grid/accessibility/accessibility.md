@@ -102,10 +102,10 @@ On macOS replace:
 
 Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
 
-- <kbd class="key">Page Up</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd>
-- <kbd class="key">Page Down</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd>
-- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
-- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
+- <kbd class="key">Page Up</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd></kbd>
+- <kbd class="key">Page Down</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd></kbd>
+- <kbd class="key">Home</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd></kbd>
+- <kbd class="key">End</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd></kbd>
 
 :::
 

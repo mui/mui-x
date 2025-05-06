@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
+import { loadStyleSheets } from '@mui/x-internals/export';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -211,7 +212,7 @@ export const useGridPrintExport = (
         printDoc.body.classList.add(...normalizeOptions.bodyClassName.split(' '));
       }
 
-      const stylesheetLoadPromises: Promise<void>[] = [];
+      let stylesheetLoadPromises: Promise<void>[] = [];
 
       if (normalizeOptions.copyStyles) {
         const rootCandidate = gridRootElement!.getRootNode();
@@ -219,46 +220,8 @@ export const useGridPrintExport = (
           rootCandidate.constructor.name === 'ShadowRoot'
             ? (rootCandidate as ShadowRoot)
             : doc.current;
-        const headStyleElements = root!.querySelectorAll("style, link[rel='stylesheet']");
 
-        for (let i = 0; i < headStyleElements.length; i += 1) {
-          const node = headStyleElements[i];
-          if (node.tagName === 'STYLE') {
-            const newHeadStyleElements = printDoc.createElement(node.tagName);
-            const sheet = (node as HTMLStyleElement).sheet;
-
-            if (sheet) {
-              let styleCSS = '';
-              // NOTE: for-of is not supported by IE
-              for (let j = 0; j < sheet.cssRules.length; j += 1) {
-                if (typeof sheet.cssRules[j].cssText === 'string') {
-                  styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
-                }
-              }
-              newHeadStyleElements.appendChild(printDoc.createTextNode(styleCSS));
-              printDoc.head.appendChild(newHeadStyleElements);
-            }
-          } else if (node.getAttribute('href')) {
-            // If `href` tag is empty, avoid loading these links
-
-            const newHeadStyleElements = printDoc.createElement(node.tagName);
-
-            for (let j = 0; j < node.attributes.length; j += 1) {
-              const attr = node.attributes[j];
-              if (attr) {
-                newHeadStyleElements.setAttribute(attr.nodeName, attr.nodeValue || '');
-              }
-            }
-
-            stylesheetLoadPromises.push(
-              new Promise((resolve) => {
-                newHeadStyleElements.addEventListener('load', () => resolve());
-              }),
-            );
-
-            printDoc.head.appendChild(newHeadStyleElements);
-          }
-        }
+        stylesheetLoadPromises = loadStyleSheets(printDoc, root!);
       }
 
       // Trigger print

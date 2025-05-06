@@ -35,7 +35,7 @@ const barChartsProps = {
       highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
-  xAxis: [{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }],
+  xAxis: [{ data: ['A', 'B', 'C', 'D', 'E'] }],
   height: 200,
   hideLegend: true,
 };

@@ -14,11 +14,6 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
    */
   params: ChartUsedDefaultizedParams<TSignature>;
   /**
-   * The store of controlled properties.
-   * If they are not controlled by the user, they will be initialized by the plugin.
-   */
-  models: ChartUsedControlModels<TSignature>;
-  /**
    * The store that can be used to access the state of other plugins.
    */
   store: ChartUsedStore<TSignature>;
@@ -39,14 +34,6 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
    */
   seriesConfig: ChartSeriesConfig<any>;
 }
-
-type ChartControlModelsInitializer<TSignature extends ChartAnyPluginSignature> = {
-  [TControlled in keyof TSignature['models']]: {
-    getDefaultValue: (
-      params: TSignature['defaultizedParams'],
-    ) => Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
-  };
-};
 
 type ChartResponse<TSignature extends ChartAnyPluginSignature> = OptionalIfEmpty<
   'publicAPI',
@@ -88,17 +75,6 @@ export type ChartPluginSignature<
    */
   publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
   /**
-   * A helper for controlled properties.
-   * Properties defined here can be controlled by the user. If they are not controlled, they will be initialized by the plugin.
-   */
-  models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
-    ? {
-        [TControlled in T['modelNames']]-?: ChartControlModel<
-          Exclude<T['defaultizedParams'][TControlled], undefined>
-        >;
-      }
-    : {};
-  /**
    * Any plugins that this plugin depends on.
    */
   dependencies: T extends { dependencies: Array<any> } ? T['dependencies'] : [];
@@ -116,7 +92,6 @@ export type ChartAnyPluginSignature = ChartPluginSignature<{
   instance: any;
   publicAPI: any;
   state: any;
-  modelNames: any;
   dependencies: any;
   optionalDependencies: any;
 }>;
@@ -150,21 +125,6 @@ export type ChartUsedInstance<TSignature extends ChartAnyPluginSignature> =
     $$signature: TSignature;
   };
 
-export interface ChartControlModel<TValue> {
-  name: string;
-  value: TValue;
-  setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
-  isControlled: boolean;
-}
-
-type RemoveSetValue<Models extends Record<string, ChartControlModel<any>>> = {
-  [K in keyof Models]: Omit<Models[K], 'setValue'>;
-};
-
-export type ChartUsedControlModels<TSignature extends ChartAnyPluginSignature> =
-  TSignature['models'] &
-    RemoveSetValue<MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'models'>>;
-
 export type ChartUsedStore<TSignature extends ChartAnyPluginSignature> = ChartStore<
   [TSignature, ...TSignature['dependencies']],
   TSignature['optionalDependencies']
@@ -193,11 +153,6 @@ export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
     currentState: MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>,
     seriesConfig: ChartSeriesConfig<any>,
   ) => TSignature['state'];
-  /**
-   * The configuration of properties that can be controlled by the user.
-   * If they are not controlled, they will be initialized by the plugin.
-   */
-  models?: ChartControlModelsInitializer<TSignature>;
   /**
    * An object where each property used by the plugin is set to `true`.
    */
