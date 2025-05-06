@@ -1,17 +1,16 @@
+/* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 /**
  * This is a custom "bump" curve generator.
+ * It draws smooth curves for the 4 provided points,
+ * with the option to add a gap between sections while also properly handling the border radius.
  *
- * It takes into account the gap between the points and draws a smooth curve between them.
- *
- * It is based on the d3-shape bump curve generator.
+ * The implementation is based on the d3-shape bump curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/bump.js
  */
 export class Bump implements CurveGenerator {
   private context: CanvasRenderingContext2D;
-
-  private line: number = NaN;
 
   private x: number = NaN;
 
@@ -23,30 +22,22 @@ export class Bump implements CurveGenerator {
 
   private gap: number = 0;
 
-  constructor(context: CanvasRenderingContext2D, isHorizontal: boolean, gap: number = 0) {
+  constructor(
+    context: CanvasRenderingContext2D,
+    { isHorizontal, gap }: { isHorizontal: boolean; gap?: number },
+  ) {
     this.context = context;
     this.isHorizontal = isHorizontal;
-    this.gap = gap / 2;
+    this.gap = (gap ?? 0) / 2;
   }
 
-  areaStart(): void {
-    this.line = 0;
-  }
+  areaStart(): void {}
 
-  areaEnd(): void {
-    this.line = NaN;
-  }
+  areaEnd(): void {}
 
-  lineStart(): void {
-    this.currentPoint = 0;
-  }
+  lineStart(): void {}
 
-  lineEnd() {
-    if (this.line || (this.line !== 0 && this.currentPoint === 1)) {
-      this.context.closePath();
-    }
-    this.line = 1 - this.line;
-  }
+  lineEnd(): void {}
 
   point(x: number, y: number): void {
     x = +x;
@@ -65,6 +56,9 @@ export class Bump implements CurveGenerator {
         this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x + this.gap, y);
       }
 
+      if (this.currentPoint === 3) {
+        this.context.closePath();
+      }
       this.currentPoint += 1;
       this.x = x;
       this.y = y;
@@ -84,6 +78,9 @@ export class Bump implements CurveGenerator {
       this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y + this.gap);
     }
 
+    if (this.currentPoint === 3) {
+      this.context.closePath();
+    }
     this.currentPoint += 1;
     this.x = x;
     this.y = y;
