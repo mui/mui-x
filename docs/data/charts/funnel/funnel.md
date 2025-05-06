@@ -85,6 +85,17 @@ The `borderRadius` property will also behave differently depending on whether th
 
 {{"demo": "FunnelBorderRadius.js"}}
 
+### Variant
+
+The funnel sections can be displayed in two different styles using the `variant` property:
+
+- `'filled'` (default): Sections have a solid fill and no stroke.
+- `'outlined'`: Sections have a translucent fill with a colored stroke around them.
+
+The `outlined` variant creates a more lightweight visual style.
+
+{{"demo": "FunnelVariant.js"}}
+
 ### Colors
 
 The funnel colors can be customized in two ways.
