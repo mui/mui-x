@@ -351,5 +351,46 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         expect(clearSpy.callCount).to.equal(1);
       });
     });
+
+    // Context: https://github.com/mui/mui-x/pull/17684
+    it('should call `editRow()` when a computed column is updated', async () => {
+      const { user } = render(
+        <TestDataSource
+          dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }}
+          columns={[
+            {
+              field: 'commodity',
+            },
+            {
+              field: 'computed',
+              editable: true,
+              valueGetter: (value, row) => `${row.commodity}-computed`,
+              valueSetter: (value, row) => {
+                const [commodity] = value!.toString().split('-');
+                return { ...row, commodity: `${commodity}-edited` };
+              },
+            },
+          ]}
+          dataSourceCache={null}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await waitFor(() => {
+        expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+      });
+      const cell = getCell(1, 1);
+      await user.click(cell);
+      expect(cell).toHaveFocus();
+
+      // edit the cell
+      await user.keyboard('{Enter}{Enter}');
+
+      expect(editRowSpy.callCount).to.equal(1);
+      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
+    });
   });
 });
