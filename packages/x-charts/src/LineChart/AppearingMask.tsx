@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import clsx from 'clsx';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { cleanId } from '../internals/cleanId';
 import { useChartId, useDrawingArea } from '../hooks';
