@@ -22,6 +22,12 @@ export default function FunnelCurves() {
           min: 0,
           max: 20,
         },
+        borderRadius: {
+          knob: 'slider',
+          defaultValue: 0,
+          min: 0,
+          max: 20,
+        },
       }}
       renderDemo={(props) => (
         <Stack sx={{ width: '100%' }}>
@@ -29,6 +35,7 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'vertical',
                 ...populationByEducationLevelPercentageSeries,
               },
@@ -41,6 +48,7 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'horizontal',
                 ...populationByEducationLevelPercentageSeries,
               },
@@ -55,7 +63,10 @@ export default function FunnelCurves() {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
-  series={[{ curve: '${props.curveType}' }]}
+  series={[{ 
+    curve: '${props.curveType}',
+    ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
+  }]}
   gap={${props.gap}}
 />
 `;

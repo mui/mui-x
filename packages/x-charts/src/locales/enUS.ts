@@ -7,6 +7,8 @@ export const enUSLocaleText: ChartsLocaleText = {
   // Overlay
   loading: 'Loading data…',
   noData: 'No data to display',
+  zoomIn: 'Zoom in',
+  zoomOut: 'Zoom out',
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;

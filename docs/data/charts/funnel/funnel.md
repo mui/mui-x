@@ -67,6 +67,24 @@ It accepts a number that represents the gap in pixels.
 
 {{"demo": "FunnelGap.js"}}
 
+### Border radius
+
+The border radius of the sections can be customized by the `borderRadius` property.
+It accepts a number that represents the radius in pixels.
+
+- The `bump` curve interpolation will not respect the border radius.
+- The `linear` curve respects the border radius to some extent due to the angle of the sections.
+- The `step` curve will respect the border radius.
+
+To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
+
+The `borderRadius` property will also behave differently depending on whether the `gap` property is greater than 0.
+
+- If the `gap` is 0, the border radius will be applied to the corners of the sections that are not connected to another section.
+- If the `gap` is greater than 0, the border radius will be applied to all the corners of the sections.
+
+{{"demo": "FunnelBorderRadius.js"}}
+
 ### Variant
 
 The funnel sections can be displayed in two different styles using the `variant` property:
@@ -74,10 +92,9 @@ The funnel sections can be displayed in two different styles using the `variant`
 - `'filled'` (default): Sections have a solid fill and no stroke.
 - `'outlined'`: Sections have a translucent fill with a colored stroke around them.
 
-The `outlined` variant creates a more lightweight visual style. And by default it uses a
-single color for the fill and stroke.
+The `outlined` variant creates a more lightweight visual style.
 
-{{"demo": "FunnelVariant.js"}}
+# {{"demo": "FunnelVariant.js"}}
 
 ### Colors
 
