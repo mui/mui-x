@@ -5,12 +5,11 @@ import {
   CommonDefaultizedProps,
   SeriesId,
 } from '@mui/x-charts/internals';
-import { CurveType, Position } from '@mui/x-charts/models';
+import { Position } from '@mui/x-charts/models';
 import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import { FunnelCurveType } from './curves';
 
 export type FunnelItemId = string | number;
-
-export type FunnelCurveType = Extract<CurveType, 'linear' | 'step'> | 'bump';
 
 export type FunnelValueType = {
   /**

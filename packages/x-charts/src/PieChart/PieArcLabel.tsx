@@ -66,7 +66,6 @@ const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
 const PieArcLabelRoot = styled('text', {
   name: 'MuiPieArcLabel',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
@@ -131,8 +130,8 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       cornerRadius,
       startAngle,
       endAngle,
-      innerRadius,
-      outerRadius,
+      innerRadius: arcLabelRadius,
+      outerRadius: arcLabelRadius,
       paddingAngle,
       skipAnimation,
       ref,

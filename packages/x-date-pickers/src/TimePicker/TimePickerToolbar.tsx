@@ -62,7 +62,6 @@ const useUtilityClasses = (
 const TimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiTimePickerToolbar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: PickerToolbarOwnerState;
 }>({});
@@ -70,7 +69,6 @@ const TimePickerToolbarRoot = styled(PickersToolbar, {
 const TimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiTimePickerToolbar',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
 })({
   outline: 0,
   margin: '0 4px 0 2px',

@@ -14,6 +14,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/components/toolbarV8/ToolbarButton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/toolbar\">Data Grid - Toolbar component</a></li></ul>",
   "cssComponent": false
 }

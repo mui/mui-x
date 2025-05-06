@@ -25,7 +25,6 @@ const useThemeProps = createUseThemeProps('MuiTreeItem');
 export const TreeItemRoot = styled('li', {
   name: 'MuiTreeItem',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({
   listStyle: 'none',
   margin: 0,
@@ -36,7 +35,6 @@ export const TreeItemRoot = styled('li', {
 export const TreeItemContent = styled('div', {
   name: 'MuiTreeItem',
   slot: 'Content',
-  overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
 })<{ status: UseTreeItemStatus }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
@@ -96,7 +94,6 @@ export const TreeItemContent = styled('div', {
 export const TreeItemLabel = styled('div', {
   name: 'MuiTreeItem',
   slot: 'Label',
-  overridesResolver: (props, styles) => styles.label,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'editable',
 })<{ editable?: boolean }>(({ theme }) => ({
   width: '100%',
@@ -119,7 +116,6 @@ export const TreeItemLabel = styled('div', {
 export const TreeItemIconContainer = styled('div', {
   name: 'MuiTreeItem',
   slot: 'IconContainer',
-  overridesResolver: (props, styles) => styles.iconContainer,
 })({
   width: 16,
   display: 'flex',
@@ -143,7 +139,6 @@ export const TreeItemGroupTransition = styled(Collapse, {
 export const TreeItemErrorContainer = styled('div', {
   name: 'MuiTreeItem',
   slot: 'ErrorIcon',
-  overridesResolver: (props, styles) => styles.errorIcon,
 })({
   position: 'absolute',
   right: -3,
@@ -156,7 +151,6 @@ export const TreeItemErrorContainer = styled('div', {
 export const TreeItemLoadingContainer = styled(CircularProgress, {
   name: 'MuiTreeItem',
   slot: 'LoadingIcon',
-  overridesResolver: (props, styles) => styles.loadingIcon,
 })({
   color: 'text.primary',
 });
@@ -175,7 +169,6 @@ export const TreeItemCheckbox = styled(
   {
     name: 'MuiTreeItem',
     slot: 'Checkbox',
-    overridesResolver: (props, styles) => styles.checkbox,
   },
 )({
   padding: 0,

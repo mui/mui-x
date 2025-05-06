@@ -75,6 +75,7 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
   availableAggregationFunctions?: string[];
   /**
    * Function that transforms a complex cell value into a key that be used for grouping the rows.
+   * Not supported with the server-side row grouping. Use `dataSource.getGroupKey()` instead.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
   groupingValueGetter?: GridGroupingValueGetter<R>;

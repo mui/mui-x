@@ -65,7 +65,6 @@ function useDateCalendarDefaultizedProps(
 const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -75,7 +74,6 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
   slot: 'ViewTransitionContainer',
-  overridesResolver: (props, styles) => styles.viewTransitionContainer,
 })<{ ownerState: PickerOwnerState }>({});
 
 type DateCalendarComponent = ((

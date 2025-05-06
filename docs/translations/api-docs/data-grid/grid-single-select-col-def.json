@@ -48,7 +48,7 @@
       "description": "If <code>true</code>, the rows can be grouped based on this column values (pro-plan only).<br />Only available in DataGridPremium."
     },
     "groupingValueGetter": {
-      "description": "Function that transforms a complex cell value into a key that be used for grouping the rows."
+      "description": "Function that transforms a complex cell value into a key that be used for grouping the rows.<br />Not supported with the server-side row grouping. Use <code>dataSource.getGroupKey()</code> instead."
     },
     "headerAlign": { "description": "Align column header content." },
     "headerClassName": { "description": "Class name added to the column header cell." },

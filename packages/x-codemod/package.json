@@ -1,10 +1,9 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.0.0-beta.3",
-  "bin": "./codemod.js",
-  "private": false,
+  "version": "8.2.0",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
+  "bin": "./codemod.js",
   "keywords": [
     "react",
     "react-component",
@@ -32,9 +31,9 @@
     "url": "https://opencollective.com/mui-org"
   },
   "dependencies": {
-    "@babel/core": "^7.26.10",
-    "@babel/runtime": "^7.27.0",
-    "@babel/traverse": "^7.27.0",
+    "@babel/core": "^7.27.1",
+    "@babel/runtime": "^7.27.1",
+    "@babel/traverse": "^7.27.1",
     "@mui/x-internals": "workspace:*",
     "jscodeshift": "17.1.2",
     "yargs": "^17.7.2"

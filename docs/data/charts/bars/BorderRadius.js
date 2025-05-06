@@ -79,6 +79,6 @@ const chartSettingsH = {
 };
 const chartSettingsV = {
   ...chartSettingsH,
-  xAxis: [{ scaleType: 'band', dataKey: 'order' }],
+  xAxis: [{ dataKey: 'order' }],
   yAxis: undefined,
 };
