@@ -60,7 +60,7 @@ export interface FunnelSeriesType
   curve?: FunnelCurveType;
   /**
    * The radius, in pixels, of the corners of the funnel sections.
-   * @default 0
+   * @default 8
    */
   borderRadius?: number;
   /**

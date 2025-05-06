@@ -35,6 +35,7 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'vertical',
                 borderRadius: props.borderRadius,
                 ...populationByEducationLevelPercentageSeries,
@@ -48,6 +49,7 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'horizontal',
                 borderRadius: props.borderRadius,
                 ...populationByEducationLevelPercentageSeries,
@@ -63,7 +65,10 @@ export default function FunnelCurves() {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
-  series={[{ curve: '${props.curveType}' }]}
+  series={[{ 
+    curve: '${props.curveType}',
+    ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
+  }]}
   gap={${props.gap}}
   ${props.curveType === 'bump' ? '// ' : ''}borderRadius={${props.borderRadius}}
 />

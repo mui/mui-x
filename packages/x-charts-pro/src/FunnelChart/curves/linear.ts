@@ -58,7 +58,12 @@ export class Linear implements CurveGenerator {
       const slopeStart = this.points.at(index <= 1 ? 0 : 2)!;
       const slopeEnd = this.points.at(index <= 1 ? 1 : 3)!;
       if (this.isHorizontal) {
-        const yGetter = yFromX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+        const yGetter = yFromX(
+          slopeStart.x - this.gap,
+          slopeStart.y,
+          slopeEnd.x - this.gap,
+          slopeEnd.y,
+        );
         const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
 
         return {
@@ -67,7 +72,12 @@ export class Linear implements CurveGenerator {
         };
       }
 
-      const xGetter = xFromY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+      const xGetter = xFromY(
+        slopeStart.x,
+        slopeStart.y - this.gap,
+        slopeEnd.x,
+        slopeEnd.y - this.gap,
+      );
       const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
       return {
         x: xGetter(yGap),

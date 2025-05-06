@@ -13,6 +13,7 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
@@ -23,7 +24,13 @@ export interface BarChartProProps
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
       'series' | 'plugins' | 'seriesConfig'
-    > {}
+    > {
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
+}
 
 /**
  * Demos:
@@ -41,7 +48,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -76,6 +83,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {showToolbar ? <ChartsToolbarPro /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
@@ -246,6 +254,11 @@ BarChartPro.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
+  /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
@@ -363,7 +376,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -453,7 +465,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -534,7 +545,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -615,7 +625,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -696,7 +705,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -777,7 +785,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -858,7 +865,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -939,7 +945,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1039,7 +1044,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1128,7 +1132,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1208,7 +1211,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1288,7 +1290,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1368,7 +1369,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1448,7 +1448,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1528,7 +1527,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1608,7 +1606,6 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
-              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
