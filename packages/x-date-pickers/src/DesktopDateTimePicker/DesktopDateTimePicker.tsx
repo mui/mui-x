@@ -38,7 +38,7 @@ const rendererInterceptor = function RendererInterceptor(
   props: PickerRendererInterceptorProps<PickerValue, DateOrTimeViewWithMeridiem, any>,
 ) {
   const { viewRenderers, popperView, rendererProps } = props;
-  const { openTo, focusedView, timeViewsCount, autoFocus, ...otherProps } = rendererProps;
+  const { openTo, focusedView, timeViewsCount, ...otherProps } = rendererProps;
 
   const finalProps = {
     ...otherProps,
