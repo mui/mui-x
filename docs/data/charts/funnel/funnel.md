@@ -74,7 +74,7 @@ It accepts a number that represents the radius in pixels.
 
 - The `bump` curve interpolation will not respect the border radius.
 - The `linear` and `pyramid` curve respects the border radius to some extent due to the angle of the sections.
-- The `step` and `step-pyramid` curve will respect the border radius.
+- The `step` and `step-pyramid` curve respects the border radius.
 
 To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
 
