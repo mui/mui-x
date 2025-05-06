@@ -19,6 +19,7 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
@@ -29,7 +30,13 @@ export interface LineChartProProps
     Omit<
       ChartContainerProProps<'line', LineChartProPluginsSignatures>,
       'series' | 'plugins' | 'seriesConfig'
-    > {}
+    > {
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
+}
 
 /**
  * Demos:
@@ -46,7 +53,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -83,6 +90,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {showToolbar ? <ChartsToolbarPro /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
@@ -250,6 +258,11 @@ LineChartPro.propTypes = {
    * An array of [[LineSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * @default false
