@@ -88,7 +88,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
     "@mui/internal-babel-plugin-resolve-imports": "2.0.0",
-    "@mui/internal-markdown": "^2.0.4",
+    "@mui/internal-markdown": "https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown",
     "@mui/internal-test-utils": "^2.0.7",
     "@mui/material": "^7.0.2",
     "@mui/monorepo": "github:cherniavskii/material-ui#256bb18a1650629ef62eb57c254c0f86a72b687a",

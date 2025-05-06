@@ -83,8 +83,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0(@babel/core@7.27.1)
       '@mui/internal-markdown':
-        specifier: ^2.0.4
-        version: 2.0.4
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown
+        version: https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown
       '@mui/internal-test-utils':
         specifier: ^2.0.7
         version: 2.0.7(@babel/core@7.27.1)(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -3453,6 +3453,10 @@ packages:
 
   '@mui/internal-markdown@2.0.4':
     resolution: {integrity: sha512-b4QJ1G1qh4BBC0ezxYbWTzzQ4tCYjUdUTzFbv6WgXTSxmWETq583cPj6mXLXa1fS5u/9u7PX15hsNFNv2g0QDg==}
+
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown}
+    version: 2.0.4
 
   '@mui/internal-scripts@2.0.7':
     resolution: {integrity: sha512-74PmRI9vr2++U1rZh+SXwThJ7yD/jZuBdBk0mruc0vcsD/dfO+yaEgIe9uOD64j9x7Djm/t5R/0as4V0UwPagg==}
@@ -8419,6 +8423,11 @@ packages:
     resolution: {integrity: sha512-u00joA/syf3VhWh6/ybVFkib5Zpj2e5KB/cfCei8fkSRuums6nyisTWGqjTWIOFoFwuXoTBQQiqlB4qFKp8ncQ==}
     engines: {node: '>=18'}
 
+  marked@15.0.11:
+    resolution: {integrity: sha512-1BEXAU2euRCG3xwgLVT1y0xbJEld1XOrmRJpUwRCcy7rxhSCwMrmEu9LXoPhHSCJG41V7YcQ2mjKRr5BA3ITIA==}
+    engines: {node: '>= 18'}
+    hasBin: true
+
   marked@15.0.7:
     resolution: {integrity: sha512-dgLIeKGLx5FwziAnsk4ONoGwHwGPJzselimvlVskE9XLN4Orv9u2VA3GWw/lYUqjfA0rUT/6fqKwfZJapP9BEg==}
     engines: {node: '>= 18'}
@@ -13097,6 +13106,13 @@ snapshots:
       '@babel/runtime': 7.27.1
       lodash: 4.17.21
       marked: 15.0.7
+      prismjs: 1.30.0
+
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown':
+    dependencies:
+      '@babel/runtime': 7.27.1
+      lodash: 4.17.21
+      marked: 15.0.11
       prismjs: 1.30.0
 
   '@mui/internal-scripts@2.0.7':
@@ -18956,6 +18972,8 @@ snapshots:
       micromark-util-types: 2.0.1
     transitivePeerDependencies:
       - supports-color
+
+  marked@15.0.11: {}
 
   marked@15.0.7: {}
 
