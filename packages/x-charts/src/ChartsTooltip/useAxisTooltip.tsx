@@ -7,7 +7,7 @@ import {
   ChartsSeriesConfig,
   PolarChartSeriesType,
 } from '../models/seriesType/config';
-import { AxisDefaultized, PolarAxisDefaultized, AxisId } from '../models/axis';
+import { ComputedAxis, PolarAxisDefaultized, AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
@@ -38,7 +38,7 @@ export interface UseAxisTooltipReturnValue<
   AxisValueT extends string | number | Date = string | number | Date,
 > {
   axisDirection: SeriesT extends CartesianChartSeriesType ? 'x' | 'y' : 'rotation' | 'radius';
-  mainAxis: SeriesT extends CartesianChartSeriesType ? AxisDefaultized : PolarAxisDefaultized;
+  mainAxis: SeriesT extends CartesianChartSeriesType ? ComputedAxis : PolarAxisDefaultized;
   axisId: AxisId;
   axisValue: AxisValueT;
   axisFormattedValue: string;
@@ -68,7 +68,7 @@ interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> 
 }
 
 function defaultAxisTooltipConfig(
-  axis: AxisDefaultized | PolarAxisDefaultized,
+  axis: ComputedAxis | PolarAxisDefaultized,
   dataIndex: number,
   axisDirection: 'x' | 'y' | 'rotation',
 ): UseAxisTooltipReturnValue {
