@@ -11,7 +11,7 @@ const lerp2D = (p1: Point, p2: Point, t: number) => ({
  * Draws a polygon with rounded corners
  * @param {CanvasRenderingContext2D} ctx The canvas context
  * @param {Array} points A list of `{x, y}` points
- * @radius {number} how much to round the corners
+ * @param {number} radius how much to round the corners
  */
 export function borderRadiusPolygon(
   ctx: CanvasRenderingContext2D,

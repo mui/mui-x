@@ -78,10 +78,10 @@ It accepts a number that represents the radius in pixels.
 
 To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
 
-The `borderRadius` property will also behave differently depending if the `gap` property is bigger than 0 or not.
+The `borderRadius` property will also behave differently depending on whether the `gap` property is greater than 0.
 
 - If the `gap` is 0, the border radius will be applied to the corners of the sections that are not connected to another section.
-- If the `gap` is bigger than 0, the border radius will be applied to all the corners of the sections.
+- If the `gap` is greater than 0, the border radius will be applied to all the corners of the sections.
 
 {{"demo": "FunnelBorderRadius.js"}}
 
