@@ -36,7 +36,8 @@ export interface ChartZoomSliderHandleOwnerState {
 }
 
 export interface ChartZoomSliderHandleProps
-  extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'>,
+  // TODO: Rename `onResize` to avoid conflict with the `onResize` prop of the `rect` element
+  extends Omit<React.ComponentProps<'rect'>, 'onResize' | 'orientation'>,
     ChartZoomSliderHandleOwnerState {}
 
 /**
@@ -47,7 +48,7 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
   SVGRectElement,
   ChartZoomSliderHandleProps
 >(function ChartPreviewHandle(
-  { x, y, width, height, onResize, orientation, placement, rx = 4, ry = 4 },
+  { onResize, orientation, placement, rx = 4, ry = 4, ...rest },
   forwardedRef,
 ) {
   const classes = useUtilityClasses({ onResize, orientation, placement });
@@ -91,16 +92,5 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
     };
   }, [onResizeEvent, orientation]);
 
-  return (
-    <Rect
-      className={classes.root}
-      ref={ref}
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      rx={rx}
-      ry={ry}
-    />
-  );
+  return <Rect className={classes.root} ref={ref} rx={rx} ry={ry} {...rest} />;
 });
