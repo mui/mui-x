@@ -231,6 +231,7 @@ export type PickerViewsRendererProps<
   onFocusedViewChange: (viewToFocus: TView, hasFocus: boolean) => void;
   showViewSwitcher: boolean;
   timeViewsCount: number;
+  autoFocus: boolean;
 };
 
 export type PickerViewRenderer<
