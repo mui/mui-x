@@ -94,7 +94,7 @@ The funnel sections can be displayed in two different styles using the `variant`
 
 The `outlined` variant creates a more lightweight visual style.
 
-# {{"demo": "FunnelVariant.js"}}
+{{"demo": "FunnelVariant.js"}}
 
 ### Colors
 
