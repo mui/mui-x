@@ -1,28 +1,21 @@
 import { mergeConfig } from 'vitest/config';
 // eslint-disable-next-line import/no-relative-packages
-import filterReplacePlugin from '../../test/vite-plugin-filter-replace.mts';
+import { redirectImports } from '../../test/vite-plugin-filter-replace.mts';
 import sharedConfig from '../../vitest.shared.mts';
 import { getTestName } from '../../scripts/getTestName.mts';
 
-export const filterReplace = filterReplacePlugin(
-  [
-    {
-      filter: /\/AdapterDateFnsV2\/.*/,
-      replace: {
-        from: /from 'date-fns/g,
-        to: "from 'date-fns-v2",
-      },
-    },
-    {
-      filter: /\/AdapterDateFnsJalaliV2\/.*/,
-      replace: {
-        from: /from 'date-fns-jalali/g,
-        to: "from 'date-fns-jalali-v2",
-      },
-    },
-  ],
-  { enforce: 'pre' },
-);
+export const filterReplace = redirectImports([
+  {
+    test: /\/AdapterDateFnsV2\//,
+    from: 'date-fns',
+    to: 'date-fns-v2',
+  },
+  {
+    test: /\/AdapterDateFnsJalaliV2\//,
+    from: 'date-fns-jalali',
+    to: 'date-fns-jalali-v2',
+  },
+]);
 
 export default mergeConfig(sharedConfig, {
   plugins: [filterReplace],

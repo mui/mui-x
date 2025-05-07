@@ -1,186 +1,63 @@
-/**
- * Taken from https://github.com/ikeq/vite-plugin-filter-replace/tree/main
- *
- * Modified to work with vitest browser @v3+
- */
-
-import fs from 'fs/promises';
 import { Plugin } from 'vite';
-import { PluginBuild } from 'esbuild';
-import MagicString, { SourceMap } from 'magic-string';
+import path from 'path';
 
-type ReplaceFn = (source: string, path: string) => string;
-type ReplacePair = { from: RegExp | string | string[]; to: string | number };
-
-interface Replacement {
-  /**
-   * for debugging purpose
-   */
-  id?: string | number;
-  filter: RegExp | string | string[];
-  replace: ReplacePair | ReplaceFn | Array<ReplacePair | ReplaceFn>;
+interface RedirectRule {
+  test: RegExp;
+  from: string;
+  to: string;
 }
 
-interface Options extends Pick<Plugin, 'enforce' | 'apply'> {}
-
-function escape(str: string): string {
-  return str.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
-}
-
-function parseReplacements(
-  replacements: Replacement[],
-): Array<Omit<Replacement, 'replace' | 'filter'> & { filter: RegExp; replace: ReplaceFn[] }> {
-  if (!replacements || !replacements.length) {
-    return [];
+const cleanDepName = (name: string) => {
+  // If the name starts with '@', we need to split it into scope and lib
+  // e.g. `@mui/material/Button` -> `@mui/material`
+  if (name.startsWith('@')) {
+    const [scope, lib] = name.split('/');
+    return `${scope}/${lib}`;
   }
+  // If the name does not start with '@', we only care about the first part
+  // e.g. `material/Button` -> `material`
+  return name.split('/')[0];
+};
 
-  return replacements.reduce((entries: any[], replacement) => {
-    const filter =
-      replacement.filter instanceof RegExp
-        ? replacement.filter
-        : new RegExp(
-            `(${[]
-              .concat(replacement.filter as any)
-              .filter((i) => i)
-              .map((i: string) => escape(i.trim().replace(/\\+/g, '/')))
-              .join('|')})`,
-          );
-    let { replace = [] } = replacement;
-
-    if (!filter) {
-      return entries;
-    }
-    if (typeof replace === 'function' || !Array.isArray(replace)) {
-      replace = [replace];
-    }
-
-    replace = replace.reduce((replaceEntries: ReplaceFn[], rp) => {
-      if (typeof rp === 'function') {
-        return replaceEntries.concat(rp);
-      }
-
-      const { from, to } = rp;
-
-      if (from === undefined || to === undefined) {
-        return replaceEntries;
-      }
-
-      return replaceEntries.concat((source) =>
-        source.replace(
-          from instanceof RegExp
-            ? from
-            : new RegExp(
-                `(${[]
-                  .concat(from as any)
-                  .map(escape)
-                  .join('|')})`,
-                'g',
-              ),
-          String(to),
-        ),
-      );
-    }, []);
-
-    if (!replace.length) {
-      return entries;
-    }
-
-    return entries.concat({ ...replacement, filter, replace });
-  }, []);
-}
-
-export default function pluginFilterReplace(
-  replacements: Replacement[] = [],
-  options: Options = {},
-): Plugin {
-  const resolvedReplacements = parseReplacements(replacements);
-  let isServe = true;
-  let internalSourcemap = false;
-
-  if (!resolvedReplacements.length) {
-    return {} as any;
-  }
-
-  function replace(code: string, id: string): string;
-  // eslint-disable-next-line no-redeclare
-  function replace(code: string, id: string, sourcemap: boolean): { code: string; map: SourceMap };
-  // eslint-disable-next-line no-redeclare
-  function replace(
-    code: string,
-    id: string,
-    sourcemap?: boolean,
-  ): string | { code: string; map: SourceMap } {
-    const replaced = resolvedReplacements.reduce((c, rp) => {
-      if (!rp.filter.test(id)) {
-        return c;
-      }
-      return rp.replace.reduce((text, fn) => fn(text, id), c);
-    }, code);
-
-    if (!sourcemap) {
-      return replaced;
-    }
-
-    return {
-      code: replaced,
-      map: new MagicString(replaced).generateMap({ hires: true }),
-    };
-  }
-
+export function redirectImports(rules: RedirectRule[]): Plugin {
   return {
-    name: 'vite-plugin-filter-replace',
-    enforce: options.enforce,
-    apply: options.apply,
-    config: (config, env) => {
-      isServe = env.command === 'serve';
-      internalSourcemap = !!config.build?.sourcemap;
+    name: 'vite-plugin-redirect-imports',
+    enforce: 'pre',
 
-      if (!isServe) {
-        return;
-      }
+    config(config) {
+      config.optimizeDeps ??= {};
+      config.optimizeDeps.exclude ??= [];
 
-      if (!config.optimizeDeps) {
-        config.optimizeDeps = {};
-      }
-      if (!config.optimizeDeps.esbuildOptions) {
-        config.optimizeDeps.esbuildOptions = {};
-      }
-      if (!config.optimizeDeps.esbuildOptions.plugins) {
-        config.optimizeDeps.esbuildOptions.plugins = [];
-      }
-
-      config.optimizeDeps.esbuildOptions.plugins.unshift(
-        ...resolvedReplacements.map((option) => {
-          return {
-            name: `vite-plugin-filter-replace${option.id ? `:${option.id}` : ''}`,
-            setup(build: PluginBuild) {
-              build.onLoad({ filter: option.filter, namespace: 'file' }, async ({ path }) => {
-                const source = await fs.readFile(path, 'utf8');
-
-                return {
-                  loader: 'default',
-                  contents: option.replace.reduce((text, fn) => fn(text, path), source),
-                };
-              });
-            },
-          };
-        }),
+      // Collect all 'from' and 'to' package names for exclusion
+      const depsToExclude = new Set<string>(
+        // Exclude all packages that are used in the rules
+        // We need to use the package name, so we clean it up in case we are replacing a deep import
+        rules.flatMap(({ from, to }) => [cleanDepName(from), cleanDepName(to)]),
       );
+
+      // Ignore already-excluded deps
+      config.optimizeDeps.exclude.forEach((dep) => depsToExclude.delete(dep));
+      config.optimizeDeps.exclude.push(...depsToExclude);
     },
-    renderChunk(code, chunk) {
-      if (isServe) {
-        return null;
+
+    async resolveId(source, importer) {
+      if (!importer) return null;
+
+      const normalizedImporter = importer.split(path.sep).join('/');
+
+      for (const rule of rules) {
+        if (!rule.test.test(normalizedImporter)) continue;
+
+        // Match `from` or `from/...`
+        const match = source === rule.from || source.startsWith(`${rule.from}/`);
+        if (!match) continue;
+
+        const newSource = rule.to + source.slice(rule.from.length);
+
+        return this.resolve(newSource, importer, { skipSelf: true });
       }
-      return replace(code, chunk.fileName, internalSourcemap);
-    },
-    transform(code, id) {
-      return replace(code, id, internalSourcemap);
-    },
-    async handleHotUpdate(ctx) {
-      const defaultRead = ctx.read;
-      ctx.read = async function read() {
-        return replace(await defaultRead(), ctx.file);
-      };
+
+      return null;
     },
   };
 }
