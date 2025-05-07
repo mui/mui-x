@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
   notched: boolean;

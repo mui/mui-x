@@ -17,6 +17,23 @@ export default function FunnelCurves() {
             options: curveTypes,
             defaultValue: curveTypes[0],
           },
+          gap: {
+            knob: 'slider',
+            defaultValue: 0,
+            min: 0,
+            max: 20,
+          },
+          borderRadius: {
+            knob: 'slider',
+            defaultValue: 0,
+            min: 0,
+            max: 20,
+          },
+          variant: {
+            knob: 'select',
+            options: ['filled', 'outlined'],
+            defaultValue: 'filled',
+          },
         } as const
       }
       renderDemo={(props) => (
@@ -25,10 +42,13 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'vertical',
+                variant: props.variant,
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -36,10 +56,13 @@ export default function FunnelCurves() {
             series={[
               {
                 curve: props.curveType,
+                borderRadius: props.borderRadius,
                 layout: 'horizontal',
+                variant: props.variant,
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
           />
@@ -49,7 +72,12 @@ export default function FunnelCurves() {
         return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
-  series={[{ curve: '${props.curveType}' }]}
+  series={[{ 
+    curve: '${props.curveType}',
+    variant: '${props.variant}',
+    ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
+  }]}
+  gap={${props.gap}}
 />
 `;
       }}

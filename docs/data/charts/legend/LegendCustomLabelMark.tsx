@@ -29,7 +29,7 @@ export default function LegendCustomLabelMark() {
         { id: 2, data: [20, 25], label: 'Series C' },
         { id: 3, data: [10, 15], label: 'Series D', labelMarkType: SVGDiamond },
       ]}
-      xAxis={[{ scaleType: 'band', data: ['Category 1', 'Category 2'] }]}
+      xAxis={[{ data: ['Category 1', 'Category 2'] }]}
       height={200}
     />
   );

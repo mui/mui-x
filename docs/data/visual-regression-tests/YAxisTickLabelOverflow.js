@@ -4,7 +4,6 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { usAirportPassengersData } from './airportData';
 
 const defaultYAxis = {
-  scaleType: 'band',
   dataKey: 'code',
   width: 80,
   valueFormatter: (value) =>

@@ -14,7 +14,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersFilledInputProps extends PickersInputBaseProps {
@@ -295,7 +295,7 @@ PickersFilledInput.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([
