@@ -3,7 +3,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
+import {
+  adapterToUse,
+  createPickerRenderer,
+  openPicker,
+  expectFieldValueV6,
+} from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -101,6 +106,28 @@ describe('<DesktopDateTimePicker />', () => {
     expect(onChange.callCount).to.equal(8);
     expect(onAccept.callCount).to.equal(1);
     expect(onClose.callCount).to.equal(1);
+  });
+
+  it('should cycle focused views among the visible step after selection', () => {
+    render(<DesktopDateTimePicker referenceDate={adapterToUse.date('2018-01-10')} />);
+
+    openPicker({ type: 'date-time', variant: 'desktop' });
+
+    const day = screen.getByRole('gridcell', { name: '10' });
+    expect(day).toHaveFocus();
+    fireEvent.click(day);
+
+    const hours = screen.getByRole('option', { name: '12 hours' });
+    expect(hours).toHaveFocus();
+    fireEvent.click(hours);
+
+    const minutes = screen.getByRole('option', { name: '0 minutes' });
+    expect(minutes).toHaveFocus();
+    fireEvent.click(minutes);
+
+    const meridiem = screen.getByRole('option', { name: 'AM' });
+    expect(meridiem).toHaveFocus();
+    expectFieldValueV6(screen.getByRole('textbox'), '01/10/2018 12:00 AM');
   });
 
   describe('prop: timeSteps', () => {
