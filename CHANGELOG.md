@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.3
+_May 7, 2025_
+
+We'd like to offer a big thanks to the 1 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Following are all team members who have contributed to this release:
+@arminmeh and @LukasTy.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.3`
+
+- [DataGrid] Ignore `preProcessEditCellProps` for non-editable columns when starting a row update (#17734) @arminmeh
+
+#### `@mui/x-data-grid-pro@7.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.3`.
+
+#### `@mui/x-data-grid-premium@7.29.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.3`
+
+- [DateTimePicker] Fix focus behavior on desktop variant (#17730) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.3`.
+
+### Charts
+
+#### `@mui/x-charts@7.29.3`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.29.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.29.3`.
+
 ## 7.29.2
 
 _May 1, 2025_
