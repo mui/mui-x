@@ -8,7 +8,7 @@ components: ScatterChartPro, BarChartPro, LineChartPro
 
 <p class="description">Charts can be printed and exported as PDF.</p>
 
-Export is available on the Pro version of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
+Export is available on the Pro version of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
 
 ## Print/Export as PDF
 
