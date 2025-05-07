@@ -90,7 +90,13 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
             return;
           }
 
-          instance.stopDraggingItem(itemId);
+          // Check if the drag-and-drop was cancelled, possibly by pressing Escape
+          if (event.dataTransfer.dropEffect === 'none') {
+            instance.cancelDraggingItem();
+            return;
+          }
+
+          instance.completeDraggingItem(itemId);
         };
 
         return {
