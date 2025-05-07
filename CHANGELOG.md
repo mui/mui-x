@@ -77,7 +77,7 @@ Same changes as in `@mui/x-date-pickers@8.2.1`, plus:
 - [charts] Improve `<MarkElement />` performance (#17546) @bernardobelchior
 - [charts] Rename `materialSlots` internal constant (#17710) @bernardobelchior
 - [charts] Update zoom slider design (#17682) @bernardobelchior
-- [charts] fix zoom being documented as available for heatmap (#17657) @bernardobelchior
+- [charts] Fix zoom being documented as available for heatmap (#17657) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
