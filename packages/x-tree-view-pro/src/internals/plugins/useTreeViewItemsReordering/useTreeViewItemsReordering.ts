@@ -159,7 +159,22 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [store],
   );
 
-  const stopDraggingItem = React.useCallback(
+  const cancelDraggingItem = React.useCallback(() => {
+    const currentReorder = selectorCurrentItemReordering(store.value);
+    if (currentReorder == null) {
+      return;
+    }
+
+    store.update((prevState) => ({
+      ...prevState,
+      itemsReordering: {
+        ...prevState.itemsReordering,
+        currentReorder: null,
+      },
+    }));
+  }, [store]);
+
+  const completeDraggingItem = React.useCallback(
     (itemId: string) => {
       const currentReorder = selectorCurrentItemReordering(store.value);
       if (currentReorder == null || currentReorder.draggedItemId !== itemId) {
@@ -275,7 +290,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       canItemBeDragged,
       getDroppingTargetValidActions,
       startDraggingItem,
-      stopDraggingItem,
+      cancelDraggingItem,
+      completeDraggingItem,
       setDragTargetItem,
     },
   };
