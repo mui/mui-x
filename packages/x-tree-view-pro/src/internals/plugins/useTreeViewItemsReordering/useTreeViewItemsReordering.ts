@@ -161,10 +161,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const cancelDragging = React.useCallback(() => {
     const currentReorder = selectorCurrentItemReordering(store.value);
-      if (currentReorder == null) {
-        return;
-      }
-    
+    if (currentReorder == null) {
+      return;
+    }
+
     store.update((prevState) => ({
       ...prevState,
       itemsReordering: {
