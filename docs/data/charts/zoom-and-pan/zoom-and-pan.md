@@ -1,10 +1,10 @@
 ---
-title: Charts - Zooming and panning
+title: Charts - Zoom and pan
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro
+components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider
 ---
 
-# Charts - Zooming and panning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Zoom and pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Enables zooming and panning on specific charts or axis.</p>
 
@@ -52,6 +52,22 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
+## Zoom slider 🧪
+
+:::warning
+This feature is unstable and its API, visuals and/or behavior may change in future minor or patch releases.
+:::
+
+You can provide an overview and allow the manipulation of the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
+
+{{"demo": "ZoomSlider.js"}}
+
+### Composition
+
+When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.
+
+{{"demo": "ZoomSliderComposition.js"}}
+
 ## Zoom management
 
 ### External zoom management
@@ -59,7 +75,7 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 You can manage the zoom state by two means:
 
 - By defining an initial state with the `initialZoom` prop.
-- By imperatively set a zoom value with the `setZoomData` method of the public api.
+- By imperatively setting a zoom value with the `setZoomData()` method of the public API.
 
 In addition, the `onZoomChange` prop is a function that receives the new zoom state.
 

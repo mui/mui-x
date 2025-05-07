@@ -39,7 +39,6 @@ const useUtilityClasses = <Multiple extends boolean | undefined>(
 export const SimpleTreeViewRoot = styled('ul', {
   name: 'MuiSimpleTreeView',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: SimpleTreeViewProps<any> }>({
   padding: 0,
   margin: 0,
@@ -68,7 +67,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: SimpleTreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
-  const ownerState = props as SimpleTreeViewProps<any>;
+  const { slots, slotProps, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
@@ -86,10 +85,9 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   >({
     plugins: SIMPLE_TREE_VIEW_PLUGINS,
     rootRef: ref,
-    props: { ...props, items: EMPTY_ITEMS },
+    props: { ...other, items: EMPTY_ITEMS },
   });
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? SimpleTreeViewRoot;
@@ -98,11 +96,16 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     externalSlotProps: slotProps?.root,
     className: classes.root,
     getSlotProps: getRootProps,
-    ownerState,
+    ownerState: props as SimpleTreeViewProps<any>,
   });
 
   return (
-    <TreeViewProvider contextValue={contextValue} classes={classes}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps} />
     </TreeViewProvider>
   );
@@ -175,12 +178,6 @@ SimpleTreeView.propTypes = {
    * @default 'content'
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures: PropTypes.object,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.

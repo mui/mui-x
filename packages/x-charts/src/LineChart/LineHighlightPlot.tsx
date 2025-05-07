@@ -12,7 +12,7 @@ import getColor from './seriesConfig/getColor';
 import { useChartContext } from '../context/ChartProvider';
 import {
   UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxis,
+  selectorChartsInteractionXAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 
@@ -57,11 +57,9 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { instance } = useChartContext();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
+  const highlightedIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
-  const highlightedIndex = xAxisIdentifier?.index;
-
-  if (highlightedIndex === undefined) {
+  if (highlightedIndex === null) {
     return null;
   }
 
@@ -96,7 +94,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X: ${
+              `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`

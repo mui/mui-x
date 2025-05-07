@@ -33,19 +33,14 @@ export interface ChartsLabelMarkProps {
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLabelMarkProps }>(() => {
   return {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
     width: 14,
     height: 14,
     [`&.${labelMarkClasses.line}`]: {
       width: 16,
       height: 'unset',
-      display: 'flex',
       alignItems: 'center',
       [`.${labelMarkClasses.mask}`]: {
         height: 4,
@@ -63,8 +58,6 @@ const Root = styled('div', {
     [`&.${labelMarkClasses.circle}`]: {
       height: 15,
       width: 15,
-      borderRadius: '50%',
-      overflow: 'hidden',
     },
     svg: {
       display: 'block',
@@ -107,7 +100,11 @@ const ChartsLabelMark = consumeThemeProps(
             <Component className={classes?.fill} color={color} />
           ) : (
             <svg viewBox="0 0 24 24" preserveAspectRatio={type === 'line' ? 'none' : undefined}>
-              <rect className={classes?.fill} width="24" height="24" fill={color} />
+              {type === 'circle' ? (
+                <circle className={classes?.fill} r="12" cx="12" cy="12" fill={color} />
+              ) : (
+                <rect className={classes?.fill} width="24" height="24" fill={color} />
+              )}
             </svg>
           )}
         </div>

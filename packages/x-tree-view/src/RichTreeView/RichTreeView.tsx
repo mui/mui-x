@@ -47,7 +47,6 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 export const RichTreeViewRoot = styled('ul', {
   name: 'MuiRichTreeView',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({
   padding: 0,
   margin: 0,
@@ -75,6 +74,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
+  const { slots, slotProps, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -89,12 +89,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
     plugins: RICH_TREE_VIEW_PLUGINS,
     rootRef: ref,
-    props,
+    props: other,
   });
   const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
   const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewRoot;
@@ -115,7 +114,12 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewProvider contextValue={contextValue} classes={classes}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>
@@ -187,12 +191,6 @@ RichTreeView.propTypes = {
    * @default 'content'
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures: PropTypes.object,
   /**
    * Used to determine the id of a given item.
    *

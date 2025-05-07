@@ -7,6 +7,9 @@ import {
   isBandScaleConfig,
   isPointScaleConfig,
   AxisId,
+  DefaultedXAxis,
+  DefaultedYAxis,
+  DefaultedAxis,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -16,9 +19,10 @@ import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { DefaultizedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
+import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -48,8 +52,8 @@ function createDateFormatter(
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
-type ComputeResult<T extends ChartsAxisProps> = {
-  axis: DefaultizedAxisConfig<T>;
+export type ComputeResult<T extends ChartsAxisProps> = {
+  axis: ComputedAxisConfig<T>;
   axisIds: string[];
 };
 
@@ -64,13 +68,13 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
 
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    axis?: DefaultedYAxis[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+    axis?: DefaultedXAxis[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsXAxisProps>;
@@ -84,7 +88,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomOptions,
   getFilters,
 }: ComputeCommonParams<T> & {
-  axis?: AxisConfig[];
+  axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
 }) {
   if (allAxis === undefined) {
@@ -94,9 +98,16 @@ export function computeAxisValue<T extends ChartSeriesType>({
     };
   }
 
-  const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
+  const axisIdsTriggeringTooltip = getAxisTriggerTooltip(
+    axisDirection,
+    seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+    formattedSeries,
+    allAxis[0].id,
+  );
+
+  const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
@@ -110,6 +121,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
       formattedSeries,
       zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
+
+    const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
+
     const data = axis.data ?? [];
 
     if (isBandScaleConfig(axis)) {
@@ -124,6 +138,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         height: 0,
         categoryGapRatio,
         barGapRatio,
+        triggerTooltip,
         ...axis,
         data,
         scale: scaleBand(axis.data!, zoomedRange)
@@ -149,6 +164,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       completeAxis[axis.id] = {
         offset: 0,
         height: 0,
+        triggerTooltip,
         ...axis,
         data,
         scale: scalePoint(axis.data!, zoomedRange),
@@ -196,6 +212,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     completeAxis[axis.id] = {
       offset: 0,
       height: 0,
+      triggerTooltip,
       ...axis,
       data,
       scaleType: scaleType as any,

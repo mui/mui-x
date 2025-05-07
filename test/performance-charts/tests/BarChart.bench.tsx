@@ -19,21 +19,7 @@ describe('BarChart', () => {
     'BarChart with big data amount',
     async () => {
       const { findByText } = render(
-        <BarChart
-          xAxis={[
-            {
-              scaleType: 'band',
-              data: xData,
-            },
-          ]}
-          series={[
-            {
-              data: yData,
-            },
-          ]}
-          width={500}
-          height={300}
-        />,
+        <BarChart xAxis={[{ data: xData }]} series={[{ data: yData }]} width={500} height={300} />,
       );
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });

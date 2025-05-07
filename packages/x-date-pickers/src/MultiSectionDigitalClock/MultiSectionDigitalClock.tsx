@@ -42,7 +42,6 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   flexDirection: 'row',
   width: '100%',
@@ -444,7 +443,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           items={viewTimeOptions[timeView].items}
           onChange={viewTimeOptions[timeView].onChange}
           active={view === timeView}
-          autoFocus={autoFocus ?? focusedView === timeView}
+          autoFocus={autoFocus || focusedView === timeView}
           disabled={disabled}
           readOnly={readOnly}
           slots={slots}

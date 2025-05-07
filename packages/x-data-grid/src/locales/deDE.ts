@@ -7,6 +7,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
   noColumnsOverlayLabel: 'Keine Spalten',
   noColumnsOverlayManageColumns: 'Spalten verwalten',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',
@@ -32,24 +33,18 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Prompt eingeben…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Prompt eingeben oder aufnehmen…',
-  toolbarPromptControlRecordingPlaceholder: 'Hört Prompteingabe zu…',
-  toolbarPromptControlLabel: 'Prompteingabe',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Aufnahme starten',
-  toolbarPromptControlRecordButtonActiveLabel: 'Aufnahme stoppen',
-  toolbarPromptControlSendActionLabel: 'Senden',
-  toolbarPromptControlSendActionAriaLabel: 'Prompt senden',
-  toolbarPromptControlErrorMessage:
-    'Ein Fehler ist während der Bearbeitung der Anfrage aufgetreten. Bitte versuche es nochmal mit einem anderen Prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
   toolbarExportPrint: 'Drucken',
   toolbarExportExcel: 'Download als Excel',
+
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar AI Assistant button
+  // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
   columnsManagementSearchTitle: 'Suche',
@@ -132,6 +127,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Sortierung deaktivieren',
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',
+  // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -219,6 +215,83 @@ const deDEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'Minimum',
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: 'Anzahl',
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  promptFieldLabel: 'Prompteingabe',
+  promptFieldPlaceholder: 'Prompt eingeben…',
+  promptFieldPlaceholderWithRecording: 'Prompt eingeben oder aufnehmen…',
+  promptFieldPlaceholderListening: 'Hört Prompteingabe zu…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSend: 'Senden',
+  promptFieldRecord: 'Aufnahme starten',
+  promptFieldStopRecording: 'Aufnahme stoppen',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid);

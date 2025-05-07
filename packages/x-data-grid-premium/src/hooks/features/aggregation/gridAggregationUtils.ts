@@ -24,7 +24,7 @@ import {
   GridAggregationRules,
 } from './gridAggregationInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';

@@ -32,9 +32,9 @@
       "isGlobal": false
     },
     {
-      "key": "markCell",
-      "className": "MuiChartsAxisTooltipContent-markCell",
-      "description": "Styles applied to the markCell element.",
+      "key": "markContainer",
+      "className": "MuiChartsAxisTooltipContent-markContainer",
+      "description": "Styles applied to the markContainer element.",
       "isGlobal": false
     },
     {

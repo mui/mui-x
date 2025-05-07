@@ -39,6 +39,12 @@
       "className": "MuiBarElement-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiBarElement-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.",
+      "isGlobal": false
     }
   ],
   "muiName": "MuiBarElement",

@@ -39,21 +39,21 @@ export interface UseTreeViewLabelParameters<R extends {}> {
   isItemEditable?: boolean | ((item: R) => boolean);
 }
 
-export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewLabelParametersWithDefaults<R extends {}> = DefaultizedProps<
   UseTreeViewLabelParameters<R>,
   'isItemEditable'
 >;
 
 export interface UseTreeViewLabelState {
   label: {
-    isItemEditable: (item: any) => boolean;
+    isItemEditable: ((item: any) => boolean) | boolean;
     editedItemId: string | null;
   };
 }
 
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   params: UseTreeViewLabelParameters<any>;
-  defaultizedParams: UseTreeViewLabelDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewLabelParametersWithDefaults<any>;
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;

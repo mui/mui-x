@@ -18,7 +18,6 @@ const lineAxis = [
 const barAxis = [
   {
     zoom: true,
-    scaleType: 'band' as const,
     id: 'shared-x-axis',
     data: randomData.map((v, i) => i),
   },
@@ -38,13 +37,13 @@ export default function ZoomControlled() {
     <Stack sx={{ width: '100%', justifyContent: 'flex-start' }}>
       <LineChartPro
         {...chartProps}
-        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        onZoomChange={setZoomData}
         zoomData={zoomData}
         xAxis={lineAxis}
       />
       <BarChartPro
         {...chartProps}
-        onZoomChange={(newZoomData) => setZoomData(newZoomData)}
+        onZoomChange={setZoomData}
         zoomData={zoomData}
         xAxis={barAxis}
       />

@@ -24,5 +24,3 @@ export const gaugeClasses: GaugeClasses = generateUtilityClasses('MuiGauge', [
   'referenceArc',
   'valueText',
 ]);
-
-export default gaugeClasses;

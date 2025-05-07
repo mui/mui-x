@@ -13,7 +13,6 @@ import {
   RICH_TREE_VIEW_PRO_PLUGINS,
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -43,7 +42,6 @@ const useUtilityClasses = <R extends {}, Multiple extends boolean | undefined>(
 export const RichTreeViewProRoot = styled('ul', {
   name: 'MuiRichTreeViewPro',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: RichTreeViewProProps<any, any> }>({
   padding: 0,
   margin: 0,
@@ -56,7 +54,7 @@ type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undef
   props: RichTreeViewProProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const releaseInfo = getReleaseInfo();
+const releaseInfo = '__RELEASE_INFO__';
 
 /**
  *
@@ -73,6 +71,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
+  const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
@@ -90,11 +89,10 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     {
       plugins: RICH_TREE_VIEW_PRO_PLUGINS,
       rootRef: ref,
-      props,
+      props: other,
     },
   );
 
-  const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;
@@ -107,7 +105,12 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   });
 
   return (
-    <TreeViewProvider contextValue={contextValue} classes={classes}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+    >
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
@@ -198,14 +201,6 @@ RichTreeViewPro.propTypes = {
    * @default 'content'
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures: PropTypes.shape({
-    lazyLoading: PropTypes.bool,
-  }),
   /**
    * Used to determine the id of a given item.
    *

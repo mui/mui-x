@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   MergeSignaturesProperty,
   TreeViewAnyPluginSignature,
-  TreeViewExperimentalFeatures,
   TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals/models';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeViewSlotProps, TreeViewSlots } from '@mui/x-tree-view/internals';
 
 export type DescribeTreeViewTestRunner<TSignatures extends TreeViewAnyPluginSignature[]> = (
   params: DescribeTreeViewTestRunnerParams<TSignatures>,
@@ -130,13 +130,12 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
      */
     withErrorBoundary?: boolean;
   } & Omit<MergeSignaturesProperty<TSignatures, 'params'>, 'slots' | 'slotProps'> & {
-      slots?: MergeSignaturesProperty<TSignatures, 'slots'> & {
+      slots?: TreeViewSlots & {
         item?: React.ElementType<TreeItemProps>;
       };
-      slotProps?: MergeSignaturesProperty<TSignatures, 'slotProps'> & {
+      slotProps?: TreeViewSlotProps & {
         item?: Partial<TreeItemProps>;
       };
-      experimentalFeatures?: TreeViewExperimentalFeatures<TSignatures>;
     },
 ) => DescribeTreeViewRendererReturnValue<TSignatures>;
 

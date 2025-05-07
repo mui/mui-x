@@ -30,8 +30,7 @@ const useUtilityClasses = (classes: Partial<PickersToolbarButtonClasses> | undef
 const PickersToolbarButtonRoot = styled(Button, {
   name: 'MuiPickersToolbarButton',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})({
+})<{ ownerState: PickersToolbarButtonProps }>({
   padding: 0,
   minWidth: 16,
   textTransform: 'none',
@@ -62,6 +61,7 @@ export const PickersToolbarButton = React.forwardRef(function PickersToolbarButt
       variant="text"
       ref={ref}
       className={clsx(classes.root, className)}
+      ownerState={props}
       {...(width ? { sx: { width } } : {})}
       {...other}
     >

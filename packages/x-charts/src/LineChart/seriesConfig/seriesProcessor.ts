@@ -27,7 +27,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         [
-          `MUI X: line series with id='${id}' has no data.`,
+          `MUI X Charts: line series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -66,7 +66,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
                 if (process.env.NODE_ENV !== 'production') {
                   if (value !== null) {
                     warnOnce([
-                      `MUI X: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
+                      `MUI X Charts: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
                       'Line plots only support numbers and null values.',
                     ]);
                   }

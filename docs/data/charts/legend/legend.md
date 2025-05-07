@@ -43,7 +43,7 @@ It can also be moved with the `position: { vertical, horizontal }` property whic
 By default, the legend is placed above the charts.
 
 :::warning
-The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />`.
+The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />` props.
 In the second case, you are free to place the legend where you want.
 :::
 
@@ -51,7 +51,7 @@ In the second case, you are free to place the legend where you want.
 
 ### Hiding
 
-You can hide the legend with the `hideLegend` property of the Chart.
+You can hide the legend with the `hideLegend` prop of the Chart.
 
 {{"demo": "HiddenLegend.js"}}
 
@@ -96,7 +96,9 @@ For advanced customization, you can create your own legend with `useLegend`.
 This hook returns the items that the default legend would plot.
 Allowing you to focus on the rendering.
 
-This demo show how to use it with slots.
+This demo also shows how to use `labelMarkType` together with a custom legend to create a legend with custom shapes.
+
+This approach uses slots to render the legend items.
 Another demo in [HTML components docs](/x/react-charts/components/#html-components) shows how to use it with composition.
 
 {{"demo": "CustomLegend.js"}}

@@ -39,15 +39,13 @@ const useUtilityClasses = (classes: Partial<DayCalendarSkeletonClasses> | undefi
 const DayCalendarSkeletonRoot = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})({
+})<{ ownerState: DayCalendarSkeletonProps }>({
   alignSelf: 'start',
 });
 
 const DayCalendarSkeletonWeek = styled('div', {
   name: 'MuiDayCalendarSkeleton',
   slot: 'Week',
-  overridesResolver: (props, styles) => styles.week,
 })({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
@@ -57,7 +55,6 @@ const DayCalendarSkeletonWeek = styled('div', {
 const DayCalendarSkeletonDay = styled(Skeleton, {
   name: 'MuiDayCalendarSkeleton',
   slot: 'DaySkeleton',
-  overridesResolver: (props, styles) => styles.daySkeleton,
 })({
   margin: `0 ${DAY_MARGIN}px`,
   '&[data-day-in-month="0"]': {
@@ -93,7 +90,11 @@ function DayCalendarSkeleton(inProps: DayCalendarSkeletonProps) {
   const classes = useUtilityClasses(classesProp);
 
   return (
-    <DayCalendarSkeletonRoot className={clsx(classes.root, className)} {...other}>
+    <DayCalendarSkeletonRoot
+      className={clsx(classes.root, className)}
+      ownerState={props}
+      {...other}
+    >
       {monthMap.map((week, index) => (
         <DayCalendarSkeletonWeek key={index} className={classes.week}>
           {week.map((dayInMonth, index2) => (

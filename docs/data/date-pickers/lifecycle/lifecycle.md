@@ -174,7 +174,7 @@ Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#lifecycl
 
 #### When the user interacts with the view
 
-If the component is controlled (i.e: if it has a `value` prop),
+If the component is controlled (if it has a `value` prop that isn't undefined),
 clicking on a value will call `onChange` if the value to publish is different from the current value
 (for example clicking on the already selected day in the `day` view will not call `onChange`).
 
@@ -187,7 +187,7 @@ The `onChange` is only fired once when the dragging (touching) of the clock hand
 
 #### When a value is selected using the action bar
 
-If the component is controlled (i.e: if it has a `value` prop),
+If the component is controlled (if it has a `value` prop that isn't undefined),
 clicking on any built-in actions will call `onChange` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onChange` if no value has ever been published, even if the current value equals the value to publish.
@@ -295,7 +295,7 @@ When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker
 
 #### When a value is selected using the action bar
 
-If the component is controlled (i.e: if it has a `value` prop),
+If the component is controlled (if it has a `value` prop that isn't undefined),
 clicking on any built-in actions will call `onAccept` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onAccept` if no value has ever been published, even if the current value equals the value to publish.

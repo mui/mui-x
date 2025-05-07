@@ -7,6 +7,10 @@
     }
   },
   "classDescriptions": {
+    "area": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the series area element"
+    },
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the series element",
@@ -16,6 +20,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the series element",
       "conditions": "it is highlighted"
+    },
+    "mark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the series mark element"
     },
     "root": { "description": "Styles applied to the root element." }
   }

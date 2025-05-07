@@ -15,7 +15,11 @@ export type {
   GridAggregationRule,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
-export * from './gridAggregationSelectors';
+export {
+  gridAggregationStateSelector,
+  gridAggregationLookupSelector,
+  gridAggregationModelSelector,
+} from './gridAggregationSelectors';
 export * from './gridAggregationFunctions';
 export {
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,

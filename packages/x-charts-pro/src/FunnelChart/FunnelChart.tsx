@@ -7,7 +7,6 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -77,9 +76,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     funnelPlotProps,
     overlayProps,
     legendProps,
-    clipPathGroupProps,
     chartsAxisProps,
-    clipPathProps,
     chartsWrapperProps,
     axisHighlightProps,
     children,
@@ -96,14 +93,11 @@ const FunnelChart = React.forwardRef(function FunnelChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          <g {...clipPathGroupProps}>
-            <FunnelPlot {...funnelPlotProps} />
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-          </g>
+          <FunnelPlot {...funnelPlotProps} />
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
           {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
       </ChartsWrapper>
@@ -118,6 +112,8 @@ FunnelChart.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      exportAsImage: PropTypes.func.isRequired,
+      exportAsPrint: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
@@ -136,18 +132,96 @@ FunnelChart.propTypes = {
    *
    * @default { position: 'none' }
    */
-  categoryAxis: PropTypes.shape({
-    categories: PropTypes.arrayOf(PropTypes.string),
-    disableLine: PropTypes.bool,
-    disableTicks: PropTypes.bool,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
-    scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-    size: PropTypes.number,
-    tickLabelStyle: PropTypes.object,
-    tickSize: PropTypes.number,
-  }),
-  children: PropTypes.node,
+  categoryAxis: PropTypes.oneOfType([
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['band']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['point']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['log']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['pow']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['sqrt']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['time']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['utc']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['linear']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+  ]),
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -161,6 +235,11 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The gap, in pixels, between funnel sections.
+   * @default 0
+   */
+  gap: PropTypes.number,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -200,6 +279,10 @@ FunnelChart.propTypes = {
    */
   loading: PropTypes.bool,
   /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *
@@ -218,7 +301,7 @@ FunnelChart.propTypes = {
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
   /**

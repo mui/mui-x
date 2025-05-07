@@ -1,11 +1,11 @@
 import * as React from 'react';
 import InstallationInstructions from './InstallationInstructions';
 
-// #default-branch-switch
+// #npm-tag-reference
 
 const packages = {
-  Community: '@mui/x-charts@next',
-  Pro: '@mui/x-charts-pro@next',
+  Community: '@mui/x-charts',
+  Pro: '@mui/x-charts-pro',
 };
 
 export default function DataGridInstallationInstructions() {
