@@ -19,7 +19,7 @@ const initialPaginationModel = {
 export default function ServerSideTreeDataNestedPagination() {
   const apiRef = useGridApiRef();
 
-  const { groupKeys, ...props } = useNestedPagination({ initialPaginationModel });
+  const { groupKeys, ...props } = useNestedPagination(initialPaginationModel);
   const { fetchRows, columns, initialState } = useMockServer(
     dataSetOptions,
     serverOptions,

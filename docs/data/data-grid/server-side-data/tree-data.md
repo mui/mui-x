@@ -95,13 +95,6 @@ The following demo uses `QueryClient` from `@tanstack/react-core` as a data sour
 
 {{"demo": "ServerSideTreeDataCustomCache.js", "bg": "inline"}}
 
-## Nested pagination
-
-By default, the pagination works only on the first level of the tree.
-You can enable the nested pagination in the userland by using the pinned rows feature, as shown in the following demo.
-
-{{"demo": "ServerSideTreeDataNestedPagination.js", "bg": "inline"}}
-
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
