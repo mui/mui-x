@@ -1,4 +1,3 @@
-import { DEFAULT_ZOOM_SLIDER_SIZE } from '../../../constants';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
