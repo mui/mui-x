@@ -9,7 +9,7 @@ components: Toolbar, ToolbarButton, ChartsToolbarPro
 <p class="description">Charts can display a toolbar for easier access to certain functionality.</p>
 
 :::info
-This feature is in preview. It is ready for production use, but its API, visuals and/or behavior may change in future minor or patch releases.
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 :::
 
 Charts provide a toolbar that can be enabled to give users quick access to certain features.
