@@ -1049,7 +1049,12 @@ describe('<DataGridPro /> - Row selection', () => {
       });
 
       it('should not apply row selection propagation on filtered rows', async () => {
-        const { user } = render(<SelectionPropagationGrid keepNonExistentRowsSelected defaultGroupingExpansionDepth={-1}  />);
+        const { user } = render(
+          <SelectionPropagationGrid
+            keepNonExistentRowsSelected
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
 
         await user.click(getCell(3, 0).querySelector('input')!);
         expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([3]);
