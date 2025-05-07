@@ -9,11 +9,13 @@ export const filterReplace = redirectImports([
     test: /\/AdapterDateFnsV2\//,
     from: 'date-fns',
     to: 'date-fns-v2',
+    include: ['date-fns-v2/locale', 'date-fns-v2/**/*.js'],
   },
   {
     test: /\/AdapterDateFnsJalaliV2\//,
     from: 'date-fns-jalali',
     to: 'date-fns-jalali-v2',
+    include: ['date-fns-jalali-v2/locale', 'date-fns-jalali-v2/**/*.js'],
   },
 ]);
 

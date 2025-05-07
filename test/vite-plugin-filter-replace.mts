@@ -5,19 +5,8 @@ interface RedirectRule {
   test: RegExp;
   from: string;
   to: string;
+  include?: string[];
 }
-
-const cleanDepName = (name: string) => {
-  // If the name starts with '@', we need to split it into scope and lib
-  // e.g. `@mui/material/Button` -> `@mui/material`
-  if (name.startsWith('@')) {
-    const [scope, lib] = name.split('/');
-    return `${scope}/${lib}`;
-  }
-  // If the name does not start with '@', we only care about the first part
-  // e.g. `material/Button` -> `material`
-  return name.split('/')[0];
-};
 
 export function redirectImports(rules: RedirectRule[]): Plugin {
   return {
@@ -28,12 +17,7 @@ export function redirectImports(rules: RedirectRule[]): Plugin {
       config.optimizeDeps ??= {};
       config.optimizeDeps.include ??= [];
 
-      // Collect all 'from' and 'to' package names for inclusion
-      const depsToInclude = new Set<string>(
-        // Include all packages that are used in the rules
-        // We need to use the package name, so we clean it up in case we are replacing a deep import
-        rules.flatMap(({ from, to }) => [cleanDepName(from), cleanDepName(to)]),
-      );
+      const depsToInclude = new Set<string>(rules.flatMap((rule) => rule.include ?? []));
 
       // Ignore already-included deps
       config.optimizeDeps.include.forEach((dep) => depsToInclude.delete(dep));
