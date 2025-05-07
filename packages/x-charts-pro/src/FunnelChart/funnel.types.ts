@@ -71,6 +71,15 @@ export interface FunnelSeriesType
    * @default { vertical: 'middle', horizontal: 'center' }
    */
   sectionLabel?: FunnelLabelOptions | ((item: FunnelItem) => FunnelLabelOptions | false) | false;
+  /**
+   * Defines if the funnel sections are filled or outlined.
+   *
+   * An `outlined` funnel will have a stroke around the sections and a translucent fill.
+   * A `filled` funnel will have a solid fill and no stroke.
+   *
+   * @default 'filled'
+   */
+  variant?: 'filled' | 'outlined';
 }
 
 /**
