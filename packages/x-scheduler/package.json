@@ -69,7 +69,8 @@
     "luxon": "^3.6.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "rimraf": "^6.0.1"
+    "rimraf": "^6.0.1",
+    "use-isomorphic-layout-effect": "^1.1.2"
   },
   "engines": {
     "node": ">=14.0.0"

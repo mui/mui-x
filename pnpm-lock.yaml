@@ -1485,6 +1485,9 @@ importers:
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
+      use-isomorphic-layout-effect:
+        specifier: ^1.1.2
+        version: 1.2.0(@types/react@19.0.12)(react@19.0.0)
     publishDirectory: build
 
   packages/x-telemetry:
@@ -10329,6 +10332,15 @@ packages:
   url@0.11.4:
     resolution: {integrity: sha512-oCwdVC7mTuWiPyjLUz/COz5TLk6wgp0RCsN+wHZ2Ekneac9w8uuV0njcbbie2ME+Vs+d6duwmYuR3HgQXs1fOg==}
     engines: {node: '>= 0.4'}
+
+  use-isomorphic-layout-effect@1.2.0:
+    resolution: {integrity: sha512-q6ayo8DWoPZT0VdG4u3D3uxcgONP3Mevx2i2b0434cwWBoL+aelL1DzkXI6w3PhTZzUeR2kaVlZn70iCiseP6w==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   use-sync-external-store@1.5.0:
     resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
@@ -20622,6 +20634,12 @@ snapshots:
       punycode: 1.4.1
       qs: 6.14.0
     optional: true
+
+  use-isomorphic-layout-effect@1.2.0(@types/react@19.0.12)(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+    optionalDependencies:
+      '@types/react': 19.0.12
 
   use-sync-external-store@1.5.0(react@19.0.0):
     dependencies:
