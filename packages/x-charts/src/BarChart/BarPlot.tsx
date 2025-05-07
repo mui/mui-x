@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { AxisDefaultized } from '../models/axis';
+import { ComputedAxis } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './seriesConfig/getColor';
 import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
@@ -122,9 +122,7 @@ const useAggregatedData = (): {
 
       checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxis, yAxisId, yAxis);
 
-      const baseScaleConfig = (
-        verticalLayout ? xAxisConfig : yAxisConfig
-      ) as AxisDefaultized<'band'>;
+      const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;

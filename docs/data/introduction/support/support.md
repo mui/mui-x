@@ -49,9 +49,7 @@ You can browse the documentation, find an example close to your use case, and th
 
 You can use a starter template to build a reproduction case with:
 
-<!-- #default-branch-switch -->
-<!-- TODO: Change this in the "old" version branches and remove this comment there. -->
-<!-- Afterwards replace this comment with "version-branch-off" -->
+<!-- #target-branch-reference -->
 
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template

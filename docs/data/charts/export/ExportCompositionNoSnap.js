@@ -28,7 +28,14 @@ export default function ExportCompositionNoSnap() {
   const apiRef = React.useRef(undefined);
 
   return (
-    <Stack width="100%">
+    <Stack width="100%" sx={{ display: 'block' }}>
+      <Button
+        onClick={() => apiRef.current.exportAsPrint()}
+        variant="contained"
+        sx={{ mb: 1 }}
+      >
+        Print
+      </Button>
       <ChartDataProviderPro
         apiRef={apiRef}
         height={300}
@@ -65,8 +72,6 @@ export default function ExportCompositionNoSnap() {
           </ChartsSurface>
         </CustomChartWrapper>
       </ChartDataProviderPro>
-
-      <Button onClick={() => apiRef.current?.exportAsPrint()}>Print</Button>
     </Stack>
   );
 }

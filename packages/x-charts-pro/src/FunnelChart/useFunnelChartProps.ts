@@ -3,11 +3,10 @@ import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-
 import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import useId from '@mui/utils/useId';
-import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
+import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -42,7 +41,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     ) {
       warnOnce(
         [
-          `MUI X: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
+          `MUI X Charts: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
           `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
         ],
         'warning',
@@ -125,12 +124,10 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     hideLegend,
     axisHighlight,
     apiRef,
+    gap,
     ...rest
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
-
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
 
   const isHorizontal = series.some((s) => s.layout === 'horizontal');
 
@@ -158,7 +155,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     width,
     height,
     margin,
-    colors,
+    colors: colors ?? strawberrySkyPalette,
     xAxis: [xAxis],
     yAxis: [yAxis],
     sx,
@@ -169,6 +166,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   };
 
   const funnelPlotProps: FunnelPlotProps = {
+    gap,
     onItemClick,
     slots,
     slotProps,
@@ -190,14 +188,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     slotProps,
   };
 
-  const clipPathGroupProps = {
-    clipPath: `url(#${clipPathId})`,
-  };
-
-  const clipPathProps: ChartsClipPathProps = {
-    id: clipPathId,
-  };
-
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
     legendPosition: props.slotProps?.legend?.position,
@@ -214,8 +204,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     overlayProps,
     chartsAxisProps,
     legendProps,
-    clipPathGroupProps,
-    clipPathProps,
     chartsWrapperProps,
     axisHighlightProps,
     children,

@@ -1,5 +1,5 @@
 ---
-title: React Charts - Migration from v7 to v8
+title: Charts - Migration from v7 to v8
 productId: x-charts
 ---
 
@@ -74,7 +74,7 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
 # Charts-specific

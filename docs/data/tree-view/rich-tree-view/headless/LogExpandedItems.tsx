@@ -24,7 +24,7 @@ interface TreeViewLogExpandedParameters {
   logMessage?: (message: string) => void;
 }
 
-interface TreeViewLogExpandedDefaultizedParameters {
+interface TreeViewLogExpandedParametersWithDefaults {
   areLogsEnabled: boolean;
   logMessage?: (message: string) => void;
 }
@@ -33,7 +33,7 @@ type TreeViewLogExpandedSignature = TreeViewPluginSignature<{
   // The parameters of this plugin as they are passed to `useTreeView`
   params: TreeViewLogExpandedParameters;
   // The parameters of this plugin as they are passed to the plugin after calling `plugin.getDefaultizedParams`
-  defaultizedParams: TreeViewLogExpandedDefaultizedParameters;
+  paramsWithDefaults: TreeViewLogExpandedParametersWithDefaults;
   // Dependencies of this plugin (we need the expansion plugin to access its model)
   dependencies: [UseTreeViewExpansionSignature];
 }>;
@@ -54,7 +54,7 @@ const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
 };
 
 // Sets the default value of this plugin parameters.
-useTreeViewLogExpanded.getDefaultizedParams = ({ params }) => ({
+useTreeViewLogExpanded.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   areLogsEnabled: params.areLogsEnabled ?? false,
 });

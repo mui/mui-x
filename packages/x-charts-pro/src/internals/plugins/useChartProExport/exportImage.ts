@@ -1,5 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { createExportIframe, loadStyleSheets } from './common';
+import { loadStyleSheets } from '@mui/x-internals/export';
+import { createExportIframe } from './common';
 import { ChartImageExportOptions } from './useChartProExport.types';
 
 export const getDrawDocument = async () => {
@@ -9,7 +10,7 @@ export const getDrawDocument = async () => {
     return module.drawDocument;
   } catch (error) {
     throw new Error(
-      `MUI X: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
+      `MUI X Charts: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
       { cause: error },
     );
   }
@@ -45,7 +46,11 @@ export async function exportImage(
     exportDoc.body.innerHTML = container.innerHTML;
     exportDoc.body.style.margin = '0px';
 
-    await loadStyleSheets(exportDoc, element);
+    const rootCandidate = element.getRootNode();
+    const root =
+      rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
+
+    await Promise.all(loadStyleSheets(exportDoc, root));
 
     resolve();
   };
@@ -74,11 +79,11 @@ export async function exportImage(
   try {
     blob = await blobPromise;
   } catch (error) {
-    throw new Error('MUI X: Failed to create blob from canvas.', { cause: error });
+    throw new Error('MUI X Charts: Failed to create blob from canvas.', { cause: error });
   }
 
   if (!blob) {
-    throw new Error('MUI X: Failed to create blob from canvas.');
+    throw new Error('MUI X Charts: Failed to create blob from canvas.');
     return;
   }
 

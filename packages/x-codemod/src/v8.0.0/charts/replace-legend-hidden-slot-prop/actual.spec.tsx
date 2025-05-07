@@ -1,5 +1,4 @@
 // @ts-nocheck
-// eslint-disable-next-line
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
