@@ -1027,7 +1027,7 @@ describe('<DataGridPro /> - Row selection', () => {
         const { user } = render(<SelectionPropagationGrid keepNonExistentRowsSelected />);
 
         await user.click(getCell(1, 0).querySelector('input')!);
-        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
 
         await act(() => {
           apiRef.current.setFilterModel({
@@ -1043,7 +1043,7 @@ describe('<DataGridPro /> - Row selection', () => {
 
         await user.click(getCell(0, 0).querySelector('input')!);
 
-        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
       });
 
       it('should not apply row selection propagation on filtered rows', async () => {
@@ -1055,7 +1055,7 @@ describe('<DataGridPro /> - Row selection', () => {
         );
 
         await user.click(getCell(3, 0).querySelector('input')!);
-        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([3]);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([3]);
 
         await act(async () => {
           apiRef.current?.setFilterModel({
@@ -1069,7 +1069,7 @@ describe('<DataGridPro /> - Row selection', () => {
           });
         });
 
-        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([3]);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([3]);
       });
     });
   });
