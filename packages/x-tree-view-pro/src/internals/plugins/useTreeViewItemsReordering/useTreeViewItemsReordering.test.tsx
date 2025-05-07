@@ -18,7 +18,6 @@ interface DragEventOptions {
    * @default: { x: targetWidth / 2, y: targetHeight / 2 }
    */
   coordinates?: { x: number; y: number };
-
   /**
    * Callback executed before the dragEnd event is fired.
    * @param {DataTransfer} dataTransfer The dataTransfer object associated with the drag-and-drop operation.

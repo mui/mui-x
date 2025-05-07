@@ -34,7 +34,7 @@ export interface UseTreeViewItemsReorderingInstance {
   /**
    * Cancel the current reordering operation and reset the state.
    */
-  cancelDragging: () => void;
+  cancelDraggingItem: () => void;
   /**
    * Set the new target item for the ongoing reordering.
    * The action will be determined based on the position of the cursor inside the target and the valid actions for this target.
