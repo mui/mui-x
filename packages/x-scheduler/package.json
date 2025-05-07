@@ -16,7 +16,7 @@
   },
   "exports": {
     "./joy": "./src/joy/index.ts",
-    "./joy/scheduler": "./src/joy/scheduler/index.ts"
+    "./joy/event-calendar": "./src/joy/event-calendar/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -26,7 +26,13 @@
   "keywords": [
     "react",
     "react-component",
-    "scheduler"
+    "scheduler",
+    "event-calendar",
+    "calendar",
+    "timeline",
+    "agenda",
+    "planning",
+    "big-calendar"
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",

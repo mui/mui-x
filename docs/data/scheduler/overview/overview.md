@@ -13,4 +13,6 @@ githubLabel: 'component: scheduler'
 This package is not published yet.
 :::
 
-{{"demo": "BasicScheduler.js", "defaultCodeOpen": false}}
+## Event Calendar
+
+{{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false}}
