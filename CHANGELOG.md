@@ -5,6 +5,119 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.2.1
+
+_May 7, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to this community member for a valuable contribution:
+@ptuukkan.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @rita-codes, @romgrk.
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.2.1`
+
+- [DataGrid] Fix cell editing of computed columns with data source (#17684) @ptuukkan
+- [DataGrid] Fix lazy loading crash with `isRowSelectable` prop (#17629) @MBilalShafi
+- [DataGrid] Fix: use CSS nonce (#17726) @romgrk
+- [DataGrid] Ignore `preProcessEditCellProps` for non-editable columns when starting a row update (#17732) @arminmeh
+
+#### `@mui/x-data-grid-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.2.1`.
+
+#### `@mui/x-data-grid-premium@8.2.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.2.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.2.1`
+
+- [DateTimePicker] Fix focus behavior on desktop variant (#17719) @LukasTy
+- [pickers] Avoid `DigitalClock` stealing focus from a Picker open button on close (#17686) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.2.1`, plus:
+
+- [DateRangePicker] Fix to reset range position after closing mobile Picker (#17631) @LukasTy
+
+### Charts
+
+From https://github.com/mui/mui-x/pull/17661
+
+
+- The `FunnelChart` series now accept a `variant='outlined'` prop for a simpler style.
+
+  <img width="398" alt="Screenshot 2025-05-06 at 20 36 12" src="https://github.com/user-attachments/assets/00fef14f-9026-421e-a4b6-7e081adce1e8" />
+
+From https://github.com/mui/mui-x/pull/17660
+
+- Add a `borderRadius` property to `FunnelChart`. All funnels have a `8px` `borderRadius` by default
+
+  <img width="386" alt="Screenshot 2025-05-06 at 14 00 20" src="https://github.com/user-attachments/assets/4f4cc0e7-01ce-4ed6-a0e1-a387f78def23" />
+
+From https://github.com/mui/mui-x/pull/17665
+
+- Add a `pyramid` curve to `FunnelChart`, this allows us to create a pyramid shaped funnel.
+  <img width="344" alt="Screenshot 2025-05-06 at 14 32 59" src="https://github.com/user-attachments/assets/0b2896e0-0478-4766-bb1b-258a4977a751" />
+- Add a `step-pyramid` curve to `FunnelChart`, which creates a stepped-pyramid like shape.
+  <img width="344" alt="Screenshot 2025-05-06 at 14 33 03" src="https://github.com/user-attachments/assets/894f0ab3-7898-40fe-b0df-560feea4085a" />
+
+From https://github.com/mui/mui-x/pull/17501
+
+Fix sparkline not clipping elements outside the drawing area. Clipping can be disabled by setting `disableClipping` to true.
+
+#### `@mui/x-charts@8.2.1`
+
+- [charts] Add charts toolbar with zoom options (#17615) @bernardobelchior
+- [charts] Add population pyramid demo (#17652) @bernardobelchior
+- [charts] Add zoom slider (#17496) @bernardobelchior
+- [charts] Cleanup compiler warnings (#17360) @alexfauquette
+- [charts] Fix PieArcLabel not taking arcLabelRadius into account (#17655) @bernardobelchior
+- [charts] Fix spark line not having clip path (#17501) @bernardobelchior
+- [charts] Fix type issue with ESM (#17624) @alexfauquette
+- [charts] Improve MarkElement perf (#17546) @bernardobelchior
+- [charts] Rename materialSlots internal constant (#17710) @bernardobelchior
+- [charts] Update zoom slider design (#17682) @bernardobelchior
+- [charts] fix zoom being documented as available for heatmap (#17657) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.2.1`, plus:
+
+- [charts-pro] Add `pyramid` curve to `FunnelChart` (#17665) @JCQuintas
+- [charts-pro] Add `variant='outlined'` to `FunnelChart` series (#17661) @JCQuintas
+- [charts-pro] Add a `borderRadius` property to `FunnelChart` (#17660) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.2.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.2.1`.
+
+### Docs
+
+- [docs][charts] Fix randomised argos test (#17658) @JCQuintas
+
+### Core
+
+- [core] Avoid `node` types in the built packages (#17533) @LukasTy
+- [code-infra] Add pkg.pr.new publishing (#17402) @Janpot
+- [code-infra] Normalize author package in org @oliviertassinari
+- [code-infra] Remove required checkout step (#17729) @JCQuintas
+- [docs-infra] Normalize netlify.toml in org @oliviertassinari
+
 ## 8.2.0
 
 _May 1, 2025_
