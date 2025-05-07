@@ -8,6 +8,10 @@ components: FunnelChart, FunnelPlot
 
 <p class="description">Funnel charts allow to express quantity evolution along a process, such as audience engagement, population education levels or yields of multiple processes.</p>
 
+:::info
+This feature is in preview. It is ready for production use, but its API, visuals and/or behavior may change in future minor or patch releases.
+:::
+
 ## Basics
 
 Funnel charts series must contain a `data` property containing an array of objects.
