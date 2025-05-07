@@ -161,7 +161,7 @@ export const findRowsToSelect = (
   const filteredRows = gridFilteredRowsLookupSelector(apiRef);
   const selectedDescendants: Set<GridRowId> = new Set([]);
 
-  if (!autoSelectDescendants && !autoSelectParents) {
+  if ((!autoSelectDescendants && !autoSelectParents) || filteredRows[selectedRow] === false) {
     return;
   }
 
