@@ -1,7 +1,8 @@
 import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
 import { PopperProps } from '@mui/material/Popper';
-import { ChartsTooltipPaper, ChartsTooltipRoot } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltipPaper } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltipRoot } from '@mui/x-charts/internals';
 import Typography from '@mui/material/Typography';
 
 const MODIFIERS = [
