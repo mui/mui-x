@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.2.1
+## 8.3.0
 
 _May 7, 2025_
 
@@ -15,36 +15,36 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 Special thanks go out to this community member for a valuable contribution:
 @ptuukkan.
-Following are all team members who have contributed to this release:
+Team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @rita-codes, @romgrk.
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.2.1`
+#### `@mui/x-data-grid@8.3.0`
 
 - [DataGrid] Fix cell editing of computed columns with data source (#17684) @ptuukkan
 - [DataGrid] Fix lazy loading crash with `isRowSelectable` prop (#17629) @MBilalShafi
 - [DataGrid] Fix: use CSS nonce (#17726) @romgrk
 - [DataGrid] Ignore `preProcessEditCellProps` for non-editable columns when starting a row update (#17732) @arminmeh
 
-#### `@mui/x-data-grid-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.2.1`.
+Same changes as in `@mui/x-data-grid@8.3.0`.
 
-#### `@mui/x-data-grid-premium@8.2.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.3.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.2.1`.
+Same changes as in `@mui/x-data-grid-pro@8.3.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.2.1`
+#### `@mui/x-date-pickers@8.3.0`
 
 - [DateTimePicker] Fix focus behavior on desktop variant (#17719) @LukasTy
 - [pickers] Avoid `DigitalClock` stealing focus from a Picker open button on close (#17686) @LukasTy
 
-#### `@mui/x-date-pickers-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.2.1`, plus:
+Same changes as in `@mui/x-date-pickers@8.3.0`, plus:
 
 - [DateRangePicker] Fix to reset range position after closing mobile Picker (#17631) @LukasTy
 
@@ -66,7 +66,7 @@ Same changes as in `@mui/x-date-pickers@8.2.1`, plus:
  
   <img width="344" alt="Screenshot 2025-05-06 at 14 33 03" src="https://github.com/user-attachments/assets/894f0ab3-7898-40fe-b0df-560feea4085a" />
 
-#### `@mui/x-charts@8.2.1`
+#### `@mui/x-charts@8.3.0`
 
 - [charts] Add charts toolbar with zoom options (#17615) @bernardobelchior
 - [charts] Add zoom slider (#17496) @bernardobelchior
@@ -79,9 +79,9 @@ Same changes as in `@mui/x-date-pickers@8.2.1`, plus:
 - [charts] Update zoom slider design (#17682) @bernardobelchior
 - [charts] Fix zoom being documented as available for heatmap (#17657) @bernardobelchior
 
-#### `@mui/x-charts-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.2.1`, plus:
+Same changes as in `@mui/x-charts@8.3.0`, plus:
 
 - [charts-pro] Add `pyramid` curve to `<FunnelChart />` (#17665) @JCQuintas
 - [charts-pro] Add `variant='outlined'` to `<FunnelChart />` series (#17661) @JCQuintas
@@ -89,13 +89,13 @@ Same changes as in `@mui/x-charts@8.2.1`, plus:
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.2.1`
+#### `@mui/x-tree-view@8.3.0`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.2.1`.
+Same changes as in `@mui/x-tree-view@8.3.0`.
 
 ### Docs
 
