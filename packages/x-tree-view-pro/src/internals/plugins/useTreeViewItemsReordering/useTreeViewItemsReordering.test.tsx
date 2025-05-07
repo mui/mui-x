@@ -18,6 +18,12 @@ interface DragEventOptions {
    * @default: { x: targetWidth / 2, y: targetHeight / 2 }
    */
   coordinates?: { x: number; y: number };
+
+  /**
+   * Callback executed before the dragEnd event is fired.
+   * Allows modifying the dataTransfer object or performing other actions.
+   */
+  beforeDragEnd?: (dataTransfer: DataTransfer) => void;
 }
 
 const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
@@ -46,7 +52,7 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
     fullDragSequence: (
       draggedItem: HTMLElement,
       targetItem: HTMLElement,
-      options: DragEventOptions & { beforeDragEnd?: (dataTransfer: DataTransfer) => void } = {},
+      options: DragEventOptions = {},
     ) => {
       dragStart(draggedItem);
       dragEnter(targetItem);
