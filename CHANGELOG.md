@@ -9,8 +9,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _May 7, 2025_
 
-We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎨 Added new styling options and shapes for FunnelChart, including `variant`, `borderRadius`, `pyramid`, and `step-pyramid` curves.
 - 🐞 Bugfixes
 
 Special thanks go out to this community member for a valuable contribution:
@@ -104,7 +105,7 @@ Same changes as in `@mui/x-tree-view@8.3.0`.
 
 ### Core
 
-- [core] Avoid `node` types in the built packages (#17533) @LukasTy
+- [code-infra] Avoid `node` types in the built packages (#17533) @LukasTy
 - [code-infra] Add `pkg.pr.new` publishing (#17402) @Janpot
 - [code-infra] Normalize author package in org @oliviertassinari
 - [code-infra] Remove required checkout step (#17729) @JCQuintas
