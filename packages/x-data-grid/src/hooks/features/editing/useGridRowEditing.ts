@@ -30,7 +30,7 @@ import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditi
 import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
-  gridColumnFieldsSelector,
+  gridColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -422,9 +422,10 @@ export const useGridRowEditing = (
       const { id, fieldToFocus, deleteValue, initialValue } = params;
 
       const row = apiRef.current.getRow(id);
-      const columnFields = gridColumnFieldsSelector(apiRef);
+      const columns = gridColumnDefinitionsSelector(apiRef);
 
-      const newProps = columnFields.reduce<Record<string, GridEditCellProps>>((acc, field) => {
+      const newProps = columns.reduce<Record<string, GridEditCellProps>>((acc, col) => {
+        const field = col.field;
         const cellParams = apiRef.current.getCellParams(id, field);
         if (!cellParams.isEditable) {
           return acc;
@@ -443,7 +444,7 @@ export const useGridRowEditing = (
         acc[field] = {
           value: newValue,
           error: false,
-          isProcessingProps: !!column.preProcessEditCellProps && deleteValue,
+          isProcessingProps: column.editable && !!column.preProcessEditCellProps && deleteValue,
         };
 
         return acc;
@@ -456,10 +457,10 @@ export const useGridRowEditing = (
         apiRef.current.setCellFocus(id, fieldToFocus);
       }
 
-      columnFields
-        .filter((field) => !!apiRef.current.getColumn(field).preProcessEditCellProps && deleteValue)
-        .forEach((field) => {
-          const column = apiRef.current.getColumn(field);
+      columns
+        .filter((column) => column.editable && !!column.preProcessEditCellProps && deleteValue)
+        .forEach((column) => {
+          const field = column.field;
           const value = apiRef.current.getCellValue(id, field);
           const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
 

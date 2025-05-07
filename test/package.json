@@ -25,6 +25,7 @@
     "@types/prop-types": "^15.7.14",
     "@types/react": "^19.0.12",
     "@types/react-router": "^5.1.20",
+    "@types/react-transition-group": "^4.4.12",
     "@types/semver": "^7.7.0",
     "chai": "^4.5.0",
     "dayjs": "^1.11.13",

@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { CurveOptions } from './curve.types';
 
 /**
  * This is a custom "bump" curve generator.
@@ -22,12 +23,9 @@ export class Bump implements CurveGenerator {
 
   private gap: number = 0;
 
-  constructor(
-    context: CanvasRenderingContext2D,
-    { isHorizontal, gap }: { isHorizontal: boolean; gap?: number },
-  ) {
+  constructor(context: CanvasRenderingContext2D, { isHorizontal, gap }: CurveOptions) {
     this.context = context;
-    this.isHorizontal = isHorizontal;
+    this.isHorizontal = isHorizontal ?? false;
     this.gap = (gap ?? 0) / 2;
   }
 

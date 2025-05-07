@@ -11,10 +11,12 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
   dataIndex: number;
   color: string;
   classes?: Partial<FunnelSectionClasses>;
+  variant?: 'filled' | 'outlined';
 }
 
 export const FunnelSectionPath = styled('path')(() => ({
-  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  transition:
+    'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
 }));
 
 /**
@@ -30,26 +32,42 @@ const FunnelSection = consumeSlots(
     props: FunnelSectionProps,
     ref: React.Ref<SVGPathElement>,
   ) {
-    const { seriesId, dataIndex, classes, color, onClick, className, ...other } = props;
+    const {
+      seriesId,
+      dataIndex,
+      classes,
+      color,
+      onClick,
+      className,
+      variant = 'filled',
+      ...other
+    } = props;
     const interactionProps = useInteractionItemProps({ type: 'funnel', seriesId, dataIndex });
     const { isFaded, isHighlighted } = useItemHighlighted({
       seriesId,
       dataIndex,
     });
 
+    const isOutlined = variant === 'outlined';
+
     return (
       <FunnelSectionPath
         {...interactionProps}
-        filter={isHighlighted ? 'brightness(120%)' : undefined}
-        opacity={isFaded ? 0.3 : 1}
+        filter={isHighlighted && !isOutlined ? 'brightness(120%)' : undefined}
+        opacity={isFaded && !isOutlined ? 0.3 : 1}
         fill={color}
-        stroke="none"
+        stroke={isOutlined ? color : 'none'}
+        fillOpacity={isOutlined && !isHighlighted ? 0.4 : 1}
+        strokeOpacity={1}
+        strokeWidth={isOutlined ? 1.5 : 0}
         cursor={onClick ? 'pointer' : 'unset'}
         onClick={onClick}
         className={clsx(
           classes?.root,
           isHighlighted && classes?.highlighted,
           isFaded && classes?.faded,
+          isOutlined && classes?.outlined,
+          !isOutlined && classes?.filled,
           className,
         )}
         {...other}
