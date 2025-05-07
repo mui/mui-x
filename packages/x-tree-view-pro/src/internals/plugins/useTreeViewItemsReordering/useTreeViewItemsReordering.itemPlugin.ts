@@ -85,7 +85,6 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         };
 
         const handleRootDragEnd = (event: React.DragEvent & TreeViewCancellableEvent) => {
-          event.stopPropagation();
           externalEventHandlers.onDragEnd?.(event);
           if (event.defaultMuiPrevented) {
             return;
