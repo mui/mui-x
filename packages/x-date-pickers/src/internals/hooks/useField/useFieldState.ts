@@ -216,12 +216,14 @@ export const useFieldState = <
     return hasValidationError;
   }, [hasValidationError, errorProp]);
 
-  const publishValue = (newValue: TValue) => {
+  const publishValue = (newValue: TValue, isNewValuePartiallyFilled: boolean) => {
     const context: FieldChangeHandlerContext<TError> = {
+      isPartiallyFilled,
       validationError: validator({
         adapter,
         value: newValue,
         timezone,
+        isPartiallyFilled: isNewValuePartiallyFilled,
         props: internalPropsWithDefaults,
       }),
     };
@@ -270,7 +272,7 @@ export const useFieldState = <
       }));
     } else {
       setState((prevState) => ({ ...prevState, characterQuery: null }));
-      publishValue(valueManager.emptyValue);
+      publishValue(valueManager.emptyValue, false);
     }
   };
 
@@ -321,7 +323,7 @@ export const useFieldState = <
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
-    publishValue(newValue);
+    publishValue(newValue, false);
   };
 
   const cleanActiveDateSectionsIfValueNullTimeout = useTimeout();

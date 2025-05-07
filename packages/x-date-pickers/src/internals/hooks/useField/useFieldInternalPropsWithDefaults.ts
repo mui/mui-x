@@ -43,6 +43,7 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
       return setValue?.(newValue, {
         validationError: ctx.validationError,
         shouldClose: false,
+        isPartiallyFilled: ctx.isPartiallyFilled,
       });
     },
     [setValue],
