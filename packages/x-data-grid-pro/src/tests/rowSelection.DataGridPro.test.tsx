@@ -13,7 +13,6 @@ import {
   GridRowsProp,
   GridColDef,
   GridFilterModel,
-  gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
