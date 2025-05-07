@@ -12,6 +12,8 @@ import {
   useStore,
   ZoomData,
   ZOOM_SLIDER_MARGIN,
+  selectorChartRawAxis,
+  ChartState,
 } from '@mui/x-charts/internals';
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
@@ -165,41 +167,30 @@ function ChartAxisZoomSliderTrack({
   const onPointerMove = React.useMemo(
     () =>
       rafThrottle((event: PointerEvent) => {
-        const { left, top, height, width } = selectorChartDrawingArea(store.getSnapshot());
-        const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
         const element = svgRef.current;
         const startingPoint = startingPointRef.current;
 
-        if (!axisZoomData || !element || startingPoint === null) {
+        if (!element || startingPoint === null) {
           return;
         }
 
         const point = getSVGPoint(element, event);
+        const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
-        let pointerZoom: number;
-        if (axisDirection === 'x') {
-          pointerZoom = ((point.x - left) / width) * 100;
-        } else {
-          pointerZoom = ((top + height - point.y) / height) * 100;
-        }
-
-        if (reverse) {
-          pointerZoom = 100 - pointerZoom;
+        if (pointerZoom === null) {
+          return;
         }
 
         // pointerZoom = Math.max(pointerZoomMin, Math.min(pointerZoomMax, pointerZoom));
-        pointerZoom = Math.max(0, Math.min(100, pointerZoom));
 
-        instance.setAxisZoomData(axisId, (prevZoomData) => {
-          return {
-            ...prevZoomData,
-            start: pointerZoom > startingPoint ? prevZoomData.start : pointerZoom,
-            end: pointerZoom > startingPoint ? pointerZoom : prevZoomData.end,
-          };
-        });
+        instance.setAxisZoomData(axisId, (prevZoomData) => ({
+          ...prevZoomData,
+          start: pointerZoom > startingPoint ? prevZoomData.start : pointerZoom,
+          end: pointerZoom > startingPoint ? pointerZoom : prevZoomData.end,
+        }));
         firstMoveRef.current = false;
       }),
-    [axisDirection, axisId, instance, reverse, store, svgRef],
+    [axisId, instance, store, svgRef],
   );
 
   const onPointerUp = () => {
@@ -229,25 +220,17 @@ function ChartAxisZoomSliderTrack({
     rect.addEventListener('pointerup', onPointerUp);
     rect.addEventListener('pointermove', onPointerMove);
 
-    const { left, top, height, width } = selectorChartDrawingArea(store.getSnapshot());
-    const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
     const element = svgRef.current;
 
-    if (!axisZoomData || !element) {
+    if (!element) {
       return;
     }
 
     const point = getSVGPoint(element, event);
+    const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
-    let pointerZoom: number;
-    if (axisDirection === 'x') {
-      pointerZoom = ((point.x - left) / width) * 100;
-    } else {
-      pointerZoom = ((top + height - point.y) / height) * 100;
-    }
-
-    if (reverse) {
-      pointerZoom = 100 - pointerZoom;
+    if (pointerZoom === null) {
+      return;
     }
 
     startingPointRef.current = pointerZoom;
@@ -302,25 +285,17 @@ function ChartAxisZoomSliderActiveTrack({
     let prevPointerZoom = 0;
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
-      const { left, top, height, width } = selectorChartDrawingArea(store.getSnapshot());
-      const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
       const element = svgRef.current;
 
-      if (!axisZoomData || !element) {
+      if (!element) {
         return;
       }
 
       const point = getSVGPoint(element, event);
+      let pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
-      let pointerZoom: number;
-      if (axisDirection === 'x') {
-        pointerZoom = ((point.x - left) / width) * 100;
-      } else {
-        pointerZoom = ((top + height - point.y) / height) * 100;
-      }
-
-      if (reverse) {
-        pointerZoom = 100 - pointerZoom;
+      if (pointerZoom === null) {
+        return;
       }
 
       pointerZoom = Math.max(pointerZoomMin, Math.min(pointerZoomMax, pointerZoom));
@@ -342,7 +317,6 @@ function ChartAxisZoomSliderActiveTrack({
       event.preventDefault();
       activePreviewRect.setPointerCapture(event.pointerId);
 
-      const { left, top, height, width } = selectorChartDrawingArea(store.getSnapshot());
       const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
       const element = svgRef.current;
 
@@ -351,17 +325,10 @@ function ChartAxisZoomSliderActiveTrack({
       }
 
       const point = getSVGPoint(element, event);
+      const pointerDownZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
-      // The corresponding value of zoom where the pointer was pressed
-      let pointerDownZoom: number;
-      if (axisDirection === 'x') {
-        pointerDownZoom = ((point.x - left) / width) * 100;
-      } else {
-        pointerDownZoom = ((top + height - point.y) / height) * 100;
-      }
-
-      if (reverse) {
-        pointerDownZoom = 100 - pointerDownZoom;
+      if (pointerDownZoom === null) {
+        return;
       }
 
       prevPointerZoom = pointerDownZoom;
@@ -392,22 +359,14 @@ function ChartAxisZoomSliderActiveTrack({
     const point = getSVGPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
-      const { left, top, width, height } = selectorChartDrawingArea(store.value);
-
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.value, axisId);
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
       return prevZoomData.map((zoom) => {
         if (zoom.axisId === axisId) {
-          let newStart: number;
+          const newStart = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
-          if (axisDirection === 'x') {
-            newStart = ((point.x - left) / width) * 100;
-          } else {
-            newStart = ((top + height - point.y) / height) * 100;
-          }
-
-          if (reverse) {
-            newStart = 100 - newStart;
+          if (newStart === null) {
+            return zoom;
           }
 
           return {
@@ -564,6 +523,30 @@ function ChartAxisZoomSliderActiveTrack({
       </ChartsTooltipZoomSliderValue>
     </React.Fragment>
   );
+}
+
+export function calculateZoomFromPoint(state: ChartState<any>, axisId: AxisId, point: DOMPoint) {
+  const { left, top, height, width } = selectorChartDrawingArea(state);
+  const axis = selectorChartRawAxis(state, axisId);
+
+  if (!axis) {
+    return null;
+  }
+
+  const axisDirection = axis.position === 'right' || axis.position === 'left' ? 'y' : 'x';
+
+  let pointerZoom: number;
+  if (axisDirection === 'x') {
+    pointerZoom = ((point.x - left) / width) * 100;
+  } else {
+    pointerZoom = ((top + height - point.y) / height) * 100;
+  }
+
+  if (axis.reverse) {
+    pointerZoom = 100 - pointerZoom;
+  }
+
+  return pointerZoom;
 }
 
 export function calculateZoomStart(
