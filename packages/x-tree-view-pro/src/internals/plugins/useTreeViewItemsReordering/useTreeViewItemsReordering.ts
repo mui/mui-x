@@ -159,6 +159,16 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [store],
   );
 
+  const resetDraggingItem = React.useCallback(() => {
+    store.update((prevState) => ({
+      ...prevState,
+      itemsReordering: {
+        ...prevState.itemsReordering,
+        currentReorder: null,
+      },
+    }));
+  }, [store]);
+
   const stopDraggingItem = React.useCallback(
     (itemId: string) => {
       const currentReorder = selectorCurrentItemReordering(store.value);
@@ -275,6 +285,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       canItemBeDragged,
       getDroppingTargetValidActions,
       startDraggingItem,
+      resetDraggingItem,
       stopDraggingItem,
       setDragTargetItem,
     },

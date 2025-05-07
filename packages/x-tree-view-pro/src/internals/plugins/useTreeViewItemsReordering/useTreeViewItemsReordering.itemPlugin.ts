@@ -85,8 +85,15 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         };
 
         const handleRootDragEnd = (event: React.DragEvent & TreeViewCancellableEvent) => {
+          event.stopPropagation();
           externalEventHandlers.onDragEnd?.(event);
           if (event.defaultMuiPrevented) {
+            return;
+          }
+
+          // Check if the drag-and-drop was cancelled, possibly by pressing Escape
+          if (event.dataTransfer.dropEffect === 'none') {
+            instance.resetDraggingItem(itemId);
             return;
           }
 
