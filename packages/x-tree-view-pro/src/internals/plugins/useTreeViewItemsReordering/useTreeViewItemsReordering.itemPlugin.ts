@@ -97,7 +97,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
             return;
           }
 
-          instance.stopDraggingItem(itemId);
+          instance.completeDraggingItem(itemId);
         };
 
         return {

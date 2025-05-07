@@ -169,7 +169,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     }));
   }, [store]);
 
-  const stopDraggingItem = React.useCallback(
+  const completeDraggingItem = React.useCallback(
     (itemId: string) => {
       const currentReorder = selectorCurrentItemReordering(store.value);
       if (currentReorder == null || currentReorder.draggedItemId !== itemId) {
@@ -286,7 +286,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       getDroppingTargetValidActions,
       startDraggingItem,
       cancelDragging,
-      stopDraggingItem,
+      completeDraggingItem,
       setDragTargetItem,
     },
   };
