@@ -181,6 +181,7 @@ function ChartAxisZoomSliderTrack({
           return;
         }
 
+        // TODO: Handle min span, etc.
         // pointerZoom = Math.max(pointerZoomMin, Math.min(pointerZoomMax, pointerZoom));
 
         instance.setAxisZoomData(axisId, (prevZoomData) => ({
