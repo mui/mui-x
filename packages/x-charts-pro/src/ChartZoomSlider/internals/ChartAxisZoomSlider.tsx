@@ -412,7 +412,7 @@ function ChartAxisZoomSliderSpan({
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
-        onResize={onResizeStart}
+        onMove={onResizeStart}
         onPointerEnter={() => setShowTooltip('start')}
         onPointerLeave={() => setShowTooltip(null)}
         placement="start"
@@ -424,7 +424,7 @@ function ChartAxisZoomSliderSpan({
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
-        onResize={onResizeEnd}
+        onMove={onResizeEnd}
         onPointerEnter={() => setShowTooltip('end')}
         onPointerLeave={() => setShowTooltip(null)}
         placement="end"
