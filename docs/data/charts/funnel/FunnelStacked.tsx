@@ -20,7 +20,7 @@ export default function FunnelStacked() {
               offset: { x: 10 },
             },
           },
-          { data: dataSmall },
+          { data: dataSmall, curve: 'bump' },
         ]}
         height={300}
       />

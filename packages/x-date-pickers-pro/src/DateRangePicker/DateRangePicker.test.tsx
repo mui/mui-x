@@ -9,7 +9,7 @@ import {
   openPicker,
   stubMatchMedia,
 } from 'test/utils/pickers';
-import { pickerPopperClasses } from '@mui/x-date-pickers/internals/components/PickerPopper';
+import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 
 describe('<DateRangePicker />', () => {

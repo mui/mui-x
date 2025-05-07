@@ -283,7 +283,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
 useTreeViewItemsReordering.itemPlugin = useTreeViewItemsReorderingItemPlugin;
 
-useTreeViewItemsReordering.getDefaultizedParams = ({ params }) => ({
+useTreeViewItemsReordering.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   itemsReordering: params.itemsReordering ?? false,
 });

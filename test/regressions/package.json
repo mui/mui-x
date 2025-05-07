@@ -10,7 +10,7 @@
     "server": "serve . -p 5001"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
@@ -35,8 +35,8 @@
     "chai": "^4.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.5.2",
+    "react-router": "^7.5.3",
     "react-transition-group": "^4.4.5",
-    "tsx": "^4.19.3"
+    "tsx": "^4.19.4"
   }
 }
