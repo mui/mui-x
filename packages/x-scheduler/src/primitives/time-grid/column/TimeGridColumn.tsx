@@ -1,9 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useTimeGridColumn } from './useTimeGridColumn';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TImeGridColumnContext';
+import { getAdapter } from '../../utils/adapter/getAdapter';
+import { SchedulerValidDate } from '../../utils/adapter/types';
+
+const adapter = getAdapter();
 
 const TimeGridColumn = React.forwardRef(function CalendarCell(
   componentProps: TimeGridColumn.Props,
@@ -13,13 +16,18 @@ const TimeGridColumn = React.forwardRef(function CalendarCell(
     // Rendering props
     className,
     render,
-    // Hook props
+    // Internal props
     value,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const { props, contextValue } = useTimeGridColumn({ value });
+  const contextValue: TimeGridColumnContext = React.useMemo(
+    () => ({ start: adapter.startOfDay(value), end: adapter.endOfDay(value) }),
+    [value],
+  );
+
+  const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
   const state: TimeGridColumn.State = React.useMemo(() => ({}), []);
 
@@ -39,7 +47,12 @@ const TimeGridColumn = React.forwardRef(function CalendarCell(
 export namespace TimeGridColumn {
   export interface State {}
 
-  export interface Props extends useTimeGridColumn.Parameters, BaseUIComponentProps<'div', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State> {
+    /**
+     * The value of the column.
+     */
+    value: SchedulerValidDate;
+  }
 }
 
 export { TimeGridColumn };

@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useTimeGridRoot } from './useTimeGridRoot';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 
@@ -16,7 +15,7 @@ const TimeGridRoot = React.forwardRef(function CalendarRoot(
     ...elementProps
   } = componentProps;
 
-  const { props } = useTimeGridRoot({});
+  const props = React.useMemo(() => ({ role: 'grid' }), []);
 
   const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
 
@@ -32,7 +31,7 @@ const TimeGridRoot = React.forwardRef(function CalendarRoot(
 export namespace TimeGridRoot {
   export interface State {}
 
-  export interface Props extends useTimeGridRoot.Parameters, BaseUIComponentProps<'div', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State> {}
 }
 
 export { TimeGridRoot };
