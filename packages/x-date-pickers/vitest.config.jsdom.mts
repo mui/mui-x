@@ -15,7 +15,7 @@ export const filterReplace = redirectImports([
     test: /\/AdapterDateFnsJalaliV2\//,
     from: 'date-fns-jalali',
     to: 'date-fns-jalali-v2',
-    include: ['date-fns-jalali-v2/locale','date-fns-jalali-v2/**/*.js'],
+    include: ['date-fns-jalali-v2/locale', 'date-fns-jalali-v2/**/*.js'],
   },
 ]);
 
