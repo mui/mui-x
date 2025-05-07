@@ -21,7 +21,7 @@ interface DragEventOptions {
 
   /**
    * Callback executed before the dragEnd event is fired.
-   * Allows modifying the dataTransfer object or performing other actions.
+   * @param {DataTransfer} dataTransfer The dataTransfer object associated with the drag-and-drop operation.
    */
   beforeDragEnd?: (dataTransfer: DataTransfer) => void;
 }
