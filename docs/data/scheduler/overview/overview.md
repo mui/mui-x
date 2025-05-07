@@ -25,4 +25,6 @@ TODO
 
 ## Joy UI
 
-{{"demo": "BasicJoyUIScheduler.js", "defaultCodeOpen": false}}
+### Event Calendar
+
+{{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false}}
