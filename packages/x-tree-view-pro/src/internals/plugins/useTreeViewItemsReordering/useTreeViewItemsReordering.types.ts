@@ -32,7 +32,7 @@ export interface UseTreeViewItemsReorderingInstance {
    */
   completeDraggingItem: (itemId: TreeViewItemId) => void;
   /**
-   * Cancels the current reordering operation and resets the state.
+   * Cancel the current reordering operation and reset the state.
    */
   cancelDragging: () => void;
   /**
