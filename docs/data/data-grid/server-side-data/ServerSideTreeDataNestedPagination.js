@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
-import Button from '@mui/material/Button';
 import { useMockServer } from '@mui/x-data-grid-generator';
+import { vars } from '@mui/x-data-grid/internals';
 import { NestedPaginationGroupingCell } from './NestedPaginationGroupingCell';
 
 const pageSizeOptions = [5, 10, 50];
@@ -78,11 +78,17 @@ export default function ServerSideTreeDataNestedPagination() {
     [fetchRows, expandedRows],
   );
 
+  const sx = React.useMemo(
+    () => ({
+      [`& .MuiDataGrid-rowSkeleton .MuiDataGrid-cell:nth-child(1)`]: {
+        paddingLeft: vars.spacing((expandedRows.length + 1) * 2),
+      },
+    }),
+    [expandedRows.length],
+  );
+
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current?.dataSource.cache.clear()}>
-        Reset cache
-      </Button>
       <div style={{ height: 500 }}>
         <DataGridPro
           columns={columns}
@@ -100,6 +106,7 @@ export default function ServerSideTreeDataNestedPagination() {
           pinnedRows={{
             top: expandedRows,
           }}
+          sx={sx}
         />
       </div>
     </div>
