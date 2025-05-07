@@ -3,7 +3,6 @@ export * from './ChartsTooltipContainer';
 export type { ChartsTooltipClasses, ChartsTooltipClassKey } from './chartsTooltipClasses';
 export { getChartsTooltipUtilityClass, chartsTooltipClasses } from './chartsTooltipClasses';
 
-export * from './ChartsTooltipRoot';
 export * from './ChartsAxisTooltipContent';
 export * from './ChartsItemTooltipContent';
 
