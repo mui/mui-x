@@ -53,6 +53,8 @@
     "use-material-ui-next": "node scripts/useMaterialUINext.mjs",
     "build:codesandbox": "pnpm run release:build --concurrency 3",
     "install:codesandbox": "pnpm install --no-frozen-lockfile",
+    "pkg-pr-new-packages": "node -e \"console.log(Object.values(require('./.codesandbox/ci.json').publishDirectory).join(' '))\"",
+    "pkg-pr-new-release": "pnpm dlx pkg-pr-new publish $(pnpm -s pkg-pr-new-packages) --template './examples/*' --comment=off --peerDeps",
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
     "release:build": "lerna run --scope '@mui/*' build",

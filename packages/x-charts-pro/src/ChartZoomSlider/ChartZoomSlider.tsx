@@ -20,9 +20,7 @@ export function ChartZoomSlider() {
           return null;
         }
 
-        return (
-          <ChartAxisZoomSlider key={axisId} size={slider.size} axisId={axisId} axisDirection="x" />
-        );
+        return <ChartAxisZoomSlider key={axisId} axisId={axisId} axisDirection="x" />;
       })}
       {yAxisIds.map((axisId) => {
         const yAxis = yAxes[axisId];
@@ -33,9 +31,7 @@ export function ChartZoomSlider() {
           return null;
         }
 
-        return (
-          <ChartAxisZoomSlider key={axisId} size={slider.size} axisId={axisId} axisDirection="y" />
-        );
+        return <ChartAxisZoomSlider key={axisId} axisId={axisId} axisDirection="y" />;
       })}
     </React.Fragment>
   );
