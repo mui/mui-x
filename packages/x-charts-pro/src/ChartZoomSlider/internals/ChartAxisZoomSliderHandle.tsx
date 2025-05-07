@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import clsx from 'clsx';
 import {
   chartAxisZoomSliderHandleClasses,
   useUtilityClasses,
@@ -47,7 +48,7 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
   SVGRectElement,
   ChartZoomSliderHandleProps
 >(function ChartPreviewHandle(
-  { onMove, orientation, placement, rx = 4, ry = 4, ...rest },
+  { className, onMove, orientation, placement, rx = 4, ry = 4, ...rest },
   forwardedRef,
 ) {
   const classes = useUtilityClasses({ onMove, orientation, placement });
@@ -91,5 +92,5 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
     };
   }, [onMoveEvent, orientation]);
 
-  return <Rect className={classes.root} ref={ref} rx={rx} ry={ry} {...rest} />;
+  return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...rest} />;
 });
