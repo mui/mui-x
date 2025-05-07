@@ -16,7 +16,10 @@ import {
   type GridRowId,
   type GridClasses,
 } from '@mui/x-data-grid-pro';
-import { useGridPrivateApiContext, createSelector } from '@mui/x-data-grid-pro/internals';
+import {
+  useGridPrivateApiContext,
+  createSelector,
+} from '@mui/x-data-grid-pro/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -60,50 +63,40 @@ function GridTreeDataGroupingCellIcon(
     nestedLevelRef: React.RefObject<number>;
   },
 ) {
-  const apiRef =
-    useGridApiContext() as React.MutableRefObject<GridPrivateApiPro>;
+  const apiRef = useGridApiContext() as React.MutableRefObject<GridPrivateApiPro>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses({ classes: rootProps.classes });
   const { rowNode, id, field, descendantCount, row, nestedLevelRef } = props;
 
-  const isDataLoading = useGridSelector(
-    apiRef,
-    gridDataSourceLoadingIdSelector,
-    id,
-  );
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
   const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
 
   const expanded = rowNode.childrenExpanded || row.expanded;
 
-  const handleClick = useEventCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    apiRef.current?.setRows([]);
-    if (!expanded) {
-      props.setExpandedRows((prev) => [
-        ...prev,
-        {
-          ...row,
-          groupingKey: rowNode.groupingKey,
-          expanded: true,
-          depth: nestedLevelRef.current,
-        },
-      ]);
-      if (apiRef.current.state.pagination.paginationModel.page > 0) {
-        apiRef.current.setPage(0);
+  const handleClick = useEventCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      apiRef.current?.setRows([]);
+      if (!expanded) {
+        props.setExpandedRows((prev) => [
+          ...prev,
+          {
+            ...row,
+            groupingKey: rowNode.groupingKey,
+            expanded: true,
+            depth: nestedLevelRef.current,
+          },
+        ]);
+      } else if (row.expanded) {
+        props.setExpandedRows((prev) => {
+          const index = prev.findIndex((r) => r.id === id);
+          return prev.slice(0, index);
+        });
+      } else {
+        apiRef.current.setRowChildrenExpansion(id, !expanded);
       }
-    } else if (row.expanded) {
-      props.setExpandedRows((prev) => {
-        const index = prev.findIndex((r) => r.id === id);
-        return prev.slice(0, index);
-      });
-      if (apiRef.current.state.pagination.paginationModel.page > 0) {
-        apiRef.current.setPage(0);
-      }
-    } else {
-      apiRef.current.setRowChildrenExpansion(id, !expanded);
-    }
       apiRef.current.setCellFocus(id, field);
       event.stopPropagation(); // TODO remove event.stopPropagation
-    }
+    },
   );
 
   const Icon = expanded

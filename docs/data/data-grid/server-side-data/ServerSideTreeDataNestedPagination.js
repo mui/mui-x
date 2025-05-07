@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { vars } from '@mui/x-data-grid/internals';
-import { NestedPaginationGroupingCell } from './NestedPaginationGroupingCell';
+import { useNestedPagination } from './useNestedPagination';
 
 const pageSizeOptions = [5, 10, 50];
 const dataSetOptions = {
@@ -12,45 +11,20 @@ const dataSetOptions = {
 };
 const serverOptions = {};
 
+const initialPaginationModel = {
+  pageSize: 5,
+  page: 0,
+};
+
 export default function ServerSideTreeDataNestedPagination() {
   const apiRef = useGridApiRef();
-  const [expandedRows, setExpandedRows] = React.useState([]);
-  const nestedLevelRef = React.useRef(0);
 
-  React.useEffect(() => {
-    nestedLevelRef.current = expandedRows.length;
-  }, [expandedRows]);
-
+  const { groupKeys, ...props } = useNestedPagination({ initialPaginationModel });
   const { fetchRows, columns, initialState } = useMockServer(
     dataSetOptions,
     serverOptions,
     false,
     true,
-  );
-
-  const renderGroupingCell = React.useCallback(
-    (params) => (
-      <NestedPaginationGroupingCell
-        {...params}
-        rowNode={params.rowNode}
-        nestedLevelRef={nestedLevelRef}
-        setExpandedRows={setExpandedRows}
-      />
-    ),
-    [setExpandedRows],
-  );
-
-  const initialStateWithPagination = React.useMemo(
-    () => ({
-      ...initialState,
-      pagination: {
-        paginationModel: {
-          pageSize: 5,
-        },
-        rowCount: 0,
-      },
-    }),
-    [initialState],
   );
 
   const dataSource = React.useMemo(
@@ -60,9 +34,7 @@ export default function ServerSideTreeDataNestedPagination() {
           paginationModel: JSON.stringify(params.paginationModel),
           filterModel: JSON.stringify(params.filterModel),
           sortModel: JSON.stringify(params.sortModel),
-          groupKeys: JSON.stringify(
-            expandedRows?.map((row) => row.groupingKey) ?? [],
-          ),
+          groupKeys: JSON.stringify(groupKeys),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -75,40 +47,23 @@ export default function ServerSideTreeDataNestedPagination() {
       getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
       getChildrenCount: (row) => row.descendantCount,
     }),
-    [fetchRows, expandedRows],
-  );
-
-  const sx = React.useMemo(
-    () => ({
-      [`& .MuiDataGrid-rowSkeleton .MuiDataGrid-cell:nth-child(1)`]: {
-        paddingLeft: vars.spacing((expandedRows.length + 1) * 2),
-      },
-    }),
-    [expandedRows.length],
+    [fetchRows, groupKeys],
   );
 
   return (
-    <div style={{ width: '100%' }}>
-      <div style={{ height: 500 }}>
-        <DataGridPro
-          columns={columns}
-          dataSource={dataSource}
-          dataSourceCache={null}
-          treeData
-          apiRef={apiRef}
-          pagination
-          pageSizeOptions={pageSizeOptions}
-          initialState={initialStateWithPagination}
-          showToolbar
-          groupingColDef={{
-            renderCell: renderGroupingCell,
-          }}
-          pinnedRows={{
-            top: expandedRows,
-          }}
-          sx={sx}
-        />
-      </div>
+    <div style={{ width: '100%', height: 500 }}>
+      <DataGridPro
+        {...props}
+        columns={columns}
+        dataSource={dataSource}
+        dataSourceCache={null}
+        treeData
+        apiRef={apiRef}
+        pagination
+        pageSizeOptions={pageSizeOptions}
+        initialState={initialState}
+        showToolbar
+      />
     </div>
   );
 }

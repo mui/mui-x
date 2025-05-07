@@ -57,17 +57,11 @@ function GridTreeDataGroupingCellIcon(props) {
           depth: nestedLevelRef.current,
         },
       ]);
-      if (apiRef.current.state.pagination.paginationModel.page > 0) {
-        apiRef.current.setPage(0);
-      }
     } else if (row.expanded) {
       props.setExpandedRows((prev) => {
         const index = prev.findIndex((r) => r.id === id);
         return prev.slice(0, index);
       });
-      if (apiRef.current.state.pagination.paginationModel.page > 0) {
-        apiRef.current.setPage(0);
-      }
     } else {
       apiRef.current.setRowChildrenExpansion(id, !expanded);
     }

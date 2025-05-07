@@ -457,7 +457,7 @@ export const useGridFocus = (
     });
 
     const rowIsInCurrentPage = currentPage.rows.find((row) => row.id === currentFocusedCell.id);
-    if (rowIsInCurrentPage) {
+    if (rowIsInCurrentPage || currentPage.rows.length === 0) {
       return;
     }
 
