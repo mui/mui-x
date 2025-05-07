@@ -83,8 +83,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0(@babel/core@7.27.1)
       '@mui/internal-markdown':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown
-        version: https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/b637287f/@mui/internal-markdown
+        version: https://pkg.csb.dev/mui/material-ui/commit/b637287f/@mui/internal-markdown
       '@mui/internal-test-utils':
         specifier: ^2.0.7
         version: 2.0.7(@babel/core@7.27.1)(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -92,8 +92,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:cherniavskii/material-ui#256bb18a1650629ef62eb57c254c0f86a72b687a
-        version: https://codeload.github.com/cherniavskii/material-ui/tar.gz/256bb18a1650629ef62eb57c254c0f86a72b687a(@babel/core@7.27.1)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)
+        specifier: github:cherniavskii/material-ui#b637287f9d0d9898afd490a0d43e082ae363ccda
+        version: https://codeload.github.com/cherniavskii/material-ui/tar.gz/b637287f9d0d9898afd490a0d43e082ae363ccda(@babel/core@7.27.1)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)
       '@mui/utils':
         specifier: ^7.0.2
         version: 7.0.2(@types/react@19.0.12)(react@19.0.0)
@@ -3567,9 +3567,9 @@ packages:
   '@mui/internal-markdown@2.0.4':
     resolution: {integrity: sha512-b4QJ1G1qh4BBC0ezxYbWTzzQ4tCYjUdUTzFbv6WgXTSxmWETq583cPj6mXLXa1fS5u/9u7PX15hsNFNv2g0QDg==}
 
-  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown':
-    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown}
-    version: 2.0.4
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/b637287f/@mui/internal-markdown':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/b637287f/@mui/internal-markdown}
+    version: 2.0.5
 
   '@mui/internal-scripts@2.0.7':
     resolution: {integrity: sha512-74PmRI9vr2++U1rZh+SXwThJ7yD/jZuBdBk0mruc0vcsD/dfO+yaEgIe9uOD64j9x7Djm/t5R/0as4V0UwPagg==}
@@ -3656,9 +3656,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/cherniavskii/material-ui/tar.gz/256bb18a1650629ef62eb57c254c0f86a72b687a':
-    resolution: {tarball: https://codeload.github.com/cherniavskii/material-ui/tar.gz/256bb18a1650629ef62eb57c254c0f86a72b687a}
-    version: 7.0.2
+  '@mui/monorepo@https://codeload.github.com/cherniavskii/material-ui/tar.gz/b637287f9d0d9898afd490a0d43e082ae363ccda':
+    resolution: {tarball: https://codeload.github.com/cherniavskii/material-ui/tar.gz/b637287f9d0d9898afd490a0d43e082ae363ccda}
+    version: 7.1.0
     engines: {pnpm: 10.10.0}
 
   '@mui/private-theming@5.17.1':
@@ -3804,6 +3804,11 @@ packages:
   '@netlify/serverless-functions-api@1.38.0':
     resolution: {integrity: sha512-AuTzLH4BlQxPViwdEP9WcW/9NjqmjzaPHxOd9fyaMZUOkAgF0iauio9PF9QylAtgyodhLd6mGuASESZZiJcXaw==}
     engines: {node: '>=18.0.0'}
+
+  '@netlify/zip-it-and-ship-it@10.0.7':
+    resolution: {integrity: sha512-h7VUDyY6ePD8JA1tM0m8zbWDp03UOmBlPdqgl9/aK1fSVYcoo0qhXmp1Z1n+viKkNkmvBx4KvOLScUJEXPeRnA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
 
   '@next/env@15.3.2':
     resolution: {integrity: sha512-xURk++7P7qR9JG1jJtLzPzf0qEvqCN0A/T3DXf8IPMKo9/6FfjxtEffRJIIew/bIL4T3C2jLLqBor8B/zVlx6g==}
@@ -8913,6 +8918,10 @@ packages:
   nested-error-stacks@2.1.1:
     resolution: {integrity: sha512-9iN1ka/9zmX1ZvLV9ewJYEk9h7RyRRtqdK0woXcqohu8EWIerfPUjYJPg0ULy0UqP7cslmdGc8xKDJcojlKiaw==}
 
+  netlify@13.3.5:
+    resolution: {integrity: sha512-Nc3loyVASW59W+8fLDZT1lncpG7llffyZ2o0UQLx/Fr20i7P8oP+lE7+TEcFvXj9IUWU6LjB9P3BH+iFGyp+mg==}
+    engines: {node: ^14.16.0 || >=16.0.0}
+
   next@15.3.2:
     resolution: {integrity: sha512-CA3BatMyHkxZ48sgOCLdVHjFU36N7TF1HhqAHLFOkV6buwZnvMI84Cug8xD56B9mCuKrqXnLn94417GrZ/jjCQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
@@ -13289,7 +13298,7 @@ snapshots:
       marked: 15.0.11
       prismjs: 1.30.0
 
-  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/256bb18a/@mui/internal-markdown':
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/b637287f/@mui/internal-markdown':
     dependencies:
       '@babel/runtime': 7.27.1
       lodash: 4.17.21
@@ -13409,7 +13418,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@types/react': 19.0.12
 
-  '@mui/monorepo@https://codeload.github.com/cherniavskii/material-ui/tar.gz/256bb18a1650629ef62eb57c254c0f86a72b687a(@babel/core@7.27.1)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)':
+  '@mui/monorepo@https://codeload.github.com/cherniavskii/material-ui/tar.gz/b637287f9d0d9898afd490a0d43e082ae363ccda(@babel/core@7.27.1)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)':
     dependencies:
       '@googleapis/sheets': 9.7.0(encoding@0.1.13)
       '@netlify/functions': 3.1.5(encoding@0.1.13)(rollup@4.40.0)
@@ -13561,6 +13570,72 @@ snapshots:
       parse-gitignore: 2.0.0
       uuid: 11.1.0
       write-file-atomic: 6.0.0
+
+  '@netlify/functions@3.1.5(encoding@0.1.13)(rollup@4.40.0)':
+    dependencies:
+      '@netlify/blobs': 9.0.1
+      '@netlify/dev-utils': 2.1.0
+      '@netlify/serverless-functions-api': 1.38.0
+      '@netlify/zip-it-and-ship-it': 10.0.7(encoding@0.1.13)(rollup@4.40.0)
+      cron-parser: 4.9.0
+      decache: 4.6.2
+      extract-zip: 2.0.1
+      is-stream: 4.0.1
+      jwt-decode: 4.0.0
+      lambda-local: 2.2.0
+      read-package-up: 11.0.0
+      source-map-support: 0.5.21
+    transitivePeerDependencies:
+      - encoding
+      - rollup
+      - supports-color
+
+  '@netlify/open-api@2.37.0': {}
+
+  '@netlify/runtime-utils@1.2.0': {}
+
+  '@netlify/serverless-functions-api@1.38.0': {}
+
+  '@netlify/zip-it-and-ship-it@10.0.7(encoding@0.1.13)(rollup@4.40.0)':
+    dependencies:
+      '@babel/parser': 7.27.1
+      '@babel/types': 7.26.10
+      '@netlify/binary-info': 1.0.0
+      '@netlify/serverless-functions-api': 1.38.0
+      '@vercel/nft': 0.27.7(encoding@0.1.13)(rollup@4.40.0)
+      archiver: 5.3.2
+      common-path-prefix: 3.0.0
+      cp-file: 10.0.0
+      es-module-lexer: 1.6.0
+      esbuild: 0.19.11
+      execa: 7.2.0
+      fast-glob: 3.3.3
+      filter-obj: 5.1.0
+      find-up: 6.3.0
+      glob: 8.1.0
+      is-builtin-module: 3.2.1
+      is-path-inside: 4.0.0
+      junk: 4.0.1
+      locate-path: 7.2.0
+      merge-options: 3.0.4
+      minimatch: 9.0.5
+      normalize-path: 3.0.0
+      p-map: 7.0.3
+      path-exists: 5.0.0
+      precinct: 11.0.5
+      require-package-name: 2.0.1
+      resolve: 2.0.0-next.5
+      semver: 7.7.1
+      tmp-promise: 3.0.3
+      toml: 3.0.0
+      unixify: 1.0.0
+      urlpattern-polyfill: 8.0.2
+      yargs: 17.7.2
+      zod: 3.24.2
+    transitivePeerDependencies:
+      - encoding
+      - rollup
+      - supports-color
 
   '@next/env@15.3.2': {}
 
@@ -19627,6 +19702,15 @@ snapshots:
   neo-async@2.6.2: {}
 
   nested-error-stacks@2.1.1: {}
+
+  netlify@13.3.5:
+    dependencies:
+      '@netlify/open-api': 2.37.0
+      lodash-es: 4.17.21
+      micro-api-client: 3.3.0
+      node-fetch: 3.3.2
+      p-wait-for: 5.0.2
+      qs: 6.14.0
 
   next@15.3.2(@babel/core@7.27.1)(@playwright/test@1.52.0)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
