@@ -59,7 +59,9 @@ export const useDesktopRangePicker = <
     viewContainerRole,
     localeText,
     getStepNavigation,
-    onPopperExited: useEventCallback(() => rangePositionResponse.setRangePosition('start')),
+    onPopperExited: useEventCallback(() =>
+      rangePositionResponse.setRangePosition(props.defaultRangePosition ?? 'start'),
+    ),
   });
 
   const Field = slots.field;
