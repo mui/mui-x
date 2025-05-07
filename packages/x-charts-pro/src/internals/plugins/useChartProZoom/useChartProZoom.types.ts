@@ -53,6 +53,13 @@ export interface UseChartProZoomPublicApi {
    * @returns {void}
    */
   setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
+  /**
+   * Set the zoom data for an axis.
+   * @param axisId
+   * @param {ZoomData | ((prev: ZoomData) => ZoomData)} value  The new value. Can either be the new zoom data, or an updater function.
+   * @returns {void}
+   */
+  setAxisZoomData: (axisId: AxisId, value: ZoomData | ((prev: ZoomData) => ZoomData)) => void;
 }
 
 export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {

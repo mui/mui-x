@@ -156,6 +156,21 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [onZoomChange, store, removeIsInteracting],
   );
 
+  const setAxisZoomData = React.useCallback(
+    (axisId: AxisId, zoomData: ZoomData | ((prev: ZoomData) => ZoomData)) => {
+      setZoomDataCallback((prev) =>
+        prev.map((z) => {
+          if (z.axisId !== axisId) {
+            return z;
+          }
+
+          return typeof zoomData === 'function' ? zoomData(z) : zoomData;
+        }),
+      );
+    },
+    [setZoomDataCallback],
+  );
+
   const moveZoomRange = React.useCallback(
     (axisId: AxisId, by: number) => {
       setZoomDataCallback((prevZoomData) => {
@@ -509,11 +524,13 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       zoomIn,
       zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       moveZoomRange,
       zoomIn,
       zoomOut,
