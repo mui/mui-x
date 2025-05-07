@@ -26,18 +26,18 @@ export function redirectImports(rules: RedirectRule[]): Plugin {
 
     config(config) {
       config.optimizeDeps ??= {};
-      config.optimizeDeps.exclude ??= [];
+      config.optimizeDeps.include ??= [];
 
       // Collect all 'from' and 'to' package names for exclusion
-      const depsToExclude = new Set<string>(
-        // Exclude all packages that are used in the rules
+      const depsToInclude = new Set<string>(
+        // Include all packages that are used in the rules
         // We need to use the package name, so we clean it up in case we are replacing a deep import
         rules.flatMap(({ from, to }) => [cleanDepName(from), cleanDepName(to)]),
       );
 
-      // Ignore already-excluded deps
-      config.optimizeDeps.exclude.forEach((dep) => depsToExclude.delete(dep));
-      config.optimizeDeps.exclude.push(...depsToExclude);
+      // Ignore already-included deps
+      config.optimizeDeps.include.forEach((dep) => depsToInclude.delete(dep));
+      config.optimizeDeps.include.push(...depsToInclude);
     },
 
     async resolveId(source, importer) {
