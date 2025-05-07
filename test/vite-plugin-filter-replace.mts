@@ -28,7 +28,7 @@ export function redirectImports(rules: RedirectRule[]): Plugin {
       config.optimizeDeps ??= {};
       config.optimizeDeps.include ??= [];
 
-      // Collect all 'from' and 'to' package names for exclusion
+      // Collect all 'from' and 'to' package names for inclusion
       const depsToInclude = new Set<string>(
         // Include all packages that are used in the rules
         // We need to use the package name, so we clean it up in case we are replacing a deep import
