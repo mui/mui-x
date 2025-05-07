@@ -1,4 +1,5 @@
 import type { TelemetryContextType } from './get-context';
+import getTelemetryContext from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
 import { fetchWithRetry } from './fetcher';
@@ -35,7 +36,6 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
       return;
     }
 
-    const { default: getTelemetryContext } = await import('./get-context.js');
     const telemetryContext = await getTelemetryContext();
     if (!event || !shouldSendTelemetry(telemetryContext)) {
       return;
