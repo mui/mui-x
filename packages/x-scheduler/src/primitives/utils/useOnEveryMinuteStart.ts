@@ -1,0 +1,32 @@
+import * as React from 'react';
+import { useEffectEvent } from '@floating-ui/react/utils';
+import useTimeout from './useTimeout';
+
+const ONE_MINUTE_IN_MS = 60 * 1000;
+
+export function useOnEveryMinuteStart(callback: () => void) {
+  const timeout = useTimeout();
+  const savedCallback = useEffectEvent(callback);
+
+  // Set up the interval.
+  React.useEffect(() => {
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    const currentDate = new Date();
+    const timeUntilNextMinuteMs =
+      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+
+    timeout.start(timeUntilNextMinuteMs, () => {
+      savedCallback();
+
+      intervalId = setInterval(() => {
+        savedCallback();
+      }, ONE_MINUTE_IN_MS);
+    });
+
+    return () => {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [timeout, savedCallback]);
+}

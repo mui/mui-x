@@ -1,13 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useTimeGridEvent } from './useTimeGridEvent';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { SchedulerValidDate } from '../../utils/adapter/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import { useTimeGridColumnContext } from '../column/TImeGridColumnContext';
-import { useInterval } from '../../utils/useInterval';
+import { useOnEveryMinuteStart } from '../../utils/useOnEveryMinuteStart';
 
 const adapter = getAdapter();
 
@@ -60,8 +59,7 @@ const TimeGridEvent = React.forwardRef(function CalendarCell(
     };
   });
 
-  // TODO: Update at the beginning of each minute instead of every minute after the first render.
-  useInterval(() => {
+  useOnEveryMinuteStart(() => {
     setStartedAndEnded((prevState) => {
       const currentDate = adapter.date();
       const newState = {
@@ -75,7 +73,7 @@ const TimeGridEvent = React.forwardRef(function CalendarCell(
 
       return newState;
     });
-  }, 60 * 1000);
+  });
 
   const props = React.useMemo(() => ({ style }), [style]);
 
@@ -90,7 +88,7 @@ const TimeGridEvent = React.forwardRef(function CalendarCell(
 });
 
 export namespace TimeGridEvent {
-  export interface State extends useTimeGridEvent.State {
+  export interface State {
     /**
      * Whether the event start date and time is in the past.
      */
@@ -101,7 +99,7 @@ export namespace TimeGridEvent {
     ended: boolean;
   }
 
-  export interface Props extends useTimeGridEvent.Parameters, BaseUIComponentProps<'div', State> {
+  export interface Props extends BaseUIComponentProps<'div', State> {
     /**
      * The time at which the event starts.
      */
