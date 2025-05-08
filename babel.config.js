@@ -105,30 +105,6 @@ module.exports = function getBabelConfig(api) {
     ],
   ];
 
-  if (process.env.NODE_ENV === 'test') {
-    plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v2` version installed as `date-fns-v2` for tests.
-    plugins.push([
-      'babel-plugin-replace-imports',
-      {
-        test: /date-fns/i,
-        replacer: 'date-fns-v2',
-        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsV2/',
-      },
-    ]);
-    plugins.push([
-      'babel-plugin-replace-imports',
-      {
-        test: /date-fns-jalali/i,
-        replacer: 'date-fns-jalali-v2',
-        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsJalaliV2/',
-      },
-      'replace-date-fns-jalali-imports',
-    ]);
-  }
-
   if (process.env.NODE_ENV === 'production') {
     if (!process.env.TEST_BUILD) {
       plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
