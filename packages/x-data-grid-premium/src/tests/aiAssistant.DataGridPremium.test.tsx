@@ -11,7 +11,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -74,7 +74,7 @@ describe('<DataGridPremium /> - Prompt', () => {
     promptSpy.reset();
   });
 
-  describeSkipIf(isJSDOM)('data sampling', () => {
+  describe.skipIf(isJSDOM)('data sampling', () => {
     it('should not show AI Assistant button in the Toolbarif the feature is disabled', () => {
       render(<Test aiAssistant={false} />);
       expect(screen.queryByTestId('AssistantIcon')).to.equal(null);

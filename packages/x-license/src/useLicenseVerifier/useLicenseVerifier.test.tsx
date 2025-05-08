@@ -8,7 +8,7 @@ import {
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
   MuiCommercialPackageName,
 } from '@mui/x-license';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
@@ -22,7 +22,7 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
 }
 
 // Can't change the process.env.NODE_ENV in Browser
-describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
+describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
   let env: any;

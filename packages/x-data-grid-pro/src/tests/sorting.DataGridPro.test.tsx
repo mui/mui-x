@@ -12,7 +12,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Sorting', () => {
   const baselineProps: DataGridProProps = {
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Sorting', () => {
   });
 
   // The number of renders depends on the user-agent
-  testSkipIf(!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM)(
+  it.skipIf(!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM)(
     'should prune rendering on cells',
     () => {
       let renderCellCount: number = 0;

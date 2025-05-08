@@ -3,7 +3,7 @@ import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer'
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { expect } from 'chai';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const cellSelector = '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th';
 
@@ -60,7 +60,7 @@ describe('<ScatterChart />', () => {
   } as const;
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  testSkipIf(isJSDOM)('should show the tooltip without errors in default config', async () => {
+  it.skipIf(isJSDOM)('should show the tooltip without errors in default config', async () => {
     const { user } = render(
       <div
         style={{
@@ -98,7 +98,7 @@ describe('<ScatterChart />', () => {
     expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['series', '(5, 5)']);
   });
 
-  testSkipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', async () => {
+  it.skipIf(isJSDOM)('should show the tooltip without errors with voronoi disabled', async () => {
     const { user } = render(
       <div
         style={{
@@ -133,7 +133,7 @@ describe('<ScatterChart />', () => {
     expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(5, 5)']);
   });
 
-  testSkipIf(isJSDOM)('should support dataset with missing values', async () => {
+  it.skipIf(isJSDOM)('should support dataset with missing values', async () => {
     // x from 500 to 600
     // y from 100 to 200
     const dataset = [

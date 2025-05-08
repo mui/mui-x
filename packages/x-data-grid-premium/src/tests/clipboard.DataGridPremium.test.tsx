@@ -12,7 +12,7 @@ import { expect } from 'chai';
 import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -170,7 +170,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
   });
 
   // These test are flaky in JSDOM
-  describeSkipIf(isJSDOM)('paste', () => {
+  describe.skipIf(isJSDOM)('paste', () => {
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');
 

@@ -8,7 +8,6 @@ import {
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
 } from '@mui/x-tree-view/internals';
-import { describeSkipIf } from 'test/utils/skipIf';
 import { chooseActionToApply } from './useTreeViewItemsReordering.utils';
 import { TreeViewItemItemReorderingValidActions } from './useTreeViewItemsReordering.types';
 
@@ -67,7 +66,7 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
 describeTreeView<
   [UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature, UseTreeViewExpansionSignature]
 >('useTreeViewItemsReordering', ({ render, treeViewComponentName }) => {
-  describeSkipIf(
+  describe.skipIf(
     treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView',
   )('reordering', () => {
     let dragEvents: ReturnType<typeof buildTreeViewDragInteractions>;

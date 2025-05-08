@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { describeSkipIf } from 'test/utils/skipIf';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 const toMinutesLabel = (minutes: number | string) => `${String(minutes).padStart(2, '0')} minutes`;
@@ -13,7 +12,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
 ) => {
   const { componentFamily, views, render, withDate, withTime, variant } = getOption();
 
-  describeSkipIf(
+  describe.skipIf(
     !views.includes('minutes') || !variant || componentFamily !== 'picker' || variant === 'desktop',
   )('minutes view:', () => {
     const defaultProps = {

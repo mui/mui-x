@@ -20,7 +20,7 @@ import {
 } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const PAGE_SIZE = 10;
 const ROW_HEIGHT = 52;
@@ -162,7 +162,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should move down by the amount of rows visible on screen when pressing "PageDown"',
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
@@ -177,7 +177,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should move down by the amount of rows visible on screen when pressing Space key',
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
@@ -192,7 +192,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should move up by the amount of rows visible on screen when pressing "PageUp"',
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
@@ -205,7 +205,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should move to the first row before moving to column header when pressing "PageUp"',
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
@@ -223,7 +223,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should move to the first row before moving to column header when pressing "PageUp" on page > 0',
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX hideFooter={false} />);
@@ -314,7 +314,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
   describe('column header navigation', () => {
     // Need layout for column virtualization
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should scroll horizontally when navigating between column headers with arrows',
       async () => {
         const { user } = render(
@@ -333,7 +333,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     // Need layout for column virtualization
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should scroll horizontally when navigating between column headers with arrows even if rows are empty',
       async () => {
         const { user } = render(
@@ -388,7 +388,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should move down by the amount of rows visible on screen when pressing "PageDown"',
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
@@ -400,7 +400,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     // This test is not relevant if we can't choose the actual height
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should move focus when the focus is on a column header button',
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
@@ -506,7 +506,7 @@ describe('<DataGrid /> - Keyboard', () => {
     }
 
     // Need layouting for column virtualization
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should scroll horizontally when navigating between column group headers with arrows',
       async () => {
         const { user } = render(
@@ -527,7 +527,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     // Need layouting for column virtualization
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should scroll horizontally when navigating between column headers with arrows even if rows are empty',
       async () => {
         const { user } = render(

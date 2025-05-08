@@ -13,7 +13,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 
@@ -46,7 +46,7 @@ const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, ve
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
+describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
   const editRowSpy = spy();

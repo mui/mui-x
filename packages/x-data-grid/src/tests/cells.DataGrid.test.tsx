@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Cells', () => {
   const { render } = createRenderer();
@@ -52,7 +52,7 @@ describe('<DataGrid /> - Cells', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  describeSkipIf(isJSDOM)('prop: showCellVerticalBorder', () => {
+  describe.skipIf(isJSDOM)('prop: showCellVerticalBorder', () => {
     function expectRightBorder(element: HTMLElement) {
       const computedStyle = window.getComputedStyle(element);
       const color = computedStyle.getPropertyValue('border-right-color');
@@ -175,7 +175,7 @@ describe('<DataGrid /> - Cells', () => {
     }).toWarnDev(['MUI X: The cell with id=1 and field=brand received focus.']);
   });
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport',
     async () => {
       const rowHeight = 50;
@@ -208,7 +208,7 @@ describe('<DataGrid /> - Cells', () => {
 
   // See https://github.com/mui/mui-x/issues/6378
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not cause scroll jump when focused cell mounts in the render zone',
     async () => {
       const rowHeight = 50;

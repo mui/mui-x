@@ -12,7 +12,7 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
@@ -380,7 +380,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
   });
 
   // JSDOM doesn't support scroll events
-  describeSkipIf(isJSDOM)('Auto-scroll', () => {
+  describe.skipIf(isJSDOM)('Auto-scroll', () => {
     beforeEach(() => {
       stub(window, 'requestAnimationFrame').callsFake(() => 0);
     });

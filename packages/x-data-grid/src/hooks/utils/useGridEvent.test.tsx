@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
-import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { useGridEvent, internal_registryContainer } from './useGridEvent';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
@@ -15,7 +15,7 @@ describe('useGridEvent', () => {
 
   describe('FinalizationRegistry-based implementation', () => {
     // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
-    testSkipIf(
+    it.skipIf(
       !isJSDOM || typeof FinalizationRegistry === 'undefined' || typeof global.gc === 'undefined',
     )('should unsubscribe event listeners registered by uncommitted components', async () => {
       internal_registryContainer.current = new FinalizationRegistryBasedCleanupTracking();

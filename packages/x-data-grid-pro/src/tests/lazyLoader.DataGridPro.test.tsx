@@ -15,7 +15,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();
@@ -58,7 +58,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
   }
 
   // Needs layout
-  testSkipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
+  it.skipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
     const handleFetchRows = spy();
     const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
@@ -66,7 +66,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)('should call onFetchRows when sorting is applied', () => {
+  it.skipIf(isJSDOM)('should call onFetchRows when sorting is applied', () => {
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
@@ -77,7 +77,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should render skeleton cell if rowCount is bigger than the number of rows',
     () => {
       render(<TestLazyLoader rowCount={10} />);

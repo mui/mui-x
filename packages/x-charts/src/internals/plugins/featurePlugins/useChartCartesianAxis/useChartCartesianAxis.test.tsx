@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 describe('useChartCartesianAxis', () => {
@@ -9,7 +9,7 @@ describe('useChartCartesianAxis', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  testSkipIf(!isJSDOM)('should throw an error when axis have duplicate ids', () => {
+  it.skipIf(!isJSDOM)('should throw an error when axis have duplicate ids', () => {
     const expectedError = [
       'MUI X Charts: The following axis ids are duplicated: qwerty.',
       'Please make sure that each axis has a unique id.',
@@ -32,7 +32,7 @@ describe('useChartCartesianAxis', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  testSkipIf(!isJSDOM)(
+  it.skipIf(!isJSDOM)(
     'should throw an error when axis have duplicate ids across different directions (x,y)',
     () => {
       const expectedError = [

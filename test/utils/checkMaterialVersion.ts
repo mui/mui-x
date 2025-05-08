@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import semver from 'semver';
 import childProcess from 'child_process';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 type PackageJson = {
   name: string;
@@ -15,7 +15,7 @@ export function checkMaterialVersion({
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
 }) {
-  testSkipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
+  it.skipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
     const expectedVersion = packageJson.devDependencies['@mui/material'];
 
     const versions = childProcess.execSync(

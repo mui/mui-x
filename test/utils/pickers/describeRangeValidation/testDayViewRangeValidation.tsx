@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { describeSkipIf } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
@@ -38,7 +37,7 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
   getOptions,
 ) => {
   const { componentFamily, views, variant = 'desktop' } = getOptions();
-  describeSkipIf(!views.includes('day') || componentFamily === 'field')(
+  describe.skipIf(!views.includes('day') || componentFamily === 'field')(
     'validation in day view:',
     () => {
       const isDesktop = variant === 'desktop';

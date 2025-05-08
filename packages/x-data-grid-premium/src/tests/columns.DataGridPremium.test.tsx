@@ -3,7 +3,7 @@ import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Columns', () => {
   const { render } = createRenderer();
@@ -11,7 +11,7 @@ describe('<DataGridPremium /> - Columns', () => {
   describe('resizing', () => {
     // https://github.com/mui/mui-x/issues/10078
     // Needs layout
-    testSkipIf(isJSDOM)('should properly resize aggregated column', () => {
+    it.skipIf(isJSDOM)('should properly resize aggregated column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPremium

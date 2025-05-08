@@ -9,7 +9,6 @@ import {
   UseTreeViewKeyboardNavigationSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
-import { testSkipIf } from 'test/utils/skipIf';
 
 describeTreeView<
   [
@@ -1221,7 +1220,7 @@ describeTreeView<
     });
 
     // Only the SimpleTreeView can have React Element labels.
-    testSkipIf(treeViewComponentName !== 'SimpleTreeView')(
+    it.skipIf(treeViewComponentName !== 'SimpleTreeView')(
       'should work with ReactElement label',
       () => {
         const view = render({

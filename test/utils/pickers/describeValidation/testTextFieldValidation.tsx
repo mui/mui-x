@@ -3,15 +3,14 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
-import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, render, withDate, withTime } = getOptions();
 
-  describeSkipIf(!['picker', 'field'].includes(componentFamily))('text field:', () => {
-    testSkipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
+  describe.skipIf(!['picker', 'field'].includes(componentFamily))('text field:', () => {
+    it.skipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
       'should apply shouldDisableDate',
       () => {
         const onErrorMock = spy();
@@ -43,7 +42,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     );
 
     // TODO: Remove when DateTimePickers will support those props
-    testSkipIf(!withDate)('should apply shouldDisableYear', () => {
+    it.skipIf(!withDate)('should apply shouldDisableYear', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -65,7 +64,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     // TODO: Remove when DateTimePickers will support those props
-    testSkipIf(!withDate)('should apply shouldDisableMonth', () => {
+    it.skipIf(!withDate)('should apply shouldDisableMonth', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -91,7 +90,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
-    testSkipIf(!withTime)('should apply shouldDisableTime', () => {
+    it.skipIf(!withTime)('should apply shouldDisableTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -138,7 +137,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
     });
 
-    describeSkipIf(!withDate)('with fake timers', () => {
+    describe.skipIf(!withDate)('with fake timers', () => {
       beforeEach(() => {
         vi.setSystemTime(new Date(2018, 0, 1));
       });
@@ -176,7 +175,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       });
     });
 
-    testSkipIf(!withDate)('should apply disableFuture', () => {
+    it.skipIf(!withDate)('should apply disableFuture', () => {
       const now = adapterToUse.date();
       function WithFakeTimer(props: any) {
         return <ElementToTest value={now} {...props} />;
@@ -202,7 +201,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
-    testSkipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
+    it.skipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
       'should apply minDate',
       () => {
         const onErrorMock = spy();
@@ -231,7 +230,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       },
     );
 
-    testSkipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
+    it.skipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
       'should apply maxDate',
       () => {
         const onErrorMock = spy();
@@ -260,7 +259,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       },
     );
 
-    testSkipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
+    it.skipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
       'should apply minTime',
       () => {
         const onErrorMock = spy();
@@ -288,7 +287,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       },
     );
 
-    testSkipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
+    it.skipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
       'should apply maxTime',
       () => {
         const onErrorMock = spy();
@@ -315,7 +314,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       },
     );
 
-    testSkipIf(!withDate || !withTime)('should apply maxDateTime', () => {
+    it.skipIf(!withDate || !withTime)('should apply maxDateTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -346,7 +345,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
     });
 
-    testSkipIf(!withDate || !withTime)('should apply minDateTime', () => {
+    it.skipIf(!withDate || !withTime)('should apply minDateTime', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -377,7 +376,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
-    testSkipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
+    it.skipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
       'should apply minutesStep',
       () => {
         const onErrorMock = spy();

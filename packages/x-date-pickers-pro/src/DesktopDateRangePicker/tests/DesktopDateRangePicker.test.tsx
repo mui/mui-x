@@ -16,7 +16,7 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -482,7 +482,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     // test:unit does not call `blur` when focusing another element.
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should call onClose when blur the current field without prior change (multi input field)',
       async () => {
         const onChange = spy();
