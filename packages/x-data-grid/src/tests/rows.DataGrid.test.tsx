@@ -866,9 +866,8 @@ describe('<DataGrid /> - Rows', () => {
         'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
         {
           // Retry the test because it is flaky
-          retries: 3,
+          retry: 3,
         },
-        // @ts-expect-error mocha types are incorrect
         async () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;

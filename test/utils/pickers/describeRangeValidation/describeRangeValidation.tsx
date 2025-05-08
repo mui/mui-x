@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { testDayViewRangeValidation } from './testDayViewRangeValidation';
