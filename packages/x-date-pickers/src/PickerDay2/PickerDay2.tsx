@@ -1,25 +1,24 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps, CSSInterpolation, Theme } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { usePickerDayOwnerState, useUtils } from '@mui/x-date-pickers/internals';
+import { DAY_MARGIN } from '../internals/constants/dimensions';
 import {
-  EnhancedDateRangePickerDayOwnerState,
-  EnhancedDateRangePickerDayProps,
-} from './EnhancedDateRangePickerDay.types';
-import {
-  enhancedDateRangePickerDayClasses,
-  EnhancedDateRangePickerDayClassKey,
-  getEnhancedDateRangePickerDayUtilityClass,
-} from './enhancedDateRangePickerDayClasses';
+  pickerDay2Classes,
+  PickerDay2ClassKey,
+  getPickerDay2UtilityClass,
+} from './pickerDay2Classes';
+import { useUtils } from '../internals/hooks/useUtils';
+import { PickerDay2OwnerState, PickerDay2Props } from './PickerDay2.types';
+import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
 const DAY_SIZE = 36;
 
-const useUtilityClasses = (ownerState: EnhancedDateRangePickerDayOwnerState) => {
+const useUtilityClasses = (ownerState: PickerDay2OwnerState) => {
   const {
     isDaySelected,
     disableHighlightToday,
@@ -27,94 +26,30 @@ const useUtilityClasses = (ownerState: EnhancedDateRangePickerDayOwnerState) => 
     isDayDisabled,
     isDayOutsideMonth,
     isDayFillerCell,
-    isDayPreviewStart,
-    isDayPreviewEnd,
-    isDayInsidePreview,
-    isDayPreviewed,
-    isDaySelectionStart,
-    isDaySelectionEnd,
-    isDayInsideSelection,
-    isDayStartOfWeek,
-    isDayEndOfWeek,
-    isDayStartOfMonth,
-    isDayEndOfMonth,
-    isDayDraggable,
   } = ownerState;
 
   const slots = {
     root: [
       'root',
+      isDaySelected && !isDayFillerCell && 'selected',
       isDayDisabled && 'disabled',
       !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
       isDayOutsideMonth && 'dayOutsideMonth',
       isDayFillerCell && 'fillerCell',
-      isDaySelected && 'selected',
-      isDayPreviewStart && 'previewStart',
-      isDayPreviewEnd && 'previewEnd',
-      isDayInsidePreview && 'insidePreviewing',
-      isDaySelectionStart && 'selectionStart',
-      isDaySelectionEnd && 'selectionEnd',
-      isDayInsideSelection && 'insideSelection',
-      isDayEndOfWeek && 'endOfWeek',
-      isDayStartOfWeek && 'startOfWeek',
-      isDayPreviewed && 'previewed',
-      isDayStartOfMonth && 'startOfMonth',
-      isDayEndOfMonth && 'endOfMonth',
-      isDayDraggable && 'draggable',
     ],
   };
 
-  return composeClasses(slots, getEnhancedDateRangePickerDayUtilityClass, {});
+  return composeClasses(slots, getPickerDay2UtilityClass, {});
 };
 
-const SET_MARGIN = '2px'; // should be working with any given margin
-const highlightStyles = (theme: Theme) => ({
-  content: '""' /* Creates an empty element */,
-  width: '100%',
-  height: '100%',
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-    : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-  boxSizing: 'border-box',
-  left: 0,
-  right: 0,
-});
-const previewStyles = (theme: Theme) => ({
-  content: '""' /* Creates an empty element */,
-  width: '100%',
-  height: '100%',
-  border: `1.2px dashed ${(theme.vars || theme).palette.divider}`,
-  borderLeftColor: 'transparent',
-  borderRightColor: 'transparent',
-  boxSizing: 'border-box',
-  borderOffset: '-1px',
-  left: 0,
-  right: 0,
-});
+const SET_MARGIN = DAY_MARGIN; // should be working with any given margin
 
-const selectedDayStyles = (theme: Theme) => ({
-  color: (theme.vars || theme).palette.primary.contrastText,
-  backgroundColor: (theme.vars || theme).palette.primary.main,
-  fontWeight: theme.typography.fontWeightMedium,
-  '&:focus': {
-    willChange: 'background-color',
-    backgroundColor: (theme.vars || theme).palette.primary.dark,
-  },
-  '&:hover': {
-    willChange: 'background-color',
-    backgroundColor: (theme.vars || theme).palette.primary.dark,
-  },
-  [`&.${enhancedDateRangePickerDayClasses.disabled}`]: {
-    opacity: 0.6,
-  },
-});
-
-const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
-  name: 'MuiEnhancedDateRangePickerDay',
+const PickerDay2Root = styled(ButtonBase, {
+  name: 'MuiPickerDay2',
   slot: 'Root',
   overridesResolver: (
-    props: { ownerState: EnhancedDateRangePickerDayOwnerState },
-    styles: Record<EnhancedDateRangePickerDayClassKey, CSSInterpolation>,
+    props: { ownerState: PickerDay2OwnerState },
+    styles: Record<PickerDay2ClassKey, CSSInterpolation>,
   ) => {
     const { ownerState } = props;
     return [
@@ -122,19 +57,9 @@ const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
       !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
       !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
       ownerState.isDayFillerCell && styles.fillerCell,
-      ownerState.isDaySelected && !ownerState.isDayInsideSelection && styles.selected,
-      ownerState.isDayPreviewStart && styles.previewStart,
-      ownerState.isDayPreviewEnd && styles.previewEnd,
-      ownerState.isDayInsidePreview && styles.insidePreviewing,
-      ownerState.isDaySelectionStart && styles.selectionStart,
-      ownerState.isDaySelectionEnd && styles.selectionEnd,
-      ownerState.isDayInsideSelection && styles.insideSelection,
-      ownerState.isDayDraggable && styles.draggable,
-      ownerState.isDayStartOfWeek && styles.startOfWeek,
-      ownerState.isDayEndOfWeek && styles.endOfWeek,
     ];
   },
-})<{ ownerState: EnhancedDateRangePickerDayOwnerState }>(({ theme }) => ({
+})<{ ownerState: PickerDay2OwnerState }>(({ theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
   height: DAY_SIZE,
@@ -158,16 +83,28 @@ const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
   },
-  zIndex: 1,
-  isolation: 'isolate',
-  position: 'initial',
-  '&::before, &::after': {
-    zIndex: -1,
-    position: 'absolute',
-    pointerEvents: 'none',
-    mixBlendMode: 'multiply',
-  },
+  marginLeft: SET_MARGIN,
+  marginRight: SET_MARGIN,
   variants: [
+    {
+      props: { isDaySelected: true },
+      style: {
+        color: (theme.vars || theme).palette.primary.contrastText,
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+        fontWeight: theme.typography.fontWeightMedium,
+        '&:focus': {
+          willChange: 'background-color',
+          backgroundColor: (theme.vars || theme).palette.primary.dark,
+        },
+        '&:hover': {
+          willChange: 'background-color',
+          backgroundColor: (theme.vars || theme).palette.primary.dark,
+        },
+        [`&.${pickerDay2Classes.disabled}`]: {
+          opacity: 0.6,
+        },
+      },
+    },
     {
       props: { isDayDisabled: true },
       style: {
@@ -196,145 +133,22 @@ const EnhancedDateRangePickerDayRoot = styled(ButtonBase, {
         outlineOffset: -1,
       },
     },
-    {
-      props: { isDayDraggable: true },
-      style: {
-        cursor: 'grab',
-        touchAction: 'none',
-      },
-    },
-    {
-      props: { isDayPreviewStart: true },
-      style: {
-        '::after': {
-          ...previewStyles(theme),
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          borderLeftColor: (theme.vars || theme).palette.divider,
-          left: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
-        },
-      },
-    },
-    {
-      props: { isDayPreviewEnd: true },
-      style: {
-        '::after': {
-          ...previewStyles(theme),
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          borderRightColor: (theme.vars || theme).palette.divider,
-          right: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
-        },
-      },
-    },
-    {
-      props: { isDayInsidePreview: true },
-      style: {
-        '::after': {
-          ...previewStyles(theme),
-        },
-      },
-    },
-    {
-      props: { isDaySelected: true, isDayInsideSelection: false },
-      style: {
-        ...selectedDayStyles(theme),
-      },
-    },
-    {
-      props: { isDaySelectionStart: true },
-      style: {
-        '::before': {
-          ...highlightStyles(theme),
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          left: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
-        },
-      },
-    },
-    {
-      props: { isDaySelectionEnd: true },
-      style: {
-        '::before': {
-          ...highlightStyles(theme),
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          right: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
-        },
-        '::after': {
-          borderLeftColor: 'transparent',
-        },
-      },
-    },
-    {
-      props: { isDayInsideSelection: true },
-      color: 'initial',
-      background: 'initial',
-      style: {
-        '::before': {
-          ...highlightStyles(theme),
-        },
-      },
-    },
-    {
-      props: { isDayEndOfWeek: true },
-      style: {
-        '::after': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-          borderRightColor: (theme.vars || theme).palette.divider,
-        },
-        '::before': {
-          borderTopRightRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-        },
-      },
-    },
-    {
-      props: {
-        isDayStartOfWeek: true,
-      },
-      style: {
-        '::after': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-          borderLeftColor: (theme.vars || theme).palette.divider,
-        },
-        '::before': {
-          borderTopLeftRadius: 'inherit',
-          borderBottomLeftRadius: 'inherit',
-        },
-      },
-    },
   ],
 }));
 
-const EnhancedDateRangePickerDayContainer = styled('div', {
-  name: 'MuiEnhancedDateRangePickerDay',
-  slot: 'Container',
-})({
-  paddingLeft: SET_MARGIN,
-  paddingRight: SET_MARGIN,
-  position: 'relative',
-});
-
-type EnhancedDateRangePickerDayComponent = ((
-  props: EnhancedDateRangePickerDayProps & React.RefAttributes<HTMLButtonElement>,
+type PickerDay2Component = ((
+  props: PickerDay2Props & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const noop = () => {};
 
-const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRangePickerDay(
-  inProps: EnhancedDateRangePickerDayProps,
+const PickerDay2Raw = React.forwardRef(function PickerDay2(
+  inProps: PickerDay2Props,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
   const props = useThemeProps({
     props: inProps,
-    name: 'MuiEnhancedDateRangePickerDay',
+    name: 'MuiPickerDay2',
   });
 
   const utils = useUtils();
@@ -360,16 +174,10 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
     disabled,
     today,
     outsideCurrentMonth,
+    disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
-    isEndOfHighlighting,
-    isEndOfPreviewing,
-    isHighlighting,
-    isPreviewing,
-    isStartOfHighlighting,
-    isStartOfPreviewing,
     isVisuallySelected,
-    draggable,
     ...other
   } = props;
 
@@ -379,29 +187,15 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
     disabled,
     today,
     outsideCurrentMonth,
-    disableMargin: false,
+    disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   });
 
-  const ownerState: EnhancedDateRangePickerDayOwnerState = {
+  const ownerState: PickerDay2OwnerState = {
     ...pickersDayOwnerState,
-    // Properties that the Base UI implementation will have
-    isDaySelectionStart: isStartOfHighlighting,
-    isDaySelectionEnd: isEndOfHighlighting,
-    isDayInsideSelection: isHighlighting && !isStartOfHighlighting && !isEndOfHighlighting,
-    isDaySelected: isHighlighting || Boolean(selected),
-    isDayPreviewed: isPreviewing,
-    isDayPreviewStart: isStartOfPreviewing,
-    isDayPreviewEnd: isEndOfPreviewing,
-    isDayInsidePreview: isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
     // Properties specific to the MUI implementation (some might be removed in the next major)
-    isDayStartOfMonth: utils.isSameDay(day, utils.startOfMonth(day)),
-    isDayEndOfMonth: utils.isSameDay(day, utils.endOfMonth(day)),
-    isDayFirstVisibleCell: isFirstVisibleCell,
-    isDayLastVisibleCell: isLastVisibleCell,
     isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
-    isDayDraggable: Boolean(draggable),
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -442,31 +236,28 @@ const EnhancedDateRangePickerDayRaw = React.forwardRef(function EnhancedDateRang
   };
 
   return (
-    <EnhancedDateRangePickerDayContainer>
-      <EnhancedDateRangePickerDayRoot
-        ref={handleRef}
-        centerRipple
-        data-testid="day"
-        disabled={disabled}
-        tabIndex={selected ? 0 : -1}
-        onKeyDown={(event) => onKeyDown(event, day)}
-        onFocus={(event) => onFocus(event, day)}
-        onBlur={(event) => onBlur(event, day)}
-        onMouseEnter={(event) => onMouseEnter(event, day)}
-        onClick={handleClick}
-        onMouseDown={handleMouseDown}
-        draggable={draggable}
-        {...other}
-        ownerState={ownerState}
-        className={clsx(classes.root, className)}
-      >
-        {children ?? utils.format(day, 'dayOfMonth')}
-      </EnhancedDateRangePickerDayRoot>
-    </EnhancedDateRangePickerDayContainer>
+    <PickerDay2Root
+      ref={handleRef}
+      centerRipple
+      data-testid="day"
+      disabled={disabled}
+      tabIndex={selected ? 0 : -1}
+      onKeyDown={(event) => onKeyDown(event, day)}
+      onFocus={(event) => onFocus(event, day)}
+      onBlur={(event) => onBlur(event, day)}
+      onMouseEnter={(event) => onMouseEnter(event, day)}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      {...other}
+      ownerState={ownerState}
+      className={clsx(classes.root, className)}
+    >
+      {children ?? utils.format(day, 'dayOfMonth')}
+    </PickerDay2Root>
   );
 });
 
-EnhancedDateRangePickerDayRaw.propTypes = {
+PickerDay2Raw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -548,39 +339,15 @@ EnhancedDateRangePickerDayRaw.propTypes = {
   focusVisibleClassName: PropTypes.string,
   isAnimating: PropTypes.bool,
   /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
-   */
-  isEndOfHighlighting: PropTypes.bool.isRequired,
-  /**
-   * Set to `true` if the `day` is the end of a previewing date range.
-   */
-  isEndOfPreviewing: PropTypes.bool.isRequired,
-  /**
    * If `true`, day is the first visible cell of the month.
    * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
    */
   isFirstVisibleCell: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is in a highlighted date range.
-   */
-  isHighlighting: PropTypes.bool.isRequired,
-  /**
    * If `true`, day is the last visible cell of the month.
    * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
    */
   isLastVisibleCell: PropTypes.bool.isRequired,
-  /**
-   * Set to `true` if the `day` is in a preview date range.
-   */
-  isPreviewing: PropTypes.bool.isRequired,
-  /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
-   */
-  isStartOfHighlighting: PropTypes.bool.isRequired,
-  /**
-   * Set to `true` if the `day` is the start of a previewing date range.
-   */
-  isStartOfPreviewing: PropTypes.bool.isRequired,
   /**
    * Indicates if the day should be visually selected.
    */
@@ -652,6 +419,4 @@ EnhancedDateRangePickerDayRaw.propTypes = {
   ]),
 } as any;
 
-export const EnhancedDateRangePickerDay = React.memo(
-  EnhancedDateRangePickerDayRaw,
-) as EnhancedDateRangePickerDayComponent;
+export const PickerDay2 = React.memo(PickerDay2Raw) as PickerDay2Component;

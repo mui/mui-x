@@ -46,15 +46,15 @@
       }
     }
   },
-  "name": "EnhancedDateRangePickerDay",
+  "name": "DateRangePickerDay2",
   "imports": [
-    "import { EnhancedDateRangePickerDay } from '@mui/x-date-pickers-pro/EnhancedDateRangePickerDay';",
-    "import { EnhancedDateRangePickerDay } from '@mui/x-date-pickers-pro';"
+    "import { DateRangePickerDay2 } from '@mui/x-date-pickers-pro/DateRangePickerDay2';",
+    "import { DateRangePickerDay2 } from '@mui/x-date-pickers-pro';"
   ],
   "classes": [
     {
       "key": "dayOutsideMonth",
-      "className": "MuiEnhancedDateRangePickerDay-dayOutsideMonth",
+      "className": "MuiDateRangePickerDay2-dayOutsideMonth",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
       "isGlobal": false
     },
@@ -66,61 +66,61 @@
     },
     {
       "key": "draggable",
-      "className": "MuiEnhancedDateRangePickerDay-draggable",
+      "className": "MuiDateRangePickerDay2-draggable",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "endOfMonth",
-      "className": "MuiEnhancedDateRangePickerDay-endOfMonth",
+      "className": "MuiDateRangePickerDay2-endOfMonth",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "endOfWeek",
-      "className": "MuiEnhancedDateRangePickerDay-endOfWeek",
+      "className": "MuiDateRangePickerDay2-endOfWeek",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "fillerCell",
-      "className": "MuiEnhancedDateRangePickerDay-fillerCell",
+      "className": "MuiDateRangePickerDay2-fillerCell",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
       "isGlobal": false
     },
     {
       "key": "insidePreviewing",
-      "className": "MuiEnhancedDateRangePickerDay-insidePreviewing",
+      "className": "MuiDateRangePickerDay2-insidePreviewing",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "insideSelection",
-      "className": "MuiEnhancedDateRangePickerDay-insideSelection",
+      "className": "MuiDateRangePickerDay2-insideSelection",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "previewed",
-      "className": "MuiEnhancedDateRangePickerDay-previewed",
+      "className": "MuiDateRangePickerDay2-previewed",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "previewEnd",
-      "className": "MuiEnhancedDateRangePickerDay-previewEnd",
+      "className": "MuiDateRangePickerDay2-previewEnd",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "previewStart",
-      "className": "MuiEnhancedDateRangePickerDay-previewStart",
+      "className": "MuiDateRangePickerDay2-previewStart",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiEnhancedDateRangePickerDay-root",
+      "className": "MuiDateRangePickerDay2-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
@@ -132,37 +132,37 @@
     },
     {
       "key": "selectionEnd",
-      "className": "MuiEnhancedDateRangePickerDay-selectionEnd",
+      "className": "MuiDateRangePickerDay2-selectionEnd",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "selectionStart",
-      "className": "MuiEnhancedDateRangePickerDay-selectionStart",
+      "className": "MuiDateRangePickerDay2-selectionStart",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "startOfMonth",
-      "className": "MuiEnhancedDateRangePickerDay-startOfMonth",
+      "className": "MuiDateRangePickerDay2-startOfMonth",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "startOfWeek",
-      "className": "MuiEnhancedDateRangePickerDay-startOfWeek",
+      "className": "MuiDateRangePickerDay2-startOfWeek",
       "description": "",
       "isGlobal": false
     },
     {
       "key": "today",
-      "className": "MuiEnhancedDateRangePickerDay-today",
+      "className": "MuiDateRangePickerDay2-today",
       "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
       "isGlobal": false
     }
   ],
-  "muiName": "MuiEnhancedDateRangePickerDay",
-  "filename": "/packages/x-date-pickers-pro/src/EnhancedDateRangePickerDay/EnhancedDateRangePickerDay.tsx",
+  "muiName": "MuiDateRangePickerDay2",
+  "filename": "/packages/x-date-pickers-pro/src/DateRangePickerDay2/DateRangePickerDay2.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
   "cssComponent": false

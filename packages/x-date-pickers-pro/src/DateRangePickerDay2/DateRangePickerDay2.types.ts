@@ -1,10 +1,7 @@
-import {
-  EnhancedPickersDayOwnerState,
-  EnhancedPickersDayProps,
-} from '@mui/x-date-pickers/EnhancedPickersDay';
-import { EnhancedDateRangePickerDayClasses } from './enhancedDateRangePickerDayClasses';
+import { PickerDay2OwnerState, PickerDay2Props } from '@mui/x-date-pickers/PickerDay2';
+import { DateRangePickerDay2Classes } from './dateRangePickerDay2Classes';
 
-export interface EnhancedDateRangePickerDayProps extends Omit<EnhancedPickersDayProps, 'classes'> {
+export interface DateRangePickerDay2Props extends Omit<PickerDay2Props, 'classes'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -32,7 +29,7 @@ export interface EnhancedDateRangePickerDayProps extends Omit<EnhancedPickersDay
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<EnhancedDateRangePickerDayClasses>;
+  classes?: Partial<DateRangePickerDay2Classes>;
   /**
    * Indicates if the day should be visually selected.
    */
@@ -44,7 +41,7 @@ export interface EnhancedDateRangePickerDayProps extends Omit<EnhancedPickersDay
   draggable?: boolean;
 }
 
-export interface EnhancedDateRangePickerDayOwnerState extends EnhancedPickersDayOwnerState {
+export interface DateRangePickerDay2OwnerState extends PickerDay2OwnerState {
   /**
    * Whether the day is the first day of the selected range.
    */

@@ -39,7 +39,7 @@ export const getEnhancedCustomTheme = (mode: PaletteMode): ThemeOptions => ({
     fontSize: 13,
   },
   components: {
-    MuiEnhancedDateRangePickerDay: {
+    MuiDateRangePickerDay2: {
       styleOverrides: {
         root: {
           borderRadius: '4px',

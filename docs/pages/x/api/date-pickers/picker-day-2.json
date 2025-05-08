@@ -40,16 +40,16 @@
       }
     }
   },
-  "name": "EnhancedPickersDay",
+  "name": "PickerDay2",
   "imports": [
-    "import { EnhancedPickersDay } from '@mui/x-date-pickers/EnhancedPickersDay';",
-    "import { EnhancedPickersDay } from '@mui/x-date-pickers';",
-    "import { EnhancedPickersDay } from '@mui/x-date-pickers-pro';"
+    "import { PickerDay2 } from '@mui/x-date-pickers/PickerDay2';",
+    "import { PickerDay2 } from '@mui/x-date-pickers';",
+    "import { PickerDay2 } from '@mui/x-date-pickers-pro';"
   ],
   "classes": [
     {
       "key": "dayOutsideMonth",
-      "className": "MuiEnhancedPickersDay-dayOutsideMonth",
+      "className": "MuiPickerDay2-dayOutsideMonth",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`.",
       "isGlobal": false
     },
@@ -61,13 +61,13 @@
     },
     {
       "key": "fillerCell",
-      "className": "MuiEnhancedPickersDay-fillerCell",
+      "className": "MuiPickerDay2-fillerCell",
       "description": "Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=false`.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiEnhancedPickersDay-root",
+      "className": "MuiPickerDay2-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
@@ -79,13 +79,13 @@
     },
     {
       "key": "today",
-      "className": "MuiEnhancedPickersDay-today",
+      "className": "MuiPickerDay2-today",
       "description": "Styles applied to the root element if `disableHighlightToday=false` and `today=true`.",
       "isGlobal": false
     }
   ],
-  "muiName": "MuiEnhancedPickersDay",
-  "filename": "/packages/x-date-pickers/src/EnhancedPickersDay/EnhancedPickersDay.tsx",
+  "muiName": "MuiPickerDay2",
+  "filename": "/packages/x-date-pickers/src/PickerDay2/PickerDay2.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
   "cssComponent": false

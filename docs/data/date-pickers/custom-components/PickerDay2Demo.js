@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-import { EnhancedDateRangePickerDay } from '@mui/x-date-pickers-pro/EnhancedDateRangePickerDay';
+import { DateRangePickerDay2 } from '@mui/x-date-pickers-pro/DateRangePickerDay2';
 import { getEnhancedCustomTheme } from './getEnhancedCustomTheme';
 
-export default function EnhancedPickersDayDemo() {
+export default function PickerDay2Demo() {
   const currentTheme = useTheme();
   const theme = createTheme(getEnhancedCustomTheme(currentTheme.palette.mode));
   return (
@@ -20,7 +20,7 @@ export default function EnhancedPickersDayDemo() {
             },
           }}
           slots={{
-            day: EnhancedDateRangePickerDay,
+            day: DateRangePickerDay2,
           }}
         />
         <ThemeProvider theme={theme}>
@@ -31,7 +31,7 @@ export default function EnhancedPickersDayDemo() {
               },
             }}
             slots={{
-              day: EnhancedDateRangePickerDay,
+              day: DateRangePickerDay2,
             }}
           />
         </ThemeProvider>

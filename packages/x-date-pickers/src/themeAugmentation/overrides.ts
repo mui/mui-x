@@ -14,7 +14,7 @@ import {
 } from '../TimeClock';
 import { MonthCalendarClassKey } from '../MonthCalendar';
 import { PickersDayClassKey } from '../PickersDay';
-import { EnhancedPickersDayClassKey } from '../EnhancedPickersDay';
+import { PickerDay2ClassKey } from '../PickerDay2';
 import { YearCalendarClassKey } from '../YearCalendar';
 import { PickersLayoutClassKey } from '../PickersLayout';
 import { DatePickerToolbarClassKey } from '../DatePicker';
@@ -57,7 +57,7 @@ export interface PickersComponentNameToClassKey {
   MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
-  MuiEnhancedPickersDay: EnhancedPickersDayClassKey;
+  MuiPickerDay2: PickerDay2ClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
   MuiPickersLayout: PickersLayoutClassKey;
   MuiPickerPopper: PickerPopperClassKey;

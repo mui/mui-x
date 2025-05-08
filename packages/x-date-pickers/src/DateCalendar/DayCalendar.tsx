@@ -32,7 +32,7 @@ import { PickerValidDate, TimezoneProps } from '../models';
 import { DateCalendarClasses } from './dateCalendarClasses';
 import { FormProps } from '../internals/models/formProps';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
-import { EnhancedPickersDay } from '../EnhancedPickersDay';
+import { PickerDay2 } from '../PickerDay2';
 
 export interface DayCalendarSlots {
   /**

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './enhanced-pickers-day.json';
+import jsonPageContent from './picker-day-2.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers/enhanced-pickers-day',
+    'docsx/translations/api-docs/date-pickers/picker-day-2',
     false,
-    /\.\/enhanced-pickers-day.*.json$/,
+    /\.\/picker-day-2.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

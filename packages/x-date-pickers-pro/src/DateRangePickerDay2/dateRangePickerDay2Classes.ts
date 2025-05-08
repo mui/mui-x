@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
-export interface EnhancedDateRangePickerDayClasses {
+export interface DateRangePickerDay2Classes {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` and `showDaysOutsideCurrentMonth=true`. */
@@ -28,14 +28,15 @@ export interface EnhancedDateRangePickerDayClasses {
   draggable: string;
 }
 
-export type EnhancedDateRangePickerDayClassKey = keyof EnhancedDateRangePickerDayClasses;
+export type DateRangePickerDay2ClassKey = keyof DateRangePickerDay2Classes;
 
-export function getEnhancedDateRangePickerDayUtilityClass(slot: string) {
-  return generateUtilityClass('MuiEnhancedDateRangePickerDay', slot);
+export function getDateRangePickerDay2UtilityClass(slot: string) {
+  return generateUtilityClass('MuiDateRangePickerDay2', slot);
 }
 
-export const enhancedDateRangePickerDayClasses =
-  generateUtilityClasses<EnhancedDateRangePickerDayClassKey>('MuiEnhancedDateRangePickerDay', [
+export const dateRangePickerDay2Classes = generateUtilityClasses<DateRangePickerDay2ClassKey>(
+  'MuiDateRangePickerDay2',
+  [
     'root',
     'dayOutsideMonth',
     'today',
@@ -54,4 +55,5 @@ export const enhancedDateRangePickerDayClasses =
     'previewed',
     'selected',
     'draggable',
-  ]);
+  ],
+);

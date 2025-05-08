@@ -192,7 +192,7 @@ The `day` slot allows users to change the selected day in the calendar.
 
 You can use the `PickerDay2` component to replace the day slot with a simplified DOM structure. This new structure provides a better theming and customization experience.
 
-{{"demo": "EnhancedPickersDayDemo.js"}}
+{{"demo": "PickerDay2Demo.js"}}
 
 ## Month button
 

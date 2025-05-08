@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './enhanced-date-range-picker-day.json';
+import jsonPageContent from './date-range-picker-day-2.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers/enhanced-date-range-picker-day',
+    'docsx/translations/api-docs/date-pickers/date-range-picker-day-2',
     false,
-    /\.\/enhanced-date-range-picker-day.*.json$/,
+    /\.\/date-range-picker-day-2.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

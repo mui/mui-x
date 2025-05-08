@@ -1,11 +1,11 @@
-import { EnhancedPickersDayClasses } from './enhancedPickersDayClasses';
+import { PickerDay2Classes } from './pickerDay2Classes';
 import { PickerDayOwnerState, PickersDayProps } from '../PickersDay';
 
-export interface EnhancedPickersDayProps extends Omit<PickersDayProps, 'classes'> {
+export interface PickerDay2Props extends Omit<PickersDayProps, 'classes'> {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<EnhancedPickersDayClasses>;
+  classes?: Partial<PickerDay2Classes>;
   /**
    * Indicates if the day should be visually selected.
    */
@@ -17,7 +17,7 @@ export interface EnhancedPickersDayProps extends Omit<PickersDayProps, 'classes'
   draggable?: boolean;
 }
 
-export interface EnhancedPickersDayOwnerState extends PickerDayOwnerState {
+export interface PickerDay2OwnerState extends PickerDayOwnerState {
   /**
    * Whether the day is a filler day (its content is hidden).
    */
