@@ -190,7 +190,7 @@ You can pass a custom component to replace the year button, as shown below:
 
 The `day` slot allows users to change the selected day in the calendar.
 
-You can use the `enableEnhancedDaySlot` prop to enable an element with a simplified DOM structure. This new structure provides a better theming and customization experience.
+You can use the `PickerDay2` component to replace the day slot with a simplified DOM structure. This new structure provides a better theming and customization experience.
 
 {{"demo": "EnhancedPickersDayDemo.js"}}
 

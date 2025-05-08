@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
+import { EnhancedDateRangePickerDay } from '@mui/x-date-pickers-pro/EnhancedDateRangePickerDay';
 import { getEnhancedCustomTheme } from './getEnhancedCustomTheme';
 
 export default function EnhancedPickersDayDemo() {
@@ -18,7 +19,9 @@ export default function EnhancedPickersDayDemo() {
               actions: ['accept', 'cancel'],
             },
           }}
-          enableEnhancedDaySlot
+          slots={{
+            day: EnhancedDateRangePickerDay,
+          }}
         />
         <ThemeProvider theme={theme}>
           <StaticDateRangePicker
@@ -27,7 +30,9 @@ export default function EnhancedPickersDayDemo() {
                 actions: ['accept', 'cancel'],
               },
             }}
-            enableEnhancedDaySlot
+            slots={{
+              day: EnhancedDateRangePickerDay,
+            }}
           />
         </ThemeProvider>
       </Box>
