@@ -181,22 +181,28 @@ function ChartAxisZoomSliderTrack({
           return;
         }
 
-        // TODO: Handle min span, etc.
-        // pointerZoom = Math.max(pointerZoomMin, Math.min(pointerZoomMax, pointerZoom));
+        const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
         instance.setAxisZoomData(axisId, (prevZoomData) => ({
           ...prevZoomData,
-          start: pointerZoom > startingPoint ? prevZoomData.start : pointerZoom,
-          end: pointerZoom > startingPoint ? pointerZoom : prevZoomData.end,
+          start:
+            pointerZoom > startingPoint
+              ? prevZoomData.start
+              : calculateZoomStart(pointerZoom, prevZoomData, zoomOptions),
+          end:
+            pointerZoom > startingPoint
+              ? calculateZoomEnd(pointerZoom, prevZoomData, zoomOptions)
+              : prevZoomData.end,
         }));
         firstMoveRef.current = false;
       }),
     [axisId, instance, store, svgRef],
   );
 
-  const onPointerUp = () => {
-    firstMoveRef.current = false;
+  const onPointerUp = (event: PointerEvent) => {
+    const pointerMoved = !firstMoveRef.current;
     const rect = ref.current;
+    firstMoveRef.current = false;
 
     if (!rect) {
       return;
@@ -204,6 +210,33 @@ function ChartAxisZoomSliderTrack({
 
     rect.removeEventListener('pointermove', onPointerMove);
     rect.removeEventListener('pointerup', onPointerUp);
+
+    if (pointerMoved) {
+      return;
+    }
+
+    // If the pointer didn't move, we still need to respect the zoom constraints (minSpan, etc.)
+    // In that case, we assume the start to be the pointerZoom and calculate the end.
+    const element = svgRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const point = getSVGPoint(element, event);
+    const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+
+    if (pointerZoom === null) {
+      return;
+    }
+
+    const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+
+    instance.setAxisZoomData(axisId, (prev) => ({
+      ...prev,
+      start: pointerZoom,
+      end: calculateZoomEnd(pointerZoom, prev, zoomOptions),
+    }));
   };
 
   const onPointerDown = (event: React.PointerEvent<SVGRectElement>) => {
@@ -391,9 +424,8 @@ function ChartAxisZoomSliderActiveTrack({
     const point = getSVGPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
-      const { left, top, width, height } = selectorChartDrawingArea(store.value);
-
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.value, axisId);
+      const { left, top, width, height } = selectorChartDrawingArea(store.getSnapshot());
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
       return prevZoomData.map((zoom) => {
         if (zoom.axisId === axisId) {
