@@ -73,7 +73,7 @@ The Data Source has an initial set of required methods that you must implement.
 The Data Grid uses these methods internally to fetch subsets of data as needed.
 
 The following code snippet illustrates a minimal `GridDataSource` interface configuration.
-More complex implementations with properties like `getChildrenCount()` and `getGroupKey()` are discussed in subsequent sections of this document.
+More complex implementations with properties like `getChildrenCount()` and `getGroupKey()` are discussed in the specific server-side feature docs that follow this introductory page.
 
 ```tsx
 interface GridDataSource {
@@ -87,7 +87,7 @@ interface GridDataSource {
 }
 ```
 
-Here's what the component from [the introductory code snippet](#introduction) looks like when assembled with the Data Source:
+Here's what the component from [the aforementioned problem](#the-problem-compounding-complexity) looks like when implemented with the Data Source:
 
 ```tsx
 const customDataSource: GridDataSource = {
@@ -174,7 +174,7 @@ The Data Source caches fetched data by default.
 This means that if the user navigates to a page or expands a node that has already been fetched, the Grid will not call the `getRows()` function again to avoid unnecessary calls to the server.
 
 By default, the Grid uses `GridDataSourceCacheDefault`, which is a simple in-memory cache that stores the data in a plain object.
-You can see its implemention in the [Data Source demo above](#with-the-data-source).
+You can see it working in the [Data Source demo above](#with-the-data-source).
 
 ### Improve the cache hit rate
 
@@ -183,7 +183,7 @@ For the requests that follow, chunks are combined as needed to recreate the resp
 This means that a single request can make multiple calls to the `get()` or `set()` method of `GridDataSourceCache`.
 
 Chunk size is the lowest expected amount of records per request based on the `pageSize` value from the `paginationModel` and `pageSizeOptions` props.
-As a result, the values in the `pageSizeOptions` prop play a big role in the cache hit rate.
+As a result, the values in the `pageSizeOptions` prop play an important role in the cache hit rate.
 We recommend using values that are multiples of the lowest value—even better if each subsequent value is a multiple of the previous value.
 
 Here are some examples:
@@ -212,7 +212,7 @@ Changing these would require a new response to be retrieved and stored in the ch
 ### Customize the cache lifetime
 
 The `GridDataSourceCacheDefault` has a default time to live (TTL) of 5 minutes.
-To customize this, pass the `ttl` option with a numerical value in milliseconds to the `GridDataSourceCacheDefault` constructor, then pass that to the `dataSourceCache` prop.
+To customize this, pass the `ttl` option with a numerical value (in milliseconds) to the `GridDataSourceCacheDefault` constructor, then pass that to the `dataSourceCache` prop.
 
 ```tsx
 import { GridDataSourceCacheDefault } from '@mui/x-data-grid';

@@ -80,7 +80,7 @@ const getRows: async (params) => {
 {{"demo": "ServerSideRowGroupingDataGrid.js", "bg": "inline"}}
 
 :::warning
-Server-side row grouping does not support the [`colDef.groupingValueGetter()`](/x/react-data-grid/row-grouping/#using-groupingvaluegetter-for-complex-grouping-value) method.
+Server-side row grouping does not support the [`colDef.groupingValueGetter()`](/x/react-data-grid/row-grouping/#using-groupingvaluegetter-for-complex-grouping-value) method because the computation is performed on the server.
 Use `dataSource.getGroupKey()` to compute the group key for the row instead.
 :::
 

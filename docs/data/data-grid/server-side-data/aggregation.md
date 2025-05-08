@@ -12,7 +12,7 @@ The Data Grid Premium provides tools to give end users the ability to aggregate 
 The Grid can aggregate server-side data using the [Data Source layer](/x/react-data-grid/server-side-data/#the-solution-the-data-source-layer).
 
 :::info
-For aggregation functions on the client side, see [Aggregation (client side)](/x/react-data-grid/aggregation/).
+For aggregation on the client side, see [Aggregation (client side)](/x/react-data-grid/aggregation/).
 :::
 
 The demo below shows how to use the methods and patterns described in this document to implement server-side aggregation.
@@ -48,7 +48,7 @@ const aggregationFunctions: Record<string, GridAggregationFunctionDataSource> = 
 
 The `GridAggregationFunctionDataSource` interface is similar to `GridAggregationFunction`, but it doesn't have `apply()` or `getCellValue()` properties because the computation is done on the server.
 
-See the [GridAggregationFunctionDataSource API page](/x/api/data-grid/grid-aggregation-function-data-source/) for more details.
+Visit the [GridAggregationFunctionDataSource API page](/x/api/data-grid/grid-aggregation-function-data-source/) to see its signature.
 
 ### 2. Fetch aggregated values
 

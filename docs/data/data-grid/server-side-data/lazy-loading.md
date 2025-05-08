@@ -99,7 +99,7 @@ Depending on the previous and new values for the total row count, the following 
 
 - **Known to unknown row count** – If the row count is updated and set to `-1`, the Data Grid resets, fetches the first page, then sets itself to infinite loading mode.
 
-- **Known row count greater than the actual row count** – This can happen either by reducing the value of the row count after more rows were already fetched, or if the row count was unknown and the Grid already fetched more rows while in infinite loading mode. In this case, the Grid resets, fetches the first page, and then continues in one mode or the other depending on the new value of the `rowCount`.
+- **Known row count greater than the actual row count** – This can happen either by reducing the value of the row count after more rows were already fetched, or if the row count was unknown and the Grid already fetched more rows while in infinite loading mode. In this case, the Grid resets, fetches the first page, and then continues in one mode or the other depending on the new value of the row count.
 
 :::warning
 `rowCount` is expected to be static.
