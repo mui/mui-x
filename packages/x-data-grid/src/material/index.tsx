@@ -258,7 +258,6 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         className={clsx(className, material?.className)}
         slotProps={{
           input: slotProps?.htmlInput,
-          ...slotProps,
         }}
         ref={handleRef}
         touchRippleRef={rippleRef}
@@ -275,7 +274,6 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
           {...material}
           slotProps={{
             input: slotProps?.htmlInput,
-            ...slotProps,
           }}
           ref={handleRef}
           touchRippleRef={rippleRef}
