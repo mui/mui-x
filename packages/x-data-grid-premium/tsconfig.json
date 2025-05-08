@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["@mui/material/themeCssVarsAugmentation", "vitest/globals", "node"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
 }

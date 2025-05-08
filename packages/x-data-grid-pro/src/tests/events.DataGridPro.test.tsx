@@ -333,10 +333,7 @@ describe('<DataGridPro /> - Events params', () => {
   // Needs layout
   it.skipIf(isJSDOM)(
     'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
-    function test() {
-      if (isJSDOM) {
-        this.skip(); // Needs layout
-      }
+    () => {
       const handleFetchRows = spy();
       render(
         <TestEvents

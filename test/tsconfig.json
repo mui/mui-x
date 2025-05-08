@@ -11,5 +11,6 @@
       "moment-timezone"
     ],
     "skipLibCheck": true
-  }
+  },
+  "include": ["utils/**/*", "setupVite.ts", "vite-plugin-filter-replace.mts"]
 }
