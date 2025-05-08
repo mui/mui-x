@@ -62,7 +62,6 @@ const getRotation = (
 const Root = styled('div', {
   name: 'MuiChartsLabelGradient',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLabelGradientProps & { isRtl: boolean } }>(({ ownerState }) => {
   const rotation = getRotation(
     ownerState.direction,

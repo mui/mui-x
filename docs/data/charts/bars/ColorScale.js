@@ -62,7 +62,6 @@ export default function ColorScale() {
         ]}
         xAxis={[
           {
-            scaleType: 'band',
             data: [
               new Date(2019, 1, 1),
               new Date(2020, 1, 1),

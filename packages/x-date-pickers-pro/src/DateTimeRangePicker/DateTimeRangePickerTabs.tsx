@@ -79,7 +79,6 @@ const useUtilityClasses = (classes: Partial<DateTimeRangePickerTabsClasses> | un
 const DateTimeRangePickerTabsRoot = styled('div', {
   name: 'MuiDateTimeRangePickerTabs',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
@@ -91,7 +90,6 @@ const DateTimeRangePickerTabsRoot = styled('div', {
 const DateTimeRangePickerTab = styled(Button, {
   name: 'MuiDateTimeRangePickerTabs',
   slot: 'TabButton',
-  overridesResolver: (_, styles) => styles.tabButton,
 })({
   textTransform: 'none',
 });
@@ -99,7 +97,6 @@ const DateTimeRangePickerTab = styled(Button, {
 const DateTimeRangePickerTabFiller = styled('div', {
   name: 'MuiDateTimeRangePickerTabs',
   slot: 'Filler',
-  overridesResolver: (_, styles) => styles.filler,
 })({ width: 40 });
 
 const tabOptions: TabValue[] = ['start-date', 'start-time', 'end-date', 'end-time'];

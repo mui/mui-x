@@ -10,7 +10,7 @@ import {
 import { DesktopTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopTimeRangePicker';
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 
-describe('<DesktopTimeRangePicker /> - Describe Value', () => {
+describe('<DesktopTimeRangePicker /> - Describe Value Multi Input', () => {
   const { render } = createPickerRenderer();
 
   describeValue<PickerRangeValue, 'picker'>(DesktopTimeRangePicker, () => ({
@@ -22,6 +22,11 @@ describe('<DesktopTimeRangePicker /> - Describe Value', () => {
     fieldType: 'multi-input',
     defaultProps: {
       slots: { field: MultiInputTimeRangeField },
+      slotProps: {
+        tabs: {
+          hidden: false,
+        },
+      },
     },
     values: [
       // initial start and end dates
@@ -59,6 +64,12 @@ describe('<DesktopTimeRangePicker /> - Describe Value', () => {
         newValue = [adapterToUse.addMinutes(adapterToUse.addHours(value[0], 1), 5), value[1]];
       }
       if (isOpened) {
+        const nextButton = screen.queryByRole('button', { name: 'Next' });
+        // if we want to set the end date, we firstly need to switch to end date "range position"
+        if (setEndDate && nextButton) {
+          fireEvent.click(nextButton);
+        }
+
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(
           newValue[setEndDate ? 1 : 0],
@@ -72,9 +83,11 @@ describe('<DesktopTimeRangePicker /> - Describe Value', () => {
           }),
         );
         if (hasMeridiem) {
-          // meridiem is an extra view on `DesktopDateTimeRangePicker`
-          // we need to click it to finish selection
           fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        }
+        if (setEndDate) {
+          // Switch back to start date "range position" in case we'd need to repeat selection
+          fireEvent.click(screen.getByRole('tab', { name: 'Start' }));
         }
       } else {
         selectSection('hours');

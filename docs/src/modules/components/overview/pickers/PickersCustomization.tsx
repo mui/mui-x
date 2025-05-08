@@ -10,7 +10,6 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import SvgIcon from '@mui/material/SvgIcon';
 import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
 import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
 import DensityLargeIcon from '@mui/icons-material/DensityLarge';
@@ -34,28 +33,12 @@ import {
   Density,
 } from './themes/themes.types';
 import { getDefaultTheme } from './themes/defaultTheme';
-
-function RectangularCornersIcon({ fontSize = 'medium' }: { fontSize: 'small' | 'medium' }) {
-  return (
-    <SvgIcon fontSize={fontSize} className="rectangular" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M15.6812 4.81884H2V2.5H18V18.5H15.6812V4.81884Z" />
-    </SvgIcon>
-  );
-}
-function MediumCornersIcon({ fontSize = 'medium' }: { fontSize: 'small' | 'medium' }) {
-  return (
-    <SvgIcon fontSize={fontSize} className="medium" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M12.2029 4.31884H2V2H12.2029C15.4045 2 18 4.59545 18 7.7971V18H15.6812V7.7971C15.6812 5.87611 14.1239 4.31884 12.2029 4.31884Z" />
-    </SvgIcon>
-  );
-}
-function RoundedCornersIcon({ fontSize = 'medium' }: { fontSize: 'small' | 'medium' }) {
-  return (
-    <SvgIcon fontSize={fontSize} className="rounded" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M15.6812 18C15.6812 10.4441 9.5559 4.31884 2 4.31884V2C10.8366 2 18 9.16344 18 18H15.6812Z" />
-    </SvgIcon>
-  );
-}
+import {
+  ColorSwatch,
+  MediumCornersIcon,
+  RectangularCornersIcon,
+  RoundedCornersIcon,
+} from '../CornerIcons';
 
 const MD3Colors = {
   default: '#6750A4',
@@ -83,19 +66,6 @@ const getColorScheme = (selectedTheme: Themes) => {
 
   return MD2Colors;
 };
-
-function ColorSwatch({ color }: { color: string }) {
-  return (
-    <Box
-      sx={(theme) => ({
-        width: '50px',
-        height: '12px',
-        background: color,
-        borderRadius: theme.shape.borderRadius,
-      })}
-    />
-  );
-}
 
 const getTheme = (mode: PaletteMode, config: Config, selectedTheme: Themes): ThemeOptions => {
   if (selectedTheme === 'md3') {

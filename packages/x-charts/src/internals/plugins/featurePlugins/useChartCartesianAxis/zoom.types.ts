@@ -70,7 +70,18 @@ export interface ZoomOptions {
    *
    * @default 'keep'
    */
-  filterMode?: 'discard' | 'keep';
+  filterMode?: ZoomFilterMode;
+  /**
+   * Configures the zoom slider. The slider is an element that shows the zoomed range and allows its manipulation.
+   */
+  slider?: ZoomSliderOptions;
+}
+
+export interface ZoomSliderOptions {
+  /**
+   * If `true`, the slider will be shown.
+   */
+  enabled?: boolean;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

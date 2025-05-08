@@ -52,7 +52,6 @@ export function useMonthCalendarDefaultizedProps(
 const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'monthsPerRow',
 })<{ ownerState: PickerOwnerState; monthsPerRow: 3 | 4 }>({
   display: 'flex',

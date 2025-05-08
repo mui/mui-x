@@ -18,8 +18,6 @@ The Pickers currently support [Day.js](https://day.js.org/), [date-fns](https://
 
 Choose your packages and manager through the toggles below, then run the commands as provided to install:
 
-<!-- #default-branch-switch -->
-
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 :::success

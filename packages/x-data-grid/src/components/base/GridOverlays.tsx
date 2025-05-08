@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import clsx from 'clsx';
 import { minimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
@@ -34,7 +33,6 @@ const GridOverlayWrapperRoot = styled('div', {
   slot: 'OverlayWrapper',
   shouldForwardProp: (prop) =>
     prop !== 'overlayType' && prop !== 'loadingOverlayVariant' && prop !== 'right',
-  overridesResolver: (props, styles) => styles.overlayWrapper,
 })<GridOverlayWrapperRootProps>(({ overlayType, loadingOverlayVariant, right }) =>
   // Skeleton overlay should flow with the scroll container and not be sticky
   loadingOverlayVariant !== 'skeleton'
@@ -57,7 +55,6 @@ const GridOverlayWrapperInner = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapperInner',
   shouldForwardProp: (prop) => prop !== 'overlayType' && prop !== 'loadingOverlayVariant',
-  overridesResolver: (props, styles) => styles.overlayWrapperInner,
 })({});
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -94,12 +91,12 @@ export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysPr
 
   return (
     <GridOverlayWrapperRoot
-      className={clsx(classes.root)}
+      className={classes.root}
       {...props}
       right={dimensions.columnsTotalWidth - dimensions.viewportOuterSize.width}
     >
       <GridOverlayWrapperInner
-        className={clsx(classes.inner)}
+        className={classes.inner}
         style={{
           height,
           width: dimensions.viewportOuterSize.width,
@@ -121,5 +118,6 @@ GridOverlayWrapper.propTypes = {
     'noResultsOverlay',
     'noRowsOverlay',
     'noColumnsOverlay',
+    'emptyPivotOverlay',
   ]),
 } as any;

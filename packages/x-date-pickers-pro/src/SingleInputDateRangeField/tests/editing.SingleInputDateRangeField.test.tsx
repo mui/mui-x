@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { fireEvent } from '@mui/internal-test-utils';
+import { fireEvent, waitFor } from '@mui/internal-test-utils';
 import {
   expectFieldValueV7,
   expectFieldValueV6,
@@ -14,7 +14,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(
     'value props (value, defaultValue, onChange)',
     SingleInputDateRangeField,
-    ({ adapter, renderWithProps, clock }) => {
+    ({ adapter, renderWithProps }) => {
       it('should not render any value when no value and no default value are defined', () => {
         // Test with accessible DOM structure
         let view = renderWithProps({
@@ -187,7 +187,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(getTextbox(), '06/04/2022 – 06/05/2022');
       });
 
-      it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', () => {
+      it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
@@ -196,7 +196,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('year');
+        await view.selectSectionAsync('year');
 
         view.pressKey(2, 'ArrowUp');
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
@@ -215,7 +215,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        view.selectSection('year');
+        await view.selectSectionAsync('year');
+
         const input = getTextbox();
         fireUserEvent.keyPress(input, { key: 'ArrowUp' });
         expectFieldValueV6(getTextbox(), '06/04/2022 – 06/05/2022');
@@ -225,7 +226,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
       });
 
-      it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', () => {
+      it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
@@ -234,7 +235,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('year');
+        await view.selectSectionAsync('year');
 
         view.pressKey(2, 'ArrowUp');
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2023 – 06/05/2022');
@@ -253,7 +254,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV6,
         });
 
-        view.selectSection('year');
+        await view.selectSectionAsync('year');
+
         const input = getTextbox();
         fireUserEvent.keyPress(input, { key: 'ArrowUp' });
         expectFieldValueV6(getTextbox(), '06/04/2023 – 06/05/2022');
@@ -263,7 +265,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
       });
 
-      it('should not call the onChange callback before filling the last section of the active date when starting from a null value', () => {
+      it('should not call the onChange callback before filling the last section of the active date when starting from a null value', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
@@ -273,7 +275,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
         });
 
-        view.selectSection('day');
+        await view.selectSectionAsync('day');
 
         view.pressKey(0, '4');
         expect(onChangeV7.callCount).to.equal(0);
@@ -284,8 +286,9 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV7.callCount).to.equal(1);
         expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
         expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
-        clock.runToLast();
-        expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
+        await waitFor(() => {
+          expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
+        });
 
         view.unmount();
 
@@ -298,7 +301,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
         });
 
-        view.selectSection('day');
+        await view.selectSectionAsync('day');
+
         const input = getTextbox();
 
         fireEvent.change(input, { target: { value: '4 MMMM – DD MMMM' } }); // Press 4
@@ -310,14 +314,15 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV6.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
         expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
-        clock.runToLast();
-        expectFieldValueV6(input, 'DD MMMM – DD MMMM');
+        await waitFor(() => {
+          expectFieldValueV6(input, 'DD MMMM – DD MMMM');
+        });
       });
     },
   );
 
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {
-    it('should clear all the sections when all sections are selected and all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and all sections are completed', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -325,7 +330,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -347,7 +352,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -356,14 +361,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
     });
 
-    it('should clear all the sections when all sections are selected and not all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and not all sections are completed', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Set a value for the "month" section
       fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
@@ -388,7 +393,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Set a value for the "month" section
       fireEvent.change(input, {
@@ -403,7 +408,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
     });
 
-    it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
+    it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -413,7 +418,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -437,7 +442,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
       fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -446,7 +451,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expect(onChangeV6.callCount).to.equal(0);
     });
 
-    it('should call `onChange` when clearing the first section of each date', () => {
+    it('should call `onChange` when clearing the first section of each date', async () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -456,7 +461,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Start date
       fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
@@ -499,7 +504,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Start date
       fireEvent.keyDown(input, { key: 'Delete' });
@@ -531,7 +536,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expect(onChangeV6.callCount).to.equal(2);
     });
 
-    it('should not call `onChange` if the section is already empty', () => {
+    it('should not call `onChange` if the section is already empty', async () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -542,7 +547,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         onChange: onChangeV7,
       });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
@@ -563,7 +568,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
@@ -577,7 +582,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     `Backspace editing`,
     SingleInputDateRangeField,
     ({ adapter, renderWithProps }) => {
-      it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
+      it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', async () => {
         // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -585,7 +590,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
@@ -607,7 +612,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Select all sections
         fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -616,14 +621,14 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
       });
 
-      it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
+      it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', async () => {
         // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
         });
 
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Set a value for the "month" section
         fireEvent.input(view.getActiveSection(0), { target: { innerHTML: 'j' } });
@@ -648,7 +653,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Set a value for the "month" section
         fireEvent.change(input, {
@@ -663,7 +668,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
       });
 
-      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', () => {
+      it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -673,7 +678,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Select all sections
         fireEvent.keyDown(view.getActiveSection(0), {
@@ -697,7 +702,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Select all sections
         fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
@@ -706,7 +711,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV6.callCount).to.equal(0);
       });
 
-      it('should call `onChange` when clearing the first section of each date (Backspace)', () => {
+      it('should call `onChange` when clearing the first section of each date (Backspace)', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -716,7 +721,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Start date
         view.pressKey(0, '');
@@ -761,7 +766,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         // Start date
         fireEvent.change(input, { target: { value: '/15/2022 – 06/15/2023' } });
@@ -771,31 +776,31 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           adapter.addYears(adapter.date(), 1),
         );
 
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        await view.user.keyboard('{ArrowRight}');
         fireEvent.change(input, { target: { value: 'MM//2022 – 06/15/2023' } });
         expect(onChangeV6.callCount).to.equal(1);
 
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        await view.user.keyboard('{ArrowRight}');
         fireEvent.change(input, { target: { value: 'MM/DD/ – 06/15/2023' } });
         expect(onChangeV6.callCount).to.equal(1);
 
         // End date
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        await view.user.keyboard('{ArrowRight}');
         fireEvent.change(input, { target: { value: 'MM/DD/YYYY – /15/2023' } });
         expect(onChangeV6.callCount).to.equal(2);
         expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
 
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        await view.user.keyboard('{ArrowRight}');
         fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM//2023' } });
         expect(onChangeV6.callCount).to.equal(2);
 
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        await view.user.keyboard('{ArrowRight}');
         fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM/DD/' } });
         expect(onChangeV6.callCount).to.equal(2);
       });
 
-      it('should not call `onChange` if the section is already empty (Backspace)', () => {
+      it('should not call `onChange` if the section is already empty (Backspace)', async () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -806,12 +811,12 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           onChange: onChangeV7,
         });
 
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
-        view.pressKey(0, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
 
-        view.pressKey(0, '');
+        await view.user.keyboard('{Backspace}');
         expect(onChangeV7.callCount).to.equal(1);
 
         view.unmount();
@@ -827,7 +832,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         const input = getTextbox();
-        view.selectSection('month');
+        await view.selectSectionAsync('month');
 
         fireEvent.change(input, { target: { value: ' 2022 – June 2023' } });
         expect(onChangeV6.callCount).to.equal(1);

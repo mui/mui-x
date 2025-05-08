@@ -11,6 +11,12 @@
   ],
   "classes": [
     {
+      "key": "area",
+      "className": "MuiRadarSeriesPlot-area",
+      "description": "Styles applied to the series area element.",
+      "isGlobal": false
+    },
+    {
       "key": "faded",
       "className": "MuiRadarSeriesPlot-faded",
       "description": "Styles applied to the series element if it is faded.",
@@ -23,6 +29,12 @@
       "isGlobal": false
     },
     {
+      "key": "mark",
+      "className": "MuiRadarSeriesPlot-mark",
+      "description": "Styles applied to the series mark element.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiRadarSeriesPlot-root",
       "description": "Styles applied to the root element.",
@@ -32,6 +44,6 @@
   "muiName": "MuiRadarSeriesPlot",
   "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🧪</a></li></ul>",
   "cssComponent": false
 }

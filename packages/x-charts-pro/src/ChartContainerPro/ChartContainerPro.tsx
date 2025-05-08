@@ -19,6 +19,8 @@ type ChartContainerProComponent = <
   props: ChartContainerProProps<TSeries, TSignatures> & { ref?: React.ForwardedRef<SVGSVGElement> },
 ) => React.JSX.Element;
 
+export type ChartProApi = NonNullable<NonNullable<ChartContainerProProps['apiRef']>['current']>;
+
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
  *

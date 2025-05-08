@@ -88,7 +88,7 @@ The following snippets build on the demo above to show various use cases for the
 // Aggregate the root group in the top-level footer
 // and the other groups in their grouping row
 // (default behavior)
-getAggregationPosition=(groupNode) => (groupNode == null ? 'footer' : 'inline'),
+getAggregationPosition={(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')}
 
 // Aggregate all the groups in their grouping row;
 // the root will not be aggregated

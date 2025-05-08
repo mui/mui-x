@@ -5,7 +5,6 @@ import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 export const ChartsAxisHighlightPath = styled('path', {
   name: 'MuiChartsAxisHighlight',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: { axisHighlight: ChartsAxisHighlightType } }>(({ theme }) => ({
   pointerEvents: 'none',
   variants: [

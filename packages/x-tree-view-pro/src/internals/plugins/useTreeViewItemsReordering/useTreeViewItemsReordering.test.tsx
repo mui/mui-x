@@ -18,6 +18,11 @@ interface DragEventOptions {
    * @default: { x: targetWidth / 2, y: targetHeight / 2 }
    */
   coordinates?: { x: number; y: number };
+  /**
+   * Callback executed before the dragEnd event is fired.
+   * @param {DataTransfer} dataTransfer The dataTransfer object associated with the drag-and-drop operation.
+   */
+  beforeDragEnd?: (dataTransfer: DataTransfer) => void;
 }
 
 const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
@@ -51,6 +56,9 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
       dragStart(draggedItem);
       dragEnter(targetItem);
       dragOver(targetItem, { coordinates: options.coordinates });
+      if (options.beforeDragEnd) {
+        options.beforeDragEnd(dataTransfer);
+      }
       dragEnd(draggedItem);
     },
   };
@@ -66,6 +74,7 @@ describeTreeView<
     // eslint-disable-next-line mocha/no-top-level-hooks
     beforeEach(() => {
       const dataTransfer = new MockedDataTransfer();
+      dataTransfer.dropEffect = 'move';
       dragEvents = buildTreeViewDragInteractions(dataTransfer);
     });
 
@@ -208,6 +217,43 @@ describeTreeView<
         });
 
         dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+        expect(view.getItemIdTree()).to.deep.equal([
+          { id: '2', children: [{ id: '1' }] },
+          { id: '3' },
+        ]);
+      });
+    });
+
+    describe('dragend behavior', () => {
+      it('should reset the drag-and-drop state when Escape is pressed', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+          itemsReordering: true,
+        });
+
+        // Simulate the drag-and-drop sequence with Escape (dropEffect is "none")
+        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'), {
+          beforeDragEnd: (dataTransfer) => {
+            dataTransfer.dropEffect = 'none';
+          },
+        });
+
+        expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+      });
+
+      it('should not reset the drag-and-drop state when the item is dropped successfully', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+          itemsReordering: true,
+        });
+
+        // Set dropEffect to "move" to simulate a successful drop
+        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'), {
+          beforeDragEnd: (dataTransfer) => {
+            dataTransfer.dropEffect = 'move';
+          },
+        });
+
         expect(view.getItemIdTree()).to.deep.equal([
           { id: '2', children: [{ id: '1' }] },
           { id: '3' },

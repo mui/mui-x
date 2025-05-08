@@ -36,14 +36,12 @@ export default function BarGap() {
           height={300}
           xAxis={[
             {
-              scaleType: 'band',
               dataKey: 'year',
-              // @ts-expect-error, issue with band scale types
               categoryGapRatio: props.categoryGapRatio,
               barGapRatio: props.barGapRatio,
             },
           ]}
-          yAxis={[{ valueFormatter: (v) => `$ ${v / 1000000}B` }]}
+          yAxis={[{ valueFormatter: (v: number) => `$ ${v / 1000000}B` }]}
           hideLegend
         />
       )}

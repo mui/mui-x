@@ -24,14 +24,17 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 
 export const useGridEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode' | 'processRowUpdate'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'isCellEditable' | 'editMode' | 'processRowUpdate' | 'dataSource' | 'onDataSourceError'
+  >,
 ) => {
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
 
-  const debounceMap = React.useRef<Record<GridRowId, Record<string, [NodeJS.Timeout, () => void]>>>(
-    {},
-  );
+  const debounceMap = React.useRef<
+    Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => void]>>
+  >({});
 
   const { isCellEditable: isCellEditableProp } = props;
 

@@ -57,7 +57,7 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   return mousePosition;
 }
 
-type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
+type PointerType = Pick<MousePosition, 'pointerType'>;
 
 export function usePointerType(): null | PointerType {
   const svgRef = useSvgRef();
@@ -79,7 +79,6 @@ export function usePointerType(): null | PointerType {
 
     const handleEnter = (event: PointerEvent) => {
       setPointerType({
-        height: event.height,
         pointerType: event.pointerType as PointerType['pointerType'],
       });
     };

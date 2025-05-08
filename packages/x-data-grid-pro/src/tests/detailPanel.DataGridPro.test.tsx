@@ -72,7 +72,9 @@ describe('<DataGridPro /> - Detail panel', () => {
           behavior: 'instant',
         }),
       );
-      expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
+      await waitFor(() => {
+        expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
+      });
     },
   );
 

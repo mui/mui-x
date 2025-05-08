@@ -29,7 +29,6 @@ export interface PickersActionBarProps extends DialogActionsProps {
 const PickersActionBarRoot = styled(DialogActions, {
   name: 'MuiPickersLayout',
   slot: 'ActionBar',
-  overridesResolver: (_, styles) => styles.actionBar,
 })({});
 
 /**
