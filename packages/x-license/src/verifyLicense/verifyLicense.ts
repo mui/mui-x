@@ -130,6 +130,12 @@ export function verifyLicense({
   licenseKey?: string;
   packageName: MuiCommercialPackageName;
 }): { status: LicenseStatus; meta?: any } {
+  // Gets replaced at build time
+  // @ts-ignore
+  if (LICENSE_DISABLE_CHECK) {
+    return { status: LICENSE_STATUS.Valid };
+  }
+
   if (!releaseInfo) {
     throw new Error('MUI X: The release information is missing. Not able to validate license.');
   }

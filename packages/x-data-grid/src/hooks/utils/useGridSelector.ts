@@ -2,10 +2,7 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
-// use-sync-external-store has no exports field defined
-// See https://github.com/facebook/react/issues/30698
-// eslint-disable-next-line import/extensions
-import { useSyncExternalStore } from 'use-sync-external-store/shim/index.js';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';

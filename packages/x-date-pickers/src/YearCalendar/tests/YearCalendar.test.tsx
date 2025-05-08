@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { spy, useFakeTimers, SinonFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 describe('<YearCalendar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
+  const { render } = createPickerRenderer();
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
@@ -170,19 +170,32 @@ describe('<YearCalendar />', () => {
     expect(document.activeElement).to.have.text('2020');
   });
 
-  it('should disable years after initial render when "disableFuture" prop changes', () => {
-    const { setProps } = render(<YearCalendar />);
+  describe('with fake timers', () => {
+    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+    let timer: SinonFakeTimers | null = null;
 
-    const year2019 = screen.getByText('2019', { selector: 'button' });
-    const year2020 = screen.getByText('2020', { selector: 'button' });
+    beforeEach(() => {
+      timer = useFakeTimers({ now: new Date(2019, 0, 1), toFake: ['Date'] });
+    });
 
-    expect(year2019).not.to.have.attribute('disabled');
-    expect(year2020).not.to.have.attribute('disabled');
+    afterEach(() => {
+      timer?.restore();
+    });
 
-    setProps({ disableFuture: true });
+    it('should disable years after initial render when "disableFuture" prop changes', () => {
+      const { setProps } = render(<YearCalendar />);
 
-    expect(year2019).not.to.have.attribute('disabled');
-    expect(year2020).to.have.attribute('disabled');
+      const year2019 = screen.getByText('2019', { selector: 'button' });
+      const year2020 = screen.getByText('2020', { selector: 'button' });
+
+      expect(year2019).not.to.have.attribute('disabled');
+      expect(year2020).not.to.have.attribute('disabled');
+
+      setProps({ disableFuture: true });
+
+      expect(year2019).not.to.have.attribute('disabled');
+      expect(year2020).to.have.attribute('disabled');
+    });
   });
 
   it('should not mark the `referenceDate` year as selected', () => {

@@ -18,7 +18,6 @@ const lineAxis = [
 const barAxis = [
   {
     zoom: true,
-    scaleType: 'band' as const,
     id: 'shared-x-axis',
     data: randomData.map((v, i) => i),
   },

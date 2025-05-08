@@ -28,7 +28,7 @@ const dirname =
     return;
   }
 
-  const storage = TelemetryStorage.init({
+  const storage = await TelemetryStorage.init({
     distDir: process.cwd(),
   });
 
@@ -56,7 +56,6 @@ const dirname =
     fs.writeFileSync(targetPath, format(JSON.stringify(contextData, null, 2)));
   };
 
-  writeContextData('modern', (content) => `export default ${content};`);
   writeContextData('esm', (content) => `export default ${content};`);
   writeContextData('', (content) =>
     [

@@ -21,6 +21,11 @@ export interface GridBaseSlots {
    */
   baseCheckbox: React.JSXElementConstructor<GridSlotProps['baseCheckbox']>;
   /**
+   * The custom Chip component used in the grid.
+   * @default Chip
+   */
+  baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
+  /**
    * The custom CircularProgress component used in the grid.
    * @default CircularProgress
    */

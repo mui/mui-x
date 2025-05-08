@@ -45,7 +45,7 @@ function LoadingOverlay() {
         );
       })}
       <LoadingText x={left + width / 2} y={top + height / 2}>
-        Loading data ...
+        Loading data…
       </LoadingText>
     </g>
   );
@@ -63,9 +63,7 @@ export default function CustomOverlay() {
       />
       <BarChart
         loading
-        xAxis={[
-          { scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] },
-        ]}
+        xAxis={[{ data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] }]}
         slots={{ loadingOverlay: LoadingOverlay }}
         series={[]}
         height={150}

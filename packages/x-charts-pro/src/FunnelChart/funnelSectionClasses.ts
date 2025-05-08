@@ -10,8 +10,17 @@ export interface FunnelSectionClasses {
   highlighted: string;
   /** Styles applied to the root element if `faded={true}`. */
   faded: string;
+  /** Styles applied to the root element if `variant="filled"`. */
+  filled: string;
+  /** Styles applied to the root element if `variant="outlined"`. */
+  outlined: string;
   /** Styles applied to the label element. */
   label: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${funnelSectionClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 function getFunnelSectionUtilityClass(slot: string) {
@@ -19,12 +28,14 @@ function getFunnelSectionUtilityClass(slot: string) {
 }
 
 export const useUtilityClasses = (props: FunnelSectionProps) => {
-  const { classes, seriesId } = props;
+  const { classes, seriesId, variant } = props;
 
   const slots = {
     root: ['root', `series-${seriesId}`],
     highlighted: ['highlighted'],
     faded: ['faded'],
+    outlined: variant === 'outlined' ? ['outlined'] : [],
+    filled: variant === 'filled' ? ['filled'] : [],
     label: ['label'],
   };
 
@@ -33,5 +44,5 @@ export const useUtilityClasses = (props: FunnelSectionProps) => {
 
 export const funnelSectionClasses: FunnelSectionClasses = generateUtilityClasses(
   'MuiFunnelSection',
-  ['root', 'highlighted', 'faded', 'label'],
+  ['root', 'highlighted', 'faded', 'filled', 'outlined', 'label', 'series'],
 );

@@ -15,8 +15,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 Install the Tree View package that best suits your needs—Community or Pro:
 
-<!-- #default-branch-switch -->
-
 {{"component": "modules/components/TreeViewInstallationInstructions.js"}}
 
 ### Peer dependencies

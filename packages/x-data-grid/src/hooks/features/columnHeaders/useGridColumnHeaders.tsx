@@ -79,7 +79,6 @@ type OwnerState = DataGridProcessedProps;
 export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
-  overridesResolver: (_, styles) => styles.columnHeaderRow,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
 });

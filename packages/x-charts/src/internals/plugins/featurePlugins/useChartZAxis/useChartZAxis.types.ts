@@ -34,8 +34,6 @@ export interface UseChartZAxisState {
   };
 }
 
-export interface UseChartZAxisInstance {}
-
 export type UseChartZAxisSignature = ChartPluginSignature<{
   params: UseChartZAxisParameters;
   defaultizedParams: UseChartZAxisDefaultizedParameters;

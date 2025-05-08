@@ -6,6 +6,15 @@
     "aggregationRowsScope": {
       "description": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows."
     },
+    "aiAssistant": { "description": "If <code>true</code>, the AI Assistant is enabled." },
+    "aiAssistantActiveConversationIndex": {
+      "description": "The index of the active AI Assistant conversation."
+    },
+    "aiAssistantConversations": { "description": "The conversations with the AI Assistant." },
+    "aiAssistantSuggestions": { "description": "The suggestions of the AI Assistant." },
+    "allowAiAssistantDataSampling": {
+      "description": "If <code>true</code>, the AI Assistant is allowed to pick up values from random cells from each column to build the prompt context."
+    },
     "apiRef": {
       "description": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>."
     },
@@ -101,6 +110,7 @@
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled."
     },
+    "disablePivoting": { "description": "If <code>true</code>, the pivoting feature is disabled." },
     "disableRowGrouping": { "description": "If <code>true</code>, the row grouping is disabled." },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."
@@ -156,6 +166,10 @@
         "params": "With all properties from GridRowHeightParams.",
         "number | null": "The estimated row height value. If <code>null</code> or <code>undefined</code> then the default row height, based on the density, is applied."
       }
+    },
+    "getPivotDerivedColumns": {
+      "description": "Allows to generate derived columns from actual columns that will be used for pivoting. Useful e.g. for date columns to generate year, quarter, month, etc.",
+      "typeDescriptions": { "column": "The column to generate derived columns for." }
     },
     "getRowClassName": {
       "description": "Function that applies CSS classes dynamically on rows.",
@@ -271,6 +285,16 @@
         "model": "The aggregated columns.",
         "details": "Additional details for this callback."
       }
+    },
+    "onAiAssistantActiveConversationIndexChange": {
+      "description": "Callback fired when the AI Assistant active conversation index changes.",
+      "typeDescriptions": {
+        "aiAssistantActiveConversationIndex": "The new active conversation index."
+      }
+    },
+    "onAiAssistantConversationsChange": {
+      "description": "Callback fired when the AI Assistant conversations change.",
+      "typeDescriptions": { "conversations": "The new AI Assistant conversations." }
     },
     "onBeforeClipboardPasteStart": {
       "description": "Callback fired before the clipboard paste operation starts. Use it to confirm or cancel the paste operation.",
@@ -492,6 +516,18 @@
         "details": "Additional details for this callback."
       }
     },
+    "onPivotActiveChange": {
+      "description": "Callback fired when the pivot active state changes.",
+      "typeDescriptions": { "isPivotActive": "Whether the data grid is in pivot mode." }
+    },
+    "onPivotModelChange": {
+      "description": "Callback fired when the pivot model changes.",
+      "typeDescriptions": { "pivotModel": "The new pivot model." }
+    },
+    "onPivotPanelOpenChange": {
+      "description": "Callback fired when the pivot side panel open state changes.",
+      "typeDescriptions": { "pivotPanelOpen": "Whether the pivot side panel is visible." }
+    },
     "onPreferencePanelClose": {
       "description": "Callback fired when the preferences panel is closed.",
       "typeDescriptions": {
@@ -511,6 +547,15 @@
     "onProcessRowUpdateError": {
       "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
       "typeDescriptions": { "error": "The error thrown." }
+    },
+    "onPrompt": {
+      "description": "The function to be used to process the prompt.",
+      "typeDescriptions": {
+        "prompt": "The prompt to be processed.",
+        "promptContext": "The prompt context.",
+        "conversationId": "The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.",
+        "Promise<PromptResponse>": "The prompt response."
+      }
     },
     "onResize": {
       "description": "Callback fired when the Data Grid is resized.",
@@ -611,6 +656,16 @@
     },
     "pinnedColumns": { "description": "The column fields to display pinned to left or right." },
     "pinnedRows": { "description": "Rows data to pin on top or bottom." },
+    "pivotActive": {
+      "description": "If <code>true</code>, the data grid will show data in pivot mode using the <code>pivotModel</code>."
+    },
+    "pivotingColDef": {
+      "description": "The column definition overrides for the columns generated by the pivoting feature."
+    },
+    "pivotModel": {
+      "description": "The pivot model of the grid. Will be used to generate the pivot data. In case of <code>pivotActive</code> being <code>false</code>, the pivot model is still used to populate the pivot panel."
+    },
+    "pivotPanelOpen": { "description": "If <code>true</code>, the pivot side panel is visible." },
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
       "typeDescriptions": {
@@ -720,6 +775,58 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the aggregation row overlay wrapper"
     },
+    "aiAssistantPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel body"
+    },
+    "aiAssistantPanelConversation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation"
+    },
+    "aiAssistantPanelConversationList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation list"
+    },
+    "aiAssistantPanelConversationTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation title"
+    },
+    "aiAssistantPanelEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel empty text"
+    },
+    "aiAssistantPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel footer"
+    },
+    "aiAssistantPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel header"
+    },
+    "aiAssistantPanelSuggestions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions"
+    },
+    "aiAssistantPanelSuggestionsItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions item"
+    },
+    "aiAssistantPanelSuggestionsLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions label"
+    },
+    "aiAssistantPanelSuggestionsList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions list"
+    },
+    "aiAssistantPanelTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel title"
+    },
+    "aiAssistantPanelTitleContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel title container"
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
@@ -818,6 +925,18 @@
     "checkboxInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
+    },
+    "collapsible": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible element"
+    },
+    "collapsiblePanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible panel element"
+    },
+    "collapsibleTrigger": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the collapsible trigger element"
     },
     "columnHeader": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1058,6 +1177,7 @@
       "nodeName": "the main container element",
       "conditions": "it has right pinned columns"
     },
+    "mainContent": { "description": "" },
     "menu": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the menu element" },
     "menuIcon": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1116,6 +1236,127 @@
     "pinnedRows--top": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top pinned rows container"
+    },
+    "pivotPanelAvailableFields": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel available fields"
+    },
+    "pivotPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel body"
+    },
+    "pivotPanelField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field"
+    },
+    "pivotPanelField--sorted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the pivot panel field",
+      "conditions": "sorted"
+    },
+    "pivotPanelFieldActionContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field action container"
+    },
+    "pivotPanelFieldCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field checkbox"
+    },
+    "pivotPanelFieldDragIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field drag icon"
+    },
+    "pivotPanelFieldList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field list"
+    },
+    "pivotPanelFieldName": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel field name"
+    },
+    "pivotPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel header"
+    },
+    "pivotPanelPlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel placeholder"
+    },
+    "pivotPanelScrollArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel scroll area"
+    },
+    "pivotPanelSearchContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel search container"
+    },
+    "pivotPanelSection": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel section"
+    },
+    "pivotPanelSections": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel sections"
+    },
+    "pivotPanelSectionTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel section title"
+    },
+    "pivotPanelSwitch": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel switch"
+    },
+    "pivotPanelSwitchLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pivot panel switch label"
+    },
+    "prompt": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt root element"
+    },
+    "promptAction": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt action element"
+    },
+    "promptChangeList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt change list element"
+    },
+    "promptChangesToggle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt changes toggle element"
+    },
+    "promptContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt content element"
+    },
+    "promptError": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt error element"
+    },
+    "promptFeedback": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt feedback element"
+    },
+    "promptIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
+    "promptText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt text element"
+    },
+    "resizablePanelHandle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "resizable panel handles"
+    },
+    "resizablePanelHandle--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "horizontal resizable panel handles"
+    },
+    "resizablePanelHandle--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "vertical resizable panel handles"
     },
     "root": { "description": "Styles applied to the root element." },
     "root--densityComfortable": {
@@ -1218,9 +1459,21 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
+    "sidebar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar element"
+    },
+    "sidebarHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sidebar header element"
+    },
+    "sortButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sort button element"
+    },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the sort icon element"
+      "nodeName": "the sort button icon element"
     },
     "toolbarContainer": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1237,27 +1490,6 @@
     "toolbarLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar label element"
-    },
-    "toolbarPromptControl": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control element"
-    },
-    "toolbarPromptControl--recording": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the toolbar prompt control element",
-      "conditions": "recording"
-    },
-    "toolbarPromptControlRecordButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control record button element"
-    },
-    "toolbarPromptControlRecordingIndicator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control recording indicator element"
-    },
-    "toolbarPromptControlSendButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control send button element"
     },
     "toolbarQuickFilter": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1301,15 +1533,22 @@
       "nodeName": "cells",
       "conditions": "column header and other elements that have border"
     },
+    "withSidePanel": { "description": "" },
     "withVerticalBorder": {
       "description": "Styles applied the grid if <code>showColumnVerticalBorder={true}</code>."
     }
   },
   "slotDescriptions": {
+    "aiAssistantIcon": "Icon used for the AI Assistant button",
+    "aiAssistantPanel": "Component rendered when AI Assistant panel is open. Only needed when <code>aiAssistant</code> prop is passed to the grid. Pass <code>GridAiAssistantPanel</code> to render the default AI Assistant panel.",
+    "aiAssistantPanelCloseIcon": "Icon used for the AI Assistant panel close button",
+    "aiAssistantPanelHistoryIcon": "Icon used for the AI Assistant panel history icon",
+    "aiAssistantPanelNewConversationIcon": "Icon used for the AI Assistant panel new conversation button",
     "baseAutocomplete": "The custom Autocomplete component used in the grid for both header and cells.",
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "baseChip": "The custom Chip component used in the grid.",
     "baseCircularProgress": "The custom CircularProgress component used in the grid.",
     "baseDivider": "The custom Divider component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
@@ -1329,6 +1568,7 @@
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
     "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
+    "collapsibleIcon": "Icon displayed in the collapsible to indicate if it is open or closed.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "columnHeaders": "Component responsible for rendering the column headers.",
@@ -1354,13 +1594,13 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
-    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
     "detailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
     "detailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "detailPanels": "Component responsible for rendering the detail panels.",
+    "emptyPivotOverlay": "Component rendered when pivot mode is enabled but no rows are defined.",
     "exportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "filterPanel": "Filter panel component rendered when clicking the filter button.",
     "filterPanelAddIcon": "Icon displayed for deleting the filter from filter panel.",
@@ -1382,14 +1622,35 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
+    "pivotIcon": "Icon used for the pivot icon",
+    "pivotMenuAddIcon": "Icon displayed in the pivot menu for adding a field to a pivot section.",
+    "pivotMenuCheckIcon": "Icon displayed in the pivot menu to signify a pivot section is selected.",
+    "pivotMenuMoveDownIcon": "Icon displayed in the pivot menu for moving a field down.",
+    "pivotMenuMoveToBottomIcon": "Icon displayed in the pivot menu for moving a field to the bottom.",
+    "pivotMenuMoveToTopIcon": "Icon displayed in the pivot menu for moving a field to the top.",
+    "pivotMenuMoveUpIcon": "Icon displayed in the pivot menu for moving a field up.",
+    "pivotMenuRemoveIcon": "Icon displayed in the pivot menu for removing a field from the pivot.",
+    "pivotSearchClearIcon": "Icon used for the clear button in the sidebar search field",
+    "pivotSearchIcon": "Icon used for the search icon in the sidebar search field",
+    "promptAggregationIcon": "Icon used to display aggregation changes",
+    "promptChangesToggleIcon": "Icon used on the toggle button of the changes list",
+    "promptFilterIcon": "Icon used to display filter changes",
+    "promptGroupIcon": "Icon used to display group changes",
+    "promptIcon": "Icon used for the prompt",
+    "promptPivotIcon": "Icon used to display pivot changes",
+    "promptRerunIcon": "Icon used for the button that reruns a prompt",
+    "promptSendIcon": "Icon used for the button that sends a prompt",
+    "promptSortAscIcon": "Icon used to display sort ascending changes",
+    "promptSortDescIcon": "Icon used to display sort descending changes",
+    "promptSpeechRecognitionIcon": "Icon used for the button that starts and stops recording the prompt",
+    "promptSpeechRecognitionOffIcon": "Icon used for when speech recognition is not supported",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "sidebarCloseIcon": "Icon displayed in the sidebar close button.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
-    "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",
-    "toolbarPromptSendIcon": "Icon used for the button that sends a prompt",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
   }

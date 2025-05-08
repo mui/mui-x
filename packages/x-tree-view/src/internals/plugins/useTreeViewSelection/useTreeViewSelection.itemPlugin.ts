@@ -63,8 +63,10 @@ function selectorItemCheckboxStatus(
   return {
     disabled: !isSelectionEnabledForItem,
     visible: isCheckboxSelectionEnabled,
-    indeterminate: (hasSelectedDescendant && hasUnSelectedDescendant) || !hasUnSelectedDescendant,
-    checked: selectorSelectionPropagationRules(state).parents ? hasSelectedDescendant : false,
+    indeterminate: hasSelectedDescendant && hasUnSelectedDescendant,
+    checked: selectorSelectionPropagationRules(state).parents
+      ? hasSelectedDescendant && !hasUnSelectedDescendant
+      : false,
   };
 }
 

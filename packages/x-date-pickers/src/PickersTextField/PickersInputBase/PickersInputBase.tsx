@@ -8,6 +8,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
+import { MuiEvent } from '@mui/x-internals/types';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
@@ -20,16 +21,16 @@ import {
   Unstable_PickersSectionListSection as PickersSectionListSection,
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
+  PickersSectionElement,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
 export const PickersInputBaseRoot = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   ...theme.typography.body1,
   color: (theme.vars || theme).palette.text.primary,
@@ -52,7 +53,6 @@ export const PickersInputBaseRoot = styled('div', {
 export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, {
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
 })<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
@@ -107,7 +107,6 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
 const PickersInputBaseSection = styled(PickersSectionListSection, {
   name: 'MuiPickersInputBase',
   slot: 'Section',
-  overridesResolver: (props, styles) => styles.section,
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -120,7 +119,7 @@ const PickersInputBaseSection = styled(PickersSectionListSection, {
 const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, {
   name: 'MuiPickersInputBase',
   slot: 'SectionContent',
-  overridesResolver: (props, styles) => styles.content,
+  overridesResolver: (props, styles) => styles.content, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   lineHeight: '1.4375em', // 23px
@@ -132,7 +131,6 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
 const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparator, {
   name: 'MuiPickersInputBase',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
 })(() => ({
   whiteSpace: 'pre',
   letterSpacing: 'inherit',
@@ -141,10 +139,35 @@ const PickersInputBaseSectionSeparator = styled(PickersSectionListSectionSeparat
 const PickersInputBaseInput = styled('input', {
   name: 'MuiPickersInputBase',
   slot: 'Input',
-  overridesResolver: (props, styles) => styles.hiddenInput,
+  overridesResolver: (props, styles) => styles.hiddenInput, // FIXME: Inconsistent naming with slot
 })({
   ...visuallyHidden,
 });
+
+const PickersInputBaseActiveBar = styled('div', {
+  name: 'MuiPickersInputBase',
+  slot: 'ActiveBar',
+})<{ ownerState: { sectionOffsets: number[] } }>(({ theme, ownerState }) => ({
+  display: 'none',
+  position: 'absolute',
+  height: 2,
+  bottom: 2,
+  borderTopLeftRadius: 2,
+  borderTopRightRadius: 2,
+  transition: theme.transitions.create(['width', 'left'], {
+    duration: theme.transitions.duration.shortest,
+  }),
+  backgroundColor: (theme.vars || theme).palette.primary.main,
+  '[data-active-range-position="start"] &, [data-active-range-position="end"] &': {
+    display: 'block',
+  },
+  '[data-active-range-position="start"] &': {
+    left: ownerState.sectionOffsets[0],
+  },
+  '[data-active-range-position="end"] &': {
+    left: ownerState.sectionOffsets[1],
+  },
+}));
 
 const useUtilityClasses = (
   classes: Partial<PickersInputBaseClasses> | undefined,
@@ -181,10 +204,56 @@ const useUtilityClasses = (
     sectionContent: ['sectionContent'],
     sectionBefore: ['sectionBefore'],
     sectionAfter: ['sectionAfter'],
+    activeBar: ['activeBar'],
   };
 
   return composeClasses(slots, getPickersInputBaseUtilityClass, classes);
 };
+
+function resolveSectionElementWidth(
+  sectionElement: PickersSectionElement,
+  rootRef: React.RefObject<HTMLDivElement | null>,
+  index: number,
+  dateRangePosition: 'start' | 'end',
+) {
+  if (sectionElement.content.id) {
+    const activeSectionElements = rootRef.current?.querySelectorAll<HTMLSpanElement>(
+      `[data-sectionindex="${index}"] [data-range-position="${dateRangePosition}"]`,
+    );
+    if (activeSectionElements) {
+      return Array.from(activeSectionElements).reduce((currentActiveBarWidth, element) => {
+        return currentActiveBarWidth + element.offsetWidth;
+      }, 0);
+    }
+  }
+  return 0;
+}
+
+function resolveSectionWidthAndOffsets(
+  elements: PickersSectionElement[],
+  rootRef: React.RefObject<HTMLDivElement | null>,
+) {
+  let activeBarWidth = 0;
+  const activeRangePosition = rootRef.current?.getAttribute('data-active-range-position');
+  if (activeRangePosition === 'end') {
+    for (let i = elements.length - 1; i >= elements.length / 2; i -= 1) {
+      activeBarWidth += resolveSectionElementWidth(elements[i], rootRef, i, 'end');
+    }
+  } else {
+    for (let i = 0; i < elements.length / 2; i += 1) {
+      activeBarWidth += resolveSectionElementWidth(elements[i], rootRef, i, 'start');
+    }
+  }
+  return {
+    activeBarWidth,
+    sectionOffsets: [
+      rootRef.current?.querySelector<HTMLSpanElement>(`[data-sectionindex="0"]`)?.offsetLeft || 0,
+      rootRef.current?.querySelector<HTMLSpanElement>(
+        `[data-sectionindex="${elements.length / 2}"]`,
+      )?.offsetLeft || 0,
+    ],
+  };
+}
 
 /**
  * @ignore - internal component.
@@ -232,6 +301,8 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const activeBarRef = React.useRef<HTMLDivElement>(null);
+  const sectionOffsetsRef = React.useRef<number[]>([]);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
   const muiFormControl = useFormControl();
@@ -250,6 +321,25 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const handleHiddenInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     handleInputFocus(event);
+  };
+
+  const handleKeyDown = (event: MuiEvent<React.KeyboardEvent<HTMLDivElement>>) => {
+    onKeyDown?.(event);
+    if (event.key === 'Enter' && !event.defaultMuiPrevented) {
+      // Do nothing if it's a multi input field
+      if (rootRef.current?.dataset.multiInput) {
+        return;
+      }
+      const closestForm = rootRef.current?.closest<HTMLFormElement>('form');
+      const submitTrigger = closestForm?.querySelector<HTMLElement>('[type="submit"]');
+      if (!closestForm || !submitTrigger) {
+        // do nothing if there is no form or no submit button (trigger)
+        return;
+      }
+      event.preventDefault();
+      // native input trigger submit with the `submitter` field set
+      closestForm.requestSubmit(submitTrigger);
+    }
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
@@ -292,6 +382,20 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
 
   const InputSectionsContainer = slots?.input || PickersInputBaseSectionsContainer;
 
+  const isSingleInputRange = elements.some(
+    (element) => element.content['data-range-position'] !== undefined,
+  );
+  React.useEffect(() => {
+    if (!isSingleInputRange || !ownerState.isPickerOpen) {
+      return;
+    }
+    const { activeBarWidth, sectionOffsets } = resolveSectionWidthAndOffsets(elements, rootRef);
+    sectionOffsetsRef.current = [sectionOffsets[0], sectionOffsets[1]];
+    if (activeBarRef.current) {
+      activeBarRef.current.style.width = `${activeBarWidth}px`;
+    }
+  }, [elements, isSingleInputRange, ownerState.isPickerOpen]);
+
   return (
     <InputRoot {...inputRootProps}>
       {startAdornment}
@@ -305,7 +409,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         onBlur={handleInputBlur}
         onInput={onInput}
         onPaste={onPaste}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         slots={{
           root: InputSectionsContainer,
           section: PickersInputBaseSection,
@@ -349,6 +453,13 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         {...inputProps}
         ref={handleInputRef}
       />
+      {isSingleInputRange && (
+        <PickersInputBaseActiveBar
+          className={classes.activeBar}
+          ref={activeBarRef}
+          ownerState={{ sectionOffsets: sectionOffsetsRef.current }}
+        />
+      )}
     </InputRoot>
   );
 });
@@ -371,6 +482,7 @@ PickersInputBase.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
@@ -396,7 +508,7 @@ PickersInputBase.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([

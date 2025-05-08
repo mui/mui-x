@@ -2,10 +2,22 @@
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 import { describeSkipIf, isJSDOM, testSkipIf } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from './BarChartPro';
+
+const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
+  const axisData = Array.from(
+    document.querySelectorAll(
+      `.MuiChartsAxis-direction${axis.toUpperCase()} .MuiChartsAxis-tickContainer`,
+    ),
+  )
+    .map((v) => v.textContent)
+    .filter(Boolean);
+
+  return axisData as string[];
+};
 
 describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
   const { render } = createRenderer();
@@ -18,7 +30,6 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     ],
     xAxis: [
       {
-        scaleType: 'band',
         data: ['A', 'B', 'C', 'D'],
         zoom: true,
         height: 30,
@@ -55,17 +66,13 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
 
   it('should zoom on wheel', async function test() {
     this.timeout(10000);
-
     const onZoomChange = sinon.spy();
     const { user } = render(
       <BarChartPro {...barChartProps} onZoomChange={onZoomChange} />,
       options,
     );
 
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
     const svg = document.querySelector('svg')!;
 
@@ -81,27 +88,21 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
     }
 
     expect(onZoomChange.callCount).to.equal(200);
-    expect(screen.queryByText('A')).to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
     // scroll back
     for (let i = 0; i < 200; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
     }
 
     expect(onZoomChange.callCount).to.equal(400);
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
@@ -116,10 +117,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
         options,
       );
 
-      expect(screen.queryByText('A')).to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).to.equal(null);
-      expect(screen.queryByText('D')).not.to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
       const svg = document.querySelector('svg')!;
 
@@ -142,13 +140,10 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(1);
-      expect(screen.queryByText('A')).to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).not.to.equal(null);
-      expect(screen.queryByText('D')).to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
       await user.pointer([
@@ -169,13 +164,10 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
         },
       ]);
       // Wait the animation frame
-      await new Promise((r) => requestAnimationFrame(r));
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(2);
-      expect(screen.queryByText('A')).not.to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).to.equal(null);
-      expect(screen.queryByText('D')).to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
   });
 

@@ -20,7 +20,6 @@ export type {
   MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewState,
-  TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
   TreeViewItemPlugin,
@@ -65,6 +64,10 @@ export type {
   UseTreeViewItemsState,
 } from './plugins/useTreeViewItems';
 export { useTreeViewLabel } from './plugins/useTreeViewLabel';
+export {
+  selectorIsItemBeingEdited,
+  selectorIsAnyItemBeingEdited,
+} from './plugins/useTreeViewLabel/useTreeViewLabel.selectors';
 export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
