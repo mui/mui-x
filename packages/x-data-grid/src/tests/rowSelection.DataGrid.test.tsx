@@ -833,6 +833,32 @@ describe('<DataGrid /> - Row selection', () => {
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([]));
     });
 
+    it('should call onRowSelectionModelChange with the correct reason when clicking on a row', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          pagination
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await user.click(getCell(0, 0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('singleRowSelection');
+    });
+
+    it('should call onRowSelectionModelChange with the correct reason when clicking on the header checkbox', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          pagination
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await user.click(getColumnHeaderCell(0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('multipleRowsSelection');
+    });
+
     it('should call onRowSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', async () => {
       const onRowSelectionModelChange = spy();
       const { setProps, user } = render(
