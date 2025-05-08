@@ -10,13 +10,13 @@ import { useIsHydrated } from '../hooks/useIsHydrated';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
+import { AxisConfig, ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
-import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
+import { useDrawingArea, ChartDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -55,7 +55,7 @@ function getVisibleLabels(
     isMounted,
     isPointInside,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse'> & {
+    Pick<ComputedXAxis, 'reverse'> & {
       isMounted: boolean;
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
       isPointInside: (position: number) => boolean;
@@ -184,7 +184,6 @@ function shortenLabels(
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({});
 
 const defaultProps = {

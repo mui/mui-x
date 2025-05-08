@@ -4,7 +4,6 @@ import { BarChartProps } from '@mui/x-charts/BarChart';
 import { usAirportPassengersData } from './airportData';
 
 const defaultYAxis = {
-  scaleType: 'band',
   dataKey: 'code',
   width: 80,
   valueFormatter: (value: any) =>
@@ -53,7 +52,7 @@ export default function YAxisTickLabelOverflow() {
       hideLegend
       xAxis={[
         {
-          valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+          valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
         },
       ]}
     />

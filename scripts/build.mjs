@@ -33,8 +33,6 @@ function getVersionEnvVariables(pkg) {
 const exec = promisify(childProcess.exec);
 
 const validBundles = [
-  // modern build with a rolling target using ES6 modules
-  'modern',
   // build for node using commonJS modules
   'node',
   // build with a hardcoded target using ES6 modules
@@ -80,7 +78,6 @@ async function run(argv) {
 
   const relativeOutDir = {
     node: './',
-    modern: './modern',
     stable: './esm',
   }[bundle];
 
@@ -95,17 +92,16 @@ async function run(argv) {
     ...getVersionEnvVariables(packageJson),
   };
 
+  // prettier-ignore
   const babelArgs = [
-    '--config-file',
-    babelConfigPath,
-    '--extensions',
-    `"${extensions.join(',')}"`,
+    '--config-file', babelConfigPath,
+    '--extensions', `"${extensions.join(',')}"`,
     srcDir,
-    '--out-dir',
-    outDir,
-    '--ignore',
+    '--out-dir', outDir,
     // Need to put these patterns in quotes otherwise they might be evaluated by the used terminal.
-    `"${ignore.join('","')}"`,
+    '--ignore', `"${ignore.join('","')}"`,
+    '--copy-files',
+    '--no-copy-ignored',
   ];
 
   if (outFileExtension !== '.js') {
@@ -133,12 +129,12 @@ async function run(argv) {
   // `--extensions-.cjs --out-file-extension .cjs`
   await cjsCopy({ from: srcDir, to: outDir });
 
-  const isEsm = bundle === 'modern' || bundle === 'stable';
+  const isEsm = bundle === 'stable';
   if (isEsm) {
     const rootBundlePackageJson = path.join(outDir, 'package.json');
     await fs.writeFile(
       rootBundlePackageJson,
-      JSON.stringify({ type: 'module', sideEffects: false }),
+      JSON.stringify({ type: 'module', sideEffects: packageJson.sideEffects }),
     );
   }
 

@@ -51,9 +51,6 @@ export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 
 // contexts
-
-export * from '../context/AnimationProvider';
-export type * from '../context/context.types';
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
 export * from '../context/ChartProvider';
 
@@ -65,3 +62,7 @@ export * from '../models/z-axis';
 export * from '../models/axis';
 
 export * from './plugins/models';
+export * from './material';
+export * from './createSvgIcon';
+
+export * from './constants';

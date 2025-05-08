@@ -130,7 +130,19 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
-          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+          {
+            pathname: '/x/react-data-grid/pivoting-group',
+            title: 'Pivoting',
+            plan: 'premium',
+            newFeature: true,
+            children: [
+              { pathname: '/x/react-data-grid/pivoting', title: 'Overview' },
+              {
+                pathname: '/x/react-data-grid/pivoting-explained',
+                title: 'Understanding pivoting',
+              },
+            ],
+          },
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
           { pathname: '/x/react-data-grid/scrolling' },
@@ -166,6 +178,12 @@ const pages: MuiPage[] = [
               },
             ],
           },
+          {
+            pathname: '/x/react-data-grid/ai-assistant',
+            plan: 'premium',
+            newFeature: true,
+            title: 'AI Assistant',
+          },
         ],
       },
       {
@@ -186,6 +204,23 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/components/filter-panel',
             title: 'Filter Panel',
             planned: true,
+          },
+          {
+            pathname: '/x/react-data-grid/components/prompt-field',
+            title: 'Prompt Field',
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/pivot-panel',
+            title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/ai-assistant-panel',
+            title: 'AI Assistant Panel',
+            planned: true,
+            plan: 'premium',
           },
         ],
       },
@@ -496,6 +531,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/composition' },
               { pathname: '/x/react-charts/label' },
               { pathname: '/x/react-charts/legend' },
+              { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip' },
@@ -505,6 +541,12 @@ const pages: MuiPage[] = [
                 title: 'Zoom and pan',
                 plan: 'pro',
               },
+              {
+                pathname: '/x/react-charts/export',
+                title: 'Export',
+                plan: 'pro',
+              },
+              { pathname: '/x/react-charts/toolbar', title: 'Toolbar 🧪' },
             ],
           },
           {
@@ -570,7 +612,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
-          { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          {
+            pathname: '/x/react-tree-view/rich-tree-view/editing',
+            title: 'Label editing',
+            newFeature: true,
+          },
           {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',

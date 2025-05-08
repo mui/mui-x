@@ -1,5 +1,13 @@
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
+import { selectorSelectionModelArray } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorDisabledItemFocusable,
+  selectorItemMetaLookup,
+  selectorItemOrderedChildrenIds,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
+import { isItemDisabled } from '../useTreeViewItems/useTreeViewItems.utils';
+import { selectorExpandedItemsMap } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
 
 const selectorTreeViewFocusState: TreeViewRootSelector<UseTreeViewFocusSignature> = (state) =>
   state.focus;
@@ -12,8 +20,37 @@ const selectorTreeViewFocusState: TreeViewRootSelector<UseTreeViewFocusSignature
  * @returns {TreeViewItemId | null} The id of the item that should be sequentially focusable.
  */
 export const selectorDefaultFocusableItemId = createSelector(
-  selectorTreeViewFocusState,
-  (focus) => focus.defaultFocusableItemId,
+  [
+    selectorSelectionModelArray,
+    selectorExpandedItemsMap,
+    selectorItemMetaLookup,
+    selectorDisabledItemFocusable,
+    (state) => selectorItemOrderedChildrenIds(state, null),
+  ],
+  (selectedItems, expandedItemsMap, itemMetaLookup, disabledItemsFocusable, orderedRootItemIds) => {
+    const firstSelectedItem = selectedItems.find((itemId) => {
+      if (!disabledItemsFocusable && isItemDisabled(itemMetaLookup, itemId)) {
+        return false;
+      }
+
+      const itemMeta = itemMetaLookup[itemId];
+      return itemMeta && (itemMeta.parentId == null || expandedItemsMap.has(itemMeta.parentId));
+    });
+
+    if (firstSelectedItem != null) {
+      return firstSelectedItem;
+    }
+
+    const firstNavigableItem = orderedRootItemIds.find(
+      (itemId) => disabledItemsFocusable || !isItemDisabled(itemMetaLookup, itemId),
+    );
+
+    if (firstNavigableItem != null) {
+      return firstNavigableItem;
+    }
+
+    return null;
+  },
 );
 
 /**

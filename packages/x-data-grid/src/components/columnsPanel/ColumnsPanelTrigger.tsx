@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import useForkRef from '@mui/utils/useForkRef';
-import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
+import { useGridPanelContext } from '../panel/GridPanelContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import {
   gridPreferencePanelStateSelector,
@@ -56,7 +56,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.columns;
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { columnsPanelTriggerRef } = useGridPreferencePanelContext();
+    const { columnsPanelTriggerRef } = useGridPanelContext();
     const handleRef = useForkRef(ref, columnsPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -84,10 +84,10 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
-        onClick: handleClick,
-        onPointerUp: handlePointerUp,
         className: resolvedClassName,
         ...other,
+        onPointerUp: handlePointerUp,
+        onClick: handleClick,
         ref: handleRef,
       },
       state,

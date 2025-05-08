@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable react-compiler/react-compiler */
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
@@ -174,13 +173,13 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   if (process.env.NODE_ENV !== 'production') {
     if (stateRef.current.displayError && params.width === undefined && innerWidth === 0) {
       console.error(
-        `MUI X: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
+        `MUI X Charts: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
       );
       stateRef.current.displayError = false;
     }
     if (stateRef.current.displayError && params.height === undefined && innerHeight === 0) {
       console.error(
-        `MUI X: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
+        `MUI X Charts: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
       );
       stateRef.current.displayError = false;
     }

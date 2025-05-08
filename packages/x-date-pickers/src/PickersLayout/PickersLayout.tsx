@@ -30,7 +30,6 @@ const useUtilityClasses = (
 export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerLayoutOwnerState }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
@@ -79,7 +78,6 @@ export const PickersLayoutRoot = styled('div', {
 export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'ContentWrapper',
-  overridesResolver: (props, styles) => styles.contentWrapper,
 })<{ ownerState: PickerLayoutOwnerState }>({
   gridColumn: '2 / 4',
   gridRow: 2,

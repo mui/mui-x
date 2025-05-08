@@ -136,7 +136,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: GridFeatureMode;
   /**
@@ -202,7 +202,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
   /**
@@ -254,7 +254,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://next.mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**

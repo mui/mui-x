@@ -37,6 +37,8 @@ const GridOverlayRoot = styled('div', {
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
+  textAlign: 'center',
+  textWrap: 'balance',
   backgroundColor: vars.colors.background.backdrop,
 });
 

@@ -24,7 +24,7 @@ export default function MixedBarChart() {
         { data: amtData, label: 'amt' },
         { data: uData, label: 'uv', stack: 'stack1' },
       ]}
-      xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      xAxis={[{ data: xLabels }]}
       yAxis={[{ width: 50 }]}
     />
   );

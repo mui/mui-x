@@ -12,7 +12,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
     render,
     Component: SingleInputDateRangeField,
@@ -37,16 +37,15 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY – MM/DD/YYYY');
     });
 
-    it('should select all on <Tab> focus (v6 only)', () => {
+    it('should select all on <Tab> focus (v6 only)', async () => {
       // Test with non-accessible DOM structure
-      renderWithProps({ enableAccessibleFieldDOMStructure: false });
+      const { user } = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
-      // Simulate a <Tab> focus interaction on desktop
-      act(() => {
-        input.focus();
+      await user.tab();
+
+      await act(async () => {
+        input.select();
       });
-      clock.runToLast();
-      input.select();
 
       expectFieldValueV6(input, 'MM/DD/YYYY – MM/DD/YYYY');
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY – MM/DD/YYYY');
@@ -54,7 +53,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   });
 
   describe('Click', () => {
-    it('should select the clicked selection when the input is already focused', () => {
+    it('should select the clicked selection when the input is already focused', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -62,17 +61,17 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
       // End date
-      view.selectSection('month', 'last');
+      await view.selectSectionAsync('month', 'last');
       expect(getCleanedSelectedContent()).to.equal('02');
 
-      view.selectSection('day', 'last');
+      await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
       view.unmount();
@@ -84,21 +83,21 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
       // End date
-      view.selectSection('month', 'last');
+      await view.selectSectionAsync('month', 'last');
       expect(getCleanedSelectedContent()).to.equal('02');
 
-      view.selectSection('day', 'last');
+      await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
     });
 
-    it('should not change the selection when clicking on the only already selected section', () => {
+    it('should not change the selection when clicking on the only already selected section', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
@@ -106,17 +105,17 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
       // End date
-      view.selectSection('day', 'last');
+      await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
-      view.selectSection('day', 'last');
+      await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
       view.unmount();
@@ -128,27 +127,27 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
       // End date
-      view.selectSection('day', 'last');
+      await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
-      view.selectSection('day', 'last');
+      await view.selectSectionAsync('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
     });
   });
 
   describe('key: ArrowRight', () => {
-    it('should allow to move from left to right with ArrowRight', () => {
+    it('should allow to move from left to right with ArrowRight', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
@@ -172,7 +171,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
       fireEvent.keyDown(input, { key: 'ArrowRight' });
@@ -191,11 +190,11 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
-    it('should stay on the current section when the last section is selected', () => {
+    it('should stay on the current section when the last section is selected', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      view.selectSection('year', 'last');
+      await view.selectSectionAsync('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       fireEvent.keyDown(view.getActiveSection(5), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
@@ -206,7 +205,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
-      view.selectSection('year', 'last');
+      await view.selectSectionAsync('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
@@ -214,11 +213,11 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   });
 
   describe('key: ArrowLeft', () => {
-    it('should allow to move from right to left with ArrowLeft', () => {
+    it('should allow to move from right to left with ArrowLeft', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      view.selectSection('year', 'last');
+      await view.selectSectionAsync('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       fireEvent.keyDown(view.getActiveSection(5), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('DD');
@@ -241,7 +240,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
-      view.selectSection('year', 'last');
+      await view.selectSectionAsync('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       fireEvent.keyDown(input, { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('DD');
@@ -259,11 +258,11 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
-    it('should stay on the current section when the first section is selected', () => {
+    it('should stay on the current section when the first section is selected', async () => {
       // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
@@ -274,7 +273,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
-      view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
       fireEvent.keyDown(input, { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');

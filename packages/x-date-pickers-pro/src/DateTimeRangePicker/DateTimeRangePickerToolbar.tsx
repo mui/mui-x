@@ -50,7 +50,6 @@ export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToo
 const DateTimeRangePickerToolbarRoot = styled('div', {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickerToolbarOwnerState;
 }>({
@@ -61,7 +60,6 @@ const DateTimeRangePickerToolbarRoot = styled('div', {
 const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
-  overridesResolver: (_, styles) => styles.startToolbar,
 })<{ ownerState?: PickerToolbarOwnerState }>({
   borderBottom: 'none',
   paddingBottom: 0,
@@ -70,7 +68,6 @@ const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
 const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
-  overridesResolver: (_, styles) => styles.endToolbar,
 })<{ ownerState?: PickerToolbarOwnerState }>({});
 
 type DateTimeRangePickerToolbarComponent = ((
