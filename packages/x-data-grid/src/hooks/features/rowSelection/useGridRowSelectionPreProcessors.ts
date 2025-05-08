@@ -40,26 +40,38 @@ export const useGridRowSelectionPreProcessors = (
       };
 
       const shouldHaveSelectionColumn = props.checkboxSelection;
-      const haveSelectionColumn = columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] != null;
+      const hasSelectionColumn = columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] != null;
+      const hasCustomSelectionColumn = props.columns.some(
+        (col) => col.field === GRID_CHECKBOX_SELECTION_FIELD,
+      );
 
-      if (shouldHaveSelectionColumn && !haveSelectionColumn) {
+      if (shouldHaveSelectionColumn && !hasSelectionColumn) {
         columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] = selectionColumn;
         columnsState.orderedFields = [GRID_CHECKBOX_SELECTION_FIELD, ...columnsState.orderedFields];
-      } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
+      } else if (!shouldHaveSelectionColumn && hasSelectionColumn) {
         delete columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD];
         columnsState.orderedFields = columnsState.orderedFields.filter(
           (field) => field !== GRID_CHECKBOX_SELECTION_FIELD,
         );
-      } else if (shouldHaveSelectionColumn && haveSelectionColumn) {
+      } else if (shouldHaveSelectionColumn && hasSelectionColumn) {
         columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] = {
           ...selectionColumn,
           ...columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD],
         };
+        // If it is not a custom selection column, move it to the beginning of the column order
+        if (!hasCustomSelectionColumn) {
+          columnsState.orderedFields = [
+            GRID_CHECKBOX_SELECTION_FIELD,
+            ...columnsState.orderedFields.filter(
+              (field) => field !== GRID_CHECKBOX_SELECTION_FIELD,
+            ),
+          ];
+        }
       }
 
       return columnsState;
     },
-    [apiRef, classes, props.checkboxSelection],
+    [apiRef, classes, props.columns, props.checkboxSelection],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
