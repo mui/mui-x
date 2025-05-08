@@ -480,8 +480,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     },
   );
 
-  console.log(slots);
-
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
