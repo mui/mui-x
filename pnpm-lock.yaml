@@ -197,11 +197,11 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(@babel/core@7.27.1)
       chai:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^5.2.0
+        version: 5.2.0
       chai-dom:
         specifier: ^1.12.1
-        version: 1.12.1(chai@4.5.0)
+        version: 1.12.1(chai@5.2.0)
       compression-webpack-plugin:
         specifier: ^11.1.0
         version: 11.1.0(webpack@5.99.7)
@@ -1665,8 +1665,8 @@ importers:
         specifier: ^9.7.5
         version: 9.7.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/chai':
-        specifier: ^4.3.20
-        version: 4.3.20
+        specifier: ^5.2.2
+        version: 5.2.2
       '@types/karma':
         specifier: ^6.3.9
         version: 6.3.9
@@ -1689,8 +1689,8 @@ importers:
         specifier: ^7.7.0
         version: 7.7.0
       chai:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^5.2.0
+        version: 5.2.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1767,8 +1767,8 @@ importers:
         specifier: ^1.52.0
         version: 1.52.0
       '@types/chai':
-        specifier: ^4.3.20
-        version: 4.3.20
+        specifier: ^5.2.2
+        version: 5.2.2
       '@types/karma':
         specifier: ^6.3.9
         version: 6.3.9
@@ -1788,8 +1788,8 @@ importers:
         specifier: ^4.4.1
         version: 4.4.1(vite@6.3.4(@types/node@22.15.3)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.4)(yaml@2.7.0))
       chai:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^5.2.0
+        version: 5.2.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1902,8 +1902,8 @@ importers:
         specifier: ^1.52.0
         version: 1.52.0
       '@types/chai':
-        specifier: ^4.3.20
-        version: 4.3.20
+        specifier: ^5.2.2
+        version: 5.2.2
       '@types/karma':
         specifier: ^6.3.9
         version: 6.3.9
@@ -1923,8 +1923,8 @@ importers:
         specifier: ^4.4.1
         version: 4.4.1(vite@6.3.4(@types/node@22.15.3)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.4)(yaml@2.7.0))
       chai:
-        specifier: ^4.5.0
-        version: 4.5.0
+        specifier: ^5.2.0
+        version: 5.2.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -4349,8 +4349,8 @@ packages:
   '@types/chai-dom@1.11.3':
     resolution: {integrity: sha512-EUEZI7uID4ewzxnU7DJXtyvykhQuwe+etJ1wwOiJyQRTH/ifMWKX+ghiXkxCUvNJ6IQDodf0JXhuP6zZcy2qXQ==}
 
-  '@types/chai@4.3.20':
-    resolution: {integrity: sha512-/pC9HAB5I/xMlc5FP77qjCnI16ChlJfW0tGa0IUcFn38VJrTV6DeZ60NU5KZBtaOZqjdpwTWohz5HU1RrhiYxQ==}
+  '@types/chai@5.2.2':
+    resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
   '@types/chance@1.1.6':
     resolution: {integrity: sha512-V+pm3stv1Mvz8fSKJJod6CglNGVqEQ6OyuqitoDkWywEODM/eJd1eSuIp9xt6DrX8BWZ2eDSIzbw1tPCUTvGbQ==}
@@ -4402,6 +4402,9 @@ packages:
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
+
+  '@types/deep-eql@4.0.2':
+    resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
 
   '@types/device-uuid@1.0.3':
     resolution: {integrity: sha512-z1FXOPDVE85XSjOFtTYXPm4Hyvi1ByjkndfdwU3cBNYGKfYhL4WN6qwYfvMSUNz8j7QGeO+mLJYMfgiyRywzhg==}
@@ -13603,9 +13606,11 @@ snapshots:
 
   '@types/chai-dom@1.11.3':
     dependencies:
-      '@types/chai': 4.3.20
+      '@types/chai': 5.2.2
 
-  '@types/chai@4.3.20': {}
+  '@types/chai@5.2.2':
+    dependencies:
+      '@types/deep-eql': 4.0.2
 
   '@types/chance@1.1.6': {}
 
@@ -13653,6 +13658,8 @@ snapshots:
   '@types/debug@4.1.12':
     dependencies:
       '@types/ms': 2.1.0
+
+  '@types/deep-eql@4.0.2': {}
 
   '@types/device-uuid@1.0.3': {}
 
@@ -14812,6 +14819,10 @@ snapshots:
   chai-dom@1.12.1(chai@4.5.0):
     dependencies:
       chai: 4.5.0
+
+  chai-dom@1.12.1(chai@5.2.0):
+    dependencies:
+      chai: 5.2.0
 
   chai@4.5.0:
     dependencies:
