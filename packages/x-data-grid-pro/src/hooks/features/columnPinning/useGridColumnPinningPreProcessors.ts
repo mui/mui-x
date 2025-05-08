@@ -18,7 +18,6 @@ export const useGridColumnPinningPreProcessors = (
 
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      console.log('start', columnsState);
       if (columnsState.orderedFields.length === 0 || disableColumnPinning) {
         return columnsState;
       }
@@ -114,11 +113,6 @@ export const useGridColumnPinningPreProcessors = (
 
       const centerColumns = newOrderedFields.filter((field) => {
         return !leftPinnedColumns.includes(field) && !rightPinnedColumns.includes(field);
-      });
-
-      console.log('end', {
-        ...columnsState,
-        orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       });
 
       return {
