@@ -40,9 +40,6 @@ export const useGridRowReorderPreProcessors = (
 
       const shouldHaveReorderColumn = props.rowReordering;
       const hasReorderColumn = columnsState.lookup[reorderColumn.field] != null;
-      const hasCustomReorderColumn = props.columns.some(
-        (col) => col.field === GRID_REORDER_COL_DEF.field,
-      );
 
       if (shouldHaveReorderColumn && !hasReorderColumn) {
         columnsState.lookup[reorderColumn.field] = reorderColumn;
@@ -57,8 +54,8 @@ export const useGridRowReorderPreProcessors = (
           ...reorderColumn,
           ...columnsState.lookup[reorderColumn.field],
         };
-        // If it is not a custom reorder column, move it to the beginning of the column order
-        if (!hasCustomReorderColumn) {
+        // If the column is not in the columns array (not a custom reorder column), move it to the beginning of the column order
+        if (!props.columns.some((col) => col.field === GRID_REORDER_COL_DEF.field)) {
           columnsState.orderedFields = [
             reorderColumn.field,
             ...columnsState.orderedFields.filter((field) => field !== reorderColumn.field),
