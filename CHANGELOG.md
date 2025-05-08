@@ -5,14 +5,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.29.3
 
-_May 7, 2025_
+_May 8, 2025_
 
-We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
 Team members who have contributed to this release:
-@arminmeh and @LukasTy.
+@arminmeh, @LukasTy, and @MBilalShafi.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -21,6 +21,7 @@ Team members who have contributed to this release:
 #### `@mui/x-data-grid@7.29.3`
 
 - [DataGrid] Ignore `preProcessEditCellProps` for non-editable columns when starting a row update (#17734) @arminmeh
+- [DataGrid] Avoid applying row selection propagation on filtered rows (#17742) @MBilalShafi
 
 #### `@mui/x-data-grid-pro@7.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
