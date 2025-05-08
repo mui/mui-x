@@ -29,19 +29,22 @@ export const useGridDetailPanelPreProcessors = (
 
       // Don't add the toggle column if there's already one
       // The user might have manually added it to have it in a custom position
-      if (columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD]) {
+      if (props.columns.some((col) => col.field === GRID_DETAIL_PANEL_TOGGLE_FIELD)) {
         return columnsState;
       }
 
-      // Otherwise, add the toggle column at the beginning
-      columnsState.orderedFields = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.orderedFields];
+      // Make sure the toggle column is at the beginning of the column order
+      columnsState.orderedFields = [
+        GRID_DETAIL_PANEL_TOGGLE_FIELD,
+        ...columnsState.orderedFields.filter((field) => field !== GRID_DETAIL_PANEL_TOGGLE_FIELD),
+      ];
       columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
         ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
         headerName: privateApiRef.current.getLocaleText('detailPanelToggle'),
       };
       return columnsState;
     },
-    [privateApiRef, props.getDetailPanelContent],
+    [privateApiRef, props.columns, props.getDetailPanelContent],
   );
 
   const addExpandedClassToRow = React.useCallback<GridPipeProcessor<'rowClassName'>>(
