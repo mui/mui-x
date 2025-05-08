@@ -18,17 +18,13 @@ declare global {
 // Which allows us to run `pnpm test:browser --project "x-charts"` for example.
 const getWorkspaces = () => {
   const getFill = () => {
-    const isJSDOM = process.env.JSDOM === 'true';
     const isBrowser = process.env.BROWSER === 'true';
-
-    if (isJSDOM && !isBrowser) {
-      return 'jsdom';
-    }
-    if (isBrowser && !isJSDOM) {
+    // We delete the env to prevent it from being used in the tests
+    delete process.env.BROWSER;
+    if (isBrowser) {
       return 'browser';
     }
-
-    return '{jsdom,browser}';
+    return 'jsdom';
   };
 
   const fill = getFill();

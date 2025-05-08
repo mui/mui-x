@@ -35,7 +35,7 @@
     "test": "pnpm test:unit:jsdom",
     "test:jsdom": "pnpm test:unit:jsdom",
     "test:unit": "pnpm test:unit:jsdom",
-    "test:unit:jsdom": "cross-env NODE_ENV=test TZ=UTC JSDOM=true vitest",
+    "test:unit:jsdom": "cross-env NODE_ENV=test TZ=UTC vitest",
     "test:browser": "pnpm test:unit:browser",
     "test:unit:browser": "cross-env NODE_ENV=test TZ=UTC BROWSER=true vitest",
     "test:e2e": "pnpm run release:build && cd test/e2e && pnpm run start",
