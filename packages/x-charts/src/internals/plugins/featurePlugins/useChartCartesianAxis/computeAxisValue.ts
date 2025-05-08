@@ -200,7 +200,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
+    /* If the zoom start and end are the same, `tickNumber` will become infinity, so we should default to 1. */
+    const tickNumber =
+      zoomRange[0] === zoomRange[1] ? 1 : rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
