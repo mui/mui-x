@@ -285,7 +285,7 @@ const DEFAULT_SELECTED_ITEMS: string[] = [];
 const EMPTY_SELECTION_PROPAGATION: UseTreeViewSelectionParameters<true>['selectionPropagation'] =
   {};
 
-useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
+useTreeViewSelection.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
