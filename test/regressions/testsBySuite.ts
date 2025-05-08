@@ -24,6 +24,8 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
     '!docsx/data/charts/tooltip/Custom*', // Composition example
     '!docsx/data/charts/tooltip/Item*', // Composition example
+    '!docsx/data/data-grid/server-side-data/useNestedPagination',
+    '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
   ],
   { eager: true, import: 'default' },
 );
