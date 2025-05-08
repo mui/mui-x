@@ -353,7 +353,6 @@ function BaseTextField(props: P['baseTextField']) {
           shrink: true,
           ...(slotProps as any)?.inputLabel,
         },
-        ...slotProps,
       }}
     />
   );
