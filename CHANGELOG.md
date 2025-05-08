@@ -54,7 +54,7 @@ Same changes as in `@mui/x-date-pickers@8.3.0`, plus:
 - The `<FunnelChart />` series now accepts a `variant='outlined'` prop for a simpler style.
   <img width="398" alt="Screenshot 2025-05-06 at 20 36 12" src="https://github.com/user-attachments/assets/00fef14f-9026-421e-a4b6-7e081adce1e8" />
 
-- Add a `borderRadius` property to `<FunnelChart />`. All funnels have a `8px` `borderRadius` by default.
+- Add a `borderRadius` property to `<FunnelChart />`. All funnels have `8px` as a default value.
   <img width="386" alt="Screenshot 2025-05-06 at 14 00 20" src="https://github.com/user-attachments/assets/4f4cc0e7-01ce-4ed6-a0e1-a387f78def23" />
 
 - Add a `pyramid` curve to `<FunnelChart />`, which allows creation of a pyramid-shaped funnel.
