@@ -11,7 +11,7 @@ _May 7, 2025_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎨 Added new styling options and shapes for FunnelChart, including `variant`, `borderRadius`, `pyramid`, and `step-pyramid` curves.
+- 🎨 Added new styling options and shapes for `<FunnelChart />`, including `variant`, `borderRadius`, `pyramid`, and `step-pyramid` curves.
 - 🐞 Bugfixes
 
 Special thanks go out to this community member for a valuable contribution:
@@ -51,20 +51,19 @@ Same changes as in `@mui/x-date-pickers@8.3.0`, plus:
 
 ### Charts
 
-- The `FunnelChart` series now accepts a `variant='outlined'` prop for a simpler style.
+- The `<FunnelChart />` series now accepts a `variant='outlined'` prop for a simpler style.
 
   <img width="398" alt="Screenshot 2025-05-06 at 20 36 12" src="https://github.com/user-attachments/assets/00fef14f-9026-421e-a4b6-7e081adce1e8" />
 
-- Add a `borderRadius` property to `FunnelChart`. All funnels have a `8px` `borderRadius` by default.
+- Add a `borderRadius` property to `<FunnelChart />`. All funnels have a `8px` `borderRadius` by default.
 
   <img width="386" alt="Screenshot 2025-05-06 at 14 00 20" src="https://github.com/user-attachments/assets/4f4cc0e7-01ce-4ed6-a0e1-a387f78def23" />
 
-- Add a `pyramid` curve to `FunnelChart`, which allows creation of a pyramid-shaped funnel.
+- Add a `pyramid` curve to `<FunnelChart />`, which allows creation of a pyramid-shaped funnel.
 
   <img width="344" alt="Screenshot 2025-05-06 at 14 32 59" src="https://github.com/user-attachments/assets/0b2896e0-0478-4766-bb1b-258a4977a751" />
 
-- Add a `step-pyramid` curve to `FunnelChart`, which creates a stepped-pyramid like shape.
- 
+- Add a `step-pyramid` curve to `<FunnelChart />`, which creates a stepped-pyramid like shape.
   <img width="344" alt="Screenshot 2025-05-06 at 14 33 03" src="https://github.com/user-attachments/assets/894f0ab3-7898-40fe-b0df-560feea4085a" />
 
 #### `@mui/x-charts@8.3.0`
