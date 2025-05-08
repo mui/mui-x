@@ -34,6 +34,10 @@ export default function FunnelCurves() {
             options: ['filled', 'outlined'],
             defaultValue: 'filled',
           },
+          reverse: {
+            knob: 'switch',
+            defaultValue: false,
+          },
         } as const
       }
       renderDemo={(props) => (
@@ -48,6 +52,9 @@ export default function FunnelCurves() {
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            categoryAxis={{
+              reverse: props.reverse,
+            }}
             gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
@@ -62,6 +69,9 @@ export default function FunnelCurves() {
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
+            categoryAxis={{
+              reverse: props.reverse,
+            }}
             gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
@@ -77,7 +87,7 @@ export default function FunnelCurves() {
     variant: '${props.variant}',
     ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
   }]}
-  gap={${props.gap}}
+  gap={${props.gap}}${props.reverse ? '\n  categoryAxis={{ reverse: true }}' : ''}
 />
 `;
       }}
