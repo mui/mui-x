@@ -12,6 +12,7 @@ _May 8, 2025_
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎨 Added new styling options and shapes for `<FunnelChart />`, including `variant`, `borderRadius`, `pyramid`, and `step-pyramid` curves.
+- 📚 Documentation improvements
 - 🐞 Bugfixes
 
 Special thanks go out to this community member for a valuable contribution:
@@ -27,6 +28,7 @@ Team members who have contributed to this release:
 - [DataGrid] Fix lazy loading crash with `isRowSelectable` prop (#17629) @MBilalShafi
 - [DataGrid] Fix: use CSS nonce (#17726) @romgrk
 - [DataGrid] Ignore `preProcessEditCellProps` for non-editable columns when starting a row update (#17732) @arminmeh
+- [DataGrid] Avoid applying row selection propagation on filtered rows (#17739) @MBilalShafi
 
 #### `@mui/x-data-grid-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
