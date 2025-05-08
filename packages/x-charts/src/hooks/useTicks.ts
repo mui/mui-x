@@ -145,7 +145,7 @@ export function useTicks(
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
 
     // Ticks inside the drawing area
-    const visibleTicks = [];
+    const visibleTicks: TickItemType[] = [];
 
     for (let i = 0; i < ticks.length; i += 1) {
       const value = ticks[i];
