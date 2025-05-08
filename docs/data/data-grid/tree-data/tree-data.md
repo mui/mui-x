@@ -19,7 +19,7 @@ For tree data on the server side, see [Server-side data—Tree data](/x/react-da
 
 ## Rendering tree data
 
-To work with client-side tree data, pass the `treeData` and `getTreeDataPath` props to the `<DataGridPro />` component.
+To work with tree data, pass the `treeData` and `getTreeDataPath` props to the `<DataGridPro />` component.
 The `getTreeDataPath` function returns an array of strings representing the path to a given row.
 
 ```tsx
@@ -35,7 +35,7 @@ Both examples that follow will render a tree that looks like this:
 //         - Karen
 ```
 
-1. Without transformation:
+**1. Without transformation:**
 
 ```tsx
 const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
@@ -57,7 +57,7 @@ const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
 />;
 ```
 
-2. With transformation:
+**2. With transformation:**
 
 ```tsx
 const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
