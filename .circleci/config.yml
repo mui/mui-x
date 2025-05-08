@@ -339,14 +339,7 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: pnpm test:argos
-  run_danger:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js
-      - run:
-          name: Run danger on PRs
-          command: pnpm danger ci --fail-on-errors
+
 workflows:
   pipeline:
     when:
@@ -374,9 +367,6 @@ workflows:
           <<: *default-context
 
       - test_regressions:
-          <<: *default-context
-
-      - run_danger:
           <<: *default-context
 
       - test_package:
