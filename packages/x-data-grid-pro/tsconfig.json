@@ -4,11 +4,10 @@
     "types": [
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
-      "chai-dom",
       "vitest/globals",
       "node"
     ],
     "skipLibCheck": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
 }

@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["@mui/material/themeCssVarsAugmentation", "chai-dom", "vitest/globals", "node"]
+    "types": ["@mui/material/themeCssVarsAugmentation", "vitest/globals", "node"]
   },
   "include": ["src/**/*"]
 }

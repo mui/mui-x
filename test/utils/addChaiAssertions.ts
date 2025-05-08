@@ -1,3 +1,5 @@
+/// <reference path="./addChaiAssertions.d.ts" />
+
 import chai from 'chai';
 
 import chaiDom from 'chai-dom';
