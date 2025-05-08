@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridColumnsManagementProps, Toolbar, ToolbarButton } from '@mui/x-data-grid';
@@ -56,7 +56,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 1' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 1' }).focus());
       expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
 
       await user.keyboard('{ArrowRight}');
@@ -71,7 +71,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 3' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 3' }).focus());
       expect(screen.getByRole('button', { name: 'Item 3' })).toHaveFocus();
 
       await user.keyboard('{ArrowLeft}');
@@ -86,7 +86,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 1' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 1' }).focus());
       await user.keyboard('{Home}');
       expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
     });
@@ -96,7 +96,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 3' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 3' }).focus());
       await user.keyboard('{End}');
       expect(screen.getByRole('button', { name: 'Item 3' })).toHaveFocus();
     });
@@ -106,7 +106,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 3' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 3' }).focus());
       await user.keyboard('{ArrowRight}');
       expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
     });
@@ -116,7 +116,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 1' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 1' }).focus());
       await user.keyboard('{ArrowLeft}');
       expect(screen.getByRole('button', { name: 'Item 3' })).toHaveFocus();
     });
@@ -126,7 +126,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 2' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 2' }).focus());
       setProps({
         slotProps: {
           toolbar: { items: ['Item 1', 'Item 3'] },
@@ -140,7 +140,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <DataGrid {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
       );
 
-      screen.getByRole('button', { name: 'Item 3' }).focus();
+      act(() => screen.getByRole('button', { name: 'Item 3' }).focus());
       setProps({
         slotProps: {
           toolbar: { items: ['Item 1', 'Item 2'] },
