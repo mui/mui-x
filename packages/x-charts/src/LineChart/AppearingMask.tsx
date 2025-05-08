@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import clsx from 'clsx';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { cleanId } from '../internals/cleanId';
 import { useChartId, useDrawingArea } from '../hooks';
@@ -44,13 +43,13 @@ const AnimatedRect = styled('rect')({
 export function AppearingMask(props: AppearingMaskProps) {
   const drawingArea = useDrawingArea();
   const chartId = useChartId();
-
   const clipId = cleanId(`${chartId}-${props.id}`);
+
   return (
     <React.Fragment>
       <clipPath id={clipId}>
         <AnimatedRect
-          className={clsx(!props.skipAnimation && appearingMaskClasses.animate)}
+          className={props.skipAnimation ? '' : appearingMaskClasses.animate}
           x={0}
           y={0}
           width={drawingArea.left + drawingArea.width + drawingArea.right}

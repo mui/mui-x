@@ -75,8 +75,9 @@ export const getPreviousNavigableItem = (
   );
   while (selectorIsItemExpanded(state, currentItemId) && lastNavigableChild != null) {
     currentItemId = lastNavigableChild;
-    lastNavigableChild = selectorItemOrderedChildrenIds(state, currentItemId).find((childId) =>
-      selectorCanItemBeFocused(state, childId),
+    lastNavigableChild = getLastNavigableItemInArray(
+      state,
+      selectorItemOrderedChildrenIds(state, currentItemId),
     );
   }
 

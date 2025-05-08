@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.2.0",
-  "description": "MUI X Telemetry",
+  "version": "8.3.0",
   "author": "MUI Team",
+  "description": "MUI X Telemetry.",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
@@ -32,7 +32,7 @@
     "directory": "packages/x-telemetry"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
     "@mui/utils": "^7.0.2",
     "ci-info": "^4.2.0",

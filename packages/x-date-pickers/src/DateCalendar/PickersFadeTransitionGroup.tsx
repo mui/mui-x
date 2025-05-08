@@ -52,13 +52,8 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
   if (reduceAnimations) {
     return children;
   }
-  const ownerState = { ...other };
-
   return (
-    <PickersFadeTransitionGroupRoot
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-    >
+    <PickersFadeTransitionGroupRoot className={clsx(classes.root, className)} ownerState={other}>
       <Fade
         appear={false}
         mountOnEnter
