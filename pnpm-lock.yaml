@@ -82,6 +82,9 @@ importers:
       '@mui/internal-babel-plugin-resolve-imports':
         specifier: 2.0.0
         version: 2.0.0(@babel/core@7.27.1)
+      '@mui/internal-bundle-size-checker':
+        specifier: github:mui/mui-public#bundle-size-checker&path:./packages/bundle-size-checker
+        version: https://codeload.github.com/mui/mui-public/tar.gz/f7753fbebeeb98f5d27128706e2a2c5d74a57219#path:./packages/bundle-size-checker(@swc/core@1.11.21)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))
       '@mui/internal-markdown':
         specifier: ^2.0.4
         version: 2.0.4
