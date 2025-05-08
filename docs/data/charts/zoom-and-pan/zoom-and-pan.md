@@ -8,7 +8,7 @@ components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider
 
 <p class="description">Enables zooming and panning on specific charts or axis.</p>
 
-Zooming is possible on the **Pro**[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') versions of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
+Zooming is possible on the Pro version of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
 
 ## Basic usage
 
