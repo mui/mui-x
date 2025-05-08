@@ -156,11 +156,11 @@ You can limit it to top-level rows with the `disableChildrenSorting` prop.
 When using `sortingMode="server"`, a child must always immediately follow its parent:
 
 ```ts
-// ✅ The row A.A is immediately after its parent
+// ✅ Row A.A immediately follows its parent
 const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
 
-// ❌ The row A.A is not immediately after its parent
-const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
+// ❌ Row X.X does not immediately follow its parent
+const invalidRows = [{ path: ['X'] }, { path: ['Y'] }, { path: ['X', 'X'] }];
 ```
 
 :::
