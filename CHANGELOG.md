@@ -100,7 +100,7 @@ Same changes as in `@mui/x-tree-view@8.3.0`.
 
 - [charts] Add population pyramid demo (#17652) @bernardobelchior
 - [charts] Fix randomised argos test (#17658) @JCQuintas
-- [docs] Make preview messaging consistent in charts @bernardobelchior 
+- [docs] Make preview messaging consistent in charts @bernardobelchior
 
 ### Core
 
