@@ -845,7 +845,7 @@ We'd like to offer a big thanks to the 21 contributors who made this release pos
 - 🌍 Improve Chinese (zh-CN), (zh-HK), (zh-TW), Czech (cs-CZ), Korean (ko-KR) and Slovak (sk-Sk) locales on the Data Grid
 - 🌍 Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales on the Pickers
 
-## Breaking changes
+### Breaking changes
 
 - ℹ️ The peer dependency on `@mui/material` has been updated to accept only v7.
   This has been done to increase the adoption rate of ESM.
@@ -858,7 +858,7 @@ Following are all team members who have contributed to this release:
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
-## Alpha release highlights
+### Alpha release highlights
 
 Below are the highlights of the alpha releases leading up to this beta release:
 
