@@ -131,7 +131,7 @@ function GridTreeDataGroupingCellIcon(
   ) : null;
 }
 
-export function NestedPaginationGroupingCell(
+export default function NestedPaginationGroupingCell(
   props: GridTreeDataGroupingCellProps & {
     setExpandedRows: React.Dispatch<React.SetStateAction<GridValidRowModel[]>>;
     nestedLevelRef: React.RefObject<number>;

@@ -5,7 +5,7 @@ import {
   type GridDataSource,
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { useNestedPagination } from './useNestedPagination';
+import useNestedPagination from './useNestedPagination';
 
 const pageSizeOptions = [5, 10, 50];
 const dataSetOptions = {

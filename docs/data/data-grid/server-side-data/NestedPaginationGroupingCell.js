@@ -101,7 +101,7 @@ function GridTreeDataGroupingCellIcon(props) {
   ) : null;
 }
 
-export function NestedPaginationGroupingCell(props) {
+export default function NestedPaginationGroupingCell(props) {
   const {
     id,
     field,

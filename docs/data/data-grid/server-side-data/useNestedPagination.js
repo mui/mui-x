@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { vars } from '@mui/x-data-grid/internals';
-import { NestedPaginationGroupingCell } from './NestedPaginationGroupingCell';
+import NestedPaginationGroupingCell from './NestedPaginationGroupingCell';
 
-export function useNestedPagination(initialPaginationModel) {
+export default function useNestedPagination(initialPaginationModel) {
   const [expandedRows, setExpandedRows] = React.useState([]);
   const [paginationModels, setPaginationModels] = React.useState({
     0: initialPaginationModel,
