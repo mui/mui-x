@@ -24,7 +24,7 @@ describe('ScatterChartPro', () => {
               id: 'x',
               data: xData,
               zoom: { filterMode: 'discard' },
-              valueFormatter: (v) => v.toLocaleString('en-US'),
+              valueFormatter: (v: number) => v.toLocaleString('en-US'),
             },
           ]}
           initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
@@ -39,6 +39,32 @@ describe('ScatterChartPro', () => {
       );
 
       await findByText('60', { ignore: 'span' });
+
+      cleanup();
+    },
+    options,
+  );
+
+  bench(
+    'ScatterChartPro with big data amount and zoomed in',
+    async () => {
+      const { findByText } = render(
+        <ScatterChartPro
+          xAxis={[
+            { id: 'x', data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US') },
+          ]}
+          yAxis={[{ id: 'y' }]}
+          series={[{ data }]}
+          width={500}
+          height={300}
+          initialZoom={[
+            { axisId: 'x', start: 50, end: 50.00001 },
+            { axisId: 'y', start: 50, end: 50.00001 },
+          ]}
+        />,
+      );
+
+      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
 
       cleanup();
     },
