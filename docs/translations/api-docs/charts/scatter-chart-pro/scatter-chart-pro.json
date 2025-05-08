@@ -59,6 +59,7 @@
     "series": {
       "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series-type/'>ScatterSeriesType</a> objects."
     },
+    "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },

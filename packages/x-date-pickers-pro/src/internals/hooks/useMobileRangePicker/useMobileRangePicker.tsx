@@ -63,7 +63,9 @@ export const useMobileRangePicker = <
     viewContainerRole: 'dialog',
     localeText,
     getStepNavigation,
-    onPopperExited: useEventCallback(() => rangePositionResponse.setRangePosition('start')),
+    onPopperExited: useEventCallback(() =>
+      rangePositionResponse.setRangePosition(props.defaultRangePosition ?? 'start'),
+    ),
   });
 
   const labelId = providerProps.privateContextValue.labelId;

@@ -38,7 +38,7 @@
     "directory": "packages/x-charts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@mui/utils": "^7.0.2",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
