@@ -546,7 +546,7 @@ const pages: MuiPage[] = [
                 title: 'Export',
                 plan: 'pro',
               },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar 🧪' },
+              { pathname: '/x/react-charts/toolbar', title: 'Toolbar', unstable: true },
             ],
           },
           {
