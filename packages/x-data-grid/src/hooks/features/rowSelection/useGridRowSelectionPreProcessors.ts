@@ -41,9 +41,6 @@ export const useGridRowSelectionPreProcessors = (
 
       const shouldHaveSelectionColumn = props.checkboxSelection;
       const hasSelectionColumn = columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] != null;
-      const hasCustomSelectionColumn = props.columns.some(
-        (col) => col.field === GRID_CHECKBOX_SELECTION_FIELD,
-      );
 
       if (shouldHaveSelectionColumn && !hasSelectionColumn) {
         columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] = selectionColumn;
@@ -58,8 +55,8 @@ export const useGridRowSelectionPreProcessors = (
           ...selectionColumn,
           ...columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD],
         };
-        // If it is not a custom selection column, move it to the beginning of the column order
-        if (!hasCustomSelectionColumn) {
+        // If the column is not in the columns array (not a custom selection column), move it to the beginning of the column order
+        if (!props.columns.some((col) => col.field === GRID_CHECKBOX_SELECTION_FIELD)) {
           columnsState.orderedFields = [
             GRID_CHECKBOX_SELECTION_FIELD,
             ...columnsState.orderedFields.filter(
