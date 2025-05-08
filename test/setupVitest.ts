@@ -1,4 +1,4 @@
-import { beforeAll, afterAll } from 'vitest';
+import { beforeAll } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
@@ -52,13 +52,6 @@ configure({
 });
 
 failOnConsole();
-
-if (!globalThis.before) {
-  (globalThis as any).before = beforeAll;
-}
-if (!globalThis.after) {
-  (globalThis as any).after = afterAll;
-}
 
 const isJsdom = typeof window !== 'undefined' && window.navigator.userAgent.includes('jsdom');
 

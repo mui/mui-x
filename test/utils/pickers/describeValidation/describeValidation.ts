@@ -22,7 +22,7 @@ function innerDescribeValidation(
 ) {
   const { after: runAfterHook = () => {}, views } = getOptions();
 
-  after(runAfterHook);
+  afterAll(runAfterHook);
 
   function getTestOptions() {
     return {
