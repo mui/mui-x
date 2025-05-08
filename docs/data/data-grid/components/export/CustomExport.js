@@ -3,11 +3,10 @@ import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DownloadIcon from '@mui/icons-material/Download';
-
 // Define the data structure
 
 // Mock API function to simulate server-side data fetching
-async function fetchUsers(page, pageSize) {
+const fetchUsers = async (page, pageSize) => {
   // Simulate API delay
   await new Promise((resolve) => {
     setTimeout(resolve, 500);
@@ -26,10 +25,10 @@ async function fetchUsers(page, pageSize) {
   }));
 
   return { rows, rowCount: total };
-}
+};
 
 // Mock API function to fetch all data for export
-async function fetchAllUsers() {
+const fetchAllUsers = async () => {
   // Simulate API delay
   await new Promise((resolve) => {
     setTimeout(resolve, 1000);
@@ -42,16 +41,9 @@ async function fetchAllUsers() {
     email: `user${index + 1}@example.com`,
     role: index % 2 === 0 ? 'Admin' : 'User',
   }));
-}
+};
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  { field: 'name', headerName: 'Name', width: 200 },
-  { field: 'email', headerName: 'Email', width: 250 },
-  { field: 'role', headerName: 'Role', width: 130 },
-];
-
-export default function CustomExport() {
+function CustomExport() {
   const [loading, setLoading] = React.useState(false);
   const [rows, setRows] = React.useState([]);
   const [rowCount, setRowCount] = React.useState(0);
@@ -61,6 +53,13 @@ export default function CustomExport() {
   });
 
   const apiRef = useGridApiRef();
+
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'email', headerName: 'Email', width: 250 },
+    { field: 'role', headerName: 'Role', width: 130 },
+  ];
 
   const handleExport = async () => {
     setLoading(true);
@@ -96,16 +95,17 @@ export default function CustomExport() {
 
   return (
     <div style={{ height: 520, width: '100%' }}>
-      <Button
-        variant="contained"
-        startIcon={<DownloadIcon />}
-        onClick={handleExport}
-        disabled={loading}
-        sx={{ mb: 1 }}
-      >
-        Export to Excel
-      </Button>
-      <Box sx={{ height: 480 }}>
+      <Box gap={1} mb={1} flexWrap="wrap">
+        <Button
+          variant="contained"
+          startIcon={<DownloadIcon />}
+          onClick={handleExport}
+          disabled={loading}
+        >
+          Export to Excel
+        </Button>
+      </Box>
+      <Box style={{ height: 480, width: '100%' }}>
         <DataGridPremium
           apiRef={apiRef}
           rows={rows}
@@ -122,3 +122,5 @@ export default function CustomExport() {
     </div>
   );
 }
+
+export default CustomExport;
