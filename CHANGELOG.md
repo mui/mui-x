@@ -102,7 +102,6 @@ Same changes as in `@mui/x-tree-view@8.3.0`.
 - [charts] Fix randomised argos test (#17658) @JCQuintas
 - [docs] Make preview messaging consistent in charts @bernardobelchior 
 
-
 ### Core
 
 - [code-infra] Avoid `node` types in the built packages (#17533) @LukasTy
