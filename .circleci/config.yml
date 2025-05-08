@@ -294,6 +294,38 @@ jobs:
           command: pnpm test:e2e-website
           environment:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
+
+  test_package:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js:
+          react-version: << parameters.react-version >>
+
+      - run:
+          name: prepare danger on PRs
+          command: pnpm danger ci
+          environment:
+            DANGER_COMMAND: prepareBundleSizeReport
+
+      - run:
+          name: Build packages
+          command: pnpm release:build
+
+      - run:
+          name: create and upload a size snapshot
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_ARTIFACTS
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_ARTIFACTS
+            export AWS_REGION=$AWS_REGION_ARTIFACTS
+            pnpm size:snapshot
+
+      - run:
+          name: Run danger on PRs
+          command: pnpm danger ci --fail-on-errors
+          environment:
+            DANGER_COMMAND: reportBundleSize
+
   test_regressions:
     <<: *default-job
     steps:
@@ -345,6 +377,9 @@ workflows:
           <<: *default-context
 
       - run_danger:
+          <<: *default-context
+
+      - test_package:
           <<: *default-context
 
   e2e-website:

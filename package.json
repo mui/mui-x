@@ -30,7 +30,7 @@
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "prettier:check": "prettier --check . --ignore-path .eslintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
-    "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
+    "size:snapshot": "pnpm -F ./bundle-size check",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
     "tc": "node test/cli.js",
     "test": "node scripts/test.mjs",
