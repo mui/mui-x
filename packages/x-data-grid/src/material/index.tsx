@@ -245,7 +245,10 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         {...other}
         {...material}
         className={clsx(className, material?.className)}
-        inputProps={slotProps?.htmlInput}
+        slotProps={{
+          input: slotProps?.htmlInput,
+          ...slotProps,
+        }}
         ref={handleRef}
         touchRippleRef={rippleRef}
       />
@@ -259,7 +262,10 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
         <Checkbox
           {...other}
           {...material}
-          inputProps={slotProps?.htmlInput}
+          slotProps={{
+            input: slotProps?.htmlInput,
+            ...slotProps,
+          }}
           ref={handleRef}
           touchRippleRef={rippleRef}
         />
@@ -340,11 +346,14 @@ function BaseTextField(props: P['baseTextField']) {
       variant="outlined"
       {...rest}
       {...material}
-      inputProps={slotProps?.htmlInput}
-      InputProps={transformInputProps(slotProps?.input as any)}
-      InputLabelProps={{
-        shrink: true,
-        ...(slotProps as any)?.inputLabel,
+      slotProps={{
+        htmlInput: slotProps?.htmlInput,
+        input: transformInputProps(slotProps?.input as any),
+        inputLabel: {
+          shrink: true,
+          ...(slotProps as any)?.inputLabel,
+        },
+        ...slotProps,
       }}
     />
   );
@@ -399,11 +408,15 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
             {...inputRest}
             label={label}
             placeholder={placeholder}
-            inputProps={inputProps}
-            InputProps={transformInputProps(InputProps as any, false)}
-            InputLabelProps={{
-              shrink: true,
-              ...InputLabelProps,
+            slotProps={{
+              htmlInput: inputProps,
+              input: transformInputProps(InputProps as any, false),
+              inputLabel: {
+                shrink: true,
+                ...InputLabelProps,
+              },
+              ...slotProps?.textField?.slotProps,
+              ...rootProps.slotProps?.baseTextField?.slotProps,
             }}
             {...slotProps?.textField}
             {...rootProps.slotProps?.baseTextField}
