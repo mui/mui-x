@@ -79,9 +79,8 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
         it('should apply disablePast', () => {
           const { render } = getOptions();
 
-          let now;
+          const now = adapterToUse.date();
           function WithFakeTimer(props: any) {
-            now = adapterToUse.date();
             const { referenceDate, ...otherProps } = props;
             return <ElementToTest value={[now, null]} {...otherProps} />;
           }
@@ -114,9 +113,8 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
         it('should apply disableFuture', () => {
           const { render } = getOptions();
 
-          let now;
+          const now = adapterToUse.date();
           function WithFakeTimer(props: any) {
-            now = adapterToUse.date();
             const { referenceDate, ...otherProps } = props;
             return <ElementToTest value={[now, null]} {...otherProps} />;
           }

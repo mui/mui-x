@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": [
       "@mui/internal-test-utils/initMatchers",
@@ -9,9 +9,8 @@
       "dayjs/plugin/utc.d.ts",
       "vitest/globals",
       "moment-timezone",
-      "vite/client"
+      "mocha"
     ],
     "skipLibCheck": true
-  },
-  "include": ["utils/**/*"]
+  }
 }

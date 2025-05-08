@@ -148,9 +148,8 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       });
 
       it('should apply disablePast', () => {
-        let now;
+        const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
-          now = adapterToUse.date();
           return <ElementToTest value={now} {...props} />;
         }
 
@@ -178,9 +177,8 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     testSkipIf(!withDate)('should apply disableFuture', () => {
-      let now;
+      const now = adapterToUse.date();
       function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
         return <ElementToTest value={now} {...props} />;
       }
 

@@ -200,19 +200,18 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       it('should apply disablePast', () => {
         const onErrorMock = spy();
-        let now;
+        const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
-          now = adapterToUse.date();
           return <ElementToTest value={[now, now]} {...props} />;
         }
 
         const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
 
-        let past: null | typeof now = null;
+        let past: null | ReturnType<typeof adapterToUse.date> = null;
         if (withDate) {
-          past = adapterToUse.addDays(now, -1);
-        } else if (adapterToUse.isSameDay(adapterToUse.addHours(now, -1), now)) {
-          past = adapterToUse.addHours(now, -1);
+          past = adapterToUse.addDays(now!, -1);
+        } else if (adapterToUse.isSameDay(adapterToUse.addHours(now!, -1), now!)) {
+          past = adapterToUse.addHours(now!, -1);
         }
 
         if (past === null) {
@@ -239,15 +238,14 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
     it('should apply disableFuture', () => {
       const onErrorMock = spy();
-      let now;
+      const now = adapterToUse.date();
       function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
         return <ElementToTest value={[now, now]} {...props} />;
       }
 
       const { setProps } = render(<WithFakeTimer disableFuture onError={onErrorMock} />);
 
-      let future: null | typeof now = null;
+      let future: null | ReturnType<typeof adapterToUse.date> = null;
 
       if (withDate) {
         future = adapterToUse.addDays(now, 1);
