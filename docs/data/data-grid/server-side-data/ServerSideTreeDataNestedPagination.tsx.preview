@@ -1,0 +1,12 @@
+<DataGridPro
+  {...props}
+  columns={columns}
+  dataSource={dataSource}
+  dataSourceCache={null}
+  treeData
+  apiRef={apiRef}
+  pagination
+  pageSizeOptions={pageSizeOptions}
+  initialState={initialState}
+  showToolbar
+/>
