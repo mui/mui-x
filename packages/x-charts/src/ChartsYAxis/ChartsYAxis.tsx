@@ -150,6 +150,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     sx,
     offset,
     width: axisWidth,
+    disableTruncation,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -259,9 +260,10 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
       TICK_LABEL_GAP,
   );
 
-  const tickLabels = isHydrated
-    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
-    : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
+  const tickLabels =
+    !disableTruncation && isHydrated
+      ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
+      : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
 
   return (
     <YAxisRoot
