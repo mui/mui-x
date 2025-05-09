@@ -1,6 +1,5 @@
 {
   "name": "@mui/x-scheduler",
-  "version": "0.0.1-alpha.0",
   "private": true,
   "description": "The community edition of the Scheduler component (MUI X).",
   "author": "MUI Team",
@@ -9,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
-  "homepage": "https://mui.com/x/react-date-scheduler/",
+  "homepage": "https://mui.com/x/react-scheduler/",
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/mui-org"

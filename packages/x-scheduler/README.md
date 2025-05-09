@@ -5,7 +5,7 @@ It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core li
 
 ## Installation
 
-⚠️ This package is not published on NPM yet and its source are not stable enough to be used for now.
+⚠️ This package is not published on npm yet, and its source is not stable enough to be used for now.
 
 ## Documentation
 

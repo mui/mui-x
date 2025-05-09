@@ -53,8 +53,15 @@ export interface FunnelSeriesType
    */
   layout?: 'horizontal' | 'vertical';
   /**
-   * The type of curve to use for the line. Read more about curves at
-   * [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * The type of curve to use for the line.
+   *
+   * - `bump`: A curve that creates a smooth transition between points, with a bump in the middle.
+   * - `linear`: A straight line between points.
+   * - `step`: A step line that creates a staircase effect.
+   * - `pyramid`: A pyramid shape that connects the points.
+   * - `step-pyramid`: A step line that creates a staircase effect, with a pyramid shape.
+   *
+   * Read more about curves at [curve interpolation](https://mui.com/x/react-charts/funnel/#curve-interpolation).
    * @default 'linear'
    */
   curve?: FunnelCurveType;
