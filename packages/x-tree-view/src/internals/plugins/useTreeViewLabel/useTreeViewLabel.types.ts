@@ -12,9 +12,9 @@ export interface UseTreeViewLabelPublicAPI {
    */
   updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
   /**
-   * Updates which item is currently being edited.
-   * @param {TreeViewItemId | null} itemId The id of the item to set as edited, or `null` to stop editing.
-   * @returns {void}.
+   * Used to set which item is currently being edited.
+   * Pass `null` to exit editing mode.
+   * @param {TreeViewItemId | null} itemId The id of the item to edit, or `null` to cancel editing.
    */
   setEditedItem: (itemId: TreeViewItemId | null) => void;
 }
