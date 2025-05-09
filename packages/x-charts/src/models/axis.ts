@@ -11,6 +11,7 @@ import type {
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -457,7 +458,7 @@ export type ComputedAxis<
   S extends ScaleName = ScaleName,
   V = any,
   AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = MakeRequired<Omit<AxisConfig<S, V, AxisProps>, 'scaleType'>, 'offset'> &
+> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**
@@ -528,17 +529,28 @@ export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'line
   : never;
 
 /**
+ * The axis configuration with missing values filled with default values.
+ */
+export type DefaultedAxis<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = AxisConfig<S, V, AxisProps> & {
+  zoom: DefaultizedZoomOptions | undefined;
+};
+/**
  * The x-axis configuration with missing values filled with default values.
  */
-export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = AxisConfig<
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
   S,
   V,
   ChartsXAxisProps
 >;
+
 /**
  * The y-axis configuration with missing values filled with default values.
  */
-export type DefaultedYAxis<S extends ScaleName = ScaleName, V = any> = AxisConfig<
+export type DefaultedYAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
   S,
   V,
   ChartsYAxisProps

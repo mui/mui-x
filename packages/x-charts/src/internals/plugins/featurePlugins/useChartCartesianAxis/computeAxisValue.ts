@@ -7,10 +7,13 @@ import {
   isBandScaleConfig,
   isPointScaleConfig,
   AxisId,
+  DefaultedXAxis,
+  DefaultedYAxis,
+  DefaultedAxis,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber } from '../../../../hooks/useTicks';
+import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
@@ -65,13 +68,13 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
 
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    axis?: DefaultedYAxis[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+    axis?: DefaultedXAxis[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsXAxisProps>;
@@ -85,7 +88,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomOptions,
   getFilters,
 }: ComputeCommonParams<T> & {
-  axis?: AxisConfig[];
+  axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
 }) {
   if (allAxis === undefined) {
@@ -104,7 +107,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
@@ -197,7 +200,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 

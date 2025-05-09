@@ -60,7 +60,6 @@ export default function LazyLoadingDemo() {
           <ThemeProvider theme={theme}>
             <RichTreeViewPro
               items={initialItems}
-              experimentalFeatures={{ lazyLoading: true }}
               dataSource={{
                 getChildrenCount: (item) => item?.childrenCount as number,
                 getTreeItems: fetchData,
@@ -71,7 +70,7 @@ export default function LazyLoadingDemo() {
 
         <HighlightedCode
           code={
-            '\n<RichTreeViewPro\n  items={[]}\n  experimentalFeatures={{ lazyLoading: true }}\n  dataSource={{\n    getChildrenCount: (item) => item?.childrenCount as number,\n    getTreeItems: fetchData,\n  }}\n/>'
+            '\n<RichTreeViewPro\n  items={[]}\n  dataSource={{\n    getChildrenCount: (item) => item?.childrenCount as number,\n    getTreeItems: fetchData,\n  }}\n/>'
           }
           language="js"
           sx={{ overflowX: 'hidden' }}

@@ -8,7 +8,7 @@ export interface UseTreeViewIdParameters {
   id?: string;
 }
 
-export type UseTreeViewIdDefaultizedParameters = UseTreeViewIdParameters;
+export type UseTreeViewIdParametersWithDefaults = UseTreeViewIdParameters;
 
 export interface UseTreeViewIdState {
   id: {
@@ -19,6 +19,6 @@ export interface UseTreeViewIdState {
 
 export type UseTreeViewIdSignature = TreeViewPluginSignature<{
   params: UseTreeViewIdParameters;
-  defaultizedParams: UseTreeViewIdDefaultizedParameters;
+  paramsWithDefaults: UseTreeViewIdParametersWithDefaults;
   state: UseTreeViewIdState;
 }>;

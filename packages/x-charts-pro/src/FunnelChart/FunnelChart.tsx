@@ -7,7 +7,6 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -77,9 +76,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     funnelPlotProps,
     overlayProps,
     legendProps,
-    clipPathGroupProps,
     chartsAxisProps,
-    clipPathProps,
     chartsWrapperProps,
     axisHighlightProps,
     children,
@@ -96,14 +93,11 @@ const FunnelChart = React.forwardRef(function FunnelChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
-          <g {...clipPathGroupProps}>
-            <FunnelPlot {...funnelPlotProps} />
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-          </g>
+          <FunnelPlot {...funnelPlotProps} />
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
           {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
       </ChartsWrapper>
@@ -241,6 +235,11 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  /**
+   * The gap, in pixels, between funnel sections.
+   * @default 0
+   */
+  gap: PropTypes.number,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

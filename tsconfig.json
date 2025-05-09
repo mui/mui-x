@@ -8,6 +8,7 @@
     "strict": true,
     "baseUrl": "./",
     "allowJs": true,
+    "allowImportingTsExtensions": true,
     "paths": {
       "@mui/x-data-grid": ["./packages/x-data-grid/src"],
       "@mui/x-data-grid/*": ["./packages/x-data-grid/src/*"],
@@ -27,6 +28,9 @@
       "@mui/x-charts-pro/*": ["./packages/x-charts-pro/src/*"],
       "@mui/x-charts-vendor": ["./packages/x-charts-vendor"],
       "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/*"],
+      // There is no root import on this package
+      // "@mui/x-scheduler": ["./packages/x-scheduler/src"],
+      "@mui/x-scheduler/*": ["./packages/x-scheduler/src/*"],
       "@mui/x-tree-view": ["./packages/x-tree-view/src"],
       "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
       "@mui/x-tree-view-pro": ["./packages/x-tree-view-pro/src"],
@@ -49,7 +53,8 @@
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
-    }
+    },
+    "types": ["@vitest/browser/providers/playwright"]
   },
   "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }

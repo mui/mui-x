@@ -18,7 +18,7 @@ export interface PickersInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
 }
 
-interface PickerInputOwnerState extends PickerTextFieldOwnerState {
+export interface PickerInputOwnerState extends PickerTextFieldOwnerState {
   /**
    * `true` if the input has an underline, `false` otherwise.
    */
