@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "8.0.0",
-  "description": "Vendored dependencies for MUI X Charts",
+  "version": "8.3.0",
   "author": "MUI Team",
+  "description": "Vendored dependencies for MUI X Charts.",
   "keywords": [
     "data visualization",
     "React",
@@ -24,7 +24,7 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@types/d3-color": "^3.1.3",
     "@types/d3-delaunay": "^6.0.4",
     "@types/d3-interpolate": "^3.0.4",
@@ -43,7 +43,7 @@
     "robust-predicates": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.26.10",
+    "@babel/plugin-transform-runtime": "^7.27.1",
     "@types/d3-array": "^3.2.1",
     "@types/d3-format": "^3.0.4",
     "@types/d3-path": "^3.1.1",

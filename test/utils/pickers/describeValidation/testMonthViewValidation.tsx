@@ -3,6 +3,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 import { describeSkipIf } from 'test/utils/skipIf';
+import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
@@ -37,68 +38,79 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       expect(screen.getByText('May')).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', () => {
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
-      }
-      const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
+    describe('with fake timers', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+      beforeEach(() => {
+        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+      });
+      afterEach(() => {
+        timer?.restore();
+      });
 
-      const nextMonth = adapterToUse.addMonths(now, 1);
-      const prevMonth = adapterToUse.addMonths(now, -1);
+      it('should apply disablePast', () => {
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={now} {...props} />;
+        }
+        const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
-      expect(screen.getByText(adapterToUse.format(now, 'monthShort'))).not.to.have.attribute(
-        'disabled',
-      );
+        const nextMonth = adapterToUse.addMonths(now, 1);
+        const prevMonth = adapterToUse.addMonths(now, -1);
 
-      if (!adapterToUse.isSameYear(now, nextMonth)) {
-        setProps({ value: nextMonth });
-      }
-      expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).not.to.have.attribute(
-        'disabled',
-      );
+        expect(screen.getByText(adapterToUse.format(now, 'monthShort'))).not.to.have.attribute(
+          'disabled',
+        );
 
-      if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
-        setProps({ value: prevMonth });
-      }
-      expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).to.have.attribute(
-        'disabled',
-      );
+        if (!adapterToUse.isSameYear(now, nextMonth)) {
+          setProps({ value: nextMonth });
+        }
+        expect(
+          screen.getByText(adapterToUse.format(nextMonth, 'monthShort')),
+        ).not.to.have.attribute('disabled');
 
-      // TODO: define what appends when value is `null`
-    });
+        if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
+          setProps({ value: prevMonth });
+        }
+        expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).to.have.attribute(
+          'disabled',
+        );
 
-    it('should apply disableFuture', () => {
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
-      }
-      const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
+        // TODO: define what appends when value is `null`
+      });
 
-      const nextMonth = adapterToUse.addMonths(now, 1);
-      const prevMonth = adapterToUse.addMonths(now, -1);
+      it('should apply disableFuture', () => {
+        let now;
+        function WithFakeTimer(props: any) {
+          now = adapterToUse.date();
+          return <ElementToTest value={now} {...props} />;
+        }
+        const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
-      expect(screen.getByText(adapterToUse.format(now, 'monthShort'))).not.to.have.attribute(
-        'disabled',
-      );
+        const nextMonth = adapterToUse.addMonths(now, 1);
+        const prevMonth = adapterToUse.addMonths(now, -1);
 
-      if (!adapterToUse.isSameYear(now, nextMonth)) {
-        setProps({ value: nextMonth });
-      }
-      expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).to.have.attribute(
-        'disabled',
-      );
+        expect(screen.getByText(adapterToUse.format(now, 'monthShort'))).not.to.have.attribute(
+          'disabled',
+        );
 
-      if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
-        setProps({ value: prevMonth });
-      }
-      expect(screen.getByText(adapterToUse.format(prevMonth, 'monthShort'))).not.to.have.attribute(
-        'disabled',
-      );
+        if (!adapterToUse.isSameYear(now, nextMonth)) {
+          setProps({ value: nextMonth });
+        }
+        expect(screen.getByText(adapterToUse.format(nextMonth, 'monthShort'))).to.have.attribute(
+          'disabled',
+        );
 
-      // TODO: define what appends when value is `null`
+        if (!adapterToUse.isSameYear(prevMonth, nextMonth)) {
+          setProps({ value: prevMonth });
+        }
+        expect(
+          screen.getByText(adapterToUse.format(prevMonth, 'monthShort')),
+        ).not.to.have.attribute('disabled');
+
+        // TODO: define what appends when value is `null`
+      });
     });
 
     it('should apply minDate', () => {

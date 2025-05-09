@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 
 # Charts - Gauge
 
-<p class="description">Gauge chart let the user evaluate metrics.</p>
+<p class="description">Gauge let the user evaluate metrics.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
