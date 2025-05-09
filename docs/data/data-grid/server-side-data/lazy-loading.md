@@ -6,6 +6,10 @@ title: Data Grid - Server-side lazy loading
 
 <p class="description">Learn how to implement lazy-loading rows with a server-side data source.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 Lazy loading changes the way pagination works by removing page controls and loading data dynamically (in a single list) as the user scrolls through the grid.
 
 You can enable it with the `lazyLoading` prop paired with the `dataSource` prop.

@@ -6,6 +6,10 @@ title: Data Grid - Cell selection
 
 <p class="description">Let users select individual cells or a range of cells.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 ## Enabling cell selection
 
 By default, the Data Grid lets users select individual rows.

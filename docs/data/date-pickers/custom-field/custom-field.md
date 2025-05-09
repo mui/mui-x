@@ -24,6 +24,10 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 ### Change the separator of range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 You can use the `dateSeparator` prop to change the separator rendered between the start and end dates:
 
 {{"demo": "RangeFieldDateSeparator.js"}}
@@ -36,6 +40,10 @@ Setting `formatDensity` to `"spacious"` adds space before and after each `/`, `-
 {{"demo": "FieldFormatDensity.js"}}
 
 ## Multi input range field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
 
 ### Usage inside a range picker
 

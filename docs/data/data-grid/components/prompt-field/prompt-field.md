@@ -10,6 +10,10 @@ githubLabel: 'component: data grid'
 
 <p class="description">Provide users with a prompt field to interact with the AI assistant.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 ## Basic usage
 
 The demo below shows how to add a prompt field to a custom toolbar.

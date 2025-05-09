@@ -12,6 +12,10 @@ To unselect a row, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</k
 
 ## Multiple row selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 On the Data Grid Pro and Data Grid Premium components, you can select multiple rows in two ways:
 
 - To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
@@ -72,6 +76,10 @@ Otherwise, the Data Grid might remove your column.
 :::
 
 ### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
 
 By default, when you click the "Select All" checkbox, all rows in the Data Grid are selected.
 If you want to change this behavior and only select the rows that are currently visible on the page, you can use the `checkboxSelectionVisibleOnly` prop.

@@ -6,6 +6,10 @@ title: Data Grid - Server-side tree data
 
 <p class="description">Tree data lazy-loading with server-side data source.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
 :::info

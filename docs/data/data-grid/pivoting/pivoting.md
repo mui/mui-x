@@ -6,6 +6,10 @@ title: Data Grid - Pivoting
 
 <p class="description">Rearrange rows and columns to view data from multiple perspectives.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 The Data Grid Premium's pivoting feature lets users transform the data in their grid by reorganizing rows and columns, creating dynamic cross-tabulations of data.
 This makes it possible to analyze data from different angles and gain insights that would be difficult to see in the default grid view.
 

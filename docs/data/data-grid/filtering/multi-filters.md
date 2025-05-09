@@ -6,6 +6,10 @@ title: Data Grid - Multi filters
 
 <p class="description">Apply multiple filters at the same time.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 Multi filters allow filtering rows by multiple columns with multiple criteria.
 To add more filters, use the `Add Filter` button on the filter panel.
 

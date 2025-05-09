@@ -6,6 +6,10 @@ title: Data Grid - Row grouping
 
 <p class="description">Group rows together based on column values in the Data Grid.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 The Data Grid Premium provides a row grouping feature to create subsets of rows based on repeated column values or custom functions.
 
 For example, in the demo below, movies are grouped based on their respective values in the **Company** column—try clicking the **>** on the left side of a row group to expand it:

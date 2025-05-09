@@ -8,6 +8,10 @@ components: Heatmap, HeatmapPlot, HeatmapTooltip
 
 <p class="description">Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 ## Basics
 
 Heatmap charts series must contain a `data` property containing an array of 3-tuples.

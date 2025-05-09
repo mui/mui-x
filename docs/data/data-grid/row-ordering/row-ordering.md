@@ -6,6 +6,10 @@ title: Data Grid - Row ordering
 
 <p class="description">Drag and drop your rows to reorder them.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 Row reordering lets users rearrange rows by dragging the special reordering cell.
 
 By default, row reordering is disabled.

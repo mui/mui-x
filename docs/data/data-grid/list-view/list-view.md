@@ -6,6 +6,10 @@ title: Data Grid - List view
 
 <p class="description">Display data in a single-column list view. Can be used to present a more compact grid on smaller screens and mobile devices.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 List view can be enabled by providing the `listView` prop.
 
 Unlike the default grid view, the list view makes no assumptions on how data is presented to end users.

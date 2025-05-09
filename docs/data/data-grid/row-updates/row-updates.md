@@ -39,6 +39,10 @@ Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/
 
 ## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 :::warning
 This feature is deprecated, use the [Server-side data—Infinite loading](/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading) instead.
 :::
@@ -55,6 +59,10 @@ Otherwise, the sorting and filtering will only be applied to the subset of rows 
 :::
 
 ## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
 
 :::warning
 This feature is deprecated, use the [Server-side data—Viewport loading](/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading) instead.
@@ -88,6 +96,10 @@ You can find out more information about how to do that on the [server-side filte
 :::
 
 ## High frequency [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
 
 Whenever the rows are updated, the Data Grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the Data Grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
 

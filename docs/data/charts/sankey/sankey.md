@@ -7,6 +7,10 @@ productId: x-charts
 
 <p class="description">Sankey charts are great for visualizing flows between different elements.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 :::warning
 The Sankey Chart component isn't available yet, but you can upvote [**this GitHub issue**](https://github.com/mui/mui-x/issues/7930) to see it arrive sooner.
 

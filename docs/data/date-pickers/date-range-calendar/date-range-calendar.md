@@ -10,6 +10,10 @@ packageName: '@mui/x-date-pickers-pro'
 
 <p class="description">The Date Range Calendar lets the user select a range of dates without any input or popper / modal.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 ## Basic usage
 
 {{"demo": "BasicDateRangeCalendar.js"}}

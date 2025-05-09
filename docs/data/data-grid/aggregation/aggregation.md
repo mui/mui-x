@@ -6,6 +6,10 @@ title: Data Grid - Aggregation
 
 <p class="description">Add aggregation functions to the Data Grid to let users combine row values.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 The Data Grid Premium provides tools to give end users the ability to aggregate and compare row values.
 It includes [built-in functions](#built-in-functions) to cover common use cases such as sum, average, minimum, and maximum, as well as the means to [create custom functions](#creating-custom-functions) for all other needs.
 

@@ -5,7 +5,11 @@ packageName: '@mui/x-telemetry'
 
 # MUI X Telemetry guide [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walk you through how to opt-in, opt-out, and configure telemetry.</p>
+<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walk you through how to opt in, opt out, and configure telemetry.</p>
+
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
 
 ## Why is Telemetry collected?
 
