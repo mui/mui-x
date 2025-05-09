@@ -1,14 +1,19 @@
 'use client';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 // eslint-disable-next-line no-restricted-imports
 import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
 import { CustomStyleHookMapping } from '@mui/x-date-pickers/internals/base/base-utils/getStyleHookProps';
 // eslint-disable-next-line no-restricted-imports
 import { useRenderElement } from '@mui/x-date-pickers/internals/base/base-utils/useRenderElement';
-import { useRangeCalendarMonthCell } from './useRangeCalendarMonthCell';
-import { useRangeCalendarMonthCellWrapper } from './useRangeCalendarMonthCellWrapper';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarMonthCell } from '@mui/x-date-pickers/internals/base/utils/base-calendar/month-cell/useBaseCalendarMonthCell';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarMonthCellWrapper } from '@mui/x-date-pickers/internals/base/utils/base-calendar/month-cell/useBaseCalendarMonthCellWrapper';
 import { RangeCellState, rangeCellStyleHookMapping, useRangeCellState } from '../utils/rangeCell';
+import { useRangeCell } from '../utils/useRangeCell';
+import { useRangeCellWrapper } from '../utils/useRangeCellWrapper';
 
 const customStyleHookMapping: CustomStyleHookMapping<RangeCalendarMonthCell.State> = {
   ...rangeCellStyleHookMapping,
@@ -19,14 +24,15 @@ const InnerRangeCalendarMonthCell = React.forwardRef(function InnerRangeCalendar
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, format, ctx, ...elementProps } = componentProps;
-  const { getMonthCellProps } = useRangeCalendarMonthCell({ value, format, ctx });
 
+  const { props } = useBaseCalendarMonthCell({ value, format, ctx });
+  const rangeCellProps = useRangeCell({ ctx, value, section: 'month' });
   const state: RangeCalendarMonthCell.State = useRangeCellState(ctx);
 
   const renderElement = useRenderElement('button', componentProps, {
     state,
     ref: forwardedRef,
-    props: [getMonthCellProps, elementProps],
+    props: [props, rangeCellProps, elementProps],
     customStyleHookMapping,
   });
 
@@ -39,7 +45,23 @@ const RangeCalendarMonthCell = React.forwardRef(function RangeCalendarMonthCell(
   props: RangeCalendarMonthCell.Props,
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
-  const { ref, ctx } = useRangeCalendarMonthCellWrapper({ value: props.value, forwardedRef });
+  const { ref: baseRef, ctx: baseCtx } = useBaseCalendarMonthCellWrapper({
+    value: props.value,
+    forwardedRef,
+  });
+  const { cellRef, ctx: rangeCellCtx } = useRangeCellWrapper({
+    value: props.value,
+    section: 'month',
+  });
+  const ref = useForkRef(baseRef, cellRef);
+
+  const ctx = React.useMemo<InnerRangeCalendarMonthCellPropsContext>(
+    () => ({
+      ...baseCtx,
+      ...rangeCellCtx,
+    }),
+    [baseCtx, rangeCellCtx],
+  );
 
   return <MemoizedInnerRangeCalendarMonthCell {...props} ref={ref} ctx={ctx} />;
 });
@@ -48,12 +70,19 @@ export namespace RangeCalendarMonthCell {
   export interface State extends RangeCellState {}
 
   export interface Props
-    extends Omit<useRangeCalendarMonthCell.Parameters, 'ctx'>,
-      Omit<BaseUIComponentProps<'button', State>, 'value'> {}
+    extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
+      useBaseCalendarMonthCell.Parameters {}
 }
 
-interface InnerRangeCalendarMonthCellProps
-  extends useRangeCalendarMonthCell.Parameters,
-    Omit<BaseUIComponentProps<'button', RangeCalendarMonthCell.State>, 'value'> {}
+interface InnerRangeCalendarMonthCellProps extends RangeCalendarMonthCell.Props {
+  /**
+   * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+   */
+  ctx: InnerRangeCalendarMonthCellPropsContext;
+}
+
+interface InnerRangeCalendarMonthCellPropsContext
+  extends useBaseCalendarMonthCell.Context,
+    useRangeCell.Context {}
 
 export { RangeCalendarMonthCell };

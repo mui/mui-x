@@ -97,7 +97,7 @@ export namespace useBaseCalendarDayGridNavigation {
   export interface CellRefs {
     cell: React.RefObject<HTMLButtonElement | null>;
     row: React.RefObject<HTMLDivElement | null>;
-    grid: React.RefObject<HTMLDivElement | null>;
+    grid: React.RefObject<HTMLElement | null>;
   }
 }
 
@@ -128,8 +128,8 @@ function getCellsInCalendar(
   cellsRef: React.RefObject<Map<number, useBaseCalendarDayGridNavigation.CellRefs>>,
 ) {
   const grids: {
-    element: HTMLDivElement;
-    rows: { element: HTMLDivElement; cells: HTMLButtonElement[] }[];
+    element: HTMLElement;
+    rows: { element: HTMLElement; cells: HTMLButtonElement[] }[];
   }[] = [];
 
   for (const [, cellRefs] of cellsRef.current) {

@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
-import { mergeProps } from '../../../base-utils/mergeProps';
 import { useBaseCalendarRootContext } from '../root/BaseCalendarRootContext';
 import { CalendarDayGridBodyContext } from './CalendarDayGridBodyContext';
 import { useRegisterSection } from '../utils/useRegisterSection';
 import { useBaseCalendarRootVisibleDateContext } from '../root/BaseCalendarRootVisibleDateContext';
 import { useScrollableList } from '../../useScrollableList';
+import { HTMLProps } from '../../../base-utils/types';
 
-export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBody.Parameters) {
+export function useBaseCalendarDayGridBody(
+  parameters: useBaseCalendarDayGridBody.Parameters,
+): useBaseCalendarDayGridBody.ReturnValue {
   const { fixedWeekNumber, focusOnMount, children, offset = 0, freezeMonth = false } = parameters;
   const utils = useUtils();
   const baseRootContext = useBaseCalendarRootContext();
@@ -30,7 +32,7 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
 
   const month = freezeMonth ? lastNonFrozenMonthRef.current : rawMonth;
 
-  const { scrollerRef } = useScrollableList({ focusOnMount });
+  useScrollableList({ focusOnMount, ref });
   useRegisterSection({
     section: 'day',
     value: month,
@@ -94,18 +96,13 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
     return children;
   }, [children, daysGrid]);
 
-  const getDayGridBodyProps = React.useCallback(
-    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
-      return mergeProps(
-        {
-          ref,
-          role: 'rowgroup',
-          children: resolvedChildren,
-          onKeyDown: baseRootContext.applyDayGridKeyboardNavigation,
-        },
-        externalProps,
-      );
-    },
+  const props = React.useMemo(
+    () => ({
+      ref,
+      role: 'rowgroup',
+      children: resolvedChildren,
+      onKeyDown: baseRootContext.applyDayGridKeyboardNavigation,
+    }),
     [baseRootContext.applyDayGridKeyboardNavigation, resolvedChildren],
   );
 
@@ -114,14 +111,11 @@ export function useBaseCalendarDayGridBody(parameters: useBaseCalendarDayGridBod
     [daysGrid, month, canCellBeTabbed, ref],
   );
 
-  return React.useMemo(
-    () => ({ getDayGridBodyProps, rowsRefs, context, scrollerRef }),
-    [getDayGridBodyProps, rowsRefs, context, scrollerRef],
-  );
+  return React.useMemo(() => ({ props, rowsRefs, context, ref }), [props, rowsRefs, context, ref]);
 }
 
 export namespace useBaseCalendarDayGridBody {
-  export interface Parameters extends useScrollableList.Parameters {
+  export interface Parameters extends useScrollableList.PublicParameters {
     /**
      * The children of the component.
      * If a function is provided, it will be called with the weeks weeks to render as its parameter.
@@ -147,5 +141,25 @@ export namespace useBaseCalendarDayGridBody {
 
   export interface ChildrenParameters {
     weeks: PickerValidDate[];
+  }
+
+  export interface ReturnValue {
+    /**
+     * The props to apply to the element.
+     */
+    props: HTMLProps;
+    // TODO: Use Composite instead.
+    /**
+     * The ref of each row rendered inside the component.
+     */
+    rowsRefs: React.RefObject<(HTMLElement | null)[]>;
+    /**
+     * The context to provide to the children of the component.
+     */
+    context: CalendarDayGridBodyContext;
+    /**
+     * The ref to apply to the element.
+     */
+    ref: React.RefObject<HTMLDivElement | null>;
   }
 }

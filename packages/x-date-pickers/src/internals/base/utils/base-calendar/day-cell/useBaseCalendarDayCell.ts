@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
-import { mergeProps } from '../../../base-utils/mergeProps';
+import { HTMLProps } from '../../../base-utils/types';
 
 export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parameters) {
   const utils = useUtils();
@@ -17,22 +17,17 @@ export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parame
     ctx.selectDay(value);
   });
 
-  const getDayCellProps = React.useCallback(
-    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
-      return mergeProps(
-        {
-          role: 'gridcell',
-          'aria-selected': ctx.isSelected,
-          'aria-current': ctx.isCurrent ? 'date' : undefined,
-          'aria-colindex': utils.getDayOfWeek(value),
-          children: formattedValue,
-          disabled: ctx.isDisabled,
-          tabIndex: ctx.isTabbable ? 0 : -1,
-          onClick,
-        },
-        externalProps,
-      );
-    },
+  const props = React.useMemo<HTMLProps>(
+    () => ({
+      role: 'gridcell',
+      'aria-selected': ctx.isSelected,
+      'aria-current': ctx.isCurrent ? 'date' : undefined,
+      'aria-colindex': utils.getDayOfWeek(value),
+      children: formattedValue,
+      disabled: ctx.isDisabled,
+      tabIndex: ctx.isTabbable ? 0 : -1,
+      onClick,
+    }),
     [
       utils,
       value,
@@ -45,7 +40,7 @@ export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parame
     ],
   );
 
-  return React.useMemo(() => ({ getDayCellProps }), [getDayCellProps]);
+  return React.useMemo(() => ({ props }), [props]);
 }
 
 export namespace useBaseCalendarDayCell {

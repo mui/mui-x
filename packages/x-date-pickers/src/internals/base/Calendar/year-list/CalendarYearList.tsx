@@ -1,29 +1,57 @@
 'use client';
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { BaseUIComponentProps } from '../../base-utils/types';
 import { useRenderElement } from '../../base-utils/useRenderElement';
 import { CompositeList } from '../../base-utils/composite/list/CompositeList';
-import { useCalendarYearList } from './useCalendarYearList';
 import { BaseCalendarYearCollectionContext } from '../../utils/base-calendar/utils/BaseCalendarYearCollectionContext';
+import { useYearCells } from '../utils/useYearCells';
+import { navigateInList } from '../../Clock/utils/keyboardNavigation';
 
 const CalendarYearList = React.forwardRef(function CalendarYearList(
   componentProps: CalendarYearList.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, render, children, getItems, focusOnMount, loop, ...elementProps } =
-    componentProps;
-  const { getYearListProps, cellRefs, yearsListOrGridContext, scrollerRef } = useCalendarYearList({
+  const {
+    className,
+    render,
     children,
     getItems,
     focusOnMount,
-    loop,
+    loop = false,
+    ...elementProps
+  } = componentProps;
+
+  const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
+  const { resolvedChildren, yearsListOrGridContext, ref } = useYearCells({
+    getItems,
+    focusOnMount,
+    children,
   });
+
+  const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    navigateInList({
+      cells: cellRefs.current,
+      event,
+      loop,
+    });
+  });
+
+  const props = React.useMemo(
+    () => ({
+      role: 'radiogroup',
+      children: resolvedChildren,
+      onKeyDown,
+    }),
+    [resolvedChildren, onKeyDown],
+  );
+
   const state = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, scrollerRef],
-    props: [getYearListProps, elementProps],
+    ref: [forwardedRef, ref],
+    props: [props, elementProps],
   });
 
   return (
@@ -38,7 +66,14 @@ export namespace CalendarYearList {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useCalendarYearList.Parameters {}
+      useYearCells.Parameters {
+    /**
+     * Whether to loop keyboard focus back to the first item
+     * when the end of the list is reached while using the arrow keys.
+     * @default true
+     */
+    loop?: boolean;
+  }
 }
 
 export { CalendarYearList };

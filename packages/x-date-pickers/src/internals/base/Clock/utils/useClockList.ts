@@ -15,7 +15,6 @@ import {
   isSameSecond,
 } from '../../utils/future-adapter-methods';
 import { navigateInList } from './keyboardNavigation';
-import { mergeProps } from '../../base-utils/mergeProps';
 
 export function useClockList(parameters: useClockList.Parameters) {
   const {
@@ -32,8 +31,10 @@ export function useClockList(parameters: useClockList.Parameters) {
 
   const utils = useUtils();
   const rootContext = useClockRootContext();
-  const { scrollerRef } = useScrollableList({ focusOnMount });
+  const ref = React.useRef<HTMLDivElement>(null);
   const cellsRef = React.useRef<(HTMLElement | null)[]>([]);
+
+  useScrollableList({ focusOnMount, ref });
 
   const valueOrReferenceDate = rootContext.value ?? rootContext.referenceDate;
 
@@ -200,6 +201,15 @@ export function useClockList(parameters: useClockList.Parameters) {
     });
   });
 
+  const props = React.useMemo(
+    () => ({
+      role: 'listbox',
+      children: resolvedChildren,
+      onKeyDown,
+    }),
+    [resolvedChildren, onKeyDown],
+  );
+
   const context: ClockListContext = React.useMemo(
     () => ({
       section,
@@ -211,28 +221,11 @@ export function useClockList(parameters: useClockList.Parameters) {
     [isItemSelected, canItemBeTabbed, section, precision, format],
   );
 
-  const getListProps = React.useCallback(
-    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
-      return mergeProps(
-        {
-          role: 'listbox',
-          children: resolvedChildren,
-          onKeyDown,
-        },
-        externalProps,
-      );
-    },
-    [resolvedChildren, onKeyDown],
-  );
-
-  return React.useMemo(
-    () => ({ context, scrollerRef, cellsRef, getListProps }),
-    [context, scrollerRef, cellsRef, getListProps],
-  );
+  return React.useMemo(() => ({ context, ref, cellsRef, props }), [context, ref, cellsRef, props]);
 }
 
 export namespace useClockList {
-  export interface PublicParameters extends useScrollableList.Parameters {
+  export interface PublicParameters extends useScrollableList.PublicParameters {
     /**
      * The children of the component.
      * If a function is provided, it will be called with the public context as its parameter.

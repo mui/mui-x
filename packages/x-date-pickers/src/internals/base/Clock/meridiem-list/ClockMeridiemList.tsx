@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useClockMeridiemList } from './useClockMeridiemList';
 import { ClockListContext } from '../utils/ClockListContext';
 import { CompositeList } from '../../base-utils/composite/list/CompositeList';
+import { useClockList } from '../utils/useClockList';
+import { useUtils } from '../../../hooks/useUtils';
 
 const ClockMeridiemList = React.forwardRef(function ClockMeridiemList(
   componentProps: ClockMeridiemList.Props,
@@ -21,20 +22,25 @@ const ClockMeridiemList = React.forwardRef(function ClockMeridiemList(
     ...elementProps
   } = componentProps;
 
-  const { getListProps, context, scrollerRef, cellsRef } = useClockMeridiemList({
+  const utils = useUtils();
+
+  const { props, context, ref, cellsRef } = useClockList({
     children,
     getItems,
     skipInvalidItems,
-    focusOnMount,
     loop,
+    section: 'meridiem',
+    precision: 'meridiem',
+    step: 1,
+    format: utils.formats.meridiem,
   });
 
   const state: ClockMeridiemList.State = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, scrollerRef],
-    props: [getListProps, elementProps],
+    ref: [forwardedRef, ref],
+    props: [props, elementProps],
   });
 
   return (
@@ -48,7 +54,7 @@ export namespace ClockMeridiemList {
   export interface State {}
 
   export interface Props
-    extends useClockMeridiemList.Parameters,
+    extends useClockList.PublicParameters,
       Omit<BaseUIComponentProps<'div', State>, 'children'> {}
 }
 

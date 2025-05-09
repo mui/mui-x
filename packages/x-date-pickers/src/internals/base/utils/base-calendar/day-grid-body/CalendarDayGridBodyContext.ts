@@ -19,7 +19,7 @@ export interface CalendarDayGridBodyContext {
   /**
    * The DOM ref of the DayGridBody primitive.
    */
-  ref: React.RefObject<HTMLDivElement | null>;
+  ref: React.RefObject<HTMLElement | null>;
 }
 
 export const CalendarDayGridBodyContext = React.createContext<

@@ -12,6 +12,7 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const utils = useUtils();
+  const ref = React.useRef<HTMLDivElement>(null);
 
   const items = React.useMemo(() => {
     const getDefaultItems = () =>
@@ -37,7 +38,7 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
     baseRootContext.dateValidationProps.maxDate,
   ]);
 
-  const { scrollerRef } = useScrollableList({ focusOnMount });
+  useScrollableList({ focusOnMount, ref });
   useRegisterSection({
     section: 'year',
     value: baseRootVisibleDateContext.visibleDate,
@@ -83,11 +84,11 @@ export function useYearCells(parameters: useYearCells.Parameters): useYearCells.
     return children;
   }, [children, items]);
 
-  return { resolvedChildren, scrollerRef, yearsListOrGridContext };
+  return { resolvedChildren, ref, yearsListOrGridContext };
 }
 
 export namespace useYearCells {
-  export interface Parameters extends useScrollableList.Parameters {
+  export interface Parameters extends useScrollableList.PublicParameters {
     /**
      * Generate the list of items to render.
      * @param {GetItemsParameters} parameters The current parameters of the list.
@@ -125,8 +126,9 @@ export namespace useYearCells {
     getDefaultItems: () => PickerValidDate[];
   }
 
-  export interface ReturnValue extends useScrollableList.ReturnValue {
+  export interface ReturnValue {
     yearsListOrGridContext: BaseCalendarYearCollectionContext;
     resolvedChildren: React.ReactNode;
+    ref: React.RefObject<HTMLDivElement | null>;
   }
 }

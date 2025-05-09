@@ -10,7 +10,7 @@ const InnerCalendarMonthCell = React.forwardRef(function InnerCalendarMonthCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, format, ctx, ...elementProps } = componentProps;
-  const { getMonthCellProps } = useBaseCalendarMonthCell({ value, format, ctx });
+  const { props } = useBaseCalendarMonthCell({ value, format, ctx });
 
   const state: CalendarMonthCell.State = React.useMemo(
     () => ({
@@ -25,7 +25,7 @@ const InnerCalendarMonthCell = React.forwardRef(function InnerCalendarMonthCell(
   const renderElement = useRenderElement('button', componentProps, {
     state,
     ref: forwardedRef,
-    props: [getMonthCellProps, elementProps],
+    props: [props, elementProps],
   });
 
   return renderElement();

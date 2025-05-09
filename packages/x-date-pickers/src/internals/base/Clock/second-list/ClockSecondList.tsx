@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-utils/types';
-import { useClockSecondList } from './useClockSecondList';
 import { ClockListContext } from '../utils/ClockListContext';
 import { CompositeList } from '../../base-utils/composite/list/CompositeList';
+import { useClockList } from '../utils/useClockList';
+import { useUtils } from '../../../hooks/useUtils';
 
 const ClockSecondList = React.forwardRef(function ClockSecondList(
   componentProps: ClockSecondList.Props,
@@ -15,28 +16,32 @@ const ClockSecondList = React.forwardRef(function ClockSecondList(
     render,
     children,
     getItems,
-    step,
+    step = 1,
     skipInvalidItems,
     focusOnMount,
     loop,
     ...elementProps
   } = componentProps;
 
-  const { getListProps, context, scrollerRef, cellsRef } = useClockSecondList({
+  const utils = useUtils();
+
+  const { props, context, ref, cellsRef } = useClockList({
     children,
     getItems,
-    step,
     skipInvalidItems,
-    focusOnMount,
     loop,
+    section: 'second',
+    precision: 'second',
+    step,
+    format: utils.formats.seconds,
   });
 
   const state: ClockSecondList.State = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, scrollerRef],
-    props: [getListProps, elementProps],
+    ref: [forwardedRef, ref],
+    props: [props, elementProps],
   });
 
   return (
@@ -50,8 +55,14 @@ export namespace ClockSecondList {
   export interface State {}
 
   export interface Props
-    extends useClockSecondList.Parameters,
-      Omit<BaseUIComponentProps<'div', State>, 'children'> {}
+    extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
+      useClockList.PublicParameters {
+    /**
+     * The step in seconds between two consecutive items.
+     * @default 1
+     */
+    step?: number;
+  }
 }
 
 export { ClockSecondList };

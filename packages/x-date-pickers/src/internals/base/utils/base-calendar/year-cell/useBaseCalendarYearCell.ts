@@ -2,9 +2,11 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
-import { mergeProps } from '../../../base-utils/mergeProps';
+import { HTMLProps } from '../../../base-utils/types';
 
-export function useBaseCalendarYearCell(parameters: useBaseCalendarYearCell.Parameters) {
+export function useBaseCalendarYearCell(
+  parameters: useBaseCalendarYearCell.Parameters,
+): useBaseCalendarYearCell.ReturnValue {
   const utils = useUtils();
   const { value, format = utils.formats.year, ctx } = parameters;
 
@@ -17,26 +19,21 @@ export function useBaseCalendarYearCell(parameters: useBaseCalendarYearCell.Para
     ctx.selectYear(value);
   });
 
-  const getYearCellProps = React.useCallback(
-    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
-      return mergeProps(
-        {
-          type: 'button' as const,
-          role: 'radio',
-          'aria-checked': ctx.isSelected,
-          'aria-current': ctx.isCurrent ? 'date' : undefined,
-          disabled: ctx.isDisabled,
-          tabIndex: ctx.isTabbable ? 0 : -1,
-          children: formattedValue,
-          onClick,
-        },
-        externalProps,
-      );
-    },
-    [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, ctx.isCurrent],
+  const props = React.useMemo<HTMLProps>(
+    () => ({
+      type: 'button' as const,
+      role: 'radio',
+      'aria-checked': ctx.isSelected,
+      'aria-current': ctx.isCurrent ? 'date' : undefined,
+      disabled: ctx.isDisabled,
+      tabIndex: ctx.isTabbable ? 0 : -1,
+      children: formattedValue,
+      onClick,
+    }),
+    [ctx.isSelected, ctx.isCurrent, ctx.isDisabled, ctx.isTabbable, formattedValue, onClick],
   );
 
-  return React.useMemo(() => ({ getYearCellProps }), [getYearCellProps]);
+  return React.useMemo(() => ({ props }), [props]);
 }
 
 export namespace useBaseCalendarYearCell {
@@ -54,6 +51,13 @@ export namespace useBaseCalendarYearCell {
      * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
      */
     ctx: Context;
+  }
+
+  export interface ReturnValue {
+    /**
+     * The props to apply to the element.
+     */
+    props: HTMLProps;
   }
 
   export interface Context {

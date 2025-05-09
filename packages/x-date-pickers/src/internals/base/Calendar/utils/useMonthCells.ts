@@ -14,6 +14,7 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
   const utils = useUtils();
+  const ref = React.useRef<HTMLDivElement>(null);
 
   const currentYear = React.useMemo(
     () => utils.startOfYear(baseRootVisibleDateContext.visibleDate),
@@ -33,7 +34,7 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
     return getDefaultItems();
   }, [utils, getItems, currentYear]);
 
-  const { scrollerRef } = useScrollableList({ focusOnMount });
+  useScrollableList({ focusOnMount, ref });
   useRegisterSection({
     section: 'month',
     value: currentYear,
@@ -122,11 +123,11 @@ export function useMonthCells(parameters: useMonthCells.Parameters): useMonthCel
     return children;
   }, [children, items]);
 
-  return { resolvedChildren, monthsListOrGridContext, changePage, scrollerRef };
+  return { resolvedChildren, monthsListOrGridContext, changePage, ref };
 }
 
 export namespace useMonthCells {
-  export interface Parameters extends useScrollableList.Parameters {
+  export interface Parameters extends useScrollableList.PublicParameters {
     /**
      * Generate the list of items to render.
      * @param {GetItemsParameters} parameters The current parameters of the list.
@@ -159,9 +160,10 @@ export namespace useMonthCells {
     getDefaultItems: () => PickerValidDate[];
   }
 
-  export interface ReturnValue extends useScrollableList.ReturnValue {
+  export interface ReturnValue {
     monthsListOrGridContext: BaseCalendarMonthCollectionContext;
     changePage: (direction: 'next' | 'previous') => void;
     resolvedChildren: React.ReactNode;
+    ref: React.RefObject<HTMLDivElement | null>;
   }
 }

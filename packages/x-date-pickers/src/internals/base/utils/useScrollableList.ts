@@ -5,21 +5,17 @@ import * as React from 'react';
  * - Focuses the first tabbable child on mount if `props.focusOnMount` is `true`.
  * - Scrolls the scroller to center the focused element if it is not visible.
  * @param {useScrollableList.Parameters} parameters The parameters of the hook.
- * @returns {useScrollableList.ReturnValue} The return value of the hook.
  */
-export function useScrollableList(
-  parameters: useScrollableList.Parameters,
-): useScrollableList.ReturnValue {
-  const { focusOnMount = false } = parameters;
+export function useScrollableList(parameters: useScrollableList.Parameters) {
+  const { focusOnMount = false, ref } = parameters;
   const initialFocusOnMount = React.useRef(focusOnMount);
-  const scrollerRef = React.useRef<HTMLElement>(null);
 
   React.useEffect(() => {
-    if (scrollerRef.current === null) {
+    if (ref.current === null) {
       return;
     }
 
-    const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    const tabbableButton = ref.current.querySelector<HTMLElement>('[tabindex="0"]');
     if (!tabbableButton) {
       return;
     }
@@ -32,8 +28,8 @@ export function useScrollableList(
     const offsetHeight = tabbableButton.offsetHeight;
     const offsetTop = tabbableButton.offsetTop;
 
-    const clientHeight = scrollerRef.current.clientHeight;
-    const scrollTop = scrollerRef.current.scrollTop;
+    const clientHeight = ref.current.clientHeight;
+    const scrollTop = ref.current.scrollTop;
 
     const elementBottom = offsetTop + offsetHeight;
 
@@ -42,14 +38,12 @@ export function useScrollableList(
       return;
     }
 
-    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
-  }, []);
-
-  return { scrollerRef };
+    ref.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [ref]);
 }
 
 export namespace useScrollableList {
-  export interface Parameters {
+  export interface PublicParameters {
     /**
      * If `true`, the first tabbable children inside this component will be focused on mount.
      * Warning: If several components are rendered at the same time with focusOnMount={true}, the result might be unpredictable.
@@ -58,10 +52,10 @@ export namespace useScrollableList {
     focusOnMount?: boolean;
   }
 
-  export interface ReturnValue {
+  export interface Parameters extends PublicParameters {
     /**
-     * The ref that must be attached to the scroller element.
+     * The ref applied to the scrollable list.
      */
-    scrollerRef: React.RefObject<HTMLElement | null>;
+    ref: React.RefObject<HTMLElement | null>;
   }
 }

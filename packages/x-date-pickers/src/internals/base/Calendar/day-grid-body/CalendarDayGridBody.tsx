@@ -21,7 +21,7 @@ const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     ...elementProps
   } = componentProps;
 
-  const { getDayGridBodyProps, rowsRefs, context, scrollerRef } = useBaseCalendarDayGridBody({
+  const { props, rowsRefs, context, ref } = useBaseCalendarDayGridBody({
     children,
     fixedWeekNumber,
     focusOnMount,
@@ -33,8 +33,8 @@ const CalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, scrollerRef],
-    props: [getDayGridBodyProps, elementProps],
+    ref: [forwardedRef, ref],
+    props: [props, elementProps],
   });
 
   return (

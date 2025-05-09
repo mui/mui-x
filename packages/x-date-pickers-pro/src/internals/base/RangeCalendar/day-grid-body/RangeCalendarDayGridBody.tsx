@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 // eslint-disable-next-line no-restricted-imports
 import { BaseUIComponentProps } from '@mui/x-date-pickers/internals/base/base-utils/types';
 // eslint-disable-next-line no-restricted-imports
@@ -8,7 +9,9 @@ import { useRenderElement } from '@mui/x-date-pickers/internals/base/base-utils/
 import { CompositeList } from '@mui/x-date-pickers/internals/base/base-utils/composite/list/CompositeList';
 // eslint-disable-next-line no-restricted-imports
 import { CalendarDayGridBodyContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/day-grid-body/CalendarDayGridBodyContext';
-import { useRangeCalendarDayGridBody } from './useRangeCalendarDayGridBody';
+// eslint-disable-next-line no-restricted-imports
+import { useBaseCalendarDayGridBody } from '@mui/x-date-pickers/internals/base/utils/base-calendar/day-grid-body/useBaseCalendarDayGridBody';
+import { useRangeCalendarRootContext } from '../root/RangeCalendarRootContext';
 
 const RangeCalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
   componentProps: RangeCalendarDayGridBody.Props,
@@ -25,7 +28,12 @@ const RangeCalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     ...elementProps
   } = componentProps;
 
-  const { getDayGridBodyProps, rowsRefs, context, scrollerRef } = useRangeCalendarDayGridBody({
+  const {
+    props: baseProps,
+    rowsRefs,
+    context,
+    ref,
+  } = useBaseCalendarDayGridBody({
     children,
     fixedWeekNumber,
     focusOnMount,
@@ -33,12 +41,21 @@ const RangeCalendarDayGridBody = React.forwardRef(function CalendarDayGrid(
     freezeMonth,
   });
 
+  const rootContext = useRangeCalendarRootContext();
+
+  // TODO: Add the same for year and month list and year.
+  const onMouseLeave = useEventCallback(() => {
+    rootContext.setHoveredDate(null, 'day');
+  });
+
+  const props = React.useMemo(() => ({ onMouseLeave }), [onMouseLeave]);
+
   const state = React.useMemo(() => ({}), []);
 
   const renderElement = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, scrollerRef],
-    props: [getDayGridBodyProps, elementProps],
+    ref: [forwardedRef, ref],
+    props: [baseProps, props, elementProps],
   });
 
   return (
@@ -53,7 +70,7 @@ export namespace RangeCalendarDayGridBody {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useRangeCalendarDayGridBody.Parameters {}
+      useBaseCalendarDayGridBody.Parameters {}
 }
 
 export { RangeCalendarDayGridBody };

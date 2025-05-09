@@ -36,7 +36,7 @@ const InnerCalendarDayCell = React.forwardRef(function InnerCalendarDayCell(
   forwardedRef: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const { className, render, value, ctx, ...elementProps } = componentProps;
-  const { getDayCellProps } = useBaseCalendarDayCell({ value, ctx });
+  const { props } = useBaseCalendarDayCell({ value, ctx });
 
   const state: CalendarDayCell.State = React.useMemo(
     () => ({
@@ -62,7 +62,7 @@ const InnerCalendarDayCell = React.forwardRef(function InnerCalendarDayCell(
   const renderElement = useRenderElement('button', componentProps, {
     state,
     ref: forwardedRef,
-    props: [getDayCellProps, elementProps],
+    props: [props, elementProps],
     customStyleHookMapping,
   });
 

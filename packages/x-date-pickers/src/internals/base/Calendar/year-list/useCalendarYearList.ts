@@ -7,7 +7,7 @@ import { useYearCells } from '../utils/useYearCells';
 export function useCalendarYearList(parameters: useCalendarYearList.Parameters) {
   const { children, getItems, focusOnMount, loop = true } = parameters;
   const cellRefs = React.useRef<(HTMLElement | null)[]>([]);
-  const { resolvedChildren, yearsListOrGridContext, scrollerRef } = useYearCells({
+  const { resolvedChildren, yearsListOrGridContext, ref } = useYearCells({
     getItems,
     focusOnMount,
     children,
@@ -37,8 +37,8 @@ export function useCalendarYearList(parameters: useCalendarYearList.Parameters) 
   );
 
   return React.useMemo(
-    () => ({ getYearListProps, cellRefs, yearsListOrGridContext, scrollerRef }),
-    [getYearListProps, cellRefs, yearsListOrGridContext, scrollerRef],
+    () => ({ getYearListProps, cellRefs, yearsListOrGridContext, ref }),
+    [getYearListProps, cellRefs, yearsListOrGridContext, ref],
   );
 }
 

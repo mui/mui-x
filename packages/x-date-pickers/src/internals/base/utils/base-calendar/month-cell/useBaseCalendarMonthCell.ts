@@ -2,9 +2,11 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerValidDate } from '../../../../../models';
 import { useUtils } from '../../../../hooks/useUtils';
-import { mergeProps } from '../../../base-utils/mergeProps';
+import { HTMLProps } from '../../../base-utils/types';
 
-export function useBaseCalendarMonthCell(parameters: useBaseCalendarMonthCell.Parameters) {
+export function useBaseCalendarMonthCell(
+  parameters: useBaseCalendarMonthCell.Parameters,
+): useBaseCalendarMonthCell.ReturnValue {
   const utils = useUtils();
   const { value, format = utils.formats.month, ctx } = parameters;
 
@@ -17,26 +19,21 @@ export function useBaseCalendarMonthCell(parameters: useBaseCalendarMonthCell.Pa
     ctx.selectMonth(value);
   });
 
-  const getMonthCellProps = React.useCallback(
-    (externalProps = {}): React.ComponentPropsWithRef<'button'> => {
-      return mergeProps(
-        {
-          type: 'button' as const,
-          role: 'radio',
-          'aria-checked': ctx.isSelected,
-          'aria-current': ctx.isCurrent ? 'date' : undefined,
-          disabled: ctx.isDisabled,
-          tabIndex: ctx.isTabbable ? 0 : -1,
-          children: formattedValue,
-          onClick,
-        },
-        externalProps,
-      );
-    },
+  const props = React.useMemo<HTMLProps>(
+    () => ({
+      type: 'button' as const,
+      role: 'radio',
+      'aria-checked': ctx.isSelected,
+      'aria-current': ctx.isCurrent ? 'date' : undefined,
+      disabled: ctx.isDisabled,
+      tabIndex: ctx.isTabbable ? 0 : -1,
+      children: formattedValue,
+      onClick,
+    }),
     [formattedValue, ctx.isSelected, ctx.isDisabled, ctx.isTabbable, onClick, ctx.isCurrent],
   );
 
-  return React.useMemo(() => ({ getMonthCellProps }), [getMonthCellProps]);
+  return React.useMemo(() => ({ props }), [props]);
 }
 
 export namespace useBaseCalendarMonthCell {
@@ -63,5 +60,12 @@ export namespace useBaseCalendarMonthCell {
     isTabbable: boolean;
     isCurrent: boolean;
     selectMonth: (date: PickerValidDate) => void;
+  }
+
+  export interface ReturnValue {
+    /**
+     * The props to apply to the element.
+     */
+    props: HTMLProps;
   }
 }
