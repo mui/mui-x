@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export interface ToolbarContextValue {
-  focusableItemId: string | null;
+  focusableItem: { id: string; index: number } | null;
   registerItem: (id: string, ref: React.RefObject<HTMLButtonElement | null>) => void;
   unregisterItem: (id: string) => void;
   onItemKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
