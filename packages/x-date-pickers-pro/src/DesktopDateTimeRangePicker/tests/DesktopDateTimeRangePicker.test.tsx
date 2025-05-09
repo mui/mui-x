@@ -8,21 +8,18 @@ import {
   getFieldSectionsContainer,
   expectFieldValueV7,
 } from 'test/utils/pickers';
-import { SinonFakeTimers, useFakeTimers } from 'sinon';
+import { vi } from 'vitest';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer();
 
-  // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-  let timer: SinonFakeTimers | null = null;
-
   beforeEach(() => {
-    timer = useFakeTimers({ now: new Date(2018, 0, 10, 10, 16, 0), toFake: ['Date'] });
+    vi.setSystemTime(new Date(2018, 0, 10, 10, 16, 0));
   });
 
   afterEach(() => {
-    timer?.restore();
+    vi.useRealTimers();
   });
 
   describe('value selection', () => {
