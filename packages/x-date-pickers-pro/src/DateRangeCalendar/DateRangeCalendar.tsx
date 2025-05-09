@@ -57,6 +57,7 @@ import {
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
+import { DateRangePickerDay2 } from '../DateRangePickerDay2';
 
 const releaseInfo = '__RELEASE_INFO__';
 
