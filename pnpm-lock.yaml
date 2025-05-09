@@ -81,7 +81,7 @@ importers:
         version: 2.0.0(@babel/core@7.27.1)
       '@mui/internal-bundle-size-checker':
         specifier: github:mui/mui-public#bundle-size-checker&path:./packages/bundle-size-checker
-        version: https://codeload.github.com/mui/mui-public/tar.gz/f7753fbebeeb98f5d27128706e2a2c5d74a57219#path:./packages/bundle-size-checker(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))
+        version: https://codeload.github.com/mui/mui-public/tar.gz/37e67cf6925c8910be3778ed4d52f77d9d3b9d82#path:./packages/bundle-size-checker(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))
       '@mui/internal-markdown':
         specifier: ^2.0.4
         version: 2.0.4
@@ -454,7 +454,7 @@ importers:
     devDependencies:
       '@mui/internal-bundle-size-checker':
         specifier: github:mui/mui-public#bundle-size-checker&path:./packages/bundle-size-checker
-        version: https://codeload.github.com/mui/mui-public/tar.gz/f7753fbebeeb98f5d27128706e2a2c5d74a57219#path:./packages/bundle-size-checker(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))
+        version: https://codeload.github.com/mui/mui-public/tar.gz/37e67cf6925c8910be3778ed4d52f77d9d3b9d82#path:./packages/bundle-size-checker(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))
       fast-glob:
         specifier: ^3.3.2
         version: 3.3.3
@@ -3623,8 +3623,8 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@https://codeload.github.com/mui/mui-public/tar.gz/f7753fbebeeb98f5d27128706e2a2c5d74a57219#path:./packages/bundle-size-checker':
-    resolution: {path: ./packages/bundle-size-checker, tarball: https://codeload.github.com/mui/mui-public/tar.gz/f7753fbebeeb98f5d27128706e2a2c5d74a57219}
+  '@mui/internal-bundle-size-checker@https://codeload.github.com/mui/mui-public/tar.gz/37e67cf6925c8910be3778ed4d52f77d9d3b9d82#path:./packages/bundle-size-checker':
+    resolution: {path: ./packages/bundle-size-checker, tarball: https://codeload.github.com/mui/mui-public/tar.gz/37e67cf6925c8910be3778ed4d52f77d9d3b9d82}
     version: 1.0.0
     hasBin: true
 
@@ -5919,6 +5919,10 @@ packages:
 
   chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
+  chalk@5.4.1:
+    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
   chance@1.1.12:
@@ -13773,10 +13777,11 @@ snapshots:
       '@babel/core': 7.27.1
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@https://codeload.github.com/mui/mui-public/tar.gz/f7753fbebeeb98f5d27128706e2a2c5d74a57219#path:./packages/bundle-size-checker(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))':
+  '@mui/internal-bundle-size-checker@https://codeload.github.com/mui/mui-public/tar.gz/37e67cf6925c8910be3778ed4d52f77d9d3b9d82#path:./packages/bundle-size-checker(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))':
     dependencies:
       '@aws-sdk/client-s3': 3.804.0
       '@aws-sdk/credential-providers': 3.804.0
+      chalk: 5.4.1
       compression-webpack-plugin: 10.0.0(webpack@5.99.7(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7)))
       css-loader: 7.1.2(webpack@5.99.7(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7)))
       env-ci: 11.1.0
@@ -13784,6 +13789,7 @@ snapshots:
       fast-glob: 3.3.3
       file-loader: 6.2.0(webpack@5.99.7(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7)))
       fs-extra: 11.3.0
+      micromatch: 4.0.8
       piscina: 4.9.2
       terser-webpack-plugin: 5.3.14(@swc/core@1.11.21)(esbuild@0.25.3)(webpack@5.99.7(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7)))
       webpack: 5.99.7(@swc/core@1.11.21)(esbuild@0.25.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.7))
@@ -16473,6 +16479,8 @@ snapshots:
   chalk@5.0.1: {}
 
   chalk@5.3.0: {}
+
+  chalk@5.4.1: {}
 
   chance@1.1.12: {}
 
