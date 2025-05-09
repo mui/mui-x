@@ -9,6 +9,7 @@
     "baseUrl": "./",
     "allowJs": true,
     "allowImportingTsExtensions": true,
+    "isolatedModules": true,
     "paths": {
       "@mui/x-data-grid": ["./packages/x-data-grid/src"],
       "@mui/x-data-grid/*": ["./packages/x-data-grid/src/*"],
