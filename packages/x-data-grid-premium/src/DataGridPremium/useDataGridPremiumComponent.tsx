@@ -128,19 +128,21 @@ export const useDataGridPremiumComponent = (
 
   /**
    * Register all pre-processors called during state initialization here.
+   * Some pre-processors are changing the same part of the state (like the order of the columns).
+   * Order them in descending order of priority.
+   * For example, left pinned columns should always render first from the left, so the `hydrateColumns` pre-processor from `useGridColumnPinningPreProcessors` should be called last (after all other `hydrateColumns` pre-processors).
+   * Similarly, the `hydrateColumns` pre-processor from `useGridRowSelectionPreProcessors` should be called after `useGridRowGroupingPreProcessors` because the selection checkboxes should appear before the grouping columns.
    */
-  useGridRowSelectionPreProcessors(apiRef, props);
-  useGridRowReorderPreProcessors(apiRef, props);
+  useGridDetailPanelPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridDataSourceRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
+  useGridRowSelectionPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);
-  useGridDetailPanelPreProcessors(apiRef, props);
-  // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
-  // Because it changes the order of the columns.
+  useGridRowReorderPreProcessors(apiRef, props);
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
 
