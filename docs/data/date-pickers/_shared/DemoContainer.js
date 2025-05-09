@@ -1,27 +1,11 @@
 import * as React from 'react';
-import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
+import Stack, { stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme } from '@mui/material/styles';
+
 import { textFieldClasses } from '@mui/material/TextField';
-import { pickersTextFieldClasses } from '../../PickersTextField';
+import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 
-interface DemoGridProps {
-  children: React.ReactNode;
-  components: string[];
-  sx?: SxProps<Theme>;
-}
-
-type PickersGridChildComponentType =
-  | 'single-input-field'
-  | 'multi-input-range-field'
-  | 'single-input-range-field'
-  | 'UI-view'
-  | 'Tall-UI-view'
-  | 'multi-panel-UI-view';
-
-type PickersSupportedSections = 'date' | 'time' | 'date-time';
-
-const getChildTypeFromChildName = (childName: string): PickersGridChildComponentType => {
+const getChildTypeFromChildName = (childName) => {
   if (childName.match(/^([A-Za-z]+)Range(Calendar|Clock)$/)) {
     return 'multi-panel-UI-view';
   }
@@ -30,7 +14,10 @@ const getChildTypeFromChildName = (childName: string): PickersGridChildComponent
     return 'Tall-UI-view';
   }
 
-  if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
+  if (
+    childName.match(/^Static([A-Za-z]+)/) ||
+    childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)
+  ) {
     return 'UI-view';
   }
 
@@ -48,7 +35,7 @@ const getChildTypeFromChildName = (childName: string): PickersGridChildComponent
   return 'single-input-field';
 };
 
-const getSupportedSectionFromChildName = (childName: string): PickersSupportedSections => {
+const getSupportedSectionFromChildName = (childName) => {
   if (childName.includes('DateTime')) {
     return 'date-time';
   }
@@ -60,22 +47,20 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
   return 'time';
 };
 
-interface DemoItemProps {
-  label?: React.ReactNode;
-  component?: string;
-  children: React.ReactNode;
-  sx?: SxProps<Theme>;
-}
 /**
- * @deprecated Will be removed in the next major version (v9.0.0).
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
  */
-export function DemoItem(props: DemoItemProps) {
+export function DemoItem(props) {
   const { label, children, component, sx: sxProp } = props;
 
-  let spacing: StackProps['spacing'];
+  let spacing;
   let sx = sxProp;
 
-  if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
+  if (
+    component &&
+    getChildTypeFromChildName(component) === 'multi-input-range-field'
+  ) {
     spacing = 1.5;
     sx = {
       ...sx,
@@ -97,41 +82,43 @@ export function DemoItem(props: DemoItemProps) {
 
 DemoItem.displayName = 'DemoItem';
 
-const isDemoItem = (child: React.ReactNode): child is React.ReactElement<DemoItemProps> => {
+const isDemoItem = (child) => {
   if (React.isValidElement(child) && typeof child.type !== 'string') {
     // @ts-ignore
     return child.type.displayName === 'DemoItem';
   }
   return false;
 };
-
 /**
- * @deprecated Will be removed in the next major version (v9.0.0).
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
  */
-export function DemoContainer(props: DemoGridProps) {
+export function DemoContainer(props) {
   const { children, components, sx: sxProp } = props;
 
-  const childrenTypes = new Set<PickersGridChildComponentType>();
-  const childrenSupportedSections = new Set<PickersSupportedSections>();
+  const childrenTypes = new Set();
+  const childrenSupportedSections = new Set();
 
   components.forEach((childName) => {
     childrenTypes.add(getChildTypeFromChildName(childName));
     childrenSupportedSections.add(getSupportedSectionFromChildName(childName));
   });
 
-  const getSpacing = (direction: 'column' | 'row') => {
+  const getSpacing = (direction) => {
     if (direction === 'row') {
-      return childrenTypes.has('UI-view') || childrenTypes.has('Tall-UI-view') ? 3 : 2;
+      return childrenTypes.has('UI-view') || childrenTypes.has('Tall-UI-view')
+        ? 3
+        : 2;
     }
 
     return childrenTypes.has('UI-view') ? 4 : 3;
   };
 
-  let direction: StackProps['direction'];
-  let spacing: StackProps['spacing'];
-  let extraSx: SxProps<Theme> = {};
-  let demoItemSx: SxProps<Theme> = {};
-  const sx: SxProps<Theme> = {
+  let direction;
+  let spacing;
+  let extraSx = {};
+  let demoItemSx = {};
+  const sx = {
     overflow: 'auto',
     // Add padding as overflow can hide the outline text field label.
     pt: 1,
@@ -175,7 +162,9 @@ export function DemoContainer(props: DemoGridProps) {
     }
   } else if (childrenSupportedSections.has('date-time')) {
     extraSx = {
-      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 270 },
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
+        minWidth: 270,
+      },
     };
     if (childrenTypes.has('multi-input-range-field')) {
       // increase width for the multi input date time range fields
@@ -186,7 +175,9 @@ export function DemoContainer(props: DemoGridProps) {
     }
   } else {
     extraSx = {
-      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 200 },
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
+        minWidth: 200,
+      },
     };
   }
   const finalSx = {
