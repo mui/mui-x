@@ -1,3 +1,4 @@
 Broken links found by `docs:link-check` that exist:
 
 - https://mui.com/x/react-data-grid/row-grouping/#disable-the-row-grouping
+- https://mui.com/x/react-data-grid/tree-data/#children-lazy-loading
