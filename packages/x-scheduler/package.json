@@ -1,5 +1,6 @@
 {
   "name": "@mui/x-scheduler",
+  "version": "0.0.1-alpha.0",
   "private": true,
   "description": "The community edition of the Scheduler component (MUI X).",
   "author": "MUI Team",
@@ -37,7 +38,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
