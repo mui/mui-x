@@ -6,8 +6,6 @@ title: Data Grid - Server-side lazy loading
 
 <p class="description">Implement lazy-loading rows with server-side data in the Data Grid using the Data Source layer.</p>
 
-## Server-side lazy loading
-
 Lazy loading is a technique for deferring the loading of resources until they are actually needed, rather than loading everything when a page is first requested.
 Lazy loading changes the way pagination works in the Data Grid by removing page controls and instead loading data dynamically (in a single list) as the user scrolls.
 

@@ -6,8 +6,6 @@ title: Data Grid - Server-side row grouping
 
 <p class="description">Implement lazy-loading row grouping in the Data Grid using the Data Source layer.</p>
 
-## Server-side row grouping
-
 The Data Grid Premium's row grouping feature lets users create subsets of rows based on repeated column values or custom functions.
 The Grid can render grouped rows from server-side data using the [Data Source layer](/x/react-data-grid/server-side-data/#the-solution-the-data-source-layer).
 
