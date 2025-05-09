@@ -17,6 +17,8 @@ ponyfillGlobal.__MUI_LICENSE_INFO__ = ponyfillGlobal.__MUI_LICENSE_INFO__ || {
 };
 
 export class LicenseInfo {
+  private static hasSetLicenseKeyRun: boolean = false;
+
   private static getLicenseInfo() {
     // eslint-disable-next-line no-underscore-dangle
     return ponyfillGlobal.__MUI_LICENSE_INFO__;
@@ -29,5 +31,10 @@ export class LicenseInfo {
   public static setLicenseKey(key: string) {
     const licenseInfo = LicenseInfo.getLicenseInfo();
     licenseInfo.key = key;
+    LicenseInfo.hasSetLicenseKeyRun = true;
+  }
+
+  public static getHasSetLicenseKeyRun(): boolean {
+    return LicenseInfo.hasSetLicenseKeyRun;
   }
 }
