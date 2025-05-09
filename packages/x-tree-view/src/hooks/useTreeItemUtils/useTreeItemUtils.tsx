@@ -183,12 +183,10 @@ export const useTreeItemUtils = <
       return;
     }
 
-    if (isEditable) {
-      if (isEditing) {
-        instance.setEditedItemId(null);
-      } else {
-        instance.setEditedItemId(itemId);
-      }
+    if (isEditing) {
+      instance.setEditedItem(null);
+    } else {
+      instance.setEditedItem(itemId);
     }
   };
 
