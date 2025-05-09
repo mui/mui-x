@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const config: Partial<BarChartProps> = {
   dataset: [
@@ -55,7 +55,7 @@ describe('ChartsTooltip', () => {
   });
 
   // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-  describeSkipIf(isJSDOM)('axis trigger', () => {
+  describe.skipIf(isJSDOM)('axis trigger', () => {
     it('should show right values with vertical layout on axis', async () => {
       const { user } = render(
         <BarChart
@@ -175,7 +175,7 @@ describe('ChartsTooltip', () => {
   });
 
   // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-  describeSkipIf(isJSDOM)('item trigger', () => {
+  describe.skipIf(isJSDOM)('item trigger', () => {
     it('should show right values with vertical layout on item', async () => {
       const { user } = render(
         <BarChart

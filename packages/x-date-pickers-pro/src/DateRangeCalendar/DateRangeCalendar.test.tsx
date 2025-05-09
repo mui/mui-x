@@ -21,7 +21,6 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
-import { testSkipIf } from 'test/utils/skipIf';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -183,7 +182,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should not emit "onChange" when touch dragging is ended where it was started',
         () => {
           const onChange = spy();
@@ -251,7 +250,7 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('2');
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should emit "onChange" when touch dragging end date',
         () => {
           const onChange = spy();
@@ -329,7 +328,7 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('22');
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should emit "onChange" when touch dragging start date',
         () => {
           const onChange = spy();
@@ -404,7 +403,7 @@ describe('<DateRangeCalendar />', () => {
         ).to.have.lengthOf(10);
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should dynamically update "shouldDisableDate" when flip touch dragging',
         () => {
           const initialValue: [any, any] = [

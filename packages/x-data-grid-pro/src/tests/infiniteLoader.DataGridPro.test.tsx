@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy, restore } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Infinite loader', () => {
   afterEach(() => {
@@ -14,7 +14,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
   const { render } = createRenderer();
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should call `onRowsScrollEnd` when viewport scroll reaches the bottom',
     async () => {
       const baseRows = [
@@ -71,7 +71,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
   );
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height',
     async () => {
       const allRows = [
@@ -147,7 +147,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
   );
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not observe intersections with the rows pinned to the bottom',
     async () => {
       const baseRows = [

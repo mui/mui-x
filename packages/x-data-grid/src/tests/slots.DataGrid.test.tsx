@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Slots', () => {
   const { render } = createRenderer();
@@ -156,7 +156,7 @@ describe('<DataGrid /> - Slots', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  testSkipIf(!isJSDOM)('should throw if a component is used without providing the context', () => {
+  it.skipIf(!isJSDOM)('should throw if a component is used without providing the context', () => {
     expect(() => {
       render(
         <ErrorBoundary>

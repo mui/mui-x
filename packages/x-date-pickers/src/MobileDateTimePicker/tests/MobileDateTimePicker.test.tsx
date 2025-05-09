@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
-import { hasTouchSupport, testSkipIf } from 'test/utils/skipIf';
+import { hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -78,7 +78,7 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    testSkipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {
+    it.skipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();

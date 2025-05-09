@@ -61,11 +61,11 @@ describe(`RTL - test arrows navigation`, () => {
     adapterName: 'moment-jalaali',
   });
 
-  before(() => {
+  beforeAll(() => {
     jMoment.loadPersian();
   });
 
-  after(() => {
+  afterAll(() => {
     moment.locale('en');
   });
 

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { generateLicense } from '../generateLicense/generateLicense';
 import { generateReleaseInfo, verifyLicense } from './verifyLicense';
 import { LICENSE_STATUS } from '../utils/licenseStatus';
@@ -9,7 +9,7 @@ const releaseDate = new Date(2018, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 // Can't change the process.env.NODE_ENV in Browser
-describeSkipIf(!isJSDOM)('License: verifyLicense', () => {
+describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
   let env: any;
 
   // eslint-disable-next-line mocha/no-top-level-hooks

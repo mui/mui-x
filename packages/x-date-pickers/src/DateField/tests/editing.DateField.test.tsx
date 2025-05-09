@@ -10,7 +10,6 @@ import {
   getCleanedSelectedContent,
 } from 'test/utils/pickers';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { testSkipIf } from 'test/utils/skipIf';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters(
@@ -320,7 +319,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     // Luxon doesn't have any day format with a letter suffix
-    testSkipIf(adapter.lib === 'luxon')('should support day with letter suffix', () => {
+    it.skipIf(adapter.lib === 'luxon')('should support day with letter suffix', () => {
       testFieldChange({
         format: adapter.lib === 'date-fns' ? 'do' : 'Do',
         keyStrokes: [
@@ -1673,7 +1672,7 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MM/DD/YYYY');
     });
 
-    testSkipIf(adapter.lib !== 'dayjs')(
+    it.skipIf(adapter.lib !== 'dayjs')(
       'should reset the input query state on an unfocused field',
       async () => {
         // Test with accessible DOM structure

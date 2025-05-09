@@ -6,7 +6,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import { act, screen } from '@mui/internal-test-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/pickers';
-import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 
 describe('<DesktopDatePicker />', () => {
@@ -96,7 +96,7 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByRole('radio', { checked: true, name: 'January' })).not.to.equal(null);
     });
 
-    testSkipIf(isJSDOM)('should move the focus to the newly opened views', async () => {
+    it.skipIf(isJSDOM)('should move the focus to the newly opened views', async () => {
       const { user } = render(
         <DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />,
       );
@@ -131,7 +131,7 @@ describe('<DesktopDatePicker />', () => {
   });
 
   // JSDOM has neither layout nor window.scrollTo
-  describeSkipIf(isJSDOM)('scroll', () => {
+  describe.skipIf(isJSDOM)('scroll', () => {
     const NoTransition = React.forwardRef(function NoTransition(
       props: TransitionProps & { children?: React.ReactNode },
       ref: React.Ref<HTMLDivElement>,

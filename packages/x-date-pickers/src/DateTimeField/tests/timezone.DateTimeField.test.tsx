@@ -9,13 +9,12 @@ import {
   describeAdapters,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
 describe('<DateTimeField /> - Timezone', () => {
   describeAdapters('Timezone prop', DateTimeField, ({ adapter, renderWithProps }) => {
-    describeSkipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
+    describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       const format = `${adapter.formats.keyboardDate} ${adapter.formats.hours24h}`;
 
       const fillEmptyValue = (v7Response: ReturnType<typeof renderWithProps>, timezone: string) => {

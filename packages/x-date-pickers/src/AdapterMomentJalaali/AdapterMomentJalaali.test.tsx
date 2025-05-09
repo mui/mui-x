@@ -23,11 +23,11 @@ describe('<AdapterMomentJalaali />', () => {
   });
 
   describe('Adapter localization', () => {
-    before(() => {
+    beforeAll(() => {
       jMoment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
     });
 
-    after(() => {
+    afterAll(() => {
       moment.locale('en');
     });
 
@@ -48,11 +48,11 @@ describe('<AdapterMomentJalaali />', () => {
   });
 
   describe('Picker localization', () => {
-    before(() => {
+    beforeAll(() => {
       jMoment.loadPersian();
     });
 
-    after(() => {
+    afterAll(() => {
       moment.locale('en');
     });
 

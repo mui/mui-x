@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { ScatterChartPro } from './ScatterChartPro';
 
@@ -19,7 +19,7 @@ const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   return axisData as string[];
 };
 
-describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
+describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
   const { render } = createRenderer();
 
   const scatterChartProps = {

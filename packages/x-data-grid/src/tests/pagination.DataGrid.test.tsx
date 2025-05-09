@@ -22,7 +22,7 @@ import {
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
@@ -42,7 +42,7 @@ describe('<DataGrid /> - Pagination', () => {
   }
 
   // Need layouting
-  describeSkipIf(isJSDOM)('prop: paginationModel and onPaginationModelChange', () => {
+  describe.skipIf(isJSDOM)('prop: paginationModel and onPaginationModelChange', () => {
     it('should display the rows of page given in props', () => {
       render(<BaselineTestCase paginationModel={{ page: 1, pageSize: 1 }} pageSizeOptions={[1]} />);
       expect(getColumnValues(0)).to.deep.equal(['1']);
@@ -390,7 +390,7 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   // Need layout
-  describeSkipIf(isJSDOM)('prop: autoPageSize', () => {
+  describe.skipIf(isJSDOM)('prop: autoPageSize', () => {
     function TestCaseAutoPageSize(
       props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number },
     ) {
@@ -682,7 +682,7 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   // Need layout
-  describeSkipIf(isJSDOM)('prop: initialState.pagination', () => {
+  describe.skipIf(isJSDOM)('prop: initialState.pagination', () => {
     it('should allow to initialize the paginationModel', () => {
       render(
         <BaselineTestCase

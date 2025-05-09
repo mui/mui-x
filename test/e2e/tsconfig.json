@@ -4,10 +4,13 @@
     "types": [
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
+      "dayjs/plugin/timezone.d.ts",
+      "dayjs/plugin/utc.d.ts",
       "vitest/globals",
-      "node"
+      "moment-timezone",
+      "mocha",
+      "vite/client"
     ],
-    "noImplicitAny": false
-  },
-  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+    "skipLibCheck": true
+  }
 }
