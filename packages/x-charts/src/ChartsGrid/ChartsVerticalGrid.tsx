@@ -19,7 +19,7 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
 
   const { scale, tickNumber, tickInterval } = axis;
 
-  const xTicks = useTicks({ scale, tickNumber, tickInterval });
+  const xTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'x' });
 
   return (
     <React.Fragment>

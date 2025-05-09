@@ -171,6 +171,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickInterval,
+    direction: 'y',
   });
 
   const positionSign = position === 'right' ? 1 : -1;

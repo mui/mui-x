@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 import { isInfinity } from '../internals/isInfinity';
@@ -67,6 +68,7 @@ export function useTicks(
   options: {
     scale: D3Scale;
     valueFormatter?: AxisConfig['valueFormatter'];
+    direction: 'x' | 'y';
   } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): TickItemType[] {
   const {
@@ -76,7 +78,9 @@ export function useTicks(
     tickInterval,
     tickPlacement = 'extremities',
     tickLabelPlacement: tickLabelPlacementProp,
+    direction,
   } = options;
+  const { instance } = useChartContext();
 
   return React.useMemo(() => {
     // band scale
@@ -139,20 +143,40 @@ export function useTicks(
     }
     const tickLabelPlacement = tickLabelPlacementProp;
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
-    return ticks.map((value: any, i) => {
-      return {
-        value,
-        formattedValue:
-          valueFormatter?.(value, { location: 'tick', scale }) ??
-          scale.tickFormat(tickNumber)(value),
-        offset: scale(value),
-        // Allowing the label to be placed in the middle of a continuous scale is weird.
-        // But it is useful in some cases, like funnel categories with a linear scale.
-        labelOffset:
-          tickLabelPlacement === 'middle'
-            ? scale(ticks[i - 1] ?? 0) - (scale(value) + scale(ticks[i - 1] ?? 0)) / 2
-            : 0,
-      };
-    });
-  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacementProp]);
+
+    // Ticks inside the drawing area
+    const visibleTicks: TickItemType[] = [];
+
+    for (let i = 0; i < ticks.length; i += 1) {
+      const value = ticks[i];
+      const offset = scale(value);
+
+      if (instance.isPointInside({ x: offset, y: offset }, { direction })) {
+        visibleTicks.push({
+          value,
+          formattedValue:
+            valueFormatter?.(value, { location: 'tick', scale }) ??
+            scale.tickFormat(tickNumber)(value),
+          offset,
+          // Allowing the label to be placed in the middle of a continuous scale is weird.
+          // But it is useful in some cases, like funnel categories with a linear scale.
+          labelOffset:
+            tickLabelPlacement === 'middle'
+              ? scale(ticks[i - 1] ?? 0) - (offset + scale(ticks[i - 1] ?? 0)) / 2
+              : 0,
+        });
+      }
+    }
+
+    return visibleTicks;
+  }, [
+    scale,
+    tickLabelPlacementProp,
+    tickInterval,
+    tickNumber,
+    tickPlacement,
+    valueFormatter,
+    direction,
+    instance,
+  ]);
 }
