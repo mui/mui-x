@@ -9,7 +9,7 @@ import {
 } from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
-import { GridApiCommunity } from '../api/gridApiCommunity';
+import { GridApiCommunity, GridApiCommon } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -19,6 +19,7 @@ export interface GridCellParams<
   V = unknown,
   F = V,
   N extends GridTreeNode = GridTreeNode,
+  Api extends GridApiCommon = GridApiCommunity,
 > {
   /**
    * The grid row id.
@@ -68,7 +69,7 @@ export interface GridCellParams<
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApiCommunity;
+  api: Api;
 }
 
 export interface FocusElement {
@@ -83,11 +84,8 @@ export interface GridRenderCellParams<
   V = any,
   F = V,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends GridCellParams<R, V, F, N> {
-  /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: GridApiCommunity;
+  Api extends GridApiCommon = GridApiCommunity,
+> extends GridCellParams<R, V, F, N, Api> {
   /**
    * A ref allowing to set imperative focus.
    * It can be passed to the element that should receive focus.
@@ -104,13 +102,9 @@ export interface GridRenderEditCellParams<
   V = any,
   F = V,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends GridCellParams<R, V, F, N>,
-    GridEditCellProps<V> {
-  /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: GridApiCommunity;
-}
+  Api extends GridApiCommon = GridApiCommunity,
+> extends GridCellParams<R, V, F, N, Api>,
+    GridEditCellProps<V> {}
 
 /**
  * Object passed as parameter in the column [[GridColDef]] edit cell props change callback.
