@@ -77,7 +77,7 @@ Open the Info section of your browser console to see the requests being made and
 ## Error handling
 
 For each row group expansion, the Data Source is called to fetch the children.
-If an error occurs during the fetch, the Data Grid display an error message in the row group cell.
+If an error occurs during the fetch, the Data Grid displays an error message in the row group cell.
 `onDataSourceError()` is also triggered with an error object containing the params described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
 The demo below renders an error message and a notification at the row group level when the requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.
