@@ -97,7 +97,7 @@ The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all level
 
 ## Custom cache
 
-The Data Source uses a cache by default to store the fetched data.
+The Data Source uses its own built-in cache by default to store fetched data.
 Use the `dataSourceCache` prop to provide a custom cache if necessary.
 See [Server-side data overview—Data caching](/x/react-data-grid/server-side-data/#data-caching) for more info.
 
