@@ -16,7 +16,7 @@
   },
   "exports": {
     "./joy": "./src/joy/index.ts",
-    "./joy/event-calendar": "./src/joy/scheduler/event-calendar/index.ts",
+    "./joy/event-calendar": "./src/joy/event-calendar/index.ts",
     "./primitives": "./src/primitives/index.ts",
     "./primitives/time-grid": "./src/primitives/time-grid/index.ts"
   },
