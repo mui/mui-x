@@ -1,6 +1,8 @@
 import {
+  AxisId,
   ChartRootSelector,
   createSelector,
+  selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
@@ -16,4 +18,9 @@ export const selectorChartZoomIsInteracting = createSelector(
 export const selectorChartZoomIsEnabled = createSelector(
   selectorChartZoomOptionsLookup,
   (optionsLookup) => Object.keys(optionsLookup).length > 0,
+);
+
+export const selectorChartAxisZoomData = createSelector(
+  [selectorChartZoomMap, (state, axisId: AxisId) => axisId],
+  (zoomMap, axisId) => zoomMap?.get(axisId),
 );

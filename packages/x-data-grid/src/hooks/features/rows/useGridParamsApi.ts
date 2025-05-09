@@ -75,7 +75,7 @@ export function useGridParamsApi(
         value,
         formattedValue: value,
         isEditable: false,
-        api: null as any,
+        api: apiRef.current,
       };
       if (colDef && colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);

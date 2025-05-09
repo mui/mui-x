@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "8.0.0",
-  "description": "The community edition of the Date and Time Picker components (MUI X).",
+  "version": "8.3.0",
   "author": "MUI Team",
+  "description": "The community edition of the MUI X Date and Time Picker components.",
   "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
@@ -44,7 +44,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@base-ui-components/react": "1.0.0-alpha.4",
     "@mui/utils": "^7.0.2",
     "@mui/x-internals": "workspace:*",

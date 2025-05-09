@@ -97,7 +97,7 @@ export const getStyleString = (style: React.CSSProperties) =>
       '',
     );
 
-let domCleanTimeout: NodeJS.Timeout | undefined;
+let domCleanTimeout: ReturnType<typeof setTimeout> | undefined;
 
 /**
  *

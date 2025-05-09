@@ -3,7 +3,6 @@
   dataset={dataset}
   xAxis={[
     {
-      scaleType: 'band',
       dataKey: 'letter',
       zoom: { filterMode: 'discard' },
     },

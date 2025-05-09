@@ -1,12 +1,11 @@
 ---
-title: React Data Grid - Filter Panel component
 productId: x-data-grid
 components: FilterPanelTrigger
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Filter Panel 🚧
+# Data Grid - Filter Panel component 🚧
 
 <p class="description">Customize the Data Grid's filter panel.</p>
 

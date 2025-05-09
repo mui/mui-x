@@ -390,6 +390,7 @@ export interface GridControlledStateReasonLookup {
     | 'removeAllFilterItems';
   pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
   rows: 'addSkeletonRows';
+  rowSelection: 'singleRowSelection' | 'multipleRowsSelection';
 }
 
 export interface GridEventLookup
@@ -572,6 +573,12 @@ export interface GridEventLookup
    * @ignore - do not document.
    */
   virtualScrollerTouchMove: { params: {}; event: React.TouchEvent };
+  /**
+   * Fired when the area of height `scrollEndThreshold` is entering the viewport from the bottom.
+   * Used to trigger infinite loading.
+   * @ignore - do not document.
+   */
+  rowsScrollEndIntersection: {};
 
   // Selection
   /**

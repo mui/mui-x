@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  ErrorBoundary,
-  fireEvent,
-  reactMajor,
-  screen,
-} from '@mui/internal-test-utils';
+import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
@@ -105,9 +99,9 @@ describe('<DataGrid /> - Slots', () => {
       expect(getRow(0)).to.have.attr('data-name', 'foobar');
     });
 
-    it('should pass the props from slotProps.columnHeaderFilterIconButton to the column header filter icon', () => {
+    it('should pass the props from slotProps.columnHeaderFilterIconButton to the column header filter icon', async () => {
       const onClick = spy();
-      render(
+      const { user } = render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
             {...baselineProps}
@@ -121,8 +115,8 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
       expect(onClick.callCount).to.equal(0);
-      const button = screen.getByRole('button', { name: /show filters/i });
-      fireEvent.click(button);
+      const button = screen.getByLabelText('Show filters');
+      await user.click(button);
       expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
       expect(onClick.lastCall.args[1]).to.have.property('target', button);
     });
@@ -173,7 +167,7 @@ describe('<DataGrid /> - Slots', () => {
       'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
       reactMajor < 19 &&
         'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
-      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay)> component',
+      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay2)> component',
     ]);
   });
 

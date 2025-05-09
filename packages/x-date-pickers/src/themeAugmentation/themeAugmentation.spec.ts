@@ -23,6 +23,7 @@ import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
+import { pickersInputBaseClasses } from '../PickersTextField';
 
 createTheme({
   components: {
@@ -635,9 +636,12 @@ createTheme({
         someRandomProp: true,
       },
       styleOverrides: {
-        root: {
+        root: ({ ownerState }) => ({
           backgroundColor: 'red',
-        },
+          [`.${pickersInputBaseClasses.activeBar}`]: {
+            backgroundColor: ownerState.isPickerReadOnly ? 'green' : 'blue',
+          },
+        }),
         // @ts-expect-error invalid MuiPickersInputBase class key
         content: {
           backgroundColor: 'blue',

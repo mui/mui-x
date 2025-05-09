@@ -1,4 +1,6 @@
-import { MakeOptional } from '@mui/x-internals/types';
+import { ZOOM_SLIDER_SIZE } from '../../../constants';
+import { defaultizeZoom } from './defaultizeZoom';
+import { ZoomOptions } from './zoom.types';
 import {
   DEFAULT_X_AXIS_KEY,
   DEFAULT_Y_AXIS_KEY,
@@ -6,14 +8,16 @@ import {
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
-import { AxisConfig, ScaleName } from '../../../../models';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
+import { XAxis, YAxis } from '../../../../models';
+import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
 import { DatasetType } from '../../../../models/seriesType/config';
 
+type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
+
 export function defaultizeXAxis(
-  inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[] | undefined,
+  inAxes: readonly InXAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
-): Array<AxisConfig<ScaleName, any, ChartsXAxisProps>> {
+): DefaultedXAxis[] {
   const offsets = {
     top: 0,
     bottom: 0,
@@ -21,8 +25,8 @@ export function defaultizeXAxis(
   };
 
   const inputAxes =
-    inAxis && inAxis.length > 0
-      ? inAxis
+    inAxes && inAxes.length > 0
+      ? inAxes
       : [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' as const }];
 
   const parsedAxes = inputAxes.map((axisConfig, index) => {
@@ -34,17 +38,23 @@ export function defaultizeXAxis(
     const defaultHeight =
       DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
+    const id = axisConfig.id ?? `defaultized-x-axis-${index}`;
     const sharedConfig = {
-      id: `defaultized-x-axis-${index}`,
       offset: offsets[position],
       ...axisConfig,
+      id,
       position,
       height: axisConfig.height ?? defaultHeight,
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'x'),
     };
 
     // Increment the offset for the next axis
     if (position !== 'none') {
       offsets[position] += sharedConfig.height;
+
+      if (sharedConfig.zoom?.slider.enabled) {
+        offsets[position] += ZOOM_SLIDER_SIZE;
+      }
     }
 
     // If `dataKey` is NOT provided
@@ -53,7 +63,7 @@ export function defaultizeXAxis(
     }
 
     if (dataset === undefined) {
-      throw new Error(`MUI X: x-axis uses \`dataKey\` but no \`dataset\` is provided.`);
+      throw new Error(`MUI X Charts: x-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
     // If `dataKey` is provided
@@ -66,15 +76,17 @@ export function defaultizeXAxis(
   return parsedAxes;
 }
 
+type InYAxis = YAxis & { zoom?: boolean | ZoomOptions };
+
 export function defaultizeYAxis(
-  inAxis: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[] | undefined,
+  inAxes: readonly InYAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
-): Array<AxisConfig<ScaleName, any, ChartsYAxisProps>> {
+): DefaultedYAxis[] {
   const offsets = { right: 0, left: 0, none: 0 };
 
   const inputAxes =
-    inAxis && inAxis.length > 0
-      ? inAxis
+    inAxes && inAxes.length > 0
+      ? inAxes
       : [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' as const }];
 
   const parsedAxes = inputAxes.map((axisConfig, index) => {
@@ -86,17 +98,23 @@ export function defaultizeYAxis(
     const defaultWidth =
       DEFAULT_AXIS_SIZE_WIDTH + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
+    const id = axisConfig.id ?? `defaultized-y-axis-${index}`;
     const sharedConfig = {
-      id: `defaultized-y-axis-${index}`,
       offset: offsets[position],
       ...axisConfig,
+      id,
       position,
       width: axisConfig.width ?? defaultWidth,
-    };
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'y'),
+    } satisfies DefaultedYAxis;
 
     // Increment the offset for the next axis
     if (position !== 'none') {
       offsets[position] += sharedConfig.width;
+
+      if (sharedConfig.zoom?.slider.enabled) {
+        offsets[position] += ZOOM_SLIDER_SIZE;
+      }
     }
 
     // If `dataKey` is NOT provided
@@ -105,7 +123,7 @@ export function defaultizeYAxis(
     }
 
     if (dataset === undefined) {
-      throw new Error(`MUI X: y-axis uses \`dataKey\` but no \`dataset\` is provided.`);
+      throw new Error(`MUI X Charts: y-axis uses \`dataKey\` but no \`dataset\` is provided.`);
     }
 
     // If `dataKey` is provided

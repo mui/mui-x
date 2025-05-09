@@ -1,12 +1,11 @@
 ---
-title: React Data Grid - Export component
 productId: x-data-grid
 components: ExportPrint, ExportCsv, ExportExcel
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Export
+# Data Grid - Export component
 
 <p class="description">Let users export the Data Grid for Excel, CSV, or printing.</p>
 
@@ -51,6 +50,13 @@ Below are some ways the Export components can be used.
 The demo below shows how to display export options within a menu on the toolbar.
 
 {{"demo": "GridExportMenu.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Customizing Excel export parameters [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+The demo below shows how to implement a custom export button that downloads the full dataset (beyond the current page) to an Excel spreadsheet, while preserving any sorting, filtering, or grouping parameters that the user has applied to the Grid.
+It uses the built-in [`exportDataAsExcel()`](/x/react-data-grid/export/#excel) method.
+
+{{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom elements
 

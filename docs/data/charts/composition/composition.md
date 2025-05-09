@@ -35,6 +35,7 @@ While the `ChartsSurface` renders the SVG elements.
   width={500}
   height={300}
 >
+  <ChartsLegend />
   <ChartsSurface
     // Ref needs to be directly on the ChartsSurface
     ref={mySvgRef}
@@ -207,16 +208,35 @@ It's important to generate unique IDs for clip paths, especially when dealing wi
 
 ### Axis
 
-To add axes, you can use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
+To add axes, use `<ChartsXAxis />` and `<ChartsYAxis />` as defined in the [axis page](/x/react-charts/axis/#composition).
 
 It takes an `axisId` prop that indicates which axis, defined in the container, should be rendered.
 If `axisId` is not provided it will pick the first one.
 
 ### Grid
 
-To add a grid, you can use the `<ChartsGrid />` component.
+To add a grid, use the `<ChartsGrid />` component.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+### Legend
+
+To add a legend, use the `<ChartsLegend />` component.
+
+:::warning
+The Charts Legend is an HTML element since v8.
+It must be rendered inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+
+```jsx
+<ChartDataProvider>
+  <ChartsLegend />
+  <ChartsSurface>{/* SVG components */}</ChartsSurface>
+</ChartDataProvider>
+```
+
+:::
+
+See [HTML components](/x/react-charts/components/#html-components) documentation for more information.
 
 ### Additional information
 

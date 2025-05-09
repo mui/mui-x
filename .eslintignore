@@ -5,9 +5,7 @@ netlify/functions
 /docs/export
 /docs/pages/playground/
 /lerna.json
-/packages/x-codemod/src/**/*.spec.js
-/packages/x-codemod/src/**/*.spec.ts
-/packages/x-codemod/src/**/*.spec.tsx
+/packages/x-codemod/src/**/*.spec.*
 /packages/x-charts-vendor
 build
 /coverage
