@@ -63,13 +63,13 @@ describe('ScatterChartPro', () => {
           width={500}
           height={300}
           initialZoom={[
-            { axisId: 'x', start: 50, end: 50.01 },
-            { axisId: 'y', start: 50, end: 50.01 },
+            { axisId: 'x', start: 50, end: 50.1 },
+            { axisId: 'y', start: 50, end: 50.1 },
           ]}
         />,
       );
 
-      await findByText('50.006', { ignore: 'span' });
+      await findByText('50.06', { ignore: 'span' });
 
       cleanup();
     },
