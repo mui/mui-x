@@ -100,7 +100,7 @@ apiRef.current.updateItemLabel(
 
 ### Change edition mode of an item
 
-Use the `setEditedItem()` API method to enter or exit editing mode for a given item.
+Use the `setEditedItem()` API method to set which item is being edited.
 
 ```ts
 apiRef.current.setEditedItem(
