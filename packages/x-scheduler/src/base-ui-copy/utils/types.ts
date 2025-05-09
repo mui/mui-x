@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export type GenericHTMLProps = React.HTMLAttributes<any> & { ref?: React.Ref<any> | undefined };
+export type HTMLProps = React.HTMLAttributes<any> & { ref?: React.Ref<any> | undefined };
 
 export type BaseUIEvent<E extends React.SyntheticEvent<Element, Event>> = E & {
   preventBaseUIHandler: () => void;
@@ -40,7 +40,7 @@ export type ComponentRenderFn<Props, State> = (
 export type BaseUIComponentProps<
   ElementType extends React.ElementType,
   State,
-  RenderFunctionProps = GenericHTMLProps,
+  RenderFunctionProps = HTMLProps,
 > = Omit<
   WithBaseUIEvent<React.ComponentPropsWithoutRef<ElementType>>,
   'className' | 'color' | 'defaultValue' | 'defaultChecked'
