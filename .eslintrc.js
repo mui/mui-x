@@ -310,6 +310,17 @@ module.exports = {
         'no-console': 'off',
       },
     },
+    {
+      files: ['packages/x-scheduler/**/*{.tsx,.ts,.js}'],
+      rules: {
+        // Base UI lint rules
+        '@typescript-eslint/no-redeclare': 'off',
+        'import/export': 'off',
+        'material-ui/straight-quotes': 'off',
+        'jsdoc/require-param': 'off',
+        'jsdoc/require-returns': 'off',
+      },
+    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
