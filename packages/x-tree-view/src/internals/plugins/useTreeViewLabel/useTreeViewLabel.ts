@@ -5,7 +5,7 @@ import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
 import { selectorIsItemEditable } from './useTreeViewLabel.selectors';
 
-export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {  
+export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {
   const setEditedItem = (editedItemId: TreeViewItemId | null) => {
     if (editedItemId !== null) {
       const isEditable = selectorIsItemEditable(store.value, editedItemId);

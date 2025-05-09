@@ -25,8 +25,8 @@ export default function ApiMethodSetEditedItem() {
   const handleItemLabelChange = (itemId, newLabel) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === itemId ? { ...item, label: newLabel } : item
-      )
+        item.id === itemId ? { ...item, label: newLabel } : item,
+      ),
     );
   };
 
