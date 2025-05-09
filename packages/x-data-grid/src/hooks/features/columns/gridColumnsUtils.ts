@@ -424,7 +424,7 @@ export function getFirstNonSpannedColumnToRender({
   let foundStableColumn = false;
 
   // Keep checking columns until we find one that's not spanned in any visible row
-  while (!foundStableColumn && firstNonSpannedColumnToRender >= 0) {
+  while (!foundStableColumn) {
     foundStableColumn = true;
 
     for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
