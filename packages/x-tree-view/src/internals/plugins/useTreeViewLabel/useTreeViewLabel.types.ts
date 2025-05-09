@@ -11,16 +11,15 @@ export interface UseTreeViewLabelPublicAPI {
    * @param {string} newLabel The new label of the item.
    */
   updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
-}
-
-export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
   /**
    * Updates which item is currently being edited.
-   * @param {TreeViewItemId} itemId The id of the item that is currently being edited.
+   * @param {TreeViewItemId | null} itemId The id of the item to set as edited, or `null` to stop editing.
    * @returns {void}.
    */
-  setEditedItemId: (itemId: TreeViewItemId | null) => void;
+  setEditedItem: (itemId: TreeViewItemId | null) => void;
 }
+
+export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {}
 
 export interface UseTreeViewLabelParameters<R extends {}> {
   /**
