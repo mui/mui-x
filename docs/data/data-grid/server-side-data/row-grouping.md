@@ -77,6 +77,8 @@ const getRows: async (params) => {
 }
 ```
 
+With the required props in place, server-side row grouping should now be implemented in your Data Grid, as shown in the demo below:
+
 {{"demo": "ServerSideRowGroupingDataGrid.js", "bg": "inline"}}
 
 :::warning
