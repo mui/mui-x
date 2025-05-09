@@ -287,6 +287,9 @@ module.exports = {
                   // Allow any import depth with any internal packages
                   '!@mui/internal-*/**',
 
+                  // The scheduler import strategy is not determined yet
+                  '!@mui/x-scheduler/**',
+
                   // Exceptions (QUESTION: Keep or remove?)
                   '!@mui/x-data-grid/internals/demo',
                   '!@mui/x-date-pickers/internals/demo',
