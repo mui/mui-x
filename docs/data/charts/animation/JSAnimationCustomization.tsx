@@ -4,6 +4,7 @@ import { useAnimate } from '@mui/x-charts/hooks';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
+import { ChartsContrastingText } from '@mui/x-charts/ChartsText';
 
 export default function JSAnimationCustomization() {
   const [key, animate] = React.useReducer((v) => v + 1, 0);
@@ -71,6 +72,11 @@ function AnimatedBarLabel(props: BarLabelProps) {
   );
 
   return (
-    <text {...otherProps} fill={color} textAnchor="middle" {...animatedProps} />
+    <ChartsContrastingText
+      {...otherProps}
+      fill={color}
+      textAnchor="middle"
+      {...animatedProps}
+    />
   );
 }

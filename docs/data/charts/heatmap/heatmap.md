@@ -1,7 +1,7 @@
 ---
 title: React Heatmap chart
 productId: x-charts
-components: Heatmap, HeatmapPlot, HeatmapTooltip
+components: Heatmap, HeatmapPlot, HeatmapTooltip, ChartsContrastingText
 ---
 
 # Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
