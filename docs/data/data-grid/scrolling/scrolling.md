@@ -22,10 +22,12 @@ The following demo explores the usage of scroll restoration:
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of scrolling feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the Data Grid.
+This API should only be used as a last resort when the Data Grid's built-in props do not suffice for your specific use case.
 :::
 
 {{"demo": "ScrollApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
