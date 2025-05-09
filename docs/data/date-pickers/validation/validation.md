@@ -45,6 +45,9 @@ On the calendar and clock views, the invalid values are displayed as disabled to
 
 {{"demo": "ValidationBehaviorView.js", "defaultCodeOpen": false}}
 
+### Empty string considered invalid
+Empty string (`''`) values will be considered invalid.  Pass `null` instead if you want a blank date-picker.
+
 ## Past and future validation
 
 All pickers support the past and future validation.
