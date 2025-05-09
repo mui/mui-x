@@ -45,7 +45,7 @@ describe('ScatterChartPro', () => {
     options,
   );
 
-  it(
+  bench(
     'ScatterChartPro with big data amount and zoomed in',
     async () => {
       const { findByText } = render(
