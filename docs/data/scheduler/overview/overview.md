@@ -7,7 +7,9 @@ githubLabel: 'component: scheduler'
 
 # Scheduler - Overview
 
-<p class="description">A collection of React UI components for creating a scheduler UI. </p>
+<p class="description">A collection of React UI components to schedule your events. </p>
+
+{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
 :::warning
 This package is not published yet.
