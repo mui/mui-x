@@ -5,8 +5,8 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
   noResultsOverlayLabel: 'Fant ingen resultat.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Ingen kolonner',
+  noColumnsOverlayManageColumns: 'Velg kolonner',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -51,7 +51,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ingen kolonner',
   columnsManagementShowHideAllText: 'Vis/skjul alle',
   columnsManagementReset: 'Nullstill',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Tøm',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
@@ -67,9 +67,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'inneholder',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'inneholder ikke',
   filterOperatorEquals: 'er lik',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'er ikke lik',
   filterOperatorStartsWith: 'starter med',
   filterOperatorEndsWith: 'slutter med',
   filterOperatorIs: 'er',
@@ -90,9 +90,9 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Inneholder',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
-  headerFilterOperatorEquals: 'Lik',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotContain: 'Inneholder ikke',
+  headerFilterOperatorEquals: 'Er lik',
+  headerFilterOperatorDoesNotEqual: 'Er ikke lik',
   headerFilterOperatorStartsWith: 'Starter på',
   headerFilterOperatorEndsWith: 'Slutter på',
   headerFilterOperatorIs: 'Er',
@@ -110,7 +110,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større enn eller lik',
   'headerFilterOperator<': 'Mindre enn',
   'headerFilterOperator<=': 'Mindre enn eller lik',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Tøm filter',
 
   // Filter values text
   filterValueAny: 'noen',
@@ -119,7 +119,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} kolonnemeny`,
   columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filter',
@@ -182,18 +182,13 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Rader per side:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} av ${count !== -1 ? count : `mer enn ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `omtrent ${estimated}` : `mer enn ${to}`;
+    return `${from}–${to} av ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Gå til første side';
