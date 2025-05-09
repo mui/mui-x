@@ -1,0 +1,13 @@
+<Calendar.Root value={value} onValueChange={setValue} className={styles.Root}>
+  <Calendar.YearList className={styles.YearList}>
+    {({ years }) =>
+      years.map((year) => (
+        <Calendar.YearCell
+          value={year}
+          className={styles.YearCell}
+          key={year.toString()}
+        />
+      ))
+    }
+  </Calendar.YearList>
+</Calendar.Root>
