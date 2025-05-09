@@ -1,6 +1,6 @@
 ---
 productId: x-scheduler
-title: Scheduler- Overview
+title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'component: scheduler'
 ---
