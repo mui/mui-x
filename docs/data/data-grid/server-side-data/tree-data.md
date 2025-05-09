@@ -15,6 +15,8 @@ For tree data on the client side, see [Tree data (client side)](/x/react-data-gr
 
 ## Prerequisites
 
+Server-side tree data functionality is an extension of its client-side counterpart, so we recommend reviewing [Tree data (client side)](/x/react-data-grid/tree-data/) to understand the underlying data structures and core implementation before proceeding.
+
 To be able to dynamically load tree data from the server, including lazy-loading of children, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 ## Implementing server-side tree data

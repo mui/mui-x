@@ -24,6 +24,8 @@ Provide the function names and minimal configuration to demonstrate the aggregat
 
 ## Prerequisites
 
+Server-side aggregation is an extension of its client-side counterpart, so we recommend reviewing [Aggregation (client side)](/x/react-data-grid/aggregation/) to understand the underlying data structures and core implementation before proceeding.
+
 To be able to use aggregation functions with server-side data, you must create a Data Source and pass the `dataSource` prop to the Data Grid as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 ## Implementing server-side aggregation

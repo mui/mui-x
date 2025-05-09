@@ -26,6 +26,8 @@ Open the Info section of your browser console to see the requests being made and
 
 ## Prerequisites
 
+Server-side row grouping is an extension of its client-side counterpart, so we recommend reviewing [Row grouping (client side)](/x/react-data-grid/row-grouping/) to understand the underlying data structures and core implementation before proceeding.
+
 To be able to dynamically load row-grouping data from the server, including lazy-loading of children, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 ## Implementating server-side row grouping
