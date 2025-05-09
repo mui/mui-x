@@ -7,6 +7,10 @@ productId: x-charts
 
 <p class="description">Gantt charts can illustrate a schedule and the relationships between its various activities.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 :::warning
 The Gantt Chart component isn't available yet, but you can upvote [**this GitHub issue**](https://github.com/mui/mui-x/issues/8732) to see it arrive sooner.
 

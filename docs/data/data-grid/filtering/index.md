@@ -45,6 +45,10 @@ Some operators do not need any value (for instance the `isEmpty` operator of the
 
 #### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 The `logicOperator` tells the Data Grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
 ```ts

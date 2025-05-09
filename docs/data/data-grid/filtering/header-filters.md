@@ -6,10 +6,8 @@ title: Data Grid - Header filters
 
 <p class="description">Quickly accessible per-column filters on grid header.</p>
 
-:::warning
-
-To use header filters, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
-
+:::success
+{{ FEATURE }} is a Pro feature.
 :::
 
 Header filters add a new header row that lets users quickly filter the columns. The filters added on the filter panel are synchronized with the header filters and vice versa.

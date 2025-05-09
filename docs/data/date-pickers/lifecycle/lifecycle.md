@@ -30,6 +30,10 @@ The example below shows the last value received by `onChange`.
 
 ## Lifecycle on range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
 `onChange` is called if the date you are modifying is matching one of the conditions above,
 regardless of the other date state.

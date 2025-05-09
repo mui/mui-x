@@ -67,6 +67,10 @@ The `columnGroupHeaderHeight` prop can be used to size column group headers inde
 
 ## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 By default, the columns that are part of a group cannot be dragged to outside their group.
 You can customize this behavior on specific groups by setting `freeReordering: true` in a column group object.
 
@@ -90,6 +94,10 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 With this feature, users would be able to expand and collapse grouped columns to toggle their visibility.
 
 ## Column group ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
+
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/9448) to help us prioritize it.

@@ -6,6 +6,10 @@ title: Data Grid - Column ordering
 
 <p class="description">Drag and drop your columns to reorder them.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 :::warning
 There is [a known issue with Firefox v129](https://github.com/mui/mui-x/issues/14263) that impacts this feature.
 Reordering does not work on that specific version of Firefox because the value for `event.dataTransfer` is `null` which results in an error.

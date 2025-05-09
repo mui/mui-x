@@ -11,6 +11,10 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 <p class="description">The Date Range Picker lets the user select a range of dates.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 ## Basic usage
 
 {{"demo": "BasicDateRangePicker.js"}}

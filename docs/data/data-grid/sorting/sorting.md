@@ -18,6 +18,10 @@ To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensin
 
 ## Multi-sorting [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 The following demo lets you sort the rows according to several criteria at the same time.
 
 Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.

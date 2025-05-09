@@ -11,6 +11,10 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 <p class="description">The Time Range Picker lets users select a range of time values.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 ## Basic usage
 
 {{"demo": "BasicTimeRangePicker.js"}}

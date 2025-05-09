@@ -6,6 +6,10 @@ title: Data Grid - Tree data
 
 <p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 To enable the Tree data, you simply have to use the `treeData` prop as well as provide a `getTreeDataPath` prop.
 The `getTreeDataPath` function returns an array of strings which represents the path to a given row.
 

@@ -10,6 +10,10 @@ githubLabel: 'component: data grid'
 
 <p class="description">Customize the Data Grid's AI assistant panel.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 :::warning
 This component is incomplete.
 

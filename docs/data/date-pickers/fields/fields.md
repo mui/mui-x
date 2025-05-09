@@ -21,6 +21,10 @@ They provide refined navigation through arrow keys and support advanced behavior
 
 ### Fields to edit a range [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 All fields to edit a range are available in a single input version and in a multi input version.
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
@@ -58,6 +62,10 @@ You need to make sure the input is focused before imperatively updating the sele
 
 #### Usage with single input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 For single input range fields, you won't be able to use the section name to select a single section because each section is present both in the start and in the end date.
 Instead, you can pass the index of the section using the `unstableFieldRef` prop to access the full list of sections:
 
@@ -69,6 +77,10 @@ Please only use it if needed.
 {{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
 
 #### Usage with multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
 
 For multi input range fields, you just have to make sure that the right input is focused before updating the selected section(s).
 Otherwise, the section(s) might be selected on the wrong input.

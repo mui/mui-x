@@ -6,6 +6,10 @@ title: Data Grid - Server-side aggregation
 
 <p class="description">Aggregation with server-side data source.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 To dynamically load tree data from the server, you must create a data source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 :::info
