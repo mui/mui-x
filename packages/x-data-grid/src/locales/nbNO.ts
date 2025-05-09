@@ -182,12 +182,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Rader per side:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
       return `${from}–${to} av ${count !== -1 ? count : `mer enn ${to}`}`;
     }
