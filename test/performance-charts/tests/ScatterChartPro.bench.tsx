@@ -1,7 +1,7 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe, it } from 'vitest';
+import { bench, describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
 
@@ -63,13 +63,13 @@ describe('ScatterChartPro', () => {
           width={500}
           height={300}
           initialZoom={[
-            { axisId: 'x', start: 50, end: 50.0001 },
-            { axisId: 'y', start: 50, end: 50.0001 },
+            { axisId: 'x', start: 50, end: 50.001 },
+            { axisId: 'y', start: 50, end: 50.001 },
           ]}
         />,
       );
 
-      await findByText('50.00006', { ignore: 'span' });
+      await findByText('50.0006', { ignore: 'span' });
 
       cleanup();
     },
