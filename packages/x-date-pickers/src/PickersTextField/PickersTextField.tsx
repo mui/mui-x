@@ -148,6 +148,14 @@ const PickersTextField = React.forwardRef(function PickersTextField(
 
   const PickersInputComponent = VARIANT_COMPONENT[variant];
 
+  const inputAdditionalProps = {} as any;
+  if (variant === 'outlined') {
+    if (InputLabelProps && typeof InputLabelProps.shrink !== 'undefined') {
+      inputAdditionalProps.notched = InputLabelProps.shrink;
+    }
+    inputAdditionalProps.label = label;
+  }
+
   return (
     <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
       <PickersTextFieldRoot
@@ -196,6 +204,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           aria-describedby={helperTextId}
           aria-live={helperTextId ? 'polite' : undefined}
           data-active-range-position={dataActiveRangePosition}
+          {...inputAdditionalProps}
           {...InputProps}
         />
         {helperText && (
