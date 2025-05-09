@@ -51,9 +51,14 @@ describe('ScatterChartPro', () => {
       const { findByText } = render(
         <ScatterChartPro
           xAxis={[
-            { id: 'x', data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US') },
+            {
+              id: 'x',
+              data: xData,
+              valueFormatter: (v: number) => v.toLocaleString('en-US'),
+              zoom: { minSpan: 0 },
+            },
           ]}
-          yAxis={[{ id: 'y' }]}
+          yAxis={[{ id: 'y', zoom: { minSpan: 0 } }]}
           series={[{ data }]}
           width={500}
           height={300}
