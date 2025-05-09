@@ -1,8 +1,6 @@
 <DataGridPremium
   {...data}
   apiRef={apiRef}
-  groupingColDef={{
-    leafField: 'title',
-  }}
+  groupingColDef={groupingColDef}
   initialState={initialState}
 />
