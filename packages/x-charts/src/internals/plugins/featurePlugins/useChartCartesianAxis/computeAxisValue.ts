@@ -13,7 +13,7 @@ import {
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber } from '../../../../hooks/useTicks';
+import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
@@ -200,9 +200,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    /* If the zoom start and end are the same, `tickNumber` will become infinity, so we should default to 1. */
-    const tickNumber =
-      zoomRange[0] === zoomRange[1] ? 1 : rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
