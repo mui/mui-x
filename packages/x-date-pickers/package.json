@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Date and Time Picker components.",
   "main": "src/index.ts",
