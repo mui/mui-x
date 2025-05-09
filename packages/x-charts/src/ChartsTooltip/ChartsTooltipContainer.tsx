@@ -3,9 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { styled, useThemeProps } from '@mui/material/styles';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import { useThemeProps } from '@mui/material/styles';
+import { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
+import { ChartsTooltipRoot } from './ChartsTooltipRoot';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
@@ -36,14 +37,6 @@ export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   classes?: Partial<ChartsTooltipClasses>;
   children?: React.ReactNode;
 }
-
-const ChartsTooltipRoot = styled(Popper, {
-  name: 'MuiChartsTooltip',
-  slot: 'Root',
-})(({ theme }) => ({
-  pointerEvents: 'none',
-  zIndex: theme.zIndex.modal,
-}));
 
 /**
  * Demos:
