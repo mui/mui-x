@@ -3,6 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
+import { ChartsSlots, ChartsSlotProps } from '../internals/material';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import { ChartContainerProps } from '../ChartContainer';
@@ -33,6 +35,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { LineChartPluginsSignatures } from './LineChart.plugins';
+import { ChartsToolbarProps } from '../Toolbar';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -42,7 +45,14 @@ export interface LineChartSlots
     LineHighlightPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    Partial<ChartsSlots> {
+  /**
+   * Custom component for the toolbar.
+   * @default ChartsToolbar
+   */
+  toolbar?: React.ElementType<ChartsToolbarProps>;
+}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
     AreaPlotSlotProps,
@@ -51,7 +61,13 @@ export interface LineChartSlotProps
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    Partial<ChartsSlotProps> {
+  /**
+   * Props for the toolbar component.
+   */
+  toolbar?: Partial<ChartsToolbarProps>;
+}
 
 export interface LineChartProps
   extends Omit<
@@ -110,6 +126,11 @@ export interface LineChartProps
    * @default false
    */
   skipAnimation?: boolean;
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
 }
 
 /**
@@ -149,10 +170,12 @@ const LineChart = React.forwardRef(function LineChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
 
   return (
     <ChartDataProvider<'line', LineChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
@@ -298,6 +321,11 @@ LineChart.propTypes = {
    * An array of [[LineSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * @default false

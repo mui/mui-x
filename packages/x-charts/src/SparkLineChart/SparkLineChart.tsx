@@ -47,6 +47,8 @@ export interface SparkLineChartProps
     | 'margin'
     | 'plugins'
     | 'colors'
+    | 'slots'
+    | 'slotProps'
   > {
   /**
    * The xAxis configuration.
