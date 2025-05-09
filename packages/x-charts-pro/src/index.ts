@@ -27,7 +27,12 @@ export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
-export { ZoomData, ZoomFilterMode, ZoomOptions, ZoomSliderOptions } from '@mui/x-charts/internals';
+export type {
+  ZoomData,
+  ZoomFilterMode,
+  ZoomOptions,
+  ZoomSliderOptions,
+} from '@mui/x-charts/internals';
 
 // Pro components
 export * from './hooks';
