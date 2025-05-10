@@ -52,9 +52,6 @@ export default function FunnelCurves() {
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
-            categoryAxis={{
-              reverse: props.reverse,
-            }}
             gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
@@ -69,9 +66,6 @@ export default function FunnelCurves() {
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
-            categoryAxis={{
-              reverse: props.reverse,
-            }}
             gap={props.gap}
             height={300}
             slotProps={{ legend: { direction: 'vertical' } }}
@@ -87,7 +81,7 @@ export default function FunnelCurves() {
     variant: '${props.variant}',
     ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
   }]}
-  gap={${props.gap}}${props.reverse ? '\n  categoryAxis={{ reverse: true }}' : ''}
+  gap={${props.gap}}
 />
 `;
       }}

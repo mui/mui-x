@@ -33,6 +33,10 @@ export default function FunnelCurves() {
           options: ['filled', 'outlined'],
           defaultValue: 'filled',
         },
+        reverse: {
+          knob: 'switch',
+          defaultValue: false,
+        },
       }}
       renderDemo={(props) => (
         <Stack sx={{ width: '100%' }}>

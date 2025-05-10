@@ -27,7 +27,7 @@ export type CategoryAxis<S extends ScaleName = ScaleName> = S extends ScaleName
     } & MakeOptional<
       Pick<
         AxisConfig<S, any>,
-        'disableLine' | 'disableTicks' | 'tickLabelStyle' | 'tickSize' | 'id' | 'reverse'
+        'disableLine' | 'disableTicks' | 'tickLabelStyle' | 'tickSize' | 'id'
       >,
       'id'
     >
