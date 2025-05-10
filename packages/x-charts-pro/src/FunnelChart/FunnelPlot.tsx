@@ -124,12 +124,15 @@ const useAggregatedData = (gap: number | undefined) => {
               })
             : currentSeries.sectionLabel;
 
+        const isIncreasing = currentSeries.dataDirection === 'increasing';
+
         const curve = getFunnelCurve(currentSeries.curve, {
           isHorizontal,
           gap,
           position: dataIndex,
           sections: currentSeries.dataPoints.length,
           borderRadius: currentSeries.borderRadius,
+          isIncreasing,
           min: minPoint,
           max: maxPoint,
         });

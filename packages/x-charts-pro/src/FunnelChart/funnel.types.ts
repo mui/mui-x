@@ -124,6 +124,7 @@ export interface DefaultizedFunnelSeriesType
   extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
+  dataDirection: 'increasing' | 'decreasing';
 }
 
 export type FunnelDataPoints = Record<'x' | 'y', number> & {

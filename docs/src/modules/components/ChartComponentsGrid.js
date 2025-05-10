@@ -74,6 +74,13 @@ function getComponents() {
       pro: true,
     },
     {
+      title: 'Pyramid Chart',
+      srcLight: '/static/x/component-illustrations/funnel-light.png',
+      srcDark: '/static/x/component-illustrations/funnel-dark.png',
+      href: '/x/react-charts/funnel/#pyramid-chart',
+      pro: true,
+    },
+    {
       title: 'Sankey Chart',
       srcLight: '/static/x/component-illustrations/sankey-light.png',
       srcDark: '/static/x/component-illustrations/sankey-dark.png',

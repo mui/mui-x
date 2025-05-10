@@ -27,6 +27,13 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
   seriesOrder.forEach((seriesId) => {
     const currentSeries = series[seriesId];
 
+    const firstDataPoint = currentSeries.data.at(0);
+    const lastDataPoint = currentSeries.data.at(-1);
+    const dataDirection =
+      firstDataPoint && lastDataPoint && firstDataPoint.value < lastDataPoint.value
+        ? 'increasing'
+        : 'decreasing';
+
     completedSeries[seriesId] = {
       labelMarkType: 'square',
       layout: isHorizontal ? 'horizontal' : 'vertical',
@@ -36,6 +43,7 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         id: `${seriesId}-funnel-item-${v.id ?? i}`,
         ...v,
       })),
+      dataDirection,
       dataPoints: [],
     };
 
@@ -49,12 +57,56 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         // Main = main axis, Other = other axis
         // For horizontal layout, main is y, other is x
         // For vertical layout, main is x, other is y
+        const isIncreasing = completedSeries[seriesId].dataDirection === 'increasing';
         const currentMaxMain = item.value;
-        const nextDataIndex = dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
+        const getNextDataIndex = () => {
+          if (isIncreasing) {
+            return dataIndex === 0 ? dataIndex : dataIndex - 1;
+          }
+          return dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
+        };
+        const nextDataIndex = getNextDataIndex();
         const nextMaxMain = array[nextDataIndex].value ?? 0;
         const nextMaxOther = 0;
         const currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
         const stackOffset = stackOffsets[dataIndex];
+
+        if (isIncreasing) {
+          return [
+            // Top right (vertical) or Top left (horizontal)
+            createPoint({
+              main: nextMaxMain,
+              other: nextMaxOther,
+              inverse: isHorizontal,
+              useBandWidth: false,
+              stackOffset,
+            }),
+            // Bottom right (vertical) or Top right (horizontal)
+            createPoint({
+              main: currentMaxMain,
+              other: currentMaxOther,
+              inverse: isHorizontal,
+              useBandWidth: true,
+              stackOffset,
+            }),
+            // Bottom left (vertical) or Bottom right (horizontal)
+            createPoint({
+              main: -currentMaxMain,
+              other: currentMaxOther,
+              inverse: isHorizontal,
+              useBandWidth: true,
+              stackOffset,
+            }),
+            // Top left (vertical) or Bottom left (horizontal)
+            createPoint({
+              main: -nextMaxMain,
+              other: nextMaxOther,
+              inverse: isHorizontal,
+              useBandWidth: false,
+              stackOffset,
+            }),
+          ];
+        }
 
         return [
           // Top right (vertical) or Top left (horizontal)
