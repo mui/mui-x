@@ -34,10 +34,6 @@ export default function FunnelCurves() {
             options: ['filled', 'outlined'],
             defaultValue: 'filled',
           },
-          reverse: {
-            knob: 'switch',
-            defaultValue: false,
-          },
         } as const
       }
       renderDemo={(props) => (
