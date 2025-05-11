@@ -945,8 +945,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       execa:
-        specifier: ^9.5.2
-        version: 9.5.2
+        specifier: ^9.5.3
+        version: 9.5.3
       internmap:
         specifier: ^2.0.3
         version: 2.0.3
@@ -6564,8 +6564,8 @@ packages:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
     engines: {node: '>=10'}
 
-  execa@9.5.2:
-    resolution: {integrity: sha512-EHlpxMCpHWSAh1dgS6bVeoLAXGnJNdR93aabr4QCGbzOM73o5XmRfM/e5FUqsw3aagP8S8XEWUWFAxnRBnAF0Q==}
+  execa@9.5.3:
+    resolution: {integrity: sha512-QFNnTvU3UjgWFy8Ef9iDHvIdcgZ344ebkwYx4/KLbR+CKQA4xBaHzv+iRpp86QfMHP8faFQLh8iOc57215y4Rg==}
     engines: {node: ^18.19.0 || >=20.5.0}
 
   expect-type@1.2.1:
@@ -12759,7 +12759,7 @@ snapshots:
       '@netlify/functions': 3.0.4
       '@slack/bolt': 4.2.1(@types/express@5.0.0)
       babel-plugin-transform-import-meta: 2.3.2(@babel/core@7.27.1)
-      execa: 9.5.2
+      execa: 9.5.3
       google-auth-library: 9.15.1(encoding@0.1.13)
     transitivePeerDependencies:
       - '@babel/core'
@@ -16236,7 +16236,7 @@ snapshots:
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
 
-  execa@9.5.2:
+  execa@9.5.3:
     dependencies:
       '@sindresorhus/merge-streams': 4.0.0
       cross-spawn: 7.0.6
