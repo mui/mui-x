@@ -1,7 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
-import { useBaseCalendarRootContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootContext';
+import {
+  BaseCalendarRootContext,
+  useBaseCalendarRootContext,
+} from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootContext';
 // eslint-disable-next-line no-restricted-imports
-import { useBaseCalendarRootVisibleDateContext } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
+import {
+  BaseCalendarRootVisibleDateContext,
+  useBaseCalendarRootVisibleDateContext,
+} from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 
 // TODO: Use a dedicated context
 export function useRangeCalendarContext() {
@@ -12,4 +18,10 @@ export function useRangeCalendarContext() {
     visibleDate: baseRootVisibleDateContext.visibleDate,
     disabled: baseRootContext.disabled,
   };
+}
+
+export namespace useRangeCalendarContext {
+  export interface ReturnValue
+    extends Pick<BaseCalendarRootContext, 'disabled'>,
+      Pick<BaseCalendarRootVisibleDateContext, 'visibleDate'> {}
 }
