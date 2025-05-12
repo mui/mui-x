@@ -6,7 +6,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { DAY_MARGIN } from '../internals/constants/dimensions';
+import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import {
   pickerDay2Classes,
   PickerDay2ClassKey,
@@ -15,8 +15,6 @@ import {
 import { useUtils } from '../internals/hooks/useUtils';
 import { PickerDay2OwnerState, PickerDay2Props } from './PickerDay2.types';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
-
-const DAY_SIZE = 36;
 
 const useUtilityClasses = (ownerState: PickerDay2OwnerState) => {
   const {
@@ -42,8 +40,6 @@ const useUtilityClasses = (ownerState: PickerDay2OwnerState) => {
   return composeClasses(slots, getPickerDay2UtilityClass, {});
 };
 
-const SET_MARGIN = DAY_MARGIN; // should be working with any given margin
-
 const PickerDay2Root = styled(ButtonBase, {
   name: 'MuiPickerDay2',
   slot: 'Root',
@@ -60,10 +56,13 @@ const PickerDay2Root = styled(ButtonBase, {
     ];
   },
 })<{ ownerState: PickerDay2OwnerState }>(({ theme }) => ({
+  '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
+  '--PickerDay-size': `${DAY_SIZE}px`,
+
   ...theme.typography.caption,
-  width: DAY_SIZE,
-  height: DAY_SIZE,
-  borderRadius: DAY_SIZE / 2,
+  width: 'var(--PickerDay-size)',
+  height: 'var(--PickerDay-size)',
+  borderRadius: 'calc(var(--PickerDay-size) / 2)',
   padding: 0,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
@@ -83,8 +82,8 @@ const PickerDay2Root = styled(ButtonBase, {
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
   },
-  marginLeft: SET_MARGIN,
-  marginRight: SET_MARGIN,
+  marginLeft: 'var(--PickerDay-horizontalMargin)',
+  marginRight: 'var(--PickerDay-horizontalMargin)',
   variants: [
     {
       props: { isDaySelected: true },
@@ -92,11 +91,7 @@ const PickerDay2Root = styled(ButtonBase, {
         color: (theme.vars || theme).palette.primary.contrastText,
         backgroundColor: (theme.vars || theme).palette.primary.main,
         fontWeight: theme.typography.fontWeightMedium,
-        '&:focus': {
-          willChange: 'background-color',
-          backgroundColor: (theme.vars || theme).palette.primary.dark,
-        },
-        '&:hover': {
+        '&:focus, &:hover': {
           willChange: 'background-color',
           backgroundColor: (theme.vars || theme).palette.primary.dark,
         },

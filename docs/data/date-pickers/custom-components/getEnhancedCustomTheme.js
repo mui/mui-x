@@ -37,10 +37,11 @@ export const getEnhancedCustomTheme = (mode) => ({
     MuiDateRangePickerDay2: {
       styleOverrides: {
         root: {
+          '--PickerDay-horizontalMargin': '8px',
+          '--PickerDay-size': '24px',
           borderRadius: '4px',
         },
         insidePreviewing: {
-          // the ::after pseudo element is used to create the previewing effect on hover
           '::after': {
             borderColor: 'transparent',
             backgroundColor: gray[200],
@@ -68,18 +69,6 @@ export const getEnhancedCustomTheme = (mode) => ({
             ...(mode === 'dark' && {
               backgroundColor: gray[600],
             }),
-          },
-        },
-        startOfWeek: {
-          '::before': {
-            borderTopLeftRadius: '4px',
-            borderBottomLeftRadius: '4px',
-          },
-        },
-        endOfWeek: {
-          '::before': {
-            borderTopRightRadius: '4px',
-            borderBottomRightRadius: '4px',
           },
         },
       },

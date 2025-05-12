@@ -17,8 +17,6 @@ import {
   getDateRangePickerDay2UtilityClass,
 } from './dateRangePickerDay2Classes';
 
-const DAY_SIZE = 36;
-
 const useUtilityClasses = (ownerState: DateRangePickerDay2OwnerState) => {
   const {
     isDaySelected,
@@ -67,40 +65,33 @@ const useUtilityClasses = (ownerState: DateRangePickerDay2OwnerState) => {
   return composeClasses(slots, getDateRangePickerDay2UtilityClass, {});
 };
 
-const SET_MARGIN = '2px'; // should be working with any given margin
 const highlightStyles = (theme: Theme) => ({
   content: '""' /* Creates an empty element */,
-  width: '100%',
   height: '100%',
   backgroundColor: theme.vars
     ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
     : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
   boxSizing: 'border-box',
-  left: 0,
-  right: 0,
+  left: 'calc(var(--PickerDay-horizontalMargin) * (-1))',
+  right: 'calc(var(--PickerDay-horizontalMargin) * (-1))',
 });
 const previewStyles = (theme: Theme) => ({
   content: '""' /* Creates an empty element */,
-  width: '100%',
   height: '100%',
   border: `1.2px dashed ${(theme.vars || theme).palette.divider}`,
   borderLeftColor: 'transparent',
   borderRightColor: 'transparent',
   boxSizing: 'border-box',
   borderOffset: '-1px',
-  left: 0,
-  right: 0,
+  left: 'calc(-1 * var(--PickerDay-horizontalMargin))',
+  right: 'calc(-1 * var(--PickerDay-horizontalMargin))',
 });
 
 const selectedDayStyles = (theme: Theme) => ({
   color: (theme.vars || theme).palette.primary.contrastText,
   backgroundColor: (theme.vars || theme).palette.primary.main,
   fontWeight: theme.typography.fontWeightMedium,
-  '&:focus': {
-    willChange: 'background-color',
-    backgroundColor: (theme.vars || theme).palette.primary.dark,
-  },
-  '&:hover': {
+  '&:focus, &:hover': {
     willChange: 'background-color',
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
@@ -135,11 +126,17 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
     ];
   },
 })<{ ownerState: DateRangePickerDay2OwnerState }>(({ theme }) => ({
+  '--PickerDay-horizontalMargin': '2px',
+  '--PickerDay-size': '36px',
+
   ...theme.typography.caption,
-  width: DAY_SIZE,
-  height: DAY_SIZE,
-  borderRadius: DAY_SIZE / 2,
+  width: 'var(--PickerDay-size)',
+  height: 'var(--PickerDay-size)',
+  borderRadius: '18px',
   padding: 0,
+  position: 'relative',
+  marginLeft: 'var(--PickerDay-horizontalMargin)',
+  marginRight: 'var(--PickerDay-horizontalMargin)',
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
   transition: theme.transitions.create('background-color', {
@@ -160,7 +157,6 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
   },
   zIndex: 1,
   isolation: 'isolate',
-  position: 'initial',
   '&::before, &::after': {
     zIndex: -1,
     position: 'absolute',
@@ -211,8 +207,7 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
           borderLeftColor: (theme.vars || theme).palette.divider,
-          left: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
+          left: 0,
         },
       },
     },
@@ -224,8 +219,7 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
           borderRightColor: (theme.vars || theme).palette.divider,
-          right: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
+          right: 0,
         },
       },
     },
@@ -237,12 +231,7 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
         },
       },
     },
-    {
-      props: { isDaySelected: true, isDayInsideSelection: false },
-      style: {
-        ...selectedDayStyles(theme),
-      },
-    },
+
     {
       props: { isDaySelectionStart: true },
       style: {
@@ -250,8 +239,7 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
           ...highlightStyles(theme),
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
-          left: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
+          left: 0,
         },
       },
     },
@@ -262,8 +250,7 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
           ...highlightStyles(theme),
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
-          right: `${SET_MARGIN}`,
-          width: `calc(100% - ${SET_MARGIN})`,
+          right: 0,
         },
         '::after': {
           borderLeftColor: 'transparent',
@@ -281,16 +268,59 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
       },
     },
     {
+      props: { isDaySelected: true, isDayInsideSelection: false },
+      style: {
+        ...selectedDayStyles(theme),
+      },
+    },
+    {
+      props: { isDaySelectionStart: true, isDaySelectionEnd: true },
+      style: {
+        '::before': {
+          left: 0,
+          right: 0,
+        },
+      },
+    },
+    {
+      props: {
+        isDaySelectionStart: true,
+        isDaySelectionEnd: true,
+        isDayPreviewEnd: false,
+        isDayPreviewStart: false,
+      },
+      style: {
+        '::after': {
+          left: 0,
+          right: 0,
+        },
+      },
+    },
+    {
+      props: {
+        isDayPreviewEnd: true,
+        isDayPreviewStart: true,
+      },
+      style: {
+        '::after': {
+          left: 0,
+          right: 0,
+        },
+      },
+    },
+    {
       props: { isDayEndOfWeek: true },
       style: {
         '::after': {
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
           borderRightColor: (theme.vars || theme).palette.divider,
+          right: 0,
         },
         '::before': {
           borderTopRightRadius: 'inherit',
           borderBottomRightRadius: 'inherit',
+          right: 0,
         },
       },
     },
@@ -303,24 +333,17 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
           borderLeftColor: (theme.vars || theme).palette.divider,
+          left: 0,
         },
         '::before': {
           borderTopLeftRadius: 'inherit',
           borderBottomLeftRadius: 'inherit',
+          left: 0,
         },
       },
     },
   ],
 }));
-
-const DateRangePickerDay2Container = styled('div', {
-  name: 'MuiDateRangePickerDay2',
-  slot: 'Container',
-})({
-  paddingLeft: SET_MARGIN,
-  paddingRight: SET_MARGIN,
-  position: 'relative',
-});
 
 type DateRangePickerDay2Component = ((
   props: DateRangePickerDay2Props & React.RefAttributes<HTMLButtonElement>,
@@ -442,27 +465,25 @@ const DateRangePickerDay2Raw = React.forwardRef(function DateRangePickerDay2(
   };
 
   return (
-    <DateRangePickerDay2Container>
-      <DateRangePickerDay2Root
-        ref={handleRef}
-        centerRipple
-        data-testid="day"
-        disabled={disabled}
-        tabIndex={selected ? 0 : -1}
-        onKeyDown={(event) => onKeyDown(event, day)}
-        onFocus={(event) => onFocus(event, day)}
-        onBlur={(event) => onBlur(event, day)}
-        onMouseEnter={(event) => onMouseEnter(event, day)}
-        onClick={handleClick}
-        onMouseDown={handleMouseDown}
-        draggable={draggable}
-        {...other}
-        ownerState={ownerState}
-        className={clsx(classes.root, className)}
-      >
-        {children ?? utils.format(day, 'dayOfMonth')}
-      </DateRangePickerDay2Root>
-    </DateRangePickerDay2Container>
+    <DateRangePickerDay2Root
+      ref={handleRef}
+      centerRipple
+      data-testid="day"
+      disabled={disabled}
+      tabIndex={selected ? 0 : -1}
+      onKeyDown={(event) => onKeyDown(event, day)}
+      onFocus={(event) => onFocus(event, day)}
+      onBlur={(event) => onBlur(event, day)}
+      onMouseEnter={(event) => onMouseEnter(event, day)}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      draggable={draggable}
+      {...other}
+      ownerState={ownerState}
+      className={clsx(classes.root, className)}
+    >
+      {children ?? utils.format(day, 'dayOfMonth')}
+    </DateRangePickerDay2Root>
   );
 });
 
