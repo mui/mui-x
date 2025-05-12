@@ -25,7 +25,9 @@ export function useBaseCalendarRoot<
   TValue extends PickerValidValue,
   TError,
   TValidationProps extends Required<BaseDateValidationProps>,
->(parameters: useBaseCalendarRoot.Parameters<TValue, TError, TValidationProps>) {
+>(
+  parameters: useBaseCalendarRoot.Parameters<TValue, TError, TValidationProps>,
+): useBaseCalendarRoot.ReturnValue<TValue> {
   const {
     // Form props
     readOnly = false,
@@ -335,6 +337,7 @@ export namespace useBaseCalendarRoot {
     setVisibleDate: (newVisibleDate: PickerValidDate, skipIfAlreadyVisible: boolean) => void;
     isDateCellVisible: (date: PickerValidDate) => boolean;
     context: BaseCalendarRootContext;
+    visibleDateContext: BaseCalendarRootVisibleDateContext;
   }
 
   export interface ValueChangeHandlerContext<TError> {

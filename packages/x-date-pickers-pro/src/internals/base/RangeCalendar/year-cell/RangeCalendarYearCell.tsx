@@ -71,7 +71,7 @@ export namespace RangeCalendarYearCell {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
-      useBaseCalendarYearCell.Parameters {}
+      useBaseCalendarYearCell.PublicParameters {}
 }
 
 interface InnerRangeCalendarYearCellProps extends RangeCalendarYearCell.Props {

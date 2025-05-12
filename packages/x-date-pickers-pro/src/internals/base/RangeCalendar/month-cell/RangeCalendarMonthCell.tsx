@@ -71,7 +71,7 @@ export namespace RangeCalendarMonthCell {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
-      useBaseCalendarMonthCell.Parameters {}
+      useBaseCalendarMonthCell.PublicParameters {}
 }
 
 interface InnerRangeCalendarMonthCellProps extends RangeCalendarMonthCell.Props {
