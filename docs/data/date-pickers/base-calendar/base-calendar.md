@@ -1,6 +1,7 @@
 ---
 productId: x-date-pickers
 title: React Calendar component
+components: DateCalendar2
 packageName: '@mui/x-date-pickers'
 ---
 

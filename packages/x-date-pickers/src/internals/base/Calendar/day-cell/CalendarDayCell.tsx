@@ -114,11 +114,16 @@ export namespace CalendarDayCell {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
-      Omit<useBaseCalendarDayCell.Parameters, 'ctx'> {}
+      useBaseCalendarDayCell.PublicParameters {}
 }
 
-interface InnerCalendarDayCellProps
-  extends Omit<BaseUIComponentProps<'button', CalendarDayCell.State>, 'value'>,
-    useBaseCalendarDayCell.Parameters {}
+interface InnerCalendarDayCellProps extends CalendarDayCell.Props {
+  /**
+   * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+   */
+  ctx: InnerCalendarDayCellContext;
+}
+
+interface InnerCalendarDayCellContext extends useBaseCalendarDayCell.Context {}
 
 export { CalendarDayCell };

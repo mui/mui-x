@@ -37,7 +37,7 @@ export function useBaseCalendarMonthCell(
 }
 
 export namespace useBaseCalendarMonthCell {
-  export interface Parameters {
+  export interface PublicParameters {
     /**
      * The value to select when this cell is clicked.
      */
@@ -47,6 +47,9 @@ export namespace useBaseCalendarMonthCell {
      * @default utils.formats.month
      */
     format?: string;
+  }
+
+  export interface Parameters extends PublicParameters {
     /**
      * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
      */

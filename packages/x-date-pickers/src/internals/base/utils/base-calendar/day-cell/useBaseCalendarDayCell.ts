@@ -44,7 +44,7 @@ export function useBaseCalendarDayCell(parameters: useBaseCalendarDayCell.Parame
 }
 
 export namespace useBaseCalendarDayCell {
-  export interface Parameters {
+  export interface PublicParameters {
     /**
      * The value to select when this cell is clicked.
      */
@@ -54,6 +54,9 @@ export namespace useBaseCalendarDayCell {
      * @default utils.formats.dayOfMonth
      */
     format?: string;
+  }
+
+  export interface Parameters extends PublicParameters {
     /**
      * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
      */

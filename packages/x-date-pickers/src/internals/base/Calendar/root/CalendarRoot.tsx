@@ -111,9 +111,9 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
   });
 
   const [prevValue, setPrevValue] = React.useState<PickerValue>(value);
-  if (value !== prevValue && utils.isValid(value)) {
+  if (value !== prevValue) {
     setPrevValue(value);
-    if (isDateCellVisible(value)) {
+    if (utils.isValid(value) && isDateCellVisible(value)) {
       setVisibleDate(value);
     }
   }

@@ -63,12 +63,17 @@ export namespace CalendarYearCell {
   }
 
   export interface Props
-    extends Omit<useBaseCalendarYearCell.Parameters, 'ctx'>,
-      Omit<BaseUIComponentProps<'button', State>, 'value'> {}
+    extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
+      useBaseCalendarYearCell.PublicParameters {}
 }
 
-interface InnerCalendarYearCellProps
-  extends useBaseCalendarYearCell.Parameters,
-    Omit<BaseUIComponentProps<'button', CalendarYearCell.State>, 'value'> {}
+interface InnerCalendarYearCellProps extends CalendarYearCell.Props {
+  /**
+   * The memoized context forwarded by the wrapper component so that this component does not need to subscribe to any context.
+   */
+  ctx: InnerRangeCalendarMonthCellContext;
+}
+
+interface InnerRangeCalendarMonthCellContext extends useBaseCalendarYearCell.Context {}
 
 export { CalendarYearCell };

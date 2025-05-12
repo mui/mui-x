@@ -54,8 +54,8 @@ export namespace ClockMeridiemList {
   export interface State {}
 
   export interface Props
-    extends useClockList.PublicParameters,
-      Omit<BaseUIComponentProps<'div', State>, 'children'> {}
+    extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
+      useClockList.PublicParameters {}
 }
 
 export { ClockMeridiemList };

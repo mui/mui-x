@@ -100,7 +100,7 @@ export namespace RangeCalendarDayCell {
 
   export interface Props
     extends Omit<BaseUIComponentProps<'button', State>, 'value'>,
-      useBaseCalendarDayCell.Parameters {}
+      useBaseCalendarDayCell.PublicParameters {}
 }
 
 interface InnerRangeCalendarDayCellProps extends RangeCalendarDayCell.Props {
