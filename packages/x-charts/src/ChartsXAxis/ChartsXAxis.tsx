@@ -293,7 +293,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     reverse,
     isMounted,
-    isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
+    isPointInside: (x: number) => instance.isPointInside(x, 0, { direction: 'x' }),
   });
 
   const axisLabelProps = useSlotProps({
@@ -363,7 +363,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
-        const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const showTick = instance.isPointInside(tickOffset, -1, { direction: 'x' });
         const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 

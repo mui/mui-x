@@ -189,7 +189,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const isPointInside = React.useCallback(
     (
-      { x, y }: { x: number; y: number },
+      x: number,
+      y: number,
       options?: {
         targetElement?: Element;
         direction?: 'x' | 'y';

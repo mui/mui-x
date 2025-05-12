@@ -86,7 +86,7 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = instance.isPointInside({ x, y });
+      const isInRange = instance.isPointInside(x, y);
 
       if (isInRange) {
         const currentItem = {
