@@ -226,9 +226,9 @@ const RangeCalendarRoot = React.forwardRef(function RangeCalendarRoot(
   if (prevState.value !== value || prevState.rangePosition !== rangePosition) {
     setPrevState({ value, rangePosition });
     if (rangePosition === 'start' && utils.isValid(value[0]) && !isDateCellVisible(value[0])) {
-      setVisibleDate(value[0]);
+      setVisibleDate(value[0], false);
     } else if (rangePosition === 'end' && utils.isValid(value[1]) && !isDateCellVisible(value[1])) {
-      setVisibleDate(value[1]);
+      setVisibleDate(value[1], false);
     }
   }
 
