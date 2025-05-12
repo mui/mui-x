@@ -10,7 +10,7 @@ import {
 } from '@mui/x-date-pickers/internals/base/utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 
 // TODO: Use a dedicated context
-export function useRangeCalendarContext() {
+export function useRangeCalendarContext(): useRangeCalendarContext.ReturnValue {
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
 
