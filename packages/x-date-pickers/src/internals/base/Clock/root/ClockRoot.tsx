@@ -16,7 +16,6 @@ import { ExportedValidateTimeProps, ValidateTimeProps } from '../../../../valida
 import { FormProps, PickerValue } from '../../../models';
 import { useControlledValue } from '../../../hooks/useControlledValue';
 import { ClockSection } from '../utils/types';
-import { mergeProps } from '../../base-utils/mergeProps';
 import { useValidation } from '../../../../validation';
 import { useUtils } from '../../../hooks/useUtils';
 import { SECTION_TYPE_GRANULARITY } from '../../../utils/getDefaultReferenceDate';
@@ -123,12 +122,7 @@ const ClockRoot = React.forwardRef(function ClockRoot(
     return children;
   }, [children]);
 
-  const getRootProps = React.useCallback(
-    (externalProps = {}): React.ComponentPropsWithRef<'div'> => {
-      return mergeProps({ children: resolvedChildren }, externalProps);
-    },
-    [resolvedChildren],
-  );
+  const props = React.useMemo(() => ({ children: resolvedChildren }), [resolvedChildren]);
 
   const { getValidationErrorForNewValue } = useValidation({
     props: { ...validationProps, onError },
@@ -167,7 +161,7 @@ const ClockRoot = React.forwardRef(function ClockRoot(
   const renderElement = useRenderElement('div', componentProps, {
     state,
     ref: forwardedRef,
-    props: [getRootProps, elementProps],
+    props: [props, elementProps],
   });
 
   return <ClockRootContext.Provider value={context}>{renderElement()}</ClockRootContext.Provider>;

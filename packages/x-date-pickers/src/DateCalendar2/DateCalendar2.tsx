@@ -57,6 +57,7 @@ const DEFAULT_VIEWS = { year: true, month: false, day: true };
  * - MuiPickersFadeTransitionGroup
  * - MuiPickersSlideTransition
  * - MuiYearCalendar
+ * @ignore - internal component.
  */
 export const DateCalendar2 = React.forwardRef(function DateCalendar2(
   props: DateCalendar2Props,
