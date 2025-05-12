@@ -128,7 +128,6 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
 })<{ ownerState: DateRangePickerDay2OwnerState }>(({ theme }) => ({
   '--PickerDay-horizontalMargin': '2px',
   '--PickerDay-size': '36px',
-
   ...theme.typography.caption,
   width: 'var(--PickerDay-size)',
   height: 'var(--PickerDay-size)',
@@ -231,7 +230,6 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
         },
       },
     },
-
     {
       props: { isDaySelectionStart: true },
       style: {
