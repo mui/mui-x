@@ -114,7 +114,7 @@ const CalendarRoot = React.forwardRef(function CalendarRoot(
   if (value !== prevValue) {
     setPrevValue(value);
     if (utils.isValid(value) && isDateCellVisible(value)) {
-      setVisibleDate(value);
+      setVisibleDate(value, false);
     }
   }
 
