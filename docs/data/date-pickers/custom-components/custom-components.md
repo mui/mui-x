@@ -190,7 +190,7 @@ You can pass a custom component to replace the year button, as shown below:
 
 The `day` slot allows users to change the selected day in the calendar.
 
-You can use the `PickerDay2` component to replace the day slot with a simplified DOM structure reduced to a single element.
+You can use the `<PickerDay2 />` component to replace the day slot with a simplified DOM structure reduced to a single element.
 
 The `::before` pseudo element is used to create the highlighting effect on the days within the selected range.
 
