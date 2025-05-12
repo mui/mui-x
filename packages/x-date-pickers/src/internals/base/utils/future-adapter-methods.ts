@@ -1,27 +1,27 @@
 import { MuiPickersAdapter, PickerValidDate } from '../../../models';
 
-export function startOfHour(utils: MuiPickersAdapter, value: PickerValidDate) {
+export function startOfHour(utils: MuiPickersAdapter, value: PickerValidDate): PickerValidDate {
   return utils.setSeconds(utils.setMinutes(value, 0), 0);
 }
 
-export function endOfHour(utils: MuiPickersAdapter, value: PickerValidDate) {
+export function endOfHour(utils: MuiPickersAdapter, value: PickerValidDate): PickerValidDate {
   return utils.setSeconds(utils.setMinutes(value, 59), 59);
 }
 
-export function startOfMinute(utils: MuiPickersAdapter, value: PickerValidDate) {
+export function startOfMinute(utils: MuiPickersAdapter, value: PickerValidDate): PickerValidDate {
   return utils.setSeconds(value, 0);
 }
 
-export function endOfMinute(utils: MuiPickersAdapter, value: PickerValidDate) {
+export function endOfMinute(utils: MuiPickersAdapter, value: PickerValidDate): PickerValidDate {
   return utils.setSeconds(value, 59);
 }
 
-export function startOfMeridiem(utils: MuiPickersAdapter, value: PickerValidDate) {
+export function startOfMeridiem(utils: MuiPickersAdapter, value: PickerValidDate): PickerValidDate {
   const newHour = utils.getHours(value) > 11 ? 12 : 0;
   return startOfHour(utils, utils.setHours(value, newHour));
 }
 
-export function endOfMeridiem(utils: MuiPickersAdapter, value: PickerValidDate) {
+export function endOfMeridiem(utils: MuiPickersAdapter, value: PickerValidDate): PickerValidDate {
   const newHour = utils.getHours(value) > 11 ? 23 : 11;
   return endOfHour(utils, utils.setHours(value, newHour));
 }

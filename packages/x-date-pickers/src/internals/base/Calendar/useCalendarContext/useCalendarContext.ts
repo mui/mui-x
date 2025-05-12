@@ -1,8 +1,14 @@
-import { useBaseCalendarRootContext } from '../../utils/base-calendar/root/BaseCalendarRootContext';
-import { useBaseCalendarRootVisibleDateContext } from '../../utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
+import {
+  BaseCalendarRootContext,
+  useBaseCalendarRootContext,
+} from '../../utils/base-calendar/root/BaseCalendarRootContext';
+import {
+  BaseCalendarRootVisibleDateContext,
+  useBaseCalendarRootVisibleDateContext,
+} from '../../utils/base-calendar/root/BaseCalendarRootVisibleDateContext';
 
 // TODO: Use a dedicated context
-export function useCalendarContext() {
+export function useCalendarContext(): useCalendarContext.ReturnValue {
   const baseRootContext = useBaseCalendarRootContext();
   const baseRootVisibleDateContext = useBaseCalendarRootVisibleDateContext();
 
@@ -10,4 +16,10 @@ export function useCalendarContext() {
     visibleDate: baseRootVisibleDateContext.visibleDate,
     disabled: baseRootContext.disabled,
   };
+}
+
+export namespace useCalendarContext {
+  export interface ReturnValue
+    extends Pick<BaseCalendarRootContext, 'disabled'>,
+      Pick<BaseCalendarRootVisibleDateContext, 'visibleDate'> {}
 }
