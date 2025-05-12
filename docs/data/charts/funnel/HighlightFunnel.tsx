@@ -3,27 +3,43 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
-import { HighlightScope } from '@mui/x-charts/context';
+import { FadeOptions, HighlightOptions } from '@mui/x-charts/context';
 import { populationByEducationLevelPercentageSeriesLabeled } from './populationByEducationLevel';
 
 export default function HighlightFunnel() {
-  const [highlight, setHighlight] = React.useState('item');
-  const [fade, setFade] = React.useState('global');
+  const [highlight, setHighlight] = React.useState<HighlightOptions>('item');
+  const [fade, setFade] = React.useState<FadeOptions>('global');
 
   return (
-    <Stack spacing={1} sx={{ width: '100%', maxWidth: 400 }}>
-      <FunnelChart
-        series={[
-          {
-            ...populationByEducationLevelPercentageSeriesLabeled,
-            highlightScope: {
-              highlight,
-              fade,
-            } as HighlightScope,
-          },
-        ]}
-        {...funnelChartParams}
-      />
+    <Stack spacing={1} sx={{ width: '100%' }}>
+      <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }}>
+        <FunnelChart
+          series={[
+            {
+              ...populationByEducationLevelPercentageSeriesLabeled,
+              highlightScope: {
+                highlight,
+                fade,
+              },
+            },
+          ]}
+          {...funnelChartParams}
+        />
+        <FunnelChart
+          series={[
+            {
+              ...populationByEducationLevelPercentageSeriesLabeled,
+              variant: 'outlined',
+              highlightScope: {
+                highlight,
+                fade,
+              },
+            },
+          ]}
+          {...funnelChartParams}
+        />
+      </Stack>
+
       <Controls
         highlight={highlight}
         setHighlight={setHighlight}
@@ -46,9 +62,9 @@ function Controls({
   setFade,
 }: {
   highlight: string;
-  setHighlight: React.Dispatch<React.SetStateAction<string>>;
+  setHighlight: React.Dispatch<React.SetStateAction<HighlightOptions>>;
   fade: string;
-  setFade: React.Dispatch<React.SetStateAction<string>>;
+  setFade: React.Dispatch<React.SetStateAction<FadeOptions>>;
 }) {
   return (
     <Stack
@@ -62,7 +78,7 @@ function Controls({
         select
         label="highlight"
         value={highlight}
-        onChange={(event) => setHighlight(event.target.value)}
+        onChange={(event) => setHighlight(event.target.value as HighlightOptions)}
         sx={{ minWidth: 150 }}
       >
         <MenuItem value={'none'}>none</MenuItem>
@@ -73,7 +89,7 @@ function Controls({
         select
         label="fade"
         value={fade}
-        onChange={(event) => setFade(event.target.value)}
+        onChange={(event) => setFade(event.target.value as FadeOptions)}
         sx={{ minWidth: 150 }}
       >
         <MenuItem value={'none'}>none</MenuItem>

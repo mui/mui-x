@@ -1,6 +1,7 @@
 // date-fns-jalali@<3 has no exports field defined
 // See https://github.com/date-fns/date-fns/issues/1781
 /* eslint-disable import/extensions, class-methods-use-this */
+/* v8 ignore start */
 // @ts-nocheck
 import addSeconds from 'date-fns-jalali/addSeconds/index.js';
 import addMinutes from 'date-fns-jalali/addMinutes/index.js';
@@ -47,6 +48,7 @@ import isWithinInterval from 'date-fns-jalali/isWithinInterval/index.js';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR/index.js';
 import type { Locale as DateFnsLocale } from 'date-fns-jalali';
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters/index.js';
+/* v8 ignore end */
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
@@ -125,7 +127,7 @@ export class AdapterDateFnsJalali
   implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    /* istanbul ignore next */
+    /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
         throw new Error(
@@ -136,6 +138,7 @@ export class AdapterDateFnsJalali
         );
       }
     }
+    /* v8 ignore stop */
     super({
       locale: locale ?? defaultLocale,
       // some formats are different in jalali adapter,
