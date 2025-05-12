@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
-import { testSkipIf, hasTouchSupport, describeSkipIf } from 'test/utils/skipIf';
+import { hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
@@ -221,7 +221,7 @@ describe('<TimeClock />', () => {
     });
   });
 
-  testSkipIf(!hasTouchSupport)(
+  it.skipIf(!hasTouchSupport)(
     'should display options, but not update value when readOnly prop is passed',
     () => {
       const selectEvent = {
@@ -250,7 +250,7 @@ describe('<TimeClock />', () => {
     },
   );
 
-  testSkipIf(!hasTouchSupport)(
+  it.skipIf(!hasTouchSupport)(
     'should display disabled options when disabled prop is passed',
     () => {
       const selectEvent = {
@@ -279,7 +279,7 @@ describe('<TimeClock />', () => {
     },
   );
 
-  describeSkipIf(!hasTouchSupport)('Time validation on touch ', () => {
+  describe.skipIf(!hasTouchSupport)('Time validation on touch ', () => {
     const clockTouchEvent = {
       '13:--': {
         changedTouches: [

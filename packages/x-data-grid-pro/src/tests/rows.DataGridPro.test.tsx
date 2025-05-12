@@ -26,7 +26,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridProProps {
   rows: GridValidRowModel[];
@@ -432,7 +432,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   // Need layouting
-  describeSkipIf(isJSDOM)('virtualization', () => {
+  describe.skipIf(isJSDOM)('virtualization', () => {
     let apiRef: RefObject<GridApi | null>;
     function TestCaseVirtualization(
       props: Partial<DataGridProProps> & {

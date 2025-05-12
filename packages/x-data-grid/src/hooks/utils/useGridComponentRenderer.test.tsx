@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import Box, { BoxProps } from '@mui/material/Box';
-import { testSkipIf } from 'test/utils/skipIf';
 import { RenderProp, useGridComponentRenderer } from './useGridComponentRenderer';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -100,7 +99,7 @@ describe('useGridComponentRenderer', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)('should merge sx props', () => {
+  it.skipIf(isJSDOM)('should merge sx props', () => {
     function TestComponentWithSxProp(
       props: BoxProps & { render?: RenderProp<BoxProps, { someState: string }> },
     ) {

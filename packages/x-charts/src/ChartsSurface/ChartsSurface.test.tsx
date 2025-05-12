@@ -2,11 +2,11 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { expect } from 'chai';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { ChartProvider } from '../context/ChartProvider';
 
 // JSDOM doesn't implement SVGElement
-describeSkipIf(isJSDOM)('<ChartsSurface />', () => {
+describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
   const { render } = createRenderer();
 
   it('should pass ref when it is added directly to component', () => {

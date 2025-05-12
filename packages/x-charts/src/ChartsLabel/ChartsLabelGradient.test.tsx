@@ -5,7 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChartsLabelGradient } from '@mui/x-charts/ChartsLabel/ChartsLabelGradient';
 import { labelGradientClasses } from '@mui/x-charts/ChartsLabel';
 import { expect } from 'chai';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import RtlProvider from '@mui/system/RtlProvider';
 
 describe('<ChartsLabelGradient />', () => {
@@ -33,7 +33,7 @@ describe('<ChartsLabelGradient />', () => {
   }));
 
   // JSDOM does not support SVGMatrix
-  describeSkipIf(isJSDOM)('rotation', () => {
+  describe.skipIf(isJSDOM)('rotation', () => {
     const matrixToRotation = (element: SVGSVGElement | null) => {
       if (!element) {
         throw new Error('Svg element not found');

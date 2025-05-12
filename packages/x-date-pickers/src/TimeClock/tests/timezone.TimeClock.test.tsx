@@ -9,13 +9,12 @@ import {
   getDateOffset,
   describeAdapters,
 } from 'test/utils/pickers';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
 describe('<TimeClock /> - Timezone', () => {
   describeAdapters('Timezone prop', TimeClock, ({ adapter, render }) => {
-    describeSkipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
+    describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
         const onChange = spy();
         render(<TimeClock onChange={onChange} />);

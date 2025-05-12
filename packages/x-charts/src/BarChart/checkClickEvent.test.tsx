@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const config = {
   dataset: [
@@ -43,7 +43,7 @@ describe('BarChart - click event', () => {
 
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = spy();
       const { user } = render(
         <div
@@ -95,7 +95,7 @@ describe('BarChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should provide the right context as second argument with layout="horizontal"',
       async () => {
         const onAxisClick = spy();
@@ -172,7 +172,7 @@ describe('BarChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onItemClick = spy();
       const { user } = render(
         <div

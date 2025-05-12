@@ -6,9 +6,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
 import { grid } from 'test/utils/helperFn';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
-describeSkipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
+describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();
 
   const baselineProps = {

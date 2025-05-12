@@ -1,4 +1,6 @@
-import chai from 'chai';
+/// <reference path="./addChaiAssertions.d.ts" />
+
+import * as chai from 'chai';
 
 import chaiDom from 'chai-dom';
 import chaiPlugin from '@mui/internal-test-utils/chaiPlugin';

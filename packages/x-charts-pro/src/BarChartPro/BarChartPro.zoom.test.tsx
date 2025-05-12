@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM, testSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from './BarChartPro';
 
@@ -19,7 +19,7 @@ const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   return axisData as string[];
 };
 
-describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
+describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
   const { render } = createRenderer();
 
   const barChartProps = {
@@ -172,7 +172,7 @@ describeSkipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
 
   // Technically it should work, but it's not working in the test environment
   // https://github.com/pmndrs/use-gesture/discussions/430
-  testSkipIf(true)('should zoom on pinch', async () => {
+  it.skipIf(true)('should zoom on pinch', async () => {
     const { user } = render(<BarChartPro {...barChartProps} />, options);
 
     expect(screen.queryByText('A')).not.to.equal(null);

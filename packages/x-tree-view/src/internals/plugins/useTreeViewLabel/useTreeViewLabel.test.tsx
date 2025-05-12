@@ -2,14 +2,13 @@ import { expect } from 'chai';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { UseTreeViewLabelSignature } from '@mui/x-tree-view/internals';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 describeTreeView<[UseTreeViewLabelSignature]>(
   'useTreeViewLabel plugin',
   ({ render, treeViewComponentName }) => {
     const isSimpleTreeView = treeViewComponentName.startsWith('SimpleTreeView');
 
-    describeSkipIf(isSimpleTreeView)('interaction', () => {
+    describe.skipIf(isSimpleTreeView)('interaction', () => {
       describe('render labelInput when needed', () => {
         // This test is not relevant for the TreeItem component or the SimpleTreeView.
         it('should not render labelInput when double clicked if item is not editable', () => {
@@ -172,7 +171,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
         });
       });
     });
-    describeSkipIf(isSimpleTreeView)('updateItemLabel api method', () => {
+    describe.skipIf(isSimpleTreeView)('updateItemLabel api method', () => {
       it('should change the label value', () => {
         const view = render({
           items: [{ id: '1', label: 'test' }],

@@ -1,14 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "types": [
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
+      "dayjs/plugin/timezone.d.ts",
+      "dayjs/plugin/utc.d.ts",
+      "vite/client",
       "vitest/globals",
-      "node"
+      "moment-timezone"
     ],
-    "noImplicitAny": false,
     "skipLibCheck": true
-  },
-  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+  }
 }

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<StaticDatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -41,14 +41,14 @@ describe('<StaticDatePicker />', () => {
       );
     }
 
-    testSkipIf(isJSDOM)('should take focus when `autoFocus=true`', () => {
+    it.skipIf(isJSDOM)('should take focus when `autoFocus=true`', () => {
       render(<Test autoFocus />);
 
       const isInside = document.getElementById('pickerWrapper')?.contains(document.activeElement);
       expect(isInside).to.equal(true);
     });
 
-    testSkipIf(isJSDOM)('should not take focus when `autoFocus=false`', () => {
+    it.skipIf(isJSDOM)('should not take focus when `autoFocus=false`', () => {
       render(<Test />);
 
       const isInside = document.getElementById('pickerWrapper')?.contains(document.activeElement);
