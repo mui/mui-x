@@ -397,7 +397,7 @@ Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? 
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
 ### Tree View
 ${logChangelogMessages('TreeView')}
-#### \`@mui/x-tree-view@__VERSION__\` 
+#### \`@mui/x-tree-view@__VERSION__\`
 ${logChangelogSection(treeViewCommits) || 'Internal changes.'}
 
 #### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
