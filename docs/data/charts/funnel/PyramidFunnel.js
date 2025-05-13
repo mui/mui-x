@@ -1,4 +1,3 @@
-// filepath: /Users/jcquintas/dev/mui/mui-x/docs/data/charts/funnel/PyramidFunnel.tsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
