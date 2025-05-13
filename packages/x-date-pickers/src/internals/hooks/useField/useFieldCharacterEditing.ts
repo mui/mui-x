@@ -224,13 +224,6 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
         return { saveQuery: false };
       }
 
-      // If the user types `0` on a month section,
-      // It is below the minimum, but we want to store the `0` in the query,
-      // So that when he pressed `1`, it will store `01` and move to the next section.
-      if (queryValueNumber < sectionBoundaries.minimum) {
-        return { saveQuery: true };
-      }
-
       const shouldGoToNextSection =
         queryValueNumber * 10 > sectionBoundaries.maximum ||
         cleanQueryValue.length === sectionBoundaries.maximum.toString().length;
