@@ -198,7 +198,7 @@ The reference below describes the relevant functions.
 See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-This API should only be used as a last resort when the Data Grid's built-in props do not suffice for your specific use case.
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
 {{"demo": "DetailPanelApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
