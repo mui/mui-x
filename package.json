@@ -91,6 +91,7 @@
     "@mui/material": "^7.0.2",
     "@mui/monorepo": "github:mui/material-ui#adb0a76b09080d02f899789266336b297850d86b",
     "@mui/utils": "^7.0.2",
+    "@mui-public/babel-plugin-display-name": "github:romgrk/mui-public#feat-babel-plugin-display-name&path:./packages/babel-plugin-display-name",
     "@next/eslint-plugin-next": "15.3.1",
     "@octokit/plugin-retry": "^7.2.1",
     "@octokit/rest": "^21.1.1",

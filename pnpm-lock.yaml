@@ -73,6 +73,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
+      '@mui-public/babel-plugin-display-name':
+        specifier: github:romgrk/mui-public#feat-babel-plugin-display-name&path:./packages/babel-plugin-display-name
+        version: '@probablyup/babel-plugin-react-displayname@https://codeload.github.com/romgrk/mui-public/tar.gz/33f5309e6858fc222e3f8d01eaa328fb55ec0ea2#path:./packages/babel-plugin-display-name(@babel/core@7.27.1)(@babel/preset-react@7.27.1(@babel/core@7.27.1))'
       '@mui/icons-material':
         specifier: ^7.0.2
         version: 7.0.2(@mui/material@7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
@@ -4026,6 +4029,13 @@ packages:
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+
+  '@probablyup/babel-plugin-react-displayname@https://codeload.github.com/romgrk/mui-public/tar.gz/33f5309e6858fc222e3f8d01eaa328fb55ec0ea2#path:./packages/babel-plugin-display-name':
+    resolution: {path: ./packages/babel-plugin-display-name, tarball: https://codeload.github.com/romgrk/mui-public/tar.gz/33f5309e6858fc222e3f8d01eaa328fb55ec0ea2}
+    version: 1.0.3
+    peerDependencies:
+      '@babel/core': ^7.0.0
+      '@babel/preset-react': ^7.0.0
 
   '@react-spring/animated@9.7.5':
     resolution: {integrity: sha512-Tqrwz7pIlsSDITzxoLS3n/v/YCUHQdOIKtOJf4yL6kYVSDTSmVK1LI1Q3M/uu2Sx4X3pIWF3xLUhlsA6SPNTNg==}
@@ -13278,6 +13288,15 @@ snapshots:
   '@polka/url@1.0.0-next.28': {}
 
   '@popperjs/core@2.11.8': {}
+
+  '@probablyup/babel-plugin-react-displayname@https://codeload.github.com/romgrk/mui-public/tar.gz/33f5309e6858fc222e3f8d01eaa328fb55ec0ea2#path:./packages/babel-plugin-display-name(@babel/core@7.27.1)(@babel/preset-react@7.27.1(@babel/core@7.27.1))':
+    dependencies:
+      '@babel/core': 7.27.1
+      '@babel/helper-module-imports': 7.27.1
+      '@babel/helper-plugin-utils': 7.27.1
+      '@babel/preset-react': 7.27.1(@babel/core@7.27.1)
+    transitivePeerDependencies:
+      - supports-color
 
   '@react-spring/animated@9.7.5(react@19.0.0)':
     dependencies:
