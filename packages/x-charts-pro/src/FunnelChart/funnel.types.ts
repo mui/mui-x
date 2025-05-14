@@ -124,6 +124,12 @@ export interface DefaultizedFunnelSeriesType
   extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
+  /**
+   * Denotes if the data is increasing, first data point is less than the last data point.
+   * While the data is decreasing if the first data point is greater than the last data point.
+   *
+   * This is used to determine the direction of the funnel.
+   */
   dataDirection: 'increasing' | 'decreasing';
 }
 

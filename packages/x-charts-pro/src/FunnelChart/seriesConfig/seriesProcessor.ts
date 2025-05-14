@@ -30,7 +30,9 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
     const firstDataPoint = currentSeries.data.at(0);
     const lastDataPoint = currentSeries.data.at(-1);
     const dataDirection =
-      firstDataPoint && lastDataPoint && firstDataPoint.value < lastDataPoint.value
+      firstDataPoint !== undefined &&
+      lastDataPoint !== undefined &&
+      firstDataPoint.value < lastDataPoint.value
         ? 'increasing'
         : 'decreasing';
 
