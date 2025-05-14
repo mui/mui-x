@@ -231,7 +231,7 @@ This method is required if your codebase is "source-available" (to hide the lice
 :::
 
 The license key is validated on the server and client-side so you must expose the environment variable to the browser.
-To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser):
+To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/guides/environment-variables#bundling-environment-variables-for-the-browser):
 
 ```tsx title="app/layout.tsx"
 'use client';

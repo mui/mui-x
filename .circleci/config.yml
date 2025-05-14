@@ -360,31 +360,22 @@ workflows:
     jobs:
       - checkout:
           <<: *default-context
-
       - test_unit:
           <<: *default-context
-
       - test_browser:
           <<: *default-context
-
       - test_lint:
           <<: *default-context
-
       - test_static:
           <<: *default-context
-
       - test_types:
           <<: *default-context
-
       - test_e2e:
           <<: *default-context
-
       - test_regressions:
           <<: *default-context
-
       - test_package:
           <<: *default-context
-
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
@@ -392,7 +383,6 @@ workflows:
       - checkout:
           <<: *default-context
       - test_e2e_website
-
   additional-tests:
     when:
       and:
@@ -418,7 +408,6 @@ workflows:
           <<: *default-context
           name: test_e2e_additional
           react-version: << pipeline.parameters.with-react-version >>
-
   additional-checks:
     when:
       and:

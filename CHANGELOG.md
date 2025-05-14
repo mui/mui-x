@@ -15,10 +15,8 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-Special thanks go out to this community member for a valuable contribution:
-@ptuukkan.
-Team members who have contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @rita-codes, @romgrk.
+Special thanks go out to this community member for a valuable contribution: @ptuukkan.
+Team members who have contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @rita-codes, @romgrk.
 
 ### Data Grid
 
@@ -531,8 +529,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-Team members who have contributed to this release:
-@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
+Team members who have contributed to this release: @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -845,7 +842,7 @@ We'd like to offer a big thanks to the 21 contributors who made this release pos
 - 🌍 Improve Chinese (zh-CN), (zh-HK), (zh-TW), Czech (cs-CZ), Korean (ko-KR) and Slovak (sk-Sk) locales on the Data Grid
 - 🌍 Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales on the Pickers
 
-## Breaking changes
+### Breaking changes
 
 - ℹ️ The peer dependency on `@mui/material` has been updated to accept only v7.
   This has been done to increase the adoption rate of ESM.
@@ -858,7 +855,7 @@ Following are all team members who have contributed to this release:
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
-## Alpha release highlights
+### Alpha release highlights
 
 Below are the highlights of the alpha releases leading up to this beta release:
 
@@ -3152,8 +3149,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - 🐞 Bugfixes
 
-Team members who have contributed to this release:
-@arminmeh, @cherniavskii, @LukasTy, @michelengelen.
+Team members who have contributed to this release: @arminmeh, @cherniavskii, @LukasTy, @michelengelen.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 

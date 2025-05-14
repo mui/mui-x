@@ -171,7 +171,7 @@
     "languageTag": "ko-KR",
     "importName": "koKR",
     "localeName": "Korean",
-    "missingKeysCount": 59,
+    "missingKeysCount": 3,
     "totalKeysCount": 191,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/koKR.ts"
   },
@@ -179,7 +179,7 @@
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (Bokmål)",
-    "missingKeysCount": 71,
+    "missingKeysCount": 61,
     "totalKeysCount": 191,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/nbNO.ts"
   },
