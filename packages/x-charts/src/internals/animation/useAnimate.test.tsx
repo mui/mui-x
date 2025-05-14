@@ -4,7 +4,12 @@ import * as React from 'react';
 import { useAnimateInternal } from '@mui/x-charts/internals/animation/useAnimateInternal';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { spy } from 'sinon';
-import { sleep } from 'test/utils/helperFn';
+
+// Wait for the next animation frame
+const waitNextFrame = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => resolve());
+  });
 
 describe('useAnimate', () => {
   const { render } = createRenderer();
@@ -25,16 +30,6 @@ describe('useAnimate', () => {
   afterEach(() => {
     applyProps.resetHistory();
   });
-
-  function waitTwoFrames() {
-    let resolve: () => void;
-    const twoAnimationFrames = new Promise<void>((res) => {
-      resolve = res;
-    });
-    // Wait two frames to ensure no transition was initiated
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-    return twoAnimationFrames;
-  }
 
   it('starts animating from initial props', async () => {
     function TestComponent() {
@@ -107,9 +102,8 @@ describe('useAnimate', () => {
 
     const { rerender } = render(<TestComponent width={2000} />);
 
-    await waitFor(() => {
-      expect(callCount()).to.be.greaterThan(1);
-    });
+    await waitNextFrame();
+    expect(callCount()).to.be.equal(2);
 
     const lastIncreasingCall = lastCallWidth();
     // Should be animating from 1000 to 2000
@@ -118,7 +112,7 @@ describe('useAnimate', () => {
 
     rerender(<TestComponent width={0} />);
 
-    await sleep(100);
+    await waitNextFrame();
 
     expect(lastCallWidth()).to.be.lessThan(lastIncreasingCall);
 
@@ -155,9 +149,8 @@ describe('useAnimate', () => {
 
     const { rerender } = render(<TestComponent width={2000} />);
 
-    await waitFor(() => {
-      expect(callCount()).to.be.greaterThan(1);
-    });
+    await waitNextFrame();
+    expect(callCount()).to.be.equal(2);
 
     // Should be animating from 1000 to 2000
     expect(lastCallWidth()).to.be.greaterThan(1000);
@@ -165,9 +158,8 @@ describe('useAnimate', () => {
 
     rerender(<TestComponent width={0} skipAnimation />);
 
-    await waitFor(() => {
-      expect(callCount()).to.be.greaterThanOrEqual(2);
-    });
+    await waitNextFrame();
+    expect(callCount()).to.be.equal(4);
 
     // Should jump to 0 immediately after first call
     expect(lastCallWidth()).to.equal(0);
@@ -194,8 +186,8 @@ describe('useAnimate', () => {
 
     render(<TestComponent width={1000} />);
 
-    // Wait two frames to ensure no transition was initiated
-    await waitTwoFrames();
+    // Wait a frame to ensure the transition is stopped
+    await waitNextFrame();
 
     expect(callCount()).to.equal(0);
   });
@@ -221,25 +213,22 @@ describe('useAnimate', () => {
 
     const { rerender } = render(<TestComponent width={1000} skip={false} />);
 
-    await waitFor(() => {
-      expect(callCount()).to.be.greaterThanOrEqual(2);
-    });
+    await waitNextFrame();
+    expect(callCount()).to.be.equal(2);
     expect(lastCallWidth()).to.be.greaterThan(0);
     expect(lastCallWidth()).to.be.lessThan(1000);
 
     rerender(<TestComponent width={2000} skip />);
 
     // Transition finishes immediately
-    await waitFor(() => {
-      expect(callCount()).to.be.greaterThanOrEqual(4);
-    });
+    await waitNextFrame();
+    expect(callCount()).to.be.equal(4);
     expect(lastCallWidth()).to.equal(2000);
 
     rerender(<TestComponent width={1000} skip={false} />);
 
-    await waitFor(() => {
-      expect(callCount()).to.be.greaterThanOrEqual(6);
-    });
+    await waitNextFrame();
+    expect(callCount()).to.be.equal(6);
     expect(lastCallWidth()).to.be.lessThan(2000);
     expect(lastCallWidth()).to.be.greaterThan(1000);
   });
@@ -279,8 +268,8 @@ describe('useAnimate', () => {
 
     await user.click(screen.getByRole('button'));
 
-    // Wait two frames to ensure the transition is stopped
-    await waitTwoFrames();
+    // Wait a frame to ensure the transition is stopped
+    await waitNextFrame();
 
     // Clicking the button is async, so at most one more call could have happened
     expect(callCount()).to.lessThanOrEqual(callsAfterUnmount + (reactMajor > 18 ? 1 : 2));
@@ -311,8 +300,8 @@ describe('useAnimate', () => {
 
     unmount();
 
-    // Wait two frames to ensure the transition is stopped
-    await waitTwoFrames();
+    // Wait a frame to ensure the transition is stopped
+    await waitNextFrame();
 
     expect(lastCallWidth()).to.equal(lastCallBeforeUnmount);
     expect(callCount()).to.equal(numCallsBeforeUnmount);
