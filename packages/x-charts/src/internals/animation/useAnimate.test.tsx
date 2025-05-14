@@ -166,7 +166,7 @@ describe('useAnimate', () => {
     rerender(<TestComponent width={0} skipAnimation />);
 
     await waitFor(() => {
-      expect(callCount()).to.greaterThanOrEqual(2);
+      expect(callCount()).to.be.greaterThanOrEqual(2);
     });
 
     // Should jump to 0 immediately after first call
