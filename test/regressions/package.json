@@ -22,6 +22,7 @@
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-internals": "workspace:^",
     "@mui/x-license": "workspace:*",
+    "@mui/x-scheduler": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
     "@mui/x-tree-view-pro": "workspace:*",
     "@playwright/test": "^1.52.0",
