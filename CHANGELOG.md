@@ -12,7 +12,7 @@ _May 14, 2025_
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Norwegian Bokmål (nb-NO) locale on the Data Grid
-- 🌍 Improve Korean (ko-KR) locale on the Data Gid and Pickers
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid and Pickers
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
