@@ -10,6 +10,10 @@ packageName: '@mui/x-date-pickers-pro'
 
 <p class="description">The Date Range Field lets the user select a date range with the keyboard.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 ## Basic usage
 
 You can render your Date Range Field with either one input using `SingleInputDateRangeField`

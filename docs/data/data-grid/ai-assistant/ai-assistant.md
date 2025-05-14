@@ -6,6 +6,10 @@ title: Ask Your Table - AI Assistant
 
 <p class="description">Translate natural language into Data Grid views.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 :::warning
 To use this feature you must have a prompt processing backend.
 MUI [offers this service](/x/react-data-grid/ai-assistant/#with-muis-service) as a part of a premium package add-on.

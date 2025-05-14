@@ -17,6 +17,10 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 ## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 :::info
 
 <details style="margin: 0">

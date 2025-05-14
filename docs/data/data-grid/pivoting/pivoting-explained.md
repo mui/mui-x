@@ -6,6 +6,10 @@ title: Data Grid - Understanding pivoting
 
 <p class="description">Rearrange rows and columns to view data from multiple perspectives.</p>
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 ## The purpose of pivoting
 
 Pivoting gets its name from the idea of rotating data—for example, you might take a flat list of transactions with columns for product, region, and sales, and then pivot it to compare these values in different ways.

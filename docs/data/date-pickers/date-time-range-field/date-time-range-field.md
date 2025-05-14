@@ -10,6 +10,10 @@ packageName: '@mui/x-date-pickers-pro'
 
 <p class="description">The Date Time Range Field lets the user select a range of dates with an explicit starting and ending time with the keyboard.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 ## Basic usage
 
 :::info

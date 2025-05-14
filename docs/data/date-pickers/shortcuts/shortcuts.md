@@ -47,6 +47,10 @@ Here is an example where `minDate` is set to the middle of the year.
 
 ## Range shortcuts [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 Shortcuts on range pickers require `getValue` property to return an array with two values.
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline"}}

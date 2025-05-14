@@ -247,6 +247,10 @@ The demo below shows how to add a custom JSON export option.
 
 ## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
 

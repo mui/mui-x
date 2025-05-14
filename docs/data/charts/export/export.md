@@ -8,6 +8,10 @@ components: ScatterChartPro, BarChartPro, LineChartPro
 
 <p class="description">Charts can be printed and exported as PDF.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 Export is available on the Pro version of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
 
 ## Print/Export as PDF

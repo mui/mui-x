@@ -11,6 +11,10 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 <p class="description">Drag and drop your items to reorder them.</p>
 
+:::success
+{{ FEATURE }} is a Pro feature.
+:::
+
 ## Enable drag & drop re-ordering
 
 You can enable the drag & drop re-ordering of items by setting the `itemsReordering` prop to `true`:

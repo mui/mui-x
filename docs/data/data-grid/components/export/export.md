@@ -38,6 +38,10 @@ It renders the `baseButton` slot.
 
 ### Export Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
+:::success
+{{ FEATURE }} is a Premium feature.
+:::
+
 `<ExportExcel />` is a button that triggers an Excel export.
 It renders the `baseButton` slot.
 
