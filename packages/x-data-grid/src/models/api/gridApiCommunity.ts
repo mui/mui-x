@@ -21,5 +21,3 @@ export interface GridPrivateApiCommunity
     GridRowMultiSelectionApi,
     GridColumnReorderApi,
     GridRowProApi {}
-
-export type { GridApiCommon };
