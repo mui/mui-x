@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Drag-and-drop reordering
+title: Data Grid - Drag-and-drop column reordering
 ---
 
-# Data Grid - Drag-and-drop reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Data Grid - Drag-and-drop column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The Data Grid Pro lets users drag and drop columns to reorder them.</p>
 
