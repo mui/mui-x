@@ -735,7 +735,7 @@
     "splitClipboardPastedText": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(text: string, delimiter: string) => void",
+        "type": "function(text: string, delimiter: string) => string[][] | null",
         "describedArgs": ["text", "delimiter"]
       }
     },
