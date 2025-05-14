@@ -265,7 +265,7 @@ function ChartAxisZoomSliderSpan({
     };
   }, [axisDirection, axisId, instance, reverse, store, svgRef]);
 
-  const onResizeStart = (event: PointerEvent) => {
+  const onStartHandleMove = (event: PointerEvent) => {
     const element = svgRef.current;
 
     if (!element) {
@@ -304,7 +304,7 @@ function ChartAxisZoomSliderSpan({
     });
   };
 
-  const onResizeEnd = (event: PointerEvent) => {
+  const onEndHandleMove = (event: PointerEvent) => {
     const element = svgRef.current;
 
     if (!element) {
@@ -412,7 +412,7 @@ function ChartAxisZoomSliderSpan({
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
-        onMove={onResizeStart}
+        onMove={onStartHandleMove}
         onPointerEnter={() => setShowTooltip('start')}
         onPointerLeave={() => setShowTooltip(null)}
         placement="start"
@@ -424,7 +424,7 @@ function ChartAxisZoomSliderSpan({
         width={previewHandleWidth}
         height={previewHandleHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
-        onMove={onResizeEnd}
+        onMove={onEndHandleMove}
         onPointerEnter={() => setShowTooltip('end')}
         onPointerLeave={() => setShowTooltip(null)}
         placement="end"
