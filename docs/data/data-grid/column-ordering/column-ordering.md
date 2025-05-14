@@ -4,7 +4,7 @@ title: Data Grid - Column ordering
 
 # Data Grid - Column ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Drag and drop your columns to reorder them.</p>
+<p class="description">Implement drag-and-drop column reordering in the Data Grid.</p>
 
 :::warning
 There is [a known issue with Firefox v129](https://github.com/mui/mui-x/issues/14263) that impacts this feature.
