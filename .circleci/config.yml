@@ -26,16 +26,19 @@ parameters:
     type: string
     default: ''
 
+default-parameters: &default-parameters
+  react-version:
+    description: The version of react to be used
+    type: string
+    default: << pipeline.parameters.react-version >>
+  e2e-base-url:
+    description: The base url for running end-to-end test
+    type: string
+    default: << pipeline.parameters.e2e-base-url >>
+
 default-job: &default-job
   parameters:
-    react-version:
-      description: The version of react to be used
-      type: string
-      default: << pipeline.parameters.react-version >>
-    e2e-base-url:
-      description: The base url for running end-to-end test
-      type: string
-      default: << pipeline.parameters.e2e-base-url >>
+    <<: *default-parameters
   environment:
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
@@ -150,21 +153,46 @@ jobs:
       - install_js:
           react-version: << parameters.react-version >>
       - run:
-          name: Tests fake browser
-          command: pnpm test:coverage
-      - run:
-          name: Check coverage generated
-          command: |
-            if ! [[ -s coverage/lcov.info ]]
-            then
-              exit 1
-            fi
-      - run:
-          name: Coverage
-          command: |
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            chmod +x codecov
-            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
+          name: Test JSDOM
+          command: pnpm test:unit:jsdom
+
+  test_browser:
+    <<: *default-job
+    resource_class: medium+
+    steps:
+      - checkout
+      - install_js:
+          playwright: true
+          react-version: << parameters.react-version >>
+      - when:
+          condition:
+            not:
+              equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                name: Test Browser
+                command: pnpm test:unit:browser
+      - when:
+          condition:
+            equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                name: Test Browser + Coverage
+                command: pnpm test:unit:browser --coverage
+            - run:
+                name: Check coverage generated
+                command: |
+                  if ! [[ -s coverage/lcov.info ]]
+                  then
+                    exit 1
+                  fi
+            - run:
+                name: Coverage
+                command: |
+                  curl -Os https://uploader.codecov.io/latest/linux/codecov
+                  chmod +x codecov
+                  ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-browser"
+
   test_lint:
     <<: *default-job
     steps:
@@ -242,21 +270,6 @@ jobs:
             else
                 exit 0
             fi
-
-  test_browser:
-    <<: *default-job
-    steps:
-      - checkout
-      - install_js:
-          playwright: true
-          react-version: << parameters.react-version >>
-      - run:
-          name: Tests real browsers
-          command: pnpm test:karma
-      - store_artifacts:
-          # hardcoded in karma-webpack
-          path: /tmp/_karma_webpack_
-          destination: artifact-file
   test_types:
     <<: *default-job
     steps:
@@ -322,41 +335,29 @@ workflows:
     jobs:
       - checkout:
           <<: *default-context
-
       - test_unit:
           <<: *default-context
-
       - test_browser:
           <<: *default-context
-
       - test_lint:
           <<: *default-context
-
       - test_static:
           <<: *default-context
-
       - test_types:
           <<: *default-context
-
       - test_e2e:
           <<: *default-context
-
       - test_regressions:
           <<: *default-context
-
       - run_danger:
           <<: *default-context
-
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
       - checkout:
           <<: *default-context
-      - test_e2e_website:
-          requires:
-            - checkout
-
+      - test_e2e_website
   additional-tests:
     when:
       and:
@@ -382,7 +383,6 @@ workflows:
           <<: *default-context
           name: test_e2e_additional
           react-version: << pipeline.parameters.with-react-version >>
-
   additional-checks:
     when:
       and:
