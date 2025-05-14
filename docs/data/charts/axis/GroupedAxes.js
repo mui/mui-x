@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
+
 export default function GroupedAxes() {
   return (
     <BarChart
       xAxis={[
         {
+          id: 'months',
           scaleType: 'band',
           data: time,
           valueFormatter: formatShortMonth,
-          height: 30,
+          height: 24,
         },
         {
           scaleType: 'band',
@@ -24,10 +27,8 @@ export default function GroupedAxes() {
       ]}
       {...chartConfig}
       sx={{
-        '& .MuiChartsAxis-directionX .MuiChartsAxis-tickContainer:nth-child(3n - 1) .MuiChartsAxis-tick':
-          {
-            transform: 'scaleY(8)',
-          },
+        [`& .${axisClasses.id}-months .${axisClasses.tickContainer}:nth-child(3n - 1) .${axisClasses.tick}`]:
+          { transform: 'scaleY(4)' },
       }}
     />
   );
