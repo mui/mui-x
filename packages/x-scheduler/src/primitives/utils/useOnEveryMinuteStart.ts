@@ -4,11 +4,14 @@ import useTimeout from './useTimeout';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
+/**
+ * Hook that runs a callback function at the start of every minute.
+ * @param {() => void} callback The callback function to run.
+ */
 export function useOnEveryMinuteStart(callback: () => void) {
   const timeout = useTimeout();
   const savedCallback = useEffectEvent(callback);
 
-  // Set up the interval.
   React.useEffect(() => {
     let intervalId: ReturnType<typeof setInterval> | null = null;
     const currentDate = new Date();

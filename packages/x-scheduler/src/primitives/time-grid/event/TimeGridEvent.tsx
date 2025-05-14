@@ -20,7 +20,7 @@ const TimeGridEvent = React.forwardRef(function CalendarCell(
     // Rendering props
     className,
     render,
-    // Hook props
+    // Internal props
     start,
     end,
     // Props forwarded to the DOM element

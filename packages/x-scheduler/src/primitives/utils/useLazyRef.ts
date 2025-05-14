@@ -3,7 +3,7 @@ import * as React from 'react';
 
 const UNINITIALIZED = {};
 
-// TODO: Use the `useTimeout` hook from the base-ui-copy package when it is available.
+// TODO: Use the `useLazyRef` hook from the base-ui-copy package when it is available.
 /**
  * A React.useRef() that is initialized lazily with a function. Note that it accepts an optional
  * initialization argument, so the initialization function doesn't need to be an inline closure.

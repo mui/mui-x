@@ -3,7 +3,7 @@ import * as React from 'react';
 
 const EMPTY = [] as unknown[];
 
-// TODO: Use the `useTimeout` hook from the base-ui-copy package when it is available.
+// TODO: Use the `useOnMount` hook from the base-ui-copy package when it is available.
 /**
  * A React.useEffect equivalent that runs once, when the component is mounted.
  */
