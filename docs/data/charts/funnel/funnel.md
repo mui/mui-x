@@ -34,9 +34,6 @@ To disable the legend, set the `hideLegend` prop to `true`.
 The pyramid chart is a variation of the funnel chart.
 
 To create a pyramid chart, set the `curve` property to `pyramid` in the series.
-It will automatically adjust the sections to create a pyramid shape.
-
-The pyramid chart is useful for displaying data that has a natural hierarchy or progression.
 
 {{"demo": "PyramidFunnel.js"}}
 
