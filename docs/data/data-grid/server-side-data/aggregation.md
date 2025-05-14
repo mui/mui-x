@@ -4,7 +4,7 @@ title: Data Grid - Server-side aggregation
 
 # Data Grid - Server-side aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Implement the Data Grid's aggregation features with a server-side data source.</p>
+<p class="description">Implement the Data Grid's aggregation feature with a server-side data source.</p>
 
 The Data Grid Premium provides tools to give end users the ability to aggregate and compare row values.
 The Grid can aggregate server-side data using the [Data Source layer](/x/react-data-grid/server-side-data/#the-solution-the-data-source-layer).
