@@ -67,8 +67,8 @@ Same changes as in `@mui/x-date-pickers@8.3.1`.
 
 Same changes as in `@mui/x-charts@8.3.1`, plus:
 
-- [charts-pro] Fix ESM build issue with vite (#17774) @bernardobelchior
-- [charts-pro] add benchmark for zoomed in scatter chart (#17756) @bernardobelchior
+- [charts-pro] Fix ESM build issue with Vite (#17774) @bernardobelchior
+- [charts-pro] Add benchmark for zoomed in scatter chart (#17756) @bernardobelchior
 
 ### Tree View
 
@@ -90,7 +90,7 @@ Same changes as in `@mui/x-tree-view@8.3.1`.
 
 ### Core
 
-- [core] Apply yml convention, blank line only at top level @oliviertassinari
+- [core] Apply YAML convention, blank line only at top level @oliviertassinari
 - [code-infra] Fix dynamic import missing extensions (#17767) @Janpot
 - [code-infra] Replace `mocha` with `vitest` for browser & jsdom tests (#14508) @JCQuintas
 - [scheduler] Create the package and setup a private doc page (#17239) @flaviendelangle
