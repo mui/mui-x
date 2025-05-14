@@ -26,9 +26,9 @@ import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultT
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
-  const { classes, position } = ownerState;
+  const { classes, position, id } = ownerState;
   const slots = {
-    root: ['root', 'directionX', position],
+    root: ['root', 'directionX', position, `id-${id}`],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
