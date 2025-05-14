@@ -120,7 +120,7 @@ export default function App() {
 }
 ```
 
-{{"demo": "Codesandbox.js", "hideToolbar": true, "bg": true}}
+{{"demo": "RenderComponent.js", "hideToolbar": true, "bg": true}}
 
 ## TypeScript
 
