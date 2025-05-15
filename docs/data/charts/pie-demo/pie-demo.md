@@ -31,3 +31,7 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 ## Pie chart with custom mark in legend and tooltip
 
 {{"demo": "PieChartWithCustomLegendAndTooltip.js"}}
+
+## Sunburst Chart
+
+{{"demo": "SunburstPieChart.js"}}
