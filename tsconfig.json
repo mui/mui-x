@@ -56,5 +56,10 @@
     },
     "types": ["@vitest/browser/providers/playwright"]
   },
-  "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
+  "exclude": [
+    "**/node_modules/!(@mui)/**",
+    "**/build/**/*",
+    "docs/export/**/*",
+    "dangerFileContent.ts"
+  ]
 }
