@@ -6,6 +6,10 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
+const groupingColDef = {
+  hideDescendantCount: true,
+};
+
 export default function RowGroupingHideDescendantCount() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
@@ -26,9 +30,7 @@ export default function RowGroupingHideDescendantCount() {
         apiRef={apiRef}
         disableRowSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          hideDescendantCount: true,
-        }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );
