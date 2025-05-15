@@ -118,10 +118,35 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   /**
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
+   * @param {string} delimiter The delimiter used to split the text. Default is the tab character and can be set with the `clipboardCopyCellDelimiter` prop.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
+   * @default (pastedText, delimiter = '\t') => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split(delimiter)); }
    */
-  splitClipboardPastedText: (text: string) => string[][] | null;
+  splitClipboardPastedText: (text: string, delimiter: string) => string[][] | null;
+  /**
+   * If `true`, the pivoting feature is disabled.
+   * @default false
+   */
+  disablePivoting: boolean;
+  /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   */
+  getPivotDerivedColumns:
+    | ((
+        column: GridColDef,
+        getLocaleText: GridLocaleTextApi['getLocaleText'],
+      ) => GridColDef[] | undefined)
+    | null;
+  /**
+   * If `true`, the AI Assistant is enabled.
+   * @default false
+   */
+  aiAssistant: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
