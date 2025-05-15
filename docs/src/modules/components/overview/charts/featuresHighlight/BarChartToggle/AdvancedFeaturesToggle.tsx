@@ -1,8 +1,10 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import Paper from '@mui/material/Paper';
+import { SelectOptions } from './types';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -15,8 +17,8 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 export type FeaturesToggleGroupProps = {
-  selected: 'stacking' | 'highlighting';
-  onToggleChange: (value: 'stacking' | 'highlighting') => void;
+  selected: SelectOptions;
+  onToggleChange: (value: SelectOptions) => void;
 };
 
 export default function AdvancedFeaturesToggle({
@@ -49,7 +51,6 @@ export default function AdvancedFeaturesToggle({
           title="Stacking"
           sx={{ flexGrow: 1, gap: 1, flexWrap: 'wrap' }}
         >
-          {/* eslint-disable material-ui/no-hardcoded-labels */}
           Stacking
         </ToggleButton>
         <ToggleButton

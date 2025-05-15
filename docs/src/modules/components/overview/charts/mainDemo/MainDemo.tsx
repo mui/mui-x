@@ -15,16 +15,16 @@ export default function MainDemo() {
       component="div"
       variant="outlined"
       sx={(theme) => ({
-        mb: 8,
+        my: 8,
+        mx: 'auto',
         maxWidth: 1200,
-        margin: 'auto',
         height: { md: 640 },
         overflow: 'hidden',
         p: 1,
         background: theme.palette.gradients.linearSubtle,
       })}
     >
-      <Stack direction="row" alignItems="stretch" spacing={1}>
+      <Stack direction="row" height="100%" spacing={1}>
         <Stack direction="column" spacing={1} flexBasis="65%" maxHeight="800px">
           <Stack direction="row" spacing={1}>
             {statCardData.map((card, index) => (
