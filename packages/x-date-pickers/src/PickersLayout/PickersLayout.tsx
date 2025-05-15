@@ -70,9 +70,6 @@ export const PickersLayoutRoot = styled('div', {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
           gridColumn: 3,
         },
-        [`& .${pickersLayoutClasses.contentWrapper}`]: {
-          gridColumn: 1,
-        },
       },
     },
   ],
