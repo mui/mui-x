@@ -6,19 +6,20 @@ title: Data Grid - Column pinning
 
 <p class="description">Implement pinning to keep columns in the Data Grid visible at all times.</p>
 
-Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while the user scrolls the Data Grid horizontally.
-They can be pinned either to the left or right side and cannot be reordered.
+Pinned columns (also known as sticky, frozen, and locked) are visible at all times while scrolling the Data Grid horizontally.
+Users can access this feature through the column menu to pin and unpin columns to either the left or right side, and they cannot be reordered.
 
-To pin a column, there are a few ways:
+## Implementing column pinning
 
-- Using the `initialState` prop
-- [Controlling](#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
-- Dedicated buttons in the column menu
-- Accessing the [imperative](#apiref) API
+The Data Grid Pro provides column pinning to end users by default, and there are several different tools you can use to modify the experience to meet your needs:
 
-## Initializing the pinned columns
+- The `initialState` prop – for pinning during initialization
+- The `pinnedColumns` and `onPinnedColumnsChange` props – for more control over pinning
+- The imperative `apiRef` API – for fully custom solutions
 
-To set pinned columns via `initialState`, pass an object with the following shape to this prop:
+### Column pinning on initialization
+
+To set pinned columns when the Data Grid is initialized, pass an object with the following shape to the `initialState` prop:
 
 ```ts
 interface GridPinnedColumnFields {
@@ -27,37 +28,28 @@ interface GridPinnedColumnFields {
 }
 ```
 
-The following demos illustrates how this approach works:
+The demo below illustrates how this works:
 
 {{"demo": "BasicColumnPinning.js", "bg": "inline"}}
-
-:::info
-The column pinning feature can be completely disabled with `disableColumnPinning`.
-
-```tsx
-<DataGridPro disableColumnPinning />
-```
-
-:::
 
 :::warning
 You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the Grid.
 Make sure that the Data Grid can properly accommodate these columns at a minimum.
 :::
 
-## Controlling the pinned columns
+### Controlled column pinning
 
-While the `initialState` prop only works for setting pinned columns during the initialization, the `pinnedColumns` prop allows you to modify which columns are pinned at any time.
-The value passed to it follows the same shape from the previous approach.
-Use it together with `onPinnedColumnsChange` to know when a column is pinned or unpinned.
+The `pinnedColumns` prop gives you more granular control over how the user can interact with the pinning feature.
+To implement this prop, pass an object to it with the same shape as that outlined in [the `initialState` section above](#column-pinning-on-initialization).
+Use it together with `onPinnedColumnsChange` to track when columns are pinned and unpinned, as shown in the demo below:
 
 {{"demo": "ControlPinnedColumns.js", "bg": "inline"}}
 
-## Disable column pinning
+## Disabling column pinning
 
 ### For all columns
 
-Column pinning is enabled by default, but you can easily disable this feature by setting the `disableColumnPinning` prop.
+Column pinning is enabled by default on the Data Grid Pro and Premium, but you can disable it with the `disableColumnPinning` prop:
 
 ```tsx
 <DataGridPro disableColumnPinning />
@@ -65,35 +57,44 @@ Column pinning is enabled by default, but you can easily disable this feature by
 
 ### For some columns
 
-To disable the pinning of a single column, set the `pinnable` property in `GridColDef` to `false`.
+To disable pinning on a given column, set the `pinnable` property in its corresponding `GridColDef` to `false`.
 
 ```tsx
-<DataGridPro columns={[{ field: 'id', pinnable: false }]} /> // Default is `true`.
+<DataGridPro columns={[{ field: 'id', pinnable: false }]} /> // Default is `true`
 ```
 
-### Pin non-pinnable columns programmatically
+### Remove pinning from the column menu
 
-It may be desirable to allow one or more columns to be pinned or unpinned programmatically that cannot be pinned or unpinned on the UI (that is columns for which prop `disableColumnPinning = true` or `colDef.pinnable = false`).
-This can be done in one of the following ways.
+An alternative option for disabling pinning actions is to remove them from the user interface, which can be done in one of two ways:
 
-- (A) Initializing the pinned columns
-- (B) Controlling the pinned columns
-- (C) Using the API method `setPinnedColumns` to set the pinned columns
+1. Use the column menu API to hide the pinning actions. See [Column menu—Hiding a menu item](/x/react-data-grid/column-menu/#hiding-a-menu-item) for details.
+2. Use the [`disableColumnMenu` prop](/x/react-data-grid/column-menu/#disable-column-menu) to completely remove the column menu altogether.
+
+## Pinning non-pinnable columns programmatically
+
+When [pinning is disabled](#disabling-column-pinning) in the UI for some or all columns (via `disableColumnPinning` or `colDef.pinnable`), it's still possible to implement it programmatically.
+You can do this in one of three ways:
+
+1. Initialized pinning with `initialState`
+2. Controlled pinning with `pinnedColumns`
+3. Using the `setPinnedColumns()` method
+
+The code snippets below illustrate these three approaches:
 
 ```tsx
-// (A) Initializing the pinning
+// 1. Initialized pinning
 <DataGridPro
   disableColumnPinning
   initialState={{ pinnedColumns: { left: ['name'] } }}
 />
 
-// (B) Controlling the pinned columns
+// 2. Controlled pinning
 <DataGridPro
   disableColumnPinning
   pinnedColumns={{ left: ['name'] }}
 />
 
-// (C) Using the API method `setPinnedColumns` to set the pinned columns
+// 3. Using the `setPinnedColumns()` method
 <React.Fragment>
   <DataGridPro disableColumnPinning />
   <Button onClick={() => apiRef.current.setPinnedColumns({ left: ['name'] })}>
@@ -102,21 +103,13 @@ This can be done in one of the following ways.
 </React.Fragment>
 ```
 
-The following demo uses method (A) to initialize the state of the pinned columns which pins a column `name` although the pinning feature is disabled.
+In the following demo, pinning is disabled but the Grid is initialized with the **Name** column pinned to the left:
 
 {{"demo": "DisableColumnPinningButtons.js", "bg": "inline"}}
 
-:::info
-Another alternate option to disable pinning actions on the UI is to disable the pinning options in the column menu in one of the following ways.
-
-1. Use [`disableColumnMenu` prop](/x/react-data-grid/column-menu/#disable-column-menu) to completely disable the column menu.
-2. Use column menu API to hide the pinning options in the column menu. See [Column Menu - Hiding a menu item](/x/react-data-grid/column-menu/#hiding-a-menu-item) for more details.
-
-:::
-
 ## Pinning the checkbox selection column
 
-To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECKBOX_SELECTION_COL_DEF.field` to the list of pinned columns.
+To pin the checkbox column that's generated when using [the `checkboxSelection` prop](/x/react-data-grid/row-selection/#checkbox-selection), add `GRID_CHECKBOX_SELECTION_COL_DEF.field` to the list of pinned columns, as shown in the demo below:
 
 {{"demo": "ColumnPinningWithCheckboxSelection.js", "bg": "inline"}}
 
