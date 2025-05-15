@@ -41,7 +41,7 @@ export default function RowGroupingPropagateSelection() {
               }
             />
           }
-          label="Auto select descendants"
+          label="Auto-select descendants"
         />
         <FormControlLabel
           control={
@@ -55,7 +55,7 @@ export default function RowGroupingPropagateSelection() {
               }
             />
           }
-          label="Auto select parents"
+          label="Auto-select parents"
         />
       </Stack>
       <div style={{ height: 400 }}>
