@@ -86,7 +86,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
     "@mui/internal-babel-plugin-resolve-imports": "^2.0.1",
-    "@mui/internal-bundle-size-checker": "github:mui/mui-public#b7c613b84c54e3d587c5013b93c1d27c5a4e13bf&path:./packages/bundle-size-checker",
+    "@mui/internal-bundle-size-checker": "^1.0.1",
     "@mui/internal-markdown": "^2.0.4",
     "@mui/internal-test-utils": "^2.0.7",
     "@mui/material": "^7.0.2",
