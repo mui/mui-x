@@ -56,6 +56,5 @@
     },
     "types": ["@vitest/browser/providers/playwright"]
   },
-  "files": [],
   "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }
