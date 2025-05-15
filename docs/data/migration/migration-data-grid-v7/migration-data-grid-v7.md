@@ -456,7 +456,7 @@ export default defineConfig({
 
 If you're using the App Router, CSS imports should work out of the box.
 
-If you're using the Pages Router, you need to add the Data Grid packages to `transpilePackages`.
+If you're using the Pages Router, you need to add the Data Grid packages to [`transpilePackages`](https://nextjs.org/docs/app/api-reference/config/next-config-js/transpilePackages).
 
 ```ts title="next.config.ts"
 export default {
