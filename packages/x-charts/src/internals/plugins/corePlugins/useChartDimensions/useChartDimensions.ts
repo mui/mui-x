@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
+import { useSelector } from '../../../store/useSelector';
 import { DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
@@ -185,6 +186,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     }
   }
 
+  const drawingArea = useSelector(store, selectorChartDrawingArea);
   const isPointInside = React.useCallback(
     (
       { x, y }: { x: number; y: number },
@@ -197,8 +199,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       if (options?.targetElement && options?.targetElement.closest('[data-drawing-container]')) {
         return true;
       }
-
-      const drawingArea = selectorChartDrawingArea(store.value);
 
       const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
       const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
@@ -213,7 +213,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
 
       return isInsideX && isInsideY;
     },
-    [store.value],
+    [drawingArea.height, drawingArea.left, drawingArea.top, drawingArea.width],
   );
 
   return { instance: { isPointInside } };

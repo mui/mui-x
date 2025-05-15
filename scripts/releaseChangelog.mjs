@@ -274,6 +274,8 @@ async function main(argv) {
                 break;
             }
           });
+        } else {
+          otherCommits.push(commitItem);
         }
         break;
       }
