@@ -10,7 +10,7 @@ const GRID_PACKAGES = [
 ];
 const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
 const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
-const SCHEDULER_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
+const SCHEDULER_PACKAGES = ['x-scheduler'];
 
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
