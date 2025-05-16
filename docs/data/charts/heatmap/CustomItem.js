@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
+import { ChartsContrastingText } from '@mui/x-charts/ChartsText';
 import { data } from './dumbData';
 
 function CustomCell(props) {
@@ -17,15 +18,16 @@ function CustomCell(props) {
         fill={ownerState.color}
         clipPath={ownerState.isHighlighted ? undefined : 'inset(0px round 10px)'}
       />
-      <text
+      <ChartsContrastingText
         x={x + width / 2}
         y={y + height / 2}
         textAnchor="middle"
         dominantBaseline="middle"
         pointerEvents="none"
+        textBackground={ownerState.color}
       >
         {ownerState.value}
-      </text>
+      </ChartsContrastingText>
     </React.Fragment>
   );
 }

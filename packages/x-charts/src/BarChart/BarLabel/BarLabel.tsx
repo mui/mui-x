@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import { useAnimateBarLabel } from '../../hooks/animation/useAnimateBarLabel';
 import { barLabelClasses } from './barLabelClasses';
 import { BarLabelOwnerState } from './BarLabel.types';
+import { ChartsContrastingText, ChartsContrastingTextProps } from '../../ChartsText';
 
-export const BarLabelComponent = styled('text', {
+export const BarLabelComponent = styled(ChartsContrastingText, {
   name: 'MuiBarLabel',
   slot: 'Root',
   overridesResolver: (_, styles) => [
@@ -17,7 +18,6 @@ export const BarLabelComponent = styled('text', {
 })(({ theme }) => ({
   ...theme?.typography?.body2,
   stroke: 'none',
-  fill: (theme.vars || theme)?.palette?.text?.primary,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   textAnchor: 'middle',
   dominantBaseline: 'central',
@@ -32,6 +32,7 @@ export type BarLabelProps = Omit<
   React.SVGProps<SVGTextElement>,
   'ref' | 'id' | 'x' | 'y' | 'width' | 'height'
 > &
+  Pick<ChartsContrastingTextProps, 'textBackground'> &
   BarLabelOwnerState & {
     /**
      * The x-coordinate of the stack this bar label belongs to.
@@ -97,6 +98,11 @@ BarLabel.propTypes = {
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
+  /**
+   * The background color to contrast against.
+   * Used to calculate the text color for optimal readability.
+   */
+  textBackground: PropTypes.string.isRequired,
   /**
    * Width of the bar this label belongs to.
    */

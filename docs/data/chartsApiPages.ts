@@ -73,6 +73,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsClipPath',
   },
   {
+    pathname: '/x/api/charts/charts-contrasting-text',
+    title: 'ChartsContrastingText',
+  },
+  {
     pathname: '/x/api/charts/charts-grid',
     title: 'ChartsGrid',
   },

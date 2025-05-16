@@ -2,6 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {
     "height": { "description": "Height of the bar this label belongs to." },
+    "textBackground": {
+      "description": "The background color to contrast against. Used to calculate the text color for optimal readability."
+    },
     "width": { "description": "Width of the bar this label belongs to." },
     "x": { "description": "Position in the x-axis of the bar this label belongs to." },
     "xOrigin": { "description": "The x-coordinate of the stack this bar label belongs to." },

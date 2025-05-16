@@ -154,7 +154,7 @@ function BarLabelItem(props: BarLabelItemProps) {
   }
 
   return (
-    <Component {...barLabelProps} {...barLabelOwnerState}>
+    <Component {...barLabelProps} {...barLabelOwnerState} textBackground={color}>
       {formattedLabelText}
     </Component>
   );
