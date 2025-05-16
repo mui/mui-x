@@ -7,10 +7,6 @@ import { TreeViewContextValue } from './TreeViewProvider.types';
  */
 export const TreeViewContext = React.createContext<TreeViewContextValue<any> | null>(null);
 
-if (process.env.NODE_ENV !== 'production') {
-  TreeViewContext.displayName = 'TreeViewContext';
-}
-
 export const useTreeViewContext = <
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],

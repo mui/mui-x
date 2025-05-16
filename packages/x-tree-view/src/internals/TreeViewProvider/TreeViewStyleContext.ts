@@ -63,10 +63,6 @@ export const TreeViewStyleContext = React.createContext<TreeViewStyleContextValu
   slotProps: {},
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  TreeViewStyleContext.displayName = 'TreeViewStyleContext';
-}
-
 export const useTreeViewStyleContext = () => {
   return React.useContext(TreeViewStyleContext);
 };

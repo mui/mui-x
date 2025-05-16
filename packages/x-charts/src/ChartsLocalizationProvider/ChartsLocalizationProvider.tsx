@@ -13,10 +13,6 @@ export const ChartsLocalizationContext = React.createContext<ChartsLocalizationC
   null,
 );
 
-if (process.env.NODE_ENV !== 'production') {
-  ChartsLocalizationContext.displayName = 'ChartsLocalizationContext';
-}
-
 export interface ChartsLocalizationProviderProps {
   children?: React.ReactNode;
   /**

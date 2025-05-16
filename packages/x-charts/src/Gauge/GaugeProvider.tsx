@@ -127,10 +127,6 @@ export const GaugeContext = React.createContext<
   valueAngle: null,
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  GaugeContext.displayName = 'GaugeContext';
-}
-
 export interface GaugeProviderProps extends GaugeConfig, CircularConfig {
   children: React.ReactNode;
 }
