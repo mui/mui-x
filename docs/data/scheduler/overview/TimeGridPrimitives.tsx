@@ -21,14 +21,14 @@ const days = [
         start: createDate(1, 7, 30),
         end: createDate(1, 8, 15),
         title: 'Footing',
-        agenda: 'personal',
+        resource: 'personal',
       },
       {
         id: '2',
         start: createDate(1, 16, 0),
         end: createDate(1, 17, 0),
         title: 'Weekly',
-        agenda: 'work',
+        resource: 'work',
       },
     ],
   },
@@ -40,14 +40,14 @@ const days = [
         start: createDate(2, 10, 0),
         end: createDate(2, 11, 0),
         title: 'Backlog grooming',
-        agenda: 'work',
+        resource: 'work',
       },
       {
         id: '4',
         start: createDate(2, 19, 0),
         end: createDate(2, 22, 0),
         title: 'Pizza party',
-        agenda: 'personal',
+        resource: 'personal',
       },
     ],
   },
@@ -59,7 +59,7 @@ const days = [
         start: createDate(3, 8, 0),
         end: createDate(3, 17, 0),
         title: 'Scheduler deep dive',
-        agenda: 'work',
+        resource: 'work',
       },
     ],
   },
@@ -71,7 +71,7 @@ const days = [
         start: createDate(4, 7, 30),
         end: createDate(4, 8, 15),
         title: 'Footing',
-        agenda: 'personal',
+        resource: 'personal',
       },
     ],
   },
@@ -83,7 +83,7 @@ const days = [
         start: createDate(5, 15, 0),
         end: createDate(5, 15, 45),
         title: 'Retrospective',
-        agenda: 'work',
+        resource: 'work',
       },
     ],
   },
@@ -129,7 +129,7 @@ export default function TimeGridPrimitives() {
                     key={event.id}
                     start={event.start}
                     end={event.end}
-                    data-agenda={event.agenda}
+                    data-resource={event.resource}
                     className={classes.Event}
                   >
                     <div className={classes.EventInformation}>
