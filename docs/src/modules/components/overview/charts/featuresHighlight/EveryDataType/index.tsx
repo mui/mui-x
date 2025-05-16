@@ -1,21 +1,19 @@
 /* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { blackAndWhite, colorFull } from './colors';
+import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { blackAndWhite, colorFull } from '../colors';
+import SelectChart from './SelectChart';
+import { LineAndBar, Pie } from './Charts';
 
-const Circle = styled('div')({
-  display: 'inline-block',
-  borderRadius: '50%',
-  width: 24,
-  height: 24,
-  marginRight: -8,
-});
+export default function EveryDataType() {
+  const [selected, setSelected] = React.useState(1);
 
-export default function ColorPaletteSequence() {
   return (
-    <Box
+    <Stack
+      spacing={1}
       sx={{
         '--palette-color-0': blackAndWhite[0],
         '--palette-color-1': blackAndWhite[1],
@@ -36,19 +34,23 @@ export default function ColorPaletteSequence() {
         },
       }}
     >
-      {colorFull.map((color, index) => (
-        <Circle
-          key={color}
-          sx={{
-            backgroundColor: `var(--palette-color-${index}, ${color})`,
-            transition: 'background-color 0.5s',
-          }}
-        />
-      ))}
-      <Typography variant="subtitle2">Customization and styling</Typography>
+      <Box
+        sx={{
+          flexGrow: 1,
+          mb: 2,
+          width: '100%',
+          height: 200,
+        }}
+      >
+        {selected === 0 && <LineAndBar />}
+        {selected === 1 && <Pie />}
+      </Box>
+      <SelectChart selected={selected} setSelected={setSelected} />
+      <Typography variant="subtitle2">A chart for every data type</Typography>
       <Typography variant="body2" color="text.secondary">
-        Fine-grained control over appearance to match your brand and style.
+        A wide variety of chart types to choose from, including bar, line, pie, scatter, and more,
+        to best visualize your data.
       </Typography>
-    </Box>
+    </Stack>
   );
 }

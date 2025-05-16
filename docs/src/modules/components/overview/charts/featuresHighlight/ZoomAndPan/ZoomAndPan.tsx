@@ -4,34 +4,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { blackAndWhite, colorFull } from '../colors';
-import GoolgeStock from './GOOGL.json';
-import MetaStock from './META.json';
-import { valueFormatter } from 'docsx/data/charts/dataset/weather';
-
-const dataset: { google?: number; meta?: number; date: string }[] = GoolgeStock.map(
-  ({ date, close }) => ({ date, google: close }),
-);
-
-let datasetIndex = 0;
-let metaIndex = 0;
-
-while (datasetIndex < dataset.length && metaIndex < MetaStock.length) {
-  const metaItem = MetaStock[metaIndex];
-  const dataItem = dataset[datasetIndex];
-
-  if (metaItem.date === dataItem.date) {
-    dataset[datasetIndex].meta = metaItem.close;
-    datasetIndex += 1;
-    metaIndex += 1;
-  } else if (metaItem.date < dataItem.date) {
-    dataset.splice(datasetIndex, 0, { date: metaItem.date, meta: metaItem.close });
-    datasetIndex += 1;
-    metaIndex += 1;
-  } else {
-    datasetIndex += 1;
-  }
-}
+import { sxColors } from '../colors';
+import dataset from './data.json';
 
 const base = {
   google: dataset[0].google!,
@@ -45,28 +19,7 @@ const formattedDataset = dataset.map((item) => ({
 
 export default function ZoomAndPan() {
   return (
-    <Stack
-      spacing={1}
-      sx={{
-        '--palette-color-0': blackAndWhite[0],
-        '--palette-color-1': blackAndWhite[1],
-        '--palette-color-2': blackAndWhite[2],
-        '--palette-color-3': blackAndWhite[3],
-        '--palette-color-4': blackAndWhite[4],
-        '--palette-color-5': blackAndWhite[5],
-        '--palette-color-6': blackAndWhite[6],
-
-        '&:hover': {
-          '--palette-color-0': colorFull[0],
-          '--palette-color-1': colorFull[1],
-          '--palette-color-2': colorFull[2],
-          '--palette-color-3': colorFull[3],
-          '--palette-color-4': colorFull[4],
-          '--palette-color-5': colorFull[5],
-          '--palette-color-6': colorFull[6],
-        },
-      }}
-    >
+    <Stack spacing={1} sx={sxColors}>
       <Box
         sx={{
           flexGrow: 1,
@@ -76,7 +29,7 @@ export default function ZoomAndPan() {
         }}
       >
         <LineChartPro
-          color={['var(--palette-colo-0)', 'var(--palette-colo-4)']}
+          colors={['var(--palette-color-0)', 'var(--palette-color-4)']}
           dataset={formattedDataset}
           series={[
             { label: 'Google', dataKey: 'google', showMark: false },
@@ -91,6 +44,7 @@ export default function ZoomAndPan() {
             { axisId: 'x-axis', start: 40, end: 80 },
             { axisId: 'y-axis', start: 20, end: 89 },
           ]}
+          slotProps={{ tooltip: { disablePortal: true } }}
         />
       </Box>
       <Typography variant="subtitle2" sx={{ pt: 2 }}>

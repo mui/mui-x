@@ -97,10 +97,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(
             <MarkPlot {...markPlotProps} />
           </g>
           <LineHighlightPlot {...lineHighlightPlotProps} />
-          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );

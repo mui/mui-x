@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import ColorPaletteSequence from './ColorPaletteSequence';
 import BarChartToggle from './BarChartToggle/BarChartToggle';
 import ZoomAndPan from './ZoomAndPan/ZoomAndPan';
+import EveryDataType from './EveryDataType';
+import Legends from './Legends';
 
 export default function FeaturesHighlight() {
   return (
@@ -50,22 +52,7 @@ export default function FeaturesHighlight() {
                 borderBottom: `1px solid ${theme.palette.divider}`,
               })}
             >
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  minHeight: '100px',
-                  background: 'lightgrey',
-                  borderRadius: 1,
-                }}
-              >
-                {'slider with a few different chart types: bar, pie, radar, etc.'}
-              </Box>
-              <Typography variant="subtitle2">A chart for every data type</Typography>
-              <Typography variant="body2" color="text.secondary">
-                A wide variety of chart types to choose from, including bar, line, pie, scatter, and
-                more, to best visualize your data.
-              </Typography>
+              <EveryDataType />
             </Stack>
             <Stack spacing={1} p={2} flexBasis={{ xs: '50%', sm: '35%' }}>
               <ColorPaletteSequence />
@@ -74,10 +61,9 @@ export default function FeaturesHighlight() {
 
           {/* second column */}
           <Stack flexBasis={{ xs: '100%', sm: '50%' }}>
-            <Stack
-              spacing={1}
+            <Box
               p={1}
-              flexBasis="50%"
+              flexBasis="30%"
               sx={(theme) => ({
                 borderBottom: `1px solid ${theme.palette.divider}`,
               })}
@@ -87,19 +73,10 @@ export default function FeaturesHighlight() {
                 Clearly and effectively communicate data points with labels, interactive tooltips,
                 and informative legends.
               </Typography>
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  minHeight: '100px',
-                  background: 'lightgrey',
-                  borderRadius: 1,
-                }}
-              >
-                {'data labeling demo or image'}
-              </Box>
-            </Stack>
-            <Box flexBasis="50%" p={1}>
+              <Legends />
+            </Box>
+
+            <Box flexBasis="70%" p={1}>
               <ZoomAndPan />
             </Box>
           </Stack>
