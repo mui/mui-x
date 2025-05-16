@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { DemoContainer, DemoItem } from '../_shared/DemoContainer';
 
 export default function DigitalClockBasic() {
   return (
