@@ -140,9 +140,9 @@ const PieChart = React.forwardRef(function PieChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-          {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
+        {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>
   );

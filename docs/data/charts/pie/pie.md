@@ -138,8 +138,8 @@ Here's how the Pie Chart is composed:
     <ChartsSurface>
       <PiePlot />
       <ChartsOverlay />
-      <ChartsTooltip trigger="item" />
     </ChartsSurface>
+    <ChartsTooltip trigger="item" />
   </ChartsWrapper>
 </ChartDataProvider>
 ```

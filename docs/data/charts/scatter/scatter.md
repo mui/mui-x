@@ -154,8 +154,8 @@ Here's how the Scatter Chart is composed:
       </g>
       <ChartsOverlay />
       <ChartsAxisHighlight />
-      <ChartsTooltip trigger="item" />
     </ChartsSurface>
+    <ChartsTooltip trigger="item" />
   </ChartsWrapper>
 </ChartDataProvider>
 ```

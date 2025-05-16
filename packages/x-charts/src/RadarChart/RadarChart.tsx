@@ -79,9 +79,9 @@ const RadarChart = React.forwardRef(function RadarChart(
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks />
           <ChartsOverlay {...overlayProps} />
-          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </RadarDataProvider>
   );
