@@ -24,7 +24,7 @@ export function useTimeGridColumnContext() {
   const context = React.useContext(TimeGridColumnContext);
   if (context === undefined) {
     throw new Error(
-      'Time Box: TimeGridColumnContext is missing. <TimeGrid.Event /> must be placed within <TimeGrid.Column />.',
+      'Scheduler: `TimeGridColumnContext` is missing. <TimeGrid.Event /> must be placed within <TimeGrid.Column />.',
     );
   }
   return context;
