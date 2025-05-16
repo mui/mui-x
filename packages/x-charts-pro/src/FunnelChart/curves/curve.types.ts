@@ -9,6 +9,10 @@ export type CurveOptions = {
    */
   isHorizontal?: boolean;
   /**
+   * Indicates if the segments values are increasing or decreasing.
+   */
+  isIncreasing?: boolean;
+  /**
    * The order position of the segment.
    */
   position?: number;
