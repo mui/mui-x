@@ -35,6 +35,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     shape,
     stripeColor,
     highlight = 'axis',
+    showToolbar,
     ...other
   } = props;
 

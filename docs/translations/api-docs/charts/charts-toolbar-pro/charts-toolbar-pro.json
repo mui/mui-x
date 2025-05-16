@@ -1,1 +1,5 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "The chart toolbar component for the pro package.",
+  "propDescriptions": {},
+  "classDescriptions": {}
+}

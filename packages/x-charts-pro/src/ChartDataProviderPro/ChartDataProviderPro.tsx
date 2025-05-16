@@ -7,10 +7,12 @@ import {
   ChartSeriesType,
   ChartAnyPluginSignature,
   ChartProviderProps,
+  ChartsSlotsProvider,
 } from '@mui/x-charts/internals';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { ChartsSlotPropsPro, ChartsSlotsPro, defaultSlotsMaterial } from '../internals/material';
 import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 
@@ -21,7 +23,16 @@ export type ChartDataProviderProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = ChartDataProviderProps<TSeries, TSignatures> &
-  ChartProviderProps<TSeries, TSignatures>['pluginParams'];
+  ChartProviderProps<TSeries, TSignatures>['pluginParams'] & {
+    /**
+     * Slots to customize charts' components.
+     */
+    slots?: Partial<ChartsSlotsPro>;
+    /**
+     * The props for the slots.
+     */
+    slotProps?: Partial<ChartsSlotPropsPro>;
+  };
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -54,16 +65,25 @@ function ChartDataProviderPro<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProProps<TSeries, TSignatures>) {
-  const { children, localeText, chartProviderProps } = useChartDataProviderProProps({
-    ...props,
-    plugins: props.plugins ?? DEFAULT_PLUGINS,
-  });
+  const { children, localeText, chartProviderProps, slots, slotProps } =
+    useChartDataProviderProProps({
+      ...props,
+      plugins: props.plugins ?? DEFAULT_PLUGINS,
+    });
 
   useLicenseVerifier(packageIdentifier, releaseInfo);
 
   return (
     <ChartProvider {...chartProviderProps}>
-      <ChartsLocalizationProvider localeText={localeText}>{children}</ChartsLocalizationProvider>
+      <ChartsLocalizationProvider localeText={localeText}>
+        <ChartsSlotsProvider
+          slots={slots}
+          slotProps={slotProps}
+          defaultSlots={defaultSlotsMaterial}
+        >
+          {children}
+        </ChartsSlotsProvider>
+      </ChartsLocalizationProvider>
       <Watermark packageName={packageIdentifier} releaseInfo={releaseInfo} />
     </ChartProvider>
   );
@@ -125,6 +145,14 @@ ChartDataProviderPro.propTypes = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
+  /**
+   * The props for the slots.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Slots to customize charts' components.
+   */
+  slots: PropTypes.object,
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
