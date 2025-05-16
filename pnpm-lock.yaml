@@ -430,6 +430,9 @@ importers:
       '@babel/runtime-corejs2':
         specifier: ^7.27.1
         version: 7.27.1
+      '@base-ui-components/react':
+        specifier: 1.0.0-alpha.4
+        version: 1.0.0-alpha.4(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@docsearch/react':
         specifier: ^3.9.0
         version: 3.9.0(@algolia/client-search@5.21.0)(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.17.3)
@@ -634,6 +637,9 @@ importers:
       react-simple-code-editor:
         specifier: ^0.14.1
         version: 0.14.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-transition-group:
+        specifier: ^4.4.5
+        version: 4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       recast:
         specifier: ^0.23.9
         version: 0.23.9
@@ -710,6 +716,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.4
         version: 19.0.4(@types/react@19.0.12)
+      '@types/react-transition-group':
+        specifier: ^4.4.12
+        version: 4.4.12(@types/react@19.0.12)
       '@types/stylis':
         specifier: ^4.2.7
         version: 4.2.7
@@ -1245,6 +1254,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.27.1
         version: 7.27.1
+      '@base-ui-components/react':
+        specifier: 1.0.0-alpha.4
+        version: 1.0.0-alpha.4(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.0.12)(react@19.0.0)
@@ -1331,6 +1343,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.27.1
         version: 7.27.1
+      '@base-ui-components/react':
+        specifier: 1.0.0-alpha.4
+        version: 1.0.0-alpha.4(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.0.12)(react@19.0.0)
@@ -2711,6 +2726,17 @@ packages:
   '@babel/types@7.27.1':
     resolution: {integrity: sha512-+EzkxvLNfiUeKMgy/3luqfsCWFRXLb7U6wNQTk60tovuckwB15B191tJWvpp4HjiQWdJkCxO3Wbvc6jlk3Xb2Q==}
     engines: {node: '>=6.9.0'}
+
+  '@base-ui-components/react@1.0.0-alpha.4':
+    resolution: {integrity: sha512-hURFNvqx+gBZ6E1T2KpsZrv7RGfNECfHPovNYNr2+LLim62MeC04wgObRd8bjxvwU9L2uYvYQFkErql4LHsU6Q==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0 || ^19.0.0-rc
+      react: ^17.0.0 || ^18.0.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -11898,6 +11924,18 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
+
+  '@base-ui-components/react@1.0.0-alpha.4(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@babel/runtime': 7.27.1
+      '@floating-ui/react': 0.27.8(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@floating-ui/utils': 0.2.9
+      prop-types: 15.8.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      use-sync-external-store: 1.5.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.12
 
   '@bcoe/v8-coverage@0.2.3': {}
 
