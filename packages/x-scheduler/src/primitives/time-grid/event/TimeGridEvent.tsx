@@ -5,7 +5,7 @@ import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { SchedulerValidDate } from '../../utils/adapter/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { getAdapter } from '../../utils/adapter/getAdapter';
-import { useTimeGridColumnContext } from '../column/TImeGridColumnContext';
+import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useOnEveryMinuteStart } from '../../utils/useOnEveryMinuteStart';
 
 const adapter = getAdapter();

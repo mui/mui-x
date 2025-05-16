@@ -33,6 +33,7 @@ export function useForkRef<Instance>(
     return () => {
       cleanups.forEach((refCleanup) => refCleanup?.());
     };
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, refs);
 
@@ -51,6 +52,7 @@ export function useForkRef<Instance>(
         (cleanupRef as React.RefObject<void | (() => void)>).current = refEffect(value);
       }
     };
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, refs);
 }

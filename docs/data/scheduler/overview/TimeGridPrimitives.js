@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
 import classes from './TimeGridPrimitives.module.css';
 
@@ -151,7 +150,7 @@ function useInitialScrollPosition() {
   const scrollableRef = React.useRef(null);
   const scrollerRef = React.useRef(null);
 
-  useEnhancedEffect(() => {
+  React.useLayoutEffect(() => {
     if (!scrollableRef.current || !scrollerRef.current) {
       return;
     }

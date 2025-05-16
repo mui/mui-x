@@ -1,1 +1,1 @@
-export enum EventDayListRootDataAttributes {}
+export enum TimeGridRootDataAttributes {}
