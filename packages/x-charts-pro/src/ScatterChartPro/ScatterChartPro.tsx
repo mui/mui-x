@@ -93,9 +93,9 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
