@@ -17,6 +17,26 @@ Level AA exceeds the basic criteria for accessibility and is a common target for
 
 The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a Data Grid.
 
+## Label
+
+You can display a label in the data grid toolbar by passing the `label` and `showToolbar` props, as shown in the demo below.
+
+{{"demo": "GridLabel.js", "bg": "inline"}}
+
+Alternatively, if there's another element in the user interface that serves as a label for the grid, you can associate it with the grid using the `aria-labelledby` prop. Set the prop to the `id` of the element that contains the descriptive text:
+
+```tsx
+<h2 id="my-grid-label">Employees</h2>
+
+<DataGrid aria-labelledby="my-grid-label" />
+```
+
+If there isn't a visual label for the grid, you should apply the `aria-label` prop with text that describes the contents of your grid:
+
+```tsx
+<DataGrid aria-label="Employees" />
+```
+
 ## Density
 
 The Data Grid exposes the `density` prop which supports the following values:
