@@ -33,6 +33,11 @@ const datePickersApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/date-pickers/date-range-picker-day-2',
+    title: 'DateRangePickerDay2',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/date-range-picker-toolbar',
     title: 'DateRangePickerToolbar',
     plan: 'pro',
@@ -156,6 +161,10 @@ const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/multi-section-digital-clock',
     title: 'MultiSectionDigitalClock',
+  },
+  {
+    pathname: '/x/api/date-pickers/picker-day-2',
+    title: 'PickerDay2',
   },
   {
     pathname: '/x/api/date-pickers/pickers-action-bar',
