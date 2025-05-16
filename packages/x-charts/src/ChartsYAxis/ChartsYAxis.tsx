@@ -23,9 +23,9 @@ import { clampAngle } from '../internals/clampAngle';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
-  const { classes, position } = ownerState;
+  const { classes, position, id } = ownerState;
   const slots = {
-    root: ['root', 'directionY', position],
+    root: ['root', 'directionY', position, `id-${id}`],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],

@@ -214,9 +214,13 @@ The axis is still computed and used for the scaling.
 You can display multiple axes on the same side.
 If two or more axes share the same `position`, they are displayed in the order they are defined from closest to the chart to farthest.
 
-To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for `yAxis` to increase the space between the axes.
-
 {{"demo": "MultipleAxes.js"}}
+
+### Grouped Axes
+
+You can group axes together by rendering more than one axis on the same side.
+
+{{"demo": "GroupedAxes.js"}}
 
 ## Axis customization
 
