@@ -138,7 +138,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!instance.isPointInside({ x, y })) {
+                  if (!instance.isPointInside(x, y)) {
                     // Remove out of range
                     return false;
                   }

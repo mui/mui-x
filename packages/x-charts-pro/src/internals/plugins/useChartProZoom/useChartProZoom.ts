@@ -287,7 +287,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     const handleDown = (event: PointerEvent) => {
       panningEventCacheRef.current.push(event);
       const point = getSVGPoint(element, event);
-      if (!instance.isPointInside(point)) {
+      if (!instance.isPointInside(point.x, point.y)) {
         return;
       }
       // If there is only one pointer, prevent selecting text
@@ -352,7 +352,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
       const point = getSVGPoint(element, event);
 
-      if (!instance.isPointInside(point)) {
+      if (!instance.isPointInside(point.x, point.y)) {
         return;
       }
 
