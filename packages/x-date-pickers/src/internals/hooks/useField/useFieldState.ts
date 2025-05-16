@@ -373,10 +373,13 @@ export const useFieldState = <
     }
 
     /**
-     * If all the sections are filled but the date is invalid,
+     * If all the sections are filled but the date is invalid and the previous date is valid or null,
      * Then we publish an invalid date.
      */
-    if (newActiveDateSections.every((sectionBis) => sectionBis.value !== '')) {
+    if (
+      newActiveDateSections.every((sectionBis) => sectionBis.value !== '') &&
+      (activeDate == null || utils.isValid(activeDate))
+    ) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
       return publishValue(fieldValueManager.updateDateInValue(value, section, newActiveDate));
     }
