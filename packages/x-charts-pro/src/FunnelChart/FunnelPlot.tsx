@@ -31,10 +31,12 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const useAggregatedData = (gap: number | undefined) => {
+const useAggregatedData = (gapIn: number | undefined) => {
   const seriesData = useFunnelSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
+
+  const gap = gapIn ?? 0;
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
