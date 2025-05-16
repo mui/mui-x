@@ -68,15 +68,14 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
   );
 
   const injectDefaultProps = React.useMemo(() => {
-    return (
-      Object.keys(DATA_GRID_PROPS_DEFAULT_VALUES) as Array<
-        keyof DataGridPropsWithDefaultValues<any>
-      >
-    ).reduce((acc, key) => {
-      // @ts-ignore
-      acc[key] = themedProps[key] ?? DATA_GRID_PROPS_DEFAULT_VALUES[key];
-      return acc;
-    }, {} as DataGridPropsWithDefaultValues<any>);
+    const defaultProps = {} as DataGridPropsWithDefaultValues<any>;
+    for (const key in DATA_GRID_PROPS_DEFAULT_VALUES) {
+      if (DATA_GRID_PROPS_DEFAULT_VALUES.hasOwnProperty(key)) {
+        // @ts-ignore
+        defaultProps[key] = themedProps[key] ?? DATA_GRID_PROPS_DEFAULT_VALUES[key];
+      }
+    }
+    return defaultProps;
   }, [themedProps]);
 
   return React.useMemo<DataGridProcessedProps<R>>(

@@ -354,22 +354,28 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
     const lastGroupToRender = columnGroupsModel[lastColumnFieldToRender]?.[depth] ?? null;
 
-    const lastGroupIndex = rowStructure.findIndex(
-      ({ groupId, columnFields }) =>
-        groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),
-    );
+    const visibleColumnGroupHeader: GridGroupingStructure[] = [];
+    for (let i = firstGroupIndex; i < rowStructure.length; i += 1) {
+      const groupStructure = rowStructure[i];
 
-    const visibleColumnGroupHeader = rowStructure
-      .slice(firstGroupIndex, lastGroupIndex + 1)
-      .map((groupStructure) => {
-        return {
+      const visibleColumnFields = groupStructure.columnFields.filter(
+        (field) => columnVisibility[field] !== false,
+      );
+      if (visibleColumnFields.length !== 0) {
+        visibleColumnGroupHeader.push({
           ...groupStructure,
-          columnFields: groupStructure.columnFields.filter(
-            (field) => columnVisibility[field] !== false,
-          ),
-        };
-      })
-      .filter((groupStructure) => groupStructure.columnFields.length > 0);
+          columnFields: visibleColumnFields,
+        });
+      }
+
+      const isLastGroup =
+        groupStructure.groupId === lastGroupToRender &&
+        groupStructure.columnFields.includes(lastColumnFieldToRender);
+
+      if (isLastGroup) {
+        break;
+      }
+    }
 
     const firstVisibleColumnIndex =
       visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
@@ -384,20 +390,30 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     let columnIndex = firstColumnToRender;
     const children = visibleColumnGroupHeader.map(({ groupId, columnFields }, index) => {
-      const hasFocus =
-        columnGroupHeaderFocus !== null &&
-        columnGroupHeaderFocus.depth === depth &&
-        columnFields.includes(columnGroupHeaderFocus.field);
-      const tabIndex: 0 | -1 =
-        columnGroupHeaderTabIndexState !== null &&
-        columnGroupHeaderTabIndexState.depth === depth &&
-        columnFields.includes(columnGroupHeaderTabIndexState.field)
-          ? 0
-          : -1;
+      const canHaveFocus =
+        columnGroupHeaderFocus !== null && columnGroupHeaderFocus.depth === depth;
+      let hasFocus = false;
+
+      const canHaveTabIndex =
+        columnGroupHeaderTabIndexState !== null && columnGroupHeaderTabIndexState.depth === depth;
+      let tabIndex: 0 | -1 = -1;
+
+      let width = 0;
+      for (let i = 0; i < columnFields.length; i += 1) {
+        const field = columnFields[i];
+        width += columnsLookup[field].computedWidth;
+
+        if (canHaveFocus && columnGroupHeaderFocus.field === field) {
+          hasFocus = true;
+        }
+        if (canHaveTabIndex && columnGroupHeaderTabIndexState.field === field) {
+          tabIndex = 0;
+        }
+      }
 
       const headerInfo: HeaderInfo = {
         groupId,
-        width: columnFields.reduce((acc, field) => acc + columnsLookup[field].computedWidth, 0),
+        width,
         fields: columnFields,
         colIndex: columnIndex,
         hasFocus,
