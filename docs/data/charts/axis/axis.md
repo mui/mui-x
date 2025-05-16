@@ -232,6 +232,8 @@ In the following demo, the size of the x- and y-axes is modified to increase the
 The first and last tick labels may bleed into the margin. If that margin is not enough to display the label, it might be clipped.
 To avoid this, you can use the `margin` prop to increase the space between the chart and the edge of the container.
 
+Alternatively you can disable clipping altogether by setting the desired axis's `disableTruncation` property to true.
+
 {{"demo": "MarginAndLabelPosition.js"}}
 
 ### Rendering
