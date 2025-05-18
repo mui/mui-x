@@ -170,7 +170,7 @@
     "lerna": "^8.2.2",
     "lodash": "^4.17.21",
     "magic-string": "^0.30.17",
-    "markdownlint-cli2": "^0.17.2",
+    "markdownlint-cli2": "^0.18.1",
     "mocha": "^11.3.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.48",
