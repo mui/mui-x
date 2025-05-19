@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { ChartsSlotProps } from '../internals/material';
-import { useChartSlots } from '../context/ChartsSlotsContext';
+import { useChartsSlots } from '../context/ChartsSlotsContext';
 
 export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
   /**
@@ -14,7 +14,7 @@ export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
     const { render, ...other } = props;
-    const { slots, slotProps } = useChartSlots();
+    const { slots, slotProps } = useChartsSlots();
     const element = useComponentRenderer(slots.baseIconButton, render, {
       ...slotProps?.baseIconButton,
       ...other,
