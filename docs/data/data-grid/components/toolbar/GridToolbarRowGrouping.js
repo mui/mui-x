@@ -33,9 +33,9 @@ function CustomToolbar() {
   );
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
   const draggedColumn = useGridSelector(apiRef, gridColumnReorderDragColSelector);
-  const [draggedChip, setDraggedChip] = React.useState<string | null>(null);
+  const [draggedChip, setDraggedChip] = React.useState(null);
 
-  const handleToolbarDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleToolbarDragOver = (event) => {
     event.preventDefault();
 
     if (
@@ -47,52 +47,47 @@ function CustomToolbar() {
     }
   };
 
-  const handleToolbarDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleToolbarDragLeave = (event) => {
     event.preventDefault();
 
-    if (
-      draggedColumn &&
-      !event.currentTarget.contains(event.relatedTarget as Node)
-    ) {
+    if (draggedColumn && !event.currentTarget.contains(event.relatedTarget)) {
       apiRef.current.removeRowGroupingCriteria(draggedColumn);
     }
   };
 
-  const handleChipDragStart =
-    (field: string) => (event: React.DragEvent<HTMLDivElement>) => {
-      setDraggedChip(field);
-      event.dataTransfer.effectAllowed = 'move';
-    };
+  const handleChipDragStart = (field) => (event) => {
+    setDraggedChip(field);
+    event.dataTransfer.effectAllowed = 'move';
+  };
 
   const handleChipDragEnd = () => {
     setDraggedChip(null);
   };
 
-  const handleChipDragOver =
-    (targetField: string) => (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
+  const handleChipDragOver = (targetField) => (event) => {
+    event.preventDefault();
 
-      const draggedField = draggedChip || draggedColumn;
-      if (!draggedField || draggedField === targetField) {
-        return;
-      }
+    const draggedField = draggedChip || draggedColumn;
+    if (!draggedField || draggedField === targetField) {
+      return;
+    }
 
-      const currentIndex = rowGroupingModel.indexOf(draggedField);
-      const targetIndex = rowGroupingModel.indexOf(targetField);
+    const currentIndex = rowGroupingModel.indexOf(draggedField);
+    const targetIndex = rowGroupingModel.indexOf(targetField);
 
-      if (currentIndex === -1 || targetIndex === -1) {
-        return;
-      }
+    if (currentIndex === -1 || targetIndex === -1) {
+      return;
+    }
 
-      if (currentIndex !== targetIndex) {
-        const newModel = [...rowGroupingModel];
-        newModel.splice(currentIndex, 1);
-        newModel.splice(targetIndex, 0, draggedField);
-        apiRef.current.setRowGroupingModel(newModel);
-      }
-    };
+    if (currentIndex !== targetIndex) {
+      const newModel = [...rowGroupingModel];
+      newModel.splice(currentIndex, 1);
+      newModel.splice(targetIndex, 0, draggedField);
+      apiRef.current.setRowGroupingModel(newModel);
+    }
+  };
 
-  const moveRowGroup = (field: string, position: number) => {
+  const moveRowGroup = (field, position) => {
     if (position < 0 || position > rowGroupingModel.length) {
       return;
     }
@@ -104,7 +99,7 @@ function CustomToolbar() {
     apiRef.current.setRowGroupingModel(newModel);
   };
 
-  const removeRowGroup = (field: string) => {
+  const removeRowGroup = (field) => {
     if (columnsLookup[field].groupable) {
       apiRef.current.removeRowGroupingCriteria(field);
     }
@@ -137,9 +132,7 @@ function CustomToolbar() {
                     onKeyDown,
                     ...chipProps
                   }) => {
-                    const handleKeyDown = (
-                      event: React.KeyboardEvent<HTMLDivElement>,
-                    ) => {
+                    const handleKeyDown = (event) => {
                       if (event.key === 'ArrowRight' && event.shiftKey) {
                         moveRowGroup(field, index + 1);
                       } else if (event.key === 'ArrowLeft' && event.shiftKey) {
@@ -152,7 +145,7 @@ function CustomToolbar() {
                     return (
                       <Chip
                         {...chipProps}
-                        ref={ref as React.Ref<HTMLDivElement>}
+                        ref={ref}
                         label={label}
                         sx={{ cursor: 'grab', opacity: isDraggedField ? 0.5 : 1 }}
                         onDelete={() => removeRowGroup(field)}
@@ -179,16 +172,23 @@ function CustomToolbar() {
   );
 }
 
-export default function RowGroupingToolbar() {
+export default function GridToolbarRowGrouping() {
   const apiRef = useGridApiRef();
 
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 10,
+    rowLength: 100,
     maxColumns: 10,
   });
 
-  const initialState = useKeepGroupedColumnsHidden({ apiRef });
+  const initialState = useKeepGroupedColumnsHidden({
+    apiRef,
+    initialState: {
+      rowGrouping: {
+        model: ['status', 'commodity'],
+      },
+    },
+  });
 
   return (
     <div style={{ height: 400, width: '100%' }}>

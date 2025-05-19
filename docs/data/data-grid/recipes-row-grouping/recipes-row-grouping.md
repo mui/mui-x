@@ -20,11 +20,7 @@ Use `GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD` to pin a grouped column. In the de
 
 ## Creating and reordering groups with drag and drop
 
-The demo below shows how to add a custom toolbar that enables creating and reordering groups with drag and drop.
-
-Users can drag column headers into the toolbar to create groups, then reorder them by dragging the chips within the toolbar. Groups can be removed by clicking the delete button.
-
-{{"demo": "RowGroupingToolbar.js", "bg": "inline", "defaultCodeOpen": false}}
+See [Toolbar component—Row grouping bar](/x/react-data-grid/components/toolbar/#row-grouping-bar) for an example of how to add a custom toolbar that allows users to create row groups with drag and drop.
 
 ## Sorting row groups by the number of child rows
 
