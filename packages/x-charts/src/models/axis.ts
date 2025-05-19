@@ -515,6 +515,24 @@ export interface ChartsAxisData {
   seriesValues: Record<string, number | null | undefined>;
 }
 
+/**
+ * The data used to identify pointer interaction with axis
+ */
+export interface AxisPointerIdentifier {
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index if the axis have a `data` property.
+   */
+  dataIndex: number | null;
+  /**
+   * The value. If the axis have a `data` property, the `dataIndex` get the priority.
+   */
+  value: number | string | Date | null;
+}
+
 export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
   ? MakeOptional<AxisConfig<S, V, ChartsXAxisProps>, 'id'>
   : never;
