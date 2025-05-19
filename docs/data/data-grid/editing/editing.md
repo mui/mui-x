@@ -252,7 +252,13 @@ Also, removing one field or row ID from the object will not cause the missing ce
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the editing feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
+
+:::warning
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
+:::
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
