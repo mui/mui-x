@@ -113,11 +113,11 @@ To pin the checkbox column that's generated when using [the `checkboxSelection` 
 
 {{"demo": "ColumnPinningWithCheckboxSelection.js", "bg": "inline"}}
 
-## Usage with dynamic row height
+## Pinning columns with dynamic row height
 
-You can have both pinned columns and [dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height) enabled at the same time.
-However, if the rows change their content after the initial calculation, you may need to trigger a manual recalculation to avoid incorrect measurements.
-You can do this by calling `apiRef.current.resetRowHeights()` every time that the content changes.
+The Data Grid supports use cases involving both column pinning and [dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height).
+However, if row contents change after the initial calculation, you may need to trigger a manual recalculation to avoid incorrect measurements.
+You can do this by calling `apiRef.current.resetRowHeights()` whenever the content changes.
 
 The demo below contains an example of both features enabled:
 
@@ -125,7 +125,13 @@ The demo below contains an example of both features enabled:
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the column pinning feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
+
+:::warning
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
+:::
 
 {{"demo": "ColumnPinningApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
