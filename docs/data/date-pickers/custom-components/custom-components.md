@@ -10,7 +10,7 @@ components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerT
 
 :::info
 The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
-For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
+For example, check [available Date Picker slots](/x/api/date-pickers/date-picker/#slots).
 :::
 
 :::success

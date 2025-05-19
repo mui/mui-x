@@ -15,6 +15,18 @@ githubLabel: 'component: scheduler'
 This package is not published yet.
 :::
 
-## Event Calendar
+## Primitives
+
+### Time Grid
+
+{{"demo": "TimeGridPrimitives.js", "defaultCodeOpen": false}}
+
+### Day Grid
+
+TODO
+
+## Joy UI
+
+### Event Calendar
 
 {{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false}}

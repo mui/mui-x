@@ -1298,8 +1298,9 @@ DataGridPremiumRaw.propTypes = {
   /**
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
+   * @param {string} delimiter The delimiter used to split the text. Default is the tab character and can be set with the `clipboardCopyCellDelimiter` prop.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default (pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }
+   * @default (pastedText, delimiter = '\t') => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split(delimiter)); }
    */
   splitClipboardPastedText: PropTypes.func,
   style: PropTypes.object,
