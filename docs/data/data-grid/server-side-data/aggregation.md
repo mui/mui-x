@@ -4,12 +4,11 @@ title: React Data Grid - Server-side aggregation
 
 # Data Grid - Server-side aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧
 
-<p class="description">Aggregation with server-side data source.</p>
+<p class="description">Implement aggregation with server-side data in the Data Grid.</p>
 
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #10860](https://github.com/mui/mui-x/issues/10860) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+:::success
+Server-side aggregation is available in MUI X v8+.
+You must [upgrade from v7](https://mui.com/x/migration/migration-data-grid-v7/) to use this feature.
 :::
+
+The Data Grid Premium provides tools to give end users the ability to aggregate and compare row values rendered from server-side data.
