@@ -13,8 +13,8 @@ Reordering does not work on that specific version of Firefox because the value f
 You must upgrade to Firefox v130 or higher to avoid this issue.
 :::
 
-By default, columns are organized according to the order in which they're provided in the `columns` array.
-The Data Grid Pro lets users reorder columns by dragging and dropping the header cells—give it a try in the demo below:
+Columns are organized according to the order in which they're provided in the `columns` array.
+By default, the Data Grid Pro lets users reorder columns by dragging and dropping the header cells—give it a try in the demo below:
 
 {{"demo": "ColumnOrderingGrid.js", "bg": "inline"}}
 
