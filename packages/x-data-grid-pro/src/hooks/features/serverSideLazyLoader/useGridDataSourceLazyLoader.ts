@@ -186,7 +186,7 @@ export const useGridDataSourceLazyLoader = (
         continue;
       }
 
-      const rowId = tree[rootGroupChildren[i]].id; // keep the id, so that row related state is maintained (selection, re-ordering, etc.)
+      const rowId = tree[rootGroupChildren[i]].id; // keep the id, so that row related state is maintained
       const skeletonRowNode: GridSkeletonRowNode = {
         type: 'skeletonRow',
         id: rowId,
