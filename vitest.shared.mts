@@ -2,14 +2,15 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import babel from 'vite-plugin-babel';
+import react from '@vitejs/plugin-react';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
 export default defineConfig({
   plugins: [
-    babel({
-      babelConfig: {
+    react({
+      babel: {
         plugins: ['@mui/internal-babel-plugin-display-name'],
         babelrc: false,
         configFile: false,
