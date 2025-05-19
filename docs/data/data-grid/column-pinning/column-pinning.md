@@ -50,7 +50,7 @@ Use it together with `onPinnedColumnsChange` to track when columns are pinned an
 
 ### For all columns
 
-Column pinning is enabled by default on the Data Grid Pro and Premium, but you can disable it with the `disableColumnPinning` prop:
+To disable pinning for all columns, set the `disableColumnPinning` prop to `true`:
 
 ```tsx
 <DataGridPro disableColumnPinning />
@@ -58,7 +58,7 @@ Column pinning is enabled by default on the Data Grid Pro and Premium, but you c
 
 ### For specific columns
 
-To disable pinning on a specific column, set the `pinnable` property in its corresponding `GridColDef` to `false`.
+To disable pinning for a specific column, set the `pinnable` property to `false` in the column's `GridColDef`, as shown below:
 
 ```tsx
 <DataGridPro columns={[{ field: 'id', pinnable: false }]} /> // Default is `true`

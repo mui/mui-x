@@ -31,11 +31,15 @@ Column reordering emits the following events for you to import as needed:
 
 ### For all columns
 
-To disable reordering on all columns, set the `disableColumnReorder` prop to `true`.
+To disable reordering for all columns, set the `disableColumnReorder` prop to `true`:
+
+```tsx
+<DataGridPro disableColumnReorder />
+```
 
 ### For specific columns
 
-To disable reordering in a specific column, set the `disableReorder` property to `true` in the column's `GridColDef`, as shown below:
+To disable reordering for a specific column, set the `disableReorder` property to `true` in the column's `GridColDef`, as shown below:
 
 {{"demo": "ColumnOrderingDisabledGrid.js", "bg": "inline"}}
 
