@@ -718,9 +718,7 @@ export const useGridRowSelection = (
     (value: boolean) => {
       const filterModel = gridFilterModelSelector(apiRef);
       const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
-      const hasFilters =
-        filterModel.items.length > 0 || quickFilterModel?.some((val) => val.length);
-
+      const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
       if (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&
