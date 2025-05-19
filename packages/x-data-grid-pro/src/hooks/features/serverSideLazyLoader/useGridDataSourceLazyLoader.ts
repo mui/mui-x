@@ -148,7 +148,6 @@ export const useGridDataSourceLazyLoader = (
 
   const addSkeletonRows = React.useCallback(() => {
     const tree = privateApiRef.current.state.rows.tree;
-    const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
     const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
     const rootGroupChildren = [...rootGroup.children];
 
@@ -229,7 +228,6 @@ export const useGridDataSourceLazyLoader = (
         rows: {
           ...state.rows,
           tree,
-          dataRowIdToModelLookup,
         },
       }),
       'addSkeletonRows',
