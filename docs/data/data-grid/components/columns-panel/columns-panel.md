@@ -20,6 +20,10 @@ See [Custom subcomponents—Columns panel](/x/react-data-grid/components/#column
 
 :::
 
+The columns panel is part of the [column visibility feature](/x/react-data-grid/column-visibility/) and is enabled by default. Users can trigger the columns panel via the column menu, as well as from the toolbar when `showToolbar` is passed to the `<DataGrid />` component.
+
+When you need to customize the columns panel trigger, or when implementing a custom toolbar, you can use the Columns Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components.
+
 ## Basic usage
 
 The demo below shows how to add a columns panel trigger to a custom toolbar.

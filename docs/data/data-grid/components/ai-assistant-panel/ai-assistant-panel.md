@@ -18,6 +18,10 @@ Future versions of the AI Assistant Panel component will make it possible to com
 
 :::
 
+The AI assistant panel is part of the [`AI Assistant feature`](/x/react-data-grid/ai-assistant/).
+
+When you need to customize the AI assistant panel trigger, or when implementing a custom toolbar, you can use the AI Assistant Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components.
+
 ## Basic usage
 
 The demo below shows how to add an AI assistant panel trigger to a custom toolbar.

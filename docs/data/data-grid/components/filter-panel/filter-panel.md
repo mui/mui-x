@@ -21,6 +21,10 @@ for more details.
 
 :::
 
+The [filter panel](/x/react-data-grid/filtering/) is enabled by default. Users can trigger the filter panel via the column menu, as well as from the toolbar when `showToolbar` is passed to the `<DataGrid />` component.
+
+When you need to customize the filter panel trigger, or when implementing a custom toolbar, you can use the Filter Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components.
+
 ## Basic usage
 
 The demo below shows how to add a filter panel trigger to a custom toolbar.

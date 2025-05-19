@@ -10,6 +10,10 @@ githubLabel: 'component: data grid'
 
 <p class="description">Provide users with a prompt field to interact with the AI assistant.</p>
 
+The prompt field is part of the [AI Assistant feature](/x/react-data-grid/ai-assistant/).
+
+If you want to build your own UI for the AI Assistant, you can use the Prompt Field component directly.
+
 ## Basic usage
 
 The demo below shows how to add a prompt field to a custom toolbar.
