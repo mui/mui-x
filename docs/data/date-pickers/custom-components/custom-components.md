@@ -190,7 +190,7 @@ You can pass a custom component to replace the year button, as shown below:
 
 The `day` slot allows users to change the selected day in the calendar.
 
-You can use the `PickerDay2` component to replace the day slot with a simplified DOM structure reduced to a single element.
+You can use the `PickerDay2` and `DateRangePickerDay2` components to replace the day slot with a simplified DOM structure reduced to a single element.
 
 The `::before` pseudo element is used to create the highlighting effect on the days within the selected range.
 
@@ -198,9 +198,15 @@ The `::after` pseudo element is used to create the previewing effect on hover.
 
 This new structure provides a better theming and customization experience.
 
+{{"demo": "PickerDay2Demo.js"}}
+
 Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
 
-{{"demo": "PickerDay2Demo.js"}}
+{{"demo": "PickerDay2DemoCSSVars.js"}}
+
+Customize the look and feel by creating a custom theme with `styleOverrides`.
+
+{{"demo": "PickerDay2DemoCustomTheme.js"}}
 
 ## Month button
 

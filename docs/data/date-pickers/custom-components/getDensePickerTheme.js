@@ -1,6 +1,4 @@
 'use client';
-import { ThemeOptions } from '@mui/material/styles';
-import type {} from '@mui/x-data-grid/themeAugmentation';
 
 export const gray = {
   50: 'hsl(220, 60%, 99%)',
@@ -15,12 +13,9 @@ export const gray = {
   900: 'hsl(220, 30%, 5%)',
 };
 
-type PaletteMode = 'light' | 'dark';
-
-export const getEnhancedCustomTheme = (mode: PaletteMode): ThemeOptions => ({
+export const getDensePickerTheme = (mode) => ({
   palette: {
     mode,
-
     primary: {
       light: 'hsl(240, 83%, 88%)',
       main: 'hsl(240, 83%, 65%)',
