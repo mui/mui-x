@@ -18,6 +18,15 @@ The Data Grid Pro lets users reorder columns by dragging and dropping the header
 
 {{"demo": "ColumnOrderingGrid.js", "bg": "inline"}}
 
+## Column reordering events
+
+Column reordering emits the following events for you to import as needed:
+
+- `columnHeaderDragStart`: emitted when the user starts dragging the header cell.
+- `columnHeaderDragEnter`: emitted when the cursor enters another header cell while dragging.
+- `columnHeaderDragOver`: emitted when the user drags a header cell over another header cell.
+- `columnHeaderDragEnd`: emitted when the user stops dragging the header cell.
+
 ## Disable column reordering
 
 ### All columns
@@ -29,15 +38,6 @@ To disable reordering on all columns, set the `disableColumnReorder` prop to `tr
 To disable reordering in a specific column, set the `disableReorder` property to `true` in the column's `GridColDef`, as shown below:
 
 {{"demo": "ColumnOrderingDisabledGrid.js", "bg": "inline"}}
-
-## Column reordering events
-
-Column reordering emits the following events for you to import as needed:
-
-- `columnHeaderDragStart`: emitted when the user starts dragging the header cell.
-- `columnHeaderDragEnter`: emitted when the cursor enters another header cell while dragging.
-- `columnHeaderDragOver`: emitted when the user drags a header cell over another header cell.
-- `columnHeaderDragEnd`: emitted when the user stops dragging the header cell.
 
 ## API
 
