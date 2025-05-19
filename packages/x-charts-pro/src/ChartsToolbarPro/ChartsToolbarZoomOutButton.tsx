@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useChartContext, useChartSlots, ChartsSlotProps } from '@mui/x-charts/internals';
+import { useChartContext, useChartsSlots, ChartsSlotProps } from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
@@ -20,7 +20,7 @@ const ChartsToolbarZoomOutButton = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarZoomOutButtonProps>
 >(function ChartsToolbarZoomOutButton({ render, ...other }, ref) {
-  const { slots, slotProps } = useChartSlots();
+  const { slots, slotProps } = useChartsSlots();
   const { instance } = useChartContext<[UseChartProZoomSignature]>();
   const element = useComponentRenderer(slots.baseIconButton, render, {
     ...slotProps?.baseIconButton,
