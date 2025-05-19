@@ -1332,7 +1332,7 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(onRowSelectionModelChange.callCount).to.equal(0);
     });
 
-    it('should call onRowSelectionModelChange with the `exclude` set when select all checkbox is clicked', async () => {
+    it('should call onRowSelectionModelChange with the `exclude` set when select all checkbox is clicked and filters are empty', async () => {
       const onRowSelectionModelChange = spy();
       const { user } = render(
         <TestDataGridSelection
