@@ -1,5 +1,65 @@
 # Testing
 
+We use [Vitest](https://vitest.dev/) for unit tests in both the browser and jsdom environments.
+
+## How to run
+
+Some simple examples on how to run the tests.
+
+### Filter by project
+
+```bash
+### starting with `x-charts`
+pnpm test:unit --project "x-charts*"
+
+### exactly `x-data-grid`
+pnpm test:unit --project "x-data-grid"
+
+### ending with `-pro`
+pnpm test:unit --project "*-pro"
+```
+
+### Filter by path
+
+```bash
+### any file that has BarChart in its path
+pnpm test:browser BarChart
+
+# FILTER BY TEST NAME (generally slow)
+
+### any test that hast "hide tooltip" in its name
+pnpm test:browser -t "hide tooltip"
+```
+
+### Combine the above
+
+```bash
+### only run files that contain the pattern inside a specific project
+pnpm test:browser --project "x-charts" BarChart
+
+### only run tests which names contain the pattern inside a specific project
+pnpm test:browser --project "x-charts" -t "hide tooltip"
+```
+
+### Using test.only
+
+Vitest's `test.only` behavior is different from Mocha's. That's because Vitest parallelizes tests and can't know whether `test.only` is used in another file. This behavior is the same as [Jest's](https://github.com/jestjs/jest/issues/4414).
+
+The way to make the test run only a test specified with a `.only` modifier is to use the file filter and run only the file that contains the test.
+
+```tsx
+// src/x-charts/test/BarChart.test.tsx
+it.only('should show the tooltip', () => {
+  // ...
+});
+```
+
+```bash
+pnpm test:browser BarChart
+```
+
+This will run only the test that has `it.only` in it and will ignore all other tests in the file.
+
 ## Testing multiple versions of React
 
 You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following command:
