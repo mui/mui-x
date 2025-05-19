@@ -36,6 +36,6 @@ That is achievable by passing the custom elements to `slots` prop of the chart.
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
 
-If you want to add or further customize the toolbar's functionality, you can also partially or entirely replace it and use a custom implementation.
+If you want to further customize the toolbar's functionality, you can also partially or entirely replace it with a custom implementation.
 
 {{"demo": "ChartsToolbarCustomToolbar.js"}}
