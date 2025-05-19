@@ -1,37 +1,37 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
 import {
-  createRenderer,
-  screen,
-  ErrorBoundary,
-  waitFor,
-  reactMajor,
   act,
+  createRenderer,
+  ErrorBoundary,
+  reactMajor,
+  screen,
+  waitFor,
 } from '@mui/internal-test-utils';
-import { stub, spy } from 'sinon';
-import { expect } from 'chai';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   DataGrid,
   DataGridProps,
-  GridColDef,
-  gridClasses,
-  useGridApiRef,
   GridApi,
+  gridClasses,
+  GridColDef,
+  useGridApiRef,
 } from '@mui/x-data-grid';
-import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ptBR } from '@mui/x-data-grid/locales';
+import { RefObject } from '@mui/x-internals/types';
+import { expect } from 'chai';
+import * as React from 'react';
+import { spy, stub } from 'sinon';
 import {
   $,
-  grid,
-  gridVar,
+  getCell,
   getColumnHeaderCell,
   getColumnValues,
-  getCell,
   getRow,
+  grid,
+  gridVar,
   sleep,
 } from 'test/utils/helperFn';
-import { describeSkipIf, testSkipIf, isJSDOM, isOSX } from 'test/utils/skipIf';
+import { describeSkipIf, isJSDOM, isOSX, testSkipIf } from 'test/utils/skipIf';
 
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
@@ -953,7 +953,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
         'The Data Grid component requires all rows to have a unique `id` property',
         reactMajor < 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid)> component',
+        reactMajor < 19 && 'The above error occurred in the <DataGrid> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(

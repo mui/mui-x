@@ -1,15 +1,14 @@
-import * as React from 'react';
-import { expect } from 'chai';
-import { spy } from 'sinon';
 import { act, fireEvent, reactMajor } from '@mui/internal-test-utils';
-import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import {
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { expect } from 'chai';
+import { spy } from 'sinon';
+import { describeSkipIf, isJSDOM, testSkipIf } from 'test/utils/skipIf';
+import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 
 describeTreeView<
   [UseTreeViewItemsSignature, UseTreeViewExpansionSignature, UseTreeViewSelectionSignature]
@@ -29,8 +28,8 @@ describeTreeView<
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
           reactMajor < 19 &&
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem)> component`,
-          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem)> component`,
+          reactMajor < 19 && `The above error occurred in the <TreeItem> component`,
+          reactMajor < 19 && `The above error occurred in the <TreeItem> component`,
         ]);
       } else {
         expect(() =>
@@ -39,8 +38,7 @@ describeTreeView<
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
           reactMajor < 19 &&
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          reactMajor < 19 &&
-            `The above error occurred in the <ForwardRef(${treeViewComponentName})> component`,
+          reactMajor < 19 && `The above error occurred in the <${treeViewComponentName}> component`,
         ]);
       }
     });
