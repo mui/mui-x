@@ -31,11 +31,6 @@ const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
         paginationMode: 'server',
       }
     : {}),
-  ...(themedProps.dataSource && themedProps.lazyLoading
-    ? {
-        keepNonExistentRowsSelected: true,
-      }
-    : {}),
 });
 
 /**
