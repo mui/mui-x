@@ -48,6 +48,8 @@ Use it together with `onPinnedColumnsChange` to track when columns are pinned an
 
 ## Disabling column pinning
 
+Column pinning is enabled by default on the Data Grid Pro, but you can disable it for some or all columns.
+
 ### For all columns
 
 To disable pinning for all columns, set the `disableColumnPinning` prop to `true`:

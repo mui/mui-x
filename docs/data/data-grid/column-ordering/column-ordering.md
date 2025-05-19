@@ -29,6 +29,8 @@ Column reordering emits the following events for you to import as needed:
 
 ## Disabling column reordering
 
+Drag-and-drop column reordering is enabled by default on the Data Grid Pro, but you can disable it for some or all columns.
+
 ### For all columns
 
 To disable reordering for all columns, set the `disableColumnReorder` prop to `true`:
