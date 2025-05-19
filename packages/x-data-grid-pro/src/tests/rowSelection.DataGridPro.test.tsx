@@ -1331,5 +1331,29 @@ describe('<DataGridPro /> - Row selection', () => {
       );
       expect(onRowSelectionModelChange.callCount).to.equal(0);
     });
+
+    it('should call onRowSelectionModelChange with the `exclude` set when select all checkbox is clicked', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          onRowSelectionModelChange={onRowSelectionModelChange}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: [''],
+              },
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      await user.click(selectAllCheckbox);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal({
+        type: 'exclude',
+        ids: new Set(),
+      });
+    });
   });
 });
