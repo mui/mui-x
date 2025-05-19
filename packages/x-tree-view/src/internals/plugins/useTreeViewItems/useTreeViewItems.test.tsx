@@ -1,15 +1,15 @@
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import { act, fireEvent, reactMajor } from '@mui/internal-test-utils';
+import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import {
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { expect } from 'chai';
-import { spy } from 'sinon';
-import { describeSkipIf, isJSDOM, testSkipIf } from 'test/utils/skipIf';
-import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
+import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 describeTreeView<
   [UseTreeViewItemsSignature, UseTreeViewExpansionSignature, UseTreeViewSelectionSignature]

@@ -1,37 +1,37 @@
+import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
-  act,
   createRenderer,
-  ErrorBoundary,
-  reactMajor,
   screen,
+  ErrorBoundary,
   waitFor,
+  reactMajor,
+  act,
 } from '@mui/internal-test-utils';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { stub, spy } from 'sinon';
+import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
-  GridApi,
-  gridClasses,
   GridColDef,
+  gridClasses,
   useGridApiRef,
+  GridApi,
 } from '@mui/x-data-grid';
-import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { ptBR } from '@mui/x-data-grid/locales';
-import { RefObject } from '@mui/x-internals/types';
-import { expect } from 'chai';
-import * as React from 'react';
-import { spy, stub } from 'sinon';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   $,
-  getCell,
-  getColumnHeaderCell,
-  getColumnValues,
-  getRow,
   grid,
   gridVar,
+  getColumnHeaderCell,
+  getColumnValues,
+  getCell,
+  getRow,
   sleep,
 } from 'test/utils/helperFn';
-import { describeSkipIf, isJSDOM, isOSX, testSkipIf } from 'test/utils/skipIf';
+import { describeSkipIf, testSkipIf, isJSDOM, isOSX } from 'test/utils/skipIf';
 
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
