@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useChartContext, ChartsSlots, useChartSlots } from '@mui/x-charts/internals';
+import { useChartContext, useChartSlots, ChartsSlotProps } from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
@@ -10,7 +10,7 @@ interface ChartsToolbarZoomInButtonProps {
   /**
    * A function to customize the rendering of the component.
    */
-  render?: RenderProp<ChartsSlots['baseIconButton']>;
+  render?: RenderProp<ChartsSlotProps['baseIconButton']>;
 }
 
 /**
