@@ -284,6 +284,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    direction: 'x',
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {

@@ -12,7 +12,7 @@ import {
 } from '../../../../models/axis';
 import { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber } from '../../../../hooks/useTicks';
+import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
@@ -200,7 +200,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    const tickNumber = rawTickNumber / ((range[1] - range[0]) / 100);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
     const scale = getScale(scaleType, axisExtremums, range);
     const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;

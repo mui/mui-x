@@ -5,6 +5,96 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.3.1
+
+_May 14, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Norwegian Bokmål (nb-NO) locale on the Data Grid
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid and Pickers
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@100pearlcent, @htollefsen, @JanPretzel, @sai6855.
+Following are all team members who have contributed to this release:
+@bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @oliviertassinari, @prakhargupta1.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.3.1`
+
+- [DataGrid] Add `reason` param for `onRowSelectionModelChange` callback (#17545) @sai6855
+- [DataGrid] Fix `renderContext` calculation loop (#17779) @cherniavskii
+- [DataGrid] Fix column spanning jump on scroll (#17759) @cherniavskii
+- [DataGrid] Fix material augmentation not working (#17761) @cherniavskii
+- [DataGrid] Use arguments selector for checkbox props (#17683) @MBilalShafi
+- [l10n] Improve Norwegian Bokmål (nb-NO) locale (#17766) @htollefsen
+- [l10n] Improve Korean (ko-KR) locale (#17484) @100pearlcent
+
+#### `@mui/x-data-grid-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.3.1`.
+
+#### `@mui/x-data-grid-premium@8.3.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.3.1`, plus:
+
+- [DataGridPremium] Fix aggregation label not being used in pivot panel (#17760) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.3.1`
+
+- [fields] Add notch to the field outlined when the label is manually shrank (#17620) @flaviendelangle
+- [l10n] Improve Korean (ko-KR) locale (#17484) @100pearlcent
+
+#### `@mui/x-date-pickers-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.3.1`.
+
+### Charts
+
+#### `@mui/x-charts@8.3.1`
+
+- [charts] Fix infinite tick number when zoom range is zero (#17750) @bernardobelchior
+- [charts] Improve tick rendering performance (#17755) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.3.1`, plus:
+
+- [charts-pro] Fix ESM build issue with Vite (#17774) @bernardobelchior
+- [charts-pro] Add benchmark for zoomed in scatter chart (#17756) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.3.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.3.1`.
+
+### Docs
+
+- [docs] Fix 301 to Next.js docs for license @oliviertassinari
+- [docs] Fix AI assistant API URL (#17745) @oliviertassinari
+- [docs] Fix heading structure in README @oliviertassinari
+- [docs] Fix translation keys documentation (#17811) @JanPretzel
+- [docs] Improve CHANGELOG format @oliviertassinari
+
+### Core
+
+- [core] Apply YAML convention, blank line only at top level @oliviertassinari
+- [code-infra] Fix dynamic import missing extensions (#17767) @Janpot
+- [code-infra] Replace `mocha` with `vitest` for browser & jsdom tests (#14508) @JCQuintas
+- [scheduler] Create the package and setup a private doc page (#17239) @flaviendelangle
+
 ## 8.3.0
 
 _May 8, 2025_
@@ -15,10 +105,8 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-Special thanks go out to this community member for a valuable contribution:
-@ptuukkan.
-Team members who have contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @rita-codes, @romgrk.
+Special thanks go out to this community member for a valuable contribution: @ptuukkan.
+Team members who have contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @rita-codes, @romgrk.
 
 ### Data Grid
 
@@ -531,8 +619,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-Team members who have contributed to this release:
-@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
+Team members who have contributed to this release: @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -845,7 +932,7 @@ We'd like to offer a big thanks to the 21 contributors who made this release pos
 - 🌍 Improve Chinese (zh-CN), (zh-HK), (zh-TW), Czech (cs-CZ), Korean (ko-KR) and Slovak (sk-Sk) locales on the Data Grid
 - 🌍 Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales on the Pickers
 
-## Breaking changes
+### Breaking changes
 
 - ℹ️ The peer dependency on `@mui/material` has been updated to accept only v7.
   This has been done to increase the adoption rate of ESM.
@@ -858,7 +945,7 @@ Following are all team members who have contributed to this release:
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
-## Alpha release highlights
+### Alpha release highlights
 
 Below are the highlights of the alpha releases leading up to this beta release:
 
@@ -3152,8 +3239,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - 🐞 Bugfixes
 
-Team members who have contributed to this release:
-@arminmeh, @cherniavskii, @LukasTy, @michelengelen.
+Team members who have contributed to this release: @arminmeh, @cherniavskii, @LukasTy, @michelengelen.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
