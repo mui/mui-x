@@ -726,7 +726,10 @@
     "sortModel": { "description": "Set the sort model of the Data Grid." },
     "splitClipboardPastedText": {
       "description": "The function is used to split the pasted text into rows and cells.",
-      "typeDescriptions": { "text": "The text pasted from the clipboard." }
+      "typeDescriptions": {
+        "text": "The text pasted from the clipboard.",
+        "delimiter": "The delimiter used to split the text. Default is the tab character and can be set with the <code>clipboardCopyCellDelimiter</code> prop."
+      }
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."

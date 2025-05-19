@@ -734,7 +734,10 @@
     },
     "splitClipboardPastedText": {
       "type": { "name": "func" },
-      "signature": { "type": "function(text: string) => void", "describedArgs": ["text"] }
+      "signature": {
+        "type": "function(text: string, delimiter: string) => void",
+        "describedArgs": ["text", "delimiter"]
+      }
     },
     "sx": {
       "type": {

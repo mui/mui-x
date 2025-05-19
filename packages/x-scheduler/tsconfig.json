@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["@mui/internal-test-utils/initMatchers", "chai-dom", "mocha", "node"],
+    "noImplicitAny": false,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+}
