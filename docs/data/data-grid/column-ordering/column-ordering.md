@@ -27,13 +27,13 @@ Column reordering emits the following events for you to import as needed:
 - `columnHeaderDragOver`: emitted when the user drags a header cell over another header cell.
 - `columnHeaderDragEnd`: emitted when the user stops dragging the header cell.
 
-## Disable column reordering
+## Disabling column reordering
 
-### All columns
+### For all columns
 
 To disable reordering on all columns, set the `disableColumnReorder` prop to `true`.
 
-### Specific columns
+### For specific columns
 
 To disable reordering in a specific column, set the `disableReorder` property to `true` in the column's `GridColDef`, as shown below:
 

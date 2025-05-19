@@ -7,7 +7,8 @@ title: Data Grid - Column pinning
 <p class="description">Implement pinning to keep columns in the Data Grid visible at all times.</p>
 
 Pinned columns (also known as sticky, frozen, and locked) are visible at all times while scrolling the Data Grid horizontally.
-Users can access this feature through the column menu to pin and unpin columns to either the left or right side, and they cannot be reordered.
+Users can access this feature through the column menu to pin and unpin columns to either the left or right side.
+Pinned columns cannot be [reordered](/x/react-data-grid/column-ordering/), except by unpinning and repinning.
 
 ## Implementing column pinning
 
@@ -55,9 +56,9 @@ Column pinning is enabled by default on the Data Grid Pro and Premium, but you c
 <DataGridPro disableColumnPinning />
 ```
 
-### For some columns
+### For specific columns
 
-To disable pinning on a given column, set the `pinnable` property in its corresponding `GridColDef` to `false`.
+To disable pinning on a specific column, set the `pinnable` property in its corresponding `GridColDef` to `false`.
 
 ```tsx
 <DataGridPro columns={[{ field: 'id', pinnable: false }]} /> // Default is `true`
