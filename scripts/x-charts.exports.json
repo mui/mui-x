@@ -116,6 +116,8 @@
   { "name": "ChartsTextProps", "kind": "Interface" },
   { "name": "ChartsTextStyle", "kind": "Interface" },
   { "name": "ChartsToolbarProps", "kind": "Interface" },
+  { "name": "ChartsToolbarSlotProps", "kind": "Interface" },
+  { "name": "ChartsToolbarSlots", "kind": "Interface" },
   { "name": "ChartsTooltip", "kind": "Function" },
   { "name": "ChartsTooltipCell", "kind": "Variable" },
   { "name": "chartsTooltipClasses", "kind": "Variable" },

@@ -22,7 +22,7 @@ import {
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
-import { ChartsToolbarProps } from '@mui/x-charts/Toolbar';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -36,12 +36,8 @@ export interface HeatmapSlots
   extends ChartsAxisSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots,
+    ChartsToolbarSlots,
     Partial<ChartsSlotsPro> {
-  /**
-   * Custom component for the toolbar.
-   * @default ChartsToolbar
-   */
-  toolbar?: React.ElementType<ChartsToolbarProps>;
   /**
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
@@ -52,11 +48,8 @@ export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
+    ChartsToolbarSlotProps,
     Partial<ChartsSlotPropsPro> {
-  /**
-   * Props for the toolbar component.
-   */
-  toolbar?: Partial<ChartsToolbarProps>;
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 

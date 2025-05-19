@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsToolbarProps } from '../Toolbar';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { ChartsSlots, ChartsSlotProps } from '../internals/material';
 import {
   ScatterPlot,
@@ -41,25 +41,16 @@ export interface ScatterChartSlots
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
-    Partial<ChartsSlots> {
-  /**
-   * Custom component for the toolbar.
-   * @default ChartsToolbar
-   */
-  toolbar?: React.ElementType<ChartsToolbarProps>;
-}
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
-    Partial<ChartsSlotProps> {
-  /**
-   * Props for the toolbar component.
-   */
-  toolbar?: Partial<ChartsToolbarProps>;
-}
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {}
 
 export interface ScatterChartProps
   extends Omit<

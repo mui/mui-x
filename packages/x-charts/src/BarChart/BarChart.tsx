@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSlotProps, ChartsSlots } from '../internals/material';
-import { ChartsToolbarProps } from '../Toolbar';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
@@ -36,25 +36,16 @@ export interface BarChartSlots
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
-    Partial<ChartsSlots> {
-  /**
-   * Custom component for the toolbar.
-   * @default ChartsToolbar
-   */
-  toolbar?: React.ElementType<ChartsToolbarProps>;
-}
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 export interface BarChartSlotProps
   extends ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
-    Partial<ChartsSlotProps> {
-  /**
-   * Props for the toolbar component.
-   */
-  toolbar?: Partial<ChartsToolbarProps>;
-}
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {}
 
 export interface BarChartProps
   extends Omit<

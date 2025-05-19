@@ -35,7 +35,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { LineChartPluginsSignatures } from './LineChart.plugins';
-import { ChartsToolbarProps } from '../Toolbar';
+import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -46,13 +46,8 @@ export interface LineChartSlots
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
-    Partial<ChartsSlots> {
-  /**
-   * Custom component for the toolbar.
-   * @default ChartsToolbar
-   */
-  toolbar?: React.ElementType<ChartsToolbarProps>;
-}
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
     AreaPlotSlotProps,
@@ -62,12 +57,8 @@ export interface LineChartSlotProps
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
-    Partial<ChartsSlotProps> {
-  /**
-   * Props for the toolbar component.
-   */
-  toolbar?: Partial<ChartsToolbarProps>;
-}
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {}
 
 export interface LineChartProps
   extends Omit<
