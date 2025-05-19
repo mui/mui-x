@@ -208,7 +208,6 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
 
   return (
     <ChartDataProvider
-      {...other}
       series={[
         {
           type: plotType,
@@ -244,7 +243,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         axisHighlight?.y === 'none'
       }
     >
-      <ChartsSurface className={className} ref={ref} sx={sx}>
+      <ChartsSurface className={className} ref={ref} sx={sx} {...other}>
         <g clipPath={`url(#${clipPathId})`}>
           {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
 

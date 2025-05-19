@@ -209,7 +209,6 @@ const Heatmap = React.forwardRef(function Heatmap(
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
         </g>
         <ChartsAxis slots={slots} slotProps={slotProps} />
-
         <ChartsClipPath id={clipPathId} />
         {children}
       </ChartsSurface>
