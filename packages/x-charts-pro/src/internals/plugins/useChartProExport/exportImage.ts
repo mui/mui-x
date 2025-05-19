@@ -7,7 +7,7 @@ export const getDrawDocument = async () => {
   try {
     const module = await import('rasterizehtml');
 
-    return module.drawDocument;
+    return module.default.drawDocument;
   } catch (error) {
     throw new Error(
       `MUI X Charts: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
