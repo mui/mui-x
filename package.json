@@ -218,6 +218,11 @@
       "esbuild",
       "nx",
       "sharp"
+    ],
+    "ignoredBuiltDependencies": [
+      "@mui/internal-babel-plugin-display-name",
+      "@mui/monorepo",
+      "msw"
     ]
   }
 }
