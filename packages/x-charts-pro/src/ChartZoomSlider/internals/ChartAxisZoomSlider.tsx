@@ -404,6 +404,8 @@ function ChartAxisZoomSliderSpan({
         y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
         width={previewWidth}
         height={previewHeight}
+        onPointerEnter={() => setShowTooltip('both')}
+        onPointerLeave={() => setShowTooltip(null)}
       />
       <ChartAxisZoomSliderHandle
         ref={setStartHandleEl}
