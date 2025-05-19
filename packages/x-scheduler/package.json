@@ -51,7 +51,7 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@floating-ui/react": "^0.27.8",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
@@ -70,7 +70,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rimraf": "^6.0.1",
-    "use-isomorphic-layout-effect": "^1.1.2"
+    "use-isomorphic-layout-effect": "^1.2.1"
   },
   "engines": {
     "node": ">=14.0.0"
