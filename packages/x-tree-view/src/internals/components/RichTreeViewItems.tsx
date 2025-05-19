@@ -15,10 +15,6 @@ const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
 >(null);
 
-if (process.env.NODE_ENV !== 'production') {
-  RichTreeViewItemsContext.displayName = 'RichTreeViewItemsProvider';
-}
-
 const WrappedTreeItem = React.memo(function WrappedTreeItem({
   itemSlot,
   itemSlotProps,

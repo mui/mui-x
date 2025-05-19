@@ -92,6 +92,7 @@ module.exports = function getBabelConfig(api) {
         ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
       },
     ],
+    '@mui/internal-babel-plugin-display-name',
     [
       'transform-inline-environment-variables',
       {
