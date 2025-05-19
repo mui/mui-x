@@ -10,10 +10,6 @@ githubLabel: 'component: data grid'
 
 <p class="description">Customize the Data Grid's pivot panel.</p>
 
-The pivot panel is part of the [pivoting feature](/x/react-data-grid/pivoting/) and is enabled by default when `showToolbar` is passed to the `<DataGridPremium />` component.
-
-When you need to customize the pivot panel trigger, or when implementing a custom toolbar, you can use the Pivot Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components.
-
 :::warning
 This component is incomplete.
 
@@ -21,6 +17,10 @@ Currently, the Pivot Panel Trigger is the only part of the Pivot Panel component
 Future versions of the Pivot Panel component will make it possible to compose each of its parts to create a custom pivot panel.
 
 :::
+
+The pivot panel is part of the [pivoting feature](/x/react-data-grid/pivoting/) and is enabled by default when `showToolbar` is passed to the `<DataGridPremium />` component.
+
+When you need to customize the pivot panel trigger, or when implementing a custom toolbar, you can use the Pivot Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components.
 
 ## Basic usage
 
