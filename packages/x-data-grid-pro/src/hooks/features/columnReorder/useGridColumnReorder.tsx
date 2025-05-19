@@ -95,7 +95,7 @@ export const useGridColumnReorder = (
       event.preventDefault();
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
-      // event.stopPropagation();
+      event.stopPropagation();
 
       clearTimeout(removeDnDStylesTimeout.current);
 
@@ -235,7 +235,7 @@ export const useGridColumnReorder = (
         }
       }
     },
-    [props.disableColumnReorder, logger, classes.columnHeaderDragging, apiRef],
+    [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
 
   const handleDragEnter = React.useCallback<
