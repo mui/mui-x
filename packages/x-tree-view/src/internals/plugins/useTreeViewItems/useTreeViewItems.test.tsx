@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { act, fireEvent, reactMajor } from '@mui/internal-test-utils';
 import {
   UseTreeViewExpansionSignature,

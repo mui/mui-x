@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
 import { expect } from 'chai';
