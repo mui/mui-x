@@ -75,7 +75,6 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     overlayProps,
     legendProps,
     axisHighlightProps,
-    chartToolbarProps,
     children,
   } = useScatterChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
@@ -99,7 +98,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {showToolbar ? <Toolbar {...chartToolbarProps} /> : null}
+        {showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
