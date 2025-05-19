@@ -14,6 +14,7 @@ import {
   gridPaginationModelSelector,
   gridFilteredSortedRowIdsSelector,
   gridRowIdSelector,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
@@ -68,6 +69,7 @@ export const useGridDataSourceLazyLoader = (
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
+  const draggedRowId = React.useRef<GridRowId | null>(null);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -178,25 +180,21 @@ export const useGridDataSourceLazyLoader = (
       // replace the rows not in the viewport with skeleton rows
       if (
         ((pageToSkip.start as number) <= i && i <= pageToSkip.end) ||
-        tree[rootGroupChildren[i]]?.type === 'skeletonRow'
+        tree[rootGroupChildren[i]]?.type === 'skeletonRow' || // ignore rows that are already skeleton rows
+        tree[rootGroupChildren[i]]?.id === draggedRowId.current // ignore row that is being dragged (https://github.com/mui/mui-x/issues/17854)
       ) {
         continue;
       }
 
-      const skeletonId = getSkeletonRowId(i); // to avoid duplicate keys on rebuild
-      const removedRow = rootGroupChildren[i];
-      rootGroupChildren[i] = skeletonId;
-
+      const rowId = tree[rootGroupChildren[i]].id; // keep the id, so that row related state is maintained (selection, re-ordering, etc.)
       const skeletonRowNode: GridSkeletonRowNode = {
         type: 'skeletonRow',
-        id: skeletonId,
+        id: rowId,
         parent: GRID_ROOT_GROUP_ID,
         depth: 0,
       };
 
-      tree[skeletonId] = skeletonRowNode;
-      delete tree[removedRow];
-      delete dataRowIdToModelLookup[removedRow];
+      tree[rowId] = skeletonRowNode;
       hasChanged = true;
     }
 
@@ -482,6 +480,14 @@ export const useGridDataSourceLazyLoader = (
     [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange],
   );
 
+  const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
+    draggedRowId.current = row.id;
+  }, []);
+
+  const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(() => {
+    draggedRowId.current = null;
+  }, []);
+
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
@@ -524,6 +530,16 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef,
     'filterModelChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleGridFilterModelChange),
+  );
+  useGridEvent(
+    privateApiRef,
+    'rowDragStart',
+    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragStart),
+  );
+  useGridEvent(
+    privateApiRef,
+    'rowDragEnd',
+    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragEnd),
   );
 
   React.useEffect(() => {
