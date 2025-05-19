@@ -26,15 +26,35 @@ For example, if the chart is not zoomable, the zoom buttons will not be displaye
 
 {{"demo": "ChartsToolbar.js"}}
 
-## Composition 🚧
+## Customization
 
-## Custom elements
+The toolbar is highly customizable, built to integrate with any design system.
 
-The toolbar can be customized to use custom elements instead of the default ones.
+### Slots
+
+TODO: How to differentiate these slots from "composition" slots?
 
 That is achievable by passing the custom elements to `slots` prop of the chart.
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
+
+### Render prop
+
+You can use the `render` prop to customize the rendering of certain elements.
+
+```tsx
+<ToolbarButton render={<MyButton />} />
+```
+
+Alternatively, you can pass a function to the `render` prop, which will receive the props and state as arguments.
+
+```tsx
+<ToolbarButton render={(props, state) => <MyButton {...props} />} />
+```
+
+You can see an example of this in the [composition](#composition) section.
+
+### Composition
 
 If you want to further customize the toolbar's functionality, you can also partially or entirely replace it with a custom implementation.
 
