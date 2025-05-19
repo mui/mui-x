@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { getCell, getColumnValues, getRows, includeRowSelection } from 'test/utils/helperFn';
-import { createRenderer, screen, act, reactMajor, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,
@@ -812,7 +812,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(reactMajor < 19 ? 2 : 1); // Dev mode calls twice on React 18
+      expect(onRowSelectionModelChange.callCount).to.equal(2);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
