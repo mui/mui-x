@@ -1,7 +1,8 @@
 <DataGridPremium
   {...data}
-  loading={loading}
-  slots={{ toolbar: CustomToolbar }}
   apiRef={apiRef}
+  loading={loading}
+  initialState={initialState}
+  slots={{ toolbar: CustomToolbar }}
   showToolbar
 />

@@ -9,6 +9,7 @@ import {
   gridColumnReorderDragColSelector,
   gridRowGroupingSanitizedModelSelector,
   useGridApiRef,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Typography from '@mui/material/Typography';
@@ -180,13 +181,16 @@ export default function RowGroupingToolbar() {
     maxColumns: 10,
   });
 
+  const initialState = useKeepGroupedColumnsHidden({ apiRef });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
-        loading={loading}
-        slots={{ toolbar: CustomToolbar }}
         apiRef={apiRef}
+        loading={loading}
+        initialState={initialState}
+        slots={{ toolbar: CustomToolbar }}
         showToolbar
       />
     </div>

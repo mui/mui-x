@@ -53,6 +53,10 @@ The demo below shows how to display active filter chips on the toolbar.
 
 {{"demo": "GridToolbarFilterBar.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Row grouping bar
+
+See [Row grouping recipes—Creating and reordering groups with drag and drop](/x/react-data-grid/recipes-row-grouping/#creating-and-reordering-groups-with-drag-and-drop) for an example of how to create a row grouping bar using the Toolbar component.
+
 ## Custom elements
 
 Use the `render` prop to replace default elements. See [Components usage—Customization](/x/react-data-grid/components/usage/#customization) for more details.
