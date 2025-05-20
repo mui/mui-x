@@ -602,7 +602,7 @@ export const GridRootStyles = styled('div', {
         borderTop: 'none',
       },
     },
-    [`&.${c['root--disableUserSelection']} .${c.cell}`]: {
+    [`&.${c['root--disableUserSelection']}`]: {
       userSelect: 'none',
     },
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
