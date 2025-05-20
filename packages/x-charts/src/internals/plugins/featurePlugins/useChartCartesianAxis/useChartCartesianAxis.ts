@@ -352,4 +352,12 @@ useChartCartesianAxis.getInitialState = (params) => ({
     x: params.defaultizedXAxis,
     y: params.defaultizedYAxis,
   },
+  ...(params.xAxisHighlight === undefined && params.yAxisHighlight === undefined
+    ? {}
+    : {
+        controlledCartesianAxisHighlight: {
+          x: params.xAxisHighlight,
+          y: params.yAxisHighlight,
+        },
+      }),
 });
