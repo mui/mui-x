@@ -124,7 +124,11 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       mousePosition.current.y = svgPoint.y;
 
       // Test if it's in the drawing area
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
+      if (
+        !instance.isPointInside(svgPoint.x, svgPoint.y, {
+          targetElement: event.target as SVGElement,
+        })
+      ) {
         if (mousePosition.current.isInChart) {
           instance?.cleanInteraction();
           mousePosition.current.isInChart = false;
