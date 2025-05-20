@@ -95,14 +95,15 @@ It removes the header showing the x-axis value from the tooltip.
 ### Series
 
 To hide a series, the formatted value should be `null`.
-To display en empty space, return an empty string.
+To display the series with a blank space, return an empty string.
 
 ## Style modification
 
 The tooltip can be styled using CSS classes, similar to other elements.
-However, there is one caveat du to the usage of [Portal](https://react.dev/reference/react-dom/createPortal).
+However, there is one caveat regarding using [portal](https://react.dev/reference/react-dom/createPortal).
 
-The tooltip renders as a children of the document's body element.
+The tooltip renders as a child of the document's body element.
+From a DOM perspective, it's not inside the chart.
 So using the chart's `sx` prop as follow does not work.
 
 ```tsx
@@ -117,16 +118,16 @@ import { chartsTooltipClasses } from '@mui/x-charts';
 />;
 ```
 
-To apply the same style as we're trying to apply above, we need to use the `sx` property inside the tooltip itself thanks to `slotProps.tooltip`:
+To apply the same style as above, use the `sx` prop of the tooltip itself, thanks to `slotProps.tooltip`.
 
 {{"demo": "TooltipStyle.js"}}
 
-If necessary, you can also disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
-In that case the tooltip will render as a child of the chart.
+Another option is to disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
+In that case, the tooltip renders as a child of the chart, and CSS rules apply as expected.
 
 ## Using a custom tooltip
 
-For advanced use-case, it can be necessary to create your own tooltip.
+For advanced use cases, it can be necessary to create your own tooltip.
 You can replace the default tooltip in single component charts by using slots.
 
 ```jsx
@@ -159,7 +160,7 @@ The solution is to put your tooltip inside the ChartDataProvider to get data, bu
 
 ## Creating a tooltip
 
-To create your custom tooltip, we provide some helpers which are explained in following sections:
+To create your custom tooltip, the library exports some helpers which are explained in the following sections:
 
 - `<ChartsTooltipContainer />` A wrapper providing the open/close state and the position of the tooltip.
 - `<ChartsItemTooltipContent />` render the content of the default item tooltip.
@@ -169,7 +170,7 @@ To create your custom tooltip, we provide some helpers which are explained in fo
 
 ### Modifying the position
 
-To override the tooltip position, you can create a wrapper that will manage the position.
+To override the tooltip position, you can create a wrapper that manages the position.
 
 ```jsx
 function CustomTooltipPopper(props){
@@ -183,7 +184,7 @@ function CustomTooltipPopper(props){
 }
 ```
 
-Then you will be able to either render a built-in content (`<ChartsItemTooltipContent />` or `<ChartsAxisTooltipContent />`) or your own component.
+Then you can either render built-in content (with `<ChartsItemTooltipContent />` or `<ChartsAxisTooltipContent />`) or your own component.
 
 ```jsx
 <CustomTooltipPopper>
