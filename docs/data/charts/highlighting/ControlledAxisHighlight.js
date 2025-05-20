@@ -1,10 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -38,43 +36,37 @@ export default function ControlledAxisHighlight() {
   };
 
   return (
-    <Stack
-      direction={{ xs: 'column', xl: 'row' }}
-      spacing={1}
-      sx={{ width: '100%' }}
-    >
-      <Box sx={{ flexGrow: 1 }}>
-        <Stack spacing={2} alignItems={'center'}>
-          <ToggleButtonGroup
-            value={chartType}
-            exclusive
-            onChange={handleChartType}
-            aria-label="chart type"
-            fullWidth
-          >
-            {['bar', 'line'].map((type) => (
-              <ToggleButton key={type} value={type} aria-label="left aligned">
-                {type}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-          <FormControl>
-            <FormLabel id="axis-index-radio-group">Item ID</FormLabel>
-            <RadioGroup
-              aria-labelledby="axis-index-radio-group"
-              name="radio-buttons-group"
-              value={xAxisHighlight?.dataIndex ?? null}
-              onChange={handleAxisHighlight}
-              row
-            >
-              <FormControlLabel value="0" control={<Radio />} label="0" />
-              <FormControlLabel value="1" control={<Radio />} label="1" />
-              <FormControlLabel value="2" control={<Radio />} label="2" />
-              <FormControlLabel value="3" control={<Radio />} label="3" />
-              <FormControlLabel value="4" control={<Radio />} label="4" />
-            </RadioGroup>
-          </FormControl>
-        </Stack>
+    <Stack spacing={2} alignItems={'center'} sx={{ width: '100%' }}>
+      <ToggleButtonGroup
+        value={chartType}
+        exclusive
+        onChange={handleChartType}
+        aria-label="chart type"
+        fullWidth
+      >
+        {['bar', 'line'].map((type) => (
+          <ToggleButton key={type} value={type} aria-label="left aligned">
+            {type}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+      <FormControl>
+        <FormLabel id="axis-index-radio-group">Item ID</FormLabel>
+        <RadioGroup
+          aria-labelledby="axis-index-radio-group"
+          name="radio-buttons-group"
+          value={xAxisHighlight?.dataIndex ?? null}
+          onChange={handleAxisHighlight}
+          row
+        >
+          <FormControlLabel value="0" control={<Radio />} label="0" />
+          <FormControlLabel value="1" control={<Radio />} label="1" />
+          <FormControlLabel value="2" control={<Radio />} label="2" />
+          <FormControlLabel value="3" control={<Radio />} label="3" />
+          <FormControlLabel value="4" control={<Radio />} label="4" />
+        </RadioGroup>
+      </FormControl>
+      <Box sx={{ width: '100%' }}>
         {chartType === 'bar' ? (
           <BarChart
             {...barChartsProps}
@@ -102,8 +94,8 @@ const barChartsProps = {
     { data: [3, 4, 1, 6, 5], label: 'series A', id: 'A' },
     { data: [4, 3, 1, 5, 8], label: 'series B', id: 'B' },
   ],
-  xAxis: [{ id: 'x-axis', scaleType: 'band' }],
-  height: 400,
+  xAxis: [{ id: 'x-axis', scaleType: 'band', data: [0, 2, 5, 10, 20] }],
+  height: 300,
 };
 
 const lineChartsProps = {
@@ -111,6 +103,6 @@ const lineChartsProps = {
     { data: [3, 4, 1, 6, 5], label: 'series A', id: 'A' },
     { data: [4, 3, 1, 5, 8], label: 'series B', id: 'B' },
   ],
-  xAxis: [{ id: 'x-axis', data: [0, 2, 5, 10, 20] }],
-  height: 400,
+  xAxis: [{ id: 'x-axis', scaleType: 'linear', data: [0, 2, 5, 10, 20] }],
+  height: 300,
 };

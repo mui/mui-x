@@ -96,7 +96,7 @@ const barChartsProps: BarChartProps = {
     { data: [4, 3, 1, 5, 8], label: 'series B', id: 'B' },
   ],
   xAxis: [{ id: 'x-axis', scaleType: 'band', data: [0, 2, 5, 10, 20] }],
-  height: 400,
+  height: 300,
 };
 
 const lineChartsProps: LineChartProps = {
@@ -105,5 +105,5 @@ const lineChartsProps: LineChartProps = {
     { data: [4, 3, 1, 5, 8], label: 'series B', id: 'B' },
   ],
   xAxis: [{ id: 'x-axis', scaleType: 'linear', data: [0, 2, 5, 10, 20] }],
-  height: 400,
+  height: 300,
 };
