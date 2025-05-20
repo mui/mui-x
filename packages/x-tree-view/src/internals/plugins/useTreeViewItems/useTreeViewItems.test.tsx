@@ -160,6 +160,40 @@ describeTreeView<
           expect(view.isItemExpanded('1')).to.equal(false);
         },
       );
+
+      testSkipIf(!isRichTreeView)('should use getItemLabel to render the label', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }],
+          getItemLabel: (item) => `Label: ${item.id}`,
+        });
+
+        expect(view.getItemContent('1')).to.have.text('Label: 1');
+        expect(view.getItemContent('2')).to.have.text('Label: 2');
+      });
+
+      testSkipIf(!isRichTreeView)('should use getItemChildren to find children', () => {
+        const items = [
+          {
+            id: '1',
+            label: 'Node 1',
+            section: [
+              { id: '1.1', label: 'Child 1' },
+              { id: '1.2', label: 'Child 2' },
+            ],
+          },
+          { id: '2', label: 'Node 2' },
+        ];
+
+        const view = render({
+          items,
+          getItemChildren: (item) => item.section,
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1.1', '1.2', '2']);
+        expect(view.getItemContent('1.1')).to.have.text('Child 1');
+        expect(view.getItemContent('1.2')).to.have.text('Child 2');
+      });
     });
 
     describe('disabled prop', () => {
