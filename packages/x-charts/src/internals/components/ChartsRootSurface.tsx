@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { useChartRootRef } from '../hooks';
+import { ChartsSurface, ChartsSurfaceProps } from '../../ChartsSurface';
+import { useChartRootRef } from '../../hooks';
 
 export interface ChartsRootSurfaceProps extends ChartsSurfaceProps {}
 

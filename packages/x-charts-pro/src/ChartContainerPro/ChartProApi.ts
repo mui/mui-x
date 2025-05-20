@@ -13,6 +13,11 @@ type PluginsPerSeriesType = {
   bar: BarChartProPluginsSignatures;
 };
 
+/**
+ * The API of the chart `apiRef` object.
+ * The chart type can be passed as the first generic parameter to narrow down the API to the specific chart type.
+ * @example ChartProApi<'bar'>
+ */
 export type ChartProApi<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends
