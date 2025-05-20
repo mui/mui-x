@@ -85,14 +85,18 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     );
   }, [apiRef]);
 
+  const onMouseUp = React.useCallback(() => {
+    apiRef.current.rootElementRef?.current?.classList.remove(
+      gridClasses['root--disableUserSelection'],
+    );
+  }, [apiRef]);
+
   const handleDragEnd = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      apiRef.current.rootElementRef?.current?.classList.remove(
-        gridClasses['root--disableUserSelection'],
-      );
+      onMouseUp();
       publish('rowDragEnd')(event);
     },
-    [apiRef, publish],
+    [publish, onMouseUp],
   );
 
   const draggableEventHandlers = isDraggable
@@ -101,6 +105,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
         onDragOver: publish('rowDragOver'),
         onDragEnd: handleDragEnd,
         onMouseDown,
+        onMouseUp,
       }
     : null;
 
