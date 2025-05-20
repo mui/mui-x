@@ -40,6 +40,14 @@
         "scatterItemIdentifier": "Identify which item got clicked"
       }
     },
+    "onXAxisInteraction": {
+      "description": "The function called when pointer moves from one axis item to another.",
+      "typeDescriptions": { "newAxes": "The array of item per axis." }
+    },
+    "onYAxisInteraction": {
+      "description": "The function called when pointer moves from one axis item to another.",
+      "typeDescriptions": { "newAxes": "The array of item per axis." }
+    },
     "radiusAxis": {
       "description": "The configuration of the radial-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
@@ -61,9 +69,11 @@
     "xAxis": {
       "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
+    "xAxisHighlight": { "description": "The controlled x-axis value highlighted." },
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
+    "yAxisHighlight": { "description": "The controlled y-axis value highlighted." },
     "zAxis": { "description": "The configuration of the z-axes." }
   },
   "classDescriptions": {}

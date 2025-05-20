@@ -248,6 +248,16 @@ LineChartPro.propTypes = {
    */
   onMarkClick: PropTypes.func,
   /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onXAxisInteraction: PropTypes.func,
+  /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onYAxisInteraction: PropTypes.func,
+  /**
    * Callback fired when the zoom has changed.
    *
    * @param {ZoomData[]} zoomData Updated zoom data.
@@ -959,6 +969,14 @@ LineChartPro.propTypes = {
     ]).isRequired,
   ),
   /**
+   * The controlled x-axis value highlighted.
+   */
+  xAxisHighlight: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number,
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
@@ -1619,6 +1637,14 @@ LineChartPro.propTypes = {
       }),
     ]).isRequired,
   ),
+  /**
+   * The controlled y-axis value highlighted.
+   */
+  yAxisHighlight: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number,
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+  }),
   /**
    * The configuration of the z-axes.
    */

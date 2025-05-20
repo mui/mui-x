@@ -54,6 +54,20 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onXAxisInteraction": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newAxes: Array<AxisPointerIdentifier>) => void",
+        "describedArgs": ["newAxes"]
+      }
+    },
+    "onYAxisInteraction": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newAxes: Array<AxisPointerIdentifier>) => void",
+        "describedArgs": ["newAxes"]
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -65,6 +79,18 @@
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
     },
     "width": { "type": { "name": "number" } },
+    "xAxisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex?: number, value?: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string }"
+      }
+    },
+    "yAxisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex?: number, value?: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string }"
+      }
+    },
     "zAxis": {
       "type": {
         "name": "arrayOf",
