@@ -140,6 +140,7 @@ const Heatmap = React.forwardRef(function Heatmap(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
+    apiRef,
     xAxis,
     yAxis,
     zAxis,
@@ -209,6 +210,7 @@ const Heatmap = React.forwardRef(function Heatmap(
 
   return (
     <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>
+      apiRef={apiRef}
       seriesConfig={seriesConfig}
       series={series.map((s) => ({
         type: 'heatmap',

@@ -75,7 +75,7 @@ function ChartsWrapper(props: ChartsWrapperProps) {
   const chartRootRef = useChartRootRef();
 
   return (
-    <Root ref={chartRootRef} ownerState={props} sx={sx}>
+    <Root ref={chartRootRef as React.RefObject<HTMLDivElement>} ownerState={props} sx={sx}>
       {children}
     </Root>
   );
