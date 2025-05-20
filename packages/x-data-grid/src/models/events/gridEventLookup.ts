@@ -193,6 +193,7 @@ export interface GridColumnHeaderEventLookup {
   };
   /**
    * Fired when the dragging of a column header ends.
+   * Same as `columnHeaderDragEnd`, but also fires when the DOM element is unmounted.
    * @ignore - do not document.
    */
   columnHeaderDragEndNative: {

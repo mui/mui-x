@@ -53,11 +53,11 @@ The demo below shows how to display active filter chips on the toolbar.
 
 {{"demo": "GridToolbarFilterBar.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Row grouping bar
+### Row grouping toolbar
 
 The demo below shows how to add a custom toolbar that enables creating and reordering groups with drag and drop.
 
-Users can drag column headers into the toolbar to create groups, then reorder them by dragging the chips within the toolbar. Groups can be removed by clicking the delete button.
+Users can create groups by dragging column headers into the toolbar, reorder them by dragging the chips within the toolbar, and remove them by clicking the delete button.
 
 {{"demo": "GridToolbarRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
