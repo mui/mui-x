@@ -96,7 +96,7 @@ export const useGridRowReorder = (
       event.stopPropagation();
 
       dragRowNode.current = event.currentTarget;
-      dragRowNode.current?.classList.add(classes.rowDragging);
+      dragRowNode.current.classList.add(classes.rowDragging);
       setDragRowId(params.id);
 
       removeDnDStylesTimeout.current = setTimeout(() => {
@@ -161,7 +161,6 @@ export const useGridRowReorder = (
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
-
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
