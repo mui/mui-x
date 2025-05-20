@@ -207,9 +207,9 @@ Here's how the Bar Chart is composed:
         <ChartsAxisHighlight />
       </g>
       <ChartsAxis />
-      <ChartsTooltip />
       <ChartsClipPath id={clipPathId} />
     </ChartsSurface>
+    <ChartsTooltip />
   </ChartsWrapper>
 </ChartDataProvider>
 ```

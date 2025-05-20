@@ -137,8 +137,8 @@ Here's how the Radar Chart is composed:
       <RadarSeriesMarks />
       {/* Other components */}
       <ChartsOverlay />
-      <ChartsTooltip />
     </ChartsSurface>
+    <ChartsTooltip />
   </ChartsWrapper>
 </RadarDataProvider>
 ```
