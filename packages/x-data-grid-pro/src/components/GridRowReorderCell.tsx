@@ -78,14 +78,14 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     [apiRef, params.id],
   );
 
-  const onMouseDown = React.useCallback(() => {
+  const handleMouseDown = React.useCallback(() => {
     // Prevent text selection as it will block all the drag events. More context: https://github.com/mui/mui-x/issues/16303
     apiRef.current.rootElementRef?.current?.classList.add(
       gridClasses['root--disableUserSelection'],
     );
   }, [apiRef]);
 
-  const onMouseUp = React.useCallback(() => {
+  const handleMouseUp = React.useCallback(() => {
     apiRef.current.rootElementRef?.current?.classList.remove(
       gridClasses['root--disableUserSelection'],
     );
@@ -93,10 +93,10 @@ function GridRowReorderCell(params: GridRenderCellParams) {
 
   const handleDragEnd = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      onMouseUp();
+      handleMouseUp();
       publish('rowDragEnd')(event);
     },
-    [publish, onMouseUp],
+    [publish, handleMouseUp],
   );
 
   const draggableEventHandlers = isDraggable
@@ -104,8 +104,8 @@ function GridRowReorderCell(params: GridRenderCellParams) {
         onDragStart: publish('rowDragStart'),
         onDragOver: publish('rowDragOver'),
         onDragEnd: handleDragEnd,
-        onMouseDown,
-        onMouseUp,
+        onMouseDown: handleMouseDown,
+        onMouseUp: handleMouseUp,
       }
     : null;
 
