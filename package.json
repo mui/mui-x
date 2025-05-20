@@ -86,9 +86,9 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
     "@mui/internal-babel-plugin-display-name": "github:mui/mui-public#master&path:./packages/babel-plugin-display-name",
-    "@mui/internal-babel-plugin-resolve-imports": "^2.0.1",
-    "@mui/internal-markdown": "^2.0.4",
-    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/internal-babel-plugin-resolve-imports": "^2.0.2",
+    "@mui/internal-markdown": "^2.0.5",
+    "@mui/internal-test-utils": "^2.0.8",
     "@mui/material": "^7.0.2",
     "@mui/monorepo": "github:mui/material-ui#adb0a76b09080d02f899789266336b297850d86b",
     "@mui/utils": "^7.0.2",
@@ -202,9 +202,9 @@
     "yargs": "^17.7.2"
   },
   "resolutions": {},
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "engines": {
-    "pnpm": "10.10.0"
+    "pnpm": "10.11.0"
   },
   "pnpm": {
     "patchedDependencies": {

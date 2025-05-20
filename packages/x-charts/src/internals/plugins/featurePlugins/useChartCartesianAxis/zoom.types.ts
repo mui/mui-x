@@ -82,6 +82,14 @@ export interface ZoomSliderOptions {
    * If `true`, the slider will be shown.
    */
   enabled?: boolean;
+  /**
+   * The size reserved for the zoom slider. The actual size of the slider might be smaller, so
+   * increasing this value effectively increases the margin around the slider.
+   * This means the height for the x-axis and the width for the y-axis.
+   *
+   * @default 28
+   */
+  size?: number;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

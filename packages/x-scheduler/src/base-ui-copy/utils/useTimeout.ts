@@ -2,13 +2,16 @@
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
 
-// TODO: Use the `useTimeout` hook from the base-ui-copy package when it is available.
+type TimeoutId = number;
+
+const EMPTY = 0 as TimeoutId;
+
 export class Timeout {
   static create() {
     return new Timeout();
   }
 
-  currentId: ReturnType<typeof setTimeout> | null = null;
+  currentId: TimeoutId = EMPTY;
 
   /**
    * Executes `fn` after `delay`, clearing any previously scheduled call.
@@ -16,15 +19,19 @@ export class Timeout {
   start(delay: number, fn: Function) {
     this.clear();
     this.currentId = setTimeout(() => {
-      this.currentId = null;
+      this.currentId = EMPTY;
       fn();
-    }, delay);
+    }, delay) as unknown as number; /* Node.js types are enabled in development */
+  }
+
+  isStarted() {
+    return this.currentId !== EMPTY;
   }
 
   clear = () => {
-    if (this.currentId !== null) {
-      clearTimeout(this.currentId);
-      this.currentId = null;
+    if (this.currentId !== EMPTY) {
+      clearTimeout(this.currentId as TimeoutId);
+      this.currentId = EMPTY;
     }
   };
 
@@ -33,7 +40,10 @@ export class Timeout {
   };
 }
 
-export default function useTimeout() {
+/**
+ * A `setTimeout` with automatic cleanup and guard.
+ */
+export function useTimeout() {
   const timeout = useLazyRef(Timeout.create).current;
 
   useOnMount(timeout.disposeEffect);
