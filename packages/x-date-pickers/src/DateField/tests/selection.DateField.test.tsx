@@ -56,7 +56,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
 
-    it('should not select 1st section (v7) on mount (`autoFocus = false` and `disabled = true`)', () => {
+    it('should not select 1st section (v7) on mount (`autoFocus = true` and `disabled = true`)', () => {
       // Test with accessible DOM structure
       const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
