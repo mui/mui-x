@@ -55,6 +55,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   lazyLoading: false,
   lazyLoadingRequestThrottleMs: 500,
   listView: false,
+  multiSortingWithoutModifier: false,
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;

@@ -221,6 +221,7 @@
       },
       "default": "\"error\" (\"warn\" in dev mode)"
     },
+    "multiSortingWithoutModifier": { "type": { "name": "bool" }, "default": "false" },
     "nonce": { "type": { "name": "string" } },
     "onCellClick": {
       "type": { "name": "func" },

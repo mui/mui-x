@@ -886,6 +886,11 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @default false
    */
   listView: boolean;
+  /**
+   * If `true`, the multi-sorting is applied on column header click without modifier key.
+   * @default false
+   */
+  multiSortingWithoutModifier: boolean;
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {

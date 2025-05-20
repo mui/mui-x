@@ -681,6 +681,11 @@ DataGridPremiumRaw.propTypes = {
    */
   logLevel: PropTypes.oneOf(['debug', 'error', 'info', 'warn', false]),
   /**
+   * If `true`, the multi-sorting is applied on column header click without modifier key.
+   * @default false
+   */
+  multiSortingWithoutModifier: PropTypes.bool,
+  /**
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
