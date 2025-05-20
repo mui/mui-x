@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import clsx from 'clsx';
 import {
   chartAxisZoomSliderHandleClasses,
   useUtilityClasses,
@@ -30,13 +31,13 @@ const Rect = styled('rect')(({ theme }) => ({
 }));
 
 export interface ChartZoomSliderHandleOwnerState {
-  onResize: (event: PointerEvent) => void;
+  onMove: (event: PointerEvent) => void;
   orientation: 'horizontal' | 'vertical';
   placement: 'start' | 'end';
 }
 
 export interface ChartZoomSliderHandleProps
-  extends Pick<React.ComponentProps<'rect'>, 'x' | 'y' | 'width' | 'height' | 'rx' | 'ry'>,
+  extends Omit<React.ComponentProps<'rect'>, 'orientation'>,
     ChartZoomSliderHandleOwnerState {}
 
 /**
@@ -47,15 +48,15 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
   SVGRectElement,
   ChartZoomSliderHandleProps
 >(function ChartPreviewHandle(
-  { x, y, width, height, onResize, orientation, placement, rx = 4, ry = 4 },
+  { className, onMove, orientation, placement, rx = 4, ry = 4, ...rest },
   forwardedRef,
 ) {
-  const classes = useUtilityClasses({ onResize, orientation, placement });
+  const classes = useUtilityClasses({ onMove, orientation, placement });
 
   const handleRef = React.useRef<SVGRectElement>(null);
   const ref = useForkRef(handleRef, forwardedRef);
 
-  const onResizeEvent = useEventCallback(onResize);
+  const onMoveEvent = useEventCallback(onMove);
 
   React.useEffect(() => {
     const handle = handleRef.current;
@@ -65,7 +66,7 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
     }
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
-      onResizeEvent(event);
+      onMoveEvent(event);
     });
 
     const onPointerUp = () => {
@@ -89,18 +90,7 @@ export const ChartAxisZoomSliderHandle = React.forwardRef<
       handle.removeEventListener('pointerdown', onPointerDown);
       onPointerMove.clear();
     };
-  }, [onResizeEvent, orientation]);
+  }, [onMoveEvent, orientation]);
 
-  return (
-    <Rect
-      className={classes.root}
-      ref={ref}
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      rx={rx}
-      ry={ry}
-    />
-  );
+  return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...rest} />;
 });
