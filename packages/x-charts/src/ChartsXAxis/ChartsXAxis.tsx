@@ -53,12 +53,12 @@ function getVisibleLabels(
     tickLabelMinGap,
     reverse,
     isMounted,
-    isPointInside,
+    isXInside,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
     Pick<ComputedXAxis, 'reverse'> & {
       isMounted: boolean;
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
-      isPointInside: (position: number) => boolean;
+      isXInside: (x: number) => boolean;
     },
 ): Set<TickItemType> {
   const getTickLabelSize = (tick: TickItemType) => {
@@ -94,7 +94,7 @@ function getVisibleLabels(
         return false;
       }
 
-      if (!isPointInside(textPosition)) {
+      if (!isXInside(textPosition)) {
         return false;
       }
 
@@ -293,7 +293,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     reverse,
     isMounted,
-    isPointInside: (x: number) => instance.isPointInside(x, 0, { direction: 'x' }),
+    isXInside: instance.isXInside,
   });
 
   const axisLabelProps = useSlotProps({
@@ -363,7 +363,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
-        const showTick = instance.isPointInside(tickOffset, -1, { direction: 'x' });
+        const showTick = instance.isXInside(tickOffset);
         const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 

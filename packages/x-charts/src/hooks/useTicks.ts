@@ -150,8 +150,9 @@ export function useTicks(
     for (let i = 0; i < ticks.length; i += 1) {
       const value = ticks[i];
       const offset = scale(value);
+      const isInside = direction === 'x' ? instance.isXInside(offset) : instance.isYInside(offset);
 
-      if (instance.isPointInside(offset, offset, { direction })) {
+      if (isInside) {
         visibleTicks.push({
           value,
           formattedValue:

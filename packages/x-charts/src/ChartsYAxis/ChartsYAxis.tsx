@@ -281,7 +281,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = instance.isPointInside(-1, tickOffset, { direction: 'y' });
+        const showLabel = instance.isYInside(tickOffset);
         const tickLabel = tickLabels.get(item);
 
         if (!showLabel) {
