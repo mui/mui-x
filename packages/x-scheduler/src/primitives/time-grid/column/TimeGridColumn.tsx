@@ -31,16 +31,14 @@ const TimeGridColumn = React.forwardRef(function CalendarCell(
 
   const state: TimeGridColumn.State = React.useMemo(() => ({}), []);
 
-  const renderElement = useRenderElement('div', componentProps, {
+  const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
 
   return (
-    <TimeGridColumnContext.Provider value={contextValue}>
-      {renderElement()}
-    </TimeGridColumnContext.Provider>
+    <TimeGridColumnContext.Provider value={contextValue}>{element}</TimeGridColumnContext.Provider>
   );
 });
 

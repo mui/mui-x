@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffectEvent } from '@floating-ui/react/utils';
-import useTimeout from './useTimeout';
+import { useTimeout } from '../../base-ui-copy/utils/useTimeout';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
