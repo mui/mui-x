@@ -4,6 +4,7 @@ import { HeatmapPluginsSignatures } from '../Heatmap/Heatmap.plugins';
 import { LineChartProPluginsSignatures } from '../LineChartPro/LineChartPro.plugins';
 import { ScatterChartProPluginsSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
 import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins';
+import { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 type PluginsPerSeriesType = {
   heatmap: HeatmapPluginsSignatures;
@@ -17,5 +18,5 @@ export type ChartProApi<
   TSignatures extends
     readonly ChartAnyPluginSignature[] = TSeries extends keyof PluginsPerSeriesType
     ? PluginsPerSeriesType[TSeries]
-    : [],
+    : AllPluginSignatures,
 > = NonNullable<NonNullable<ChartContainerProProps<TSeries, TSignatures>['apiRef']>['current']>;
