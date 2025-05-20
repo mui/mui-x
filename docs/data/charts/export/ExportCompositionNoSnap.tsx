@@ -16,7 +16,7 @@ function CustomChartWrapper({ children }: React.PropsWithChildren) {
 
   return (
     <div
-      ref={chartRootRef}
+      ref={chartRootRef as React.RefObject<HTMLDivElement>}
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       {children}
@@ -25,7 +25,7 @@ function CustomChartWrapper({ children }: React.PropsWithChildren) {
 }
 
 export default function ExportCompositionNoSnap() {
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = React.useRef<ChartProApi<'composition'>>(undefined);
 
   return (
     <Stack width="100%" sx={{ display: 'block' }}>

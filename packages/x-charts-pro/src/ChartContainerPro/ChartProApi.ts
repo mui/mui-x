@@ -1,16 +1,17 @@
-import { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
-import { ChartContainerProProps } from './ChartContainerPro';
+import { ChartAnyPluginSignature, ChartPublicAPI } from '@mui/x-charts/internals';
 import { HeatmapPluginsSignatures } from '../Heatmap/Heatmap.plugins';
 import { LineChartProPluginsSignatures } from '../LineChartPro/LineChartPro.plugins';
 import { ScatterChartProPluginsSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
 import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 
 type PluginsPerSeriesType = {
   heatmap: HeatmapPluginsSignatures;
   line: LineChartProPluginsSignatures;
   scatter: ScatterChartProPluginsSignatures;
   bar: BarChartProPluginsSignatures;
+  /* Special value when creating a chart using composition. */
+  composition: DefaultPluginSignatures;
 };
 
 /**
@@ -19,9 +20,9 @@ type PluginsPerSeriesType = {
  * @example ChartProApi<'bar'>
  */
 export type ChartProApi<
-  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSeries extends keyof PluginsPerSeriesType = keyof PluginsPerSeriesType,
   TSignatures extends
     readonly ChartAnyPluginSignature[] = TSeries extends keyof PluginsPerSeriesType
     ? PluginsPerSeriesType[TSeries]
     : AllPluginSignatures,
-> = NonNullable<NonNullable<ChartContainerProProps<TSeries, TSignatures>['apiRef']>['current']>;
+> = ChartPublicAPI<TSignatures>;
