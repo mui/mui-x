@@ -183,17 +183,41 @@ function ChartAxisZoomSliderTrack({
 
         const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
-        instance.setAxisZoomData(axisId, (prevZoomData) => ({
-          ...prevZoomData,
-          start:
-            pointerZoom > startingPoint
-              ? prevZoomData.start
-              : calculateZoomStart(pointerZoom, prevZoomData, zoomOptions),
-          end:
-            pointerZoom > startingPoint
-              ? calculateZoomEnd(pointerZoom, prevZoomData, zoomOptions)
-              : prevZoomData.end,
-        }));
+        instance.setAxisZoomData(axisId, (prevZoomData) => {
+          if (pointerZoom > startingPoint) {
+            const end = calculateZoomEnd(
+              pointerZoom,
+              { ...prevZoomData, start: startingPoint },
+              zoomOptions,
+            );
+
+            /* If the starting point is too close to the end that minSpan wouldn't be respected, we need to update the
+             * start point. */
+            const start = calculateZoomStart(
+              startingPoint,
+              { ...prevZoomData, start: startingPoint, end },
+              zoomOptions,
+            );
+
+            return { ...prevZoomData, start, end };
+          }
+
+          const start = calculateZoomStart(
+            pointerZoom,
+            { ...prevZoomData, end: startingPoint },
+            zoomOptions,
+          );
+
+          /* If the starting point is too close to the start that minSpan wouldn't be respected, we need to update the
+           * start point. */
+          const end = calculateZoomEnd(
+            startingPoint,
+            { ...prevZoomData, start, end: startingPoint },
+            zoomOptions,
+          );
+
+          return { ...prevZoomData, start, end };
+        });
         firstMoveRef.current = false;
       }),
     [axisId, instance, store, svgRef],
