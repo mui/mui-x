@@ -69,7 +69,14 @@ You can import the default tooltip, or only its content as follow:
 import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
 ```
 
-## Legend 🚧
+### Legend
+
+The Heatmap comes with a legend which is by default the [ContinuouseColorLegend](/x/react-charts/legend/#color-legend).
+
+To display it set `hideLegend` to `false`.
+You can modify it with `slots.legend` and `slotProps.legend`.
+
+{{"demo": "HeatmapLegend.js"}}
 
 ## Labels 🚧
 
