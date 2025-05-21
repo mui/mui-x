@@ -11,7 +11,7 @@ githubLabel: 'component: data grid'
 
 The default toolbar can be enabled by passing the `showToolbar` prop to the `<DataGrid />` component.
 
-When you need to customize the toolbar, you can use the Toolbar and various other [Data Grid components](/x/react-data-grid/components/usage/).
+You can use the Toolbar and various other [Data Grid components](/x/react-data-grid/components/usage/) when you need to customize the toolbar.
 
 ## Basic usage
 

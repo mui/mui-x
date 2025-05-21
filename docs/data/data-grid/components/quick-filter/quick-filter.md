@@ -11,7 +11,7 @@ githubLabel: 'component: data grid'
 
 The [quick filter feature](/x/react-data-grid/filtering/quick-filter/) is enabled by default when `showToolbar` is passed to the `<DataGrid />` component.
 
-When you need to customize the quick filter, or when implementing a custom toolbar, you can use the Quick Filter and [Toolbar](/x/react-data-grid/components/toolbar/) components.
+You can use the Quick Filter and [Toolbar](/x/react-data-grid/components/toolbar/) components when you need to customize the quick filter, or when implementing a custom toolbar.
 
 ## Basic usage
 

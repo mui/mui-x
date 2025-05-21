@@ -12,7 +12,7 @@ githubLabel: 'component: data grid'
 
 The prompt field is part of the [AI Assistant feature](/x/react-data-grid/ai-assistant/).
 
-If you want to build your own UI for the AI Assistant, you can use the Prompt Field component directly.
+You can use the Prompt Field component directly if you want to build your own UI for the AI Assistant.
 
 ## Basic usage
 
