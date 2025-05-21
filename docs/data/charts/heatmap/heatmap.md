@@ -50,15 +50,25 @@ In the following demo, we replace the highlight saturation by a border radius an
 
 ## Common features
 
-Those feature are similar in most charts.
-So they benefit from dedicated pages.
+The heatmap shares several features with other charts.
+This section only explains the details that are specific to the heatmap.
+If you'd like to learn more about the shared features, you can visit their dedicated pages.
 
 ### Axes
 
 The Heatmap axes can be customized like any other chart axis.
-The available options are available in the [dedicated page](/x/react-charts/axis/#axis-customization/).
+The available options are available in the [axis customization page](/x/react-charts/axis/#axis-customization).
 
 ### Tooltip
+
+The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
+
+The only difference of the Heatmap Tooltip is its default content.
+You can import the default tooltip, or only its content as follows:
+
+```js
+import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
+```
 
 The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
 
