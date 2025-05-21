@@ -231,7 +231,7 @@ function ChartAxisZoomSliderTrack({
     const onPointerUp = function onPointerUp(pointerUpEvent: PointerEvent) {
       rect.releasePointerCapture(pointerUpEvent.pointerId);
       rect.removeEventListener('pointermove', onPointerMove);
-      rect.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener('pointerup', onPointerUp);
 
       if (pointerMoved) {
         return;
