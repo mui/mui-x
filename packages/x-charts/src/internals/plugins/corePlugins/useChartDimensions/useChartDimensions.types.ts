@@ -70,21 +70,24 @@ export interface UseChartDimensionsState {
 export interface UseChartDimensionsInstance {
   /**
    * Checks if a point is inside the drawing area.
-   * @param {Object} point The point to check.
-   * @param {number} point.x The x coordinate of the point.
-   * @param {number} point.y The y coordinate of the point.
-   * @param {Object} options The options of the check.
-   * @param {Element} [options.targetElement] The element to check if it is allowed to overflow the drawing area.
-   * @param {'x' | 'y'} [options.direction] The direction to check.
+   * @param {number} x The x coordinate of the point.
+   * @param {number} y The y coordinate of the point.
+   * @param {Element} targetElement The element to check if it is allowed to overflow the drawing area.
    * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
    */
-  isPointInside: (
-    point: { x: number; y: number },
-    options?: {
-      targetElement?: Element;
-      direction?: 'x' | 'y';
-    },
-  ) => boolean;
+  isPointInside: (x: number, y: number, targetElement?: Element) => boolean;
+  /**
+   * Checks if the x coordinate is inside the drawing area.
+   * @param {number} x The x coordinate of the point.
+   * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
+   */
+  isXInside: (x: number) => boolean;
+  /**
+   * Checks if the y coordinate is inside the drawing area.
+   * @param {number} y The y coordinate of the point.
+   * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
+   */
+  isYInside: (y: number) => boolean;
 }
 
 export type UseChartDimensionsSignature = ChartPluginSignature<{

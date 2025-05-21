@@ -103,7 +103,7 @@ describe('useAnimate', () => {
     const { rerender } = render(<TestComponent width={2000} />);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(2);
+    expect(callCount()).to.be.equal(reactMajor > 18 ? 3 : 2);
 
     const lastIncreasingCall = lastCallWidth();
     // Should be animating from 1000 to 2000
@@ -150,7 +150,7 @@ describe('useAnimate', () => {
     const { rerender } = render(<TestComponent width={2000} />);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(2);
+    expect(callCount()).to.be.equal(reactMajor > 18 ? 3 : 2);
 
     // Should be animating from 1000 to 2000
     expect(lastCallWidth()).to.be.greaterThan(1000);
@@ -159,7 +159,7 @@ describe('useAnimate', () => {
     rerender(<TestComponent width={0} skipAnimation />);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(4);
+    expect(callCount()).to.be.equal(reactMajor > 18 ? 5 : 4);
 
     // Should jump to 0 immediately after first call
     expect(lastCallWidth()).to.equal(0);
@@ -214,7 +214,7 @@ describe('useAnimate', () => {
     const { rerender } = render(<TestComponent width={1000} skip={false} />);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(2);
+    expect(callCount()).to.be.equal(reactMajor > 18 ? 3 : 2);
     expect(lastCallWidth()).to.be.greaterThan(0);
     expect(lastCallWidth()).to.be.lessThan(1000);
 
@@ -222,13 +222,13 @@ describe('useAnimate', () => {
 
     // Transition finishes immediately
     await waitNextFrame();
-    expect(callCount()).to.be.equal(4);
+    expect(callCount()).to.be.equal(reactMajor > 18 ? 5 : 4);
     expect(lastCallWidth()).to.equal(2000);
 
     rerender(<TestComponent width={1000} skip={false} />);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(6);
+    expect(callCount()).to.be.equal(reactMajor > 18 ? 7 : 6);
     expect(lastCallWidth()).to.be.lessThan(2000);
     expect(lastCallWidth()).to.be.greaterThan(1000);
   });
