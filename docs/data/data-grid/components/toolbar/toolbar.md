@@ -9,11 +9,13 @@ githubLabel: 'component: data grid'
 
 <p class="description">Add custom actions and controls to the Data Grid.</p>
 
+The default toolbar can be enabled by passing the `showToolbar` prop to the `<DataGrid />` component.
+
+You can use the Toolbar and various other [Data Grid components](/x/react-data-grid/components/usage/) when you need to customize the toolbar.
+
 ## Basic usage
 
-The demo below shows the default toolbar configuration.
-
-To extend the default toolbar, the code in the demo below can be copied and customized to your needs.
+The demo below shows how to compose the Toolbar and various other components to look and behave like the built-in toolbar.
 
 {{"demo": "GridToolbar.js", "bg": "inline", "defaultCodeOpen": false}}
 
