@@ -12,9 +12,6 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { sortByDocumentPosition } from './utils';
 
-// TODO:
-// We need to make sure focusable item state is updated when an item moves in the DOM
-
 export type ToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
   /**
    * A function to customize rendering of the component.
@@ -71,9 +68,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
-  const [focusableItem, setFocusableItem] = React.useState<{ id: string; index: number } | null>(
-    null,
-  );
+  const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
   const [items, setItems] = React.useState<Item[]>([]);
 
   const getSortedItems = React.useCallback(() => items.sort(sortByDocumentPosition), [items]);
@@ -129,19 +124,21 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
 
   const onItemKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
-      if (!focusableItem) {
+      if (!focusableItemId) {
         return;
       }
 
       const sortedItems = getSortedItems();
+      const focusableItemIndex = sortedItems.findIndex((item) => item.id === focusableItemId);
+
       let newIndex = -1;
 
       if (event.key === 'ArrowRight') {
         event.preventDefault();
-        newIndex = findEnabledItem(focusableItem.index, 1);
+        newIndex = findEnabledItem(focusableItemIndex, 1);
       } else if (event.key === 'ArrowLeft') {
         event.preventDefault();
-        newIndex = findEnabledItem(focusableItem.index, -1);
+        newIndex = findEnabledItem(focusableItemIndex, -1);
       } else if (event.key === 'Home') {
         event.preventDefault();
         newIndex = findEnabledItem(-1, 1, false);
@@ -153,22 +150,20 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
       // TODO: Check why this is necessary
       if (newIndex >= 0 && newIndex < sortedItems.length) {
         const item = sortedItems[newIndex];
-        setFocusableItem({ id: item.id, index: newIndex });
+        setFocusableItemId(item.id);
         item.ref.current?.focus();
       }
     },
-    [getSortedItems, focusableItem, findEnabledItem],
+    [getSortedItems, focusableItemId, findEnabledItem],
   );
 
   const onItemFocus = React.useCallback(
     (id: string) => {
-      if (focusableItem?.id !== id) {
-        const sortedItems = getSortedItems();
-        const itemIndex = sortedItems.findIndex((item) => item.id === id);
-        setFocusableItem({ id, index: itemIndex });
+      if (focusableItemId !== id) {
+        setFocusableItemId(id);
       }
     },
-    [getSortedItems, focusableItem],
+    [focusableItemId, setFocusableItemId],
   );
 
   const onItemDisabled = React.useCallback(
@@ -178,7 +173,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
       const newIndex = findEnabledItem(currentIndex, 1);
       if (newIndex >= 0 && newIndex < sortedItems.length) {
         const item = sortedItems[newIndex];
-        setFocusableItem({ id: item.id, index: newIndex });
+        setFocusableItemId(item.id);
         item.ref.current?.focus();
       }
     },
@@ -190,33 +185,27 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
 
     if (sortedItems.length > 0) {
       // Set initial focusable item
-      if (!focusableItem) {
-        setFocusableItem({ id: sortedItems[0].id, index: 0 });
+      if (!focusableItemId) {
+        setFocusableItemId(sortedItems[0].id);
         return;
       }
 
-      // Last item has been removed from the items array
-      if (!sortedItems[focusableItem.index]) {
+      const focusableItemIndex = sortedItems.findIndex((item) => item.id === focusableItemId);
+
+      if (!sortedItems[focusableItemIndex]) {
+        // Last item has been removed from the items array
         const item = sortedItems[sortedItems.length - 1];
         if (item) {
-          setFocusableItem({ id: item.id, index: sortedItems.length - 1 });
+          setFocusableItemId(item.id);
           item.ref.current?.focus();
         }
-        return;
-      }
-
-      const focusableItemIndex = sortedItems.findIndex((item) => item.id === focusableItem.id);
-
-      if (focusableItemIndex === -1) {
+      } else if (focusableItemIndex === -1) {
         // Focused item has been removed from the items array
-        const item = sortedItems[focusableItem.index];
+        const item = sortedItems[focusableItemIndex];
         if (item) {
-          setFocusableItem({ id: item.id, index: focusableItem.index });
+          setFocusableItemId(item.id);
           item.ref.current?.focus();
         }
-      } else if (focusableItem.index !== focusableItemIndex) {
-        // Focused item has moved to a different position in the array
-        setFocusableItem({ id: focusableItem.id, index: focusableItemIndex });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -224,14 +213,14 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
 
   const contextValue = React.useMemo(
     () => ({
-      focusableItem,
+      focusableItemId,
       registerItem,
       unregisterItem,
       onItemKeyDown,
       onItemFocus,
       onItemDisabled,
     }),
-    [focusableItem, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemDisabled],
+    [focusableItemId, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemDisabled],
   );
 
   const element = useGridComponentRenderer(ToolbarRoot, render, {
