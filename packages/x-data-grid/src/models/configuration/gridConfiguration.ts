@@ -10,7 +10,7 @@ export interface GridAriaAttributesInternalHook {
 export interface GridInternalHook
   extends GridAriaAttributesInternalHook,
     GridRowAriaAttributesInternalHook {
-  useCSSVariables: () => { id: string; variables: Partial<GridCSSVariablesInterface> };
+  useCSSVariables: () => { id: string; variables: GridCSSVariablesInterface };
   useCellAggregationResult: (
     id: GridRowId,
     field: string,
