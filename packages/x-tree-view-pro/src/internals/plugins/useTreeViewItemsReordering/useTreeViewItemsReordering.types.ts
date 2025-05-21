@@ -27,10 +27,14 @@ export interface UseTreeViewItemsReorderingInstance {
    */
   startDraggingItem: (itemId: TreeViewItemId) => void;
   /**
-   * Stop the reordering of a given item.
-   * @param {TreeViewItemId} itemId The id of the item to stop the reordering for.
+   * Complete the reordering of a given item.
+   * @param {TreeViewItemId} itemId The id of the item to complete the reordering for.
    */
-  stopDraggingItem: (itemId: TreeViewItemId) => void;
+  completeDraggingItem: (itemId: TreeViewItemId) => void;
+  /**
+   * Cancel the current reordering operation and reset the state.
+   */
+  cancelDraggingItem: () => void;
   /**
    * Set the new target item for the ongoing reordering.
    * The action will be determined based on the position of the cursor inside the target and the valid actions for this target.

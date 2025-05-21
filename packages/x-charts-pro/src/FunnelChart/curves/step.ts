@@ -1,10 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { Point } from './curve.types';
+import { CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
-
-const max = (numbers: number[]) => Math.max(...numbers, -Infinity);
-const min = (numbers: number[]) => Math.min(...numbers, Infinity);
+import { max, min } from './utils';
 
 /**
  * This is a custom "step" curve generator.
@@ -21,34 +19,29 @@ export class Step implements CurveGenerator {
 
   private isHorizontal: boolean = false;
 
+  private isIncreasing: boolean = false;
+
   private gap: number = 0;
 
   private borderRadius: number = 0;
 
   private position: number = 0;
 
+  private sections: number = 0;
+
   private points: Point[] = [];
 
   constructor(
     context: CanvasRenderingContext2D,
-    {
-      isHorizontal,
-      gap,
-      position,
-      borderRadius,
-    }: {
-      isHorizontal: boolean;
-      gap?: number;
-      position?: number;
-      sections?: number;
-      borderRadius?: number;
-    },
+    { isHorizontal, gap, position, borderRadius, isIncreasing, sections }: CurveOptions,
   ) {
     this.context = context;
-    this.isHorizontal = isHorizontal;
+    this.isHorizontal = isHorizontal ?? false;
     this.gap = (gap ?? 0) / 2;
     this.position = position ?? 0;
+    this.sections = sections ?? 1;
     this.borderRadius = borderRadius ?? 0;
+    this.isIncreasing = isIncreasing ?? false;
   }
 
   areaStart(): void {}
@@ -58,6 +51,26 @@ export class Step implements CurveGenerator {
   lineStart(): void {}
 
   lineEnd(): void {}
+
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
+    }
+
+    if (this.isIncreasing) {
+      if (this.position === this.sections - 1) {
+        return this.borderRadius;
+      }
+
+      return [0, 0, this.borderRadius, this.borderRadius];
+    }
+
+    if (this.position === 0) {
+      return this.borderRadius;
+    }
+
+    return [this.borderRadius, this.borderRadius];
+  }
 
   point(xIn: number, yIn: number): void {
     this.points.push({ x: xIn, y: yIn });
@@ -95,12 +108,6 @@ export class Step implements CurveGenerator {
       };
     });
 
-    borderRadiusPolygon(
-      this.context,
-      this.points,
-      this.gap > 0 || this.position === 0
-        ? this.borderRadius
-        : [this.borderRadius, this.borderRadius],
-    );
+    borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
 }

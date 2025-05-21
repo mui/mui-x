@@ -5,6 +5,201 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.3.1
+
+_May 14, 2025_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Norwegian Bokmål (nb-NO) locale on the Data Grid
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid and Pickers
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@100pearlcent, @htollefsen, @JanPretzel, @sai6855.
+Following are all team members who have contributed to this release:
+@bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @oliviertassinari, @prakhargupta1.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.3.1`
+
+- [DataGrid] Add `reason` param for `onRowSelectionModelChange` callback (#17545) @sai6855
+- [DataGrid] Fix `renderContext` calculation loop (#17779) @cherniavskii
+- [DataGrid] Fix column spanning jump on scroll (#17759) @cherniavskii
+- [DataGrid] Fix material augmentation not working (#17761) @cherniavskii
+- [DataGrid] Use arguments selector for checkbox props (#17683) @MBilalShafi
+- [l10n] Improve Norwegian Bokmål (nb-NO) locale (#17766) @htollefsen
+- [l10n] Improve Korean (ko-KR) locale (#17484) @100pearlcent
+
+#### `@mui/x-data-grid-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.3.1`.
+
+#### `@mui/x-data-grid-premium@8.3.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.3.1`, plus:
+
+- [DataGridPremium] Fix aggregation label not being used in pivot panel (#17760) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.3.1`
+
+- [fields] Add notch to the field outlined when the label is manually shrank (#17620) @flaviendelangle
+- [l10n] Improve Korean (ko-KR) locale (#17484) @100pearlcent
+
+#### `@mui/x-date-pickers-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.3.1`.
+
+### Charts
+
+#### `@mui/x-charts@8.3.1`
+
+- [charts] Fix infinite tick number when zoom range is zero (#17750) @bernardobelchior
+- [charts] Improve tick rendering performance (#17755) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.3.1`, plus:
+
+- [charts-pro] Fix ESM build issue with Vite (#17774) @bernardobelchior
+- [charts-pro] Add benchmark for zoomed in scatter chart (#17756) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.3.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.3.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.3.1`.
+
+### Docs
+
+- [docs] Fix 301 to Next.js docs for license @oliviertassinari
+- [docs] Fix AI assistant API URL (#17745) @oliviertassinari
+- [docs] Fix heading structure in README @oliviertassinari
+- [docs] Fix translation keys documentation (#17811) @JanPretzel
+- [docs] Improve CHANGELOG format @oliviertassinari
+
+### Core
+
+- [core] Apply YAML convention, blank line only at top level @oliviertassinari
+- [code-infra] Fix dynamic import missing extensions (#17767) @Janpot
+- [code-infra] Replace `mocha` with `vitest` for browser & jsdom tests (#14508) @JCQuintas
+- [scheduler] Create the package and setup a private doc page (#17239) @flaviendelangle
+
+## 8.3.0
+
+_May 8, 2025_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎨 Added new styling options and shapes for `<FunnelChart />`, including `variant`, `borderRadius`, `pyramid`, and `step-pyramid` curves.
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Special thanks go out to this community member for a valuable contribution: @ptuukkan.
+Team members who have contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @rita-codes, @romgrk.
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.3.0`
+
+- [DataGrid] Fix cell editing of computed columns with data source (#17684) @ptuukkan
+- [DataGrid] Fix lazy loading crash with `isRowSelectable` prop (#17629) @MBilalShafi
+- [DataGrid] Fix: use CSS nonce (#17726) @romgrk
+- [DataGrid] Ignore `preProcessEditCellProps` for non-editable columns when starting a row update (#17732) @arminmeh
+- [DataGrid] Avoid applying row selection propagation on filtered rows (#17739) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.3.0`.
+
+#### `@mui/x-data-grid-premium@8.3.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.3.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.3.0`
+
+- [DateTimePicker] Fix focus behavior on desktop variant (#17719) @LukasTy
+- [pickers] Avoid `DigitalClock` stealing focus from a Picker open button on close (#17686) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.3.0`, plus:
+
+- [DateRangePicker] Fix to reset range position after closing mobile Picker (#17631) @LukasTy
+
+### Charts
+
+- The `<FunnelChart />` series now accepts a `variant='outlined'` prop for a simpler style.
+  <img width="398" alt="Screenshot 2025-05-06 at 20 36 12" src="https://github.com/user-attachments/assets/00fef14f-9026-421e-a4b6-7e081adce1e8" />
+
+- Add a `borderRadius` property to `<FunnelChart />`. All funnels have `8px` as a default value.
+  <img width="386" alt="Screenshot 2025-05-06 at 14 00 20" src="https://github.com/user-attachments/assets/4f4cc0e7-01ce-4ed6-a0e1-a387f78def23" />
+
+- Add a `pyramid` curve to `<FunnelChart />`, which allows creation of a pyramid-shaped funnel.
+  <img width="344" alt="Screenshot 2025-05-06 at 14 32 59" src="https://github.com/user-attachments/assets/0b2896e0-0478-4766-bb1b-258a4977a751" />
+
+- Add a `step-pyramid` curve to `<FunnelChart />`, which creates a stepped-pyramid like shape.
+  <img width="344" alt="Screenshot 2025-05-06 at 14 33 03" src="https://github.com/user-attachments/assets/894f0ab3-7898-40fe-b0df-560feea4085a" />
+
+#### `@mui/x-charts@8.3.0`
+
+- [charts] Add charts toolbar with zoom options (#17615) @bernardobelchior
+- [charts] Add zoom slider (#17496) @bernardobelchior
+- [charts] Cleanup compiler warnings (#17360) @alexfauquette
+- [charts] Fix `<PieArcLabel />` not taking `arcLabelRadius` into account (#17655) @bernardobelchior
+- [charts] Fix spark line not having clip path (#17501) @bernardobelchior
+- [charts] Fix type issue with ESM (#17624) @alexfauquette
+- [charts] Improve `<MarkElement />` performance (#17546) @bernardobelchior
+- [charts] Rename `materialSlots` internal constant (#17710) @bernardobelchior
+- [charts] Update zoom slider design (#17682) @bernardobelchior
+- [charts] Fix zoom being documented as available for heatmap (#17657) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.3.0`, plus:
+
+- [charts-pro] Add `pyramid` curve to `<FunnelChart />` (#17665) @JCQuintas
+- [charts-pro] Add `variant='outlined'` to `<FunnelChart />` series (#17661) @JCQuintas
+- [charts-pro] Add a `borderRadius` property to `<FunnelChart />` (#17660) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.3.0`
+
+- [tree view] Bug fix - Escape does not cancel Drag n Drop (#17735) @rita-codes
+- [tree view] Fix keyboard navigation error (#17685) @rita-codes
+- [tree view] Continue cleaning the plugin system (#17386) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.3.0`.
+
+### Docs
+
+- [charts] Add population pyramid demo (#17652) @bernardobelchior
+- [charts] Fix randomised argos test (#17658) @JCQuintas
+- [docs] Make preview messaging consistent in charts @bernardobelchior
+
+### Core
+
+- [code-infra] Avoid `node` types in the built packages (#17533) @LukasTy
+- [code-infra] Add `pkg.pr.new` publishing (#17402) @Janpot
+- [code-infra] Normalize author package in org @oliviertassinari
+- [code-infra] Remove required checkout step (#17729) @JCQuintas
+- [docs-infra] Normalize netlify.toml in org @oliviertassinari
+
 ## 8.2.0
 
 _May 1, 2025_
@@ -424,8 +619,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-Team members who have contributed to this release:
-@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
+Team members who have contributed to this release: @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @noraleonte, @romgrk, @alexfauquette.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -738,7 +932,7 @@ We'd like to offer a big thanks to the 21 contributors who made this release pos
 - 🌍 Improve Chinese (zh-CN), (zh-HK), (zh-TW), Czech (cs-CZ), Korean (ko-KR) and Slovak (sk-Sk) locales on the Data Grid
 - 🌍 Improve Chinese (zh-CN), (zh-HK) and (zh-TW) locales on the Pickers
 
-## Breaking changes
+### Breaking changes
 
 - ℹ️ The peer dependency on `@mui/material` has been updated to accept only v7.
   This has been done to increase the adoption rate of ESM.
@@ -751,7 +945,7 @@ Following are all team members who have contributed to this release:
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
-## Alpha release highlights
+### Alpha release highlights
 
 Below are the highlights of the alpha releases leading up to this beta release:
 
@@ -3045,8 +3239,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - 🐞 Bugfixes
 
-Team members who have contributed to this release:
-@arminmeh, @cherniavskii, @LukasTy, @michelengelen.
+Team members who have contributed to this release: @arminmeh, @cherniavskii, @LukasTy, @michelengelen.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 

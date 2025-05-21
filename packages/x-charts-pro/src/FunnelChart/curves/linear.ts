@@ -1,31 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { Point } from './curve.types';
+import { CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
-
-// From point1 to point2, get the x value from y
-const xFromY =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (y: number): number => {
-    if (y1 === y2) {
-      return x1;
-    }
-
-    const result = ((x2 - x1) * (y - y1)) / (y2 - y1) + x1;
-
-    return Number.isNaN(result) ? 0 : result;
-  };
-
-// From point1 to point2, get the y value from x
-const yFromX =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (x: number): number => {
-    if (x1 === x2) {
-      return y1;
-    }
-    const result = ((y2 - y1) * (x - x1)) / (x2 - x1) + y1;
-    return Number.isNaN(result) ? 0 : result;
-  };
+import { lerpX, lerpY } from './utils';
 
 /**
  * This is a custom "linear" curve generator.
@@ -52,22 +29,10 @@ export class Linear implements CurveGenerator {
 
   constructor(
     context: CanvasRenderingContext2D,
-    {
-      isHorizontal,
-      gap,
-      position,
-      sections,
-      borderRadius,
-    }: {
-      isHorizontal: boolean;
-      gap?: number;
-      position?: number;
-      sections?: number;
-      borderRadius?: number;
-    },
+    { isHorizontal, gap, position, sections, borderRadius }: CurveOptions,
   ) {
     this.context = context;
-    this.isHorizontal = isHorizontal;
+    this.isHorizontal = isHorizontal ?? false;
     this.gap = (gap ?? 0) / 2;
     this.position = position ?? 0;
     this.sections = sections ?? 1;
@@ -82,6 +47,19 @@ export class Linear implements CurveGenerator {
 
   lineEnd(): void {}
 
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
+    }
+    if (this.position === 0) {
+      return [0, 0, this.borderRadius, this.borderRadius];
+    }
+    if (this.position === this.sections - 1) {
+      return [this.borderRadius, this.borderRadius];
+    }
+    return 0;
+  }
+
   point(xIn: number, yIn: number): void {
     this.points.push({ x: xIn, y: yIn });
     if (this.points.length < 4) {
@@ -92,13 +70,13 @@ export class Linear implements CurveGenerator {
     this.points = this.points.map((point, index) => {
       const slopeStart = this.points.at(index <= 1 ? 0 : 2)!;
       const slopeEnd = this.points.at(index <= 1 ? 1 : 3)!;
-      const yGetter = yFromX(
-        slopeStart.x - this.gap,
-        slopeStart.y,
-        slopeEnd.x - this.gap,
-        slopeEnd.y,
-      );
       if (this.isHorizontal) {
+        const yGetter = lerpY(
+          slopeStart.x - this.gap,
+          slopeStart.y,
+          slopeEnd.x - this.gap,
+          slopeEnd.y,
+        );
         const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
 
         return {
@@ -107,7 +85,7 @@ export class Linear implements CurveGenerator {
         };
       }
 
-      const xGetter = xFromY(
+      const xGetter = lerpX(
         slopeStart.x,
         slopeStart.y - this.gap,
         slopeEnd.x,
@@ -120,19 +98,6 @@ export class Linear implements CurveGenerator {
       };
     });
 
-    const getBorderRadius = () => {
-      if (this.gap > 0) {
-        return this.borderRadius;
-      }
-      if (this.position === 0) {
-        return [0, 0, this.borderRadius, this.borderRadius];
-      }
-      if (this.position === this.sections - 1) {
-        return [this.borderRadius, this.borderRadius];
-      }
-      return 0;
-    };
-
-    borderRadiusPolygon(this.context, this.points, getBorderRadius());
+    borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
 }

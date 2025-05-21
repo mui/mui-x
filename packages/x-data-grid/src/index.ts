@@ -1,5 +1,6 @@
 import { GridApiCommunity } from './models/api/gridApiCommunity';
 import { GridInitialStateCommunity, GridStateCommunity } from './models/gridStateCommunity';
+import './material';
 
 export { useGridApiContext } from './hooks/utils/useGridApiContext';
 export { useGridApiRef } from './hooks/utils/useGridApiRef';

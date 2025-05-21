@@ -23,7 +23,12 @@ import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/use
 interface ProcessItemsLookupsParameters
   extends Pick<
     UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
-    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'disabledItemsFocusable'
+    | 'items'
+    | 'isItemDisabled'
+    | 'getItemLabel'
+    | 'getItemChildren'
+    | 'getItemId'
+    | 'disabledItemsFocusable'
   > {
   initialDepth?: number;
   initialParentId?: string | null;
@@ -65,6 +70,7 @@ const processItemsLookups = ({
   items,
   isItemDisabled,
   getItemLabel,
+  getItemChildren,
   getItemId,
   initialDepth = 0,
   initialParentId = null,
@@ -91,13 +97,16 @@ const processItemsLookups = ({
         ].join('\n'),
       );
     }
+    const children = getItemChildren
+      ? getItemChildren(item)
+      : (item as { children?: TreeViewBaseItem[] }).children;
 
     itemMetaLookup[id] = {
       id,
       label,
       parentId,
       idAttribute: undefined,
-      expandable: getChildrenCount ? getChildrenCount(item) > 0 : !!item.children?.length,
+      expandable: getChildrenCount ? getChildrenCount(item) > 0 : !!children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
       depth,
     };
@@ -111,7 +120,7 @@ const processItemsLookups = ({
 
     // if lazy loading is enabled, we don't want to process children passed through the `items` prop
     if (!ignoreChildren) {
-      item.children?.forEach((child) => processItem(child, depth + 1, id));
+      children?.forEach((child) => processItem(child, depth + 1, id));
     }
   };
 
@@ -241,6 +250,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
         getItemLabel: params.getItemLabel,
+        getItemChildren: params.getItemChildren,
         getChildrenCount,
         initialDepth: depth,
         initialParentId: parentId,
@@ -329,6 +339,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
         getItemLabel: params.getItemLabel,
+        getItemChildren: params.getItemChildren,
       });
 
       Object.values(prevState.items.itemMetaLookup).forEach((item) => {
@@ -347,6 +358,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.isItemDisabled,
     params.getItemId,
     params.getItemLabel,
+    params.getItemChildren,
   ]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
@@ -394,6 +406,7 @@ useTreeViewItems.getInitialState = (params) => ({
       isItemDisabled: params.isItemDisabled,
       getItemId: params.getItemId,
       getItemLabel: params.getItemLabel,
+      getItemChildren: params.getItemChildren,
     }),
     loading: false,
     error: null,
@@ -419,6 +432,7 @@ useTreeViewItems.params = {
   items: true,
   isItemDisabled: true,
   getItemLabel: true,
+  getItemChildren: true,
   getItemId: true,
   onItemClick: true,
   itemChildrenIndentation: true,

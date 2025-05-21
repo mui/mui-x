@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { getCell, getColumnValues, getRows, includeRowSelection } from 'test/utils/helperFn';
-import { createRenderer, screen, act, reactMajor, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,
@@ -13,6 +13,7 @@ import {
   GridRowsProp,
   GridColDef,
   GridFilterModel,
+  gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -811,7 +812,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(reactMajor < 19 ? 2 : 1); // Dev mode calls twice on React 18
+      expect(onRowSelectionModelChange.callCount).to.equal(2);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
@@ -1028,7 +1029,7 @@ describe('<DataGridPro /> - Row selection', () => {
         const { user } = render(<SelectionPropagationGrid keepNonExistentRowsSelected />);
 
         await user.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
 
         await act(async () => {
           apiRef.current?.setFilterModel({
@@ -1044,7 +1045,33 @@ describe('<DataGridPro /> - Row selection', () => {
 
         await user.click(getCell(0, 0).querySelector('input')!);
 
-        expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
+      });
+
+      it('should not apply row selection propagation on filtered rows', async () => {
+        const { user } = render(
+          <SelectionPropagationGrid
+            keepNonExistentRowsSelected
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        await user.click(getCell(3, 0).querySelector('input')!);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([3]);
+
+        await act(async () => {
+          apiRef.current?.setFilterModel({
+            items: [
+              {
+                field: 'jobTitle',
+                value: 'a-value-that-does-not-exist',
+                operator: 'equals',
+              },
+            ],
+          });
+        });
+
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([3]);
       });
     });
   });
@@ -1303,6 +1330,30 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
       expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
+    it('should call onRowSelectionModelChange with the `exclude` set when select all checkbox is clicked and filters are empty', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          onRowSelectionModelChange={onRowSelectionModelChange}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: [''],
+              },
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      await user.click(selectAllCheckbox);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal({
+        type: 'exclude',
+        ids: new Set(),
+      });
     });
   });
 });
