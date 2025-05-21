@@ -7,6 +7,7 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   ChartsAxisSlots,
   ChartsAxisSlotProps,
@@ -22,13 +23,14 @@ import {
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
-import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
 import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip/HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
   /**
@@ -181,8 +183,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro<'heatmap', HeatmapPluginsSignatures>
-      ref={ref}
+    <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>
       seriesConfig={seriesConfig}
       series={series.map((s) => ({
         type: 'heatmap',
@@ -196,23 +197,23 @@ const Heatmap = React.forwardRef(function Heatmap(
       zAxis={zAxisWithDefault}
       colors={colors}
       dataset={dataset}
-      sx={sx}
       disableAxisListener
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       onAxisClick={onAxisClick}
       plugins={HEATMAP_PLUGINS}
     >
-      <g clipPath={`url(#${clipPathId})`}>
-        <HeatmapPlot slots={slots} slotProps={slotProps} />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      </g>
-      <ChartsAxis slots={slots} slotProps={slotProps} />
+      <ChartsSurface ref={ref} sx={sx}>
+        <g clipPath={`url(#${clipPathId})`}>
+          <HeatmapPlot slots={slots} slotProps={slotProps} />
+          <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+        </g>
+        <ChartsAxis slots={slots} slotProps={slotProps} />
+        <ChartsClipPath id={clipPathId} />
+        {children}
+      </ChartsSurface>
       {!loading && <Tooltip {...slotProps?.tooltip} />}
-
-      <ChartsClipPath id={clipPathId} />
-      {children}
-    </ChartContainerPro>
+    </ChartDataProviderPro>
   );
 });
 

@@ -203,6 +203,15 @@ RichTreeViewPro.propTypes = {
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
   /**
+   * Used to determine the children of a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {R[]} The children of the item.
+   * @default (item) => item.children
+   */
+  getItemChildren: PropTypes.func,
+  /**
    * Used to determine the id of a given item.
    *
    * @template R

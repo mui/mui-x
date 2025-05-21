@@ -1,4 +1,3 @@
-import { ZOOM_SLIDER_SIZE } from '../../../constants';
 import { defaultizeZoom } from './defaultizeZoom';
 import { ZoomOptions } from './zoom.types';
 import {
@@ -53,7 +52,7 @@ export function defaultizeXAxis(
       offsets[position] += sharedConfig.height;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += ZOOM_SLIDER_SIZE;
+        offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
@@ -113,7 +112,7 @@ export function defaultizeYAxis(
       offsets[position] += sharedConfig.width;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += ZOOM_SLIDER_SIZE;
+        offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
