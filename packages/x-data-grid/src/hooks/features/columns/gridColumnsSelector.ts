@@ -53,7 +53,8 @@ export const gridColumnDefinitionsSelector = createSelectorMemoized(
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
   gridPinnedColumnsSelector,
-  (allFields, lookup, pinnedColumns) => {
+  gridIsRtlSelector,
+  (allFields, lookup, pinnedColumns, isRtl) => {
     const leftPinnedFields = pinnedColumns.left || [];
     const rightPinnedFields = pinnedColumns.right || [];
 
@@ -63,11 +64,9 @@ export const gridColumnDefinitionsSelector = createSelectorMemoized(
       (field) => !leftPinnedFields.includes(field) && !rightPinnedFields.includes(field),
     );
 
-    const orderedFields = [
-      ...visibleLeftPinnedFields,
-      ...unpinnedFields,
-      ...visibleRightPinnedFields,
-    ];
+    const orderedFields = isRtl
+      ? [...visibleRightPinnedFields, ...unpinnedFields, ...visibleLeftPinnedFields]
+      : [...visibleLeftPinnedFields, ...unpinnedFields, ...visibleRightPinnedFields];
     return orderedFields.map((field) => lookup[field]);
   },
 );
