@@ -172,11 +172,16 @@ function ChartAxisZoomSliderTrack({
     }
 
     const pointerDownPoint = getSVGPoint(element, event);
-    const pointerDownZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerDownPoint);
+    let pointerDownZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerDownPoint);
 
     if (pointerDownZoom === null) {
       return;
     }
+
+    const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+
+    // Ensure the pointerDownZoom is within the min and max range
+    pointerDownZoom = Math.max(Math.min(pointerDownZoom, maxEnd), minStart);
 
     let pointerMoved = false;
 
