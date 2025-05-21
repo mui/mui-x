@@ -1,8 +1,17 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
+const initialState: DataGridProProps['initialState'] = {
+  sorting: {
+    sortModel: [
+      { field: 'rating', sort: 'desc' },
+      { field: 'name', sort: 'asc' },
+    ],
+  },
+};
 
 export default function MultiSortingWithoutModifier() {
   const { data, loading } = useDemoData({
@@ -13,7 +22,12 @@ export default function MultiSortingWithoutModifier() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} loading={loading} multiSortingMode="always" />
+      <DataGridPro
+        {...data}
+        loading={loading}
+        initialState={initialState}
+        multiSortingMode="always"
+      />
     </div>
   );
 }

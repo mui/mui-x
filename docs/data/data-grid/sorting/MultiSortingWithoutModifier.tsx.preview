@@ -1,1 +1,6 @@
-<DataGridPro {...data} loading={loading} multiSortingMode="always" />
+<DataGridPro
+  {...data}
+  loading={loading}
+  initialState={initialState}
+  multiSortingMode="always"
+/>
