@@ -57,13 +57,17 @@ export const gridColumnDefinitionsSelector = createSelectorMemoized(
     const leftPinnedFields = pinnedColumns.left || [];
     const rightPinnedFields = pinnedColumns.right || [];
 
-    const visibleLeftPinnedFields = leftPinnedFields.filter(field => allFields.includes(field));
-    const visibleRightPinnedFields = rightPinnedFields.filter(field => allFields.includes(field));
+    const visibleLeftPinnedFields = leftPinnedFields.filter((field) => allFields.includes(field));
+    const visibleRightPinnedFields = rightPinnedFields.filter((field) => allFields.includes(field));
     const unpinnedFields = allFields.filter(
-      field => !leftPinnedFields.includes(field) && !rightPinnedFields.includes(field)
+      (field) => !leftPinnedFields.includes(field) && !rightPinnedFields.includes(field),
     );
 
-    const orderedFields = [...visibleLeftPinnedFields, ...unpinnedFields, ...visibleRightPinnedFields];
+    const orderedFields = [
+      ...visibleLeftPinnedFields,
+      ...unpinnedFields,
+      ...visibleRightPinnedFields,
+    ];
     return orderedFields.map((field) => lookup[field]);
   },
 );
@@ -108,7 +112,6 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => visibleColumns.map((column) => column.field),
 );
-
 
 /**
  * Get the visible pinned columns.
