@@ -3,7 +3,13 @@ import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-
 import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
+import {
+  ChartsWrapperProps,
+  defaultizeMargin,
+  XAxis,
+  YAxis,
+  ChartsSeriesConfig,
+} from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
@@ -11,27 +17,29 @@ import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
 
+type FunnelAxisExtension = ChartsSeriesConfig['funnel']['axisExtension'];
+
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
   gap: number,
   direction: 'y',
-): YAxis;
+): YAxis & FunnelAxisExtension;
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
   gap: number,
   direction: 'x',
-): XAxis;
+): XAxis & FunnelAxisExtension;
 function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
   gap: number,
   direction: D,
-): XAxis | YAxis {
+): (XAxis & FunnelAxisExtension) | (YAxis & FunnelAxisExtension) {
   const maxSeriesLength = Math.max(...series.map((s) => (s.data ?? []).length), 0);
   const maxSeriesValue = Array.from({ length: maxSeriesLength }, (_, index) =>
     series.reduce((a, s) => a + (s.data?.[index]?.value ?? 0), 0),
