@@ -5,6 +5,7 @@ import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { ComputedAxis, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
+import { ChartsContrastingText } from '@mui/x-charts/ChartsText';
 import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -203,13 +204,13 @@ function FunnelPlot(props: FunnelPlotProps) {
           }
         />
       ))}
-      {data.map(({ id, label }) => {
+      {data.map(({ id, label, color }) => {
         if (!label) {
           return null;
         }
 
         return (
-          <text
+          <ChartsContrastingText
             key={id}
             x={label.x}
             y={label.y}
@@ -225,10 +226,10 @@ function FunnelPlot(props: FunnelPlotProps) {
             fontStretch={theme.typography.body2.fontStretch}
             fontStyle={theme.typography.body2.fontStyle}
             fontVariant={theme.typography.body2.fontVariant}
-            fill={(theme.vars || theme)?.palette?.text?.primary}
+            textBackground={color}
           >
             {label.value}
-          </text>
+          </ChartsContrastingText>
         );
       })}
     </React.Fragment>
