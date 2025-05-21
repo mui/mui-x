@@ -1,1 +1,1 @@
-<EventCalendar />
+<EventCalendar events={events} />
