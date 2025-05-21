@@ -720,4 +720,104 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(ageCellColumnGroupHeader.textContent).to.equal('Basic info');
     });
   });
+
+  describe('pinned columns order in column management', () => {
+    it('should keep pinned column order in column management panel when toggling columns', async () => {
+      const { user } = render(
+        <DataGridPro
+          rows={[{ id: 1, brand: 'Nike' }]}
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          showToolbar
+          initialState={{
+            pinnedColumns: {
+              left: ['brand', 'id'],
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'id');
+
+      await user.click(columnCheckboxes[1]);
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const checkboxesAfterToggle = screen.getAllByRole('checkbox');
+
+      expect(checkboxesAfterToggle[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterToggle[1]).to.have.attribute('name', 'id');
+    });
+
+    it('should keep pinned column order in column management panel when clicking show/hide all checkbox', async () => {
+      const { user } = render(
+        <DataGridPro
+          rows={[{ id: 0, brand: 'Nike' }]}
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          showToolbar
+          initialState={{
+            pinnedColumns: {
+              left: ['brand', 'id'],
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'id');
+
+      await user.click(columnCheckboxes[columnCheckboxes.length - 1]);
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const checkboxesAfterToggle = screen.getAllByRole('checkbox');
+      expect(checkboxesAfterToggle[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterToggle[1]).to.have.attribute('name', 'id');
+    });
+
+    it('should keep pinned column order in column management panel when pressing reset', async () => {
+      const { user } = render(
+        <DataGridPro
+          rows={[{ id: 0, brand: 'Nike' }]}
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          showToolbar
+          initialState={{
+            pinnedColumns: {
+              left: ['brand', 'id'],
+            },
+            columns: {
+              columnVisibilityModel: { id: false },
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'id');
+
+      await user.click(columnCheckboxes[1]);
+
+      await user.click(screen.getByRole('button', { name: 'Reset' }));
+
+      const checkboxesAfterReset = screen.getAllByRole('checkbox');
+
+      expect(checkboxesAfterReset[0]).to.have.attribute('name', 'brand');
+
+      expect(checkboxesAfterReset[1]).to.have.attribute('name', 'id');
+    });
+  });
 });
