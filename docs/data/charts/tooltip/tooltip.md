@@ -202,7 +202,7 @@ To keep the default placement, use the `<ChartsTooltipContainer />` wrapper.
 It accepts a prop `trigger = 'item' | 'axis'` that defines when the Popper should open.
 
 :::warning
-The tooltip might not open if the ChartsTooltipContainer isn't rendered. 
+The tooltip might not open if the ChartsTooltipContainer isn't rendered.
 
 For example the following code does not work.
 
