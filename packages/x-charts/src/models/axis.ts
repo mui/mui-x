@@ -432,6 +432,10 @@ export type AxisConfig<
    * @default 0
    */
   offset?: number;
+  /**
+   * The gap between each axis section.
+   */
+  gap?: number;
 } & CommonAxisConfig<S, V> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
