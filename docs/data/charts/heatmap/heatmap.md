@@ -56,14 +56,14 @@ So they benefit from dedicated pages.
 ### Axes
 
 The Heatmap axes can be customized like any other chart axis.
-The available options are available in the [dedicated page](/x/react-charts/axis/#axis-customization/).
+The available options are available in the [axis customization page](/x/react-charts/axis/#axis-customization/).
 
 ### Tooltip
 
 The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
 
-The specificity of the Heatmap Tooltip is its default content.
-You can import the default tooltip, or only its content as follow:
+The only difference of the Heatmap Tooltip is its default content.
+You can import the default tooltip, or only its content as follows:
 
 ```js
 import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
