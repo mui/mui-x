@@ -1,7 +1,7 @@
 ---
 title: React Heatmap chart
 productId: x-charts
-components: Heatmap, HeatmapPlot, HeatmapTooltip
+components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent
 ---
 
 # Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -27,16 +27,14 @@ You can specify x and y ticks with the `xAxis` and `yAxis` props.
 
 {{"demo": "BasicHeatmap.js"}}
 
-## Customization
-
-### Color mapping
+## Color mapping
 
 To customize the color mapping, use the `zAxis` configuration.
 You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#values-color).
 
 {{"demo": "ColorConfig.js"}}
 
-### Highlight
+## Highlight
 
 You can chose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
 To fade the other item, set `highlightScope.fade` to `'global'`.
@@ -50,12 +48,26 @@ In the following demo, we replace the highlight saturation by a border radius an
 
 {{"demo": "HighlightClasses.js"}}
 
+## Common features
+
+Those feature are similar in most charts.
+So they benefit from dedicated pages.
+
 ### Axes
 
 The Heatmap axes can be customized like any other chart axis.
-The available options are available in the [dedicated page](/x/react-charts/axis/#axis-customization).
+The available options are available in the [dedicated page](/x/react-charts/axis/#axis-customization/).
 
-### Tooltip 🚧
+### Tooltip
+
+The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
+
+The specificity of the Heatmap Tooltip is its default content.
+You can import the default tooltip, or only its content as follow:
+
+```js
+import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
+```
 
 ## Legend 🚧
 
