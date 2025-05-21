@@ -57,7 +57,7 @@ If you'd like to learn more about the shared features, you can visit their dedic
 ### Axes
 
 The Heatmap axes can be customized like any other chart axis.
-The available options are available in the [axis customization page](/x/react-charts/axis/#axis-customization/).
+The available options are available in the [axis customization page](/x/react-charts/axis/#axis-customization).
 
 ### Tooltip
 
