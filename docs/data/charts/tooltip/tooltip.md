@@ -118,7 +118,7 @@ import { chartsTooltipClasses } from '@mui/x-charts';
 />;
 ```
 
-To apply the same style as above, use the `sx` prop of the tooltip itself, thanks to `slotProps.tooltip`.
+To apply the same style as above, use the `sx` prop of the tooltip itself, which should be set in `slotProps.tooltip`.
 
 {{"demo": "TooltipStyle.js"}}
 
@@ -144,10 +144,10 @@ With compositon, you can use your component inside the container.
 ```
 
 :::warning
-If your custom tooltip does not use portal, it can not render inside the ChartContainer.
-Overwise it would render an HTML element inside a SVG.
+If your custom tooltip is an HTML element and does not use portal, it cannot render inside the ChartContainer.
+Otherwise it would render an HTML element inside an SVG.
 
-The solution is to put your tooltip inside the ChartDataProvider to get data, but outside ChartSurface to avoid being inside the SVG.
+The solution is to render your tooltip as a descendant the ChartDataProvider so it can access the chart data, but outside ChartSurface so it isn't rendered inside an SVG element.
 
 ```jsx
 <ChartDataProvider>
@@ -162,9 +162,9 @@ The solution is to put your tooltip inside the ChartDataProvider to get data, bu
 
 To create your custom tooltip, the library exports some helpers which are explained in the following sections:
 
-- `<ChartsTooltipContainer />` A wrapper providing the open/close state and the position of the tooltip.
-- `<ChartsItemTooltipContent />` render the content of the default item tooltip.
-- `<ChartsAxisTooltipContent />` render the content of the default axis tooltip.
+- `<ChartsTooltipContainer />` a wrapper providing the open/close state and the position of the tooltip.
+- `<ChartsItemTooltipContent />` renders the content of the default item tooltip.
+- `<ChartsAxisTooltipContent />` renders the content of the default axis tooltip.
 - `useItemTooltip()` provides all basic information associated to the current item tooltip.
 - `useAxesTooltip()` provides all basic information associated to the current axes tooltip.
 
@@ -192,14 +192,14 @@ Then you can either render built-in content (with `<ChartsItemTooltipContent />`
 </CustomTooltipPopper>
 ```
 
-The following demo shows example about how to use additional hooks such as `useXAxis()` or `useDrawingArea()` to customize the tooltip position.
+The following demo shows how to use additional hooks such as `useXAxis()` and `useDrawingArea()` to customize the tooltip position.
 
 {{"demo": "CustomTooltipPosition.js"}}
 
 #### Modifying the content
 
 To keep the default placement, use the `<ChartsTooltipContainer />` wrapper.
-It accept a prop `trigger = 'item' | 'axis'` to know when the Popper should be open.
+It accepts a prop `trigger = 'item' | 'axis'` that defines when the Popper should open.
 
 :::warning
 Do not skip rendering the ChartsTooltipContainer.
