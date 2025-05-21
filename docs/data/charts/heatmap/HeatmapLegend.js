@@ -12,6 +12,12 @@ export default function HeatmapLegend() {
         series={[{ data }]}
         height={300}
         hideLegend={false}
+        slotProps={{
+          legend: {
+            direction: 'vertical',
+            sx: { alignSelf: 'stretch', maxHeight: 200 },
+          },
+        }}
       />
     </Box>
   );

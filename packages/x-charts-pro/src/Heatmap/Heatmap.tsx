@@ -281,6 +281,11 @@ Heatmap.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * If `true`, the legend is not rendered.
+   * @default true
+   */
+  hideLegend: PropTypes.bool,
+  /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
