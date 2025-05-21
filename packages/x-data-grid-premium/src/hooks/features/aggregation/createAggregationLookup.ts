@@ -36,6 +36,10 @@ const getGroupAggregatedValue = (
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
   rowIds.forEach((rowId) => {
+    if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
+      return;
+    }
+
     // If the row is a group, we want to aggregate based on its children
     // For instance in the following tree, we want the aggregated values of A to be based on A.A, A.B.A and A.B.B but not A.B
     // A
@@ -65,9 +69,7 @@ const getGroupAggregatedValue = (
         };
       }
 
-      if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
-        aggregatedValues[j].values.push(0);
-      } else if (typeof aggregationFunction.getCellValue === 'function') {
+      if (typeof aggregationFunction.getCellValue === 'function') {
         aggregatedValues[j].values.push(aggregationFunction.getCellValue({ row }));
       } else {
         const colDef = apiRef.current.getColumn(field);
