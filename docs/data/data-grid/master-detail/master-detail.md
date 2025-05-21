@@ -1,5 +1,5 @@
 ---
-title: Data Grid - Master-detail rows
+title: Data Grid - Master-detail row panels
 ---
 
 # Data Grid - Master-detail row panels [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
