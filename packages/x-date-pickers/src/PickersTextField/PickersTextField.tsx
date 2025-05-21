@@ -25,8 +25,9 @@ const VARIANT_COMPONENT = {
 const PickersTextFieldRoot = styled(FormControl, {
   name: 'MuiPickersTextField',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>({});
+})<{ ownerState: PickerTextFieldOwnerState }>({
+  maxWidth: '100%',
+});
 
 const useUtilityClasses = (ownerState: PickersTextFieldProps) => {
   const { focused, disabled, classes, required } = ownerState;
