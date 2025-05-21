@@ -71,9 +71,9 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.typography.fontWeight.regular]: t.typography.fontWeightRegular as string,
     [k.typography.fontWeight.medium]: t.typography.fontWeightMedium as string,
     [k.typography.fontWeight.bold]: t.typography.fontWeightBold as string,
-    [k.typography.font.body]: fontBody,
-    [k.typography.font.small]: fontSmall,
-    [k.typography.font.large]: fontLarge,
+    ...(fontBody ? { [k.typography.font.body]: fontBody } : {}),
+    ...(fontSmall ? { [k.typography.font.small]: fontSmall } : {}),
+    ...(fontLarge ? { [k.typography.font.large]: fontLarge } : {}),
 
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,
