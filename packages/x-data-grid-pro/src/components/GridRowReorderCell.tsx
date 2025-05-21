@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   GridRenderCellParams,
@@ -14,7 +15,6 @@ import {
 import { gridEditRowsStateSelector, isEventTargetInPortal, vars } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { styled } from '@mui/system';
 
 type OwnerState = {
   classes?: DataGridProProcessedProps['classes'];
