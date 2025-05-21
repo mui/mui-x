@@ -339,7 +339,7 @@ function ChartAxisZoomSliderActiveTrack({
 
     const onPointerUp = () => {
       activePreviewRect.removeEventListener('pointermove', onPointerMove);
-      activePreviewRect.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener('pointerup', onPointerUp);
       setShowTooltip(null);
     };
 
@@ -367,7 +367,7 @@ function ChartAxisZoomSliderActiveTrack({
       pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
 
       setShowTooltip('both');
-      activePreviewRect.addEventListener('pointerup', onPointerUp);
+      document.addEventListener('pointerup', onPointerUp);
       activePreviewRect.addEventListener('pointermove', onPointerMove);
     };
 
