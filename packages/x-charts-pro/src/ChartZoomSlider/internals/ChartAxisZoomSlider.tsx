@@ -161,139 +161,111 @@ function ChartAxisZoomSliderTrack({
   const ref = React.useRef<SVGRectElement>(null);
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
-  const firstMoveRef = React.useRef(false);
-  const startingPointRef = React.useRef<number | null>(null);
 
-  const onPointerMove = React.useMemo(
-    () =>
-      rafThrottle((event: PointerEvent) => {
-        const element = svgRef.current;
-        const startingPoint = startingPointRef.current;
+  const onPointerDown = function onPointerDown(event: React.PointerEvent<SVGRectElement>) {
+    const rect = ref.current;
+    const element = svgRef.current;
 
-        if (!element || startingPoint === null) {
-          return;
-        }
+    if (!rect || !element) {
+      return;
+    }
 
-        const point = getSVGPoint(element, event);
-        const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+    const pointerDownPoint = getSVGPoint(element, event);
+    const pointerDownZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerDownPoint);
 
-        if (pointerZoom === null) {
-          return;
-        }
+    if (pointerDownZoom === null) {
+      return;
+    }
 
-        const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+    let pointerMoved = false;
 
-        instance.setAxisZoomData(axisId, (prevZoomData) => {
-          if (pointerZoom > startingPoint) {
-            const end = calculateZoomEnd(
-              pointerZoom,
-              { ...prevZoomData, start: startingPoint },
-              zoomOptions,
-            );
+    const onPointerMove = rafThrottle(function onPointerMove(pointerMoveEvent: PointerEvent) {
+      const pointerMovePoint = getSVGPoint(element, pointerMoveEvent);
+      const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerMovePoint);
 
-            /* If the starting point is too close to the end that minSpan wouldn't be respected, we need to update the
-             * start point. */
-            const start = calculateZoomStart(
-              startingPoint,
-              { ...prevZoomData, start: startingPoint, end },
-              zoomOptions,
-            );
+      if (pointerZoom === null) {
+        return;
+      }
 
-            return { ...prevZoomData, start, end };
-          }
+      pointerMoved = true;
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
-          const start = calculateZoomStart(
+      instance.setAxisZoomData(axisId, (prevZoomData) => {
+        if (pointerZoom > pointerDownZoom) {
+          const end = calculateZoomEnd(
             pointerZoom,
-            { ...prevZoomData, end: startingPoint },
+            { ...prevZoomData, start: pointerDownZoom },
             zoomOptions,
           );
 
-          /* If the starting point is too close to the start that minSpan wouldn't be respected, we need to update the
+          /* If the starting point is too close to the end that minSpan wouldn't be respected, we need to update the
            * start point. */
-          const end = calculateZoomEnd(
-            startingPoint,
-            { ...prevZoomData, start, end: startingPoint },
+          const start = calculateZoomStart(
+            pointerDownZoom,
+            { ...prevZoomData, start: pointerDownZoom, end },
             zoomOptions,
           );
 
           return { ...prevZoomData, start, end };
-        });
-        firstMoveRef.current = false;
-      }),
-    [axisId, instance, store, svgRef],
-  );
+        }
 
-  const onPointerUp = (event: PointerEvent) => {
-    const pointerMoved = !firstMoveRef.current;
-    const rect = ref.current;
-    firstMoveRef.current = false;
+        const start = calculateZoomStart(
+          pointerZoom,
+          { ...prevZoomData, end: pointerDownZoom },
+          zoomOptions,
+        );
 
-    if (!rect) {
-      return;
-    }
+        /* If the starting point is too close to the start that minSpan wouldn't be respected, we need to update the
+         * start point. */
+        const end = calculateZoomEnd(
+          pointerDownZoom,
+          { ...prevZoomData, start, end: pointerDownZoom },
+          zoomOptions,
+        );
 
-    rect.removeEventListener('pointermove', onPointerMove);
-    rect.removeEventListener('pointerup', onPointerUp);
+        return { ...prevZoomData, start, end };
+      });
+    });
 
-    if (pointerMoved) {
-      return;
-    }
+    const onPointerUp = function onPointerUp(pointerUpEvent: PointerEvent) {
+      rect.releasePointerCapture(pointerUpEvent.pointerId);
+      rect.removeEventListener('pointermove', onPointerMove);
+      rect.removeEventListener('pointerup', onPointerUp);
 
-    // If the pointer didn't move, we still need to respect the zoom constraints (minSpan, etc.)
-    // In that case, we assume the start to be the pointerZoom and calculate the end.
-    const element = svgRef.current;
+      if (pointerMoved) {
+        return;
+      }
 
-    if (!element) {
-      return;
-    }
+      // If the pointer didn't move, we still need to respect the zoom constraints (minSpan, etc.)
+      // In that case, we assume the start to be the pointerZoom and calculate the end.
+      const pointerUpPoint = getSVGPoint(element, pointerUpEvent);
+      const pointerUpZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerUpPoint);
 
-    const point = getSVGPoint(element, event);
-    const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+      if (pointerUpZoom === null) {
+        return;
+      }
 
-    if (pointerZoom === null) {
-      return;
-    }
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
-    const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+      instance.setAxisZoomData(axisId, (prev) => ({
+        ...prev,
+        start: pointerUpZoom,
+        end: calculateZoomEnd(pointerUpZoom, prev, zoomOptions),
+      }));
+    };
 
-    instance.setAxisZoomData(axisId, (prev) => ({
-      ...prev,
-      start: pointerZoom,
-      end: calculateZoomEnd(pointerZoom, prev, zoomOptions),
-    }));
-  };
-
-  const onPointerDown = (event: React.PointerEvent<SVGRectElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
-    const rect = ref.current;
-
-    if (!rect) {
-      return;
-    }
-
-    firstMoveRef.current = true;
     rect.setPointerCapture(event.pointerId);
-    rect.addEventListener('pointerup', onPointerUp);
+    document.addEventListener('pointerup', onPointerUp);
     rect.addEventListener('pointermove', onPointerMove);
 
-    const element = svgRef.current;
-
-    if (!element) {
-      return;
-    }
-
-    const point = getSVGPoint(element, event);
-    const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
-
-    if (pointerZoom === null) {
-      return;
-    }
-
-    startingPointRef.current = pointerZoom;
-
-    instance.setAxisZoomData(axisId, (prev) => ({ ...prev, start: pointerZoom, end: pointerZoom }));
+    instance.setAxisZoomData(axisId, (prev) => ({
+      ...prev,
+      start: pointerDownZoom,
+      end: pointerDownZoom,
+    }));
   };
 
   return <ZoomSliderTrack ref={ref} onPointerDown={onPointerDown} {...other} />;
