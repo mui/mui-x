@@ -27,7 +27,7 @@ import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
-import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip/HeatmapTooltip';
+import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
