@@ -1,1 +1,1 @@
-<DataGridPro {...data} loading={loading} multiSortingWithoutModifier />
+<DataGridPro {...data} loading={loading} multiSortingMode="always" />

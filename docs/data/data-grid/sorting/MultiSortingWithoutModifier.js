@@ -13,7 +13,7 @@ export default function MultiSortingWithoutModifier() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} loading={loading} multiSortingWithoutModifier />
+      <DataGridPro {...data} loading={loading} multiSortingMode="always" />
     </div>
   );
 }
