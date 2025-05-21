@@ -117,7 +117,7 @@ function removeOpacity(color: string) {
   return setOpacity(color, 1);
 }
 
-function formatFont(font: React.CSSProperties) {
+function formatFont(font: React.CSSProperties | undefined) {
   // Accounts for disabled typography variants
   // See: https://github.com/mui/mui-x/issues/17812
   if (!font) {
