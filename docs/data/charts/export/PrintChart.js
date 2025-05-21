@@ -59,7 +59,7 @@ export default function PrintChart() {
             <MenuItem value="heatmap">Heatmap</MenuItem>
           </Select>
         </FormControl>
-        <Button onClick={() => apiRef.current.exportAsPrint} variant="contained">
+        <Button onClick={() => apiRef.current.exportAsPrint()} variant="contained">
           Print
         </Button>
       </Stack>
