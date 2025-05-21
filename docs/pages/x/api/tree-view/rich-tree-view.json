@@ -20,6 +20,15 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
+    "getItemChildren": {
+      "type": { "name": "func" },
+      "default": "(item) => item.children",
+      "signature": {
+        "type": "function(item: R) => Array<R>",
+        "describedArgs": ["item"],
+        "returned": "Array<R>"
+      }
+    },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",

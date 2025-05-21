@@ -46,7 +46,7 @@ npx @mui/x-codemod --jscodeshift=--run-in-band
 npx @mui/x-codemod --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
-See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
+See [all available options](https://github.com/facebook/jscodeshift#usage-cli).
 
 ### `Recast` Options
 

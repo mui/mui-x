@@ -78,13 +78,12 @@ const TimeGridEvent = React.forwardRef(function CalendarCell(
   const props = React.useMemo(() => ({ style }), [style]);
 
   const state = React.useMemo(() => ({ started, ended }), [started, ended]);
-  const renderElement = useRenderElement('div', componentProps, {
+
+  return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
-
-  return renderElement();
 });
 
 export namespace TimeGridEvent {
