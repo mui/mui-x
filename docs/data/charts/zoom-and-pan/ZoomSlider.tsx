@@ -50,9 +50,9 @@ export default function ZoomSlider() {
       height={400}
       margin={{ bottom: 40 }}
       initialZoom={[
-        { axisId: 'x', start: 10, end: 90 },
+        { axisId: 'x', start: 45, end: 55 },
         { axisId: 'x2', start: 30, end: 70 },
-        { axisId: 'y', start: 10, end: 90 },
+        { axisId: 'y', start: 40, end: 60 },
         { axisId: 'y2', start: 30, end: 70 },
       ]}
     />
