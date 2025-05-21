@@ -102,10 +102,10 @@ On macOS replace:
 
 Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
 
-- <kbd class="key">Page Up</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd>
-- <kbd class="key">Page Down</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd>
-- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
-- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
+- <kbd class="key">Page Up</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd></kbd>
+- <kbd class="key">Page Down</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd></kbd>
+- <kbd class="key">Home</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd></kbd>
+- <kbd class="key">End</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd></kbd>
 
 :::
 
@@ -128,7 +128,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 
 |                                                                         Keys | Description                                                          |
 | ---------------------------------------------------------------------------: | :------------------------------------------------------------------- |
-|         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select the current row                                               |
+|         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select/Deselect the current row                                      |
 | <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Select the current row and the row above or below                    |
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |

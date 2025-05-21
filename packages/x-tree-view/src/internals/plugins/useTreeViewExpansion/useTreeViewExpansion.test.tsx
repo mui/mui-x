@@ -7,6 +7,7 @@ import { act, fireEvent } from '@mui/internal-test-utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 
 /**
  * All tests related to keyboard navigation (e.g.: expanding using "Enter" and "ArrowRight")
@@ -14,6 +15,10 @@ import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
  */
 describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin', ({ render }) => {
   describe('model props (expandedItems, defaultExpandedItems, onExpandedItemsChange)', () => {
+    beforeEach(() => {
+      clearWarningsCache();
+    });
+
     it('should not expand items when no default state and no control state are defined', () => {
       const view = render({
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -122,7 +127,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
       expect(() => {
         view.setProps({ expandedItems: undefined });
       }).toErrorDev(
-        'MUI X: A component is changing the controlled expandedItems state of TreeView to be uncontrolled.',
+        'MUI X: A component is changing the controlled expandedItems state of Tree View to be uncontrolled.',
       );
     });
 
@@ -137,7 +142,7 @@ describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin',
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.isItemExpanded('2')).to.equal(false);
       }).toErrorDev(
-        'MUI X: A component is changing the default expandedItems state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
+        'MUI X: A component is changing the default expandedItems state of an uncontrolled Tree View after being initialized. To suppress this warning opt to use a controlled Tree View.',
       );
     });
   });

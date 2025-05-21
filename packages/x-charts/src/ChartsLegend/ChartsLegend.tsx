@@ -40,7 +40,6 @@ export interface ChartsLegendProps {
 const RootElement = styled('ul', {
   name: 'MuiChartsLegend',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLegendProps }>(({ ownerState, theme }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,

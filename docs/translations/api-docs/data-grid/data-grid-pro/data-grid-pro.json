@@ -658,6 +658,62 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the aggregation row overlay wrapper"
     },
+    "aiAssistantPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the AI assistant panel"
+    },
+    "aiAssistantPanelBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel body"
+    },
+    "aiAssistantPanelConversation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation"
+    },
+    "aiAssistantPanelConversationList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation list"
+    },
+    "aiAssistantPanelConversationTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel conversation title"
+    },
+    "aiAssistantPanelEmptyText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel empty text"
+    },
+    "aiAssistantPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel footer"
+    },
+    "aiAssistantPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel header"
+    },
+    "aiAssistantPanelSuggestions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions"
+    },
+    "aiAssistantPanelSuggestionsItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions item"
+    },
+    "aiAssistantPanelSuggestionsLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions label"
+    },
+    "aiAssistantPanelSuggestionsList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel suggestions list"
+    },
+    "aiAssistantPanelTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel title"
+    },
+    "aiAssistantPanelTitleContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel title container"
+    },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
@@ -1145,6 +1201,50 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the pivot panel switch label"
     },
+    "prompt": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt root element"
+    },
+    "promptAction": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt action element"
+    },
+    "promptChangeList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt change list element"
+    },
+    "promptChangesToggle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt changes toggle element"
+    },
+    "promptChangesToggleIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt changes toggle icon element"
+    },
+    "promptContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt content element"
+    },
+    "promptError": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt error element"
+    },
+    "promptFeedback": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt feedback element"
+    },
+    "promptIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
+    "promptIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt icon element"
+    },
+    "promptText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the prompt text element"
+    },
     "resizablePanelHandle": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "resizable panel handles"
@@ -1290,27 +1390,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar label element"
     },
-    "toolbarPromptControl": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control element"
-    },
-    "toolbarPromptControl--recording": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the toolbar prompt control element",
-      "conditions": "recording"
-    },
-    "toolbarPromptControlRecordButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control record button element"
-    },
-    "toolbarPromptControlRecordingIndicator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control recording indicator element"
-    },
-    "toolbarPromptControlSendButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar prompt control send button element"
-    },
     "toolbarQuickFilter": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar quick filter root element"
@@ -1405,7 +1484,6 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
-    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",

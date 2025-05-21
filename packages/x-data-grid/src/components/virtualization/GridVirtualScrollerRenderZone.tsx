@@ -26,7 +26,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const VirtualScrollerRenderZoneRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScrollerRenderZone',
-  overridesResolver: (props, styles) => styles.virtualScrollerRenderZone,
 })<{ ownerState: OwnerState }>({
   position: 'absolute',
   display: 'flex', // Prevents margin collapsing when using `getRowSpacing`

@@ -274,6 +274,8 @@ async function main(argv) {
                 break;
             }
           });
+        } else {
+          otherCommits.push(commitItem);
         }
         break;
       }
@@ -397,8 +399,8 @@ Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? 
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
 ### Tree View
 ${logChangelogMessages('TreeView')}
-#### \`@mui/x-tree-view@__VERSION__\` 
-${logChangelogSection(treeViewProCommits) || 'Internal changes.'}
+#### \`@mui/x-tree-view@__VERSION__\`
+${logChangelogSection(treeViewCommits) || 'Internal changes.'}
 
 #### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -433,14 +435,15 @@ yargs(hideBin(process.argv))
           type: 'string',
         })
         .option('release', {
-          // #default-branch-switch
+          // #target-branch-reference
+          // to be done when we branch off for a new major (e.g. v9)
           default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         })
         .option('nextVersion', {
           describe:
-            'The version expected to be released e.g. `5.2.0`. Replaces `_VERSION__` placeholder in the changelog.',
+            'The version expected to be released e.g. `5.2.0`. Replaces `__VERSION__` placeholder in the changelog.',
           type: 'string',
         });
     },

@@ -390,7 +390,7 @@ const GridColumnsManagementScrollArea = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementScrollArea',
 })<{ ownerState: OwnerState }>({
-  maxHeight: 400,
+  maxHeight: 300,
 });
 
 const GridColumnsManagementHeader = styled('div', {

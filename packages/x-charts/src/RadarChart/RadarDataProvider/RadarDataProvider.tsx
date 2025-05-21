@@ -185,6 +185,10 @@ RadarDataProvider.propTypes = {
    */
   id: PropTypes.string,
   /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *
@@ -230,7 +234,7 @@ RadarDataProvider.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * The configuration helpers used to compute attributes according to the serries type.
+   * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
   seriesConfig: PropTypes.object,

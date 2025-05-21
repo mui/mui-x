@@ -85,6 +85,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
+    pathname: '/x/api/charts/charts-localization-provider',
+    title: 'ChartsLocalizationProvider',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -95,6 +99,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-text',
     title: 'ChartsText',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-pro',
+    title: 'ChartsToolbarPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/charts-tooltip',
@@ -111,6 +120,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-y-axis',
     title: 'ChartsYAxis',
+  },
+  {
+    pathname: '/x/api/charts/chart-zoom-slider',
+    title: 'ChartZoomSlider',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/continuous-color-legend',
@@ -147,6 +161,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap-tooltip',
     title: 'HeatmapTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip-content',
+    title: 'HeatmapTooltipContent',
     plan: 'pro',
   },
   {
@@ -262,6 +281,14 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/spark-line-chart',
     title: 'SparkLineChart',
+  },
+  {
+    pathname: '/x/api/charts/toolbar',
+    title: 'Toolbar',
+  },
+  {
+    pathname: '/x/api/charts/toolbar-button',
+    title: 'ToolbarButton',
   },
 ];
 export default chartsApiPages;

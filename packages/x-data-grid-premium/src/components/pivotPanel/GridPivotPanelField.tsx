@@ -7,11 +7,10 @@ import {
   GridMenu,
   GridSlotProps,
   GridSortDirection,
-  NotRendered,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { GridColumnSortButton, vars } from '@mui/x-data-grid-pro/internals';
+import { GridColumnSortButton, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
@@ -183,7 +182,7 @@ function AggregationSelect({
   return (
     <React.Fragment>
       <rootProps.slots.baseChip
-        label={aggFunc}
+        label={rootProps.aggregationFunctions[aggFunc]?.label ?? aggFunc}
         size="small"
         variant="outlined"
         ref={aggregationMenuTriggerRef}
@@ -212,7 +211,7 @@ function AggregationSelect({
               onClick={() => handleClick(func)}
               {...rootProps.slotProps?.baseMenuItem}
             >
-              {func}
+              {rootProps.aggregationFunctions[func]?.label ?? func}
             </rootProps.slots.baseMenuItem>
           ))}
         </rootProps.slots.baseMenuList>

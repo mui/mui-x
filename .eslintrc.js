@@ -1,18 +1,16 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
-const chartsPackages = ['x-charts', 'x-charts-pro'];
-
-const dataGridPackages = [
+const CHARTS_PACKAGES = ['x-charts', 'x-charts-pro'];
+const GRID_PACKAGES = [
   'x-data-grid',
   'x-data-grid-pro',
   'x-data-grid-premium',
   'x-data-grid-generator',
 ];
-
-const datePickersPackages = ['x-date-pickers', 'x-date-pickers-pro'];
-
-const treeViewPackages = ['x-tree-view', 'x-tree-view-pro'];
+const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
+const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
+const SCHEDULER_PACKAGES = ['x-scheduler'];
 
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
@@ -24,7 +22,9 @@ const ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID =
 const ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS =
   process.env.ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS ?? false;
 const ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW =
-  process.env.ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ?? false;
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ?? true;
+const ENABLE_REACT_COMPILER_PLUGIN_SCHEDULER =
+  process.env.ENABLE_REACT_COMPILER_PLUGIN_SCHEDULER ?? true;
 
 const isAnyReactCompilerPluginEnabled =
   ENABLE_REACT_COMPILER_PLUGIN ||
@@ -141,13 +141,16 @@ module.exports = {
     'import/no-restricted-paths': [
       'error',
       {
-        zones: [...chartsPackages, ...datePickersPackages, ...treeViewPackages].map(
-          (packageName) => ({
-            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
-            from: `./packages/${packageName}/src/internals/index.ts`,
-            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
-          }),
-        ),
+        zones: [
+          ...CHARTS_PACKAGES,
+          ...PICKERS_PACKAGES,
+          ...TREE_VIEW_PACKAGES,
+          ...SCHEDULER_PACKAGES,
+        ].map((packageName) => ({
+          target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+          from: `./packages/${packageName}/src/internals/index.ts`,
+          message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+        })),
       },
     ],
     // TODO move rule into the main repo once it has upgraded
@@ -287,6 +290,9 @@ module.exports = {
                   // Allow any import depth with any internal packages
                   '!@mui/internal-*/**',
 
+                  // The scheduler import strategy is not determined yet
+                  '!@mui/x-scheduler/**',
+
                   // Exceptions (QUESTION: Keep or remove?)
                   '!@mui/x-data-grid/internals/demo',
                   '!@mui/x-date-pickers/internals/demo',
@@ -307,6 +313,17 @@ module.exports = {
         'no-console': 'off',
       },
     },
+    {
+      files: ['packages/x-scheduler/**/*{.tsx,.ts,.js}'],
+      rules: {
+        // Base UI lint rules
+        '@typescript-eslint/no-redeclare': 'off',
+        'import/export': 'off',
+        'material-ui/straight-quotes': 'off',
+        'jsdoc/require-param': 'off',
+        'jsdoc/require-returns': 'off',
+      },
+    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
@@ -321,9 +338,18 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
     ...buildPackageRestrictedImports('@mui/x-telemetry', 'x-telemetry'),
 
-    ...addReactCompilerRule(chartsPackages, ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
-    ...addReactCompilerRule(dataGridPackages, ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID),
-    ...addReactCompilerRule(datePickersPackages, ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS),
-    ...addReactCompilerRule(treeViewPackages, ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW),
+    ...addReactCompilerRule(CHARTS_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
+    ...addReactCompilerRule(GRID_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID),
+    ...addReactCompilerRule(PICKERS_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS),
+    ...addReactCompilerRule(TREE_VIEW_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW),
+    ...addReactCompilerRule(SCHEDULER_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_SCHEDULER),
+
+    // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
+    {
+      files: ['packages/x-scheduler/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
+      rules: {
+        'react-compiler/react-compiler': 'off',
+      },
+    },
   ],
 };

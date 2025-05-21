@@ -17,7 +17,7 @@ With the Data Grid Premium, you can apply the `cellSelection` prop to let users 
 
 ## Selecting cells
 
-With the `cellSelection` prop applied, users can select a single cell by clicking on it, or by pressing <kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd> when the cell is in focus.
+With the `cellSelection` prop applied, users can select a single cell by clicking on it, or by pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> when the cell is in focus.
 Select multiple cells by holding <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows) while clicking on them.
 Hold <kbd class="key">Cmd</kbd> (or <kbd class="key">Ctrl</kbd> on Windows) and click on a selected cell to deselect it.
 
@@ -73,12 +73,12 @@ You can use these classes to create CSS selectors targeting specific corners of 
 
 ## apiRef
 
-The Data Grid exposes a set of methods via the `apiRef` object that are used in the implementation of the cell selection feature.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the cell selection feature.
 The reference below describes the relevant functions.
 See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-This API should only be used as a last resort—give preference to props for controlling the Data Grid.
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
 {{"demo": "CellSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

@@ -94,7 +94,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X: ${
+              `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
@@ -105,7 +105,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
           const x = xScale(xData[highlightedIndex]);
           const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
 
-          if (!instance.isPointInside({ x, y })) {
+          if (!instance.isPointInside(x, y)) {
             return null;
           }
 

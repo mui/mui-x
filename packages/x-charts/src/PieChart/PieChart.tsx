@@ -140,9 +140,9 @@ const PieChart = React.forwardRef(function PieChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-          {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
+        {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>
   );
@@ -194,6 +194,10 @@ PieChart.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.

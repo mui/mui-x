@@ -26,7 +26,7 @@ import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
 import { PickerOwnerState } from '../../../models';
 import { usePickerContext } from '../../../hooks';
 
-interface PickerPopperOwnerState extends PickerOwnerState {
+export interface PickerPopperOwnerState extends PickerOwnerState {
   popperPlacement: PopperPlacementType;
 }
 
@@ -102,7 +102,6 @@ const useUtilityClasses = (classes: Partial<PickerPopperClasses> | undefined) =>
 const PickerPopperRoot = styled(MuiPopper, {
   name: 'MuiPickerPopper',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
@@ -110,7 +109,6 @@ const PickerPopperRoot = styled(MuiPopper, {
 const PickerPopperPaper = styled(MuiPaper, {
   name: 'MuiPickerPopper',
   slot: 'Paper',
-  overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickerPopperOwnerState;
 }>({

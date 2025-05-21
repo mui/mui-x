@@ -147,7 +147,7 @@ export const useTreeItemUtils = <
       return;
     }
 
-    if (!status.focused) {
+    if (!status.focused && !status.editing) {
       instance.focusItem(event, itemId);
     }
 
@@ -183,12 +183,10 @@ export const useTreeItemUtils = <
       return;
     }
 
-    if (isEditable) {
-      if (isEditing) {
-        instance.setEditedItemId(null);
-      } else {
-        instance.setEditedItemId(itemId);
-      }
+    if (isEditing) {
+      instance.setEditedItem(null);
+    } else {
+      instance.setEditedItem(itemId);
     }
   };
 

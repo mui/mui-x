@@ -13,7 +13,6 @@ type OwnerState = DataGridProProcessedProps;
 const DetailPanel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
-  overridesResolver: (props, styles) => styles.detailPanel,
 })<{ ownerState: OwnerState }>({
   width:
     'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',

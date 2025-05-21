@@ -2,6 +2,11 @@ import type { MuiPage } from 'docs/src/MuiPage';
 
 const dataGridApiPages: MuiPage[] = [
   {
+    pathname: '/x/api/data-grid/ai-assistant-panel-trigger',
+    title: 'AiAssistantPanelTrigger',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/data-grid/columns-panel-trigger',
     title: 'ColumnsPanelTrigger',
   },
@@ -51,6 +56,26 @@ const dataGridApiPages: MuiPage[] = [
   {
     pathname: '/x/api/data-grid/pivot-panel-trigger',
     title: 'PivotPanelTrigger',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/data-grid/prompt-field',
+    title: 'PromptField',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/data-grid/prompt-field-control',
+    title: 'PromptFieldControl',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/data-grid/prompt-field-record',
+    title: 'PromptFieldRecord',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/data-grid/prompt-field-send',
+    title: 'PromptFieldSend',
     plan: 'premium',
   },
   {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { MuiBaseEvent } from '@mui/x-internals/types';
 import type {
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
@@ -18,7 +19,6 @@ import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
-import type { MuiBaseEvent } from '../muiEvent';
 import type { GridGroupNode } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
@@ -190,6 +190,15 @@ export interface GridColumnHeaderEventLookup {
   columnHeaderDragEnd: {
     params: GridColumnHeaderParams;
     event: React.DragEvent<HTMLElement>;
+  };
+  /**
+   * Fired when the dragging of a column header ends.
+   * Same as `columnHeaderDragEnd`, but also fires when the DOM element is unmounted.
+   * @ignore - do not document.
+   */
+  columnHeaderDragEndNative: {
+    params: GridColumnHeaderParams;
+    event: DragEvent;
   };
   /**
    * Fired when a `dblclick` DOM event happens in the column header separator.
@@ -390,6 +399,7 @@ export interface GridControlledStateReasonLookup {
     | 'removeAllFilterItems';
   pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
   rows: 'addSkeletonRows';
+  rowSelection: 'singleRowSelection' | 'multipleRowsSelection';
 }
 
 export interface GridEventLookup
@@ -572,6 +582,12 @@ export interface GridEventLookup
    * @ignore - do not document.
    */
   virtualScrollerTouchMove: { params: {}; event: React.TouchEvent };
+  /**
+   * Fired when the area of height `scrollEndThreshold` is entering the viewport from the bottom.
+   * Used to trigger infinite loading.
+   * @ignore - do not document.
+   */
+  rowsScrollEndIntersection: {};
 
   // Selection
   /**
