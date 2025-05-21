@@ -159,12 +159,12 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   const setAxisZoomData = React.useCallback(
     (axisId: AxisId, zoomData: ZoomData | ((prev: ZoomData) => ZoomData)) => {
       setZoomDataCallback((prev) =>
-        prev.map((z) => {
-          if (z.axisId !== axisId) {
-            return z;
+        prev.map((prevZoom) => {
+          if (prevZoom.axisId !== axisId) {
+            return prevZoom;
           }
 
-          return typeof zoomData === 'function' ? zoomData(z) : zoomData;
+          return typeof zoomData === 'function' ? zoomData(prevZoom) : zoomData;
         }),
       );
     },
