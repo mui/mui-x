@@ -6,12 +6,6 @@ title: Data Grid - Header filters
 
 <p class="description">Quickly accessible per-column filters on grid header.</p>
 
-:::warning
-
-To use header filters, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
-
-:::
-
 Header filters add a new header row that lets users quickly filter the columns. The filters added on the filter panel are synchronized with the header filters and vice versa.
 
 You can switch between different operators by clicking the operator button in the header filter cell or pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS) when focusing on a header filter cell.
