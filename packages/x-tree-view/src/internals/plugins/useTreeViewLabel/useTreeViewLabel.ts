@@ -3,10 +3,22 @@ import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
+import { selectorIsItemEditable } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {
-  const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
-    store.update((prevState) => ({ ...prevState, label: { ...prevState.label, editedItemId } }));
+  const setEditedItem = (editedItemId: TreeViewItemId | null) => {
+    if (editedItemId !== null) {
+      const isEditable = selectorIsItemEditable(store.value, editedItemId);
+
+      if (!isEditable) {
+        return;
+      }
+    }
+
+    store.update((prevState) => ({
+      ...prevState,
+      label: { ...prevState.label, editedItemId },
+    }));
   };
 
   const updateItemLabel = (itemId: TreeViewItemId, label: string) => {
@@ -51,10 +63,11 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
 
   return {
     instance: {
-      setEditedItemId,
+      setEditedItem,
       updateItemLabel,
     },
     publicAPI: {
+      setEditedItem,
       updateItemLabel,
     },
   };

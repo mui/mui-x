@@ -178,6 +178,8 @@ To apply the same style as we're trying to apply above, we need to use the `sx` 
 
 {{"demo": "TooltipStyle.js"}}
 
+You can also disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
+
 ## Composition
 
 If you're using composition, by default, the axis listens for mouse events to get its current x/y values.

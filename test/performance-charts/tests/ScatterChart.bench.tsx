@@ -19,7 +19,7 @@ describe('ScatterChart', () => {
     async () => {
       const { findByText } = render(
         <ScatterChart
-          xAxis={[{ data: xData, valueFormatter: (v) => v.toLocaleString('en-US') }]}
+          xAxis={[{ data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US') }]}
           series={[
             {
               data,
