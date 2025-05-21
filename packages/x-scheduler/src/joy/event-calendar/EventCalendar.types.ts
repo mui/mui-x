@@ -8,5 +8,5 @@ export interface EventCalendarProps extends React.HTMLAttributes<HTMLDivElement>
   /**
    * Callback fired when some event of the calendar change.
    */
-  onEventsChange?: (value: CalendarEvent[], event: Event) => void;
+  onEventsChange?: (value: CalendarEvent[]) => void;
 }
