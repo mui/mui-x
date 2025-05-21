@@ -50,8 +50,9 @@ In the following demo, we replace the highlight saturation by a border radius an
 
 ## Common features
 
-Those feature are similar in most charts.
-So they benefit from dedicated pages.
+The heatmap shares several features with other charts.
+This section only explains the details that are specific to the heatmap.
+If you'd like to learn more about the shared features, you can visit their dedicated pages.
 
 ### Axes
 
