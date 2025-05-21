@@ -34,15 +34,15 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix disabled typography variants crashing grid (#17934) @KenanYusuf
 - [DataGrid] Fix tree data demo crash (#17904) @MBilalShafi
 - [DataGrid] Use `exclude` selection model type if quick filter does not have actual values (#17899) @arminmeh
-- [DataGrid] Fix copy a selection of cells (#16797) @nusr
+- [DataGrid] Fix clipboard copy behavior for cell ranges with empty cells (#16797) @nusr
 - [l10n] Improve Icelandic (is-IS) locale (#17915) @ragnarr18
 
 #### `@mui/x-data-grid-pro@8.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@8.4.0`, plus:
 
-- [DataGridPro] Add `aria-expanded` attribute to the Master detail toggle button (#17122) @whereisrmsqhs
-- [DataGridPro] Prevent row state loss with server side lazy loading (#17743) @arminmeh
+- [DataGridPro] Add `aria-expanded` attribute to the master detail toggle button (#17122) @whereisrmsqhs
+- [DataGridPro] Preserve row state during server-side lazy loading (#17743) @arminmeh
 - [DataGridPro] Prevent text selection when reordering rows (#16568) @jyash97
 
 #### `@mui/x-data-grid-premium@8.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
@@ -66,11 +66,8 @@ Same changes as in `@mui/x-date-pickers@8.4.0`.
 #### `@mui/x-charts@8.4.0`
 
 - [charts] Add grouped axes demo (#17848) @bernardobelchior
-- [charts] Add zoom slider tooltip (#17733) @bernardobelchior
-- [charts] Clean and document Heatmap Tooltip (#17933) @alexfauquette
 - [charts] Enable tooltip disable portal (#17871) @alexfauquette
 - [charts] Improve performance in scatter chart (#17849) @bernardobelchior
-- [charts] Introduce `Pyramid` chart (#17783) @JCQuintas
 - [charts] Recreate `isPointInside` less often (#17850) @bernardobelchior
 - [charts] Try fix for flaky `useAnimate` test (#17777) @JCQuintas
 - [charts] Add `isXInside` and `isYInside` (#17911) @bernardobelchior
@@ -80,6 +77,9 @@ Same changes as in `@mui/x-date-pickers@8.4.0`.
 Same changes as in `@mui/x-charts@8.4.0`, plus:
 
 - [charts-pro] Add size for zoom slider (#17736) @bernardobelchior
+- [charts-pro] Add zoom slider tooltip (#17733) @bernardobelchior
+- [charts-pro] Clean and document Heatmap Tooltip (#17933) @alexfauquette
+- [charts-pro] Introduce `Pyramid` chart (#17783) @JCQuintas
 - [charts-pro] Update zoom slider nomenclature (#17938) @bernardobelchior
 - [charts-pro] Fix error when importing rasterizehtml (#17897) @bernardobelchior
 
@@ -97,9 +97,10 @@ Same changes as in `@mui/x-tree-view@8.4.0`.
 
 ### Docs
 
+- [docs] Add a recipe for drag and drop row grouping (#17638) @KenanYusuf
 - [docs] Add introductory text to Data Grid component pages (#17902) @KenanYusuf
-- [docs] Refactor embedded Codesandbox - DataGrid Quickstart page (#17749) @rita-codes
-- [docs] Remove double border on DataGrid- Quickstart (#17932) @rita-codes
+- [docs] Refactor embedded CodeSandbox on Data Grid—Quickstart page (#17749) @rita-codes
+- [docs] Remove double border on Data Grid—Quickstart demo (#17932) @rita-codes
 - [docs] Standardize `apiRef` copy (#17776) @mapache-salvaje
 - [docs][DataGrid] Revise server-side data docs (#17007) @mapache-salvaje
 - [docs][DataGrid] Audit and revise the tree data doc (#17650) @mapache-salvaje
