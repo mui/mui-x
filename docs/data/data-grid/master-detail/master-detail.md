@@ -6,7 +6,7 @@ title: Data Grid - Master detail
 
 <p class="description">Expand your rows to display additional information.</p>
 
-The master detail feature allows expanding a row to display additional information inside a panel.
+The master detail feature lets users expand a row to display additional information inside a panel.
 To use this feature, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
 Any valid React element can be used as the row detail, even another grid.
 
