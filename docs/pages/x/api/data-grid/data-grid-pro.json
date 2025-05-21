@@ -221,7 +221,10 @@
       },
       "default": "\"error\" (\"warn\" in dev mode)"
     },
-    "multiSortingWithoutModifier": { "type": { "name": "bool" }, "default": "false" },
+    "multiSortingMode": {
+      "type": { "name": "enum", "description": "'always'<br>&#124;&nbsp;'withModifierKey'" },
+      "default": "\"withModifierKey\""
+    },
     "nonce": { "type": { "name": "string" } },
     "onCellClick": {
       "type": { "name": "func" },

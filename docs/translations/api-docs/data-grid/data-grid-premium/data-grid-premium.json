@@ -276,8 +276,8 @@
       "description": "Pass a custom logger in the components that implements the Logger interface."
     },
     "logLevel": { "description": "Allows to pass the logging level or false to turn off logging." },
-    "multiSortingWithoutModifier": {
-      "description": "If <code>true</code>, the multi-sorting is applied on column header click without modifier key."
+    "multiSortingMode": {
+      "description": "If set to &quot;always&quot;, the multi-sorting is applied without modifier key. Otherwise, the modifier key is required for multi-sorting to be applied."
     },
     "nonce": {
       "description": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>."

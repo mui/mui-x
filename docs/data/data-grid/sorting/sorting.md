@@ -24,7 +24,7 @@ By default, users need to hold down the <kbd class="key">Ctrl</kbd> or <kbd clas
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-You can also enable multi-sorting without modifier keys by setting the `multiSortingWithoutModifier` prop to `true`.
+You can also enable multi-sorting without modifier keys by setting the `multiSortingMode` prop to `"always"`.
 This allows users to click on multiple column headers to add them as sort criteria without needing to hold down modifier keys.
 
 {{"demo": "MultiSortingWithoutModifier.js", "bg": "inline"}}

@@ -887,10 +887,12 @@ export interface DataGridProSharedPropsWithDefaultValue {
    */
   listView: boolean;
   /**
-   * If `true`, the multi-sorting is applied on column header click without modifier key.
-   * @default false
+   * If set to "always", the multi-sorting is applied without modifier key.
+   * Otherwise, the modifier key is required for multi-sorting to be applied.
+   * @see See https://mui.com/x/react-data-grid/sorting/#multi-sorting
+   * @default "withModifierKey"
    */
-  multiSortingWithoutModifier: boolean;
+  multiSortingMode: 'withModifierKey' | 'always';
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
