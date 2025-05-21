@@ -1,10 +1,20 @@
 ---
-title: Data Grid - Master detail
+title: Data Grid - Master-detail rows
 ---
 
-# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Data Grid - Master-detail row panels [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Expand your rows to display additional information.</p>
+<p class="description">Implement master-detail row panels to let users view extended information without leaving the Data Grid.</p>
+
+## What is the master-detail pattern?
+
+"Master-detail" is a design pattern for organizing information in which the "master" area lists the data and the "detail" sections provide further information about each item.
+A common example of this pattern is an email client—users can click on an email from the master list to see its contents (details) as well as actions they can take such as replying, forwarding, and deleting.
+
+The Data Grid Pro provides the tools to implement master-detail row panels.
+These are useful whenever you need to provide end users with additional information about row items without navigating away from the Grid.
+
+## Implementing master-detail row panels
 
 The master detail feature lets users expand a row to display additional information inside a panel.
 To use this feature, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
