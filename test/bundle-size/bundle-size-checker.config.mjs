@@ -7,7 +7,9 @@ import path from 'path';
 import glob from 'fast-glob';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
 
-const rootDir = path.resolve(import.meta.dirname, '..');
+const rootDir = path.resolve(import.meta.dirname, '../..');
+
+console.log(rootDir);
 
 async function findComponents(packageFolder, packageName) {
   const pkgBuildFolder = path.join(rootDir, `packages/${packageFolder}/build`);

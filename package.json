@@ -30,7 +30,7 @@
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "prettier:check": "prettier --check . --ignore-path .eslintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
-    "size:snapshot": "pnpm -F ./bundle-size check",
+    "size:snapshot": "pnpm -F ./test/bundle-size check",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
     "test": "pnpm test:unit:jsdom",
     "test:jsdom": "pnpm test:unit:jsdom",

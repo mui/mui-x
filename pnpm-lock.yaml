@@ -422,43 +422,6 @@ importers:
         specifier: ^17.7.2
         version: 17.7.2
 
-  bundle-size:
-    dependencies:
-      '@mui/x-charts':
-        specifier: workspace:*
-        version: link:../packages/x-charts/build
-      '@mui/x-charts-pro':
-        specifier: workspace:*
-        version: link:../packages/x-charts-pro/build
-      '@mui/x-data-grid':
-        specifier: workspace:*
-        version: link:../packages/x-data-grid/build
-      '@mui/x-data-grid-premium':
-        specifier: workspace:*
-        version: link:../packages/x-data-grid-premium/build
-      '@mui/x-data-grid-pro':
-        specifier: workspace:*
-        version: link:../packages/x-data-grid-pro/build
-      '@mui/x-date-pickers':
-        specifier: workspace:*
-        version: link:../packages/x-date-pickers/build
-      '@mui/x-date-pickers-pro':
-        specifier: workspace:*
-        version: link:../packages/x-date-pickers-pro/build
-      '@mui/x-tree-view':
-        specifier: workspace:*
-        version: link:../packages/x-tree-view/build
-      '@mui/x-tree-view-pro':
-        specifier: workspace:*
-        version: link:../packages/x-tree-view-pro/build
-    devDependencies:
-      fast-glob:
-        specifier: ^3.3.2
-        version: 3.3.3
-      path:
-        specifier: ^0.12.7
-        version: 0.12.7
-
   docs:
     dependencies:
       '@babel/core':
@@ -1811,6 +1774,43 @@ importers:
       stylis-plugin-rtl:
         specifier: ^2.1.1
         version: 2.1.1(stylis@4.3.6)
+
+  test/bundle-size:
+    dependencies:
+      '@mui/x-charts':
+        specifier: workspace:*
+        version: link:../../packages/x-charts/build
+      '@mui/x-charts-pro':
+        specifier: workspace:*
+        version: link:../../packages/x-charts-pro/build
+      '@mui/x-data-grid':
+        specifier: workspace:*
+        version: link:../../packages/x-data-grid/build
+      '@mui/x-data-grid-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-data-grid-premium/build
+      '@mui/x-data-grid-pro':
+        specifier: workspace:*
+        version: link:../../packages/x-data-grid-pro/build
+      '@mui/x-date-pickers':
+        specifier: workspace:*
+        version: link:../../packages/x-date-pickers/build
+      '@mui/x-date-pickers-pro':
+        specifier: workspace:*
+        version: link:../../packages/x-date-pickers-pro/build
+      '@mui/x-tree-view':
+        specifier: workspace:*
+        version: link:../../packages/x-tree-view/build
+      '@mui/x-tree-view-pro':
+        specifier: workspace:*
+        version: link:../../packages/x-tree-view-pro/build
+    devDependencies:
+      fast-glob:
+        specifier: ^3.3.2
+        version: 3.3.3
+      path:
+        specifier: ^0.12.7
+        version: 0.12.7
 
   test/e2e:
     devDependencies:
