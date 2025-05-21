@@ -96,10 +96,10 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           <FunnelPlot {...funnelPlotProps} />
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
           <ChartsAxis {...chartsAxisProps} />
           {children}
         </ChartsSurface>
+        {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );

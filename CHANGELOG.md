@@ -5,6 +5,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.4.0
+
+_May 21, 2025_
+
+We'd like to offer a big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔺 Support regular [`pyramid` variation in the `<FunnelChart />` component](https://mui.com/x/react-charts/funnel/#pyramid-chart):
+
+  <img width="398" alt="Pyramid funnel chart" src="https://github.com/user-attachments/assets/90ccb221-3a48-4ffa-8878-89c6db16da86" />
+
+- 📚 Documentation improvements
+- 🌎 Improve Icelandic (is-IS) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@aizerin, @arminmeh, @campmarc, @jyash97, @mapache-salvaje, @noraleonte, @nusr, @ragnarr18, @romgrk, @whereisrmsqhs.
+Following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @rita-codes.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.4.0`
+
+- [DataGrid] Fix content rendering for large rows while using automatic page size (#14737) @campmarc
+- [DataGrid] Fix disabled typography variants crashing grid (#17934) @KenanYusuf
+- [DataGrid] Fix tree data demo crash (#17904) @MBilalShafi
+- [DataGrid] Use `exclude` selection model type if quick filter does not have actual values (#17899) @arminmeh
+- [DataGrid] Fix clipboard copy behavior for cell ranges with empty cells (#16797) @nusr
+- [l10n] Improve Icelandic (is-IS) locale (#17915) @ragnarr18
+
+#### `@mui/x-data-grid-pro@8.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.4.0`, plus:
+
+- [DataGridPro] Add `aria-expanded` attribute to the master detail toggle button (#17122) @whereisrmsqhs
+- [DataGridPro] Preserve row state during server-side lazy loading (#17743) @arminmeh
+- [DataGridPro] Prevent text selection when reordering rows (#16568) @jyash97
+
+#### `@mui/x-data-grid-premium@8.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.4.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.4.0`
+
+- [fields] Ensure fresh `disabled` value is used when focusing or clicking (#17914) @aizerin
+- [fields] Improve the field controlled edition (#17816) @flaviendelangle
+- [pickers] Fix `PickersTextField` overflow (#17942) @noraleonte
+
+#### `@mui/x-date-pickers-pro@8.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.4.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.4.0`
+
+- [charts] Add grouped axes demo (#17848) @bernardobelchior
+- [charts] Enable tooltip disable portal (#17871) @alexfauquette
+- [charts] Improve performance in scatter chart (#17849) @bernardobelchior
+- [charts] Recreate `isPointInside` less often (#17850) @bernardobelchior
+- [charts] Try fix for flaky `useAnimate` test (#17777) @JCQuintas
+- [charts] Add `isXInside` and `isYInside` (#17911) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.4.0`, plus:
+
+- [charts-pro] Add size for zoom slider (#17736) @bernardobelchior
+- [charts-pro] Add zoom slider tooltip (#17733) @bernardobelchior
+- [charts-pro] Clean and document Heatmap Tooltip (#17933) @alexfauquette
+- [charts-pro] Introduce `Pyramid` chart (#17783) @JCQuintas
+- [charts-pro] Update zoom slider nomenclature (#17938) @bernardobelchior
+- [charts-pro] Fix error when importing rasterizehtml (#17897) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.4.0`
+
+- [TreeView] Add `getItemChildren` prop in `RichTreeView` (#17894) @rita-codes
+- [TreeView] Add a method in the `apiRef` to toggle the editing status of an item (#17768) @rita-codes
+- [TreeView] Add missing sx prop on the Tree Item component (#17930) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.4.0`.
+
+### Docs
+
+- [docs] Add a recipe for drag and drop row grouping (#17638) @KenanYusuf
+- [docs] Add introductory text to Data Grid component pages (#17902) @KenanYusuf
+- [docs] Refactor embedded CodeSandbox on Data Grid—Quickstart page (#17749) @rita-codes
+- [docs] Remove double border on Data Grid—Quickstart demo (#17932) @rita-codes
+- [docs] Standardize `apiRef` copy (#17776) @mapache-salvaje
+- [docs][DataGrid] Revise server-side data docs (#17007) @mapache-salvaje
+- [docs][DataGrid] Audit and revise the tree data doc (#17650) @mapache-salvaje
+- [docs][pickers] Fix migration guide references to range fields (#17861) @LukasTy
+- [docs][charts] Reorganize the Tooltip documentation (#17917) @alexfauquette
+
+### Core
+
+- [core] refactor: remove manual `displayName` (#17845) @romgrk
+- [code-infra] Document how to use `vitest` cli (#17847) @JCQuintas
+- [code-infra] Increase charts export test timeout (#17909) @JCQuintas
+- [code-infra] Set `isolatedModules=true` in tsconfig (#17781) @JCQuintas
+- [infra] Ensure proper docs preview path resolution (#17863) @LukasTy
+
 ## 8.3.1
 
 _May 14, 2025_

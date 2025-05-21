@@ -294,9 +294,9 @@ Here's how the Line Chart is composed:
         <MarkPlot />
       </g>
       <LineHighlightPlot />
-      <ChartsTooltip />
       <ChartsClipPath id={clipPathId} />
     </ChartsSurface>
+    <ChartsTooltip />
   </ChartsWrapper>
 </ChartDataProvider>
 ```
