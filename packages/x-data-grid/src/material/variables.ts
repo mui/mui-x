@@ -13,7 +13,7 @@ export function useMaterialCSSVariables() {
   }, [theme]);
 }
 
-function transformTheme(t: Theme): GridCSSVariablesInterface {
+function transformTheme(t: Theme): Partial<GridCSSVariablesInterface> {
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
 
