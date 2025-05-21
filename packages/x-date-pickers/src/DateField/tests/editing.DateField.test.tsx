@@ -469,6 +469,46 @@ describe('<DateField /> - Editing', () => {
       fireEvent.change(input, { target: { value: '1/DD/YYYY' } });
       expect(getCleanedSelectedContent()).to.equal('01');
     });
+
+    it('should be editable after reenabling field', async () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        disabled: true,
+      });
+
+      view.setProps({
+        enableAccessibleFieldDOMStructure: true,
+        disabled: false,
+      });
+
+      await act(async () => {
+        view.getSection(2).focus();
+      });
+
+      view.pressKey(undefined, '2');
+      expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/0002');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps({
+        enableAccessibleFieldDOMStructure: false,
+        disabled: true,
+      });
+
+      view.setProps({
+        enableAccessibleFieldDOMStructure: false,
+        disabled: false,
+      });
+
+      await view.selectSectionAsync('year');
+
+      await view.user.keyboard('3');
+      expectFieldValueV6(getTextbox(), 'MM/DD/0003');
+
+      view.unmount();
+    });
   });
 
   describeAdapters(
