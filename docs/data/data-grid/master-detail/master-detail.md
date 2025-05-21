@@ -12,7 +12,7 @@ title: Data Grid - Master-detail row panels
 A common example of this pattern is an email client—users can click on an email from the master list to see its contents (details) as well as actions they can take such as replying, forwarding, and deleting.
 
 The Data Grid Pro provides the tools to implement master-detail row panels.
-These are useful whenever you need to provide end users with additional information about row items without navigating away from the Grid.
+These are useful whenever you need to give end users additional information about row items without navigating away from the Grid.
 
 ## Implementing master-detail row panels
 
