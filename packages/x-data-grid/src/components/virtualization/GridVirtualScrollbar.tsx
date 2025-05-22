@@ -100,7 +100,9 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     const scrollbarInnerSize =
       props.position === 'horizontal'
         ? dimensions.minimumSize[propertyDimension]
-        : dimensions.contentSize[propertyDimension];
+        : dimensions.minimumSize[propertyDimension] -
+          dimensions.headersTotalHeight -
+          (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
 
     const onScrollerScroll = useEventCallback(() => {
       const scrollbar = scrollbarRef.current;
@@ -122,13 +124,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      if (props.position === 'vertical') {
-        const scroller = apiRef.current.virtualScrollerRef.current!;
-        const scrollRatio = scrollPosition.top / (scroller.scrollHeight - scroller.clientHeight);
-        scrollbar.scrollTop = scrollRatio * (scrollbar.scrollHeight - scrollbar.clientHeight);
-      } else {
-        scrollbar[propertyScroll] = scrollPosition[propertyScrollPosition];
-      }
+      scrollbar[propertyScroll] = scrollPosition[propertyScrollPosition];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
@@ -145,12 +141,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      if (props.position === 'vertical') {
-        const scrollRatio = scrollbar.scrollTop / (scrollbar.scrollHeight - scrollbar.clientHeight);
-        scroller.scrollTop = scrollRatio * (scroller.scrollHeight - scroller.clientHeight);
-      } else {
-        scroller[propertyScroll] = scrollbar[propertyScroll];
-      }
+      scroller[propertyScroll] = scrollbar[propertyScroll];
     });
 
     useOnMount(() => {
