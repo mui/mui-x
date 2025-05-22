@@ -15,7 +15,8 @@ export default function HeatmapLegend() {
         slotProps={{
           legend: {
             direction: 'vertical',
-            sx: { alignSelf: 'stretch', maxHeight: 200 },
+            position: { vertical: 'middle' },
+            sx: { height: 200 },
           },
         }}
       />
