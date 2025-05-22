@@ -64,11 +64,11 @@
   font-size: 12px;
   background-color: var(--event-bg-color);
 
-  &[data-agenda='work'] {
+  &[data-resource='work'] {
     --event-bg-color: var(--event-work-bg-color);
   }
 
-  &[data-agenda='personal'] {
+  &[data-resource='personal'] {
     --event-bg-color: var(--event-personal-bg-color);
   }
 

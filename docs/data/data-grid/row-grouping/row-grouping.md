@@ -428,12 +428,12 @@ See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more ad
 
 ## apiRef
 
-The Data Grid exposes a set of methods via the `apiRef` object that are used in the implementation of the row grouping feature.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the row grouping feature.
 The reference below describes the relevant functions.
 See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-This API should only be used as a last resort—give preference to props for controlling the Data Grid.
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

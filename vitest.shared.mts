@@ -1,11 +1,30 @@
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
 export default defineConfig({
+  plugins: [
+    react({
+      babel: {
+        plugins: [
+          [
+            '@mui/internal-babel-plugin-display-name',
+            {
+              allowedCallees: {
+                '@mui/x-internals/forwardRef': ['forwardRef'],
+              },
+            },
+          ],
+        ],
+        babelrc: false,
+        configFile: false,
+      },
+    }),
+  ],
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',

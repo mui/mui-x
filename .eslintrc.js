@@ -338,5 +338,13 @@ module.exports = {
     ...addReactCompilerRule(PICKERS_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS),
     ...addReactCompilerRule(TREE_VIEW_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW),
     ...addReactCompilerRule(SCHEDULER_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_SCHEDULER),
+
+    // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
+    {
+      files: ['packages/x-scheduler/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
+      rules: {
+        'react-compiler/react-compiler': 'off',
+      },
+    },
   ],
 };

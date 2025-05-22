@@ -93,6 +93,14 @@ module.exports = function getBabelConfig(api) {
       },
     ],
     [
+      '@mui/internal-babel-plugin-display-name',
+      {
+        allowedCallees: {
+          '@mui/x-internals/forwardRef': ['forwardRef'],
+        },
+      },
+    ],
+    [
       'transform-inline-environment-variables',
       {
         include: [

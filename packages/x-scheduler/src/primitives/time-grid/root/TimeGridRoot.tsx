@@ -19,13 +19,11 @@ const TimeGridRoot = React.forwardRef(function CalendarRoot(
 
   const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
 
-  const renderElement = useRenderElement('div', componentProps, {
+  return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
-
-  return renderElement();
 });
 
 export namespace TimeGridRoot {

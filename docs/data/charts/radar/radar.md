@@ -4,13 +4,9 @@ productId: x-charts
 components: RadarChart, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarDataProvider
 ---
 
-# Charts - Radar 🧪
+# Charts - Radar
 
 <p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
 
 ## Basics
 
@@ -137,8 +133,8 @@ Here's how the Radar Chart is composed:
       <RadarSeriesMarks />
       {/* Other components */}
       <ChartsOverlay />
-      <ChartsTooltip />
     </ChartsSurface>
+    <ChartsTooltip />
   </ChartsWrapper>
 </RadarDataProvider>
 ```

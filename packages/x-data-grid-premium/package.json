@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "8.3.1",
+  "version": "8.4.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Data Grid Components.",
   "main": "src/index.ts",
@@ -73,7 +73,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/internal-test-utils": "^2.0.8",
     "@mui/material": "^7.0.2",
     "@mui/system": "^7.0.2",
     "@types/prop-types": "^15.7.14",
