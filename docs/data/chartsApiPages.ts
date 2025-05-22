@@ -238,6 +238,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarChart',
   },
   {
+    pathname: '/x/api/charts/radar-chart-pro',
+    title: 'RadarChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/radar-data-provider',
     title: 'RadarDataProvider',
   },
