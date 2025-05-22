@@ -20,7 +20,7 @@ type PluginsPerSeriesType = {
  * @example ChartProApi<'bar'>
  */
 export type ChartProApi<
-  TSeries extends keyof PluginsPerSeriesType = keyof PluginsPerSeriesType,
+  TSeries extends keyof PluginsPerSeriesType | undefined = undefined,
   TSignatures extends
     readonly ChartAnyPluginSignature[] = TSeries extends keyof PluginsPerSeriesType
     ? PluginsPerSeriesType[TSeries]
