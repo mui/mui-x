@@ -44,7 +44,10 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
         // @ts-ignore
         .filter((key) => (theme.vars ?? theme).palette[key].main)
         .map((color) => ({
-          props: { inputColor: color },
+          props: {
+            inputColor: color as PickerTextFieldOwnerState['inputColor'],
+            inputHasUnderline: true,
+          },
           style: {
             '&::after': {
               // @ts-ignore
@@ -53,7 +56,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
           },
         })),
       {
-        props: { disableUnderline: false },
+        props: { inputHasUnderline: true },
         style: {
           '&::after': {
             background: 'red',
@@ -161,6 +164,7 @@ const PickersInput = React.forwardRef(function PickersInput(
       slots={{ root: PickersInputRoot }}
       slotProps={{ root: { disableUnderline } }}
       {...other}
+      ownerState={ownerState}
       label={label}
       classes={classes}
       ref={ref as any}
