@@ -31,7 +31,7 @@ Following are all team members who have contributed to this release:
 
 Same changes as in `@mui/x-data-grid@7.29.4`, plus:
 
-- [DataGridPro] Add `aria-expanded` attribute to the Master detail toggle button (#17890) @whereisrmsqhs
+- [DataGridPro] Add `aria-expanded` attribute to the master detail toggle button (#17890) @whereisrmsqhs
 - [DataGridPro] Prevent text selection when reordering rows (#17920) @jyash97
 
 #### `@mui/x-data-grid-premium@7.29.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
