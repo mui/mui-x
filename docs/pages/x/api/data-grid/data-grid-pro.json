@@ -1016,7 +1016,7 @@
       "name": "rowReorderIcon",
       "description": "Icon displayed on the `reorder` column type to reorder a row.",
       "default": "GridDragIcon",
-      "class": null
+      "class": "MuiDataGridPro-rowReorderIcon"
     },
     {
       "name": "quickFilterIcon",

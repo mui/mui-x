@@ -625,6 +625,10 @@ export interface GridClasses {
    */
   'rowReorderCell--draggable': string;
   /**
+   * Styles applied to the row reorder icon element.
+   */
+  rowReorderIcon: string;
+  /**
    * Styles applied to the skeleton row element.
    */
   rowSkeleton: string;
@@ -1066,6 +1070,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'rowReorderCellContainer',
   'rowReorderCell',
   'rowReorderCell--draggable',
+  'rowReorderIcon',
   'rowSkeleton',
   'scrollArea--left',
   'scrollArea--right',

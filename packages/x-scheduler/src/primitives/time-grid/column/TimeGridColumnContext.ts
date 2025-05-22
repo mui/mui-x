@@ -16,10 +16,6 @@ export const TimeGridColumnContext = React.createContext<TimeGridColumnContext |
   undefined,
 );
 
-if (process.env.NODE_ENV !== 'production') {
-  TimeGridColumnContext.displayName = 'TimeGridColumnContext';
-}
-
 export function useTimeGridColumnContext() {
   const context = React.useContext(TimeGridColumnContext);
   if (context === undefined) {
