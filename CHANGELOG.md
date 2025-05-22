@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.4
+
+_May 22, 2025_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@campmarc, @whereisrmsqhs, @jyash97
+
+Following are all team members who have contributed to this release:
+@mapache-salvaje, @cherniavskii, @noraleonte.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.4`
+
+- [DataGrid] Fix `renderContext` calculation loop (#17806) @cherniavskii
+- [DataGrid] Fix column spanning jump on scroll (#17780) @cherniavskii
+- [DataGrid] Fix content rendering for large rows while using automatic page size (#17866) @campmarc
+
+#### `@mui/x-data-grid-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.4`, plus:
+
+- [DataGridPro] Add `aria-expanded` attribute to the Master detail toggle button (#17890) @whereisrmsqhs
+- [DataGridPro] Prevent text selection when reordering rows (#17920) @jyash97
+
+#### `@mui/x-data-grid-premium@7.29.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.4`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.4`
+
+- [pickers] Fix `PickersTextField` overflow (#17945) @noraleonte
+
+#### `@mui/x-date-pickers-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.4`.
+
+### Docs
+
+- [docs] Add "upgrade to v8" callout on v7 planned pages (#17901) @mapache-salvaje
+
 ## 7.29.3
 
 _May 8, 2025_
