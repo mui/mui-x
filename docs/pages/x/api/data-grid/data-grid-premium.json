@@ -261,6 +261,10 @@
       },
       "default": "\"error\" (\"warn\" in dev mode)"
     },
+    "multipleColumnsSortingMode": {
+      "type": { "name": "enum", "description": "'always'<br>&#124;&nbsp;'withModifierKey'" },
+      "default": "\"withModifierKey\""
+    },
     "nonce": { "type": { "name": "string" } },
     "onAggregationModelChange": {
       "type": { "name": "func" },

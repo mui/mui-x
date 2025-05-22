@@ -681,6 +681,13 @@ DataGridPremiumRaw.propTypes = {
    */
   logLevel: PropTypes.oneOf(['debug', 'error', 'info', 'warn', false]),
   /**
+   * If set to "always", the multi-sorting is applied without modifier key.
+   * Otherwise, the modifier key is required for multi-sorting to be applied.
+   * @see See https://mui.com/x/react-data-grid/sorting/#multi-sorting
+   * @default "withModifierKey"
+   */
+  multipleColumnsSortingMode: PropTypes.oneOf(['always', 'withModifierKey']),
+  /**
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,

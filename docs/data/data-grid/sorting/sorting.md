@@ -20,9 +20,14 @@ To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensin
 
 The following demo lets you sort the rows according to several criteria at the same time.
 
-Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
+By default, users need to hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+You can also enable multi-sorting without modifier keys by setting the `multipleColumnsSortingMode` prop to `"always"`.
+This allows users to click on multiple column headers to add them as sort criteria without needing to hold down modifier keys.
+
+{{"demo": "MultiSortingWithoutModifier.js", "bg": "inline"}}
 
 ## Pass sorting rules to the Data Grid
 

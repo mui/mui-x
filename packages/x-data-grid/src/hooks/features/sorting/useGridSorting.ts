@@ -63,6 +63,7 @@ export const useGridSorting = (
     | 'sortingMode'
     | 'disableColumnSorting'
     | 'disableMultipleColumnsSorting'
+    | 'multipleColumnsSortingMode'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
@@ -308,10 +309,14 @@ export const useGridSorting = (
       if (!colDef.sortable || props.disableColumnSorting) {
         return;
       }
-      const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
+      const allowMultipleSorting =
+        props.multipleColumnsSortingMode === 'always' ||
+        event.shiftKey ||
+        event.metaKey ||
+        event.ctrlKey;
       sortColumn(field, undefined, allowMultipleSorting);
     },
-    [sortColumn, props.disableColumnSorting],
+    [sortColumn, props.disableColumnSorting, props.multipleColumnsSortingMode],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
@@ -321,10 +326,14 @@ export const useGridSorting = (
       }
       // Ctrl + Enter opens the column menu
       if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey) {
-        sortColumn(field, undefined, event.shiftKey);
+        sortColumn(
+          field,
+          undefined,
+          props.multipleColumnsSortingMode === 'always' || event.shiftKey,
+        );
       }
     },
-    [sortColumn, props.disableColumnSorting],
+    [sortColumn, props.disableColumnSorting, props.multipleColumnsSortingMode],
   );
 
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {

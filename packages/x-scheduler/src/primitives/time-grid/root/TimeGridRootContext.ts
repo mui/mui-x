@@ -4,10 +4,6 @@ export interface TimeGridRootContext {}
 
 export const TimeGridRootContext = React.createContext<TimeGridRootContext | undefined>(undefined);
 
-if (process.env.NODE_ENV !== 'production') {
-  TimeGridRootContext.displayName = 'TimeGridRootContext';
-}
-
 export function useTimeGridRootContext() {
   const context = React.useContext(TimeGridRootContext);
   if (context === undefined) {
