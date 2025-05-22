@@ -30,6 +30,7 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
+import { gridDetailPanelExpandedRowIdsSelector } from '../detailPanel/gridDetailPanelSelector';
 
 enum LoadingTrigger {
   VIEWPORT,
@@ -70,6 +71,7 @@ export const useGridDataSourceLazyLoader = (
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
   const draggedRowId = React.useRef<GridRowId | null>(null);
+  const closedDetailPanels = React.useRef<Set<GridRowId>>(new Set());
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -162,6 +164,7 @@ export const useGridDataSourceLazyLoader = (
       return;
     }
 
+    const expandedDetailPanels = gridDetailPanelExpandedRowIdsSelector(privateApiRef);
     const pageToSkip = adjustRowParams({
       start: renderedRowsIntervalCache.current.firstRowToRender,
       end: renderedRowsIntervalCache.current.lastRowToRender,
@@ -192,6 +195,12 @@ export const useGridDataSourceLazyLoader = (
         parent: GRID_ROOT_GROUP_ID,
         depth: 0,
       };
+
+      // close the detail panel so that it is not visible while the row is being fetched again
+      if (expandedDetailPanels.has(rowId)) {
+        expandedDetailPanels.delete(rowId);
+        closedDetailPanels.current.add(rowId);
+      }
 
       tree[rowId] = skeletonRowNode;
       hasChanged = true;
@@ -257,6 +266,7 @@ export const useGridDataSourceLazyLoader = (
       }
 
       const { response, fetchParams } = params;
+      const expandedDetailPanels = gridDetailPanelExpandedRowIdsSelector(privateApiRef);
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
       const tree = privateApiRef.current.state.rows.tree;
       const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
@@ -298,6 +308,12 @@ export const useGridDataSourceLazyLoader = (
             delete tree[rowId];
             delete dataRowIdToModelLookup[rowId];
             duplicateRowCount += 1;
+          }
+
+          // re-open the detail panel if it was closed by this hook
+          if (closedDetailPanels.current.has(rowId)) {
+            expandedDetailPanels.add(rowId);
+            closedDetailPanels.current.delete(rowId);
           }
         });
 
