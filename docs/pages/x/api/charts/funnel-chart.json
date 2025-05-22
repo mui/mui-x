@@ -36,12 +36,6 @@
       }
     },
     "id": { "type": { "name": "string" } },
-    "initialZoom": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
@@ -78,13 +72,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "width": { "type": { "name": "number" } },
-    "zoomData": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    }
+    "width": { "type": { "name": "number" } }
   },
   "name": "FunnelChart",
   "imports": [

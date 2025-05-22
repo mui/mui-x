@@ -10,6 +10,7 @@ import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
+import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -57,13 +58,14 @@ export default function PrintChart() {
             <MenuItem value="line">Line</MenuItem>
             <MenuItem value="bar">Bar</MenuItem>
             <MenuItem value="heatmap">Heatmap</MenuItem>
+            <MenuItem value="funnel">Funnel</MenuItem>
           </Select>
         </FormControl>
         <Button onClick={() => apiRef.current.exportAsPrint()} variant="contained">
           Print
         </Button>
       </Stack>
-      <Chart apiRef={apiRef} type={chartType} />
+      <Chart key={chartType} apiRef={apiRef} type={chartType} />
     </Stack>
   );
 }
@@ -104,6 +106,18 @@ function Chart({ apiRef, type }) {
           series={[{ data: heatmapData }]}
           height={300}
           hideLegend={false}
+        />
+      );
+
+    case 'funnel':
+      return (
+        <FunnelChart
+          apiRef={apiRef}
+          width={400}
+          height={300}
+          series={[
+            { data: [{ value: 200 }, { value: 180 }, { value: 90 }, { value: 50 }] },
+          ]}
         />
       );
 

@@ -4,12 +4,14 @@ import { LineChartProPluginsSignatures } from '../LineChartPro/LineChartPro.plug
 import { ScatterChartProPluginsSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
 import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins';
 import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
+import { FunnelChartPluginsSignatures } from '../FunnelChart/FunnelChart.plugins';
 
 type PluginsPerSeriesType = {
   heatmap: HeatmapPluginsSignatures;
   line: LineChartProPluginsSignatures;
   scatter: ScatterChartProPluginsSignatures;
   bar: BarChartProPluginsSignatures;
+  funnel: FunnelChartPluginsSignatures;
   /* Special value when creating a chart using composition. */
   composition: DefaultPluginSignatures;
 };

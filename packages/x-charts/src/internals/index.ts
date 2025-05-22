@@ -1,7 +1,6 @@
 // Components
 export * from './components/ChartsAxesGradients';
 export * from './components/ChartsWrapper';
-export * from './components/ChartsRootSurface';
 export * from '../ChartsLabel/ChartsLabelMark';
 
 // hooks
@@ -32,6 +31,7 @@ export * from './store/useStore';
 export * from './store/useSelector';
 
 // plugins configs
+
 export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';
