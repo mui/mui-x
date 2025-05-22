@@ -7,7 +7,6 @@ import type {
   CartesianRangeGetterResult,
 } from '../../models/seriesConfig/cartesianRangeGetter.types';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { isCartesianSeriesType } from '../../../isCartesian';
 
 const defaultGetRangeX: CartesianRangeGetter<any> = ({ drawingArea, axis }) => {
   const range: [number, number] = [drawingArea.left, drawingArea.left + drawingArea.width];
@@ -52,7 +51,7 @@ export const getAxisRange = <T extends CartesianChartSeriesType>(
   seriesConfig: ChartSeriesConfig<T>,
   formattedSeries: ProcessedSeries<T>,
 ) => {
-  const charTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType);
+  const charTypes = Object.keys(seriesConfig);
 
   const ranges = charTypes.reduce<CartesianRangeGetterResult>(
     (acc, charType) =>
