@@ -9,10 +9,13 @@ title: Data Grid - Master-detail row panels
 ## What is the master-detail pattern?
 
 "Master-detail" is a design pattern for organizing information in which the "master" area lists the data and the "detail" sections provide further information about each item.
-A common example of this pattern is found in most email clients—users can click on an email from the master list to see its contents (details) as well as actions they can take such as replying, forwarding, and deleting.
 
 The Data Grid Pro provides the tools to implement master-detail row panels.
 These are useful whenever you need to give end users additional information about row items without navigating away from the Grid.
+
+A common example of this pattern is found in most email clients—users can click on an email from the master list to see its contents (details) as well as actions they can take such as replying, forwarding, and deleting.
+
+{{"demo": "MasterDetailEmailExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Implementing master-detail row panels
 
