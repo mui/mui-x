@@ -75,8 +75,8 @@ The demo below shows a toast apart from the default error message in the groupin
 
 ## Group expansion
 
-The idea behind the group expansion is the same as explained in the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion) section.
-The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault` in a waterfall manner.
+Group expansion of server-side tree data works similarly to how it's described in [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
+The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` in a waterfall manner.
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all levels of the tree by default.
 
