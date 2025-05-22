@@ -758,17 +758,14 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: vars.spacing(2),
     },
-
-    /* ScrollbarFiller styles */
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
-      backgroundColor: 'var(--DataGrid-headerBackground)',
+      backgroundColor: headerBackground,
       position: 'sticky',
       right: 0,
-      zIndex: 3,
+      zIndex: 30,
     },
-
     [`& .${c.filler}`]: {
       flex: '1 0 auto',
     },
