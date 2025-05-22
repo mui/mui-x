@@ -96,8 +96,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.8",
-    "@mui/material": "^7.1.0",
-    "@mui/system": "^7.1.0",
+    "@mui/material": "https://pkg.pr.new/mui/material-ui/@mui/material@1301df1",
+    "@mui/system": "https://pkg.pr.new/mui/material-ui/@mui/system@1301df1",
     "@types/luxon": "^3.6.2",
     "@types/prop-types": "^15.7.14",
     "date-fns": "^4.1.0",
