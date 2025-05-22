@@ -4,10 +4,13 @@ import { gridClasses } from '../constants';
 
 const classes = {
   root: gridClasses.scrollbarFiller,
+  pinnedRight: gridClasses['scrollbarFiller--pinnedRight'],
 };
 
-function GridScrollbarFillerCell() {
-  return <div role="presentation" className={clsx(classes.root)} />;
+function GridScrollbarFillerCell({ pinnedRight }: { pinnedRight?: boolean }) {
+  return (
+    <div role="presentation" className={clsx(classes.root, pinnedRight && classes.pinnedRight)} />
+  );
 }
 
 export { GridScrollbarFillerCell };

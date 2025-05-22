@@ -143,6 +143,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['scrollbar--horizontal']}`]: styles['scrollbar--horizontal'] },
     { [`& .${c['scrollbar--vertical']}`]: styles['scrollbar--vertical'] },
     { [`& .${c.scrollbarFiller}`]: styles.scrollbarFiller },
+    { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
     { [`& .${c.sortIcon}`]: styles.sortIcon },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     {
@@ -762,9 +763,11 @@ export const GridRootStyles = styled('div', {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
       backgroundColor: headerBackground,
-      position: 'sticky',
-      right: 0,
-      zIndex: 30,
+      [`&.${c['scrollbarFiller--pinnedRight']}`]: {
+        position: 'sticky',
+        right: 0,
+        zIndex: 30,
+      },
     },
     [`& .${c.filler}`]: {
       flex: '1 0 auto',

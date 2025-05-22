@@ -658,6 +658,11 @@ export interface GridClasses {
    */
   scrollbarFiller: string;
   /**
+   * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell.
+   */
+  'scrollbarFiller--pinnedRight': string;
+  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
@@ -1054,6 +1059,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar--vertical',
   'scrollbar--horizontal',
   'scrollbarFiller',
+  'scrollbarFiller--pinnedRight',
   'selectedRowCount',
   'sortButton',
   'sortIcon',

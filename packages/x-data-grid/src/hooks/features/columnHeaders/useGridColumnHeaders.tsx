@@ -200,7 +200,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             )}
           />
         )}
-        {hasScrollbarFiller && <ScrollbarFiller />}
+        {hasScrollbarFiller && <ScrollbarFiller pinnedRight={isPinnedRight} />}
       </React.Fragment>
     );
   };
