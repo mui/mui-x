@@ -93,7 +93,7 @@ GridActionsCellItem.propTypes = {
     PropTypes.string,
     PropTypes.bool,
   ]),
-  label: PropTypes.string.isRequired,
+  label: PropTypes.node,
   showInMenu: PropTypes.bool,
   style: PropTypes.object,
 } as any;
