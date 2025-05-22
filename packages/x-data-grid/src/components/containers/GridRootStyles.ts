@@ -776,8 +776,10 @@ export const GridRootStyles = styled('div', {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
 
-    /* Hide grid rows, row filler, and vertical scrollbar. Used when skeleton/no columns overlay is visible */
+    /* Used when skeleton/no columns overlay is visible */
     [`& .${c['main--hiddenContent']}`]: {
+      // Position vertical scrollbar and fillers out of grid viewport
+      marginRight: 'calc(var(--DataGrid-scrollbarSize) * -1)',
       [`& .${c.virtualScrollerContent}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
         // Position fixed is used to remove the virtual scroller content from the flow.
@@ -785,10 +787,10 @@ export const GridRootStyles = styled('div', {
         position: 'fixed',
         visibility: 'hidden',
       },
-      [`& .${c['scrollbar--vertical']}, & .${c.pinnedRows}, & .${c.virtualScroller} > .${c.filler}`]:
-        {
-          display: 'none',
-        },
+      // Hide grid content
+      [`& .${c.pinnedRows}`]: {
+        display: 'none',
+      },
     },
   };
 
