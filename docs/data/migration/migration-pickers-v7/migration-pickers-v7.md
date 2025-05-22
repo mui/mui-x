@@ -440,10 +440,10 @@ You can manually pass the multi input fields to your picker if you prefer them:
 
 ```diff
  import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-+import { MultiInputDateRangePicker } from '@mui/x-date-pickers-pro/MultiInputDateRangePicker';
++import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
  <DateRangePicker
-+  slots={{ field: MultiInputDateRangePicker }}
++  slots={{ field: MultiInputDateRangeField }}
  />
 ```
 
@@ -451,10 +451,10 @@ If you were already using a single input field, you no longer need to manually p
 
 ```diff
  import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
--import { SingleInputDateRangePicker } from '@mui/x-date-pickers-pro/SingleInputDateRangePicker';
+-import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
  <DateRangePicker
--  slots={{ field: SingleInputDateRangePicker }}
+-  slots={{ field: SingleInputDateRangeField }}
  />
 ```
 

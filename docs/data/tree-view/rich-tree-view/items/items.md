@@ -97,6 +97,45 @@ It could be achieved by either defining the prop outside the component scope or 
 Unlike the Simple Tree View component, the Rich Tree View component only supports string labels, you cannot pass React nodes to it.
 :::
 
+## Item children
+
+Each item can contain children, which are rendered as nested nodes in the tree.
+
+By default, the Rich Tree View component looks for a property named `children` in the data set to get the children:
+
+```tsx
+const ITEMS = [
+  { children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }] },
+];
+
+<RichTreeView items={ITEMS} />;
+```
+
+If the item's children are not called `children`, then you need to use the `getItemChildren` prop to tell the Rich Tree View component where they're located:
+
+The following demo shows how to use `getItemChildren` to grab the children from a property named `nodes`:
+
+```tsx
+const ITEMS = [
+  { nodes: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }] },
+];
+
+function getItemChildren(item) {
+  return item.nodes;
+}
+
+<RichTreeView items={ITEMS} getItemChildren={getItemChildren} />;
+```
+
+{{"demo": "GetItemChildren.js", "defaultCodeOpen": false}}
+
+:::warning
+Just like the `items` prop, the `getItemChildren` function should keep the same JavaScript reference between two renders.
+Otherwise, the Tree View will re-generate its entire structure.
+
+It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
+:::
+
 ## Disabled items
 
 Use the `isItemDisabled` prop on the Rich Tree View to disable interaction and focus on a Tree Item:

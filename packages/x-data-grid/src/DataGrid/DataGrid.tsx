@@ -27,7 +27,7 @@ const configuration: GridConfiguration = {
   },
 };
 
-const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
+const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -52,7 +52,7 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
       />
     </GridContextProvider>
   );
-});
+};
 
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
@@ -68,7 +68,7 @@ interface DataGridComponent {
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
  */
-export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
+export const DataGrid = React.memo(forwardRef(DataGridRaw)) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -517,7 +517,7 @@ const pages: MuiPage[] = [
             title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
-          { pathname: '/x/react-charts/radar', unstable: true },
+          { pathname: '/x/react-charts/radar' },
           {
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',

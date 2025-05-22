@@ -27,10 +27,9 @@ describeTreeView<
         ).toErrorDev([
           'Encountered two children with the same key, `1`',
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          reactMajor < 19 &&
-            'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem)> component`,
-          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem)> component`,
+          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item',
+          reactMajor < 19 && `The above error occurred in the <TreeItem> component`,
+          reactMajor < 19 && `The above error occurred in the <TreeItem> component`,
         ]);
       } else {
         expect(() =>
@@ -39,8 +38,7 @@ describeTreeView<
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
           reactMajor < 19 &&
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          reactMajor < 19 &&
-            `The above error occurred in the <ForwardRef(${treeViewComponentName})> component`,
+          reactMajor < 19 && `The above error occurred in the <${treeViewComponentName}> component`,
         ]);
       }
     });
@@ -160,6 +158,40 @@ describeTreeView<
           expect(view.isItemExpanded('1')).to.equal(false);
         },
       );
+
+      testSkipIf(!isRichTreeView)('should use getItemLabel to render the label', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2' }],
+          getItemLabel: (item) => `Label: ${item.id}`,
+        });
+
+        expect(view.getItemContent('1')).to.have.text('Label: 1');
+        expect(view.getItemContent('2')).to.have.text('Label: 2');
+      });
+
+      testSkipIf(!isRichTreeView)('should use getItemChildren to find children', () => {
+        const items = [
+          {
+            id: '1',
+            label: 'Node 1',
+            section: [
+              { id: '1.1', label: 'Child 1' },
+              { id: '1.2', label: 'Child 2' },
+            ],
+          },
+          { id: '2', label: 'Node 2' },
+        ];
+
+        const view = render({
+          items,
+          getItemChildren: (item) => item.section,
+          defaultExpandedItems: ['1'],
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1.1', '1.2', '2']);
+        expect(view.getItemContent('1.1')).to.have.text('Child 1');
+        expect(view.getItemContent('1.2')).to.have.text('Child 2');
+      });
     });
 
     describe('disabled prop', () => {

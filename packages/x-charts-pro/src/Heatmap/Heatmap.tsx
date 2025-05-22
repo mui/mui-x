@@ -7,12 +7,15 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   ChartsAxisSlots,
   ChartsAxisSlotProps,
   ChartSeriesConfig,
   XAxis,
   YAxis,
+  ChartsWrapper,
+  ChartsWrapperProps,
 } from '@mui/x-charts/internals';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
@@ -22,25 +25,38 @@ import {
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
-import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import {
+  ChartsLegend,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
+  ContinuousColorLegend,
+} from '@mui/x-charts/ChartsLegend';
+import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
-import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip/HeatmapTooltip';
+import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
+import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
 export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
   /**
-   * Custom component for the tooltip popper.
+   * Custom component for the tooltip.
    * @default ChartsTooltipRoot
    */
   tooltip?: React.ElementType<HeatmapTooltipProps>;
+  /**
+   * Custom component for the legend.
+   * @default ContinuousColorLegendProps
+   */
+  legend?: ChartsLegendSlots['legend'];
 }
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
-    HeatmapItemSlotProps {
+    HeatmapItemSlotProps,
+    ChartsLegendSlotProps {
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
@@ -73,6 +89,11 @@ export interface HeatmapProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
   tooltip?: ChartsTooltipProps;
+  /**
+   * If `true`, the legend is not rendered.
+   * @default true
+   */
+  hideLegend?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -136,6 +157,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     loading,
     highlightedItem,
     onHighlightChange,
+    hideLegend = true,
   } = props;
 
   const id = useId();
@@ -178,11 +200,15 @@ const Heatmap = React.forwardRef(function Heatmap(
     [zAxis],
   );
 
-  const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
+  };
+  const Tooltip = slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro<'heatmap', HeatmapPluginsSignatures>
-      ref={ref}
+    <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>
       seriesConfig={seriesConfig}
       series={series.map((s) => ({
         type: 'heatmap',
@@ -196,23 +222,32 @@ const Heatmap = React.forwardRef(function Heatmap(
       zAxis={zAxisWithDefault}
       colors={colors}
       dataset={dataset}
-      sx={sx}
       disableAxisListener
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       onAxisClick={onAxisClick}
       plugins={HEATMAP_PLUGINS}
     >
-      <g clipPath={`url(#${clipPathId})`}>
-        <HeatmapPlot slots={slots} slotProps={slotProps} />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      </g>
-      <ChartsAxis slots={slots} slotProps={slotProps} />
-      {!loading && <Tooltip {...slotProps?.tooltip} />}
-
-      <ChartsClipPath id={clipPathId} />
-      {children}
-    </ChartContainerPro>
+      <ChartsWrapper {...chartsWrapperProps}>
+        {!hideLegend && (
+          <ChartsLegend
+            slots={{ ...slots, legend: slots?.legend ?? ContinuousColorLegend }}
+            slotProps={{ legend: { labelPosition: 'extremes', ...slotProps?.legend } }}
+            sx={slotProps?.legend?.direction === 'vertical' ? { height: 150 } : { width: '50%' }}
+          />
+        )}
+        <ChartsSurface ref={ref} sx={sx}>
+          <g clipPath={`url(#${clipPathId})`}>
+            <HeatmapPlot slots={slots} slotProps={slotProps} />
+            <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+          </g>
+          <ChartsAxis slots={slots} slotProps={slotProps} />
+          <ChartsClipPath id={clipPathId} />
+          {children}
+        </ChartsSurface>
+        {!loading && <Tooltip {...slotProps?.tooltip} />}
+      </ChartsWrapper>
+    </ChartDataProviderPro>
   );
 });
 
@@ -245,6 +280,11 @@ Heatmap.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * If `true`, the legend is not rendered.
+   * @default true
+   */
+  hideLegend: PropTypes.bool,
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
