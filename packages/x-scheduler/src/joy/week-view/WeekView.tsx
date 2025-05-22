@@ -1,9 +1,7 @@
 'use client';
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { TimeGridRoot } from '../../primitives/time-grid/root/TimeGridRoot';
-import { TimeGridColumn } from '../../primitives/time-grid/column/TimeGridColumn';
-import { TimeGridEvent } from '../../primitives/time-grid/event/TimeGridEvent';
+import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import './WeekView.css';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
@@ -23,7 +21,7 @@ export const WeekView = React.forwardRef(function WeekView(
 
   return (
     <div ref={forwardedRef} className="WeekViewContainer">
-      <TimeGridRoot className="WeekViewRoot">
+      <TimeGrid.Root className="WeekViewRoot">
         <div className="WeekViewHeader">
           <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
             <div className="WeekViewAllDayEventsCell" />
@@ -33,13 +31,18 @@ export const WeekView = React.forwardRef(function WeekView(
                 className="WeekViewHeaderCell"
                 id={`WeekViewHeaderCell-${day.day.toString()}`}
                 role="columnheader"
+                aria-label={`${adapter.formatByString(day, 'cccc')} ${adapter.format(day, 'dayOfMonth')}`}
               >
-                {adapter.formatByString(day, 'ccc')} {adapter.format(day, 'dayOfMonth')}
+                <span className="WeekViewHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
+                <span className="WeekViewHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
               </div>
             ))}
           </div>
           <div className="WeekViewGridRow WeekViewAllDayEventsRow" role="row">
-            <div className="WeekViewAllDayEventsCell" role="columnheader">
+            <div
+              className="WeekViewAllDayEventsCell WeekViewAllDayEventsHeaderCell"
+              role="columnheader"
+            >
               All day
             </div>
             {weekDays.map((day) => (
@@ -48,9 +51,8 @@ export const WeekView = React.forwardRef(function WeekView(
                 className="WeekViewAllDayEventsCell"
                 aria-labelledby={`WeekViewHeaderCell-${day.day.toString()}`}
                 role="gridcell"
-              >
-                -
-              </div>
+                data-weekend={adapter.isWeekend(day) ? 'true' : undefined}
+              />
             ))}
           </div>
         </div>
@@ -63,24 +65,27 @@ export const WeekView = React.forwardRef(function WeekView(
                   className="WeekViewTimeAxisCell"
                   style={{ '--hour': hour } as React.CSSProperties}
                 >
-                  {hour === 0
-                    ? null
-                    : adapter.formatByString(DateTime.now().set({ hour, minute: 0 }), 'hh:mm a')}
+                  <time className="WeekViewTimeAxisText">
+                    {hour === 0
+                      ? null
+                      : adapter.formatByString(DateTime.now().set({ hour, minute: 0 }), 'h:mma')}
+                  </time>
                 </div>
               ))}
             </div>
             <div className="WeekViewGrid">
               {weekDays.map((day) => (
-                <TimeGridColumn
+                <TimeGrid.Column
                   key={day.day.toString()}
                   value={day}
                   className={'WeekViewColumn'}
                   role="gridcell"
+                  data-weekend={adapter.isWeekend(day) ? 'true' : undefined}
                 >
                   {props.events
                     .filter((event) => event.start.hasSame(day, 'day'))
                     .map((event) => (
-                      <TimeGridEvent
+                      <TimeGrid.Event
                         key={event.id}
                         start={event.start}
                         end={event.end}
@@ -89,16 +94,20 @@ export const WeekView = React.forwardRef(function WeekView(
                         aria-labelledby={`WeekViewHeaderCell-${day.day.toString()}`}
                         tabIndex={0}
                       >
-                        <div>{adapter.formatByString(event.start, 'hh a')}</div>
-                        <div>{event.title}</div>
-                      </TimeGridEvent>
+                        <time>
+                          {adapter.formatByString(event.start, 'h:mma')} -{' '}
+                          {adapter.formatByString(event.end, 'h:mma')}
+                        </time>
+                        <br />
+                        <span>{event.title}</span>
+                      </TimeGrid.Event>
                     ))}
-                </TimeGridColumn>
+                </TimeGrid.Column>
               ))}
             </div>
           </div>
         </div>
-      </TimeGridRoot>
+      </TimeGrid.Root>
     </div>
   );
 });

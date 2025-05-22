@@ -13,7 +13,11 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const { events, onEventsChange, className, ...other } = props;
 
   return (
-    <div className={clsx('mui', 'light', 'EventCalendar', className)} ref={forwardedRef} {...other}>
+    <div
+      className={clsx('mui', 'light', 'joy', 'EventCalendar', className)}
+      ref={forwardedRef}
+      {...other}
+    >
       <WeekView events={events} />
     </div>
   );

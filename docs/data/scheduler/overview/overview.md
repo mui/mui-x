@@ -29,4 +29,4 @@ TODO
 
 ### Event Calendar
 
-{{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false}}
+{{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false, "bg": "inline"}}
