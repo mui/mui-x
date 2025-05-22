@@ -114,6 +114,7 @@ function Chart<T extends ChartType = ChartType>({
           yAxis={[{ data: ['A', 'B', 'C', 'D', 'E'] }]}
           series={[{ data: heatmapData }]}
           height={300}
+          hideLegend={false}
         />
       );
     default:

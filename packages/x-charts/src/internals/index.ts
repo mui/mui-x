@@ -1,7 +1,6 @@
 // Components
 export * from './components/ChartsAxesGradients';
 export * from './components/ChartsWrapper';
-export * from './components/ChartsRootSurface';
 export * from '../ChartsLabel/ChartsLabelMark';
 
 // hooks
