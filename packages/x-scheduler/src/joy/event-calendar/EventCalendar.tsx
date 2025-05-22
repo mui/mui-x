@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import '../index.css';
 import './EventCalendar.css';
 import { EventCalendarProps } from './EventCalendar.types';
+import { WeekView } from '../week-view/WeekView';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -12,10 +13,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const { events, onEventsChange, className, ...other } = props;
 
   return (
-    <div className="mui light">
-      <div className={clsx(className, 'EventCalendar')} ref={forwardedRef} {...other}>
-        HELLO WORLD ({events.length} events loaded)
-      </div>
+    <div className={clsx('mui', 'light', 'EventCalendar', className)} ref={forwardedRef} {...other}>
+      <WeekView events={events} />
     </div>
   );
 });
