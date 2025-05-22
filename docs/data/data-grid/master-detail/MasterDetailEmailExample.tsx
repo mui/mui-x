@@ -13,10 +13,7 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridDimensions,
 } from '@mui/x-data-grid-pro';
-import {
-  randomCreatedDate,
-  randomEmail,
-} from '@mui/x-data-grid-generator';
+import { randomCreatedDate, randomEmail } from '@mui/x-data-grid-generator';
 
 const getDetailPanelWidth = (gridDimensions: GridDimensions) => {
   return gridDimensions.viewportInnerSize.width;
@@ -58,7 +55,14 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
           <span>{`From: ${rowProp.name} <${rowProp.email}>`}</span>
           <span>{`To: me <${randomEmail()}>`}</span>
 
-          <p>Artisan bitters street art photo booth you probably haven't heard of them slow-carb food truck. Meh narwhal tumeric bodega boys street art Brooklyn venmo. Kinfolk wolf iceland banjo, pitchfork cupping banh mi vexillologist cliche locavore venmo. Yuccie kombucha hashtag, bicycle rights umami truffaut mumblecore Brooklyn neutral milk hotel aesthetic. Wolf plaid lumbersexual leggings butcher solarpunk shabby chic cliche.</p>
+          <p>
+            Artisan bitters street art photo booth you probably haven't heard of them
+            slow-carb food truck. Meh narwhal tumeric bodega boys street art Brooklyn
+            venmo. Kinfolk wolf iceland banjo, pitchfork cupping banh mi
+            vexillologist cliche locavore venmo. Yuccie kombucha hashtag, bicycle
+            rights umami truffaut mumblecore Brooklyn neutral milk hotel aesthetic.
+            Wolf plaid lumbersexual leggings butcher solarpunk shabby chic cliche.
+          </p>
 
           <ButtonGroup variant="outlined" fullWidth>
             <Button>Reply</Button>
