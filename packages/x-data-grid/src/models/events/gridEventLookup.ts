@@ -192,6 +192,15 @@ export interface GridColumnHeaderEventLookup {
     event: React.DragEvent<HTMLElement>;
   };
   /**
+   * Fired when the dragging of a column header ends.
+   * Same as `columnHeaderDragEnd`, but also fires when the DOM element is unmounted.
+   * @ignore - do not document.
+   */
+  columnHeaderDragEndNative: {
+    params: GridColumnHeaderParams;
+    event: DragEvent;
+  };
+  /**
    * Fired when a `dblclick` DOM event happens in the column header separator.
    * @ignore - do not document.
    */
