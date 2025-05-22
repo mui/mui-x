@@ -136,7 +136,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
       {hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
-      {hasScrollX && hasScrollY && <ScrollbarCorner />}
+      {hasScrollX && hasScrollY && <ScrollbarCorner aria-hidden="true" />}
       {props.children}
     </Container>
   );
