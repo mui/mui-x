@@ -24,7 +24,7 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
          */
         closeMenuOnClick?: boolean;
         closeMenu?: () => void;
-        label: string | React.ReactElement;
+        label: React.ReactNode;
       } & Omit<GridSlotProps['baseMenuItem'], 'component'>)
   );
 
