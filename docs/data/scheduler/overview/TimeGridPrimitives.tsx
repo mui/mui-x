@@ -1,89 +1,80 @@
 import * as React from 'react';
-import { DateTime, WeekdayNumbers, MinuteNumbers, HourNumbers } from 'luxon';
+import { DateTime } from 'luxon';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
 import classes from './TimeGridPrimitives.module.css';
 
-const startOfWeek = DateTime.now().startOf('week');
-const createDate = (
-  weekday: WeekdayNumbers,
-  hour: HourNumbers,
-  minute: MinuteNumbers,
-) => {
-  return startOfWeek.set({ weekday, hour, minute });
-};
-
 const days = [
   {
-    date: createDate(1, 0, 0),
+    date: DateTime.fromISO('2025-05-26'),
     events: [
       {
         id: '1',
-        start: createDate(1, 7, 30),
-        end: createDate(1, 8, 15),
+        start: DateTime.fromISO('2025-05-26T07:30:00'),
+        end: DateTime.fromISO('2025-05-26T08:15:00'),
         title: 'Footing',
-        agenda: 'personal',
+        resource: 'personal',
       },
       {
         id: '2',
-        start: createDate(1, 16, 0),
-        end: createDate(1, 17, 0),
+        start: DateTime.fromISO('2025-05-26T16:00:00'),
+        end: DateTime.fromISO('2025-05-26T17:00:00'),
         title: 'Weekly',
-        agenda: 'work',
+        resource: 'work',
       },
     ],
   },
   {
-    date: createDate(2, 0, 0),
+    date: DateTime.fromISO('2025-05-27'),
     events: [
       {
         id: '3',
-        start: createDate(2, 10, 0),
-        end: createDate(2, 11, 0),
+        start: DateTime.fromISO('2025-05-27T10:00:00'),
+        end: DateTime.fromISO('2025-05-27T11:00:00'),
         title: 'Backlog grooming',
-        agenda: 'work',
+        resource: 'work',
       },
       {
         id: '4',
-        start: createDate(2, 19, 0),
-        end: createDate(2, 22, 0),
+        start: DateTime.fromISO('2025-05-27T19:00:00'),
+        end: DateTime.fromISO('2025-05-27T22:00:00'),
         title: 'Pizza party',
-        agenda: 'personal',
+        resource: 'personal',
       },
     ],
   },
   {
-    date: createDate(3, 0, 0),
+    date: DateTime.fromISO('2025-05-28'),
     events: [
       {
         id: '5',
-        start: createDate(3, 8, 0),
-        end: createDate(3, 17, 0),
+        start: DateTime.fromISO('2025-05-28T08:00:00'),
+        end: DateTime.fromISO('2025-05-28T17:00:00'),
         title: 'Scheduler deep dive',
-        agenda: 'work',
+        resource: 'work',
       },
     ],
   },
   {
-    date: createDate(4, 0, 0),
+    date: DateTime.fromISO('2025-05-29'),
     events: [
       {
         id: '1',
-        start: createDate(4, 7, 30),
-        end: createDate(4, 8, 15),
+        start: DateTime.fromISO('2025-05-29T07:30:00'),
+        end: DateTime.fromISO('2025-05-29T08:15:00'),
         title: 'Footing',
-        agenda: 'personal',
+        resource: 'personal',
       },
     ],
   },
   {
-    date: createDate(5, 0, 0),
+    date: DateTime.fromISO('2025-05-30'),
     events: [
       {
         id: '1',
-        start: createDate(5, 15, 0),
-        end: createDate(5, 15, 45),
+        start: DateTime.fromISO('2025-05-30T15:00:00'),
+        end: DateTime.fromISO('2025-05-30T15:45:00'),
         title: 'Retrospective',
-        agenda: 'work',
+        resource: 'work',
       },
     ],
   },
@@ -129,7 +120,7 @@ export default function TimeGridPrimitives() {
                     key={event.id}
                     start={event.start}
                     end={event.end}
-                    data-agenda={event.agenda}
+                    data-resource={event.resource}
                     className={classes.Event}
                   >
                     <div className={classes.EventInformation}>

@@ -31,6 +31,7 @@ const columns = [
     headerName: 'Transaction Date',
     width: 140,
     valueGetter: (value) => new Date(value),
+    groupingValueGetter: (value) => value,
   },
   { field: 'ticker', headerName: 'Ticker' },
   {
