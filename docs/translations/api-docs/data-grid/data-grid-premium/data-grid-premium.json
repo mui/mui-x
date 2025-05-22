@@ -276,7 +276,7 @@
       "description": "Pass a custom logger in the components that implements the Logger interface."
     },
     "logLevel": { "description": "Allows to pass the logging level or false to turn off logging." },
-    "multiSortingMode": {
+    "multipleColumnsSortingMode": {
       "description": "If set to &quot;always&quot;, the multi-sorting is applied without modifier key. Otherwise, the modifier key is required for multi-sorting to be applied."
     },
     "nonce": {

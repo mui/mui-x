@@ -26,7 +26,7 @@ export default function MultiSortingWithoutModifier() {
         {...data}
         loading={loading}
         initialState={initialState}
-        multiSortingMode="always"
+        multipleColumnsSortingMode="always"
       />
     </div>
   );

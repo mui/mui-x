@@ -221,7 +221,7 @@
       },
       "default": "\"error\" (\"warn\" in dev mode)"
     },
-    "multiSortingMode": {
+    "multipleColumnsSortingMode": {
       "type": { "name": "enum", "description": "'always'<br>&#124;&nbsp;'withModifierKey'" },
       "default": "\"withModifierKey\""
     },

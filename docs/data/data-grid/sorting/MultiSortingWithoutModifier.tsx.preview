@@ -2,5 +2,5 @@
   {...data}
   loading={loading}
   initialState={initialState}
-  multiSortingMode="always"
+  multipleColumnsSortingMode="always"
 />

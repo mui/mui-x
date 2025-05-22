@@ -556,7 +556,7 @@ DataGridProRaw.propTypes = {
    * @see See https://mui.com/x/react-data-grid/sorting/#multi-sorting
    * @default "withModifierKey"
    */
-  multiSortingMode: PropTypes.oneOf(['always', 'withModifierKey']),
+  multipleColumnsSortingMode: PropTypes.oneOf(['always', 'withModifierKey']),
   /**
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */

@@ -892,7 +892,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @see See https://mui.com/x/react-data-grid/sorting/#multi-sorting
    * @default "withModifierKey"
    */
-  multiSortingMode: 'withModifierKey' | 'always';
+  multipleColumnsSortingMode: 'withModifierKey' | 'always';
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
