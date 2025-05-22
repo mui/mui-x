@@ -17,7 +17,19 @@ export const WeekView = React.forwardRef(function WeekView(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const adapter = getAdapter();
-  const weekDays = getCurrentWeekDays();
+  const currentWeekDays = getCurrentWeekDays();
+
+  const eventsByDay = React.useMemo(() => {
+    const map = new Map();
+    for (const event of props.events) {
+      const dayKey = event.start.toISODate();
+      if (!map.has(dayKey)) {
+        map.set(dayKey, []);
+      }
+      map.get(dayKey).push(event);
+    }
+    return map;
+  }, [props.events]);
 
   return (
     <div ref={forwardedRef} className="WeekViewContainer">
@@ -25,7 +37,7 @@ export const WeekView = React.forwardRef(function WeekView(
         <div className="WeekViewHeader">
           <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
             <div className="WeekViewAllDayEventsCell" />
-            {weekDays.map((day) => (
+            {currentWeekDays.map((day) => (
               <div
                 key={day.day.toString()}
                 className="WeekViewHeaderCell"
@@ -45,7 +57,7 @@ export const WeekView = React.forwardRef(function WeekView(
             >
               All day
             </div>
-            {weekDays.map((day) => (
+            {currentWeekDays.map((day) => (
               <div
                 key={day.day.toString()}
                 className="WeekViewAllDayEventsCell"
@@ -74,17 +86,18 @@ export const WeekView = React.forwardRef(function WeekView(
               ))}
             </div>
             <div className="WeekViewGrid">
-              {weekDays.map((day) => (
-                <TimeGrid.Column
-                  key={day.day.toString()}
-                  value={day}
-                  className={'WeekViewColumn'}
-                  role="gridcell"
-                  data-weekend={adapter.isWeekend(day) ? 'true' : undefined}
-                >
-                  {props.events
-                    .filter((event) => event.start.hasSame(day, 'day'))
-                    .map((event) => (
+              {currentWeekDays.map((day) => {
+                const dayKey = day.toISODate();
+                const events = eventsByDay.get(dayKey) || [];
+                return (
+                  <TimeGrid.Column
+                    key={day.day.toString()}
+                    value={day}
+                    className={'WeekViewColumn'}
+                    role="gridcell"
+                    data-weekend={adapter.isWeekend(day) ? 'true' : undefined}
+                  >
+                    {events.map((event) => (
                       <TimeGrid.Event
                         key={event.id}
                         start={event.start}
@@ -102,8 +115,9 @@ export const WeekView = React.forwardRef(function WeekView(
                         <span>{event.title}</span>
                       </TimeGrid.Event>
                     ))}
-                </TimeGrid.Column>
-              ))}
+                  </TimeGrid.Column>
+                );
+              })}
             </div>
           </div>
         </div>
