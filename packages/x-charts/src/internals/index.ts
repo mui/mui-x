@@ -10,6 +10,7 @@ export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
+export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './createSeriesSelectorOfType';
@@ -35,6 +36,7 @@ export * from './store/useSelector';
 export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';
+export * from '../RadarChart/RadarChart.plugins';
 
 // utils
 export * from './defaultizeValueFormatter';
