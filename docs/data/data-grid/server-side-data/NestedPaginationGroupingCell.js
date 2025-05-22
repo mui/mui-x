@@ -66,7 +66,7 @@ function GridTreeDataGroupingCellIcon(props) {
       apiRef.current.setRowChildrenExpansion(id, !expanded);
     }
     apiRef.current.setCellFocus(id, field);
-    event.stopPropagation(); // TODO remove event.stopPropagation
+    event.stopPropagation();
   });
 
   const Icon = expanded
