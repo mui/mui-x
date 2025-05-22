@@ -21,9 +21,9 @@ import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
 } from '../../internals/plugins/useChartProZoom';
-import { ChartAxisZoomSliderHandle } from './ChartAxisZoomSliderHandle';
+import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
 
-const BackgroundRect = styled('rect')(({ theme }) => ({
+const ZoomSliderTrack = styled('rect')(({ theme }) => ({
   '&': {
     fill:
       theme.palette.mode === 'dark'
@@ -32,7 +32,7 @@ const BackgroundRect = styled('rect')(({ theme }) => ({
   },
 }));
 
-const ZoomRangePreviewRect = styled('rect')(({ theme }) => ({
+const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
   '&': {
     fill:
       theme.palette.mode === 'dark'
@@ -53,15 +53,15 @@ interface ChartZoomSliderProps {
   axisDirection: 'x' | 'y';
 }
 
-const ZOOM_SLIDER_BACKGROUND_SIZE = 8;
-const ZOOM_SLIDER_FOREGROUND_SIZE = 10;
-const ZOOM_SLIDER_HANDLE_HEIGHT = 20;
-const ZOOM_SLIDER_HANDLE_WIDTH = 10;
+const ZOOM_SLIDER_TRACK_SIZE = 8;
+const ZOOM_SLIDER_ACTIVE_TRACK_SIZE = 10;
+const ZOOM_SLIDER_THUMB_HEIGHT = 20;
+const ZOOM_SLIDER_THUMB_WIDTH = 10;
 const ZOOM_SLIDER_SIZE = Math.max(
-  ZOOM_SLIDER_BACKGROUND_SIZE,
-  ZOOM_SLIDER_FOREGROUND_SIZE,
-  ZOOM_SLIDER_HANDLE_HEIGHT,
-  ZOOM_SLIDER_HANDLE_WIDTH,
+  ZOOM_SLIDER_TRACK_SIZE,
+  ZOOM_SLIDER_ACTIVE_TRACK_SIZE,
+  ZOOM_SLIDER_THUMB_HEIGHT,
+  ZOOM_SLIDER_THUMB_WIDTH,
 );
 
 /**
@@ -118,19 +118,19 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
     axisPosition = axis.position ?? 'left';
   }
 
-  const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_BACKGROUND_SIZE) / 2;
+  const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_TRACK_SIZE) / 2;
 
   return (
     <g transform={`translate(${x} ${y})`}>
-      <BackgroundRect
+      <ZoomSliderTrack
         x={axisDirection === 'x' ? 0 : backgroundRectOffset}
         y={axisDirection === 'x' ? backgroundRectOffset : 0}
-        height={axisDirection === 'x' ? ZOOM_SLIDER_BACKGROUND_SIZE : drawingArea.height}
-        width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_BACKGROUND_SIZE}
-        rx={ZOOM_SLIDER_BACKGROUND_SIZE / 2}
-        ry={ZOOM_SLIDER_BACKGROUND_SIZE / 2}
+        height={axisDirection === 'x' ? ZOOM_SLIDER_TRACK_SIZE : drawingArea.height}
+        width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_TRACK_SIZE}
+        rx={ZOOM_SLIDER_TRACK_SIZE / 2}
+        ry={ZOOM_SLIDER_TRACK_SIZE / 2}
       />
-      <ChartAxisZoomSliderSpan
+      <ChartAxisZoomSliderActiveTrack
         zoomData={zoomData}
         axisId={axisId}
         axisPosition={axisPosition}
@@ -144,7 +144,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
 const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
 const zoomValueFormatter = (value: number) => formatter.format(value);
 
-function ChartAxisZoomSliderSpan({
+function ChartAxisZoomSliderActiveTrack({
   axisId,
   axisDirection,
   axisPosition,
@@ -163,14 +163,14 @@ function ChartAxisZoomSliderSpan({
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
-  const [startHandleEl, setStartHandleEl] = React.useState<SVGRectElement | null>(null);
-  const [endHandleEl, setEndHandleEl] = React.useState<SVGRectElement | null>(null);
+  const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
+  const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
   const [showTooltip, setShowTooltip] = React.useState<null | 'start' | 'end' | 'both'>(null);
 
-  const previewHandleWidth =
-    axisDirection === 'x' ? ZOOM_SLIDER_HANDLE_WIDTH : ZOOM_SLIDER_HANDLE_HEIGHT;
-  const previewHandleHeight =
-    axisDirection === 'x' ? ZOOM_SLIDER_HANDLE_HEIGHT : ZOOM_SLIDER_HANDLE_WIDTH;
+  const previewThumbWidth =
+    axisDirection === 'x' ? ZOOM_SLIDER_THUMB_WIDTH : ZOOM_SLIDER_THUMB_HEIGHT;
+  const previewThumbHeight =
+    axisDirection === 'x' ? ZOOM_SLIDER_THUMB_HEIGHT : ZOOM_SLIDER_THUMB_WIDTH;
 
   React.useEffect(() => {
     const activePreviewRect = activePreviewRectRef.current;
@@ -265,7 +265,7 @@ function ChartAxisZoomSliderSpan({
     };
   }, [axisDirection, axisId, instance, reverse, store, svgRef]);
 
-  const onStartHandleMove = (event: PointerEvent) => {
+  const onStartThumbMove = (event: PointerEvent) => {
     const element = svgRef.current;
 
     if (!element) {
@@ -304,7 +304,7 @@ function ChartAxisZoomSliderSpan({
     });
   };
 
-  const onEndHandleMove = (event: PointerEvent) => {
+  const onEndThumbMove = (event: PointerEvent) => {
     const element = svgRef.current;
 
     if (!element) {
@@ -347,58 +347,58 @@ function ChartAxisZoomSliderSpan({
   let previewY: number;
   let previewWidth: number;
   let previewHeight: number;
-  let startHandleX: number;
-  let startHandleY: number;
-  let endHandleX: number;
-  let endHandleY: number;
+  let startThumbX: number;
+  let startThumbY: number;
+  let endThumbX: number;
+  let endThumbY: number;
 
   if (axisDirection === 'x') {
     previewX = (zoomData.start / 100) * drawingArea.width;
     previewY = 0;
     previewWidth = (drawingArea.width * (zoomData.end - zoomData.start)) / 100;
-    previewHeight = ZOOM_SLIDER_FOREGROUND_SIZE;
+    previewHeight = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
 
-    startHandleX = (zoomData.start / 100) * drawingArea.width;
-    startHandleY = 0;
-    endHandleX = (zoomData.end / 100) * drawingArea.width;
-    endHandleY = 0;
+    startThumbX = (zoomData.start / 100) * drawingArea.width;
+    startThumbY = 0;
+    endThumbX = (zoomData.end / 100) * drawingArea.width;
+    endThumbY = 0;
 
     if (reverse) {
       previewX = drawingArea.width - previewX - previewWidth;
 
-      startHandleX = drawingArea.width - startHandleX;
-      endHandleX = drawingArea.width - endHandleX;
+      startThumbX = drawingArea.width - startThumbX;
+      endThumbX = drawingArea.width - endThumbX;
     }
 
-    startHandleX -= previewHandleWidth / 2;
-    endHandleX -= previewHandleWidth / 2;
+    startThumbX -= previewThumbWidth / 2;
+    endThumbX -= previewThumbWidth / 2;
   } else {
     previewX = 0;
     previewY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
-    previewWidth = ZOOM_SLIDER_FOREGROUND_SIZE;
+    previewWidth = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
     previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / 100;
 
-    startHandleX = 0;
-    startHandleY = drawingArea.height - (zoomData.start / 100) * drawingArea.height;
-    endHandleX = 0;
-    endHandleY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
+    startThumbX = 0;
+    startThumbY = drawingArea.height - (zoomData.start / 100) * drawingArea.height;
+    endThumbX = 0;
+    endThumbY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
 
     if (reverse) {
       previewY = drawingArea.height - previewY - previewHeight;
 
-      startHandleY = drawingArea.height - startHandleY;
-      endHandleY = drawingArea.height - endHandleY;
+      startThumbY = drawingArea.height - startThumbY;
+      endThumbY = drawingArea.height - endThumbY;
     }
 
-    startHandleY -= previewHandleHeight / 2;
-    endHandleY -= previewHandleHeight / 2;
+    startThumbY -= previewThumbHeight / 2;
+    endThumbY -= previewThumbHeight / 2;
   }
 
-  const previewOffset = (ZOOM_SLIDER_HANDLE_HEIGHT - ZOOM_SLIDER_FOREGROUND_SIZE) / 2;
+  const previewOffset = (ZOOM_SLIDER_THUMB_HEIGHT - ZOOM_SLIDER_ACTIVE_TRACK_SIZE) / 2;
 
   return (
     <React.Fragment>
-      <ZoomRangePreviewRect
+      <ZoomSliderActiveTrackRect
         ref={activePreviewRectRef}
         x={previewX + (axisDirection === 'x' ? 0 : previewOffset)}
         y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
@@ -407,39 +407,39 @@ function ChartAxisZoomSliderSpan({
         onPointerEnter={() => setShowTooltip('both')}
         onPointerLeave={() => setShowTooltip(null)}
       />
-      <ChartAxisZoomSliderHandle
-        ref={setStartHandleEl}
-        x={startHandleX}
-        y={startHandleY}
-        width={previewHandleWidth}
-        height={previewHandleHeight}
+      <ChartAxisZoomSliderThumb
+        ref={setStartThumbEl}
+        x={startThumbX}
+        y={startThumbY}
+        width={previewThumbWidth}
+        height={previewThumbHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
-        onMove={onStartHandleMove}
+        onMove={onStartThumbMove}
         onPointerEnter={() => setShowTooltip('start')}
         onPointerLeave={() => setShowTooltip(null)}
         placement="start"
       />
-      <ChartAxisZoomSliderHandle
-        ref={setEndHandleEl}
-        x={endHandleX}
-        y={endHandleY}
-        width={previewHandleWidth}
-        height={previewHandleHeight}
+      <ChartAxisZoomSliderThumb
+        ref={setEndThumbEl}
+        x={endThumbX}
+        y={endThumbY}
+        width={previewThumbWidth}
+        height={previewThumbHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
-        onMove={onEndHandleMove}
+        onMove={onEndThumbMove}
         onPointerEnter={() => setShowTooltip('end')}
         onPointerLeave={() => setShowTooltip(null)}
         placement="end"
       />
       <ChartsTooltipZoomSliderValue
-        anchorEl={startHandleEl}
+        anchorEl={startThumbEl}
         open={showTooltip === 'start' || showTooltip === 'both'}
         placement={axisPosition}
       >
         {valueFormatter(zoomData.start)}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
-        anchorEl={endHandleEl}
+        anchorEl={endThumbEl}
         open={showTooltip === 'end' || showTooltip === 'both'}
         placement={axisPosition}
       >

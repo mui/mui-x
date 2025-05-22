@@ -1,7 +1,7 @@
 ---
 title: React Heatmap chart
 productId: x-charts
-components: Heatmap, HeatmapPlot, HeatmapTooltip
+components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent
 ---
 
 # Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -27,16 +27,14 @@ You can specify x and y ticks with the `xAxis` and `yAxis` props.
 
 {{"demo": "BasicHeatmap.js"}}
 
-## Customization
-
-### Color mapping
+## Color mapping
 
 To customize the color mapping, use the `zAxis` configuration.
 You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#values-color).
 
 {{"demo": "ColorConfig.js"}}
 
-### Highlight
+## Highlight
 
 You can chose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
 To fade the other item, set `highlightScope.fade` to `'global'`.
@@ -50,14 +48,45 @@ In the following demo, we replace the highlight saturation by a border radius an
 
 {{"demo": "HighlightClasses.js"}}
 
+## Common features
+
+The heatmap shares several features with other charts.
+This section only explains the details that are specific to the heatmap.
+If you'd like to learn more about the shared features, you can visit their dedicated pages.
+
 ### Axes
 
 The Heatmap axes can be customized like any other chart axis.
-The available options are available in the [dedicated page](/x/react-charts/axis/#axis-customization).
+The available options are available in the [axis customization page](/x/react-charts/axis/#axis-customization).
 
-### Tooltip 🚧
+### Tooltip
 
-## Legend 🚧
+The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
+
+The only difference of the Heatmap Tooltip is its default content.
+You can import the default tooltip, or only its content as follows:
+
+```js
+import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
+```
+
+The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
+
+The specificity of the Heatmap Tooltip is its default content.
+You can import the default tooltip, or only its content as follow:
+
+```js
+import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
+```
+
+### Legend
+
+The Heatmap comes with a legend which is by default the [ContinuousColorLegend](/x/react-charts/legend/#color-legend).
+
+To display it set `hideLegend` to `false`.
+You can modify it with `slots.legend` and `slotProps.legend`.
+
+{{"demo": "HeatmapLegend.js"}}
 
 ## Labels 🚧
 
