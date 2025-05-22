@@ -81,7 +81,7 @@ import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
 
 ### Legend
 
-The Heatmap comes with a legend which is by default the [ContinuouseColorLegend](/x/react-charts/legend/#color-legend).
+The Heatmap comes with a legend which is by default the [ContinuousColorLegend](/x/react-charts/legend/#color-legend).
 
 To display it set `hideLegend` to `false`.
 You can modify it with `slots.legend` and `slotProps.legend`.

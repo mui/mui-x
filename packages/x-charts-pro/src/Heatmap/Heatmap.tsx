@@ -231,9 +231,9 @@ const Heatmap = React.forwardRef(function Heatmap(
       <ChartsWrapper {...chartsWrapperProps}>
         {!hideLegend && (
           <ChartsLegend
-            slots={{ legend: slots?.legend ?? ContinuousColorLegend }}
+            slots={{ ...slots, legend: slots?.legend ?? ContinuousColorLegend }}
             slotProps={{ legend: { labelPosition: 'extremes', ...slotProps?.legend } }}
-            sx={{ alignSelf: 'stretch' }}
+            sx={slotProps?.legend?.direction === 'vertical' ? { height: 150 } : { width: '50%' }}
           />
         )}
         <ChartsSurface ref={ref} sx={sx}>
