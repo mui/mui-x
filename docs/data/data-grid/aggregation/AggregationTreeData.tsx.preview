@@ -4,7 +4,7 @@
   columns={columns}
   getTreeDataPath={getTreeDataPath}
   getRowId={getRowId}
-  groupingColDef={{ headerName: 'Files', width: 350 }}
+  groupingColDef={groupingColDef}
   initialState={{
     aggregation: {
       model: {

@@ -70,6 +70,11 @@ By default, when using the object format, the properties will be applied to all 
 If you wish to override properties of specific grouping columns or to apply different overrides based on the current grouping criteria, you can pass a callback function to `groupingColDef`, instead of an object with its config.
 The callback is called for each grouping column, and it receives the respective column's "fields" as parameter.
 
+:::warning
+The `groupingColDef` prop, same as `columns` prop, should keep the same reference between two renders.
+Otherwise, the grouping column processing can happen multiple times and outside of the required order, resulting in a wrong column placement.
+:::
+
 {{"demo": "RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Grouping rows with custom cell renderer
