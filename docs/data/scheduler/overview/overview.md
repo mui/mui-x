@@ -19,7 +19,7 @@ This package is not published yet.
 
 ### Time Grid
 
-{{"demo": "TimeGridPrimitives.js", "defaultCodeOpen": false}}
+{{"demo": "TimeGridPrimitives.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Day Grid
 
