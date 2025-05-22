@@ -9,8 +9,6 @@ import { defineConfig } from '@mui/internal-bundle-size-checker';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 
-console.log(rootDir);
-
 async function findComponents(packageFolder, packageName) {
   const pkgBuildFolder = path.join(rootDir, `packages/${packageFolder}/build`);
   const pkgFiles = await glob(path.join(pkgBuildFolder, '([A-Z])*/index.js'));

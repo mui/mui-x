@@ -80,8 +80,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(@babel/core@7.27.1)
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.2
-        version: 1.0.2(@swc/core@1.11.21)(esbuild@0.25.4)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.8))
+        specifier: ^1.0.3
+        version: 1.0.3(@swc/core@1.11.21)(esbuild@0.25.4)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.8))
       '@mui/internal-markdown':
         specifier: ^2.0.4
         version: 2.0.4
@@ -3676,8 +3676,8 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@1.0.2':
-    resolution: {integrity: sha512-WLg/qw1g1dNFpJWZTHybjJjUILuq4gya5kNg3xkq7QT3QC4mT32U46GYNODN1Xua120GbSrnicc5BlMlUuENEw==}
+  '@mui/internal-bundle-size-checker@1.0.3':
+    resolution: {integrity: sha512-tTRjnmvujZ2YDh35UoSnam2vzTrrSo6fz0Tdzh5zfNhE5FoE4YGSuVGYUR5HNkfB6bDEsifiMGKoQgGqiJO7sg==}
     hasBin: true
 
   '@mui/internal-docs-utils@2.0.1':
@@ -13849,10 +13849,14 @@ snapshots:
       '@babel/core': 7.27.1
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.2(@swc/core@1.11.21)(esbuild@0.25.4)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.8))':
+  '@mui/internal-bundle-size-checker@1.0.3(@swc/core@1.11.21)(esbuild@0.25.4)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.8))':
     dependencies:
       '@aws-sdk/client-s3': 3.804.0
       '@aws-sdk/credential-providers': 3.804.0
+      '@babel/core': 7.27.1
+      '@babel/preset-react': 7.27.1(@babel/core@7.27.1)
+      '@babel/preset-typescript': 7.27.1(@babel/core@7.27.1)
+      babel-loader: 10.0.0(@babel/core@7.27.1)(webpack@5.99.8)
       chalk: 5.4.1
       compression-webpack-plugin: 10.0.0(webpack@5.99.8)
       css-loader: 7.1.2(webpack@5.99.8)
@@ -13873,6 +13877,7 @@ snapshots:
       - aws-crt
       - bufferutil
       - esbuild
+      - supports-color
       - uglify-js
       - utf-8-validate
       - webpack-cli
