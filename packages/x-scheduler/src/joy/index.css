@@ -1,1 +1,7 @@
 @import './styles/index.css';
+
+.joy,
+.joy * {
+  box-sizing: border-box;
+  font-family: var(--default-font-family);
+}
