@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions } from './curve.types';
+import { CurveOptions, Point } from './curve.types';
 
 /**
  * This is a custom "bump" curve generator.
@@ -13,20 +13,41 @@ import { CurveOptions } from './curve.types';
 export class Bump implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
-  private x: number = NaN;
-
-  private y: number = NaN;
-
-  private currentPoint: number = 0;
-
   private isHorizontal: boolean = false;
+
+  private isIncreasing: boolean = false;
 
   private gap: number = 0;
 
-  constructor(context: CanvasRenderingContext2D, { isHorizontal, gap }: CurveOptions) {
+  private position: number = 0;
+
+  private sections: number = 0;
+
+  private min: Point = { x: 0, y: 0 };
+
+  private max: Point = { x: 0, y: 0 };
+
+  private points: Point[] = [];
+
+  constructor(
+    context: CanvasRenderingContext2D,
+    { isHorizontal, gap, position, sections, min, max, isIncreasing }: CurveOptions,
+  ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
     this.gap = (gap ?? 0) / 2;
+    this.position = position ?? 0;
+    this.sections = sections ?? 1;
+    this.isIncreasing = isIncreasing ?? false;
+    this.min = min ?? { x: 0, y: 0 };
+    this.max = max ?? { x: 0, y: 0 };
+
+    if (isIncreasing) {
+      const currentMin = this.min;
+      const currentMax = this.max;
+      this.min = currentMax;
+      this.max = currentMin;
+    }
   }
 
   areaStart(): void {}
@@ -38,49 +59,121 @@ export class Bump implements CurveGenerator {
   lineEnd(): void {}
 
   point(x: number, y: number): void {
-    x = +x;
-    y = +y;
-
-    // 0 is the top-left corner.
-    if (this.isHorizontal) {
-      if (this.currentPoint === 0) {
-        this.context.moveTo(x + this.gap, y);
-        this.context.lineTo(x + this.gap, y);
-      } else if (this.currentPoint === 1) {
-        this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x - this.gap, y);
-      } else if (this.currentPoint === 2) {
-        this.context.lineTo(x - this.gap, y);
-      } else {
-        this.context.bezierCurveTo((this.x + x) / 2, this.y, (this.x + x) / 2, y, x + this.gap, y);
-      }
-
-      if (this.currentPoint === 3) {
-        this.context.closePath();
-      }
-      this.currentPoint += 1;
-      this.x = x;
-      this.y = y;
+    this.points.push({ x, y });
+    if (this.points.length < 4) {
       return;
     }
 
-    // 0 is the top-right corner.
-    if (this.currentPoint === 0) {
-      // X from Y
-      this.context.moveTo(x, y + this.gap);
-      this.context.lineTo(x, y + this.gap);
-    } else if (this.currentPoint === 1) {
-      this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y - this.gap);
-    } else if (this.currentPoint === 2) {
-      this.context.lineTo(x, y - this.gap);
-    } else {
-      this.context.bezierCurveTo(this.x, (this.y + y) / 2, x, (this.y + y) / 2, x, y + this.gap);
+    // In the last section, to form a triangle we need 3 points instead of 4
+    // Else the algorithm will break.
+    const isLastSection = this.position === this.sections - 1;
+    const isFirstSection = this.position === 0;
+
+    if (isFirstSection && this.isIncreasing) {
+      this.points = [
+        this.points[0],
+        this.isHorizontal
+          ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
+          : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+        this.points[2],
+      ];
     }
 
-    if (this.currentPoint === 3) {
-      this.context.closePath();
+    if (isLastSection && !this.isIncreasing) {
+      this.points = [
+        this.points[0],
+        this.isHorizontal
+          ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
+          : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+        this.points[3],
+      ];
     }
-    this.currentPoint += 1;
-    this.x = x;
-    this.y = y;
+
+    // Draw the path using bezier curves
+    this.drawPath();
+  }
+
+  private drawPath(): void {
+    if (this.isHorizontal) {
+      this.drawHorizontalPath();
+    } else {
+      this.drawVerticalPath();
+    }
+  }
+
+  private drawHorizontalPath(): void {
+    const [p0, p1, p2, p3] = this.points;
+
+    // 0 is the top-left corner
+    this.context.moveTo(p0.x + this.gap, p0.y);
+    this.context.lineTo(p0.x + this.gap, p0.y);
+
+    // Bezier curve to point 1
+    this.context.bezierCurveTo(
+      (p0.x + p1.x) / 2,
+      p0.y,
+      (p0.x + p1.x) / 2,
+      p1.y,
+      p1.x - this.gap,
+      p1.y,
+    );
+
+    // Line to point 2
+    if (p3 !== undefined) {
+      this.context.lineTo(p2.x - this.gap, p2.y);
+    }
+
+    const prevP = p3 ? p2 : p1;
+    const lastP = p3 ?? p2;
+
+    // Bezier curve back to point 3
+    this.context.bezierCurveTo(
+      (prevP.x + lastP.x) / 2,
+      prevP.y,
+      (prevP.x + lastP.x) / 2,
+      lastP.y,
+      lastP.x + this.gap,
+      lastP.y,
+    );
+
+    this.context.closePath();
+  }
+
+  private drawVerticalPath(): void {
+    const [p0, p1, p2, p3] = this.points;
+
+    // 0 is the top-right corner
+    this.context.moveTo(p0.x, p0.y + this.gap);
+    this.context.lineTo(p0.x, p0.y + this.gap);
+
+    // Bezier curve to point 1
+    this.context.bezierCurveTo(
+      p0.x,
+      (p0.y + p1.y) / 2,
+      p1.x,
+      (p0.y + p1.y) / 2,
+      p1.x,
+      p1.y - this.gap,
+    );
+
+    // Line to point 2
+    if (p3 !== undefined) {
+      this.context.lineTo(p2.x, p2.y - this.gap);
+    }
+
+    const prevP = p3 ? p2 : p1;
+    const lastP = p3 ?? p2;
+
+    // Bezier curve back to point 3
+    this.context.bezierCurveTo(
+      prevP.x,
+      (prevP.y + lastP.y) / 2,
+      lastP.x,
+      (prevP.y + lastP.y) / 2,
+      lastP.x,
+      lastP.y + this.gap,
+    );
+
+    this.context.closePath();
   }
 }
