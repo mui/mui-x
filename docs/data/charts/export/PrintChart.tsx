@@ -126,7 +126,14 @@ function Chart<T extends ChartType = ChartType>({
           width={400}
           height={300}
           series={[
-            { data: [{ value: 200 }, { value: 180 }, { value: 90 }, { value: 50 }] },
+            {
+              data: [
+                { label: 'Visitors', value: 200 },
+                { label: 'Product Page Views', value: 180 },
+                { label: 'Added to Cart', value: 90 },
+                { label: 'Purchased', value: 50 },
+              ],
+            },
           ]}
         />
       );
