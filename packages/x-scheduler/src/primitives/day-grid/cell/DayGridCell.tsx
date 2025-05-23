@@ -3,9 +3,9 @@ import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 
-const TimeGridRoot = React.forwardRef(function TimeGridRoot(
-  componentProps: TimeGridRoot.Props,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+const DayGridCell = React.forwardRef(function DayGridCell(
+  componentProps: DayGridCell.Props,
+  forwardedRef: React.ForwardedRef<HTMLTableCellElement>,
 ) {
   const {
     // Rendering props
@@ -15,21 +15,21 @@ const TimeGridRoot = React.forwardRef(function TimeGridRoot(
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({ role: 'grid' }), []);
+  const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
-  const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
+  const state: DayGridCell.State = React.useMemo(() => ({}), []);
 
-  return useRenderElement('div', componentProps, {
+  return useRenderElement('td', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
 });
 
-export namespace TimeGridRoot {
+export namespace DayGridCell {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {}
+  export interface Props extends BaseUIComponentProps<'td', State> {}
 }
 
-export { TimeGridRoot };
+export { DayGridCell };

@@ -8,7 +8,7 @@ import { SchedulerValidDate } from '../../utils/adapter/types';
 
 const adapter = getAdapter();
 
-const TimeGridColumn = React.forwardRef(function CalendarCell(
+const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   componentProps: TimeGridColumn.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {

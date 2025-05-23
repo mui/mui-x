@@ -21,6 +21,10 @@ This package is not published yet.
 
 {{"demo": "TimeGridPrimitives.js", "defaultCodeOpen": false}}
 
+## Day Grid
+
+{{"demo": "DayGridPrimitives.js", "defaultCodeOpen": false}}
+
 ### Day Grid
 
 TODO

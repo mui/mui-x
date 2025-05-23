@@ -12,7 +12,7 @@ const adapter = getAdapter();
 
 const MINUTES_IN_DAY = 24 * 60;
 
-const TimeGridEvent = React.forwardRef(function CalendarCell(
+const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   componentProps: TimeGridEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {

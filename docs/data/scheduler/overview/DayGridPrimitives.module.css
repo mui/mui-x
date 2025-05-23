@@ -1,0 +1,31 @@
+.Container {
+  --border-color: oklch(87.1% 0.006 286.286);
+}
+
+:global(.mode-dark) .Container {
+  --border-color: oklch(44.2% 0.017 285.786);
+}
+
+.Container {
+}
+
+.Root {
+  border-collapse: collapse;
+  border-radius: 4px;
+}
+
+.Row {
+}
+
+.Cell {
+  position: relative;
+  height: 120px;
+  width: 120px;
+  border: 1px solid var(--border-color);
+}
+
+.CellLabel {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
