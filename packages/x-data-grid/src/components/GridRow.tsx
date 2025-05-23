@@ -32,7 +32,6 @@ import {
   gridEditRowsStateSelector,
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
-import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -474,9 +473,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
-      {scrollbarWidth !== 0 && (
-        <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} borderTop={!isFirstVisible} />
-      )}
     </div>
   );
 });

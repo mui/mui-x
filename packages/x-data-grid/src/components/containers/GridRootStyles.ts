@@ -143,9 +143,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['scrollbar--horizontal']}`]: styles['scrollbar--horizontal'] },
     { [`& .${c['scrollbar--vertical']}`]: styles['scrollbar--vertical'] },
     { [`& .${c.scrollbarFiller}`]: styles.scrollbarFiller },
-    { [`& .${c['scrollbarFiller--borderBottom']}`]: styles['scrollbarFiller--borderBottom'] },
-    { [`& .${c['scrollbarFiller--borderTop']}`]: styles['scrollbarFiller--borderTop'] },
-    { [`& .${c['scrollbarFiller--header']}`]: styles['scrollbarFiller--header'] },
     { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
     { [`& .${c.sortIcon}`]: styles.sortIcon },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -762,24 +759,16 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: vars.spacing(2),
     },
-
-    /* ScrollbarFiller styles */
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
-      [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-      },
-      [`&.${c['scrollbarFiller--borderBottom']}`]: {
-        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
-      },
+      backgroundColor: headerBackground,
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: vars.cell.background.pinned,
         position: 'sticky',
         right: 0,
+        zIndex: 30,
       },
     },
-
     [`& .${c.filler}`]: {
       flex: '1 0 auto',
     },
@@ -787,8 +776,10 @@ export const GridRootStyles = styled('div', {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
     },
 
-    /* Hide grid rows, row filler, and vertical scrollbar. Used when skeleton/no columns overlay is visible */
+    /* Used when skeleton/no columns overlay is visible */
     [`& .${c['main--hiddenContent']}`]: {
+      // Position vertical scrollbar and fillers out of grid viewport
+      marginRight: 'calc(var(--DataGrid-scrollbarSize) * -1)',
       [`& .${c.virtualScrollerContent}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
         // Position fixed is used to remove the virtual scroller content from the flow.
@@ -796,10 +787,10 @@ export const GridRootStyles = styled('div', {
         position: 'fixed',
         visibility: 'hidden',
       },
-      [`& .${c['scrollbar--vertical']}, & .${c.pinnedRows}, & .${c.virtualScroller} > .${c.filler}`]:
-        {
-          display: 'none',
-        },
+      // Hide grid content
+      [`& .${c.pinnedRows}`]: {
+        display: 'none',
+      },
     },
   };
 
