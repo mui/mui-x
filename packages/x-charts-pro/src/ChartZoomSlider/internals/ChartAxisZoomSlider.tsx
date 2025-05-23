@@ -18,6 +18,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import clsx from 'clsx';
+import { chartAxisZoomSliderClasses } from './chartAxisZoomSliderClasses';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import {
   selectorChartAxisZoomData,
@@ -25,8 +27,15 @@ import {
 } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
 
+const Group = styled('g')({
+  [`&.${chartAxisZoomSliderClasses.root}.${chartAxisZoomSliderClasses.horizontal} .${chartAxisZoomSliderClasses.track}.${chartAxisZoomSliderClasses.selecting}`]:
+    { cursor: 'ew-resize' },
+  [`&.${chartAxisZoomSliderClasses.root}.${chartAxisZoomSliderClasses.vertical} .${chartAxisZoomSliderClasses.track}.${chartAxisZoomSliderClasses.selecting}`]:
+    { cursor: 'ns-resize' },
+});
+
 const ZoomSliderTrack = styled('rect')(({ theme }) => ({
-  '&': {
+  [`&.${chartAxisZoomSliderClasses.track}`]: {
     fill:
       theme.palette.mode === 'dark'
         ? (theme.vars || theme).palette.grey[800]
@@ -122,9 +131,15 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   }
 
   const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_TRACK_SIZE) / 2;
+  const className = clsx(
+    chartAxisZoomSliderClasses.root,
+    axisDirection === 'x'
+      ? chartAxisZoomSliderClasses.horizontal
+      : chartAxisZoomSliderClasses.vertical,
+  );
 
   return (
-    <g transform={`translate(${x} ${y})`}>
+    <Group className={className} transform={`translate(${x} ${y})`}>
       <ChartAxisZoomSliderTrack
         x={axisDirection === 'x' ? 0 : backgroundRectOffset}
         y={axisDirection === 'x' ? backgroundRectOffset : 0}
@@ -143,7 +158,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         axisDirection={axisDirection}
         reverse={reverse}
       />
-    </g>
+    </Group>
   );
 }
 
@@ -162,6 +177,11 @@ function ChartAxisZoomSliderTrack({
   const ref = React.useRef<SVGRectElement>(null);
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
+  const [isSelecting, setIsSelecting] = React.useState(false);
+  const className = clsx(
+    chartAxisZoomSliderClasses.track,
+    isSelecting && chartAxisZoomSliderClasses.selecting,
+  );
 
   const onPointerDown = function onPointerDown(event: React.PointerEvent<SVGRectElement>) {
     const rect = ref.current;
@@ -241,6 +261,7 @@ function ChartAxisZoomSliderTrack({
       rect.releasePointerCapture(pointerUpEvent.pointerId);
       rect.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
+      setIsSelecting(false);
 
       if (pointerMoved) {
         return;
@@ -271,6 +292,7 @@ function ChartAxisZoomSliderTrack({
     document.addEventListener('pointerup', onPointerUp);
     rect.addEventListener('pointermove', onPointerMove);
 
+    setIsSelecting(true);
     instance.setAxisZoomData(axisId, (prev) => ({
       ...prev,
       start: zoomFromPointerDown,
@@ -278,7 +300,9 @@ function ChartAxisZoomSliderTrack({
     }));
   };
 
-  return <ZoomSliderTrack ref={ref} onPointerDown={onPointerDown} {...other} />;
+  return (
+    <ZoomSliderTrack ref={ref} className={className} onPointerDown={onPointerDown} {...other} />
+  );
 }
 
 const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
