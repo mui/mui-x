@@ -16,7 +16,7 @@ function CustomChartWrapper({ children }: React.PropsWithChildren) {
 
   return (
     <div
-      ref={chartRootRef as React.RefObject<HTMLDivElement>}
+      ref={chartRootRef}
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
       {children}
