@@ -61,7 +61,7 @@ const columns: GridColDef[] = [
   { field: 'name', headerName: 'From' },
   { field: 'email', headerName: 'Email', width: 200 },
   { field: 'subject', headerName: 'Subject', width: 300 },
-  { field: 'date', type: 'date', headerName: 'Time' },
+  { field: 'date', type: 'date', headerName: 'Date' },
 ];
 
 const rows = [
