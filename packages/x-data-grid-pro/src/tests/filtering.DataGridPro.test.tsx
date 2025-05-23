@@ -501,9 +501,7 @@ describe('<DataGridPro /> - Filter', () => {
     // The first combo is hidden and we include hidden elements to make the query faster
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
     const input = getSelectInput(
-      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
-        isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
-      ],
+      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[0],
     );
     fireEvent.change(input!, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
@@ -1362,8 +1360,7 @@ describe('<DataGridPro /> - Filter', () => {
         },
       };
       render(<TestCase initialState={initialState} filterModel={newModel} columns={columns} />);
-      // For JSDom, the first hidden combo is also found which we are not interested in
-      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
+      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[0];
       expect(select).not.to.have.class('Mui-disabled');
     });
 

@@ -514,7 +514,7 @@ const pages: MuiPage[] = [
             title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
-          { pathname: '/x/react-charts/radar', unstable: true },
+          { pathname: '/x/react-charts/radar' },
           {
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
@@ -546,7 +546,7 @@ const pages: MuiPage[] = [
                 title: 'Export',
                 plan: 'pro',
               },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar 🧪' },
+              { pathname: '/x/react-charts/toolbar', title: 'Toolbar', unstable: true },
             ],
           },
           {

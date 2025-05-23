@@ -184,7 +184,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
             onDragStart: publish('columnHeaderDragStart'),
             onDragEnter: publish('columnHeaderDragEnter'),
             onDragOver: publish('columnHeaderDragOver'),
-            onDragEnd: publish('columnHeaderDragEnd'),
+            onDragEndCapture: publish('columnHeaderDragEnd'),
           }
         : {},
     [isDraggable, publish],

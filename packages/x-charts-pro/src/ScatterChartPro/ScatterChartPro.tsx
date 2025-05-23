@@ -93,9 +93,9 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -110,6 +110,7 @@ ScatterChartPro.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
@@ -366,6 +367,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -455,6 +457,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -535,6 +538,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -615,6 +619,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -695,6 +700,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -775,6 +781,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -855,6 +862,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -935,6 +943,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1034,6 +1043,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1122,6 +1132,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1201,6 +1212,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1280,6 +1292,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1359,6 +1372,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1438,6 +1452,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1517,6 +1532,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1596,6 +1612,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),

@@ -94,22 +94,7 @@ To use the Date and Time Pickers with a custom locale, see [Date and format loca
 
 With the component, adapter, and provider properly configured, you're now ready to render a Date Picker as shown below:
 
-```tsx
-import * as React from 'react';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-export default function App() {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker />
-    </LocalizationProvider>
-  );
-}
-```
-
-{{"demo": "FirstComponent.js"}}
+{{"demo": "FirstComponent.js", "defaultCodeOpen": true}}
 
 ## TypeScript
 

@@ -19,10 +19,11 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
+import { FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 
 export interface FunnelChartProps
   extends Omit<
-      ChartContainerProProps<'funnel'>,
+      ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,
       | 'series'
       | 'plugins'
       | 'zAxis'
@@ -89,17 +90,20 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps} seriesConfig={seriesConfig}>
+    <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
+      {...chartDataProviderProProps}
+      seriesConfig={seriesConfig}
+    >
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <FunnelPlot {...funnelPlotProps} />
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
           <ChartsAxis {...chartsAxisProps} />
           {children}
         </ChartsSurface>
+        {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -114,7 +118,6 @@ FunnelChart.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
-      setZoomData: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -263,17 +266,6 @@ FunnelChart.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * The list of zoom data related to each axis.
-   * Used to initialize the zoom in a specific configuration without controlling it.
-   */
-  initialZoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
-  ),
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -347,16 +339,6 @@ FunnelChart.propTypes = {
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.number,
-  /**
-   * The list of zoom data related to each axis.
-   */
-  zoomData: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
-  ),
 } as any;
 
 export { FunnelChart };

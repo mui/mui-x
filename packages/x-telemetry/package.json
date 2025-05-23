@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.2.0",
+  "version": "8.4.0",
   "author": "MUI Team",
   "description": "MUI X Telemetry.",
   "main": "src/index.ts",
@@ -41,7 +41,7 @@
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/internal-test-utils": "^2.0.8",
     "@types/device-uuid": "^1.0.3",
     "rimraf": "^6.0.1"
   },

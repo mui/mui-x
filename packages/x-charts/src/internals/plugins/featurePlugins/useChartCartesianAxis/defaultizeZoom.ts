@@ -1,3 +1,4 @@
+import { DEFAULT_ZOOM_SLIDER_SIZE } from '../../../constants';
 import { AxisId } from '../../../../models/axis';
 import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ZoomOptions } from './zoom.types';
@@ -10,7 +11,7 @@ const defaultZoomOptions = {
   maxSpan: 100,
   panning: true,
   filterMode: 'keep',
-  slider: { enabled: false },
+  slider: { enabled: false, size: DEFAULT_ZOOM_SLIDER_SIZE },
 } satisfies Omit<DefaultizedZoomOptions, 'axisId' | 'axisDirection'>;
 
 export const defaultizeZoom = (

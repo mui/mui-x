@@ -1,6 +1,7 @@
 // date-fns@<3 has no exports field defined
 // See https://github.com/date-fns/date-fns/issues/1781
 /* eslint-disable import/extensions, class-methods-use-this */
+/* v8 ignore start */
 // @ts-nocheck
 import addDays from 'date-fns/addDays/index.js';
 import addSeconds from 'date-fns/addSeconds/index.js';
@@ -47,6 +48,7 @@ import isWithinInterval from 'date-fns/isWithinInterval/index.js';
 import defaultLocale from 'date-fns/locale/en-US/index.js';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import longFormatters from 'date-fns/_lib/format/longFormatters/index.js';
+/* v8 ignore end */
 import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
@@ -86,7 +88,7 @@ export class AdapterDateFns
   implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    /* istanbul ignore next */
+    /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
         throw new Error(
@@ -97,6 +99,7 @@ export class AdapterDateFns
         );
       }
     }
+    /* v8 ignore stop */
     super({ locale: locale ?? defaultLocale, formats, longFormatters });
   }
 

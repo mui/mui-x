@@ -107,10 +107,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(
             <MarkPlot {...markPlotProps} />
           </g>
           <LineHighlightPlot {...lineHighlightPlotProps} />
-          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -125,6 +125,7 @@ LineChartPro.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
@@ -381,6 +382,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -470,6 +472,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -550,6 +553,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -630,6 +634,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -710,6 +715,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -790,6 +796,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -870,6 +877,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -950,6 +958,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1049,6 +1058,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1137,6 +1147,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1216,6 +1227,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1295,6 +1307,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1374,6 +1387,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1453,6 +1467,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1532,6 +1547,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1611,6 +1627,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),

@@ -21,9 +21,6 @@
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
-    "initialZoom": {
-      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
-    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {
@@ -57,8 +54,7 @@
     "slots": { "description": "Overridable component slots." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
-    },
-    "zoomData": { "description": "The list of zoom data related to each axis." }
+    }
   },
   "classDescriptions": {},
   "slotDescriptions": {

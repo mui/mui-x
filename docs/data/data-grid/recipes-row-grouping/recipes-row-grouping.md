@@ -18,6 +18,10 @@ Use `GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD` to pin a grouped column. In the de
 
 {{"demo": "RowGroupingPinning.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Creating and reordering groups with drag and drop
+
+See [Toolbar component—Row grouping bar](/x/react-data-grid/components/toolbar/#row-grouping-toolbar) for an example of how to add a custom toolbar that allows users to create row groups with drag and drop.
+
 ## Sorting row groups by the number of child rows
 
 By default, the row grouping column uses `sortComparator` of the grouping column for sorting.

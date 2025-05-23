@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { spy, useFakeTimers, SinonFakeTimers } from 'sinon';
+import { spy } from 'sinon';
 import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { vi } from 'vitest';
 
 describe('<YearCalendar />', () => {
   const { render } = createPickerRenderer();
@@ -171,15 +172,12 @@ describe('<YearCalendar />', () => {
   });
 
   describe('with fake timers', () => {
-    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-    let timer: SinonFakeTimers | null = null;
-
     beforeEach(() => {
-      timer = useFakeTimers({ now: new Date(2019, 0, 1), toFake: ['Date'] });
+      vi.setSystemTime(new Date(2019, 0, 1));
     });
 
     afterEach(() => {
-      timer?.restore();
+      vi.useRealTimers();
     });
 
     it('should disable years after initial render when "disableFuture" prop changes', () => {
