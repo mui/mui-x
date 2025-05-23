@@ -172,24 +172,28 @@ function ChartAxisZoomSliderTrack({
     }
 
     const pointerDownPoint = getSVGPoint(element, event);
-    let pointerDownZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerDownPoint);
+    let zoomFromPointerDown = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerDownPoint);
 
-    if (pointerDownZoom === null) {
+    if (zoomFromPointerDown === null) {
       return;
     }
 
     const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
-    // Ensure the pointerDownZoom is within the min and max range
-    pointerDownZoom = Math.max(Math.min(pointerDownZoom, maxEnd), minStart);
+    // Ensure the zoomFromPointerDown is within the min and max range
+    zoomFromPointerDown = Math.max(Math.min(zoomFromPointerDown, maxEnd), minStart);
 
     let pointerMoved = false;
 
     const onPointerMove = rafThrottle(function onPointerMove(pointerMoveEvent: PointerEvent) {
       const pointerMovePoint = getSVGPoint(element, pointerMoveEvent);
-      const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerMovePoint);
+      const zoomFromPointerMove = calculateZoomFromPoint(
+        store.getSnapshot(),
+        axisId,
+        pointerMovePoint,
+      );
 
-      if (pointerZoom === null) {
+      if (zoomFromPointerMove === null) {
         return;
       }
 
@@ -197,18 +201,18 @@ function ChartAxisZoomSliderTrack({
       const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
       instance.setAxisZoomData(axisId, (prevZoomData) => {
-        if (pointerZoom > pointerDownZoom) {
+        if (zoomFromPointerMove > zoomFromPointerDown) {
           const end = calculateZoomEnd(
-            pointerZoom,
-            { ...prevZoomData, start: pointerDownZoom },
+            zoomFromPointerMove,
+            { ...prevZoomData, start: zoomFromPointerDown },
             zoomOptions,
           );
 
           /* If the starting point is too close to the end that minSpan wouldn't be respected, we need to update the
            * start point. */
           const start = calculateZoomStart(
-            pointerDownZoom,
-            { ...prevZoomData, start: pointerDownZoom, end },
+            zoomFromPointerDown,
+            { ...prevZoomData, start: zoomFromPointerDown, end },
             zoomOptions,
           );
 
@@ -216,16 +220,16 @@ function ChartAxisZoomSliderTrack({
         }
 
         const start = calculateZoomStart(
-          pointerZoom,
-          { ...prevZoomData, end: pointerDownZoom },
+          zoomFromPointerMove,
+          { ...prevZoomData, end: zoomFromPointerDown },
           zoomOptions,
         );
 
         /* If the starting point is too close to the start that minSpan wouldn't be respected, we need to update the
          * start point. */
         const end = calculateZoomEnd(
-          pointerDownZoom,
-          { ...prevZoomData, start, end: pointerDownZoom },
+          zoomFromPointerDown,
+          { ...prevZoomData, start, end: zoomFromPointerDown },
           zoomOptions,
         );
 
@@ -245,9 +249,9 @@ function ChartAxisZoomSliderTrack({
       // If the pointer didn't move, we still need to respect the zoom constraints (minSpan, etc.)
       // In that case, we assume the start to be the pointerZoom and calculate the end.
       const pointerUpPoint = getSVGPoint(element, pointerUpEvent);
-      const pointerUpZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerUpPoint);
+      const zoomFromPointerUp = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerUpPoint);
 
-      if (pointerUpZoom === null) {
+      if (zoomFromPointerUp === null) {
         return;
       }
 
@@ -255,8 +259,8 @@ function ChartAxisZoomSliderTrack({
 
       instance.setAxisZoomData(axisId, (prev) => ({
         ...prev,
-        start: pointerUpZoom,
-        end: calculateZoomEnd(pointerUpZoom, prev, zoomOptions),
+        start: zoomFromPointerUp,
+        end: calculateZoomEnd(zoomFromPointerUp, prev, zoomOptions),
       }));
     };
 
@@ -269,8 +273,8 @@ function ChartAxisZoomSliderTrack({
 
     instance.setAxisZoomData(axisId, (prev) => ({
       ...prev,
-      start: pointerDownZoom,
-      end: pointerDownZoom,
+      start: zoomFromPointerDown,
+      end: zoomFromPointerDown,
     }));
   };
 
