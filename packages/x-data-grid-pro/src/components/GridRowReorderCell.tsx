@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   GridRenderCellParams,
@@ -11,7 +12,7 @@ import {
   getDataGridUtilityClass,
   gridClasses,
 } from '@mui/x-data-grid';
-import { gridEditRowsStateSelector, isEventTargetInPortal } from '@mui/x-data-grid/internals';
+import { gridEditRowsStateSelector, isEventTargetInPortal, vars } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -26,10 +27,18 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['rowReorderCell', isDraggable && 'rowReorderCell--draggable'],
     placeholder: ['rowReorderCellPlaceholder'],
+    icon: ['rowReorderIcon'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+const RowReorderIcon = styled('svg', {
+  name: 'MuiDataGrid',
+  slot: 'RowReorderIcon',
+})<{ ownerState: OwnerState }>({
+  color: vars.colors.foreground.muted,
+});
 
 function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
@@ -115,7 +124,12 @@ function GridRowReorderCell(params: GridRenderCellParams) {
 
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
-      <rootProps.slots.rowReorderIcon />
+      <RowReorderIcon
+        as={rootProps.slots.rowReorderIcon}
+        ownerState={ownerState}
+        className={classes.icon}
+        fontSize="small"
+      />
       <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );
