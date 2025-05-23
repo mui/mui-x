@@ -32,6 +32,13 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
       axisType: 'cartesian';
+      axisExtension: {
+        /**
+         * The gap, in pixels, between funnel sections.
+         * @default 0
+         */
+        gap?: number;
+      };
     };
   }
 

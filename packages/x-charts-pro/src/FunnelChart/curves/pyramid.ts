@@ -144,14 +144,12 @@ export class Pyramid implements CurveGenerator {
     const isLastSection = this.position === this.sections - 1;
     const isFirstSection = this.position === 0;
 
-    if (this.gap <= 0) {
-      if (isFirstSection && this.isIncreasing) {
-        this.points = [this.points[0], this.points[1], this.points[2]];
-      }
+    if (isFirstSection && this.isIncreasing) {
+      this.points = [this.points[0], this.points[1], this.points[2]];
+    }
 
-      if (isLastSection && !this.isIncreasing) {
-        this.points = [this.points[0], this.points[1], this.points[3]];
-      }
+    if (isLastSection && !this.isIncreasing) {
+      this.points = [this.points[0], this.points[1], this.points[3]];
     }
 
     borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
