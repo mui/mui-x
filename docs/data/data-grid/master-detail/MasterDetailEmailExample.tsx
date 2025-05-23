@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Typography from '@mui/material/Typography';
@@ -8,34 +7,12 @@ import Stack from '@mui/material/Stack';
 import {
   DataGridPro,
   GridColDef,
-  useGridApiContext,
   GridRowParams,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  GridDimensions,
 } from '@mui/x-data-grid-pro';
 import { randomCreatedDate, randomEmail } from '@mui/x-data-grid-generator';
 
-const getDetailPanelWidth = (gridDimensions: GridDimensions) => {
-  return gridDimensions.viewportInnerSize.width;
-};
-
-function DetailPanelContent({ row: rowProp }: { row: Customer }) {
-  const apiRef = useGridApiContext();
-  const [width, setWidth] = React.useState(() =>
-    getDetailPanelWidth(apiRef.current.getRootDimensions()),
-  );
-
-  const handleViewportInnerSizeChange = React.useCallback(() => {
-    setWidth(getDetailPanelWidth(apiRef.current.getRootDimensions()));
-  }, [apiRef]);
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(
-      'viewportInnerSizeChange',
-      handleViewportInnerSizeChange,
-    );
-  }, [apiRef, handleViewportInnerSizeChange]);
-
+function DetailPanelContent({ row: rowProp }: { row: Email }) {
   return (
     <Stack
       sx={{
@@ -44,7 +21,6 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
         boxSizing: 'border-box',
         position: 'sticky',
         left: 0,
-        width,
       }}
       direction="column"
     >
@@ -127,34 +103,22 @@ const rows = [
   },
 ];
 
-type Customer = (typeof rows)[number];
+type Email = (typeof rows)[number];
 
 export default function MasterDetailEmailExample() {
-  const getDetailPanelContent = React.useCallback(
-    ({ row }: GridRowParams) => <DetailPanelContent row={row} />,
-    [],
-  );
-
-  const getDetailPanelHeight = React.useCallback(() => 400, []);
-
   return (
-    <Box sx={{ width: '100%', height: 400 }}>
-      <DataGridPro
-        columns={columns}
-        rows={rows}
-        initialState={{
-          pinnedColumns: {
-            left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
-          },
-        }}
-        getDetailPanelHeight={getDetailPanelHeight}
-        getDetailPanelContent={getDetailPanelContent}
-        sx={{
-          '& .MuiDataGrid-detailPanel': {
-            overflow: 'visible',
-          },
-        }}
-      />
-    </Box>
+    <DataGridPro
+      columns={columns}
+      rows={rows}
+      initialState={{
+        pinnedColumns: {
+          left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+        },
+      }}
+      getDetailPanelHeight={() => 'auto'}
+      getDetailPanelContent={({ row }: GridRowParams) => (
+        <DetailPanelContent row={row} />
+      )}
+    />
   );
 }
