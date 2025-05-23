@@ -10,6 +10,7 @@ import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
+import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -28,7 +29,7 @@ const series = [
   { label: 'Series B', data: data.map((p) => p.y2) },
 ];
 
-type ChartType = 'scatter' | 'line' | 'bar' | 'heatmap';
+type ChartType = 'scatter' | 'line' | 'bar' | 'heatmap' | 'funnel';
 
 export default function PrintChart() {
   const [chartType, setChartType] = React.useState<ChartType>('scatter');
@@ -59,13 +60,14 @@ export default function PrintChart() {
             <MenuItem value="line">Line</MenuItem>
             <MenuItem value="bar">Bar</MenuItem>
             <MenuItem value="heatmap">Heatmap</MenuItem>
+            <MenuItem value="funnel">Funnel</MenuItem>
           </Select>
         </FormControl>
         <Button onClick={() => apiRef.current!.exportAsPrint()} variant="contained">
           Print
         </Button>
       </Stack>
-      <Chart apiRef={apiRef} type={chartType} />
+      <Chart key={chartType} apiRef={apiRef} type={chartType} />
     </Stack>
   );
 }
@@ -115,6 +117,24 @@ function Chart<T extends ChartType = ChartType>({
           series={[{ data: heatmapData }]}
           height={300}
           hideLegend={false}
+        />
+      );
+    case 'funnel':
+      return (
+        <FunnelChart
+          apiRef={apiRef as React.RefObject<ChartProApi<'funnel'> | undefined>}
+          width={400}
+          height={300}
+          series={[
+            {
+              data: [
+                { label: 'Visitors', value: 200 },
+                { label: 'Product Page Views', value: 180 },
+                { label: 'Added to Cart', value: 90 },
+                { label: 'Purchased', value: 50 },
+              ],
+            },
+          ]}
         />
       );
     default:
