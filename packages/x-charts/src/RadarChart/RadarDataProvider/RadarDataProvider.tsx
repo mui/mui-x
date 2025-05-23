@@ -243,6 +243,14 @@ RadarDataProvider.propTypes = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
+  /**
+   * The props for the slots.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Slots to customize charts' components.
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

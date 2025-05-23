@@ -31,6 +31,8 @@ import {
   ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
@@ -40,7 +42,12 @@ import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 
-export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
+export interface HeatmapSlots
+  extends ChartsAxisSlots,
+    ChartsOverlaySlots,
+    HeatmapItemSlots,
+    ChartsToolbarSlots,
+    Partial<ChartsSlotsPro> {
   /**
    * Custom component for the tooltip.
    * @default ChartsTooltipRoot
@@ -56,14 +63,16 @@ export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
-    ChartsLegendSlotProps {
+    ChartsLegendSlotProps,
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotPropsPro> {
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation'
+      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation' | 'slots' | 'slotProps'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
