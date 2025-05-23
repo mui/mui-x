@@ -12,7 +12,6 @@ export function useWeekList(): useWeekList.ReturnValue {
         ? adapter.endOfWeek(adapter.endOfMonth(date))
         : adapter.endOfWeek(adapter.addWeeks(start, amount - 1));
 
-    let count = 0;
     let current = start;
     let currentWeekNumber = adapter.getWeekNumber(current);
     const weeks: SchedulerValidDate[] = [];
@@ -30,8 +29,6 @@ export function useWeekList(): useWeekList.ReturnValue {
       if (prevWeekNumber === currentWeekNumber) {
         current = adapter.startOfDay(adapter.addHours(current, 12));
       }
-
-      count += 1;
     }
 
     return weeks;

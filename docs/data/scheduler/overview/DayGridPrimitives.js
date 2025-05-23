@@ -75,7 +75,7 @@ export default function DayGridPrimitives() {
           ),
         })),
       ),
-    [getWeekList],
+    [getWeekList, getDayList],
   );
 
   return (

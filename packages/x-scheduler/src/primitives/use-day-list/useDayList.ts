@@ -9,7 +9,6 @@ export function useDayList(): useDayList.ReturnValue {
     const start = adapter.startOfDay(date);
     const end = adapter.addDays(start, amount - 1);
 
-    let count = 0;
     let current = start;
     let currentDayNumber = adapter.getDayOfWeek(current);
     const days: SchedulerValidDate[] = [];
@@ -27,8 +26,6 @@ export function useDayList(): useDayList.ReturnValue {
       if (prevDayNumber === currentDayNumber) {
         current = adapter.startOfDay(adapter.addHours(current, 12));
       }
-
-      count += 1;
     }
 
     return days;
