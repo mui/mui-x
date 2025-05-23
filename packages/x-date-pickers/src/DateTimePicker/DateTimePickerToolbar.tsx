@@ -135,21 +135,14 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
       },
     },
     {
-      props: ({
-        pickerOrientation,
-        toolbarVariant,
-      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+      props: ({ pickerOrientation, toolbarVariant }) =>
         pickerOrientation === 'landscape' && toolbarVariant !== 'desktop',
       style: {
         flexDirection: 'column',
       },
     },
     {
-      props: ({
-        pickerOrientation,
-        toolbarVariant,
-        toolbarDirection,
-      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+      props: ({ pickerOrientation, toolbarVariant, toolbarDirection }) =>
         pickerOrientation === 'landscape' &&
         toolbarVariant !== 'desktop' &&
         toolbarDirection === 'rtl',
