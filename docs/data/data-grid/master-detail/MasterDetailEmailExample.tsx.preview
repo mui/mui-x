@@ -1,0 +1,13 @@
+<DataGridPro
+  columns={columns}
+  rows={rows}
+  initialState={{
+    pinnedColumns: {
+      left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+    },
+  }}
+  getDetailPanelHeight={() => 'auto'}
+  getDetailPanelContent={({ row }: GridRowParams) => (
+    <DetailPanelContent row={row} />
+  )}
+/>
