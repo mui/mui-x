@@ -4,7 +4,7 @@ title: Data Grid - Row pinning
 
 # Data Grid - Row pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Pin rows to keep them visible at all times.</p>
+<p class="description">Implement pinning to keep rows in the Data Grid visible at all times.</p>
 
 Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the Data Grid vertically.
 
