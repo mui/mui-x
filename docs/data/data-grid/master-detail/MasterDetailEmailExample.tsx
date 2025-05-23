@@ -37,7 +37,7 @@ function DetailPanelContent({ row: rowProp }: { row: Email }) {
             Brooklyn venmo. Kinfolk wolf iceland banjo, pitchfork cupping banh mi
             vexillologist cliche locavore venmo. Yuccie kombucha hashtag, bicycle
             rights umami truffaut mumblecore Brooklyn neutral milk hotel aesthetic.
-            Wolf plaid lumbersexual leggings butcher solarpunk shabby chic cliche.
+            Wolf plaid leggings butcher solarpunk shabby chic cliche.
           </p>
 
           <ButtonGroup variant="outlined" fullWidth>
