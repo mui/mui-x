@@ -5,6 +5,7 @@ import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import './WeekView.css';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { CalendarEvent } from '../models/events';
 
 function getCurrentWeekDays() {
   const today = DateTime.fromISO('2025-05-26');
@@ -97,7 +98,7 @@ export const WeekView = React.forwardRef(function WeekView(
                     role="gridcell"
                     data-weekend={adapter.isWeekend(day) ? 'true' : undefined}
                   >
-                    {events.map((event) => (
+                    {events.map((event: CalendarEvent) => (
                       <TimeGrid.Event
                         key={event.id}
                         start={event.start}
