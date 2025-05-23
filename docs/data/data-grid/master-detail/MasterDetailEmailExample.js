@@ -27,9 +27,9 @@ function DetailPanelContent({ row: rowProp }) {
           <span>{`To: me <${randomEmail()}>`}</span>
 
           <p>
-            Artisan bitters street art photo booth you probably haven't heard of them
-            slow-carb food truck. Meh narwhal tumeric bodega boys street art Brooklyn
-            venmo. Kinfolk wolf iceland banjo, pitchfork cupping banh mi
+            Artisan bitters street art photo booth you probably have not heard of
+            them slow-carb food truck. Meh narwhal tumeric bodega boys street art
+            Brooklyn venmo. Kinfolk wolf iceland banjo, pitchfork cupping banh mi
             vexillologist cliche locavore venmo. Yuccie kombucha hashtag, bicycle
             rights umami truffaut mumblecore Brooklyn neutral milk hotel aesthetic.
             Wolf plaid lumbersexual leggings butcher solarpunk shabby chic cliche.
