@@ -69,6 +69,10 @@ To display a grouping column for each criterion, set the `rowGroupingColumnMode`
 Use the `groupingColDef` prop to customize the rendering of the grouping column.
 You can override any property from the column definition (`GridColDef`) interface, with the exceptions of the `field`, the `type`, and the properties related to inline editing.
 
+:::success
+For better performance, keep `groupingColDef` prop reference stable between two renders.
+:::
+
 {{"demo": "RowGroupingCustomGroupingColDefObject.js", "bg": "inline", "defaultCodeOpen": false}}
 
 By default, when using the object format, the properties are applied to all grouping columns.
@@ -76,11 +80,6 @@ This means that if `rowGroupingColumnMode` is set to `multiple`, then all column
 
 To override properties for specific grouping columns, or to apply different overrides based on the current grouping criteria, you can pass a callback function to `groupingColDef` instead of an object with its config.
 The callback is called for each grouping column, and it receives the respective column's fields as parameters.
-
-:::warning
-The `groupingColDef` prop, same as `columns` prop, should keep the same reference between two renders.
-Otherwise, the grouping column processing can happen multiple times and outside of the required order, resulting in a wrong column placement.
-:::
 
 The demo below illustrates this approach to provide buttons for toggling between different grouping criteria:
 
