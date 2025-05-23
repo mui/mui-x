@@ -4,6 +4,9 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ForwardIcon from '@mui/icons-material/Forward';
+import SendIcon from '@mui/icons-material/Send';
 import {
   DataGridPro,
   GridColDef,
@@ -40,10 +43,10 @@ function DetailPanelContent({ row: rowProp }: { row: Email }) {
             Wolf plaid leggings butcher solarpunk shabby chic cliche.
           </Typography>
 
-          <ButtonGroup variant="outlined" fullWidth>
-            <Button>Reply</Button>
-            <Button>Forward</Button>
-            <Button>Delete</Button>
+          <ButtonGroup fullWidth variant="text">
+            <Button startIcon={<SendIcon />}>Reply</Button>
+            <Button startIcon={<ForwardIcon />}>Forward</Button>
+            <Button color="error" startIcon={<DeleteIcon />}>Delete</Button>
           </ButtonGroup>
         </Stack>
       </Paper>
