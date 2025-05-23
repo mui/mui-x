@@ -8,7 +8,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
-import { getStringSize } from '../internals/domUtils';
+import { getStringSize, warmUpStringCache } from '../internals/domUtils';
 import { TickItemType, useTicks } from '../hooks/useTicks';
 import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
 import { AxisConfig, ChartsYAxisProps } from '../models/axis';
@@ -71,6 +71,14 @@ function shortenLabels(
 
   if (isRtl) {
     [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
+  }
+
+  /* Avoid warming up the cache for too many values because we know not all of them will fit, so we'd be doing useless work */
+  if (visibleLabels.length < 100) {
+    warmUpStringCache(
+      visibleLabels.flatMap((t) => t.formattedValue).filter((t) => t != null),
+      tickLabelStyle,
+    );
   }
 
   for (const item of visibleLabels) {

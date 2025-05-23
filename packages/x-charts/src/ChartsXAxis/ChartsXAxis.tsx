@@ -8,7 +8,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { clampAngle } from '../internals/clampAngle';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
-import { getStringSize } from '../internals/domUtils';
+import { getStringSize, warmUpStringCache } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisConfig, ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -82,6 +82,14 @@ function getVisibleLabels(
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
 
+  /* Avoid warming up the cache for too many values because we know not all of them will fit, so we'd be doing useless work */
+  if (isMounted && xTicks.length < 100) {
+    warmUpStringCache(
+      xTicks.flatMap((t) => t.formattedValue?.split('\n')).filter((t) => t != null),
+      style,
+    );
+  }
+
   return new Set(
     xTicks.filter((item, labelIndex) => {
       const { offset, labelOffset } = item;
@@ -152,6 +160,14 @@ function shortenLabels(
   if (isRtl) {
     [leftBoundFactor, rightBoundFactor] = [rightBoundFactor, leftBoundFactor];
   }
+
+  // Measure strings so it's cached
+  warmUpStringCache(
+    Array.from(visibleLabels)
+      .map((item) => item.formattedValue)
+      .filter((item) => item != null),
+    tickLabelStyle,
+  );
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
