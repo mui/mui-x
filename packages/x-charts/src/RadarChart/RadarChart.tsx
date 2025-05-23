@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { RadarChartPluginsSignatures } from '@mui/x-charts/RadarChart/RadarChart.plugins';
+import { RadarChartPluginsSignatures } from './RadarChart.plugins';
 import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
@@ -12,8 +12,8 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface } from '../ChartsSurface';
-import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsWrapper, ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
@@ -41,7 +41,9 @@ export interface RadarChartProps
   extends RadarDataProviderProps,
     Omit<RadarGridProps, 'classes'>,
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    Pick<ChartsWrapperProps, 'sx'>,
+    Omit<ChartsSurfaceProps, 'sx'> {
   /**
    * If `true`, the legend is not rendered.
    */
@@ -119,7 +121,6 @@ RadarChart.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.

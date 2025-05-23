@@ -93,7 +93,6 @@ RadarChartPro.propTypes = {
       exportAsPrint: PropTypes.func.isRequired,
     }),
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
