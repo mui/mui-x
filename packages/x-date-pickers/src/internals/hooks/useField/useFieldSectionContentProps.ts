@@ -150,12 +150,15 @@ export function useFieldSectionContentProps(
     event.dataTransfer.dropEffect = 'none';
   });
 
-  const createFocusHandler = useEventCallback((sectionIndex: number) => () => {
-    if (disabled) {
-      return;
-    }
-    setSelectedSections(sectionIndex);
-  });
+  const createFocusHandler = React.useCallback(
+    (sectionIndex: number) => () => {
+      if (disabled) {
+        return;
+      }
+      setSelectedSections(sectionIndex);
+    },
+    [disabled, setSelectedSections],
+  );
 
   return React.useCallback(
     (section, sectionIndex) => {
