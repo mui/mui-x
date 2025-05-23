@@ -23,7 +23,7 @@
     "id": { "type": { "name": "any" } },
     "localeText": { "type": { "name": "any" } },
     "margin": { "type": { "name": "any" } },
-    "plugins": { "type": { "name": "object" } },
+    "plugins": { "type": { "name": "any" } },
     "skipAnimation": { "type": { "name": "any" } },
     "slotProps": { "type": { "name": "any" } },
     "slots": { "type": { "name": "any" }, "additionalInfo": { "slotsApi": true } },

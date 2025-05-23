@@ -5,24 +5,22 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
 import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
 import { RADAR_PLUGINS } from '../RadarChart.plugins';
-import { ChartContainerProps } from '../../ChartContainer';
 import { RadarSeriesType } from '../../models/seriesType/radar';
 import { ChartsRadiusAxisProps, ChartsRotationAxisProps, PolarAxisConfig } from '../../models/axis';
 import { ChartDataProvider, ChartDataProviderProps } from '../../ChartDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';
 import { RadarConfig } from './radar.types';
-import { ConvertSignaturesIntoPlugins } from '../../internals/plugins/models/helpers';
 import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
 
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
 const DEFAULT_RADAR_MARGIN = { top: 30, bottom: 30, left: 50, right: 50 };
 
 export type RadarDataProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<'radar'>,
 > = Omit<
-  ChartContainerProps<'radar', TSignatures>,
-  'series' | 'plugins' | 'rotationAxis' | 'radiusAxis' | 'dataset'
+  ChartDataProviderProps<'radar', TSignatures>,
+  'series' | 'rotationAxis' | 'radiusAxis' | 'dataset'
 > & {
   /**
    * The series to display in the bar chart.
@@ -38,10 +36,6 @@ export type RadarDataProviderProps<
    * @default 'axis'
    */
   highlight?: 'axis' | 'series' | 'none';
-  /**
-   * Array of plugins used to add features to the chart.
-   */
-  plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
 };
 
 function RadarDataProvider<TSignatures extends readonly ChartAnyPluginSignature[] = []>(
@@ -53,7 +47,6 @@ function RadarDataProvider<TSignatures extends readonly ChartAnyPluginSignature[
     width,
     height,
     colors,
-    className,
     skipAnimation,
     margin,
     radar,
@@ -136,14 +129,11 @@ RadarDataProvider.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any,
-  children: PropTypes.any,
-  className: PropTypes.any,
   /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
    */
   colors: PropTypes.any,
-  desc: PropTypes.any,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -172,7 +162,7 @@ RadarDataProvider.propTypes = {
   /**
    * Array of plugins used to add features to the chart.
    */
-  plugins: PropTypes.object,
+  plugins: PropTypes.any,
   /**
    * The configuration of the radar scales.
    */
@@ -215,9 +205,7 @@ RadarDataProvider.propTypes = {
    * Slots to customize charts' components.
    */
   slots: PropTypes.any,
-  sx: PropTypes.any,
   theme: PropTypes.any,
-  title: PropTypes.any,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
