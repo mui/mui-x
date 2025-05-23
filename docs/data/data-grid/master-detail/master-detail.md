@@ -13,7 +13,7 @@ title: Data Grid - Master-detail row panels
 The Data Grid Pro provides the tools to implement master-detail row panels.
 These are useful whenever you need to give end users additional information about row items without navigating away from the Grid.
 
-A common example of this pattern is found in most email clients—users can click on an email from the master list to see its contents (details) as well as actions they can take such as replying, forwarding, and deleting.
+A common example of this pattern is found in many email clients—users can click on an email from the master list to see its contents (details) as well as actions they can take such as replying, forwarding, and deleting.
 To expand a row, click on the **+** icon or press <kbd class="key">Space</kbd> when focused on a cell in the detail toggle column:
 
 {{"demo": "MasterDetailEmailExample.js", "bg": "inline", "defaultCodeOpen": false}}
