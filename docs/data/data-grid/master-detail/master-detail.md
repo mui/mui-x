@@ -20,7 +20,7 @@ To expand a row, click on the **+** icon or press <kbd class="key">Space</kbd> w
 
 ## Implementing master-detail row panels
 
-To enable master-detail row panels, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
+To create master-detail row panels, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
 You can use any valid React element—even another Data Grid.
 
 ```tsx
@@ -52,7 +52,7 @@ This function must return either a number or the `"auto"` string:
 ```
 
 :::info
-Both props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, which lets you return a different value for each row.
+The `getDetailPanelContent` and `getDetailPanelHeight` props are called with a [`GridRowParams`](/x/api/data-grid/grid-row-params/) object, which lets you return a different value for each row.
 :::
 
 The demo below shows master-detail panels with heights derived from their contents:
@@ -95,7 +95,7 @@ This component is used by the `getDetailPanelContent` prop to render the detail 
 
 ## Using a detail panel as a form
 
-As an alternative to the built-in [row editing](/x/react-data-grid/editing/#row-editing), you can render a form component inside the detail panel so users can edit the current row values.
+As an alternative to the built-in [row editing feature](/x/react-data-grid/editing/#row-editing), you can render a form component inside the detail panel so users can edit the row values.
 
 The demo below shows how to implement this behavior using [react-hook-form](https://react-hook-form.com/), but other form libraries are also supported.
 
@@ -173,7 +173,7 @@ const columns = [
 ```
 
 :::success
-For a more complex example of this use case, see [the recipe for expanding or collapsing all detail panels](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels).
+For a more complex example of this use case, see the recipe for [expanding or collapsing all detail panels](/x/react-data-grid/row-recipes/#expand-or-collapse-all-detail-panels).
 :::
 
 ## Disabling detail panel content scroll
