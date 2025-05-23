@@ -25,20 +25,20 @@ function DetailPanelContent({ row: rowProp }: { row: Email }) {
       direction="column"
     >
       <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 1 }}>
-        <Stack direction="column" spacing={1.5}>
+        <Stack direction="column" spacing={1}>
           <Typography variant="h5">{`Subject: ${rowProp.subject}`}</Typography>
-          <span>{`Date: ${rowProp.date.toLocaleString()}`}</span>
-          <span>{`From: ${rowProp.name} <${rowProp.email}>`}</span>
-          <span>{`To: me <${randomEmail()}>`}</span>
+          <Typography variant="caption">{`Date: ${rowProp.date.toLocaleString()}`}</Typography>
+          <Typography variant="subtitle2">{`From: ${rowProp.name} <${rowProp.email}>`}</Typography>
+          <Typography variant="subtitle2">{`To: me <${randomEmail()}>`}</Typography>
 
-          <p>
+          <Typography variant="body2">
             Artisan bitters street art photo booth you probably have not heard of
             them slow-carb food truck. Meh narwhal tumeric bodega boys street art
             Brooklyn venmo. Kinfolk wolf iceland banjo, pitchfork cupping banh mi
             vexillologist cliche locavore venmo. Yuccie kombucha hashtag, bicycle
             rights umami truffaut mumblecore Brooklyn neutral milk hotel aesthetic.
             Wolf plaid leggings butcher solarpunk shabby chic cliche.
-          </p>
+          </Typography>
 
           <ButtonGroup variant="outlined" fullWidth>
             <Button>Reply</Button>
