@@ -31,7 +31,7 @@ You can use any valid React element—even another Data Grid.
 
 By default, the detail panel height is 500px.
 You can customize this by passing a function to the `getDetailPanelHeight` prop.
-This function must return either a number or the `"auto"` string:
+This function must return either a number or `"auto"`:
 
 - If it returns a number, then the panel will use that value (in pixels) for the height.
 - If it returns `"auto"`, then the height will be derived from the content.
