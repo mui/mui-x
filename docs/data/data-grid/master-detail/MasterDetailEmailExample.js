@@ -23,7 +23,7 @@ function DetailPanelContent({ row: rowProp }) {
       }}
       direction="column"
     >
-      <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 1 }}>
+      <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 2 }}>
         <Stack direction="column" spacing={1}>
           <Typography variant="h5">{`Subject: ${rowProp.subject}`}</Typography>
           <Typography variant="caption">{`Date: ${rowProp.date.toLocaleString()}`}</Typography>
@@ -40,7 +40,7 @@ function DetailPanelContent({ row: rowProp }) {
           </Typography>
         </Stack>
         <Divider sx={{ my: 2 }} />
-        <ButtonGroup fullWidth variant="text" sx={{ mb: 2 }}>
+        <ButtonGroup fullWidth variant="text">
           <Button startIcon={<SendIcon />}>Reply</Button>
           <Button startIcon={<ForwardIcon />}>Forward</Button>
           <Button color="error" startIcon={<DeleteIcon />}>
