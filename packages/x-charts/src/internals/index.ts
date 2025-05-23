@@ -25,6 +25,8 @@ export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
 export * from './plugins/featurePlugins/useChartVoronoi';
 export * from './plugins/utils/selectors';
+export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
+export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -49,6 +51,8 @@ export * from './getCurve';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
+export * from './colorScale';
+export * from './ticks';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
