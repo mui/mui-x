@@ -99,10 +99,8 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     const scrollbarInnerSize =
       props.position === 'horizontal'
-        ? dimensions.minimumSize[propertyDimension]
-        : dimensions.minimumSize[propertyDimension] -
-          dimensions.headersTotalHeight -
-          (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
+        ? dimensions.minimumSize.width
+        : dimensions.minimumSize.height - dimensions.headersTotalHeight;
 
     const onScrollerScroll = useEventCallback(() => {
       const scrollbar = scrollbarRef.current;
