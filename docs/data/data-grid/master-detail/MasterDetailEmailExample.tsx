@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -42,13 +43,15 @@ function DetailPanelContent({ row: rowProp }: { row: Email }) {
             rights umami truffaut mumblecore Brooklyn neutral milk hotel aesthetic.
             Wolf plaid leggings butcher solarpunk shabby chic cliche.
           </Typography>
-
-          <ButtonGroup fullWidth variant="text">
-            <Button startIcon={<SendIcon />}>Reply</Button>
-            <Button startIcon={<ForwardIcon />}>Forward</Button>
-            <Button color="error" startIcon={<DeleteIcon />}>Delete</Button>
-          </ButtonGroup>
         </Stack>
+        <Divider sx={{ my: 2 }} />
+        <ButtonGroup fullWidth variant="text" sx={{ mb: 2 }}>
+          <Button startIcon={<SendIcon />}>Reply</Button>
+          <Button startIcon={<ForwardIcon />}>Forward</Button>
+          <Button color="error" startIcon={<DeleteIcon />}>
+            Delete
+          </Button>
+        </ButtonGroup>
       </Paper>
     </Stack>
   );
