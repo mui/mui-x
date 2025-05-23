@@ -318,6 +318,16 @@ FunnelChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onXAxisInteraction: PropTypes.func,
+  /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onYAxisInteraction: PropTypes.func,
+  /**
    * The series to display in the funnel chart.
    * An array of [[FunnelSeriesType]] objects.
    */
@@ -348,6 +358,22 @@ FunnelChart.propTypes = {
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
   width: PropTypes.number,
+  /**
+   * The controlled x-axis value highlighted.
+   */
+  xAxisHighlight: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number,
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+  }),
+  /**
+   * The controlled y-axis value highlighted.
+   */
+  yAxisHighlight: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number,
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+  }),
   /**
    * The list of zoom data related to each axis.
    */

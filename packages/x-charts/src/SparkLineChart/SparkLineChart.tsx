@@ -400,6 +400,16 @@ SparkLineChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onXAxisInteraction: PropTypes.func,
+  /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onYAxisInteraction: PropTypes.func,
+  /**
    * Type of plot used.
    * @default 'line'
    */
@@ -985,6 +995,14 @@ SparkLineChart.propTypes = {
     }),
   ]),
   /**
+   * The controlled x-axis value highlighted.
+   */
+  xAxisHighlight: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number,
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+  }),
+  /**
    * The yAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
@@ -1506,6 +1524,14 @@ SparkLineChart.propTypes = {
       width: PropTypes.number,
     }),
   ]),
+  /**
+   * The controlled y-axis value highlighted.
+   */
+  yAxisHighlight: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number,
+    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+  }),
 } as any;
 
 export { SparkLineChart };

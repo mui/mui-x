@@ -50,6 +50,14 @@
         "scatterItemIdentifier": "Identify which item got clicked"
       }
     },
+    "onXAxisInteraction": {
+      "description": "The function called when pointer moves from one axis item to another.",
+      "typeDescriptions": { "newAxes": "The array of item per axis." }
+    },
+    "onYAxisInteraction": {
+      "description": "The function called when pointer moves from one axis item to another.",
+      "typeDescriptions": { "newAxes": "The array of item per axis." }
+    },
     "plotType": { "description": "Type of plot used." },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."
@@ -75,9 +83,11 @@
     "xAxis": {
       "description": "The xAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
     },
+    "xAxisHighlight": { "description": "The controlled x-axis value highlighted." },
     "yAxis": {
       "description": "The yAxis configuration. Notice it is a single <a href='/x/api/charts/axis-config/'>AxisConfig</a> object, not an array of configuration."
-    }
+    },
+    "yAxisHighlight": { "description": "The controlled y-axis value highlighted." }
   },
   "classDescriptions": {},
   "slotDescriptions": {

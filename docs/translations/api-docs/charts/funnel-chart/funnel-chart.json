@@ -47,6 +47,14 @@
         "funnelItemIdentifier": "The funnel item identifier."
       }
     },
+    "onXAxisInteraction": {
+      "description": "The function called when pointer moves from one axis item to another.",
+      "typeDescriptions": { "newAxes": "The array of item per axis." }
+    },
+    "onYAxisInteraction": {
+      "description": "The function called when pointer moves from one axis item to another.",
+      "typeDescriptions": { "newAxes": "The array of item per axis." }
+    },
     "series": {
       "description": "The series to display in the funnel chart. An array of FunnelSeriesType objects."
     },
@@ -58,6 +66,8 @@
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
+    "xAxisHighlight": { "description": "The controlled x-axis value highlighted." },
+    "yAxisHighlight": { "description": "The controlled y-axis value highlighted." },
     "zoomData": { "description": "The list of zoom data related to each axis." }
   },
   "classDescriptions": {},

@@ -9,6 +9,7 @@ import type {
   XAxis,
   DefaultedXAxis,
   DefaultedYAxis,
+  AxisPointerIdentifier,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions } from './zoom.types';
@@ -48,6 +49,24 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    */
   onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
   /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onXAxisInteraction?: (newAxes: AxisPointerIdentifier[] | null) => void;
+  /**
+   * The function called when pointer moves from one axis item to another.
+   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   */
+  onYAxisInteraction?: (newAxes: AxisPointerIdentifier[] | null) => void;
+  /**
+   * The controlled x-axis value highlighted.
+   */
+  xAxisHighlight?: AxisPointerIdentifier | null;
+  /**
+   * The controlled y-axis value highlighted.
+   */
+  yAxisHighlight?: AxisPointerIdentifier | null;
+  /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
    * @default false
@@ -78,6 +97,16 @@ export interface UseChartCartesianAxisState {
   cartesianAxis: {
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
+  };
+  controlledCartesianAxisHighlight?: {
+    /**
+     * The controlled x-axis value highlighted.
+     */
+    x?: AxisPointerIdentifier | null;
+    /**
+     * The controlled y-axis value highlighted.
+     */
+    y?: AxisPointerIdentifier | null;
   };
 }
 

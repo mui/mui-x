@@ -71,6 +71,20 @@
         "describedArgs": ["event", "funnelItemIdentifier"]
       }
     },
+    "onXAxisInteraction": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newAxes: Array<AxisPointerIdentifier>) => void",
+        "describedArgs": ["newAxes"]
+      }
+    },
+    "onYAxisInteraction": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newAxes: Array<AxisPointerIdentifier>) => void",
+        "describedArgs": ["newAxes"]
+      }
+    },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -79,6 +93,18 @@
       "additionalInfo": { "slotsApi": true }
     },
     "width": { "type": { "name": "number" } },
+    "xAxisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex?: number, value?: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string }"
+      }
+    },
+    "yAxisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex?: number, value?: Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string }"
+      }
+    },
     "zoomData": {
       "type": {
         "name": "arrayOf",
