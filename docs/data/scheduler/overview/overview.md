@@ -19,7 +19,7 @@ This package is not published yet.
 
 ### Time Grid
 
-{{"demo": "TimeGridPrimitives.js", "defaultCodeOpen": false}}
+{{"demo": "TimeGridPrimitives.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Day Grid
 
@@ -29,4 +29,4 @@ TODO
 
 ### Event Calendar
 
-{{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false}}
+{{"demo": "BasicEventCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
