@@ -3,9 +3,9 @@ import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 
-const DayGridRow = React.forwardRef(function DayGridRow(
+export const DayGridRow = React.forwardRef(function DayGridRow(
   componentProps: DayGridRow.Props,
-  forwardedRef: React.ForwardedRef<HTMLTableRowElement>,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
     // Rendering props
@@ -19,7 +19,7 @@ const DayGridRow = React.forwardRef(function DayGridRow(
 
   const state: DayGridRow.State = React.useMemo(() => ({}), []);
 
-  return useRenderElement('tr', componentProps, {
+  return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
@@ -29,7 +29,5 @@ const DayGridRow = React.forwardRef(function DayGridRow(
 export namespace DayGridRow {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'tr', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State> {}
 }
-
-export { DayGridRow };

@@ -8,7 +8,7 @@ import { SchedulerValidDate } from '../../utils/adapter/types';
 
 const adapter = getAdapter();
 
-const TimeGridColumn = React.forwardRef(function TimeGridColumn(
+export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   componentProps: TimeGridColumn.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -52,5 +52,3 @@ export namespace TimeGridColumn {
     value: SchedulerValidDate;
   }
 }
-
-export { TimeGridColumn };

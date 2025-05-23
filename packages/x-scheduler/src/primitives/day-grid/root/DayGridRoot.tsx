@@ -3,9 +3,8 @@ import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { SchedulerValidDate } from '../../utils/adapter/types';
-import { getAdapter } from '../../utils/adapter/getAdapter';
 
-const DayGridRoot = React.forwardRef(function DayGridRoot(
+export const DayGridRoot = React.forwardRef(function DayGridRoot(
   componentProps: DayGridRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -21,7 +20,7 @@ const DayGridRoot = React.forwardRef(function DayGridRoot(
 
   const state: DayGridRoot.State = React.useMemo(() => ({}), []);
 
-  return useRenderElement('table', componentProps, {
+  return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
@@ -31,7 +30,7 @@ const DayGridRoot = React.forwardRef(function DayGridRoot(
 export namespace DayGridRoot {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'table', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State> {}
 
   export interface ChildrenParameters {
     /**
@@ -56,5 +55,3 @@ export namespace DayGridRoot {
     fixedWeekNumber?: number;
   }
 }
-
-export { DayGridRoot };
