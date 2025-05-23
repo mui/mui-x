@@ -3,7 +3,7 @@ import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
-import { pickersTextFieldClasses } from '../../PickersTextField';
+import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
 
 interface DemoGridProps {
   children: React.ReactNode;
@@ -21,7 +21,9 @@ type PickersGridChildComponentType =
 
 type PickersSupportedSections = 'date' | 'time' | 'date-time';
 
-const getChildTypeFromChildName = (childName: string): PickersGridChildComponentType => {
+const getChildTypeFromChildName = (
+  childName: string,
+): PickersGridChildComponentType => {
   if (childName.match(/^([A-Za-z]+)Range(Calendar|Clock)$/)) {
     return 'multi-panel-UI-view';
   }
@@ -30,7 +32,10 @@ const getChildTypeFromChildName = (childName: string): PickersGridChildComponent
     return 'Tall-UI-view';
   }
 
-  if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
+  if (
+    childName.match(/^Static([A-Za-z]+)/) ||
+    childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)
+  ) {
     return 'UI-view';
   }
 
@@ -48,7 +53,9 @@ const getChildTypeFromChildName = (childName: string): PickersGridChildComponent
   return 'single-input-field';
 };
 
-const getSupportedSectionFromChildName = (childName: string): PickersSupportedSections => {
+const getSupportedSectionFromChildName = (
+  childName: string,
+): PickersSupportedSections => {
   if (childName.includes('DateTime')) {
     return 'date-time';
   }
@@ -67,7 +74,8 @@ interface DemoItemProps {
   sx?: SxProps<Theme>;
 }
 /**
- * @deprecated Will be removed in the next major version (v9.0.0).
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
  */
 export function DemoItem(props: DemoItemProps) {
   const { label, children, component, sx: sxProp } = props;
@@ -75,7 +83,10 @@ export function DemoItem(props: DemoItemProps) {
   let spacing: StackProps['spacing'];
   let sx = sxProp;
 
-  if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
+  if (
+    component &&
+    getChildTypeFromChildName(component) === 'multi-input-range-field'
+  ) {
     spacing = 1.5;
     sx = {
       ...sx,
@@ -97,16 +108,18 @@ export function DemoItem(props: DemoItemProps) {
 
 DemoItem.displayName = 'DemoItem';
 
-const isDemoItem = (child: React.ReactNode): child is React.ReactElement<DemoItemProps> => {
+const isDemoItem = (
+  child: React.ReactNode,
+): child is React.ReactElement<DemoItemProps> => {
   if (React.isValidElement(child) && typeof child.type !== 'string') {
     // @ts-ignore
     return child.type.displayName === 'DemoItem';
   }
   return false;
 };
-
 /**
- * @deprecated Will be removed in the next major version (v9.0.0).
+ * WARNING: This is an internal component used in documentation to achieve a desired layout.
+ * Please do not use it in your application.
  */
 export function DemoContainer(props: DemoGridProps) {
   const { children, components, sx: sxProp } = props;
@@ -121,7 +134,9 @@ export function DemoContainer(props: DemoGridProps) {
 
   const getSpacing = (direction: 'column' | 'row') => {
     if (direction === 'row') {
-      return childrenTypes.has('UI-view') || childrenTypes.has('Tall-UI-view') ? 3 : 2;
+      return childrenTypes.has('UI-view') || childrenTypes.has('Tall-UI-view')
+        ? 3
+        : 2;
     }
 
     return childrenTypes.has('UI-view') ? 4 : 3;
@@ -175,7 +190,9 @@ export function DemoContainer(props: DemoGridProps) {
     }
   } else if (childrenSupportedSections.has('date-time')) {
     extraSx = {
-      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 270 },
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
+        minWidth: 270,
+      },
     };
     if (childrenTypes.has('multi-input-range-field')) {
       // increase width for the multi input date time range fields
@@ -186,7 +203,9 @@ export function DemoContainer(props: DemoGridProps) {
     }
   } else {
     extraSx = {
-      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 200 },
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
+        minWidth: 200,
+      },
     };
   }
   const finalSx = {
