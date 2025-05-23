@@ -31,7 +31,7 @@ const ZoomSliderTrack = styled('rect')(({ theme }) => ({
       theme.palette.mode === 'dark'
         ? (theme.vars || theme).palette.grey[800]
         : (theme.vars || theme).palette.grey[300],
-    cursor: 'crosshair',
+    cursor: 'pointer',
   },
 }));
 
