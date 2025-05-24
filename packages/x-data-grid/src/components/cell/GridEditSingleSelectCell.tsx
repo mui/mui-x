@@ -91,7 +91,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
 
     setOpen(false);
-    const target = event.target as HTMLInputElement;
+    const target = event.target;
     // NativeSelect casts the value to a string.
     const formattedTargetValue = getValueFromValueOptions(
       target.value,
