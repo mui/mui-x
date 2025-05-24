@@ -1,5 +1,3 @@
-import { ponyfillGlobal } from '@mui/utils';
-
 interface TelemetryEnvConfig {
   NODE_ENV: string | '<unknown>';
   IS_COLLECTING: boolean | undefined;
@@ -41,7 +39,7 @@ function getBooleanEnvFromEnvObject(envKey: string, envObj: Record<string, any>)
 function getIsTelemetryCollecting(): boolean | undefined {
   // Check global variable
   // eslint-disable-next-line no-underscore-dangle
-  const globalValue = ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__;
+  const globalValue = (globalThis as any).__MUI_X_TELEMETRY_DISABLED__;
   if (typeof globalValue === 'boolean') {
     // If disabled=true, telemetry is disabled
     // If disabled=false, telemetry is enabled
@@ -103,7 +101,7 @@ function getIsDebugModeEnabled(): boolean {
   try {
     // Check global variable
     // eslint-disable-next-line no-underscore-dangle
-    const globalValue = ponyfillGlobal.__MUI_X_TELEMETRY_DEBUG__;
+    const globalValue = (globalThis as any).__MUI_X_TELEMETRY_DEBUG__;
     if (typeof globalValue === 'boolean') {
       return globalValue;
     }
