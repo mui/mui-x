@@ -31,14 +31,14 @@ const params = {
 
 const ResetZoomButton = React.forwardRef<HTMLButtonElement, React.PropsWithChildren>(
   function ResetZoomButton(props, ref) {
-    const api = useChartApiContext<ChartProApi<'scatter'>>();
+    const apiRef = useChartApiContext<ChartProApi<'scatter'>>();
 
     return (
       <ToolbarButton
         {...props}
         ref={ref}
         onClick={() => {
-          api.current.setZoomData((prev) =>
+          apiRef.current.setZoomData((prev) =>
             prev.map((zoom) => ({ ...zoom, start: 0, end: 100 })),
           );
         }}
