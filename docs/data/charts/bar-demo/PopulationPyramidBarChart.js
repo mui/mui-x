@@ -85,8 +85,14 @@ export default function PopulationPyramidBarChart() {
               numberWithSuffixFormatter.format(Math.abs(population)),
             disableLine: true,
             disableTicks: true,
+            domainLimit(min, max) {
+              const extremum = Math.max(-min, max);
+              const roundedExtremum = Math.ceil(extremum / 100_000) * 100_000;
+              return { min: -roundedExtremum, max: roundedExtremum };
+            },
           },
         ]}
+        grid={{ vertical: true }}
       />
       <Typography variant="caption">Source: KOSIS</Typography>
     </Stack>
