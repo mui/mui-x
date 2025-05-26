@@ -107,6 +107,10 @@ import {
   useGridAiAssistant,
   aiAssistantStateInitializer,
 } from '../hooks/features/aiAssistant/useGridAiAssistant';
+import {
+  chartsIntegrationStateInitializer,
+  useGridChartsIntegration,
+} from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -181,6 +185,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
+  useGridInitializeState(chartsIntegrationStateInitializer, apiRef, props);
 
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
@@ -228,6 +233,7 @@ export const useDataGridPremiumComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
+  useGridChartsIntegration(apiRef, props);
 
   return props;
 };
