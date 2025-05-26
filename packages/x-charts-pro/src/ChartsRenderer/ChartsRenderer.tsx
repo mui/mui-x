@@ -26,7 +26,8 @@ export function ChartsRenderer({ categories, series, chartType }: ChartsRenderer
   if (chartType === 'line') {
     return (
       <LineChart
-        xAxis={[{ data: categories }]}
+        xAxis={[{ data: categories, scaleType: 'point' }]}
+        yAxis={[{ min: 0 }]}
         series={series.map((s) => ({
           data: s.data,
           label: s.label,

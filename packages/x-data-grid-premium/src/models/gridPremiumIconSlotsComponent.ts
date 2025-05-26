@@ -159,4 +159,9 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridExpandMoreIcon
    */
   promptChangesToggleIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the charts configuration button
+   * @default GridChartsIcon
+   */
+  chartsConfigurationIcon: React.JSXElementConstructor<IconProps>;
 }
