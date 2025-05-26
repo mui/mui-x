@@ -97,6 +97,16 @@ The `borderRadius` property will also behave differently depending on whether th
 
 {{"demo": "FunnelBorderRadius.js"}}
 
+### Point Shape
+
+The shape of the funnel point can be customized by the `pointShape` property.
+It's accepted values are:
+
+- `'sharp'`: Will result in a pyramid-like shape.
+- `'square'`: Creates a rectangle shape, where the side edges are straight.
+
+{{"demo": "FunnelPointShape.js"}}
+
 ### Variant
 
 The funnel sections can be displayed in two different styles using the `variant` property:
