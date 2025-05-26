@@ -96,7 +96,6 @@ export const WeekView = React.forwardRef(function WeekView(
                     key={day.day.toString()}
                     value={day}
                     className={'WeekViewColumn'}
-                    role="gridcell"
                     data-weekend={isWeekend(day) ? '' : undefined}
                   >
                     {events.map((event: CalendarEvent) => (
@@ -105,9 +104,7 @@ export const WeekView = React.forwardRef(function WeekView(
                         start={event.start}
                         end={event.end}
                         className="WeekViewEvent"
-                        role="button"
                         aria-labelledby={`WeekViewHeaderCell-${day.day.toString()}`}
-                        tabIndex={0}
                       >
                         <time>
                           {adapter.formatByString(event.start, 'h:mma')} -{' '}

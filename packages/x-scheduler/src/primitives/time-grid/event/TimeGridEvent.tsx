@@ -75,7 +75,7 @@ const TimeGridEvent = React.forwardRef(function CalendarCell(
     });
   });
 
-  const props = React.useMemo(() => ({ style }), [style]);
+  const props = React.useMemo(() => ({ style, role: 'button', tabIndex: 0 }), [style]);
 
   const state = React.useMemo(() => ({ started, ended }), [started, ended]);
 
