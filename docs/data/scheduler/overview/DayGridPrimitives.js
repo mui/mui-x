@@ -61,22 +61,28 @@ export default function DayGridPrimitives() {
   const getWeekList = useWeekList();
   const getDayList = useDayList();
 
-  const weeks = React.useMemo(
-    () =>
-      getWeekList({
-        date: events[0].start.startOf('month'),
-        amount: 'end-of-month',
-      }).map((week) =>
-        getDayList({ date: week, amount: 7 }).map((date) => ({
-          date,
-          events: events.filter(
-            (event) =>
-              event.start.hasSame(date, 'day') || event.end.hasSame(date, 'day'),
-          ),
-        })),
-      ),
-    [getWeekList, getDayList],
-  );
+  const weeks = React.useMemo(() => {
+    const weeksFirstDays = getWeekList({
+      date: events[0].start.startOf('month'),
+      amount: 'end-of-month',
+    });
+
+    const tempWeeks = [];
+    for (let i = 0; i < weeksFirstDays.length; i += 1) {
+      const weekStart = weeksFirstDays[i];
+      const weekDays = getDayList({ date: weekStart, amount: 7 });
+      const weekDaysWithEvents = weekDays.map((date) => ({
+        date,
+        events: events.filter(
+          (event) =>
+            event.start.hasSame(date, 'day') || event.end.hasSame(date, 'day'),
+        ),
+      }));
+      tempWeeks.push(weekDaysWithEvents);
+    }
+
+    return tempWeeks;
+  }, [getWeekList, getDayList]);
 
   return (
     <div className={classes.Container}>
