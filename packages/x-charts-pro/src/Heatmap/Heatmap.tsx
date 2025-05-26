@@ -33,7 +33,7 @@ import {
 } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
-import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';

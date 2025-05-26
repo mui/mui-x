@@ -40,7 +40,7 @@ const ResetZoomButton = React.forwardRef(function ResetZoomButton(props, ref) {
           prev.map((zoom) => ({ ...zoom, start: 0, end: 100 })),
         );
       }}
-      render={(buttonProps) => <Button {...buttonProps} />}
+      render={<Button />}
     />
   );
 });
