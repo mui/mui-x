@@ -8,6 +8,6 @@ import { ChartProApi } from '../ChartContainerPro';
  * @example
  * const apiRef = useChartApiContext<ChartApi<'bar'>>();
  */
-export function useChartApiContext<Api extends ChartProApi = ChartProApi>() {
+export function useChartApiContext<Api extends ChartProApi>() {
   return useChartApiContextCommunity<Api>();
 }

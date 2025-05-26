@@ -14,7 +14,7 @@ type PluginSignaturesFromApi<Api> =
  * @example
  * const apiRef = useChartApiContext<ChartApi<'bar'>>();
  */
-export function useChartApiContext<Api extends ChartApi = ChartApi>() {
+export function useChartApiContext<Api extends ChartApi>() {
   const { publicAPI } = useChartContext<PluginSignaturesFromApi<Api>>();
   const apiRef = React.useRef<Api>(publicAPI as unknown as Api);
 
