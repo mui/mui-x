@@ -59,7 +59,6 @@
   { "name": "bluePaletteLight", "kind": "Variable" },
   { "name": "CartesianSeriesType", "kind": "TypeAlias" },
   { "name": "CategoryAxis", "kind": "TypeAlias" },
-  { "name": "ChartApiCommunity", "kind": "TypeAlias" },
   { "name": "chartAxisZoomSliderThumbClasses", "kind": "Variable" },
   { "name": "ChartAxisZoomSliderThumbClasses", "kind": "Interface" },
   { "name": "ChartAxisZoomSliderThumbClassKey", "kind": "TypeAlias" },

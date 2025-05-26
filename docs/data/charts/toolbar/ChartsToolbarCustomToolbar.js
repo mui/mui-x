@@ -11,6 +11,7 @@ import { useChartApiContext } from '@mui/x-charts-pro/context';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+
 import Button from '@mui/material/Button';
 import { data } from './randomData';
 
@@ -29,14 +30,14 @@ const params = {
 };
 
 const ResetZoomButton = React.forwardRef(function ResetZoomButton(props, ref) {
-  const api = useChartApiContext();
+  const apiRef = useChartApiContext();
 
   return (
     <ToolbarButton
       {...props}
       ref={ref}
       onClick={() => {
-        api.setZoomData((prev) =>
+        apiRef.current.setZoomData((prev) =>
           prev.map((zoom) => ({ ...zoom, start: 0, end: 100 })),
         );
       }}

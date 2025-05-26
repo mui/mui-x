@@ -32,15 +32,20 @@ The toolbar is highly customizable, built to integrate with any design system.
 
 ### Slots
 
-TODO: How to differentiate these slots from "composition" slots?
+You can customize basic components, such as buttons and tooltips, by passing custom elements to the `slots` prop of the chart.
+You can use this to replace the default buttons with components from your design system.
 
-That is achievable by passing the custom elements to `slots` prop of the chart.
+If you're creating a chart using [composition](/x/react-charts/composition/), these basic components can be provided as slots to the `ChartDataProvider`.
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
 
 ### Render prop
 
-You can use the `render` prop to customize the rendering of certain elements.
+The `render` prop can be used to customize the rendering of the toolbar's elements.
+
+You can pass a React element to the `render` prop of the `ToolbarButton` component to replace the default button with your own component.
+
+This is useful when you want to render a custom component but want to keep the toolbar's functionality intact.
 
 ```tsx
 <ToolbarButton render={<MyButton />} />
@@ -52,10 +57,14 @@ Alternatively, you can pass a function to the `render` prop, which will receive 
 <ToolbarButton render={(props, state) => <MyButton {...props} />} />
 ```
 
-You can see an example of this in the [composition](#composition) section.
+You can see an example in the [composition](#composition) section.
 
 ### Composition
 
 If you want to further customize the toolbar's functionality, you can also partially or entirely replace it with a custom implementation.
+
+You can achieve this by providing a custom component to the `toolbar` slot.
+
+Components such as `Toolbar` and `ToolbarButton` can be used to build your own toolbar using the default components as a base, or you can create your own custom toolbar from scratch.
 
 {{"demo": "ChartsToolbarCustomToolbar.js"}}
