@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
 import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
