@@ -18,9 +18,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import clsx from 'clsx';
 import { shouldForwardProp } from '@mui/system';
-import { chartAxisZoomSliderTrackClasses } from './chartAxisZoomSliderTrackClasses';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import {
   selectorChartAxisZoomData,
@@ -29,27 +27,25 @@ import {
 import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
 
 const ZoomSliderTrack = styled('rect', {
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'axisDirection',
-})<{ axisDirection: 'x' | 'y' }>(({ theme }) => ({
-  [`&.${chartAxisZoomSliderTrackClasses.root}`]: {
-    fill:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[800]
-        : (theme.vars || theme).palette.grey[300],
-    cursor: 'pointer',
-
-    [`&.${chartAxisZoomSliderTrackClasses.selecting}`]: {
-      cursor: 'ew-resize',
-    },
-  },
+  shouldForwardProp: (prop) =>
+    shouldForwardProp(prop) && prop !== 'axisDirection' && prop !== 'isSelecting',
+})<{ axisDirection: 'x' | 'y'; isSelecting: boolean }>(({ theme }) => ({
+  fill:
+    theme.palette.mode === 'dark'
+      ? (theme.vars || theme).palette.grey[800]
+      : (theme.vars || theme).palette.grey[300],
+  cursor: 'pointer',
   variants: [
     {
-      props: { axisDirection: 'y' },
+      props: { axisDirection: 'x', isSelecting: true },
       style: {
-        [`&.${chartAxisZoomSliderTrackClasses.root}.${chartAxisZoomSliderTrackClasses.selecting}`]:
-          {
-            cursor: 'ns-resize',
-          },
+        cursor: 'ew-resize',
+      },
+    },
+    {
+      props: { axisDirection: 'y', isSelecting: true },
+      style: {
+        cursor: 'ns-resize',
       },
     },
   ],
@@ -183,10 +179,6 @@ function ChartAxisZoomSliderTrack({
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
   const [isSelecting, setIsSelecting] = React.useState(false);
-  const className = clsx(
-    chartAxisZoomSliderTrackClasses.root,
-    isSelecting && chartAxisZoomSliderTrackClasses.selecting,
-  );
 
   const onPointerDown = function onPointerDown(event: React.PointerEvent<SVGRectElement>) {
     const rect = ref.current;
@@ -311,6 +303,7 @@ function ChartAxisZoomSliderTrack({
       className={className}
       onPointerDown={onPointerDown}
       axisDirection={axisDirection}
+      isSelecting={isSelecting}
       {...other}
     />
   );
