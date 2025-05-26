@@ -47,7 +47,7 @@
 .WeekViewAllDayEventsRow {
   overflow-y: scroll;
   scrollbar-color: var(--weekend-background) var(--weekend-background);
-  min-height: 84px;
+  max-height: 84px;
 
   > *:not(:last-child) {
     border-right: 1px solid var(--border-color);
@@ -73,7 +73,8 @@
 .WeekViewAllDayEventsHeaderCell {
   font-size: var(--font-size-1);
   font-style: var(--em-font-style);
-  padding: 10px 0 0 15px;
+  padding: var(--space-2) 0;
+  text-align: center;
   color: var(--text-soft);
 }
 
