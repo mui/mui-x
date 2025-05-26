@@ -10,7 +10,11 @@ import {
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
-const COMPONENTS_WITHOUT_PROPTYPES = ['AnimatedBarElement'];
+const COMPONENTS_WITHOUT_PROPTYPES = [
+  'AnimatedBarElement',
+  /* RadarDataProvider is disabled because many `any` were being generated. More info: https://github.com/mui/mui-x/pull/17968 */
+  'RadarDataProvider',
+];
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isDateObject = (name: string) => {
