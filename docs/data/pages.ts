@@ -207,6 +207,12 @@ const pages: MuiPage[] = [
             ],
           },
           {
+            pathname: '/x/react-data-grid/charts-integration',
+            plan: 'premium',
+            newFeature: true,
+            title: 'Charts Integration',
+          },
+          {
             pathname: '/x/react-data-grid/ai-assistant',
             plan: 'premium',
             newFeature: true,
