@@ -27,6 +27,7 @@ export interface PickerFilledInputOwnerState extends PickerTextFieldOwnerState {
    * `true` if the input  has an underline, `false` otherwise.
    */
   inputHasUnderline: boolean;
+  hiddenLabel?: boolean;
 }
 
 const PickersFilledInputRoot = styled(PickersInputBaseRoot, {

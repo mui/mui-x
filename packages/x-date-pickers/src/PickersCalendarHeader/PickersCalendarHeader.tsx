@@ -24,6 +24,7 @@ import {
 import { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
 import { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { DateView } from '../models/views';
 
 const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
   const slots = {
@@ -82,7 +83,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewButton',
 })<{
-  ownerState: PickerOwnerState;
+  ownerState: PickerOwnerState & { view: DateView };
 }>({
   marginRight: 'auto',
   variants: [
@@ -165,7 +166,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
       size: 'small',
       'aria-label': translations.calendarViewSwitchingButtonAriaLabel(view),
     },
-    ownerState,
+    ownerState: { ...ownerState, view },
     className: classes.switchViewButton,
   });
 
