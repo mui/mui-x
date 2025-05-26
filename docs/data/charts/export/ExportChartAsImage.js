@@ -9,6 +9,8 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
+
 function ExportParamsSelector({ apiRef }) {
   const [type, setType] = React.useState('image/png');
   const [rawQuality, setRawQuality] = React.useState('0.9');
@@ -66,7 +68,7 @@ function ExportParamsSelector({ apiRef }) {
 }
 
 export default function ExportChartAsImage() {
-  const apiRef = React.useRef(undefined);
+  const apiRef = useChartProApiRef();
 
   return (
     <Stack width="100%" gap={2}>
