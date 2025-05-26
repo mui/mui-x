@@ -17,16 +17,33 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       ref={forwardedRef}
       {...other}
     >
-      <div className="EventCalendarSidePanel">
+      <aside className="EventCalendarSidePanel">
         <span style={{ height: 72, paddingTop: 18 }}>TODO: Time nav</span>
-        <div className="EventCalendarMonthCalendarPlaceholder">Month Calendar</div>
-        <span style={{ height: 200, paddingTop: 24 }}>TODO: Resource legend</span>
-      </div>
+        <section
+          className="EventCalendarMonthCalendarPlaceholder"
+          // TODO: Add localization
+          aria-label="Month calendar"
+        >
+          Month Calendar
+        </section>
+        <section
+          // TODO: Add localization
+          aria-label="Resource legend"
+        >
+          <span style={{ height: 200, paddingTop: 24 }}>TODO: Resource legend</span>
+        </section>
+      </aside>
       <div className="EventCalendarMainPanel">
-        <div className="EventCalendarToolbar">
+        <header className="EventCalendarToolbar">
           <span>TODO: View switch</span>
-        </div>
-        <div className="EventCalendarContent">Content: {events.length} events loaded</div>
+        </header>
+        <section
+          className="EventCalendarContent"
+          // TODO: Add localization
+          aria-label="Calendar content"
+        >
+          Content: {events.length} events loaded
+        </section>
       </div>
     </div>
   );
