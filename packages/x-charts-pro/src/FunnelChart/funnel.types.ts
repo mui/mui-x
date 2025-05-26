@@ -7,7 +7,7 @@ import {
 } from '@mui/x-charts/internals';
 import { Position } from '@mui/x-charts/models';
 import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { FunnelCurveType } from './curves';
+import { FunnelCurveType, FunnelPointShape } from './curves';
 
 export type FunnelItemId = string | number;
 
@@ -65,6 +65,17 @@ export interface FunnelSeriesType
    * @default 'linear'
    */
   curve?: FunnelCurveType;
+  /**
+   * The shape of the point of the funnel for the curves that support it.
+   *
+   * This property is only applicable for the `bump` and `linear` curves.
+   *
+   * - `sharp`: Will result in a pyramid-like shape.
+   * - `square`: Creates a rectangle shape, where the side edges are straight.
+   *
+   * @default 'square'
+   */
+  pointShape?: FunnelPointShape;
   /**
    * The radius, in pixels, of the corners of the funnel sections.
    * @default 8

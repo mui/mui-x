@@ -135,6 +135,7 @@ const useAggregatedData = (gap: number | undefined) => {
           isIncreasing,
           min: minPoint,
           max: maxPoint,
+          pointShape: currentSeries.pointShape,
         });
 
         const line = d3Line<FunnelDataPoints>()
