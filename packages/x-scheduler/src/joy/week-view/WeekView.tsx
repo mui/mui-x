@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import clsx from 'clsx';
+import { useAdapter } from '@mui/x-scheduler/primitives/utils/adapter/useAdapter';
 import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import './WeekView.css';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
 
@@ -14,14 +14,13 @@ function getCurrentWeekDays(today: DateTime) {
   return Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
 }
 
-const adapter = getAdapter();
-
 export const WeekView = React.forwardRef(function WeekView(
   props: WeekViewProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { events, className, ...other } = props;
 
+  const adapter = useAdapter();
   const today = adapter.date('2025-05-26');
   const currentWeekDays = getCurrentWeekDays(today);
 
@@ -35,7 +34,7 @@ export const WeekView = React.forwardRef(function WeekView(
       map.get(dayKey).push(event);
     }
     return map;
-  }, [events]);
+  }, [adapter, events]);
 
   return (
     <div ref={forwardedRef} className={clsx('WeekViewContainer', className)} {...other}>
@@ -71,7 +70,7 @@ export const WeekView = React.forwardRef(function WeekView(
                 className="WeekViewAllDayEventsCell"
                 aria-labelledby={`WeekViewHeaderCell-${day.day.toString()}`}
                 role="gridcell"
-                data-weekend={isWeekend(day) ? '' : undefined}
+                data-weekend={isWeekend(adapter, day) ? '' : undefined}
               />
             ))}
           </div>
@@ -102,7 +101,7 @@ export const WeekView = React.forwardRef(function WeekView(
                     key={day.day.toString()}
                     value={day}
                     className="WeekViewColumn"
-                    data-weekend={isWeekend(day) ? '' : undefined}
+                    data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
                     {dayEvents.map((event: CalendarEvent) => (
                       <TimeGrid.Event
