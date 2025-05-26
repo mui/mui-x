@@ -24,7 +24,7 @@ export interface RadarChartProProps
   extends Omit<RadarChartProps, 'apiRef'>,
     Omit<
       ChartContainerProProps<'radar', RadarChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
     > {}
 
 /**
