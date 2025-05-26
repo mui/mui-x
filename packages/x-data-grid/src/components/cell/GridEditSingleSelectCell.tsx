@@ -30,8 +30,8 @@ export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams 
   initialOpen?: boolean;
 }
 
-function isKeyboardEvent(event: any): event is React.KeyboardEvent {
-  return !!event.key;
+function isKeyboardEvent(event: React.SyntheticEvent): event is React.KeyboardEvent {
+  return 'key' in event && !!event.key;
 }
 
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
