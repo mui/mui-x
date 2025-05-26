@@ -542,8 +542,8 @@ importers:
         specifier: ^0.4.24
         version: 0.4.24
       chance:
-        specifier: ^1.1.12
-        version: 1.1.12
+        specifier: ^1.1.13
+        version: 1.1.13
       clean-css:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1078,8 +1078,8 @@ importers:
         specifier: workspace:*
         version: link:../x-internals/build
       chance:
-        specifier: ^1.1.12
-        version: 1.1.12
+        specifier: ^1.1.13
+        version: 1.1.13
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -5987,8 +5987,8 @@ packages:
     resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
-  chance@1.1.12:
-    resolution: {integrity: sha512-vVBIGQVnwtUG+SYe0ge+3MvF78cvSpuCOEUJr7sVEk2vSBuMW6OXNJjSzdtzrlxNUEaoqH2GBd5Y/+18BEB01Q==}
+  chance@1.1.13:
+    resolution: {integrity: sha512-V6lQCljcLznE7tUYUM9EOAnnKXbctE6j/rdQkYOHIWbfGQbrzTsAXNW9CdU5XCo4ArXQCj/rb6HgxPlmGJcaUg==}
 
   character-entities-legacy@3.0.0:
     resolution: {integrity: sha512-RpPp0asT/6ufRm//AJVwpViZbGM/MkjQFxJccQRHmISF/22NBtsHqAWmL+/pmkPWoIUJdWyeVleTl1wydHATVQ==}
@@ -16558,7 +16558,7 @@ snapshots:
 
   chalk@5.4.1: {}
 
-  chance@1.1.12: {}
+  chance@1.1.13: {}
 
   character-entities-legacy@3.0.0: {}
 
