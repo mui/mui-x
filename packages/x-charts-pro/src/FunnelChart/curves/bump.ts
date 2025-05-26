@@ -26,7 +26,7 @@ export class Bump implements CurveGenerator {
   constructor(context: CanvasRenderingContext2D, { isHorizontal, gap }: CurveOptions) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
-    this.gap = 0; // (gap ?? 0) / 2;
+    this.gap = (gap ?? 0) / 2;
   }
 
   areaStart(): void {}

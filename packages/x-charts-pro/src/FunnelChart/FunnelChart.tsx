@@ -4,16 +4,7 @@ import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import {
-  ChartSeriesConfig,
-  ChartsWrapper,
-  useChartHighlight,
-  UseChartHighlightSignature,
-  useChartInteraction,
-  UseChartInteractionSignature,
-  useChartZAxis,
-  UseChartZAxisSignature,
-} from '@mui/x-charts/internals';
+import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -28,8 +19,7 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
-import { useChartFunnelAxis } from './funnelAxisPlugin/useChartFunnelAxis';
-import { UseChartFunnelAxisSignature } from './funnelAxisPlugin/useChartCartesianAxis.types';
+import { FUNNEL_PLUGINS, FunnelSignatures } from './FunnelChart.plugins';
 
 export interface FunnelChartProps
   extends Omit<
@@ -76,19 +66,6 @@ export interface FunnelChartProps
 
 const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelSeriesConfig };
 
-const FUNNEL_PLUGGINS = [
-  useChartZAxis,
-  useChartFunnelAxis,
-  useChartInteraction,
-  useChartHighlight,
-] as const;
-type FunnelSignatures = [
-  UseChartZAxisSignature,
-  UseChartFunnelAxisSignature,
-  UseChartInteractionSignature,
-  UseChartHighlightSignature,
-];
-
 const FunnelChart = React.forwardRef(function FunnelChart(
   props: FunnelChartProps,
   ref: React.Ref<SVGSVGElement>,
@@ -116,7 +93,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     <ChartDataProviderPro<'funnel', FunnelSignatures>
       {...chartDataProviderProProps}
       seriesConfig={seriesConfig}
-      plugins={FUNNEL_PLUGGINS}
+      plugins={FUNNEL_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
