@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { useEventState } from '../../utils/useEventState';
+import { useEvent } from '../../utils/useEvent';
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
@@ -19,19 +19,17 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({}), []);
-
-  const state = useEventState({ start, end });
+  const { state, props: eventProps } = useEvent({ start, end });
 
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [props, elementProps],
+    props: [eventProps, elementProps],
   });
 });
 
 export namespace DayGridEvent {
-  export interface State extends useEventState.ReturnValue {}
+  export interface State extends useEvent.State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useEventState.Parameters {}
+  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {}
 }

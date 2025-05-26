@@ -5,7 +5,7 @@ import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
-import { useEventState } from '../../utils/useEventState';
+import { useEvent } from '../../utils/useEvent';
 
 const adapter = getAdapter();
 
@@ -52,7 +52,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const state = useEventState({ start, end });
+  const state = useEvent({ start, end });
 
   return useRenderElement('div', componentProps, {
     state,

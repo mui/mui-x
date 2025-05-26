@@ -5,10 +5,10 @@ import { SchedulerValidDate } from './adapter/types';
 
 const adapter = getAdapter();
 
-export function useEventState(parameters: useEventState.Parameters): useEventState.ReturnValue {
+export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
   const { start, end } = parameters;
 
-  const [{ started, ended }, setStartedAndEnded] = React.useState(() => {
+  const [state, setState] = React.useState<useEvent.State>(() => {
     const currentDate = adapter.date();
     return {
       started: adapter.isBefore(start, currentDate),
@@ -17,14 +17,14 @@ export function useEventState(parameters: useEventState.Parameters): useEventSta
   });
 
   useOnEveryMinuteStart(() => {
-    setStartedAndEnded((prevState) => {
+    setState((prevState) => {
       const currentDate = adapter.date();
       const newState = {
         started: adapter.isBefore(start, currentDate),
         ended: adapter.isBefore(end, currentDate),
       };
 
-      if (newState.started === started && newState.ended === ended) {
+      if (newState.started === state.started && newState.ended === state.ended) {
         return prevState;
       }
 
@@ -32,10 +32,12 @@ export function useEventState(parameters: useEventState.Parameters): useEventSta
     });
   });
 
-  return React.useMemo<useEventState.ReturnValue>(() => ({ started, ended }), [started, ended]);
+  const props = React.useMemo(() => ({}), []);
+
+  return { state, props };
 }
 
-export namespace useEventState {
+export namespace useEvent {
   export interface Parameters {
     /**
      * The time at which the event starts.
@@ -48,6 +50,11 @@ export namespace useEventState {
   }
 
   export interface ReturnValue {
+    state: State;
+    props: React.HTMLAttributes<HTMLDivElement>;
+  }
+
+  export interface State {
     /**
      * Whether the event start date and time is in the past.
      */

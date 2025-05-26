@@ -20,7 +20,7 @@ export function useDayList(): useDayList.ReturnValue {
       current = adapter.addDays(current, 1);
       currentDayNumber = adapter.getDayOfWeek(current);
 
-      // If there is a TZ change at midnight, adding 1 week may only increase the date by 23 hours to 11pm
+      // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
       // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
       // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
       if (prevDayNumber === currentDayNumber) {
