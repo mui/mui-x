@@ -18,6 +18,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { shouldForwardProp } from '@mui/system';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import {
   selectorChartAxisZoomData,
@@ -25,14 +26,29 @@ import {
 } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
 
-const ZoomSliderTrack = styled('rect')(({ theme }) => ({
-  '&': {
-    fill:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[800]
-        : (theme.vars || theme).palette.grey[300],
-    cursor: 'crosshair',
-  },
+const ZoomSliderTrack = styled('rect', {
+  shouldForwardProp: (prop) =>
+    shouldForwardProp(prop) && prop !== 'axisDirection' && prop !== 'isSelecting',
+})<{ axisDirection: 'x' | 'y'; isSelecting: boolean }>(({ theme }) => ({
+  fill:
+    theme.palette.mode === 'dark'
+      ? (theme.vars || theme).palette.grey[800]
+      : (theme.vars || theme).palette.grey[300],
+  cursor: 'pointer',
+  variants: [
+    {
+      props: { axisDirection: 'x', isSelecting: true },
+      style: {
+        cursor: 'ew-resize',
+      },
+    },
+    {
+      props: { axisDirection: 'y', isSelecting: true },
+      style: {
+        cursor: 'ns-resize',
+      },
+    },
+  ],
 }));
 
 const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
@@ -162,6 +178,7 @@ function ChartAxisZoomSliderTrack({
   const ref = React.useRef<SVGRectElement>(null);
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
+  const [isSelecting, setIsSelecting] = React.useState(false);
 
   const onPointerDown = function onPointerDown(event: React.PointerEvent<SVGRectElement>) {
     const rect = ref.current;
@@ -241,6 +258,7 @@ function ChartAxisZoomSliderTrack({
       rect.releasePointerCapture(pointerUpEvent.pointerId);
       rect.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
+      setIsSelecting(false);
 
       if (pointerMoved) {
         return;
@@ -271,6 +289,7 @@ function ChartAxisZoomSliderTrack({
     document.addEventListener('pointerup', onPointerUp);
     rect.addEventListener('pointermove', onPointerMove);
 
+    setIsSelecting(true);
     instance.setAxisZoomData(axisId, (prev) => ({
       ...prev,
       start: zoomFromPointerDown,
@@ -278,7 +297,15 @@ function ChartAxisZoomSliderTrack({
     }));
   };
 
-  return <ZoomSliderTrack ref={ref} onPointerDown={onPointerDown} {...other} />;
+  return (
+    <ZoomSliderTrack
+      ref={ref}
+      onPointerDown={onPointerDown}
+      axisDirection={axisDirection}
+      isSelecting={isSelecting}
+      {...other}
+    />
+  );
 }
 
 const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
