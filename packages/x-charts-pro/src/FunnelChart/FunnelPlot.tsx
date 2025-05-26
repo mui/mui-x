@@ -31,10 +31,12 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const useAggregatedData = (gap: number | undefined) => {
+const useAggregatedData = (gapIn: number | undefined) => {
   const seriesData = useFunnelSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
+
+  const gap = gapIn ?? 0;
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -104,12 +106,12 @@ const useAggregatedData = (gap: number | undefined) => {
         ),
       );
       const minPoint = {
-        x: Math.min(...allX),
-        y: Math.min(...allY),
+        x: Math.min(...allX) + gap / 2,
+        y: Math.min(...allY) + gap / 2,
       };
       const maxPoint = {
-        x: Math.max(...allX),
-        y: Math.max(...allY),
+        x: Math.max(...allX) - gap / 2,
+        y: Math.max(...allY) - gap / 2,
       };
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
