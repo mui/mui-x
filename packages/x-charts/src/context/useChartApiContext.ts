@@ -9,7 +9,8 @@ type PluginSignaturesFromApi<Api> =
 
 /**
  * The `useChartApiContext` hook provides access to the chart API.
- * It can be used to interact with the chart when rendering custom components that are descendants of the `ChartDataProvider` component.
+ * This is only available when the chart is rendered within a chart or a `ChartDataProvider` component.
+ * If you want to access the chart API outside those components, you should use the `apiRef` prop instead.
  * @example
  * const apiRef = useChartApiContext<ChartApi<'bar'>>();
  */
