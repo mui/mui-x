@@ -8,8 +8,7 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
 
-function getCurrentWeekDays() {
-  const today = DateTime.fromISO('2025-05-26');
+function getCurrentWeekDays(today: DateTime) {
   const startOfWeek = today.startOf('week');
   return Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
 }
@@ -19,19 +18,20 @@ export const WeekView = React.forwardRef(function WeekView(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const adapter = getAdapter();
-  const currentWeekDays = getCurrentWeekDays();
+  const today = adapter.date('2025-05-26');
+  const currentWeekDays = getCurrentWeekDays(today);
 
   const eventsByDay = React.useMemo(() => {
     const map = new Map();
     for (const event of props.events) {
-      const dayKey = event.start.toISODate();
+      const dayKey = adapter.format(event.start, 'keyboardDate');
       if (!map.has(dayKey)) {
         map.set(dayKey, []);
       }
       map.get(dayKey).push(event);
     }
     return map;
-  }, [props.events]);
+  }, [adapter, props.events]);
 
   return (
     <div ref={forwardedRef} className="WeekViewContainer">
@@ -45,8 +45,9 @@ export const WeekView = React.forwardRef(function WeekView(
                 className="WeekViewHeaderCell"
                 id={`WeekViewHeaderCell-${day.day.toString()}`}
                 role="columnheader"
-                aria-label={`${adapter.formatByString(day, 'cccc')} ${adapter.format(day, 'dayOfMonth')}`}
+                aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
               >
+                {/* // TODO: Add the 3 letter week day format to the adapter */}
                 <span className="WeekViewHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
                 <span className="WeekViewHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
               </div>
@@ -57,6 +58,7 @@ export const WeekView = React.forwardRef(function WeekView(
               className="WeekViewAllDayEventsCell WeekViewAllDayEventsHeaderCell"
               role="columnheader"
             >
+              {/* // TODO: Add localization */}
               All day
             </div>
             {currentWeekDays.map((day) => (
@@ -82,14 +84,14 @@ export const WeekView = React.forwardRef(function WeekView(
                   <time className="WeekViewTimeAxisText">
                     {hour === 0
                       ? null
-                      : adapter.formatByString(DateTime.now().set({ hour, minute: 0 }), 'h:mma')}
+                      : adapter.formatByString(adapter.setHours(today, hour), 'h:mma')}
                   </time>
                 </div>
               ))}
             </div>
             <div className="WeekViewGrid">
               {currentWeekDays.map((day) => {
-                const dayKey = day.toISODate();
+                const dayKey = adapter.format(day, 'keyboardDate');
                 const events = eventsByDay.get(dayKey) || [];
                 return (
                   <TimeGrid.Column
