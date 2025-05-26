@@ -45,6 +45,8 @@ const numberFormatter = Intl.NumberFormat('en-US', {
 const numberWithSuffixFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
 });
+const valueFormatter = (population: number | null) =>
+  population ? `${numberFormatter.format(Math.abs(population))}` : '';
 
 export default function PopulationPyramidBarChart() {
   return (
@@ -61,14 +63,14 @@ export default function PopulationPyramidBarChart() {
             data: male.map((population) => -population),
             label: 'Male',
             type: 'bar',
-            valueFormatter: (population: number | null) =>
-              `${numberFormatter.format(-population!)}`,
+            valueFormatter,
             stack: 'stack',
           },
           {
             data: female,
             label: 'Female',
             type: 'bar',
+            valueFormatter,
             stack: 'stack',
           },
         ]}
