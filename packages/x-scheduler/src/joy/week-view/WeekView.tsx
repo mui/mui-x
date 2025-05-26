@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { DateTime } from 'luxon';
+import clsx from 'clsx';
 import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import './WeekView.css';
@@ -19,12 +20,14 @@ export const WeekView = React.forwardRef(function WeekView(
   props: WeekViewProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const { events, className, ...other } = props;
+
   const today = adapter.date('2025-05-26');
   const currentWeekDays = getCurrentWeekDays(today);
 
   const eventsByDay = React.useMemo(() => {
     const map = new Map();
-    for (const event of props.events) {
+    for (const event of events) {
       const dayKey = adapter.format(event.start, 'keyboardDate');
       if (!map.has(dayKey)) {
         map.set(dayKey, []);
@@ -32,10 +35,10 @@ export const WeekView = React.forwardRef(function WeekView(
       map.get(dayKey).push(event);
     }
     return map;
-  }, [props.events]);
+  }, [events]);
 
   return (
-    <div ref={forwardedRef} className="WeekViewContainer">
+    <div ref={forwardedRef} className={clsx('WeekViewContainer', className)} {...other}>
       <TimeGrid.Root className="WeekViewRoot">
         <div className="WeekViewHeader">
           <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
@@ -93,15 +96,15 @@ export const WeekView = React.forwardRef(function WeekView(
             <div className="WeekViewGrid">
               {currentWeekDays.map((day) => {
                 const dayKey = adapter.format(day, 'keyboardDate');
-                const events = eventsByDay.get(dayKey) || [];
+                const dayEvents = eventsByDay.get(dayKey) || [];
                 return (
                   <TimeGrid.Column
                     key={day.day.toString()}
                     value={day}
-                    className={'WeekViewColumn'}
+                    className="WeekViewColumn"
                     data-weekend={isWeekend(day) ? '' : undefined}
                   >
-                    {events.map((event: CalendarEvent) => (
+                    {dayEvents.map((event: CalendarEvent) => (
                       <TimeGrid.Event
                         key={event.id}
                         start={event.start}
