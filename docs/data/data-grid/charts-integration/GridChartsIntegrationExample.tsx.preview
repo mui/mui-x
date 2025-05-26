@@ -1,0 +1,8 @@
+<GridChartsIntegrationContextProvider>
+  <div style={{ gap: 32 }}>
+    <div style={{ height: 300 }}>
+      <DataGridPremium rows={rows} columns={columns} showToolbar />
+    </div>
+    <GridChartsIntegrationRendererBridge renderer={ChartsRenderer} />
+  </div>
+</GridChartsIntegrationContextProvider>
