@@ -47,7 +47,7 @@
 .WeekViewAllDayEventsRow {
   overflow-y: scroll;
   scrollbar-color: var(--weekend-background) var(--weekend-background);
-  min-height: var(--space-11);
+  min-height: 84px;
 
   > *:not(:last-child) {
     border-right: 1px solid var(--border-color);
