@@ -272,7 +272,10 @@ export const useGridRowsMeta = (
           apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
         }
         if (!isHeightMetaValid.current) {
-          apiRef.current.requestPipeProcessorsApplication('rowHeight');
+          // Avoids "ResizeObserver loop completed with undelivered notifications" error
+          requestAnimationFrame(() => {
+            apiRef.current.requestPipeProcessorsApplication('rowHeight');
+          });
         }
       }),
   ).current;
