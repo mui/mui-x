@@ -61,6 +61,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the AI Assistant active conversation index changes.
    */
   aiAssistantActiveConversationIndexChange: { params: number };
+  /**
+   * Fired when the charts configuration side panel open state changes.
+   */
+  chartsConfigurationPanelOpenChange: { params: boolean };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
