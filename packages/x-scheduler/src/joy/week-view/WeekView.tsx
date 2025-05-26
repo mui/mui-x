@@ -13,11 +13,12 @@ function getCurrentWeekDays(today: DateTime) {
   return Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
 }
 
+const adapter = getAdapter();
+
 export const WeekView = React.forwardRef(function WeekView(
   props: WeekViewProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const adapter = getAdapter();
   const today = adapter.date('2025-05-26');
   const currentWeekDays = getCurrentWeekDays(today);
 
@@ -31,7 +32,7 @@ export const WeekView = React.forwardRef(function WeekView(
       map.get(dayKey).push(event);
     }
     return map;
-  }, [adapter, props.events]);
+  }, [props.events]);
 
   return (
     <div ref={forwardedRef} className="WeekViewContainer">
