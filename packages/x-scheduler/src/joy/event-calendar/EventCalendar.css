@@ -1,11 +1,6 @@
 .EventCalendarRoot {
-  box-sizing: border-box;
-
-  width: 814px;
-  height: 600px;
+  width: 100%;
   border: 1px solid var(--gray-4);
-  display: flex;
-  flex-direction: row;
   display: flex;
 }
 
@@ -27,13 +22,6 @@
   height: 72px;
   display: flex;
   align-items: center;
-}
-
-.EventCalendarContent {
-  flex: 1 1 100%;
-  background-color: var(--gray-1);
-  display: flex;
-  flex-direction: column;
 }
 
 .EventCalendarMonthCalendarPlaceholder {

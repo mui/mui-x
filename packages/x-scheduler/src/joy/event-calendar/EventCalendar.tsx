@@ -14,7 +14,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   return (
     <div
-      className={clsx(className, 'EventCalendar', 'mui', 'light', 'joy')}
+      className={clsx(className, 'EventCalendarRoot', 'mui', 'light', 'joy')}
       ref={forwardedRef}
       {...other}
     >
@@ -39,7 +39,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           <span>TODO: View switch</span>
         </header>
         <section
-          className="EventCalendarContent"
           // TODO: Add localization
           aria-label="Calendar content"
         >
