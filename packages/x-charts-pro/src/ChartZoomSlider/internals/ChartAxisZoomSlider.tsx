@@ -300,7 +300,6 @@ function ChartAxisZoomSliderTrack({
   return (
     <ZoomSliderTrack
       ref={ref}
-      className={className}
       onPointerDown={onPointerDown}
       axisDirection={axisDirection}
       isSelecting={isSelecting}
