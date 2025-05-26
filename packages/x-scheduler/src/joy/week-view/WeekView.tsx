@@ -6,6 +6,7 @@ import { WeekViewProps } from './WeekView.types';
 import './WeekView.css';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { CalendarEvent } from '../models/events';
+import { isWeekend } from '../utils/date-utils';
 
 function getCurrentWeekDays() {
   const today = DateTime.fromISO('2025-05-26');
@@ -64,7 +65,7 @@ export const WeekView = React.forwardRef(function WeekView(
                 className="WeekViewAllDayEventsCell"
                 aria-labelledby={`WeekViewHeaderCell-${day.day.toString()}`}
                 role="gridcell"
-                data-weekend={adapter.isWeekend(day) ? 'true' : undefined}
+                data-weekend={isWeekend(day) ? '' : undefined}
               />
             ))}
           </div>
@@ -96,7 +97,7 @@ export const WeekView = React.forwardRef(function WeekView(
                     value={day}
                     className={'WeekViewColumn'}
                     role="gridcell"
-                    data-weekend={adapter.isWeekend(day) ? 'true' : undefined}
+                    data-weekend={isWeekend(day) ? '' : undefined}
                   >
                     {events.map((event: CalendarEvent) => (
                       <TimeGrid.Event

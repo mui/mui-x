@@ -153,8 +153,8 @@
   flex: 1;
 }
 
-.WeekViewColumn[data-weekend='true'],
-.WeekViewAllDayEventsCell[data-weekend='true'] {
+.WeekViewColumn[data-weekend],
+.WeekViewAllDayEventsCell[data-weekend] {
   background: var(--weekend-background);
 }
 

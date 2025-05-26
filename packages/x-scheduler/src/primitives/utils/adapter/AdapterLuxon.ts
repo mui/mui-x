@@ -331,10 +331,6 @@ export class AdapterLuxon implements Adapter<string> {
     );
   };
 
-  public isWeekend = (value: DateTime): boolean => {
-    return value.weekday === 6 || value.weekday === 7;
-  };
-
   public startOfYear = (value: DateTime) => {
     return value.startOf('year');
   };
