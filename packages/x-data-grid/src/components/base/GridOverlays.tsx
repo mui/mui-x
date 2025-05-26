@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import clsx from 'clsx';
 import { minimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
@@ -92,12 +91,12 @@ export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysPr
 
   return (
     <GridOverlayWrapperRoot
-      className={clsx(classes.root)}
+      className={classes.root}
       {...props}
       right={dimensions.columnsTotalWidth - dimensions.viewportOuterSize.width}
     >
       <GridOverlayWrapperInner
-        className={clsx(classes.inner)}
+        className={classes.inner}
         style={{
           height,
           width: dimensions.viewportOuterSize.width,

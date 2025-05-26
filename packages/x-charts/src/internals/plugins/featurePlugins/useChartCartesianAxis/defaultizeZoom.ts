@@ -1,4 +1,4 @@
-import { DEFAULT_ZOOM_SLIDER_SIZE } from '../../../../constants';
+import { DEFAULT_ZOOM_SLIDER_SIZE } from '../../../constants';
 import { AxisId } from '../../../../models/axis';
 import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ZoomOptions } from './zoom.types';

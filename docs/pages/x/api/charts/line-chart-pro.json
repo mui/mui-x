@@ -72,6 +72,7 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -109,6 +110,90 @@
   "imports": [
     "import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';",
     "import { LineChartPro } from '@mui/x-charts-pro';"
+  ],
+  "slots": [
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    },
+    {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
+      "name": "axisLine",
+      "description": "Custom component for the axis main line.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTick",
+      "description": "Custom component for the axis tick.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTickLabel",
+      "description": "Custom component for tick label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "ChartsLegend",
+      "class": null
+    },
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "LineElementPath",
+      "class": null
+    },
+    { "name": "lineHighlight", "description": "", "class": null },
+    {
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
+    },
+    { "name": "mark", "description": "", "class": null },
+    {
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

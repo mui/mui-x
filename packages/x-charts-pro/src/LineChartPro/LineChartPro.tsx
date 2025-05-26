@@ -5,6 +5,8 @@ import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
   LineChartProps,
+  LineChartSlots,
+  LineChartSlotProps,
   LineHighlightPlot,
   LinePlot,
   MarkPlot,
@@ -18,18 +20,34 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { LINE_CHART_PRO_PLUGINS, LineChartProPluginsSignatures } from './LineChartPro.plugins';
 
+export interface LineChartProSlots extends LineChartSlots, Partial<ChartsSlotsPro> {}
+export interface LineChartProSlotProps extends LineChartSlotProps, Partial<ChartsSlotPropsPro> {}
+
 export interface LineChartProProps
-  extends Omit<LineChartProps, 'apiRef'>,
+  extends Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'line', LineChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig'
-    > {}
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+    > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: LineChartProSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: LineChartProSlotProps;
+}
 
 /**
  * Demos:
@@ -46,7 +64,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -79,10 +97,12 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
@@ -99,10 +119,10 @@ const LineChartPro = React.forwardRef(function LineChartPro(
             <MarkPlot {...markPlotProps} />
           </g>
           <LineHighlightPlot {...lineHighlightPlotProps} />
-          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -117,6 +137,7 @@ LineChartPro.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
@@ -250,6 +271,11 @@ LineChartPro.propTypes = {
    * An array of [[LineSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * @default false

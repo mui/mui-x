@@ -10,10 +10,12 @@ import {
   ZoomData,
   createZoomLookup,
   selectorChartZoomOptionsLookup,
+  selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { useEventCallback } from '@mui/material/utils';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
+import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import {
   getDiff,
@@ -154,6 +156,21 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [onZoomChange, store, removeIsInteracting],
   );
 
+  const setAxisZoomData = React.useCallback(
+    (axisId: AxisId, zoomData: ZoomData | ((prev: ZoomData) => ZoomData)) => {
+      setZoomDataCallback((prev) =>
+        prev.map((prevZoom) => {
+          if (prevZoom.axisId !== axisId) {
+            return prevZoom;
+          }
+
+          return typeof zoomData === 'function' ? zoomData(prevZoom) : zoomData;
+        }),
+      );
+    },
+    [setZoomDataCallback],
+  );
+
   const moveZoomRange = React.useCallback(
     (axisId: AxisId, by: number) => {
       setZoomDataCallback((prevZoomData) => {
@@ -285,7 +302,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     const handleDown = (event: PointerEvent) => {
       panningEventCacheRef.current.push(event);
       const point = getSVGPoint(element, event);
-      if (!instance.isPointInside(point)) {
+      if (!instance.isPointInside(point.x, point.y)) {
         return;
       }
       // If there is only one pointer, prevent selecting text
@@ -350,7 +367,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
       const point = getSVGPoint(element, event);
 
-      if (!instance.isPointInside(point)) {
+      if (!instance.isPointInside(point.x, point.y)) {
         return;
       }
 
@@ -485,13 +502,38 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     };
   }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
 
+  const zoom = React.useCallback(
+    (step: number) => {
+      setZoomDataCallback((prev) =>
+        prev.map((zoomData) => {
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(
+            store.getSnapshot(),
+            zoomData.axisId,
+          );
+
+          return calculateZoom(zoomData, step, zoomOptions);
+        }),
+      );
+    },
+    [setZoomDataCallback, store],
+  );
+
+  const zoomIn = React.useCallback(() => zoom(0.1), [zoom]);
+  const zoomOut = React.useCallback(() => zoom(-0.1), [zoom]);
+
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
+      zoomIn,
+      zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       moveZoomRange,
+      zoomIn,
+      zoomOut,
     },
   };
 };

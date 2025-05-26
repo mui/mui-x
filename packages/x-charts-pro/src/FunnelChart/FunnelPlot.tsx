@@ -67,8 +67,6 @@ const useAggregatedData = (gap: number | undefined) => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const curve = getFunnelCurve(currentSeries.curve, isHorizontal, gap);
-
       const xPosition = (
         value: number,
         bandIndex: number,
@@ -95,7 +93,26 @@ const useAggregatedData = (gap: number | undefined) => {
         return yScale(isHorizontal ? value : value + (stackOffset || 0))!;
       };
 
-      return currentSeries.dataPoints.map((values, dataIndex) => {
+      const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
+        d.flatMap((v) =>
+          yPosition(v.y, baseScaleConfig.data?.[dataIndex], v.stackOffset, v.useBandWidth),
+        ),
+      );
+      const allX = currentSeries.dataPoints.flatMap((d, dataIndex) =>
+        d.flatMap((v) =>
+          xPosition(v.x, baseScaleConfig.data?.[dataIndex], v.stackOffset, v.useBandWidth),
+        ),
+      );
+      const minPoint = {
+        x: Math.min(...allX),
+        y: Math.min(...allY),
+      };
+      const maxPoint = {
+        x: Math.max(...allX),
+        y: Math.max(...allY),
+      };
+
+      return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;
         const id = `${seriesId}-${dataIndex}`;
         const sectionLabel =
@@ -106,6 +123,19 @@ const useAggregatedData = (gap: number | undefined) => {
                 value: currentSeries.data[dataIndex].value,
               })
             : currentSeries.sectionLabel;
+
+        const isIncreasing = currentSeries.dataDirection === 'increasing';
+
+        const curve = getFunnelCurve(currentSeries.curve, {
+          isHorizontal,
+          gap,
+          position: dataIndex,
+          sections: currentSeries.dataPoints.length,
+          borderRadius: currentSeries.borderRadius,
+          isIncreasing,
+          min: minPoint,
+          max: maxPoint,
+        });
 
         const line = d3Line<FunnelDataPoints>()
           .x((d) =>
@@ -122,6 +152,7 @@ const useAggregatedData = (gap: number | undefined) => {
           id,
           seriesId,
           dataIndex,
+          variant: currentSeries.variant,
           label: sectionLabel !== false && {
             ...positionLabel({
               ...sectionLabel,
@@ -155,7 +186,7 @@ function FunnelPlot(props: FunnelPlotProps) {
 
   return (
     <React.Fragment>
-      {data.map(({ d, color, id, seriesId, dataIndex }) => (
+      {data.map(({ d, color, id, seriesId, dataIndex, variant }) => (
         <FunnelSection
           {...other}
           d={d}
@@ -163,6 +194,7 @@ function FunnelPlot(props: FunnelPlotProps) {
           key={id}
           dataIndex={dataIndex}
           seriesId={seriesId}
+          variant={variant}
           onClick={
             onItemClick &&
             ((event) => {

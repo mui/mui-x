@@ -83,10 +83,11 @@ export interface ZoomSliderOptions {
    */
   enabled?: boolean;
   /**
-   * The size of the slider.
-   * This is the height of the slider for the x-axis and the width of the slider for the y-axis.
+   * The size reserved for the zoom slider. The actual size of the slider might be smaller, so
+   * increasing this value effectively increases the margin around the slider.
+   * This means the height for the x-axis and the width for the y-axis.
    *
-   * @default 30
+   * @default 28
    */
   size?: number;
 }
