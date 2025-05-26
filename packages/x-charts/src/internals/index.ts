@@ -52,6 +52,7 @@ export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 export * from './colorScale';
 export * from './ticks';
+export * from './dateHelpers';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
