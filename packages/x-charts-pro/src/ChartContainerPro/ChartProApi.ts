@@ -6,7 +6,7 @@ import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins
 import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 import { FunnelChartPluginsSignatures } from '../FunnelChart/FunnelChart.plugins';
 
-type PluginsPerSeriesType = {
+export type ProPluginsPerSeriesType = {
   heatmap: HeatmapPluginsSignatures;
   line: LineChartProPluginsSignatures;
   scatter: ScatterChartProPluginsSignatures;
@@ -22,9 +22,9 @@ type PluginsPerSeriesType = {
  * @example ChartProApi<'bar'>
  */
 export type ChartProApi<
-  TSeries extends keyof PluginsPerSeriesType | undefined = undefined,
+  TSeries extends keyof ProPluginsPerSeriesType | undefined = undefined,
   TSignatures extends
-    readonly ChartAnyPluginSignature[] = TSeries extends keyof PluginsPerSeriesType
-    ? PluginsPerSeriesType[TSeries]
+    readonly ChartAnyPluginSignature[] = TSeries extends keyof ProPluginsPerSeriesType
+    ? ProPluginsPerSeriesType[TSeries]
     : AllPluginSignatures,
 > = ChartPublicAPI<TSignatures>;
