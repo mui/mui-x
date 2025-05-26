@@ -1,31 +1,27 @@
 import {
-  useChartZAxis,
-  UseChartZAxisSignature,
+  ConvertSignaturesIntoPlugins,
   useChartCartesianAxis,
   UseChartCartesianAxisSignature,
-  useChartInteraction,
-  UseChartInteractionSignature,
   useChartHighlight,
   UseChartHighlightSignature,
-  ConvertSignaturesIntoPlugins,
+  useChartInteraction,
+  UseChartInteractionSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
   UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
-export type HeatmapPluginsSignatures = [
-  UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'heatmap'>,
+export type FunnelChartPluginsSignatures = [
+  UseChartCartesianAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartProExportSignature,
 ];
 
-export const HEATMAP_PLUGINS = [
-  useChartZAxis,
+export const FUNNEL_CHART_PLUGINS: ConvertSignaturesIntoPlugins<FunnelChartPluginsSignatures> = [
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
   useChartProExport,
-] as ConvertSignaturesIntoPlugins<HeatmapPluginsSignatures>;
+];
