@@ -1,3 +1,6 @@
+'use client';
+
+import * as React from 'react';
 import { ChartApi } from '../ChartContainer';
 import { useChartContext } from './ChartProvider';
 
@@ -10,8 +13,13 @@ type PluginSignaturesFromApi<Api> =
  * @example
  * const apiRef = useChartApiContext<ChartApi<'bar'>>();
  */
-export function useChartApiContext<Api extends ChartApi = ChartApi>(): Api {
+export function useChartApiContext<Api extends ChartApi = ChartApi>() {
   const { publicAPI } = useChartContext<PluginSignaturesFromApi<Api>>();
+  const apiRef = React.useRef<Api>(publicAPI as unknown as Api);
 
-  return publicAPI as Api;
+  React.useEffect(() => {
+    apiRef.current = publicAPI as unknown as Api;
+  }, [publicAPI]);
+
+  return apiRef;
 }
