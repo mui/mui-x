@@ -25,6 +25,7 @@ import type {
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import { GridPremiumSlotProps } from './gridPremiumSlotProps';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
@@ -160,6 +161,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   aiAssistant: boolean;
+  /**
+   * If `true`, the charts integration feature is enabled.
+   * @default false
+   */
+  chartsIntegration: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -177,6 +183,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState?: GridInitialStatePremium;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridPremiumSlotProps;
   /**
    * Set the row grouping model of the grid.
    */
@@ -344,4 +354,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSidebarOpen?: GridEventListener<'sidebarOpen'>;
+  /**
+   * If `true`, the charts configuration side panel is visible.
+   * @default false
+   */
+  chartsConfigurationPanelOpen?: boolean;
+  /**
+   * Callback fired when the charts configuration side panel open state changes.
+   * @param {boolean} chartsConfigurationPanelOpen Whether the charts configuration side panel is visible.
+   */
+  onChartsConfigurationPanelOpenChange?: (chartsConfigurationPanelOpen: boolean) => void;
 }
