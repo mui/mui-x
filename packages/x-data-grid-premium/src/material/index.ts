@@ -28,6 +28,7 @@ import {
   GridPromptIcon,
   GridRerunIcon,
   GridHistoryIcon,
+  GridChartsIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -62,6 +63,7 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   promptAggregationIcon: GridFunctionsIcon,
   promptGroupIcon: GridGroupWorkIcon,
   promptChangesToggleIcon: GridExpandMoreIcon,
+  chartsConfigurationIcon: GridChartsIcon,
 };
 
 const materialSlots = {
