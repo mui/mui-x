@@ -40,6 +40,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
         </header>
         <section
           // TODO: Add localization
+          className="EventCalendarContent"
           aria-label="Calendar content"
         >
           <WeekView events={events} />

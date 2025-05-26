@@ -27,6 +27,12 @@
   align-items: center;
 }
 
+.EventCalendarContent {
+  display: flex;
+  flex: 1;
+  max-height: 450px;
+}
+
 .EventCalendarMonthCalendarPlaceholder {
   background-color: var(--gray-2);
   height: 220px;
