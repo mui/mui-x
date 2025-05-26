@@ -14,11 +14,38 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   return (
     <div
-      className={clsx('mui', 'light', 'joy', 'EventCalendar', className)}
+      className={clsx(className, 'EventCalendar', 'mui', 'light', 'joy')}
       ref={forwardedRef}
       {...other}
     >
-      <WeekView events={events} />
+      <aside className="EventCalendarSidePanel">
+        <span style={{ height: 72, paddingTop: 18 }}>TODO: Time nav</span>
+        <section
+          className="EventCalendarMonthCalendarPlaceholder"
+          // TODO: Add localization
+          aria-label="Month calendar"
+        >
+          Month Calendar
+        </section>
+        <section
+          // TODO: Add localization
+          aria-label="Resource legend"
+        >
+          <span style={{ height: 200, paddingTop: 24 }}>TODO: Resource legend</span>
+        </section>
+      </aside>
+      <div className="EventCalendarMainPanel">
+        <header className="EventCalendarToolbar">
+          <span>TODO: View switch</span>
+        </header>
+        <section
+          className="EventCalendarContent"
+          // TODO: Add localization
+          aria-label="Calendar content"
+        >
+          <WeekView events={events} />
+        </section>
+      </div>
     </div>
   );
 });
