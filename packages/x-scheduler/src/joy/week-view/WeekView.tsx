@@ -11,7 +11,7 @@ import { isWeekend } from '../utils/date-utils';
 function getCurrentWeekDays() {
   const today = DateTime.fromISO('2025-05-26');
   const startOfWeek = today.startOf('week');
-  return Array.from({ length: 7 }).map((_, i) => startOfWeek.plus({ days: i }));
+  return Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
 }
 
 export const WeekView = React.forwardRef(function WeekView(
