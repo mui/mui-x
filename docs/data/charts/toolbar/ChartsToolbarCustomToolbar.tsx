@@ -38,7 +38,7 @@ const ResetZoomButton = React.forwardRef<HTMLButtonElement, React.PropsWithChild
         {...props}
         ref={ref}
         onClick={() => {
-          api.setZoomData((prev) =>
+          api.current.setZoomData((prev) =>
             prev.map((zoom) => ({ ...zoom, start: 0, end: 100 })),
           );
         }}
