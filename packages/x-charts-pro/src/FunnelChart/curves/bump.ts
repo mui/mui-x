@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions, Point } from './curve.types';
+import { CurveOptions, FunnelPointShape, Point } from './curve.types';
 
 /**
  * This is a custom "bump" curve generator.
@@ -29,9 +29,11 @@ export class Bump implements CurveGenerator {
 
   private points: Point[] = [];
 
+  private pointShape: FunnelPointShape = 'square';
+
   constructor(
     context: CanvasRenderingContext2D,
-    { isHorizontal, gap, position, sections, min, max, isIncreasing }: CurveOptions,
+    { isHorizontal, gap, position, sections, min, max, isIncreasing, pointShape }: CurveOptions,
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
@@ -41,6 +43,7 @@ export class Bump implements CurveGenerator {
     this.isIncreasing = isIncreasing ?? false;
     this.min = min ?? { x: 0, y: 0 };
     this.max = max ?? { x: 0, y: 0 };
+    this.pointShape = pointShape ?? 'square';
 
     if (isIncreasing) {
       const currentMin = this.min;
@@ -64,29 +67,31 @@ export class Bump implements CurveGenerator {
       return;
     }
 
-    // In the last section, to form a triangle we need 3 points instead of 4
-    // Else the algorithm will break.
-    const isLastSection = this.position === this.sections - 1;
-    const isFirstSection = this.position === 0;
+    if (this.pointShape === 'sharp') {
+      // In the last section, to form a triangle we need 3 points instead of 4
+      // Else the algorithm will break.
+      const isLastSection = this.position === this.sections - 1;
+      const isFirstSection = this.position === 0;
 
-    if (isFirstSection && this.isIncreasing) {
-      this.points = [
-        this.points[0],
-        this.isHorizontal
-          ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
-          : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
-        this.points[2],
-      ];
-    }
+      if (isFirstSection && this.isIncreasing) {
+        this.points = [
+          this.points[0],
+          this.isHorizontal
+            ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+          this.points[2],
+        ];
+      }
 
-    if (isLastSection && !this.isIncreasing) {
-      this.points = [
-        this.points[0],
-        this.isHorizontal
-          ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
-          : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
-        this.points[3],
-      ];
+      if (isLastSection && !this.isIncreasing) {
+        this.points = [
+          this.points[0],
+          this.isHorizontal
+            ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+          this.points[3],
+        ];
+      }
     }
 
     // Draw the path using bezier curves
