@@ -6,7 +6,7 @@ import { ChartProApi } from '../ChartContainerPro';
  * This is only available when the chart is rendered within a chart or a `ChartDataProvider` component.
  * If you want to access the chart API outside those components, you should use the `apiRef` prop instead.
  * @example
- * const apiRef = useChartApiContext<ChartApi<'bar'>>();
+ * const apiRef = useChartApiContext<ChartProApi<'bar'>>();
  */
 export function useChartApiContext<Api extends ChartProApi>() {
   return useChartApiContextCommunity<Api>();
