@@ -1,5 +1,5 @@
 {
-  "version": "8.3.1",
+  "version": "8.4.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -30,7 +30,7 @@
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
     "prettier:check": "prettier --check . --ignore-path .eslintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
-    "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
+    "size:snapshot": "pnpm -F ./test/bundle-size check",
     "size:why": "pnpm size:snapshot --analyze --accurateBundles",
     "test": "pnpm test:unit:jsdom",
     "test:jsdom": "pnpm test:unit:jsdom",
@@ -87,6 +87,7 @@
     "@mui/icons-material": "^7.0.2",
     "@mui/internal-babel-plugin-display-name": "github:mui/mui-public#master&path:./packages/babel-plugin-display-name",
     "@mui/internal-babel-plugin-resolve-imports": "^2.0.2",
+    "@mui/internal-bundle-size-checker": "^1.0.3",
     "@mui/internal-markdown": "^2.0.5",
     "@mui/internal-test-utils": "^2.0.8",
     "@mui/material": "^7.0.2",
@@ -196,7 +197,7 @@
     "vite": "^6.3.5",
     "vitest": "3.1.3",
     "vitest-fail-on-console": "^0.7.1",
-    "webpack": "^5.99.8",
+    "webpack": "^5.99.9",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "yargs": "^17.7.2"
