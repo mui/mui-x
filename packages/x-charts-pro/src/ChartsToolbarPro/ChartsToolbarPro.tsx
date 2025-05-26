@@ -5,6 +5,9 @@ import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom
 import { ChartsToolbarZoomInButton } from './internal/ChartsToolbarZoomInButton';
 import { ChartsToolbarZoomOutButton } from './internal/ChartsToolbarZoomOutButton';
 
+/**
+ * The chart toolbar component for the pro package.
+ */
 export function ChartsToolbarPro() {
   const { store } = useChartContext();
   const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
