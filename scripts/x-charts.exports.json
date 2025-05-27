@@ -381,6 +381,7 @@
   { "name": "useBarSeriesContext", "kind": "Function" },
   { "name": "UseBarSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UseBarSeriesReturnValue", "kind": "TypeAlias" },
+  { "name": "useChartApiContext", "kind": "Function" },
   { "name": "useChartGradientId", "kind": "Function" },
   { "name": "useChartGradientIdObjectBound", "kind": "Function" },
   { "name": "useChartId", "kind": "Function" },
