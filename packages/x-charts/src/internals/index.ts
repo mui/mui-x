@@ -42,17 +42,18 @@ export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
 export * from './isDefined';
-export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
 export * from './stackSeries';
 export * from './getCurve';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
+export * from './dateHelpers';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
 export * from '../context/ChartProvider';
+export * from '../context/ChartsSlotsContext';
 
 // series configuration
 export * from '../models/seriesType/config';

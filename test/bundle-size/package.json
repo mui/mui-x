@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "description": "Bundle size measurement workspace for MUI packages",
+  "scripts": {
+    "check": "NODE_OPTIONS=\"--max-old-space-size=4096\" bundle-size-checker --output ../size-snapshot.json"
+  },
+  "devDependencies": {
+    "fast-glob": "^3.3.3",
+    "path": "^0.12.7"
+  },
+  "dependencies": {
+    "@mui/x-data-grid": "workspace:*",
+    "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-data-grid-premium": "workspace:*",
+    "@mui/x-charts": "workspace:*",
+    "@mui/x-charts-pro": "workspace:*",
+    "@mui/x-date-pickers": "workspace:*",
+    "@mui/x-date-pickers-pro": "workspace:*",
+    "@mui/x-tree-view": "workspace:*",
+    "@mui/x-tree-view-pro": "workspace:*"
+  }
+}

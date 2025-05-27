@@ -651,7 +651,7 @@ export const GridRootStyles = styled('div', {
       opacity: vars.colors.interactive.disabledOpacity,
     },
     [`& .${c['rowReorderCell--draggable']}`]: {
-      cursor: 'move',
+      cursor: 'grab',
       opacity: 1,
     },
     [`& .${c.rowReorderCellContainer}`]: {
