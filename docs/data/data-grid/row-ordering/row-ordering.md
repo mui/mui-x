@@ -8,8 +8,10 @@ title: Data Grid - Drag-and-drop reordering
 
 Row reordering lets users rearrange rows by dragging the special reordering cell.
 
-By default, row reordering is disabled.
-To enable it, you need to add the `rowReordering` prop.
+## Implementing row reordering
+
+Drag-and-drop row reordering is disabled by default.
+To enable it, pass the `rowReordering` prop to the Data Grid Pro:
 
 ```tsx
 <DataGridPro rowReordering />
@@ -17,7 +19,10 @@ To enable it, you need to add the `rowReordering` prop.
 
 {{"demo": "RowOrderingGrid.js", "bg": "inline"}}
 
-To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop. This callback is called with a `GridRowOrderChangeParams` object.
+## Row reordering events
+
+To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop.
+This callback is called with a `GridRowOrderChangeParams` object.
 
 In addition, you can import the following events to customize the row reordering experience:
 
