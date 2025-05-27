@@ -310,7 +310,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               disabled={hideableColumns.length === 0 || pivotActive}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
-              onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
+              onChange={() => toggleAllColumns(!allHideableColumnsVisible)}
               name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               label={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               density="compact"
