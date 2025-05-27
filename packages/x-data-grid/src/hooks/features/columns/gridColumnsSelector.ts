@@ -97,6 +97,18 @@ export const gridPinnedColumnsSelector = createRootSelector(
 );
 
 /**
+ * Get all existing pinned columns. Place the columns on the side that depends on the rtl state.
+ * @category Pinned Columns
+ * @ignore - Do not document
+ */
+export const gridExistingPinnedColumnSelector = createSelectorMemoized(
+  gridPinnedColumnsSelector,
+  gridColumnFieldsSelector,
+  gridIsRtlSelector,
+  (model, orderedFields, isRtl) => filterVisibleColumns(model, orderedFields, isRtl),
+);
+
+/**
  * Get the visible pinned columns.
  * @category Visible Columns
  */
