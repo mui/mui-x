@@ -48,6 +48,7 @@ export * from './getCurve';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
+export * from './dateHelpers';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
