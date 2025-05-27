@@ -1,2 +1,2 @@
 export * from './GridChartsIntegrationContextProvider';
-export * from './GridChartsIntegrationRendererBridge';
+export * from './GridChartsRendererBridge';
