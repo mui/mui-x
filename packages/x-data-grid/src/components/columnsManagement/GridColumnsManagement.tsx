@@ -138,8 +138,8 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     }
   }, [columns, sort]);
 
-  const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const { name: field } = event.target as HTMLInputElement;
+  const toggleColumn = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name: field } = event.target;
     apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
   };
 
@@ -287,7 +287,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               className={classes.row}
               disabled={column.hideable === false || pivotActive}
               checked={columnVisibilityModel[column.field] !== false}
-              onClick={toggleColumn}
+              onChange={toggleColumn}
               name={column.field}
               inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
               label={column.headerName || column.field}
