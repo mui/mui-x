@@ -10,6 +10,7 @@ export interface ChartsRendererProps {
 
 export function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) {
   if (chartType === 'bar') {
+    // TODO: instead of returning chars directly, each chart can have a helper that will get the configuration and set the props (and add the defaults)
     return (
       <BarChart
         xAxis={[{ data: categories }]}
