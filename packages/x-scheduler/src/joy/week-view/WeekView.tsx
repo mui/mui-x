@@ -5,9 +5,9 @@ import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
 import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
-import './WeekView.css';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
+import './WeekView.css';
 
 function getCurrentWeekDays(today: SchedulerValidDate) {
   const startOfWeek = today.startOf('week');
