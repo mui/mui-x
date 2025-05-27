@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 export interface ChartsRendererProps {
   categories: string[];
@@ -35,6 +36,34 @@ export function ChartsRenderer({ categories, series, chartType }: ChartsRenderer
         }))}
         height={300}
         width={500}
+      />
+    );
+  }
+
+  if (chartType === 'pie') {
+    return (
+      <PieChart
+        series={[
+          {
+            data: series[0]?.data.map((item, index) => ({
+              id: index,
+              value: item || 0,
+              label: categories[index],
+            })),
+            outerRadius: 120,
+          },
+        ]}
+        width={300}
+        height={300}
+        slotProps={{
+          legend: {
+            direction: 'horizontal',
+            position: {
+              vertical: 'bottom',
+              horizontal: 'center',
+            },
+          },
+        }}
       />
     );
   }
