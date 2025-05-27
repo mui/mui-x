@@ -11,7 +11,7 @@ export interface ChartsRendererProps {
 
 export function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) {
   if (chartType === 'bar') {
-    // TODO: instead of returning chars directly, each chart can have a helper that will get the configuration and set the props (and add the defaults)
+    // TODO: instead of returning charts directly, each chart can have a helper that will get the configuration and set the props (and add the defaults)
     return (
       <BarChart
         xAxis={[{ data: categories }]}
@@ -45,6 +45,7 @@ export function ChartsRenderer({ categories, series, chartType }: ChartsRenderer
       <PieChart
         series={[
           {
+            // TODO: should not be here
             data: series[0]?.data.map((item, index) => ({
               id: index,
               value: item || 0,
