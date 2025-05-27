@@ -18,7 +18,6 @@ import {
   GridCellModes,
   GridRowId,
   GridEditCellProps,
-  GridActionsColDef,
 } from '../../models';
 import {
   GridRenderEditCellParams,
@@ -218,7 +217,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const canManageOwnFocus =
     column.type === 'actions' &&
-    (column as GridActionsColDef)
+    'getActions' in column &&
+    column
       .getActions?.(apiRef.current.getRowParams(rowId))
       .some((action) => !action.props.disabled);
   const tabIndex =
@@ -237,7 +237,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       .join(' '),
   );
 
-  const classNames = [pipesClassName] as (string | undefined)[];
+  const classNames = [pipesClassName];
 
   if (column.cellClassName) {
     classNames.push(
@@ -442,8 +442,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     };
 
     children = column.renderEditCell(params);
+
     classNames.push(gridClasses['cell--editing']);
-    classNames.push(rootClasses?.['cell--editing']);
+    if (rootClasses?.['cell--editing']) {
+      classNames.push(rootClasses?.['cell--editing']);
+    }
   }
 
   if (children === undefined) {
