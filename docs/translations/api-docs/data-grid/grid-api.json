@@ -154,6 +154,9 @@
     "setCellSelectionModel": {
       "description": "Updates the cell selection model according to the value passed to the <code>newModel</code> argument.<br />Any cell already selected will be unselected."
     },
+    "setChartsConfigurationPanelOpen": {
+      "description": "Sets whether the charts configuration side panel is open."
+    },
     "setColumnHeaderFilterFocus": {
       "description": "Sets the focus to the column header filter at the given <code>field</code>."
     },
