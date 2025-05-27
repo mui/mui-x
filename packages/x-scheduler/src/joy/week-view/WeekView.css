@@ -122,6 +122,7 @@
   font-size: var(--font-size-1);
   line-height: calc(100% / 24);
   color: var(--text-soft);
+  white-space: nowrap;
 }
 
 .WeekViewTimeAxisCell:not(:first-child)::after {

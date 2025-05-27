@@ -87,7 +87,7 @@ export const WeekView = React.forwardRef(function WeekView(
                   <time className="WeekViewTimeAxisText">
                     {hour === 0
                       ? null
-                      : adapter.formatByString(adapter.setHours(today, hour), 'h:mma')}
+                      : adapter.formatByString(adapter.setHours(today, hour), 'h:mm a')}
                   </time>
                 </div>
               ))}
