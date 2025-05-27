@@ -40,8 +40,8 @@ const columns: GridColDef[] = [
 export default function GridChartsIntegrationExample() {
   return (
     <GridChartsIntegrationContextProvider>
-      <div style={{ gap: 32 }}>
-        <div style={{ height: 400 }}>
+      <div style={{ gap: 32, width: '100%' }}>
+        <div style={{ height: 370 }}>
           <DataGridPremium
             rows={rows}
             columns={columns}
