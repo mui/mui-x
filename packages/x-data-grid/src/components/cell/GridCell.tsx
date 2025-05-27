@@ -299,8 +299,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const publish = React.useCallback(
     (
       eventName: keyof GridCellEventLookup,
-      propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
-    ): React.MouseEventHandler<HTMLDivElement> =>
+      propHandler: React.EventHandler<any> | undefined,
+    ): React.EventHandler<any> =>
       (event) => {
         // The row might have been deleted during the click
         if (!apiRef.current.getRow(rowId)) {
