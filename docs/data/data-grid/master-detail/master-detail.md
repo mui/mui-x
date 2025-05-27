@@ -198,7 +198,7 @@ For more examples of how to customize master-detail row panels, check out the fo
 
 ## apiRef
 
-The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the master detail feature.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of master-detail row panels.
 The reference below describes the relevant functions.
 See [API object](/x/react-data-grid/api-object/) for more details.
 
