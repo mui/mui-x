@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useAdapter } from '@mui/x-scheduler/primitives/utils/adapter/useAdapter';
-import { SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
+import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
+import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
 import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import './WeekView.css';
