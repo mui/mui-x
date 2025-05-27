@@ -3,11 +3,9 @@ import {
   DataGridPremium,
   GridChartsConfigurationPanel,
   GridColDef,
-} from '@mui/x-data-grid-premium';
-import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererBridge,
-} from '@mui/x-data-grid-premium/context';
+} from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
   configurationOptions,
