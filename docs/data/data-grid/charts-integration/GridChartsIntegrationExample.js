@@ -5,7 +5,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import {
   GridChartsIntegrationContextProvider,
-  GridChartsIntegrationRendererBridge,
+  GridChartsRendererBridge,
 } from '@mui/x-data-grid-premium/context';
 import {
   ChartsRenderer,
@@ -56,7 +56,7 @@ export default function GridChartsIntegrationExample() {
             }}
           />
         </div>
-        <GridChartsIntegrationRendererBridge renderer={ChartsRenderer} />
+        <GridChartsRendererBridge renderer={ChartsRenderer} />
       </div>
     </GridChartsIntegrationContextProvider>
   );
