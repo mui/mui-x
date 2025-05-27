@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import clsx from 'clsx';
 import { useAdapter } from '@mui/x-scheduler/primitives/utils/adapter/useAdapter';
+import { SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
 import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import './WeekView.css';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
 
-function getCurrentWeekDays(today: DateTime) {
+function getCurrentWeekDays(today: SchedulerValidDate) {
   const startOfWeek = today.startOf('week');
   return Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
 }

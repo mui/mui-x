@@ -1,7 +1,6 @@
-import { Adapter } from '@mui/x-scheduler/primitives/utils/adapter/types';
-import { DateTime } from 'luxon';
+import { Adapter, SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
 
-export function isWeekend(adapter: Adapter, value: DateTime): boolean {
+export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean {
   const dayOfWeek = adapter.getDayOfWeek(value);
 
   return dayOfWeek === 6 || dayOfWeek === 7;
