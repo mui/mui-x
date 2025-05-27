@@ -161,10 +161,10 @@ export class Linear implements CurveGenerator {
 
       if (isFirstSection && this.isIncreasing) {
         this.points = [
-          this.points[0],
           this.isHorizontal
-            ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
-            : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+            ? { x: this.max.x + this.gap, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y + this.gap },
+          this.points[1],
           this.points[2],
         ];
       }
@@ -173,8 +173,8 @@ export class Linear implements CurveGenerator {
         this.points = [
           this.points[0],
           this.isHorizontal
-            ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
-            : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+            ? { x: this.max.x - this.gap, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y - this.gap },
           this.points[3],
         ];
       }

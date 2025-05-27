@@ -40,7 +40,13 @@ export type CurveOptions = {
   pointShape?: FunnelPointShape;
 };
 
-export type FunnelCurveType = 'linear' | 'step' | 'bump' | 'pyramid' | 'step-pyramid';
+export type FunnelCurveType =
+  | 'linear'
+  | 'linear-sharp'
+  | 'step'
+  | 'bump'
+  | 'pyramid'
+  | 'step-pyramid';
 
 export type FunnelPointShape = 'square' | 'sharp';
 

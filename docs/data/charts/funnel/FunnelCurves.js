@@ -28,11 +28,6 @@ export default function FunnelCurves() {
           min: 0,
           max: 20,
         },
-        pointShape: {
-          knob: 'select',
-          options: ['square', 'sharp'],
-          defaultValue: 'square',
-        },
         variant: {
           knob: 'select',
           options: ['filled', 'outlined'],
@@ -46,7 +41,6 @@ export default function FunnelCurves() {
               {
                 curve: props.curveType,
                 borderRadius: props.borderRadius,
-                pointShape: props.pointShape,
                 layout: 'vertical',
                 variant: props.variant,
                 ...populationByEducationLevelPercentageSeries,
@@ -61,7 +55,6 @@ export default function FunnelCurves() {
               {
                 curve: props.curveType,
                 borderRadius: props.borderRadius,
-                pointShape: props.pointShape,
                 layout: 'horizontal',
                 variant: props.variant,
                 ...populationByEducationLevelPercentageSeries,
@@ -81,7 +74,6 @@ export default function FunnelCurves() {
     curve: '${props.curveType}',
     variant: '${props.variant}',
     ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
-    ${props.curveType !== 'bump' && props.curveType !== 'linear' ? '// ' : ''}pointShape: ${props.pointShape},
   }]}
   gap={${props.gap}}
 />
