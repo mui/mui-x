@@ -1,4 +1,4 @@
-import { Adapter, SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
+import { Adapter, SchedulerValidDate } from '../../primitives/utils/adapter/types';
 
 export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean {
   const dayOfWeek = adapter.getDayOfWeek(value);
