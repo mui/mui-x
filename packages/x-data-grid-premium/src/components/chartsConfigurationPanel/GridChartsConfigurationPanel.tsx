@@ -3,6 +3,7 @@ import { styled } from '@mui/system';
 import { useGridRootProps } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
+import { GridChartsIcon } from '../../material/icons';
 
 export interface GridChartsConfigurationPanelProps {
   schema?: Record<string, any>;
@@ -11,6 +12,13 @@ export interface GridChartsConfigurationPanelProps {
 interface ChartTypeButtonProps {
   isSelected?: boolean;
 }
+
+const ChartTypeButtonRow = styled('div')({
+  display: 'flex',
+  gap: 4,
+  padding: 4,
+  width: '100%',
+});
 
 const ChartTypeButton = styled('button', {
   name: 'MuiDataGrid',
@@ -23,6 +31,19 @@ const ChartTypeButton = styled('button', {
     border: 'none',
     padding: 8,
     cursor: 'pointer',
+    width: 96,
+    height: 96,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 4,
+    gap: 4,
+    transition: 'background-color 0.2s, color 0.2s',
+    '&:hover': {
+      backgroundColor: vars.colors.interactive.hover,
+      color: vars.colors.interactive.selected,
+    },
   };
 });
 
@@ -31,7 +52,7 @@ function GridChartsConfigurationPanel(props: GridChartsConfigurationPanelProps) 
   const { configuration, setChartType, chartType } = useGridChartsIntegrationContext();
   const rootProps = useGridRootProps();
   return (
-    <React.Fragment>
+    <ChartTypeButtonRow>
       {configuration.chartType?.map((type: string) => (
         <ChartTypeButton
           key={type}
@@ -39,10 +60,13 @@ function GridChartsConfigurationPanel(props: GridChartsConfigurationPanelProps) 
           onClick={() => setChartType(type)}
           {...rootProps.slotProps?.baseButton}
         >
-          {type}
+          <GridChartsIcon />
+          <span style={{ fontSize: 12, marginTop: 4 }}>
+            {`${type.charAt(0).toUpperCase()}${type.slice(1)} chart`}
+          </span>
         </ChartTypeButton>
       ))}
-    </React.Fragment>
+    </ChartTypeButtonRow>
   );
 }
 
