@@ -35,6 +35,12 @@
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
+    "chartsConfigurationPanelOpen": {
+      "description": "If <code>true</code>, the charts configuration side panel is visible."
+    },
+    "chartsIntegration": {
+      "description": "If <code>true</code>, the charts integration feature is enabled."
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },
@@ -443,6 +449,12 @@
           "description": "Object in the shape of GridCellSelectionModel containing the selected cells."
         },
         "details": { "name": "details", "description": "Additional details for this callback." }
+      }
+    },
+    "onChartsConfigurationPanelOpenChange": {
+      "description": "Callback fired when the charts configuration side panel open state changes.",
+      "typeDescriptions": {
+        "chartsConfigurationPanelOpen": "Whether the charts configuration side panel is visible."
       }
     },
     "onClipboardCopy": {
@@ -1819,6 +1831,8 @@
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
     "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
+    "chartsConfigurationIcon": "Icon used for the charts configuration button",
+    "chartsConfigurationPanel": "Component rendered when charts configuration panel is open. Only needed when <code>chartsIntegration</code> prop is passed to the grid. Pass <code>GridChartsConfigurationPanel</code> to render the default charts configuration panel.",
     "collapsibleIcon": "Icon displayed in the collapsible to indicate if it is open or closed.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",

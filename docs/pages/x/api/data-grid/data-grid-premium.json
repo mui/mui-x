@@ -45,6 +45,8 @@
     "cellModesModel": { "type": { "name": "object" } },
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionModel": { "type": { "name": "object" } },
+    "chartsConfigurationPanelOpen": { "type": { "name": "bool" }, "default": "false" },
+    "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -340,6 +342,13 @@
       "signature": {
         "type": "function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) => void",
         "describedArgs": ["cellSelectionModel", "details"]
+      }
+    },
+    "onChartsConfigurationPanelOpenChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(chartsConfigurationPanelOpen: boolean) => void",
+        "describedArgs": ["chartsConfigurationPanelOpen"]
       }
     },
     "onClipboardCopy": {
@@ -788,6 +797,12 @@
       "description": "Component rendered when AI Assistant panel is open. Only needed when `aiAssistant` prop is passed to the grid.\nPass `GridAiAssistantPanel` to render the default AI Assistant panel.",
       "default": "null",
       "class": "MuiDataGridPremium-aiAssistantPanel"
+    },
+    {
+      "name": "chartsConfigurationPanel",
+      "description": "Component rendered when charts configuration panel is open. Only needed when `chartsIntegration` prop is passed to the grid.\nPass `GridChartsConfigurationPanel` to render the default charts configuration panel.",
+      "default": "null",
+      "class": null
     },
     {
       "name": "emptyPivotOverlay",
@@ -1471,6 +1486,12 @@
       "description": "Icon used on the toggle button of the changes list",
       "default": "GridExpandMoreIcon",
       "class": "MuiDataGridPremium-promptChangesToggleIcon"
+    },
+    {
+      "name": "chartsConfigurationIcon",
+      "description": "Icon used for the charts configuration button",
+      "default": "GridChartsIcon",
+      "class": null
     }
   ],
   "classes": [
