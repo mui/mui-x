@@ -14,7 +14,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   return (
     <div
-      className={clsx(className, 'EventCalendarRoot', 'mui', 'light', 'joy')}
+      className={clsx(className, 'EventCalendarRoot', 'joy', 'light')}
       ref={forwardedRef}
       {...other}
     >
