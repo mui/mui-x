@@ -9,6 +9,10 @@ githubLabel: 'component: data grid'
 
 <p class="description">Let users export the Data Grid for Excel, CSV, or printing.</p>
 
+The [export feature](/x/react-data-grid/export/) is enabled by default when `showToolbar` is passed to the `<DataGrid />` component.
+
+You can use the Export and [Toolbar](/x/react-data-grid/components/toolbar/) components when you need to customize the export menu, or when implementing a custom toolbar.
+
 ## Basic usage
 
 The demo below shows how to add export triggers to a custom toolbar.

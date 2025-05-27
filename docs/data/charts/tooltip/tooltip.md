@@ -23,17 +23,15 @@ To pass this trigger attribute to the tooltip use `slotProps.tooltip.trigger`.
 
 {{"demo": "Interaction.js"}}
 
-## Customization
-
-### Formatting
+## Formatting
 
 The format of data rendered in the tooltip can be modified thanks to the series `valueFormatter` property.
-The same can be applied to x values when a tooltip is triggered by the `'axis'`.
+The same can be applied to axes values when a tooltip is triggered by the `'axis'`.
 
 Here is a demo with:
 
-- The time axis is formatted to only show the year
-- The number values are formatted in U.S. Dollars.
+- The time axis values formatted to only show the year
+- The series values are formatted in U.S. Dollars.
 
 {{"demo": "Formatting.js"}}
 
@@ -62,6 +60,8 @@ In this demo, you can see:
 
 The label text inside the tooltip can also be formatted conditionally by providing a function to the series `label` property.
 
+Here is an example of how to shorten series label in the tooltip but not the legend.
+
 ```jsx
 <LineChart
   // ...
@@ -78,9 +78,11 @@ The label text inside the tooltip can also be formatted conditionally by providi
 See [Label—Conditional formatting](/x/react-charts/label/#conditional-formatting) for more details.
 :::
 
-### Hiding values
+## Hiding values
 
-You can hide the axis value with `hideTooltip` in the `xAxis` props.
+### Axis
+
+You can hide the axis value with `hideTooltip` in the axis props.
 It removes the header showing the x-axis value from the tooltip.
 
 ```jsx
@@ -90,46 +92,118 @@ It removes the header showing the x-axis value from the tooltip.
 />
 ```
 
-### Overriding content
+### Series
 
-To override tooltip content, provide a custom component to `slots.tooltip`.
-Some helper are provided, such as:
+To hide a series, the formatted value should be `null`.
+To display the series with a blank space, return an empty string.
 
-- `<ChartsTooltipContainer />` which provide a tooltip with built-in open and position management.
-- `useItemTooltip()` which provides all basic information associated to the current item.
-- `useAxesTooltip()` which provides all basic information associated to the current axes.
+## Style modification
 
-Here is the basic scheme to follow.
-Examples about helpers are provided in the composition section.
+The tooltip can be styled using CSS classes, similar to other elements.
+However, there is one caveat regarding using [portal](https://react.dev/reference/react-dom/createPortal).
 
-```jsx
-import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
+The tooltip renders as a child of the document's body element.
+From a DOM perspective, it's not inside the chart.
+So using the chart's `sx` prop as follow does not work.
 
-function CustomItemTooltipContent() {
-  const tooltipData = useItemTooltip();
-
-  if (!tooltipData) { // No data to display
-    return null;
-  }
-
-  return <div>{/** Your custom content **/}</div>;
-}
+```tsx
+import { chartsTooltipClasses } from '@mui/x-charts';
 
 <LineChart
-  slots={{ tooltip: CustomItemTooltip }}
-/>
+  sx={{
+    [`& .${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
+      color: 'red',
+    },
+  }}
+/>;
+```
 
-// With composition
+To apply the same style as above, use the `sx` prop of the tooltip itself, which should be set in `slotProps.tooltip`.
+
+{{"demo": "TooltipStyle.js"}}
+
+Another option is to disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
+In that case, the tooltip renders as a child of the chart, and CSS rules apply as expected.
+
+## Using a custom tooltip
+
+For advanced use cases, it can be necessary to create your own tooltip.
+You can replace the default tooltip in single component charts by using slots.
+
+```jsx
+<LineChart slots={{ tooltip: CustomItemTooltip }} />
+```
+
+With compositon, you can use your component inside the container.
+
+```jsx
 <ChartContainer>
   // ...
-  <ChartsTooltipContainer trigger="item">
-    <CustomItemTooltipContent />
-  </ChartsTooltipContainer>
+  <CustomItemTooltip />
 </ChartContainer>
 ```
 
 :::warning
-Do not skip ChartsTooltipContainer rendering if the tooltip has no data to display.
+If your custom tooltip is an HTML element and does not use portal, it cannot render inside the ChartContainer.
+Otherwise it would render an HTML element inside an SVG.
+
+The solution is to render your tooltip as a descendant the ChartDataProvider so it can access the chart data, but outside ChartSurface so it isn't rendered inside an SVG element.
+
+```jsx
+<ChartDataProvider>
+  <ChartSurface>{/* ... */}</ChartSurface>
+  <CustomItemTooltip disablePortal />
+</ChartDataProvider>
+```
+
+:::
+
+## Creating a tooltip
+
+To create your custom tooltip, the library exports some helpers which are explained in the following sections:
+
+- `<ChartsTooltipContainer />` a wrapper providing the open/close state and the position of the tooltip.
+- `<ChartsItemTooltipContent />` renders the content of the default item tooltip.
+- `<ChartsAxisTooltipContent />` renders the content of the default axis tooltip.
+- `useItemTooltip()` provides all basic information associated to the current item tooltip.
+- `useAxesTooltip()` provides all basic information associated to the current axes tooltip.
+
+### Modifying the position
+
+To override the tooltip position, you can create a wrapper that manages the position.
+
+```jsx
+function CustomTooltipPopper(props){
+  // ... (event management) ...
+
+  return <NoSsr>
+      <Popper {/* position */}>
+        {props.children}
+      </Popper>
+    </NoSsr>
+}
+```
+
+Then you can either render built-in content (with `<ChartsItemTooltipContent />` or `<ChartsAxisTooltipContent />`) or your own component.
+
+```jsx
+<CustomTooltipPopper>
+  <ChartsItemTooltipContent />
+</CustomTooltipPopper>
+```
+
+The following demo shows how to use additional hooks such as `useXAxis()` and `useDrawingArea()` to customize the tooltip position.
+
+{{"demo": "CustomTooltipPosition.js"}}
+
+#### Modifying the content
+
+To keep the default placement, use the `<ChartsTooltipContainer />` wrapper.
+It accepts a prop `trigger = 'item' | 'axis'` that defines when the Popper should open.
+
+:::warning
+The tooltip might not open if the ChartsTooltipContainer isn't rendered.
+
 For example the following code does not work.
 
 ```jsx
@@ -144,85 +218,26 @@ return (
 );
 ```
 
-The ChartsTooltipContainer must render before the pointer enters the SVG because it uses this event to get the pointer type.
 :::
 
-### Overriding placement
+##### Item content
 
-To override tooltip placement, override to the tooltip with `slots.tooltip`.
-If you want to keep the default content, you can place the `ChartsItemTooltipContent` or `ChartsAxisTooltipContent` in your custom tooltip.
-
-### Styling
-
-The tooltip can be styled using CSS classes, similar to other elements. However, there is one caveat.
-
-:::warning
-
-By default, the tooltip is rendered as a child of the document's body, so using the chart's `sx` prop does not work.
-
-```tsx
-import { chartsTooltipClasses } from '@mui/x-charts';
-
-<LineChart
-  sx={{
-    [`& .${chartsTooltipClasses.root} .${chartsTooltipClasses.valueCell}`]: {
-      color: 'red',
-    },
-  }}
-/>;
-```
-
-:::
-
-To apply the same style as we're trying to apply above, we need to use the `sx` property inside `slotProps.tooltip`:
-
-{{"demo": "TooltipStyle.js"}}
-
-## Composition
-
-If you're using composition, by default, the axis listens for mouse events to get its current x/y values.
-If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
-
-You need those listeners if you are using [axes highlight](/x/react-charts/highlighting/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
-
-```jsx
-<ChartContainer {...} disableAxisListener>
-  {/* ... */}
-</ChartContainer>
-```
-
-### Overriding content
-
-#### Item Tooltip
-
-You can create your own tooltip by using `useItemTooltip()`.
-This hook returns the information about the current item user is interacting with.
+The `useItemTooltip()` hook provides the information about the current item the user is interacting with.
 It contains:
 
 - `identifier`: An object that identify the item. Which often contains its series type, series id, and data index.
 - `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
-To follow the mouse position, you can track pointer events on the SVG thanks to `useSvgRef`.
-
 {{"demo": "CustomTooltipContent.js"}}
 
-#### Axis Tooltip
+#### Axis content
 
-Like in previous section, you can create your own tooltip by using `useAxesTooltip()`.
-This hook returns the information about the current axes user is interacting with and the relevant series.
+The `useAxesTooltip()` hook returns the information about the current axes user is interacting with and the relevant series.
 For each axis, it contains:
 
 - `identifier`: An object that identify the axis. Which often contains its series type, series id, and data index.
 - `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
-To follow the mouse position, you can track pointer events on the SVG thanks to `useSvgRef`.
-
 {{"demo": "CustomAxisTooltipContent.js"}}
-
-### Tooltip position
-
-This demo show example about how to use additional hooks such as `useXAxis()` or `useDrawingArea()` to customize the tooltip position.
-
-{{"demo": "CustomTooltipPosition.js"}}

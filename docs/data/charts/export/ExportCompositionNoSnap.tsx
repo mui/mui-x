@@ -25,7 +25,7 @@ function CustomChartWrapper({ children }: React.PropsWithChildren) {
 }
 
 export default function ExportCompositionNoSnap() {
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = React.useRef<ChartProApi<'composition'>>(undefined);
 
   return (
     <Stack width="100%" sx={{ display: 'block' }}>

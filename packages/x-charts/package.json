@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.3.1",
+  "version": "8.4.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "main": "src/index.js",
@@ -65,7 +65,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.7",
+    "@mui/internal-test-utils": "^2.0.8",
     "@mui/material": "^7.0.2",
     "@mui/system": "^7.0.2",
     "@types/prop-types": "^15.7.14",

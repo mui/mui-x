@@ -1,19 +1,46 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { PieChartPluginSignatures } from '../PieChart/PieChart.plugins';
+import { BarChartPluginsSignatures } from '../BarChart/BarChart.plugins';
+import { ScatterChartPluginsSignatures } from '../ScatterChart/ScatterChart.plugins';
+import { LineChartPluginsSignatures } from '../LineChart/LineChart.plugins';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { ChartPublicAPI } from '../internals/plugins/models';
 
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
 > = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
-export type ChartApi = NonNullable<NonNullable<ChartContainerProps['apiRef']>['current']>;
+type PluginsPerSeriesType = {
+  line: LineChartPluginsSignatures;
+  scatter: ScatterChartPluginsSignatures;
+  bar: BarChartPluginsSignatures;
+  pie: PieChartPluginSignatures;
+  /* Special value when creating a chart using composition. */
+  composition: DefaultPluginSignatures;
+};
+
+/**
+ * The API of the chart `apiRef` object.
+ * The chart type can be passed as the first generic parameter to narrow down the API to the specific chart type.
+ * @example ChartApi<'bar'>
+ * If the chart is being created using composition, the `composition` value can be used.
+ * @example ChartApi<'composition'>
+ */
+export type ChartApi<
+  TSeries extends keyof PluginsPerSeriesType | undefined = undefined,
+  TSignatures extends
+    readonly ChartAnyPluginSignature[] = TSeries extends keyof PluginsPerSeriesType
+    ? PluginsPerSeriesType[TSeries]
+    : AllPluginSignatures,
+> = ChartPublicAPI<TSignatures>;
 
 /**
  * It sets up the data providers as well as the `<svg>` for the chart.
@@ -793,6 +820,14 @@ ChartContainer.propTypes = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
+  /**
+   * The props for the slots.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Slots to customize charts' components.
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
