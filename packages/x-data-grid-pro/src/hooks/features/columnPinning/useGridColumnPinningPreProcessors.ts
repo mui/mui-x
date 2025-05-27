@@ -30,13 +30,18 @@ export const useGridColumnPinningPreProcessors = (
       const savedState = apiRef.current.state;
       apiRef.current.state = { ...savedState, columns: columnsState as unknown as any };
 
+      const existingColumns = new Set(columnsState.orderedFields);
       const pinnedColumns = gridPinnedColumnsSelector(apiRef);
 
       apiRef.current.state = savedState;
       // HACK: Ends here //
 
-      const leftPinnedColumns = pinnedColumns.left || [];
-      const rightPinnedColumns = pinnedColumns.right || [];
+      const leftPinnedColumns = (pinnedColumns.left || []).filter((field) =>
+        existingColumns.has(field),
+      );
+      const rightPinnedColumns = (pinnedColumns.right || []).filter((field) =>
+        existingColumns.has(field),
+      );
 
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
