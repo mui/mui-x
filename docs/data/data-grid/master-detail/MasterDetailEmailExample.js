@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
@@ -8,10 +9,34 @@ import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ForwardIcon from '@mui/icons-material/Forward';
 import SendIcon from '@mui/icons-material/Send';
-import { DataGridPro, GRID_DETAIL_PANEL_TOGGLE_FIELD } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiContext,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+} from '@mui/x-data-grid-pro';
 import { randomCreatedDate, randomEmail } from '@mui/x-data-grid-generator';
 
+const getDetailPanelWidth = (gridDimensions) => {
+  return gridDimensions.viewportInnerSize.width;
+};
+
 function DetailPanelContent({ row: rowProp }) {
+  const apiRef = useGridApiContext();
+  const [width, setWidth] = React.useState(() =>
+    getDetailPanelWidth(apiRef.current.getRootDimensions()),
+  );
+
+  const handleViewportInnerSizeChange = React.useCallback(() => {
+    setWidth(getDetailPanelWidth(apiRef.current.getRootDimensions()));
+  }, [apiRef]);
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent(
+      'viewportInnerSizeChange',
+      handleViewportInnerSizeChange,
+    );
+  }, [apiRef, handleViewportInnerSizeChange]);
+
   return (
     <Stack
       sx={{
@@ -20,6 +45,7 @@ function DetailPanelContent({ row: rowProp }) {
         boxSizing: 'border-box',
         position: 'sticky',
         left: 0,
+        width,
       }}
       direction="column"
     >
@@ -56,7 +82,7 @@ const columns = [
   { field: 'name', headerName: 'From' },
   { field: 'email', headerName: 'Email', width: 200 },
   { field: 'subject', headerName: 'Subject', width: 300 },
-  { field: 'date', type: 'date', headerName: 'Time' },
+  { field: 'date', type: 'date', headerName: 'Date' },
 ];
 
 const rows = [
@@ -105,17 +131,31 @@ const rows = [
 ];
 
 export default function MasterDetailEmailExample() {
+  const getDetailPanelContent = React.useCallback(
+    ({ row }) => <DetailPanelContent row={row} />,
+    [],
+  );
+
+  const getDetailPanelHeight = React.useCallback(() => 400, []);
+
   return (
-    <DataGridPro
-      columns={columns}
-      rows={rows}
-      initialState={{
-        pinnedColumns: {
-          left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
-        },
-      }}
-      getDetailPanelHeight={() => 'auto'}
-      getDetailPanelContent={({ row }) => <DetailPanelContent row={row} />}
-    />
+    <Box sx={{ width: '100%', height: 400 }}>
+      <DataGridPro
+        columns={columns}
+        rows={rows}
+        initialState={{
+          pinnedColumns: {
+            left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+          },
+        }}
+        getDetailPanelHeight={getDetailPanelHeight}
+        getDetailPanelContent={getDetailPanelContent}
+        sx={{
+          '& .MuiDataGrid-detailPanel': {
+            overflow: 'visible',
+          },
+        }}
+      />
+    </Box>
   );
 }

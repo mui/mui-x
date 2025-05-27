@@ -6,8 +6,11 @@
       left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
     },
   }}
-  getDetailPanelHeight={() => 'auto'}
-  getDetailPanelContent={({ row }: GridRowParams) => (
-    <DetailPanelContent row={row} />
-  )}
+  getDetailPanelHeight={getDetailPanelHeight}
+  getDetailPanelContent={getDetailPanelContent}
+  sx={{
+    '& .MuiDataGrid-detailPanel': {
+      overflow: 'visible',
+    },
+  }}
 />
