@@ -41,12 +41,16 @@ interface ChartAxisZoomSliderTrackProps extends React.ComponentProps<'rect'> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   reverse: boolean;
+  onSelectStart?: () => void;
+  onSelectEnd?: () => void;
 }
 
 export function ChartAxisZoomSliderTrack({
   axisId,
   axisDirection,
   reverse,
+  onSelectStart,
+  onSelectEnd,
   ...other
 }: ChartAxisZoomSliderTrackProps) {
   const ref = React.useRef<SVGRectElement>(null);
@@ -133,6 +137,7 @@ export function ChartAxisZoomSliderTrack({
       rect.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
       setIsSelecting(false);
+      onSelectEnd?.();
 
       if (pointerMoved) {
         return;
@@ -163,6 +168,7 @@ export function ChartAxisZoomSliderTrack({
     document.addEventListener('pointerup', onPointerUp);
     rect.addEventListener('pointermove', onPointerMove);
 
+    onSelectStart?.();
     setIsSelecting(true);
     instance.setAxisZoomData(axisId, (prev) => ({
       ...prev,
