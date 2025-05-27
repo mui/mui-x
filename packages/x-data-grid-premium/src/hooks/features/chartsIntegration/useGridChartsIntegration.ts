@@ -11,11 +11,13 @@ import {
   useGridApiMethod,
   useGridEvent,
   gridColumnLookupSelector,
+  runIf,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { GridChartsIntegrationContextValue } from '../../../models/gridChartsIntegration';
 import {
   GridChartsIntegrationApi,
   GridChartsIntegrationState,
@@ -53,6 +55,17 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   };
 };
 
+const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
+  categories: [],
+  series: [],
+  chartType: '',
+  configuration: {},
+  setConfiguration: () => {},
+  setChartType: () => {},
+  setCategories: () => {},
+  setSeries: () => {},
+};
+
 export const useGridChartsIntegration = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -63,9 +76,11 @@ export const useGridChartsIntegration = (
     | 'slotProps'
   >,
 ) => {
-  const isChartsIntegrationAvailable = !!props.chartsIntegration;
+  const context = useGridChartsIntegrationContext(true);
+  const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
+
   const { configuration, setConfiguration, setChartType, setCategories, setSeries } =
-    useGridChartsIntegrationContext();
+    context || EMPTY_CHART_INTEGRATION_CONTEXT;
 
   apiRef.current.registerControlState({
     stateId: 'chartsConfigurationPanelOpen',
@@ -79,6 +94,7 @@ export const useGridChartsIntegration = (
     const columns = gridColumnLookupSelector(apiRef);
     const rows = Object.values(gridFilteredSortedRowEntriesSelector(apiRef)).map((r) => r.model);
 
+    // TODO: should be configurable
     const category = Object.values(columns).find((c) => c.type === 'string')?.field;
     const series = Object.values(columns).find((c) => c.type === 'number')?.field;
 
@@ -133,6 +149,7 @@ export const useGridChartsIntegration = (
       setConfiguration(props.slotProps?.chartsConfigurationPanel?.schema);
 
       // select first chart type
+      // TODO: should come from the initial state
       if (configuration.chartType === undefined) {
         setChartType(props.slotProps?.chartsConfigurationPanel?.schema.chartType[0]);
       }
@@ -168,6 +185,6 @@ export const useGridChartsIntegration = (
     return unsubscribe;
   });
 
-  useGridEvent(apiRef, 'columnsChange', handleDataUpdate);
-  useGridEvent(apiRef, 'filteredRowsSet', handleDataUpdate);
+  useGridEvent(apiRef, 'columnsChange', runIf(isChartsIntegrationAvailable, handleDataUpdate));
+  useGridEvent(apiRef, 'filteredRowsSet', runIf(isChartsIntegrationAvailable, handleDataUpdate));
 };
