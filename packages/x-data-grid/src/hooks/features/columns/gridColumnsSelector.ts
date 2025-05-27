@@ -38,37 +38,13 @@ export const gridColumnLookupSelector = createSelector(
 );
 
 /**
- * Get the visible pinned columns model.
- * @category Visible Columns
- */
-export const gridPinnedColumnsSelector = createRootSelector(
-  (state: GridStateCommunity) => state.pinnedColumns,
-);
-
-/**
  * Get an array of column definitions in the order rendered on screen..
  * @category Columns
  */
 export const gridColumnDefinitionsSelector = createSelectorMemoized(
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
-  gridPinnedColumnsSelector,
-  gridIsRtlSelector,
-  (allFields, lookup, pinnedColumns, isRtl) => {
-    const leftPinnedFields = pinnedColumns.left || [];
-    const rightPinnedFields = pinnedColumns.right || [];
-
-    const visibleLeftPinnedFields = leftPinnedFields.filter((field) => allFields.includes(field));
-    const visibleRightPinnedFields = rightPinnedFields.filter((field) => allFields.includes(field));
-    const unpinnedFields = allFields.filter(
-      (field) => !leftPinnedFields.includes(field) && !rightPinnedFields.includes(field),
-    );
-
-    const orderedFields = isRtl
-      ? [...visibleRightPinnedFields, ...unpinnedFields, ...visibleLeftPinnedFields]
-      : [...visibleLeftPinnedFields, ...unpinnedFields, ...visibleRightPinnedFields];
-    return orderedFields.map((field) => lookup[field]);
-  },
+  (allFields, lookup) => allFields.map((field) => lookup[field]),
 );
 
 /**
@@ -110,6 +86,14 @@ export const gridVisibleColumnDefinitionsSelector = createSelectorMemoized(
 export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
   gridVisibleColumnDefinitionsSelector,
   (visibleColumns) => visibleColumns.map((column) => column.field),
+);
+
+/**
+ * Get the visible pinned columns model.
+ * @category Visible Columns
+ */
+export const gridPinnedColumnsSelector = createRootSelector(
+  (state: GridStateCommunity) => state.pinnedColumns,
 );
 
 /**
