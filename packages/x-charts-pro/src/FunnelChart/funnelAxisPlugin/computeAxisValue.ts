@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
@@ -23,6 +23,8 @@ import {
   getTickNumber,
   scaleTickNumberByRange,
   getCartesianAxisTriggerTooltip,
+  isDateData,
+  createDateFormatter,
 } from '@mui/x-charts/internals';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
 
@@ -38,21 +40,6 @@ function getRange(
 
   return axis.reverse ? [range[1], range[0]] : range;
 }
-
-const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] instanceof Date;
-
-function createDateFormatter(
-  axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,
-  range: number[],
-): AxisConfig<'band' | 'point', any, ChartsAxisProps>['valueFormatter'] {
-  const timeScale = scaleTime(axis.data!, range);
-
-  return (v, { location }) =>
-    location === 'tick' ? timeScale.tickFormat(axis.tickNumber)(v) : `${v.toLocaleString()}`;
-}
-
-const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
-const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 export type ComputeResult<T extends ChartsAxisProps> = {
   axis: ComputedAxisConfig<T>;
@@ -129,8 +116,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const data = axis.data ?? [];
 
     if (isBandScaleConfig(axis)) {
-      const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-      const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
       const zoomedRange = scaleRange;
@@ -138,14 +123,12 @@ export function computeAxisValue<T extends ChartSeriesType>({
       completeAxis[axis.id] = {
         offset: 0,
         height: 0,
-        categoryGapRatio,
-        barGapRatio,
+        categoryGapRatio: 0,
+        barGapRatio: 0,
         triggerTooltip,
         ...axis,
         data,
-        scale: scaleBand(axis.data!, zoomedRange)
-          .paddingInner(categoryGapRatio)
-          .paddingOuter(categoryGapRatio / 2),
+        scale: scaleBand(axis.data!, zoomedRange),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
