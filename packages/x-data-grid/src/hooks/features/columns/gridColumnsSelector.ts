@@ -105,7 +105,7 @@ export const gridExistingPinnedColumnSelector = createSelectorMemoized(
   gridPinnedColumnsSelector,
   gridColumnFieldsSelector,
   gridIsRtlSelector,
-  (model, orderedFields, isRtl) => filterVisibleColumns(model, orderedFields, isRtl),
+  (model, orderedFields, isRtl) => filterMissingColumns(model, orderedFields, isRtl),
 );
 
 /**
@@ -118,7 +118,7 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   gridVisibleColumnFieldsSelector,
   gridIsRtlSelector,
   (columnsState, model, visibleColumnFields, isRtl) => {
-    const visiblePinnedFields = filterVisibleColumns(model, visibleColumnFields, isRtl);
+    const visiblePinnedFields = filterMissingColumns(model, visibleColumnFields, isRtl);
     const visiblePinnedColumns = {
       left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
       right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
@@ -127,7 +127,7 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   },
 );
 
-function filterVisibleColumns(
+function filterMissingColumns(
   pinnedColumns: GridPinnedColumnFields,
   columns: string[],
   invert?: boolean,
