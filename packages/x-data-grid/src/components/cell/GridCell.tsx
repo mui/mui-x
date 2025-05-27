@@ -164,7 +164,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const field = column.field;
 
-  const editCellState: GridEditCellProps<any> | null = useGridSelector(
+  const editCellState: GridEditCellProps | null = useGridSelector(
     apiRef,
     gridEditCellStateSelector,
     {
@@ -276,7 +276,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
-      apiRef.current.publishEvent(eventName as any, params as any, event);
+      apiRef.current.publishEvent(eventName, params, event);
 
       if (onMouseUp) {
         onMouseUp(event);
@@ -288,8 +288,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
-      apiRef.current.publishEvent(eventName as any, params as any, event);
-
+      apiRef.current.publishEvent(eventName, params, event);
       if (onMouseDown) {
         onMouseDown(event);
       }
@@ -385,7 +384,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     );
   }
 
-  let handleFocus: any = other.onFocus;
+  let handleFocus: React.FocusEventHandler<Element> | undefined = other.onFocus;
 
   if (
     process.env.NODE_ENV === 'test' &&
