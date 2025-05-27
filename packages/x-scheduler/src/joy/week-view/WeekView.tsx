@@ -50,7 +50,7 @@ export const WeekView = React.forwardRef(function WeekView(
                 role="columnheader"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
               >
-                {/* // TODO: Add the 3 letter week day format to the adapter */}
+                {/* TODO: Add the 3 letter week day format to the adapter */}
                 <span className="WeekViewHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
                 <span className="WeekViewHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
               </div>
