@@ -49,9 +49,19 @@ const ChartTypeButton = styled('button', {
 });
 
 function GridChartsConfigurationPanel(props: GridChartsConfigurationPanelProps) {
-  const { schema } = props; // TODO: take props into account
-  const { configuration, setChartType, chartType } = useGridChartsIntegrationContext();
+  const { schema } = props;
+  const {
+    configuration: contextConfiguration,
+    setChartType,
+    chartType,
+  } = useGridChartsIntegrationContext();
+
+  const configuration = React.useMemo(
+    () => ({ ...contextConfiguration, ...(schema || {}) }),
+    [contextConfiguration, schema],
+  );
   const rootProps = useGridRootProps();
+
   return (
     <ChartTypeButtonRow>
       {configuration.chartType?.map((type: string) => (

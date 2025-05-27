@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GridChartsConfigurationPanel,
-} from '@mui/x-data-grid-premium';
-import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererBridge,
-} from '@mui/x-data-grid-premium/context';
+} from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
   configurationOptions,
