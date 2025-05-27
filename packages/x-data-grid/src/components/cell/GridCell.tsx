@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import clsx, { ClassValue } from 'clsx';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -237,7 +237,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       .join(' '),
   );
 
-  const classNames = [pipesClassName];
+  const classNames: ClassValue[] = [pipesClassName];
 
   if (column.cellClassName) {
     classNames.push(
@@ -444,9 +444,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     children = column.renderEditCell(params);
 
     classNames.push(gridClasses['cell--editing']);
-    if (rootClasses?.['cell--editing']) {
-      classNames.push(rootClasses?.['cell--editing']);
-    }
+    classNames.push(rootClasses?.['cell--editing']);
   }
 
   if (children === undefined) {
