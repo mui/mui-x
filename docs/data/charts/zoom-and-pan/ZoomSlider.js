@@ -24,7 +24,7 @@ export default function ZoomSlider() {
             filterMode: 'discard',
             minSpan: 10,
             panning: true,
-            slider: { enabled: true },
+            slider: { enabled: true, showTooltip: 'hover' },
           },
           valueFormatter: (v) => v.toLocaleString('en-US'),
         },

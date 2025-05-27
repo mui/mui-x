@@ -535,7 +535,7 @@ export type DefaultedAxis<
   S extends ScaleName = ScaleName,
   V = any,
   AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = AxisConfig<S, V, AxisProps> & {
+> = Omit<AxisConfig<S, V, AxisProps>, 'zoom'> & {
   zoom: DefaultizedZoomOptions | undefined;
 };
 /**
