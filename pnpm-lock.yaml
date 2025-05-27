@@ -1516,9 +1516,6 @@ importers:
       '@fingerprintjs/fingerprintjs':
         specifier: ^3.4.2
         version: 3.4.2
-      '@mui/utils':
-        specifier: ^7.0.2
-        version: 7.0.2(@types/react@19.0.12)(react@19.0.0)
       ci-info:
         specifier: ^4.2.0
         version: 4.2.0
@@ -1809,7 +1806,7 @@ importers:
         version: link:../../packages/x-tree-view-pro/build
     devDependencies:
       fast-glob:
-        specifier: ^3.3.2
+        specifier: ^3.3.3
         version: 3.3.3
       path:
         specifier: ^0.12.7
