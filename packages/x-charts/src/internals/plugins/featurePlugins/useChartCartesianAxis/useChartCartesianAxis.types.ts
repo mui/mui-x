@@ -11,7 +11,7 @@ import type {
   DefaultedYAxis,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import type { ZoomData, ZoomOptions } from './zoom.types';
+import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 
@@ -61,10 +61,15 @@ export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = Sca
     defaultizedYAxis: DefaultedYAxis<S>[];
   };
 
+export interface DefaultedZoomSliderOptions
+  extends Omit<NonNullable<Required<ZoomOptions['slider']>>, 'showTooltip'> {
+  showTooltip: ZoomSliderShowTooltip;
+}
+
 export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slider'>> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
-  slider: NonNullable<Required<ZoomOptions['slider']>>;
+  slider: DefaultedZoomSliderOptions;
 }
 
 export interface UseChartCartesianAxisState {

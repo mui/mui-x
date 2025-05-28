@@ -7,7 +7,7 @@ const adapter = getAdapter();
 export function useDayList(): useDayList.ReturnValue {
   return React.useCallback(({ date, amount }) => {
     const start = adapter.startOfDay(date);
-    const end = adapter.addDays(start, amount - 1);
+    const end = adapter.endOfDay(adapter.addDays(start, amount - 1));
 
     let current = start;
     let currentDayNumber = adapter.getDayOfWeek(current);

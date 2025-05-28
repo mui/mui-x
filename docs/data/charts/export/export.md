@@ -1,14 +1,14 @@
 ---
 title: Charts - Export
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro
+components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro
 ---
 
 # Charts - Export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Charts can be printed and exported as PDF.</p>
 
-Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `<Heatmap />` and `<FunnelChart />`.
+Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `<Heatmap />`, `<FunnelChart />` and `<RadarChartPro />`.
 
 ## Print/Export as PDF
 
