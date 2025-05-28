@@ -30,6 +30,7 @@ export * from '@mui/x-charts/ChartsLabel';
 export type {
   ZoomData,
   ZoomFilterMode,
+  ZoomSliderShowTooltip,
   ZoomOptions,
   ZoomSliderOptions,
 } from '@mui/x-charts/internals';

@@ -68,6 +68,18 @@ If you're using the default zoom slider, updating `zoom.slider.size` effectively
 
 The size is the height on an x-axis and the width on a y-axis.
 
+### Tooltip
+
+The zoom slider supports a tooltip that displays the current zoom range.
+
+You can configure the tooltip by setting the `zoom.slider.showTooltip` property on the axis config. The following options are available:
+
+- `true`: The tooltip is always displayed.
+- `'hover'`: The tooltip is displayed on hover (default).
+- `false`: The tooltip is never displayed.
+
+{{"demo": "ZoomSliderTooltip.js"}}
+
 ### Composition
 
 When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.
