@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { calculateZoomEnd, calculateZoomStart } from './ChartAxisZoomSlider';
+import { calculateZoomEnd, calculateZoomStart } from './zoom-utils';
 import { ZoomData } from '../../models';
 
-describe('ChartAxisZoomSlider', () => {
+describe('Zoom Utils', () => {
   describe('calculateZoomStart', () => {
     it('should return minStart when newStart is too small', () => {
       const newStart = 5;
