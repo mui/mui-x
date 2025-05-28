@@ -10,6 +10,10 @@
   --event-personal-bg-color: oklch(45.5% 0.188 13.697);
 }
 
+.Container {
+  width: 100%;
+}
+
 .Root {
   border-collapse: collapse;
   border-radius: 4px;
@@ -30,8 +34,7 @@
 .Cell {
   display: flex;
   flex-direction: column;
-  height: 120px;
-  width: 120px;
+  aspect-ratio: 1 / 1;
   padding: 4px;
   border-inline-end: 1px solid var(--border-color);
 
