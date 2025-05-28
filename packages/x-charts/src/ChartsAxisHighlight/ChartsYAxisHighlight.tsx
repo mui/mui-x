@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
-import { getValueToPositionMapper, useYScale } from '../hooks/useScale';
+import { getValueToPositionMapper } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
+  selectorChartsHighlightYAxisScale,
   selectorChartsHighlightYAxisValue,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -24,10 +25,9 @@ export default function ChartsYHighlight(props: {
 
   const { left, width } = useDrawingArea();
 
-  const yScale = useYScale();
-
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const axisYValue = useSelector(store, selectorChartsHighlightYAxisValue);
+  const yScale = useSelector(store, selectorChartsHighlightYAxisScale);
 
   const getYPosition = getValueToPositionMapper(yScale);
 
