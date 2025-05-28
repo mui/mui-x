@@ -7,6 +7,7 @@
   --border-color: var(--mauve-2);
   --fixed-cell-width: 68px;
   --hour-height: 46px;
+  --has-scroll: 0;
 }
 
 .mode-dark .WeekViewContainer {
@@ -43,7 +44,7 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-.WeekViewHeader--scroll .WeekViewHeaderRow {
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewHeaderRow {
   overflow-y: scroll;
   scrollbar-color: transparent transparent;
 }
@@ -56,17 +57,17 @@
   }
 }
 
-.WeekViewHeader--scroll .WeekViewAllDayEventsRow {
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewAllDayEventsRow {
   overflow-y: scroll;
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 
 /* Webkit (Chrome, Safari, Edge) */
-.WeekViewHeader--scroll .WeekViewHeaderRow::-webkit-scrollbar {
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewHeaderRow::-webkit-scrollbar {
   background: transparent;
 }
 
-.WeekViewHeader--scroll .WeekViewAllDayEventsRow::-webkit-scrollbar {
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewAllDayEventsRow::-webkit-scrollbar {
   background: var(--weekend-background);
 }
 
