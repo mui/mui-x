@@ -23,6 +23,8 @@ export const WeekView = React.forwardRef(function WeekView(
   const adapter = useAdapter();
   const today = adapter.date('2025-05-26');
   const currentWeekDays = getCurrentWeekDays(today);
+  const bodyRef = React.useRef<HTMLDivElement>(null);
+  const headerWrapperRef = React.useRef<HTMLDivElement>(null);
 
   const eventsByDay = React.useMemo(() => {
     const map = new Map();
@@ -36,10 +38,21 @@ export const WeekView = React.forwardRef(function WeekView(
     return map;
   }, [adapter, events]);
 
+  React.useLayoutEffect(() => {
+    const body = bodyRef.current;
+    const header = headerWrapperRef.current;
+    if (!body || !header) {
+      return;
+    }
+
+    const hasScroll = body.scrollHeight > body.clientHeight;
+    header.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
+  }, [events]);
+
   return (
     <div ref={forwardedRef} className={clsx('WeekViewContainer', className)} {...other}>
       <TimeGrid.Root className="WeekViewRoot">
-        <div className="WeekViewHeader">
+        <div ref={headerWrapperRef} className="WeekViewHeader">
           <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
             <div className="WeekViewAllDayEventsCell" />
             {currentWeekDays.map((day) => (
@@ -75,7 +88,7 @@ export const WeekView = React.forwardRef(function WeekView(
             ))}
           </div>
         </div>
-        <div className="WeekViewBody">
+        <div ref={bodyRef} className="WeekViewBody">
           <div className="WeekViewScrollableContent">
             <div className="WeekViewTimeAxis" aria-hidden="true">
               {Array.from({ length: 24 }, (_, hour) => (

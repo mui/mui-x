@@ -7,6 +7,7 @@
   --border-color: var(--mauve-2);
   --fixed-cell-width: 68px;
   --hour-height: 46px;
+  --has-scroll: 0;
 }
 
 .mode-dark .WeekViewContainer {
@@ -40,19 +41,25 @@
 }
 
 .WeekViewHeaderRow {
-  overflow-y: scroll;
-  scrollbar-color: transparent transparent;
   border-bottom: 1px solid var(--border-color);
 }
 
-.WeekViewAllDayEventsRow {
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewHeaderRow {
   overflow-y: scroll;
-  scrollbar-color: var(--weekend-background) var(--weekend-background);
+  scrollbar-color: transparent transparent;
+}
+
+.WeekViewAllDayEventsRow {
   max-height: 84px;
 
   > *:not(:last-child) {
     border-right: 1px solid var(--border-color);
   }
+}
+
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewAllDayEventsRow {
+  overflow-y: scroll;
+  scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 
 /* Webkit (Chrome, Safari, Edge) */
