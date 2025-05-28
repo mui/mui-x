@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
