@@ -1,3 +1,10 @@
+# Changelog
+
+> For full v7 changelog, please refer to the [v.7x branch](https://github.com/mui/mui-x/blob/v7.x/CHANGELOG.md).
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## 8.5.0
 
 _May 28, 2025_
@@ -101,13 +108,6 @@ Same changes as in `@mui/x-tree-view@8.5.0`.
 - [infra] Remove last deprecated `ponyfillGlobal` usage (#18003) @LukasTy
 - [infra] Use `babel-plugin-display-name` from npm (#18040) @LukasTy
 - [x-telemetry] Remove deprecated `ponyfillGlobal` (#17986) @xBlizZer
-
-# Changelog
-
-> For full v7 changelog, please refer to the [v.7x branch](https://github.com/mui/mui-x/blob/v7.x/CHANGELOG.md).
-
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.4.0
 
