@@ -1,3 +1,8 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## 7.29.5
 
 _May 28, 2025_
@@ -21,11 +26,6 @@ Same changes as in `@mui/x-data-grid@7.29.5`.
 #### `@mui/x-data-grid-premium@7.29.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.29.5`.
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 7.29.4
 
