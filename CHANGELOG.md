@@ -7,9 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _May 28, 2025_
 
-We'd like to offer a big thanks to the 1 contributors who made this release possible.
-
-Following are all team members who have contributed to this release: @cherniavskii
+We'd like to extend a big thank you to @cherniavskii, who made this release possible.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
