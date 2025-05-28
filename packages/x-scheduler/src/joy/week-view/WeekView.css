@@ -115,10 +115,10 @@
 .WeekViewTimeAxis {
   display: flex;
   flex-direction: column;
+  width: var(--fixed-cell-width);
 }
 
 .WeekViewTimeAxisCell {
-  width: var(--fixed-cell-width);
   height: calc(100% / 24);
   line-height: calc(100% / 24);
   border-right: 1px solid var(--border-color);
