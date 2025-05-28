@@ -17,6 +17,10 @@ import {
   GridAiAssistantInitialState,
   GridAiAssistantState,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type {
+  GridChartsIntegrationState,
+  GridChartsIntegrationInitialState,
+} from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 /**
  * The state of Data Grid Premium.
@@ -27,6 +31,7 @@ export interface GridStatePremium extends GridStatePro {
   cellSelection: GridCellSelectionModel;
   pivoting: GridPivotingState;
   aiAssistant: GridAiAssistantState;
+  chartsIntegration: GridChartsIntegrationState;
 }
 
 /**
@@ -38,4 +43,5 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   cellSelection?: GridCellSelectionModel;
   pivoting?: GridPivotingInitialState;
   aiAssistant?: GridAiAssistantInitialState;
+  chartsIntegration?: GridChartsIntegrationInitialState;
 }
