@@ -8,7 +8,7 @@ import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { TriggerOptions, usePointerType } from './utils';
-import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
@@ -59,7 +59,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     props: inProps,
     name: 'MuiChartsTooltipContainer',
   });
-  const { trigger = 'axis', classes, children, ...other } = props;
+  const { trigger = 'axis', classes: propClasses, children, ...other } = props;
+  const classes = useUtilityClasses(propClasses);
 
   const svgRef = useSvgRef();
   const pointerType = usePointerType();
