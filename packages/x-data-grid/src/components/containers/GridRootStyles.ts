@@ -82,7 +82,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['columnHeader--filledGroup']}`]: styles['columnHeader--filledGroup'] },
     { [`& .${c['columnHeader--filtered']}`]: styles['columnHeader--filtered'] },
     { [`& .${c['columnHeader--last']}`]: styles['columnHeader--last'] },
-    { [`& .${c['columnHeader--lastUnpinned']}`]: styles['columnHeader--lastUnpinned'] },
     { [`& .${c['columnHeader--moving']}`]: styles['columnHeader--moving'] },
     { [`& .${c['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
     { [`& .${c['columnHeader--pinnedLeft']}`]: styles['columnHeader--pinnedLeft'] },
@@ -309,9 +308,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeader}:focus,
       & .${c['columnHeader--withLeftBorder']},
       & .${c['columnHeader--withRightBorder']},
-      & .${c['columnHeader--siblingFocused']},
-      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--lastUnpinned']},
-      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
+      & .${c['columnHeader--siblingFocused']}
       `]: {
       [`& .${c.columnSeparator}`]: {
         opacity: 0,

@@ -349,7 +349,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
-    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+    const showLeftBorder = shouldCellShowLeftBorder(
+      pinnedPosition,
+      indexInSection,
+      rootProps.showCellVerticalBorder,
+    );
     const showRightBorder = shouldCellShowRightBorder(
       pinnedPosition,
       indexInSection,

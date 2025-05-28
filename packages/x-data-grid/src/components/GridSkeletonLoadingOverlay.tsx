@@ -135,7 +135,11 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
           rootProps.showCellVerticalBorder,
           gridHasFiller,
         );
-        const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, sectionIndex);
+        const showLeftBorder = shouldCellShowLeftBorder(
+          pinnedPosition,
+          sectionIndex,
+          rootProps.showCellVerticalBorder,
+        );
         const isLastColumn = colIndex === columns.length - 1;
         const isFirstPinnedRight = isPinnedRight && sectionIndex === 0;
         const hasFillerBefore = isFirstPinnedRight && gridHasFiller;

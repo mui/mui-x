@@ -37,7 +37,6 @@ interface GridColumnHeaderItemProps {
   pinnedPosition?: PinnedColumnPosition;
   pinnedOffset?: number;
   style?: React.CSSProperties;
-  isLastUnpinned: boolean;
   isSiblingFocused: boolean;
   showLeftBorder: boolean;
   showRightBorder: boolean;
@@ -59,7 +58,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     showLeftBorder,
     filterItemsCounter,
     pinnedPosition,
-    isLastUnpinned,
     isSiblingFocused,
   } = ownerState;
 
@@ -86,7 +84,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
       // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
       // See https://github.com/mui/mui-x/pull/14559
-      isLastUnpinned && 'columnHeader--lastUnpinned',
       isSiblingFocused && 'columnHeader--siblingFocused',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
@@ -330,7 +327,6 @@ GridColumnHeaderItem.propTypes = {
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
-  isLastUnpinned: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
   isSiblingFocused: PropTypes.bool.isRequired,
   pinnedOffset: PropTypes.number,

@@ -137,7 +137,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const indexInSection = i;
       const sectionLength = renderedColumns.length;
 
-      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showLeftBorder = shouldCellShowLeftBorder(
+        pinnedPosition,
+        indexInSection,
+        rootProps.showColumnVerticalBorder,
+      );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
         indexInSection,

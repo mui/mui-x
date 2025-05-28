@@ -7,12 +7,8 @@ export const shouldCellShowRightBorder = (
   showCellVerticalBorderRootProp: boolean,
   gridHasFiller: boolean,
 ) => {
-  const isSectionLastCell = indexInSection === sectionLength - 1;
-
-  if (pinnedPosition === PinnedColumnPosition.LEFT && isSectionLastCell) {
-    return true;
-  }
   if (showCellVerticalBorderRootProp) {
+    const isSectionLastCell = indexInSection === sectionLength - 1;
     if (pinnedPosition === PinnedColumnPosition.LEFT) {
       return true;
     }
@@ -28,6 +24,11 @@ export const shouldCellShowRightBorder = (
 export const shouldCellShowLeftBorder = (
   pinnedPosition: PinnedColumnPosition | undefined,
   indexInSection: number,
+  showCellVerticalBorderRootProp: boolean,
 ) => {
-  return pinnedPosition === PinnedColumnPosition.RIGHT && indexInSection === 0;
+  return (
+    showCellVerticalBorderRootProp &&
+    pinnedPosition === PinnedColumnPosition.RIGHT &&
+    indexInSection === 0
+  );
 };

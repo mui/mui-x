@@ -47,6 +47,7 @@ import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
+import { gridDimensionsSelector } from '../dimensions';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -350,6 +351,7 @@ export const useGridColumnResize = (
       div.style.setProperty('--width', finalWidth);
     });
 
+    const dimensions = gridDimensionsSelector(apiRef);
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
       false,
@@ -365,6 +367,11 @@ export const useGridColumnResize = (
       refs.leftPinnedHeadersAfter.forEach((header) => {
         updateProperty(header, 'left', widthDiff);
       });
+
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        '--DataGrid-leftPinnedWidth',
+        `${dimensions.leftPinnedWidth + columnWidthDiff}px`,
+      );
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
@@ -376,6 +383,11 @@ export const useGridColumnResize = (
       refs.rightPinnedHeadersBefore.forEach((header) => {
         updateProperty(header, 'right', widthDiff);
       });
+
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        '--DataGrid-rightPinnedWidth',
+        `${dimensions.rightPinnedWidth + columnWidthDiff}px`,
+      );
     }
   };
 
