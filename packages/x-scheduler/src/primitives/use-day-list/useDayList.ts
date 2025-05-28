@@ -6,6 +6,14 @@ const adapter = getAdapter();
 
 export function useDayList(): useDayList.ReturnValue {
   return React.useCallback(({ date, amount }) => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (amount <= 0) {
+        throw new Error(
+          `useDayList: The 'amount' parameter must be a positive number, but received ${amount}.`,
+        );
+      }
+    }
+
     const start = adapter.startOfDay(date);
     const end = adapter.endOfDay(adapter.addDays(start, amount - 1));
 

@@ -6,6 +6,14 @@ const adapter = getAdapter();
 
 export function useWeekList(): useWeekList.ReturnValue {
   return React.useCallback(({ date, amount }) => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof amount !== 'number' || amount <= 0) {
+        throw new Error(
+          `useWeekList: The 'amount' parameter must be a positive number, but received ${amount}.`,
+        );
+      }
+    }
+
     const start = adapter.startOfWeek(date);
     const end =
       amount === 'end-of-month'
