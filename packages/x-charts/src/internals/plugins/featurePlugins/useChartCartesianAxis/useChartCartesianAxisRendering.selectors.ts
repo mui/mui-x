@@ -1,3 +1,4 @@
+import { ChartDrawingArea } from '@mui/x-charts';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -148,10 +149,20 @@ export const selectorChartXAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
+    (state, drawingArea?: ChartDrawingArea) => drawingArea,
   ],
-  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
+  (
+    axis,
+    chartDrawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    zoomOptions,
+    getFilters,
+    drawingArea,
+  ) =>
     computeAxisValue({
-      drawingArea,
+      drawingArea: drawingArea ?? chartDrawingArea,
       formattedSeries,
       axis,
       seriesConfig,
@@ -171,10 +182,20 @@ export const selectorChartYAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
+    (state, drawingArea?: ChartDrawingArea) => drawingArea,
   ],
-  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
+  (
+    axis,
+    chartDrawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    zoomOptions,
+    getFilters,
+    drawingArea,
+  ) =>
     computeAxisValue({
-      drawingArea,
+      drawingArea: drawingArea ?? chartDrawingArea,
       formattedSeries,
       axis,
       seriesConfig,
