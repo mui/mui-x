@@ -20,6 +20,7 @@ const timeSensitiveSuites = [
   'RowSpanningClassSchedule',
   'ListView',
   'RowSpanningCalendar',
+  'WeekView',
 ];
 
 await main();
