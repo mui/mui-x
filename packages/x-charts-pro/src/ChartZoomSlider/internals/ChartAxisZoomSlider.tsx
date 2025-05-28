@@ -32,6 +32,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   const store = useStore();
   const drawingArea = useDrawingArea();
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
 
@@ -92,6 +93,8 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         axisId={axisId}
         axisDirection={axisDirection}
         reverse={reverse}
+        onSelectStart={() => setShowTooltip(true)}
+        onSelectEnd={() => setShowTooltip(false)}
       />
       <ChartAxisZoomSliderActiveTrack
         zoomData={zoomData}
@@ -99,6 +102,9 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         axisPosition={axisPosition}
         axisDirection={axisDirection}
         reverse={reverse}
+        showTooltip={showTooltip}
+        onPointerEnter={() => setShowTooltip(true)}
+        onPointerLeave={() => setShowTooltip(false)}
       />
     </g>
   );
