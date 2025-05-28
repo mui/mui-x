@@ -34,7 +34,10 @@ function filterCommit(commitsItem) {
   // TODO: Use labels
 
   // Filter dependency updates
-  return !commitsItem.commit.message.startsWith('Bump');
+  return (
+    !commitsItem.commit.message.startsWith('Bump') &&
+    !commitsItem.commit.message.includes('[scheduler]')
+  );
 }
 
 async function findLatestTaggedVersion(octokit) {
