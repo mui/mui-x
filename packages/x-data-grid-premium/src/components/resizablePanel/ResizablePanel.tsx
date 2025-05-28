@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { ResizablePanelContext } from './ResizablePanelContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';

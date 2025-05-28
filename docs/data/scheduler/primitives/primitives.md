@@ -7,7 +7,7 @@ githubLabel: 'component: scheduler'
 
 # Scheduler - Overview
 
-<p class="description">A collection of React UI components to schedule your events. </p>
+<p class="description">A collection of primitives following the principles of Base UI to create custom event calendar UIs. </p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
@@ -15,5 +15,10 @@ githubLabel: 'component: scheduler'
 This package is not published yet.
 :::
 
-- [Joy - Event Calendar](/x/react-scheduler/event-calendar/)
-- [Primitives](/x/react-scheduler/primitives/)
+## Time Grid
+
+{{"demo": "TimeGridPrimitives.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Day Grid
+
+TODO
