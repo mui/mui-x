@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
-import { CalendarEvent } from '@mui/x-scheduler/joy/models/events';
+import { CalendarEvent } from '@mui/x-scheduler/joy';
 import classes from './BasicEventCalendar.module.css';
 
 const events: CalendarEvent[] = [
