@@ -107,7 +107,9 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         axisPosition={axisPosition}
         axisDirection={axisDirection}
         reverse={reverse}
-        showTooltip={(showTooltip && tooltipConditions !== false) || tooltipConditions === true}
+        showTooltip={
+          (showTooltip && tooltipConditions !== 'never') || tooltipConditions === 'always'
+        }
         onPointerEnter={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
         onPointerLeave={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
       />

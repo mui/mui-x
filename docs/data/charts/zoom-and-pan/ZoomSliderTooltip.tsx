@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import type { ZoomSliderShowTooltip } from '@mui/x-charts-pro/models';
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 const pData = [2400, 1398, -9800, 3908, 4800, -3800, 4300];
@@ -22,9 +23,8 @@ const xLabels = [
 ];
 
 export default function ZoomSliderTooltip() {
-  const [showTooltip, setShowTooltip] = React.useState<'hover' | 'true' | 'false'>(
-    'hover',
-  );
+  const [showTooltip, setShowTooltip] =
+    React.useState<ZoomSliderShowTooltip>('hover');
 
   return (
     <Stack width="100%">
@@ -36,12 +36,12 @@ export default function ZoomSliderTooltip() {
           value={showTooltip}
           label="Show Tooltip"
           onChange={(event) =>
-            setShowTooltip(event.target.value as 'hover' | 'true' | 'false')
+            setShowTooltip(event.target.value as ZoomSliderShowTooltip)
           }
         >
-          <MenuItem value="true">Always</MenuItem>
+          <MenuItem value="always">Always</MenuItem>
           <MenuItem value="hover">On hover</MenuItem>
-          <MenuItem value="false">Never</MenuItem>
+          <MenuItem value="never">Never</MenuItem>
         </Select>
       </FormControl>
 
@@ -55,17 +55,7 @@ export default function ZoomSliderTooltip() {
           {
             id: 'x',
             data: xLabels,
-            zoom: {
-              slider: {
-                enabled: true,
-                showTooltip:
-                  showTooltip === 'false'
-                    ? false
-                    : showTooltip === 'true'
-                      ? true
-                      : 'hover',
-              },
-            },
+            zoom: { slider: { enabled: true, showTooltip } },
           },
         ]}
         yAxis={[{ width: 60, max: 10000 }]}

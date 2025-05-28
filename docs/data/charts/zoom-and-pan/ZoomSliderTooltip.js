@@ -35,9 +35,9 @@ export default function ZoomSliderTooltip() {
           label="Show Tooltip"
           onChange={(event) => setShowTooltip(event.target.value)}
         >
-          <MenuItem value="true">Always</MenuItem>
+          <MenuItem value="always">Always</MenuItem>
           <MenuItem value="hover">On hover</MenuItem>
-          <MenuItem value="false">Never</MenuItem>
+          <MenuItem value="never">Never</MenuItem>
         </Select>
       </FormControl>
 
@@ -51,17 +51,7 @@ export default function ZoomSliderTooltip() {
           {
             id: 'x',
             data: xLabels,
-            zoom: {
-              slider: {
-                enabled: true,
-                showTooltip:
-                  showTooltip === 'false'
-                    ? false
-                    : showTooltip === 'true'
-                      ? true
-                      : 'hover',
-              },
-            },
+            zoom: { slider: { enabled: true, showTooltip } },
           },
         ]}
         yAxis={[{ width: 60, max: 10000 }]}

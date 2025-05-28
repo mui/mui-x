@@ -18,7 +18,7 @@ export type ZoomData = {
 };
 
 export type ZoomFilterMode = 'keep' | 'discard';
-export type ZoomSliderShowTooltip = boolean | 'hover';
+export type ZoomSliderShowTooltip = 'always' | 'hover' | 'never';
 
 export interface ZoomOptions {
   /**
@@ -93,9 +93,9 @@ export interface ZoomSliderOptions {
   size?: number;
   /**
    * Defines when the tooltip with the zoom values should be shown.
-   * - true: The tooltip is always shown.
+   * - 'always': The tooltip is always shown.
    * - 'hover': The tooltip is shown when hovering over the track or thumb.
-   * - false: The tooltip is never shown.
+   * - 'never': The tooltip is never shown.
    * @default 'hover'
    */
   showTooltip?: ZoomSliderShowTooltip;
