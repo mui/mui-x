@@ -27,8 +27,8 @@ export default function ZoomSliderTooltip() {
   );
 
   return (
-    <Stack width="100%" alignItems="center">
-      <FormControl sx={{ width: 150, mb: 2 }}>
+    <Stack width="100%">
+      <FormControl sx={{ width: 150, mb: 2, alignSelf: 'center' }}>
         <InputLabel id="show-tooltip-label">Show Tooltip</InputLabel>
         <Select
           labelId="show-tooltip-label"
