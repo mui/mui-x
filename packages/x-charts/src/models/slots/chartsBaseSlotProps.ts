@@ -13,4 +13,5 @@ export type ChartBaseIconProps = ChartBaseCommonProps<SVGSVGElement> & {
 
 export type ChartBaseIconButtonProps = ChartBaseCommonProps & {
   ref?: React.Ref<HTMLButtonElement>;
+  disabled?: boolean;
 };
