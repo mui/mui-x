@@ -20,7 +20,6 @@ const timeSensitiveSuites = [
   'RowSpanningClassSchedule',
   'ListView',
   'RowSpanningCalendar',
-  'WeekView',
 ];
 
 await main();
@@ -34,7 +33,7 @@ async function main() {
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
-      '--hide-scrollbars',
+      '--disable-features=OverlayScrollbar',
     ],
     headless: false,
   });
