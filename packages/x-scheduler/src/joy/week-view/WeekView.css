@@ -7,7 +7,7 @@
   --border-color: var(--mauve-2);
   --fixed-cell-width: 68px;
   --hour-height: 46px;
-  --has-scroll: 0;
+  --has-scroll: 1;
 }
 
 .mode-dark .WeekViewContainer {
@@ -104,7 +104,6 @@
   flex: 1;
   border-top: 1px solid var(--border-color);
   overflow-y: auto;
-  scrollbar-gutter: stable;
 }
 
 .WeekViewScrollableContent {
