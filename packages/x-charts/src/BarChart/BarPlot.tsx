@@ -85,7 +85,7 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   slots?: BarPlotSlots;
 }
 
-export const useAggregatedData = (): {
+const useAggregatedData = (): {
   completedData: CompletedBarData[];
   masksData: MaskData[];
 } => {
