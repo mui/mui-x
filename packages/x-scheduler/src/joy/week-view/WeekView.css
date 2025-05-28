@@ -63,10 +63,11 @@
 }
 
 /* Webkit (Chrome, Safari, Edge) */
-.WeekViewHeaderRow::-webkit-scrollbar {
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewHeaderRow::-webkit-scrollbar {
   background: transparent;
 }
-.WeekViewAllDayEventsRow::-webkit-scrollbar {
+
+.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewAllDayEventsRow::-webkit-scrollbar {
   background: var(--weekend-background);
 }
 
