@@ -1,10 +1,9 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import {
   AxisId,
-  selectorChartRawAxis,
-  selectorChartXAxis,
-  selectorChartYAxis,
-  useChartContext,
+  selectorChartComputedXAxes,
+  selectorChartComputedYAxes,
   useSelector,
   useStore,
 } from '@mui/x-charts/internals';
@@ -13,11 +12,18 @@ import {
   getValueToPositionMapper,
   ScatterMarker,
   useScatterSeriesContext,
-  useXAxes,
-  useYAxes,
   useZAxes,
 } from '@mui/x-charts';
 import getColor from '@mui/x-charts/ScatterChart/seriesConfig/getColor';
+import { alpha } from '@mui/system';
+
+const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
+  rx: 4,
+  ry: 4,
+  stroke: theme.palette.grey[700],
+  // TODO: Use masks to make it look like the designs: https://stackoverflow.com/questions/22579508/subtract-one-circle-from-another-in-svg
+  fill: alpha(theme.palette.grey[700], 0.4),
+}));
 
 interface ChartAxisZoomSliderPreviewProps {
   axisId: AxisId;
@@ -37,6 +43,7 @@ export function ChartAxisZoomSliderPreview({
 }: ChartAxisZoomSliderPreviewProps) {
   return (
     <g {...props}>
+      <PreviewBackgroundRect {...props} />
       <ScatterPreview {...props} />
     </g>
   );
@@ -63,8 +70,14 @@ function ScatterPreview({
     right: x + width,
     bottom: y + height,
   };
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis, drawingArea);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis, drawingArea);
+  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartComputedXAxes, {
+    drawingArea,
+    zoomMap: undefined,
+  });
+  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartComputedYAxes, {
+    drawingArea,
+    zoomMap: undefined,
+  });
   const { zAxis, zAxisIds } = useZAxes();
 
   if (seriesData === undefined) {
@@ -92,7 +105,6 @@ function ScatterPreview({
 
         const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
         const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
-        console.log({ xScale, yScale });
         const getXPosition = getValueToPositionMapper(xScale);
         const getYPosition = getValueToPositionMapper(yScale);
 
@@ -112,7 +124,7 @@ function ScatterPreview({
               x={x}
               y={y}
               seriesId={series.id}
-              size={series.markerSize}
+              size={1}
               isHighlighted={false}
               isFaded={false}
             />,

@@ -1,4 +1,4 @@
-import { ChartDrawingArea } from '@mui/x-charts';
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -125,6 +125,52 @@ const selectorChartZoomAxisFilters = createSelector(
   },
 );
 
+export const selectorChartComputedXAxes = createSelector(
+  [
+    selectorChartRawXAxis,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorChartZoomOptionsLookup,
+    selectorChartZoomAxisFilters,
+    (_, params: { drawingArea: ChartDrawingArea; zoomMap: Map<AxisId, ZoomData> | undefined }) =>
+      params,
+  ],
+  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, { drawingArea, zoomMap }) =>
+    computeAxisValue({
+      drawingArea,
+      formattedSeries,
+      axis,
+      seriesConfig,
+      axisDirection: 'x',
+      zoomMap,
+      zoomOptions,
+      getFilters,
+    }),
+);
+
+export const selectorChartComputedYAxes = createSelector(
+  [
+    selectorChartRawYAxis,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorChartZoomOptionsLookup,
+    selectorChartZoomAxisFilters,
+    (_, params: { drawingArea: ChartDrawingArea; zoomMap: Map<AxisId, ZoomData> | undefined }) =>
+      params,
+  ],
+  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, { drawingArea, zoomMap }) =>
+    computeAxisValue({
+      drawingArea,
+      formattedSeries,
+      axis,
+      seriesConfig,
+      axisDirection: 'y',
+      zoomMap,
+      zoomOptions,
+      getFilters,
+    }),
+);
+
 /**
  * The only interesting selectors that merge axis data and zoom if provided.
  */
@@ -132,26 +178,16 @@ const selectorChartZoomAxisFilters = createSelector(
 export const selectorChartXAxis = createSelector(
   [
     selectorChartRawXAxis,
-    selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
-    selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    (state, drawingArea?: ChartDrawingArea) => drawingArea,
+    selectorChartDrawingArea,
+    selectorChartZoomMap,
   ],
-  (
-    axis,
-    chartDrawingArea,
-    formattedSeries,
-    seriesConfig,
-    zoomMap,
-    zoomOptions,
-    getFilters,
-    drawingArea,
-  ) =>
+  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, drawingArea, zoomMap) =>
     computeAxisValue({
-      drawingArea: drawingArea ?? chartDrawingArea,
+      drawingArea,
       formattedSeries,
       axis,
       seriesConfig,
