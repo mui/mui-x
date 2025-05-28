@@ -79,8 +79,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       : selectorChartsInteractionItemIsDefined,
   );
 
-  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
-
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null) {
@@ -151,10 +149,10 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <NoSsr>
-      {popperOpen && (
+      {isOpen && (
         <ChartsTooltipRoot
           className={classes?.root}
-          open={popperOpen}
+          open={isOpen}
           placement={pointerType?.pointerType === 'mouse' ? 'right-start' : 'top'}
           popperRef={popperRef}
           anchorEl={anchorEl}
