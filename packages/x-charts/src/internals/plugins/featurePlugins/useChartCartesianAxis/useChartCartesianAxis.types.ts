@@ -9,7 +9,7 @@ import type {
   XAxis,
   DefaultedXAxis,
   DefaultedYAxis,
-  AxisPointerIdentifier,
+  CartesianAxisItemIdentifier,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions } from './zoom.types';
@@ -49,23 +49,15 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    */
   onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
   /**
-   * The function called when pointer moves from one axis item to another.
-   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   * The function called when pointer moves from one axis value to another.
+   * @param {AxisItemIdentifier[]} newAxisInteraction The array of item per axis.
    */
-  onXAxisInteraction?: (newAxes: AxisPointerIdentifier[] | null) => void;
+  onAxisInteraction?: (newAxisInteraction: CartesianAxisItemIdentifier[] | null) => void;
   /**
-   * The function called when pointer moves from one axis item to another.
-   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
+   * The controlled axis highlighted.
+   * Indicates the direction, axis id, and data index to highlight.
    */
-  onYAxisInteraction?: (newAxes: AxisPointerIdentifier[] | null) => void;
-  /**
-   * The controlled x-axis value highlighted.
-   */
-  xAxisHighlight?: AxisPointerIdentifier | null;
-  /**
-   * The controlled y-axis value highlighted.
-   */
-  yAxisHighlight?: AxisPointerIdentifier | null;
+  highlightedAxis?: CartesianAxisItemIdentifier | null;
   /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
@@ -98,16 +90,10 @@ export interface UseChartCartesianAxisState {
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
   };
-  controlledCartesianAxisHighlight?: {
-    /**
-     * The controlled x-axis value highlighted.
-     */
-    x?: AxisPointerIdentifier | null;
-    /**
-     * The controlled y-axis value highlighted.
-     */
-    y?: AxisPointerIdentifier | null;
-  };
+  /**
+   * The controlled axis item highlighted.
+   */
+  controlledCartesianAxisHighlight?: CartesianAxisItemIdentifier | null;
 }
 
 export type ExtremumFilter = (

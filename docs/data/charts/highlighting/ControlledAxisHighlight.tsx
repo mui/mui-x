@@ -9,15 +9,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { AxisPointerIdentifier } from '@mui/x-charts/models';
+import { CartesianAxisItemIdentifier } from '@mui/x-charts/models';
 import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
 
 export default function ControlledAxisHighlight() {
-  const [xAxisHighlight, setXAxisHighlight] =
-    React.useState<AxisPointerIdentifier | null>({
+  const [highlightedAxis, setHighlightedAxis] =
+    React.useState<CartesianAxisItemIdentifier | null>({
       axisId: 'x-axis',
       dataIndex: 2,
-      value: null,
+      direction: 'x',
     });
 
   const [chartType, setChartType] = React.useState<'bar' | 'line'>('bar');
@@ -29,10 +29,10 @@ export default function ControlledAxisHighlight() {
   };
 
   const handleAxisHighlight = (event: any) => {
-    setXAxisHighlight({
+    setHighlightedAxis({
       axisId: 'x-axis',
       dataIndex: Number(event.target.value),
-      value: null,
+      direction: 'x',
     });
   };
 
@@ -56,7 +56,7 @@ export default function ControlledAxisHighlight() {
         <RadioGroup
           aria-labelledby="axis-index-radio-group"
           name="radio-buttons-group"
-          value={xAxisHighlight?.dataIndex ?? null}
+          value={highlightedAxis?.dataIndex ?? null}
           onChange={handleAxisHighlight}
           row
         >
@@ -71,17 +71,17 @@ export default function ControlledAxisHighlight() {
         {chartType === 'bar' ? (
           <BarChart
             {...barChartsProps}
-            xAxisHighlight={xAxisHighlight}
-            onXAxisInteraction={(newState) =>
-              setXAxisHighlight(newState && newState[0])
+            highlightedAxis={highlightedAxis}
+            onAxisInteraction={(newState) =>
+              setHighlightedAxis(newState && newState[0])
             }
           />
         ) : (
           <LineChart
             {...lineChartsProps}
-            xAxisHighlight={xAxisHighlight}
-            onXAxisInteraction={(newState) =>
-              setXAxisHighlight(newState && newState[0])
+            highlightedAxis={highlightedAxis}
+            onAxisInteraction={(newState) =>
+              setHighlightedAxis(newState && newState[0])
             }
           />
         )}

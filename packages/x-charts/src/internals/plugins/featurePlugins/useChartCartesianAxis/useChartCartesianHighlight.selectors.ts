@@ -1,4 +1,5 @@
 import { createSelector } from '../../utils/selectors';
+import { CartesianAxisItemIdentifier } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 
 import {
@@ -14,13 +15,23 @@ const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.controlledCartesianAxisHighlight;
 
+const selectValue =
+  (direction: 'x' | 'y') => (value: CartesianAxisItemIdentifier | null | undefined) => {
+    if (value === undefined) {
+      // Undefined means not controlled
+      return undefined;
+    }
+    return value?.direction === direction ? value : null;
+  };
+
 export const selectorChartsControlledXAxisHighlight = createSelector(
   [selectorChartControlledCartesianAxisHighlight],
-  (controlledValues) => controlledValues?.x,
+  selectValue('x'),
 );
+
 export const selectorChartsControlledYAxisHighlight = createSelector(
   [selectorChartControlledCartesianAxisHighlight],
-  (controlledValues) => controlledValues?.y,
+  selectValue('y'),
 );
 
 export const selectorChartsHighlightXAxisIndex = createSelector(
@@ -48,7 +59,7 @@ export const selectorChartsHighlightXAxisValue = createSelector(
     if (controlledItem.dataIndex !== null) {
       return axis.axis[controlledItem.axisId].data?.[controlledItem.dataIndex];
     }
-    return controlledItem.value;
+    return null;
   },
 );
 
@@ -65,6 +76,6 @@ export const selectorChartsHighlightYAxisValue = createSelector(
     if (controlledItem.dataIndex !== null) {
       return axis.axis[controlledItem.axisId].data?.[controlledItem.dataIndex];
     }
-    return controlledItem.value;
+    return null;
   },
 );

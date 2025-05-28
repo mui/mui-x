@@ -349,6 +349,15 @@ SparkLineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The controlled axis highlighted.
+   * Indicates the direction, axis id, and data index to highlight.
+   */
+  highlightedAxis: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number.isRequired,
+    direction: PropTypes.oneOf(['x', 'y']).isRequired,
+  }),
+  /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
@@ -389,6 +398,11 @@ SparkLineChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * The function called when pointer moves from one axis value to another.
+   * @param {AxisItemIdentifier[]} newAxisInteraction The array of item per axis.
+   */
+  onAxisInteraction: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -401,16 +415,6 @@ SparkLineChart.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
-  /**
-   * The function called when pointer moves from one axis item to another.
-   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
-   */
-  onXAxisInteraction: PropTypes.func,
-  /**
-   * The function called when pointer moves from one axis item to another.
-   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
-   */
-  onYAxisInteraction: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'
@@ -997,14 +1001,6 @@ SparkLineChart.propTypes = {
     }),
   ]),
   /**
-   * The controlled x-axis value highlighted.
-   */
-  xAxisHighlight: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    dataIndex: PropTypes.number,
-    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
-  }),
-  /**
    * The yAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
@@ -1526,14 +1522,6 @@ SparkLineChart.propTypes = {
       width: PropTypes.number,
     }),
   ]),
-  /**
-   * The controlled y-axis value highlighted.
-   */
-  yAxisHighlight: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    dataIndex: PropTypes.number,
-    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
-  }),
 } as any;
 
 export { SparkLineChart };

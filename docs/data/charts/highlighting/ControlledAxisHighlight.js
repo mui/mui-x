@@ -13,10 +13,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function ControlledAxisHighlight() {
-  const [xAxisHighlight, setXAxisHighlight] = React.useState({
+  const [highlightedAxis, setHighlightedAxis] = React.useState({
     axisId: 'x-axis',
     dataIndex: 2,
-    value: null,
+    direction: 'x',
   });
 
   const [chartType, setChartType] = React.useState('bar');
@@ -28,10 +28,10 @@ export default function ControlledAxisHighlight() {
   };
 
   const handleAxisHighlight = (event) => {
-    setXAxisHighlight({
+    setHighlightedAxis({
       axisId: 'x-axis',
       dataIndex: Number(event.target.value),
-      value: null,
+      direction: 'x',
     });
   };
 
@@ -55,7 +55,7 @@ export default function ControlledAxisHighlight() {
         <RadioGroup
           aria-labelledby="axis-index-radio-group"
           name="radio-buttons-group"
-          value={xAxisHighlight?.dataIndex ?? null}
+          value={highlightedAxis?.dataIndex ?? null}
           onChange={handleAxisHighlight}
           row
         >
@@ -70,17 +70,17 @@ export default function ControlledAxisHighlight() {
         {chartType === 'bar' ? (
           <BarChart
             {...barChartsProps}
-            xAxisHighlight={xAxisHighlight}
-            onXAxisInteraction={(newState) =>
-              setXAxisHighlight(newState && newState[0])
+            highlightedAxis={highlightedAxis}
+            onAxisInteraction={(newState) =>
+              setHighlightedAxis(newState && newState[0])
             }
           />
         ) : (
           <LineChart
             {...lineChartsProps}
-            xAxisHighlight={xAxisHighlight}
-            onXAxisInteraction={(newState) =>
-              setXAxisHighlight(newState && newState[0])
+            highlightedAxis={highlightedAxis}
+            onAxisInteraction={(newState) =>
+              setHighlightedAxis(newState && newState[0])
             }
           />
         )}

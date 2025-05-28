@@ -515,22 +515,43 @@ export interface ChartsAxisData {
   seriesValues: Record<string, number | null | undefined>;
 }
 
+export type CartesianDirection = 'x' | 'y';
+export type PolarDirection = 'rotation' | 'radius';
+
 /**
  * The data used to identify pointer interaction with axis
  */
-export interface AxisPointerIdentifier {
+export interface CartesianAxisItemIdentifier {
+  /**
+   * The axis direction.
+   */
+  direction: CartesianDirection;
   /**
    * The axis id.
    */
   axisId: AxisId;
   /**
-   * The data index if the axis have a `data` property.
+   * The data index.
    */
-  dataIndex: number | null;
+  dataIndex: number;
+}
+
+/**
+ * The data used to identify pointer interaction with axis
+ */
+export interface PolarAxisItemIdentifier {
   /**
-   * The value. If the axis have a `data` property, the `dataIndex` get the priority.
+   * The axis direction.
    */
-  value: number | string | Date | null;
+  direction: PolarDirection;
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index.
+   */
+  dataIndex: number;
 }
 
 export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName

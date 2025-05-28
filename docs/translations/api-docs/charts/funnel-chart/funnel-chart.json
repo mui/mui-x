@@ -15,6 +15,9 @@
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
+    "highlightedAxis": {
+      "description": "The controlled axis highlighted. Indicates the direction, axis id, and data index to highlight."
+    },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },
@@ -33,6 +36,10 @@
         "data": "The data about the clicked axis and items associated with it."
       }
     },
+    "onAxisInteraction": {
+      "description": "The function called when pointer moves from one axis value to another.",
+      "typeDescriptions": { "newAxisInteraction": "The array of item per axis." }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
@@ -43,14 +50,6 @@
         "event": "The event source of the callback.",
         "funnelItemIdentifier": "The funnel item identifier."
       }
-    },
-    "onXAxisInteraction": {
-      "description": "The function called when pointer moves from one axis item to another.",
-      "typeDescriptions": { "newAxes": "The array of item per axis." }
-    },
-    "onYAxisInteraction": {
-      "description": "The function called when pointer moves from one axis item to another.",
-      "typeDescriptions": { "newAxes": "The array of item per axis." }
     },
     "series": {
       "description": "The series to display in the funnel chart. An array of FunnelSeriesType objects."

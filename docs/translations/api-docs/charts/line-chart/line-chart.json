@@ -20,6 +20,9 @@
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
+    "highlightedAxis": {
+      "description": "The controlled axis highlighted. Indicates the direction, axis id, and data index to highlight."
+    },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },
@@ -39,20 +42,16 @@
         "data": "The data about the clicked axis and items associated with it."
       }
     },
+    "onAxisInteraction": {
+      "description": "The function called when pointer moves from one axis value to another.",
+      "typeDescriptions": { "newAxisInteraction": "The array of item per axis." }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
-    "onXAxisInteraction": {
-      "description": "The function called when pointer moves from one axis item to another.",
-      "typeDescriptions": { "newAxes": "The array of item per axis." }
-    },
-    "onYAxisInteraction": {
-      "description": "The function called when pointer moves from one axis item to another.",
-      "typeDescriptions": { "newAxes": "The array of item per axis." }
-    },
     "series": {
       "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series-type/'>LineSeriesType</a> objects."
     },
@@ -66,11 +65,9 @@
     "xAxis": {
       "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
-    "xAxisHighlight": { "description": "The controlled x-axis value highlighted." },
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
-    },
-    "yAxisHighlight": { "description": "The controlled y-axis value highlighted." }
+    }
   },
   "classDescriptions": {},
   "slotDescriptions": {

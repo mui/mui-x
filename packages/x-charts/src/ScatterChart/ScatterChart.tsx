@@ -55,7 +55,7 @@ export interface ScatterChartSlotProps
 export interface ScatterChartProps
   extends Omit<
       ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
-      'series' | 'plugins' | 'onItemClick'
+      'series' | 'plugins' | 'onItemClick' | 'highlightedAxis'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -262,6 +262,11 @@ ScatterChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * The function called when pointer moves from one axis value to another.
+   * @param {AxisItemIdentifier[]} newAxisInteraction The array of item per axis.
+   */
+  onAxisInteraction: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -273,16 +278,6 @@ ScatterChart.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
-  /**
-   * The function called when pointer moves from one axis item to another.
-   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
-   */
-  onXAxisInteraction: PropTypes.func,
-  /**
-   * The function called when pointer moves from one axis item to another.
-   * @param {AxisPointerIdentifier[]} newAxes The array of item per axis.
-   */
-  onYAxisInteraction: PropTypes.func,
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeriesType]] objects.
@@ -874,14 +869,6 @@ ScatterChart.propTypes = {
     ]).isRequired,
   ),
   /**
-   * The controlled x-axis value highlighted.
-   */
-  xAxisHighlight: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    dataIndex: PropTypes.number,
-    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
-  }),
-  /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
@@ -1422,14 +1409,6 @@ ScatterChart.propTypes = {
       }),
     ]).isRequired,
   ),
-  /**
-   * The controlled y-axis value highlighted.
-   */
-  yAxisHighlight: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    dataIndex: PropTypes.number,
-    value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
-  }),
   /**
    * The configuration of the z-axes.
    */

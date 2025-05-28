@@ -11,7 +11,8 @@ export type {
   YAxis,
   RadiusAxis,
   RotationAxis,
-  AxisPointerIdentifier,
+  CartesianAxisItemIdentifier,
+  PolarAxisItemIdentifier,
 } from './axis';
 
 // Utils shared across the X packages

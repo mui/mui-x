@@ -38,6 +38,10 @@
         "data": "The data about the clicked axis and items associated with it."
       }
     },
+    "onAxisInteraction": {
+      "description": "The function called when pointer moves from one axis value to another.",
+      "typeDescriptions": { "newAxisInteraction": "The array of item per axis." }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
@@ -48,14 +52,6 @@
         "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using Voronoi cells. Or the Mouse event from the scatter element, when <code>disableVoronoi=true</code>.",
         "scatterItemIdentifier": "The scatter item identifier."
       }
-    },
-    "onXAxisInteraction": {
-      "description": "The function called when pointer moves from one axis item to another.",
-      "typeDescriptions": { "newAxes": "The array of item per axis." }
-    },
-    "onYAxisInteraction": {
-      "description": "The function called when pointer moves from one axis item to another.",
-      "typeDescriptions": { "newAxes": "The array of item per axis." }
     },
     "series": {
       "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series-type/'>ScatterSeriesType</a> objects."
@@ -75,11 +71,9 @@
     "xAxis": {
       "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
-    "xAxisHighlight": { "description": "The controlled x-axis value highlighted." },
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
-    "yAxisHighlight": { "description": "The controlled y-axis value highlighted." },
     "zAxis": { "description": "The configuration of the z-axes." }
   },
   "classDescriptions": {},
