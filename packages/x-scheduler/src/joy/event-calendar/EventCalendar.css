@@ -1,9 +1,9 @@
 .EventCalendarRoot {
   width: 100%;
-  border: 1px solid var(--gray-4);
   display: flex;
   gap: var(--space-4);
-  padding: var(--space-4);
+  max-height: 100vh;
+  max-height: 100dvh;
 }
 
 .EventCalendarSidePanel {
@@ -30,7 +30,7 @@
 .EventCalendarContent {
   display: flex;
   flex: 1;
-  max-height: 450px;
+  overflow: auto;
 }
 
 .EventCalendarMonthCalendarPlaceholder {
