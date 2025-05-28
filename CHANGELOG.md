@@ -98,8 +98,6 @@ Same changes as in `@mui/x-tree-view@8.5.0`.
 - [docs] Fix derived column pivoting demo crash (#17944) @arminmeh
 - [docs] Fix light/dark mode blink on pickers overview (#18002) @alexfauquette
 - [docs] Fix scatter shape demo causing horizontal overflow (#17974) @bernardobelchior
-- [scheduler][docs] Split the primitives and the joy ui docs (#18009) @flaviendelangle
-- [scheduler][joy] Create the basic layout of the Event Calendar component (#17936) @flaviendelangle
 
 ### Core
 
