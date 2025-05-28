@@ -61,7 +61,7 @@ Same changes as in `@mui/x-date-pickers@8.5.0`, plus:
 - [charts] Add `render` prop to charts toolbar components (#17649) @bernardobelchior
 - [charts] Add configurable slots to toolbar (#17712) @bernardobelchior
 - [charts] Export `useFunnelSeries` and `useRadarSeries` (#18034) @JCQuintas
-- [charts] Expose ChartApi through context (#18004) @bernardobelchior
+- [charts] Expose `ChartApi` through context (#18004) @bernardobelchior
 - [charts] Mark Radar chart as stable (#17946) @alexfauquette
 - [charts] Only update store if interaction item is different (#17851) @bernardobelchior
 - [charts] Reuse shared date utils (#18014) @JCQuintas
