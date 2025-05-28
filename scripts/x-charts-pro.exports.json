@@ -63,6 +63,7 @@
   { "name": "ChartAxisZoomSliderThumbClasses", "kind": "Interface" },
   { "name": "ChartAxisZoomSliderThumbClassKey", "kind": "TypeAlias" },
   { "name": "ChartBaseCommonProps", "kind": "TypeAlias" },
+  { "name": "ChartBaseIconButtonProps", "kind": "TypeAlias" },
   { "name": "ChartBaseIconProps", "kind": "TypeAlias" },
   { "name": "ChartContainerPro", "kind": "Variable" },
   { "name": "ChartContainerProProps", "kind": "TypeAlias" },
@@ -126,6 +127,8 @@
   { "name": "ChartsTextProps", "kind": "Interface" },
   { "name": "ChartsTextStyle", "kind": "Interface" },
   { "name": "ChartsToolbarPro", "kind": "Function" },
+  { "name": "ChartsToolbarZoomInButton", "kind": "Variable" },
+  { "name": "ChartsToolbarZoomOutButton", "kind": "Variable" },
   { "name": "ChartsTooltip", "kind": "Function" },
   { "name": "ChartsTooltipCell", "kind": "Variable" },
   { "name": "chartsTooltipClasses", "kind": "Variable" },
@@ -339,9 +342,11 @@
   { "name": "RadarAxisHighlight", "kind": "Function" },
   { "name": "RadarAxisHighlightProps", "kind": "Interface" },
   { "name": "RadarChart", "kind": "Variable" },
+  { "name": "RadarChartPro", "kind": "Variable" },
+  { "name": "RadarChartProProps", "kind": "Interface" },
   { "name": "RadarChartProps", "kind": "Interface" },
   { "name": "RadarDataProvider", "kind": "Function" },
-  { "name": "RadarDataProviderProps", "kind": "Interface" },
+  { "name": "RadarDataProviderProps", "kind": "TypeAlias" },
   { "name": "RadarGrid", "kind": "Function" },
   { "name": "RadarGridProps", "kind": "Interface" },
   { "name": "RadarItemIdentifier", "kind": "TypeAlias" },
@@ -492,5 +497,6 @@
   { "name": "ZoomData", "kind": "TypeAlias" },
   { "name": "ZoomFilterMode", "kind": "TypeAlias" },
   { "name": "ZoomOptions", "kind": "Interface" },
-  { "name": "ZoomSliderOptions", "kind": "Interface" }
+  { "name": "ZoomSliderOptions", "kind": "Interface" },
+  { "name": "ZoomSliderShowTooltip", "kind": "TypeAlias" }
 ]

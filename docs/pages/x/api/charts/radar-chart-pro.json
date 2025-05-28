@@ -16,7 +16,9 @@
       "default": "rainbowSurgePalette"
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "divisions": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
+    "hideLegend": { "type": { "name": "bool" } },
     "highlight": {
       "type": {
         "name": "enum",
@@ -31,6 +33,7 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
@@ -45,21 +48,38 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "shape": {
+      "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
+      "default": "'sharp'"
+    },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "stripeColor": {
+      "type": { "name": "func" },
+      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'",
+      "signature": {
+        "type": "function(index: number) => string",
+        "describedArgs": ["index"],
+        "returned": "string"
+      }
+    },
     "width": { "type": { "name": "number" } }
   },
-  "name": "RadarDataProvider",
+  "name": "RadarChartPro",
   "imports": [
-    "import { RadarDataProvider } from '@mui/x-charts/RadarChart';",
-    "import { RadarDataProvider } from '@mui/x-charts';",
-    "import { RadarDataProvider } from '@mui/x-charts-pro';"
+    "import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';",
+    "import { RadarChartPro } from '@mui/x-charts-pro';"
   ],
   "classes": [],
-  "muiName": "MuiRadarDataProvider",
-  "filename": "/packages/x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx",
+  "muiName": "MuiRadarChartPro",
+  "filename": "/packages/x-charts-pro/src/RadarChartPro/RadarChartPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
   "cssComponent": false
 }

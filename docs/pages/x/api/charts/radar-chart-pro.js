@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './radar-data-provider.json';
+import jsonPageContent from './radar-chart-pro.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/charts/radar-data-provider',
+    'docsx/translations/api-docs/charts/radar-chart-pro',
     false,
-    /\.\/radar-data-provider.*.json$/,
+    /\.\/radar-chart-pro.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

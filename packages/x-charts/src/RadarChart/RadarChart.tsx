@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import { RadarChartPluginsSignatures } from './RadarChart.plugins';
 import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
@@ -11,8 +12,8 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface } from '../ChartsSurface';
-import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsWrapper, ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
@@ -40,7 +41,9 @@ export interface RadarChartProps
   extends RadarDataProviderProps,
     Omit<RadarGridProps, 'classes'>,
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    Pick<ChartsWrapperProps, 'sx'>,
+    Omit<ChartsSurfaceProps, 'sx'> {
   /**
    * If `true`, the legend is not rendered.
    */
@@ -62,6 +65,15 @@ export interface RadarChartProps
   slotProps?: RadarChartSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Radar Chart](https://mui.com/x/react-charts/radar/)
+ *
+ * API:
+ *
+ * - [RadarChart API](https://mui.com/x/api/charts/radar-chart/)
+ */
 const RadarChart = React.forwardRef(function RadarChart(
   inProps: RadarChartProps,
   ref: React.Ref<SVGSVGElement>,
@@ -82,7 +94,7 @@ const RadarChart = React.forwardRef(function RadarChart(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
 
   return (
-    <RadarDataProvider {...radarDataProviderProps}>
+    <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -109,7 +121,6 @@ RadarChart.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
