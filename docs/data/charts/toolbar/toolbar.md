@@ -14,7 +14,7 @@ This feature is in preview. It is ready for production use, but its API, visuals
 
 Charts provide a toolbar that can be enabled to give users quick access to certain features.
 
-The toolbar is available on scatter, bar, line, pie and radar charts.
+The toolbar is available on scatter, bar, line, pie, and radar charts.
 
 To enable the toolbar, set the `showToolbar` prop to `true` on the chart component.
 
@@ -51,7 +51,7 @@ This is useful when you want to render a custom component but want to keep the t
 <ToolbarButton render={<MyButton />} />
 ```
 
-Alternatively, you can pass a function to the `render` prop, which will receive the props and state as arguments.
+Alternatively, you can pass a function to the `render` prop, which receives the props and state as arguments.
 
 ```tsx
 <ToolbarButton render={(props, state) => <MyButton {...props} />} />

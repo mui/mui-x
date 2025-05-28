@@ -31,6 +31,7 @@ ToolbarButton.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   /**
    * A function to customize the rendering of the component.
    */
