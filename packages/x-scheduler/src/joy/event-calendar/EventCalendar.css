@@ -1,0 +1,45 @@
+.EventCalendarRoot {
+  width: 100%;
+  display: flex;
+  gap: var(--space-4);
+  max-height: 100vh;
+  max-height: 100dvh;
+}
+
+.EventCalendarSidePanel {
+  width: 250px;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.EventCalendarMainPanel {
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.EventCalendarToolbar {
+  height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.EventCalendarContent {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+}
+
+.EventCalendarMonthCalendarPlaceholder {
+  background-color: var(--gray-2);
+  height: 220px;
+  width: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-6);
+}

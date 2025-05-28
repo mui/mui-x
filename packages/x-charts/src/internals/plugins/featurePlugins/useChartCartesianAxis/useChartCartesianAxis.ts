@@ -30,7 +30,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     if (duplicates.size > 0) {
       warnOnce(
         [
-          `MUI X: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
+          `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
           `Please make sure that each axis has a unique id.`,
         ].join('\n'),
         'error',
@@ -81,7 +81,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       const target = 'targetTouches' in event ? event.targetTouches[0] : event;
       const svgPoint = getSVGPoint(element, target);
 
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
         instance.cleanInteraction?.();
         return;
       }

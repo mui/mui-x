@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_capitalize as capitalize, HTMLElementType } from '@mui/utils';
+import capitalize from '@mui/utils/capitalize';
+import HTMLElementType from '@mui/utils/HTMLElementType';
 import {
   useGridRootProps,
   useGridApiContext,
@@ -115,14 +116,14 @@ GridHeaderFilterMenu.propTypes = {
   applyFilterChanges: PropTypes.func.isRequired,
   clearFilterItem: PropTypes.func.isRequired,
   field: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes /* @typescript-to-proptypes-ignore */.string,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
-  labelledBy: PropTypes.string.isRequired,
+  labelledBy: PropTypes /* @typescript-to-proptypes-ignore */.string,
   open: PropTypes.bool.isRequired,
   operators: PropTypes.arrayOf(
     PropTypes.shape({

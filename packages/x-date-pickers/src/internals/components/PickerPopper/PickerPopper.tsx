@@ -11,12 +11,10 @@ import MuiPopper, {
 import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_useEventCallback as useEventCallback,
-  unstable_ownerDocument as ownerDocument,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
@@ -26,7 +24,7 @@ import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
 import { PickerOwnerState } from '../../../models';
 import { usePickerContext } from '../../../hooks';
 
-interface PickerPopperOwnerState extends PickerOwnerState {
+export interface PickerPopperOwnerState extends PickerOwnerState {
   popperPlacement: PopperPlacementType;
 }
 
@@ -102,7 +100,6 @@ const useUtilityClasses = (classes: Partial<PickerPopperClasses> | undefined) =>
 const PickerPopperRoot = styled(MuiPopper, {
   name: 'MuiPickerPopper',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
@@ -110,7 +107,6 @@ const PickerPopperRoot = styled(MuiPopper, {
 const PickerPopperPaper = styled(MuiPaper, {
   name: 'MuiPickerPopper',
   slot: 'Paper',
-  overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickerPopperOwnerState;
 }>({

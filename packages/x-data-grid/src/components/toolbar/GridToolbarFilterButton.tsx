@@ -1,11 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
-  unstable_useId as useId,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
+import useId from '@mui/utils/useId';
 import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
@@ -38,7 +36,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
-  overridesResolver: (_props, styles) => styles.toolbarFilterList,
 })<{ ownerState: OwnerState }>({
   margin: vars.spacing(1, 1, 0.5),
   padding: vars.spacing(0, 1),

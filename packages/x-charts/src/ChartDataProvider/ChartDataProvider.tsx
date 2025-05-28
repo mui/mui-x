@@ -1,11 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { defaultSlotsMaterial, ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import {
+  ChartsLocalizationProvider,
+  ChartsLocalizationProviderProps,
+} from '../ChartsLocalizationProvider';
 
 export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -13,7 +19,17 @@ export type ChartDataProviderProps<
 > = React.PropsWithChildren<
   ChartProviderProps<TSeries, TSignatures>['pluginParams'] &
     Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
->;
+> &
+  ChartsLocalizationProviderProps & {
+    /**
+     * Slots to customize charts' components.
+     */
+    slots?: Partial<ChartsSlots>;
+    /**
+     * The props for the slots.
+     */
+    slotProps?: Partial<ChartsSlotProps>;
+  };
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -46,9 +62,22 @@ function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProps<TSeries, TSignatures>) {
-  const { children, chartProviderProps } = useChartDataProviderProps(props);
+  const { children, localeText, chartProviderProps, slots, slotProps } =
+    useChartDataProviderProps(props);
 
-  return <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>{children}</ChartProvider>;
+  return (
+    <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
+      <ChartsLocalizationProvider localeText={localeText}>
+        <ChartsSlotsProvider
+          slots={slots}
+          slotProps={slotProps}
+          defaultSlots={defaultSlotsMaterial}
+        >
+          {children}
+        </ChartsSlotsProvider>
+      </ChartsLocalizationProvider>
+    </ChartProvider>
+  );
 }
 
 ChartDataProvider.propTypes = {
@@ -78,6 +107,10 @@ ChartDataProvider.propTypes = {
    */
   id: PropTypes.string,
   /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *
@@ -103,6 +136,14 @@ ChartDataProvider.propTypes = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
+  /**
+   * The props for the slots.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Slots to customize charts' components.
+   */
+  slots: PropTypes.object,
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

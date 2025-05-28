@@ -36,7 +36,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     if (duplicates.size > 0) {
       warnOnce(
         [
-          `MUI X: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
+          `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
           `Please make sure that each axis has a unique id.`,
         ].join('\n'),
         'error',
@@ -124,7 +124,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       mousePosition.current.y = svgPoint.y;
 
       // Test if it's in the drawing area
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
         if (mousePosition.current.isInChart) {
           instance?.cleanInteraction();
           mousePosition.current.isInChart = false;

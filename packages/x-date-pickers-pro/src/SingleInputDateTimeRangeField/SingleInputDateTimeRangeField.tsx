@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 import { FieldType } from '../models';

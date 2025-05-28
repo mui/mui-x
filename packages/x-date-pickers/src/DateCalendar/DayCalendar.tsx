@@ -136,13 +136,11 @@ const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 const PickersCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({});
 
 const PickersCalendarDayHeader = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Header',
-  overridesResolver: (_, styles) => styles.header,
 })({
   display: 'flex',
   justifyContent: 'center',
@@ -152,7 +150,6 @@ const PickersCalendarDayHeader = styled('div', {
 const PickersCalendarWeekDayLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekDayLabel',
-  overridesResolver: (_, styles) => styles.weekDayLabel,
 })(({ theme }) => ({
   width: 36,
   height: 40,
@@ -167,7 +164,6 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
 const PickersCalendarWeekNumberLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
-  overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
   width: 36,
   height: 40,
@@ -182,7 +178,6 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
 const PickersCalendarWeekNumber = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumber',
-  overridesResolver: (_, styles) => styles.weekNumber,
 })(({ theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
@@ -199,7 +194,6 @@ const PickersCalendarWeekNumber = styled(Typography, {
 const PickersCalendarLoadingContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'LoadingContainer',
-  overridesResolver: (_, styles) => styles.loadingContainer,
 })({
   display: 'flex',
   justifyContent: 'center',
@@ -210,7 +204,6 @@ const PickersCalendarLoadingContainer = styled('div', {
 const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
   name: 'MuiDayCalendar',
   slot: 'SlideTransition',
-  overridesResolver: (_, styles) => styles.slideTransition,
 })({
   minHeight: weeksContainerHeight,
 });
@@ -218,13 +211,11 @@ const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
 const PickersCalendarWeekContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'MonthContainer',
-  overridesResolver: (_, styles) => styles.monthContainer,
 })({ overflow: 'hidden' });
 
 const PickersCalendarWeek = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'WeekContainer',
-  overridesResolver: (_, styles) => styles.weekContainer,
 })({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',

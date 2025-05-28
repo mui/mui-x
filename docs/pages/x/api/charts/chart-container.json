@@ -15,6 +15,7 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
@@ -24,7 +25,7 @@
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: MouseEvent, data: null | AxisData) => void",
+        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
       }
     },
@@ -56,6 +57,8 @@
     },
     "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "voronoiMaxRadius": { "type": { "name": "number" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {

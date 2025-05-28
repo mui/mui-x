@@ -1,12 +1,11 @@
 ---
-title: React Data Grid - Filter Panel component
 productId: x-data-grid
 components: FilterPanelTrigger
 packageName: '@mui/x-data-grid'
 githubLabel: 'component: data grid'
 ---
 
-# Data Grid - Filter Panel 🚧
+# Data Grid - Filter Panel component 🚧
 
 <p class="description">Customize the Data Grid's filter panel.</p>
 
@@ -21,6 +20,11 @@ See [Filter customization—Custom filter panel](/x/react-data-grid/filtering/cu
 for more details.
 
 :::
+
+The [filter panel](/x/react-data-grid/filtering/) is enabled by default.
+Users can trigger the filter panel via the column menu, as well as from the toolbar when `showToolbar` is passed to the `<DataGrid />` component.
+
+You can use the Filter Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components when you need to customize the filter panel trigger, or when implementing a custom toolbar.
 
 ## Basic usage
 

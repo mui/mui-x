@@ -6,7 +6,6 @@ import { styled } from '../internals/zero-styled';
 const TreeItemLabelInput = styled('input', {
   name: 'MuiTreeItem',
   slot: 'LabelInput',
-  overridesResolver: (props, styles) => styles.labelInput,
 })(({ theme }) => ({
   ...theme.typography.body1,
   width: '100%',

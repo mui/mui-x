@@ -124,8 +124,8 @@ const entries = [
         url: '/x/react-data-grid/row-spanning/',
       },
       {
-        title: 'Data Grid – Automatic parents and children selection',
-        url: '/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection',
+        title: 'Data Grid – Automatic parent and child selection',
+        url: '/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection',
       },
       {
         title: 'Date and Time Pickers – Support date-fns v4',
@@ -273,7 +273,7 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-end-v6-features/#column-autosizing',
       },
       {
-        title: 'Sparkline Charts on the Data Grid ',
+        title: 'Sparkline charts on the Data Grid ',
         url: 'https://mui.com/blog/mui-x-end-v6-features/#sparkline-as-a-column-type',
       },
     ],

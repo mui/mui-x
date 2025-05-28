@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 
 const CLASSNAME_PREFIX = 'MuiDataGridVariables';
@@ -23,14 +24,19 @@ export function GridPortalWrapper({ children }: { children: React.ReactNode }) {
 
 export function GridCSSVariablesContext(props: { children: any }) {
   const config = useGridConfiguration();
+  const rootProps = useGridRootProps();
   const description = config.hooks.useCSSVariables();
 
   const context = React.useMemo(() => {
     const className = `${CLASSNAME_PREFIX}-${description.id}`;
     const cssString = `.${className}{${variablesToString(description.variables)}}`;
-    const tag = <style href={`/${className}`}>{cssString}</style>;
+    const tag = (
+      <style href={`/${className}`} nonce={rootProps.nonce}>
+        {cssString}
+      </style>
+    );
     return { className, tag };
-  }, [description]);
+  }, [rootProps.nonce, description]);
 
   return (
     <CSSVariablesContext.Provider value={context}>{props.children}</CSSVariablesContext.Provider>
@@ -40,7 +46,7 @@ export function GridCSSVariablesContext(props: { children: any }) {
 function variablesToString(variables: Record<string, any>) {
   let output = '';
   for (const key in variables) {
-    if (Object.hasOwn(variables, key)) {
+    if (Object.hasOwn(variables, key) && variables[key] !== undefined) {
       output += `${key}:${variables[key]};`;
     }
   }

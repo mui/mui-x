@@ -22,10 +22,6 @@ export type MuiPickersAdapterContextNullableValue = {
 export const MuiPickersAdapterContext =
   React.createContext<MuiPickersAdapterContextNullableValue | null>(null);
 
-if (process.env.NODE_ENV !== 'production') {
-  MuiPickersAdapterContext.displayName = 'MuiPickersAdapterContext';
-}
-
 export interface LocalizationProviderProps<TLocale> {
   children?: React.ReactNode;
   /**

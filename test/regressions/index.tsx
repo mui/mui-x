@@ -94,10 +94,15 @@ function App() {
       path: '/',
       element: <Root />,
       children: Object.keys(testsBySuite).map((suite) => {
-        const isChartTest = suite.startsWith('docs-charts');
         const isDataGridTest =
           suite.startsWith('docs-data-grid') || suite === 'test-regressions-data-grid';
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
+
+        const chartTestNeedsToAdvanceTime = (test: Test) =>
+          test.path.includes('Interaction') ||
+          test.path.includes('PrintChart') ||
+          test.path.includes('ExportChartAsImage');
+
         return {
           path: suite,
           children: testsBySuite[suite].map((test) => ({
@@ -106,7 +111,7 @@ function App() {
               <TestViewer
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
-                isChartTest={isChartTest}
+                shouldAdvanceTime={isDataGridTest || chartTestNeedsToAdvanceTime(test)}
                 path={computePath(test)}
               >
                 <test.case />

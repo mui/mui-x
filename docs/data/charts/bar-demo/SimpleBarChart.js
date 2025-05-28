@@ -21,7 +21,7 @@ export default function SimpleBarChart() {
         { data: pData, label: 'pv', id: 'pvId' },
         { data: uData, label: 'uv', id: 'uvId' },
       ]}
-      xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      xAxis={[{ data: xLabels }]}
       yAxis={[{ width: 50 }]}
     />
   );

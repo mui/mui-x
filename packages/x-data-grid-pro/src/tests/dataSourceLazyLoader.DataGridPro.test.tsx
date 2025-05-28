@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { getRow } from 'test/utils/helperFn';
+import { getCell, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -11,6 +11,7 @@ import {
   GridDataSource,
   GridGetRowsParams,
   GridGetRowsResponse,
+  GridRowSelectionModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
@@ -26,6 +27,15 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  const scrollEndThreshold = 60;
+  const rowHeight = 50;
+  const columnHeaderHeight = 50;
+  const gridHeight =
+    4 * rowHeight +
+    columnHeaderHeight +
+    // border
+    2;
+
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
@@ -34,10 +44,13 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     return null;
   }
 
-  function TestDataSourceLazyLoader(props: Partial<DataGridProProps>) {
+  function TestDataSourceLazyLoader(
+    props: Partial<DataGridProProps> & { mockServerRowCount?: number },
+  ) {
+    const { mockServerRowCount, ...rest } = props;
     apiRef = useGridApiRef();
     mockServer = useMockServer(
-      { rowLength: 100, maxColumns: 1 },
+      { rowLength: mockServerRowCount ?? 100, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
 
@@ -71,7 +84,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     }
 
     return (
-      <div style={{ width: 300, height: 300 }}>
+      <div style={{ width: 300, height: gridHeight }}>
         <Reset />
         <DataGridPro
           apiRef={apiRef}
@@ -80,7 +93,10 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           lazyLoading
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
           disableVirtualization
-          {...props}
+          scrollEndThreshold={scrollEndThreshold}
+          rowHeight={rowHeight}
+          columnHeaderHeight={columnHeaderHeight}
+          {...rest}
         />
       </div>
     );
@@ -112,6 +128,43 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
+  });
+
+  it('should keep the selection state on scroll', async () => {
+    let rowSelectionModel: GridRowSelectionModel = {
+      type: 'include',
+      ids: new Set(),
+    };
+
+    function TestCase() {
+      const handleSelectionChange: DataGridProProps['onRowSelectionModelChange'] = (newModel) => {
+        rowSelectionModel = newModel;
+      };
+
+      return (
+        <TestDataSourceLazyLoader
+          onRowSelectionModelChange={handleSelectionChange}
+          disableVirtualization={false}
+        />
+      );
+    }
+
+    render(<TestCase />);
+    // wait until the rows are rendered
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(0);
+    await act(async () => apiRef.current?.selectRow(getCell(1, 0).textContent!));
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(1);
+
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    await act(async () => apiRef.current?.scroll({ top: 12345 }));
+
+    // wait until the row is not in the render context anymore
+    await waitFor(() => expect(() => getRow(1)).to.throw());
+
+    // selection is kept
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(1);
   });
 
   describe('Viewport loading', () => {
@@ -237,6 +290,40 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
+    });
+
+    it('should make a new data source request when there is not enough rows to cover the viewport height', async () => {
+      render(
+        <TestDataSourceLazyLoader
+          initialState={{
+            pagination: { paginationModel: { page: 0, pageSize: 2 } },
+          }}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(3); // grid is 4 rows high and the threshold is 60px, so 3 pages are loaded
+      });
+      const lastSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      expect(lastSearchParams.get('end')).to.equal('5'); // 6th row
+    });
+
+    it('should stop making data source requests if the new rows were not added on the last call', async () => {
+      render(
+        <TestDataSourceLazyLoader
+          mockServerRowCount={2}
+          initialState={{
+            pagination: { paginationModel: { page: 0, pageSize: 2 } },
+          }}
+        />,
+      );
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      const lastSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      // 3rd and 4th row were requested but not added
+      expect(lastSearchParams.get('start')).to.equal('2');
+      expect(lastSearchParams.get('end')).to.equal('3');
     });
 
     it('should reset the scroll position when sorting is applied', async () => {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersInputClasses,
@@ -11,14 +11,14 @@ import {
 } from './pickersInputClasses';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
 }
 
-interface PickerInputOwnerState extends PickerTextFieldOwnerState {
+export interface PickerInputOwnerState extends PickerTextFieldOwnerState {
   /**
    * `true` if the input has an underline, `false` otherwise.
    */
@@ -28,7 +28,6 @@ interface PickerInputOwnerState extends PickerTextFieldOwnerState {
 const PickersInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
 })<{ ownerState: PickerInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
@@ -214,7 +213,7 @@ PickersInput.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([

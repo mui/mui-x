@@ -64,7 +64,7 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
 const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.arc,
+  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
 })<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
   // Got to move stroke to an element prop instead of style.
   stroke: (theme.vars || theme).palette.background.paper,

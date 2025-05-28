@@ -67,14 +67,14 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 
 Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
 
-<!-- #default-branch-switch -->
-
 ```bash
 pnpm docs:deploy
 ```
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v7)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v7` deployment.
+<!-- #target-branch-reference -->
+
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v8)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v8` deployment.
 
 ### Publish GitHub release
 

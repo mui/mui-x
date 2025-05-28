@@ -3,7 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
-import { ScatterChartProps, ScatterPlot } from '@mui/x-charts/ScatterChart';
+import {
+  ScatterChartProps,
+  ScatterChartSlotProps,
+  ScatterChartSlots,
+  ScatterPlot,
+} from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -11,6 +16,9 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { ChartZoomSlider } from '../ChartZoomSlider';
+import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
@@ -19,12 +27,28 @@ import {
   ScatterChartProPluginsSignatures,
 } from './ScatterChartPro.plugins';
 
+export interface ScatterChartProSlots extends ScatterChartSlots, Partial<ChartsSlotsPro> {}
+export interface ScatterChartProSlotProps
+  extends ScatterChartSlotProps,
+    Partial<ChartsSlotPropsPro> {}
+
 export interface ScatterChartProProps
-  extends Omit<ScatterChartProps, 'apiRef'>,
+  extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'onItemClick'
-    > {}
+      'series' | 'plugins' | 'seriesConfig' | 'onItemClick' | 'slots' | 'slotProps'
+    > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ScatterChartProSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ScatterChartProSlotProps;
+}
 
 /**
  * Demos:
@@ -41,7 +65,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -69,13 +93,16 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
+          <ChartZoomSlider />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
@@ -83,9 +110,9 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -98,6 +125,9 @@ ScatterChartPro.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      exportAsImage: PropTypes.func.isRequired,
+      exportAsPrint: PropTypes.func.isRequired,
+      setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
@@ -178,6 +208,10 @@ ScatterChartPro.propTypes = {
    */
   loading: PropTypes.bool,
   /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *
@@ -196,7 +230,7 @@ ScatterChartPro.propTypes = {
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
   /**
@@ -222,6 +256,11 @@ ScatterChartPro.propTypes = {
    * An array of [[ScatterSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
@@ -343,6 +382,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -429,6 +473,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -506,6 +555,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -583,6 +637,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -660,6 +719,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -737,6 +801,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -814,6 +883,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -891,6 +965,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -987,6 +1066,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -1072,6 +1156,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -1148,6 +1237,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -1224,6 +1318,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -1300,6 +1399,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -1376,6 +1480,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -1452,6 +1561,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,
@@ -1528,6 +1642,11 @@ ScatterChartPro.propTypes = {
             minSpan: PropTypes.number,
             minStart: PropTypes.number,
             panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
             step: PropTypes.number,
           }),
           PropTypes.bool,

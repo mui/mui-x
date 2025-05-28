@@ -34,6 +34,7 @@
     },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
@@ -51,6 +52,7 @@
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
     },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -82,6 +84,6 @@
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/RadarChart/RadarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🧪</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
   "cssComponent": false
 }

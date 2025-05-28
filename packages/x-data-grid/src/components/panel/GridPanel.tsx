@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
@@ -55,7 +55,6 @@ const GridPanelContent = styled('div', {
   boxShadow: vars.shadows.overlay,
   display: 'flex',
   maxWidth: `calc(100vw - ${vars.spacing(2)})`,
-  margin: vars.spacing(1),
   overflow: 'auto',
 });
 

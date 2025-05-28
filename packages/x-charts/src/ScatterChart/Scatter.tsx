@@ -86,14 +86,12 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = instance.isPointInside({ x, y });
-
-      const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
+      const isInRange = instance.isPointInside(x, y);
 
       if (isInRange) {
         const currentItem = {
-          seriesId: pointCtx.seriesId,
-          dataIndex: pointCtx.dataIndex,
+          seriesId: series.id,
+          dataIndex: i,
         };
         const isItemHighlighted = isHighlighted(currentItem);
         temp.push({
