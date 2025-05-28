@@ -10,8 +10,13 @@ import {
   ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { ChartAxisZoomSliderPreview } from '@mui/x-charts-pro/ChartZoomSlider/internals/ChartAxisZoomSliderPreview';
-import { ZOOM_SLIDER_PREVIEW_SIZE, ZOOM_SLIDER_SIZE, ZOOM_SLIDER_TRACK_SIZE } from './constants';
+import { ChartAxisZoomSliderPreview } from './ChartAxisZoomSliderPreview';
+import {
+  ZOOM_SLIDER_ACTIVE_TRACK_SIZE,
+  ZOOM_SLIDER_PREVIEW_SIZE,
+  ZOOM_SLIDER_SIZE,
+  ZOOM_SLIDER_TRACK_SIZE,
+} from './constants';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderTrack } from './ChartAxisZoomSliderTrack';
 import { ChartAxisZoomSliderActiveTrack } from './ChartAxisZoomSliderActiveTrack';
@@ -49,6 +54,8 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   let axisPosition: 'top' | 'bottom' | 'left' | 'right';
   let tooltipConditions: ZoomSliderShowTooltip;
 
+  let hasPreview = false;
+
   if (axisDirection === 'x') {
     const axis = xAxis[axisId];
 
@@ -66,6 +73,10 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
     reverse = axis.reverse ?? false;
     axisPosition = axis.position ?? 'bottom';
     tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
+
+    if (axisPosition === 'bottom') {
+      hasPreview = true;
+    }
   } else {
     const axis = yAxis[axisId];
 
@@ -90,13 +101,13 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   const ZoomSliderTrack = ChartAxisZoomSliderTrack;
 
   const track =
-    axisPosition === 'bottom' ? (
+    hasPreview ? (
       <ChartAxisZoomSliderPreview
         axisId={axisId}
         axisDirection={axisDirection}
         reverse={reverse}
-        x={axisDirection === 'x' ? 0 : backgroundRectOffset}
-        y={axisDirection === 'x' ? backgroundRectOffset : 0}
+        x={0}
+        y={0}
         height={axisDirection === 'x' ? ZOOM_SLIDER_PREVIEW_SIZE : drawingArea.height}
         width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_TRACK_SIZE}
       />
@@ -128,6 +139,8 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         showTooltip={
           (showTooltip && tooltipConditions !== 'never') || tooltipConditions === 'always'
         }
+        size={hasPreview ? ZOOM_SLIDER_PREVIEW_SIZE : ZOOM_SLIDER_ACTIVE_TRACK_SIZE}
+        preview={hasPreview}
         onPointerEnter={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
         onPointerLeave={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
       />
