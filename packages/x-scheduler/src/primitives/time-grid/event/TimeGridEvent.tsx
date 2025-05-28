@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
@@ -25,6 +26,12 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
+
+  // TODO: Expose a real `interactive` prop
+  // to control whether the event should behave like a button
+  const isInteractive = true;
+
+  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
@@ -56,8 +63,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   return useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
-    props: [props, elementProps],
+    ref: [forwardedRef, buttonRef],
+    props: [props, elementProps, getButtonProps],
   });
 });
 

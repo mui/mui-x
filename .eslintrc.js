@@ -45,6 +45,7 @@ const addReactCompilerRule = (packagesNames, isEnabled) =>
 
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
+  '@mui/utils',
   '@mui/x-charts',
   '@mui/x-charts-pro',
   '@mui/x-codemod',
