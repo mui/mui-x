@@ -11,6 +11,7 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -59,6 +60,7 @@ export default function PrintChart() {
             <MenuItem value="bar">Bar</MenuItem>
             <MenuItem value="heatmap">Heatmap</MenuItem>
             <MenuItem value="funnel">Funnel</MenuItem>
+            <MenuItem value="radar">Radar</MenuItem>
           </Select>
         </FormControl>
         <Button onClick={() => apiRef.current.exportAsPrint()} variant="contained">
@@ -125,6 +127,26 @@ function Chart({ apiRef, type }) {
               ],
             },
           ]}
+        />
+      );
+
+    case 'radar':
+      return (
+        <RadarChartPro
+          apiRef={apiRef}
+          height={300}
+          series={[{ label: 'Lisa', data: [120, 98, 86, 99, 85, 65] }]}
+          radar={{
+            max: 120,
+            metrics: [
+              'Math',
+              'Chinese',
+              'English',
+              'Geography',
+              'Physics',
+              'History',
+            ],
+          }}
         />
       );
 
