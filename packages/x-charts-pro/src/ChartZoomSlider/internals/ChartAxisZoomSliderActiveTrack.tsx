@@ -37,6 +37,18 @@ const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
 const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
 const zoomValueFormatter = (value: number) => formatter.format(value);
 
+export interface ChartAxisZoomSliderActiveTrackProps {
+  axisId: AxisId;
+  axisDirection: 'x' | 'y';
+  axisPosition: 'top' | 'bottom' | 'left' | 'right';
+  zoomData: ZoomData;
+  reverse?: boolean;
+  valueFormatter?: (value: number) => string;
+  showTooltip: boolean;
+  onPointerEnter?: () => void;
+  onPointerLeave?: () => void;
+}
+
 export function ChartAxisZoomSliderActiveTrack({
   axisId,
   axisDirection,
@@ -44,21 +56,16 @@ export function ChartAxisZoomSliderActiveTrack({
   zoomData,
   reverse,
   valueFormatter = zoomValueFormatter,
-}: {
-  axisId: AxisId;
-  axisDirection: 'x' | 'y';
-  axisPosition: 'top' | 'bottom' | 'left' | 'right';
-  zoomData: ZoomData;
-  reverse: boolean;
-  valueFormatter?: (value: number) => string;
-}) {
+  showTooltip,
+  onPointerEnter,
+  onPointerLeave,
+}: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
-  const [showTooltip, setShowTooltip] = React.useState<null | 'start' | 'end' | 'both'>(null);
 
   const previewThumbWidth =
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_WIDTH : ZOOM_SLIDER_THUMB_HEIGHT;
@@ -102,7 +109,6 @@ export function ChartAxisZoomSliderActiveTrack({
     const onPointerUp = () => {
       activePreviewRect.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
-      setShowTooltip(null);
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -128,7 +134,6 @@ export function ChartAxisZoomSliderActiveTrack({
       pointerZoomMin = pointerDownZoom - axisZoomData.start;
       pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
 
-      setShowTooltip('both');
       document.addEventListener('pointerup', onPointerUp);
       activePreviewRect.addEventListener('pointermove', onPointerMove);
     };
@@ -272,8 +277,8 @@ export function ChartAxisZoomSliderActiveTrack({
         y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
         width={previewWidth}
         height={previewHeight}
-        onPointerEnter={() => setShowTooltip('both')}
-        onPointerLeave={() => setShowTooltip(null)}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
       />
       <ChartAxisZoomSliderThumb
         ref={setStartThumbEl}
@@ -283,8 +288,8 @@ export function ChartAxisZoomSliderActiveTrack({
         height={previewThumbHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onMove={onStartThumbMove}
-        onPointerEnter={() => setShowTooltip('start')}
-        onPointerLeave={() => setShowTooltip(null)}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         placement="start"
       />
       <ChartAxisZoomSliderThumb
@@ -295,20 +300,20 @@ export function ChartAxisZoomSliderActiveTrack({
         height={previewThumbHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onMove={onEndThumbMove}
-        onPointerEnter={() => setShowTooltip('end')}
-        onPointerLeave={() => setShowTooltip(null)}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         placement="end"
       />
       <ChartsTooltipZoomSliderValue
         anchorEl={startThumbEl}
-        open={showTooltip === 'start' || showTooltip === 'both'}
+        open={showTooltip}
         placement={axisPosition}
       >
         {valueFormatter(zoomData.start)}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
         anchorEl={endThumbEl}
-        open={showTooltip === 'end' || showTooltip === 'both'}
+        open={showTooltip}
         placement={axisPosition}
       >
         {valueFormatter(zoomData.end)}
