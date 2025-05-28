@@ -11,7 +11,7 @@ _May 28, 2025_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 Add support for exporting `RadarChart`, `FunnelChart` and `Heatmap` as image and pdf.
+- 📊 Add support for exporting `RadarChartPro`, `FunnelChart` and `Heatmap` as image and PDF.
 - 📊 `RadarChart` is now stable.
 
 Special thanks go out to the community members for their valuable contributions:
