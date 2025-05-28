@@ -1,69 +1,30 @@
-'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
-import { RadarChartPluginsSignatures } from './RadarChart.plugins';
-import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
-  ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
-} from '../ChartsOverlay/ChartsOverlay';
-import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsWrapper, ChartsWrapperProps } from '../internals/components/ChartsWrapper';
-import { RadarGrid, RadarGridProps } from './RadarGrid';
-import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
-import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
-import { RadarMetricLabels } from './RadarMetricLabels';
-import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
-import { ChartsSlotProps, ChartsSlots } from '../internals/material';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+  RadarAxisHighlight,
+  RadarChartProps,
+  RadarDataProvider,
+  RadarDataProviderProps,
+  RadarGrid,
+  RadarMetricLabels,
+  RadarSeriesArea,
+  RadarSeriesMarks,
+} from '@mui/x-charts/RadarChart';
+import { useThemeProps } from '@mui/material/styles';
+import { useRadarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginsSignatures } from './RadarChartPro.plugins';
+import { ChartsToolbarPro } from '../ChartsToolbarPro';
 
-export interface RadarChartSlots
-  extends ChartsTooltipSlots,
-    ChartsOverlaySlots,
-    ChartsLegendSlots,
-    ChartsToolbarSlots,
-    Partial<ChartsSlots> {}
-
-export interface RadarChartSlotProps
-  extends ChartsTooltipSlotProps,
-    ChartsOverlaySlotProps,
-    ChartsLegendSlotProps,
-    ChartsToolbarSlotProps,
-    Partial<ChartsSlotProps> {}
-
-export interface RadarChartProps
-  extends RadarDataProviderProps,
-    Omit<RadarGridProps, 'classes'>,
-    Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    Pick<ChartsWrapperProps, 'sx'>,
-    Omit<ChartsSurfaceProps, 'sx'> {
-  /**
-   * If `true`, the legend is not rendered.
-   */
-  hideLegend?: boolean;
-  /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: RadarChartSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: RadarChartSlotProps;
-}
+export interface RadarChartProProps
+  extends Omit<RadarChartProps, 'apiRef'>,
+    Omit<
+      RadarDataProviderProps<RadarChartProPluginsSignatures>,
+      'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+    > {}
 
 /**
  * Demos:
@@ -74,11 +35,11 @@ export interface RadarChartProps
  *
  * - [RadarChart API](https://mui.com/x/api/charts/radar-chart/)
  */
-const RadarChart = React.forwardRef(function RadarChart(
-  inProps: RadarChartProps,
+const RadarChartPro = React.forwardRef(function RadarChartPro(
+  inProps: RadarChartProProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiRadarChart' });
+  const props = useThemeProps({ props: inProps, name: 'MuiRadarChartPro' });
   const {
     chartsWrapperProps,
     chartsSurfaceProps,
@@ -91,10 +52,17 @@ const RadarChart = React.forwardRef(function RadarChart(
   } = useRadarChartProps(props);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+
+  const radarDataProviderProProps: RadarDataProviderProps<RadarChartProPluginsSignatures> = {
+    ...radarDataProviderProps,
+    apiRef:
+      radarDataProviderProps.apiRef as RadarDataProviderProps<RadarChartProPluginsSignatures>['apiRef'],
+    plugins: RADAR_CHART_PRO_PLUGINS,
+  };
 
   return (
-    <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
+    <RadarDataProvider<RadarChartProPluginsSignatures> {...radarDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -113,13 +81,16 @@ const RadarChart = React.forwardRef(function RadarChart(
   );
 });
 
-RadarChart.propTypes = {
+RadarChartPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.object,
+    current: PropTypes.shape({
+      exportAsImage: PropTypes.func.isRequired,
+      exportAsPrint: PropTypes.func.isRequired,
+    }),
   }),
   className: PropTypes.string,
   /**
@@ -264,4 +235,4 @@ RadarChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadarChart };
+export { RadarChartPro };

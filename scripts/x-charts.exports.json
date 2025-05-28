@@ -301,7 +301,7 @@
   { "name": "RadarChart", "kind": "Variable" },
   { "name": "RadarChartProps", "kind": "Interface" },
   { "name": "RadarDataProvider", "kind": "Function" },
-  { "name": "RadarDataProviderProps", "kind": "Interface" },
+  { "name": "RadarDataProviderProps", "kind": "TypeAlias" },
   { "name": "RadarGrid", "kind": "Function" },
   { "name": "RadarGridProps", "kind": "Interface" },
   { "name": "RadarItemIdentifier", "kind": "TypeAlias" },
