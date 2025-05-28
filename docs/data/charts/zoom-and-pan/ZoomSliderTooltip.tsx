@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import Stack from '@mui/material/Stack';
