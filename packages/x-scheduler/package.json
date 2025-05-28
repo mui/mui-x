@@ -18,7 +18,10 @@
     "./joy": "./src/joy/index.ts",
     "./joy/event-calendar": "./src/joy/event-calendar/index.ts",
     "./primitives": "./src/primitives/index.ts",
-    "./primitives/time-grid": "./src/primitives/time-grid/index.ts"
+    "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
+    "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
+    "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
+    "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
