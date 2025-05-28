@@ -1,0 +1,14 @@
+<ScatterChart
+  height={300}
+  series={series}
+  sx={{
+    '& [data-faded=true]': {
+      opacity: 0.2,
+    },
+    "& [data-series-id='series-1'][data-highlighted=true]": {
+      stroke: 'blue',
+      strokeWidth: 3,
+      fill: 'none',
+    },
+  }}
+/>

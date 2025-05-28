@@ -105,7 +105,17 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
-### CSS 🚧
+### CSS
+
+You can target scatter elements with CSS selector by using the following data attributes:
+
+- `data-series-id='<series id>'`
+- `data-highlighted=true|false`
+- `data-faded=true|false`
+
+Here is an example the modify how highlight impact items.
+
+{{"demo": "ScatterCSSSelectors.js"}}
 
 ### Shape
 

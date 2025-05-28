@@ -88,8 +88,6 @@ You can modify it with `slots.legend` and `slotProps.legend`.
 
 {{"demo": "HeatmapLegend.js"}}
 
-## Labels 🚧
-
 ## Custom item
 
 {{"demo": "CustomItem.js"}}
