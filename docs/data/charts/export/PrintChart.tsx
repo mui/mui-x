@@ -11,6 +11,7 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -33,7 +34,7 @@ type ChartType = 'scatter' | 'line' | 'bar' | 'heatmap' | 'funnel';
 
 export default function PrintChart() {
   const [chartType, setChartType] = React.useState<ChartType>('scatter');
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = useChartProApiRef<ChartType>();
 
   const handleChange = (event: SelectChangeEvent) =>
     setChartType(event.target.value as ChartType);
