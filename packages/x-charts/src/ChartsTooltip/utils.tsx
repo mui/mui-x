@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSvgRef } from '../hooks';
 
 type MousePosition = {
@@ -8,6 +9,9 @@ type MousePosition = {
   pointerType: 'mouse' | 'touch' | 'pen';
   height: number;
 };
+
+// Taken from @mui/x-date-time-pickers
+const desktopModeMediaQuery = '@media (pointer: fine)';
 
 export type UseMouseTrackerReturnValue = null | MousePosition;
 
@@ -57,42 +61,10 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   return mousePosition;
 }
 
-type PointerType = Pick<MousePosition, 'pointerType'>;
+export function useIsDesktop(): boolean {
+  const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
-export function usePointerType(): null | PointerType {
-  const svgRef = useSvgRef();
-
-  // Use a ref to avoid rerendering on every mousemove event.
-  const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
-
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
-
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
-        setPointerType(null);
-      }
-    };
-
-    const handleEnter = (event: PointerEvent) => {
-      setPointerType({
-        pointerType: event.pointerType as PointerType['pointerType'],
-      });
-    };
-
-    element.addEventListener('pointerenter', handleEnter);
-    element.addEventListener('pointerup', handleOut);
-
-    return () => {
-      element.removeEventListener('pointerenter', handleEnter);
-      element.removeEventListener('pointerup', handleOut);
-    };
-  }, [svgRef]);
-
-  return pointerType;
+  return isDesktop;
 }
 
 export type TriggerOptions = 'item' | 'axis' | 'none';

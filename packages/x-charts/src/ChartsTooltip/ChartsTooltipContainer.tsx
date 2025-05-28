@@ -7,7 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { TriggerOptions, usePointerType } from './utils';
+import { TriggerOptions, useIsDesktop } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
@@ -62,7 +62,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const { trigger = 'axis', classes, children, ...other } = props;
 
   const svgRef = useSvgRef();
-  const pointerType = usePointerType();
+  const isDesktop = useIsDesktop();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
@@ -78,8 +78,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           noAxis
       : selectorChartsInteractionItemIsDefined,
   );
-
-  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -123,7 +121,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         name: 'offset',
         options: {
           offset: () => {
-            if (pointerType?.pointerType !== 'touch') {
+            if (isDesktop) {
               // The popper offset: [skidding, distance]
               return [0, 8];
             }
@@ -131,7 +129,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           },
         },
       },
-      ...(pointerType?.pointerType === 'mouse'
+      ...(isDesktop
         ? [] // Keep default behavior
         : [
             {
@@ -142,7 +140,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             },
           ]),
     ],
-    [pointerType],
+    [isDesktop],
   );
 
   if (trigger === 'none') {
@@ -151,11 +149,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <NoSsr>
-      {popperOpen && (
+      {isOpen && (
         <ChartsTooltipRoot
           className={classes?.root}
-          open={popperOpen}
-          placement={pointerType?.pointerType === 'mouse' ? 'right-start' : 'top'}
+          open={isOpen}
+          placement={isDesktop ? 'right-start' : 'top'}
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}
