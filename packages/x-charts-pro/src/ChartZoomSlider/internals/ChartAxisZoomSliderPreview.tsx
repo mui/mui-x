@@ -1,6 +1,15 @@
 import * as React from 'react';
-import { AxisId } from '@mui/x-charts/internals';
 import {
+  AxisId,
+  selectorChartRawAxis,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  useChartContext,
+  useSelector,
+  useStore,
+} from '@mui/x-charts/internals';
+import {
+  ChartDrawingArea,
   getValueToPositionMapper,
   ScatterMarker,
   useScatterSeriesContext,
@@ -28,15 +37,34 @@ export function ChartAxisZoomSliderPreview({
 }: ChartAxisZoomSliderPreviewProps) {
   return (
     <g {...props}>
-      <ScatterPreview />
+      <ScatterPreview {...props} />
     </g>
   );
 }
 
-function ScatterPreview() {
+function ScatterPreview({
+  x,
+  y,
+  height,
+  width,
+}: {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}) {
   const seriesData = useScatterSeriesContext();
-  const { xAxis, xAxisIds } = useXAxes();
-  const { yAxis, yAxisIds } = useYAxes();
+  const store = useStore();
+  const drawingArea: ChartDrawingArea = {
+    left: x,
+    top: y,
+    width,
+    height,
+    right: x + width,
+    bottom: y + height,
+  };
+  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis, drawingArea);
+  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis, drawingArea);
   const { zAxis, zAxisIds } = useZAxes();
 
   if (seriesData === undefined) {
