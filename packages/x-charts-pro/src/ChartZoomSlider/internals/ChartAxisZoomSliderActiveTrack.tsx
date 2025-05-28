@@ -2,15 +2,21 @@ import { styled } from '@mui/material/styles';
 import {
   AxisId,
   getSVGPoint,
+  selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   useChartContext,
   useDrawingArea,
+  useSelector,
   useStore,
   ZoomData,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import {
+  getAxisIndex,
+  getAxisValue,
+} from '@mui/x-charts/internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -34,16 +40,12 @@ const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
   },
 }));
 
-const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
-const zoomValueFormatter = (value: number) => formatter.format(value);
-
 export interface ChartAxisZoomSliderActiveTrackProps {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   axisPosition: 'top' | 'bottom' | 'left' | 'right';
   zoomData: ZoomData;
   reverse?: boolean;
-  valueFormatter?: (value: number) => string;
   showTooltip: boolean;
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -55,17 +57,42 @@ export function ChartAxisZoomSliderActiveTrack({
   axisPosition,
   zoomData,
   reverse,
-  valueFormatter = zoomValueFormatter,
   showTooltip,
   onPointerEnter,
   onPointerLeave,
 }: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
+  const axis = useSelector(store, selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
+
+  const formatValue = (value: Date | number | null) => {
+    if (axis.valueFormatter) {
+      return axis.valueFormatter(value, { location: 'zoom-slider-tooltip' });
+    }
+
+    return value;
+  };
+
+  const start = axisDirection === 'x' ? drawingArea.left : drawingArea.top;
+  const size = axisDirection === 'x' ? drawingArea.width : drawingArea.height;
+  const end = start + size;
+  const tooltipStartDataIndex = getAxisIndex(axis, start);
+  const tooltipEndDataIndex = getAxisIndex(axis, end);
+
+  const tooltipStart = formatValue(
+    getAxisValue(axis, start, tooltipStartDataIndex === -1 ? 0 : tooltipStartDataIndex),
+  );
+  const tooltipEnd = formatValue(
+    getAxisValue(
+      axis,
+      end,
+      tooltipEndDataIndex === -1 ? (axis.data?.length ?? 1) - 1 : tooltipEndDataIndex,
+    ),
+  );
 
   const previewThumbWidth =
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_WIDTH : ZOOM_SLIDER_THUMB_HEIGHT;
@@ -309,14 +336,14 @@ export function ChartAxisZoomSliderActiveTrack({
         open={showTooltip}
         placement={axisPosition}
       >
-        {valueFormatter(zoomData.start)}
+        {tooltipStart}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
         anchorEl={endThumbEl}
         open={showTooltip}
         placement={axisPosition}
       >
-        {valueFormatter(zoomData.end)}
+        {tooltipEnd}
       </ChartsTooltipZoomSliderValue>
     </React.Fragment>
   );
