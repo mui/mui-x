@@ -1,11 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  HTMLElementType,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import HTMLElementType from '@mui/utils/HTMLElementType';
 import { styled } from '@mui/material/styles';
 import { PopperProps } from '../../models/gridBaseSlots';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
