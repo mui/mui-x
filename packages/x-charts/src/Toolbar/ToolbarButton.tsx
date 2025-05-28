@@ -1,15 +1,27 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { defaultSlotsMaterial } from '../internals/material';
-import { ChartBaseIconButtonProps } from '../models/slots/chartsBaseSlotProps';
+import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { ChartsSlotProps } from '../internals/material';
+import { useChartsSlots } from '../context/ChartsSlotsContext';
 
-export interface ToolbarButtonProps extends ChartBaseIconButtonProps {}
+export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
+  /**
+   * A function to customize the rendering of the component.
+   */
+  render?: RenderProp<ChartsSlotProps['baseIconButton']>;
+};
 
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const IconButton = defaultSlotsMaterial.baseIconButton;
+    const { render, ...other } = props;
+    const { slots, slotProps } = useChartsSlots();
+    const element = useComponentRenderer(slots.baseIconButton, render, {
+      ...slotProps?.baseIconButton,
+      ...other,
+      ref,
+    });
 
-    return <IconButton ref={ref} {...props} />;
+    return <React.Fragment>{element}</React.Fragment>;
   },
 );
 
@@ -19,6 +31,11 @@ ToolbarButton.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
+  disabled: PropTypes.bool,
+  /**
+   * A function to customize the rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   style: PropTypes.object,
 } as any;
 

@@ -85,7 +85,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.2",
-    "@mui/internal-babel-plugin-display-name": "github:mui/mui-public#master&path:./packages/babel-plugin-display-name",
+    "@mui/internal-babel-plugin-display-name": "^1.0.0",
     "@mui/internal-babel-plugin-resolve-imports": "^2.0.2",
     "@mui/internal-bundle-size-checker": "^1.0.3",
     "@mui/internal-markdown": "^2.0.5",
