@@ -60,7 +60,6 @@ Same changes as in `@mui/x-date-pickers@8.5.0`, plus:
 - [charts] Reuse shared date utils (#18014) @JCQuintas
 - [charts] Use Map for string cache instead of object (#17982) @bernardobelchior
 - [charts] Fix Population pyramid demo (#17987) @oliviertassinari
-- [charts] Add support for Heatmap legend (#17943) @alexfauquette
 
 #### `@mui/x-charts-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -75,6 +74,7 @@ Same changes as in `@mui/x-charts@8.5.0`, plus:
 - [charts-pro] Show zoom slider tooltip when selecting range (#18028) @bernardobelchior
 - [charts-pro] Split `ChartAxisZoomSlider` into smaller files (#18011) @bernardobelchior
 - [charts-pro] Update zoom slider range selection cursor (#17977) @bernardobelchior
+- [charts-pro] Add support for Heatmap legend (#17943) @alexfauquette
 
 ### Tree View
 
