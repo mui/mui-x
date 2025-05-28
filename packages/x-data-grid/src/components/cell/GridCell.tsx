@@ -387,7 +387,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     );
   }
 
-  let handleFocus: React.FocusEventHandler<Element> | undefined = other.onFocus;
+  let handleFocus = other.onFocus;
 
   if (
     process.env.NODE_ENV === 'test' &&
