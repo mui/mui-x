@@ -324,8 +324,9 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tick'` The value is displayed on the axis ticks.
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
-      location: 'legend';
+      location: 'legend' | 'zoom-slider-tooltip';
     }
   | {
       /**
