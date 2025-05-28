@@ -334,7 +334,7 @@ async function main(argv) {
   };
 
   const logTeamSection = () => {
-    return `Following are all team members who have contributed to this release:\n${Array.from(
+    return `The following are all team members who have contributed to this release:\n${Array.from(
       community.team,
     )
       .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
@@ -346,7 +346,7 @@ async function main(argv) {
 <!-- generated comparing ${lastRelease}..${release} -->
 _${nowFormatted}_
 
-We'd like to offer a big thanks to the ${
+We'd like to extend a big thank you to the ${
     authors.length
   } contributors who made this release possible. Here are some highlights ✨:
 
