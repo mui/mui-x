@@ -1,3 +1,27 @@
+## **7.29.5**
+
+_May 28, 2025_
+
+We'd like to offer a big thanks to the 1 contributors who made this release possible.
+
+Following are all team members who have contributed to this release: @cherniavskii
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.5`
+
+- [DataGrid] Avoid ResizeObserver loop error (@cherniavskii) (#18005) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@7.29.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.5`.
+
+#### `@mui/x-data-grid-premium@7.29.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.5`.
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
