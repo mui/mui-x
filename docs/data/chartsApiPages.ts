@@ -106,6 +106,16 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-button',
+    title: 'ChartsToolbarZoomInButton',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-button',
+    title: 'ChartsToolbarZoomOutButton',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-tooltip',
     title: 'ChartsTooltip',
   },
