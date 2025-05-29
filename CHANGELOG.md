@@ -27,7 +27,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Avoid ResizeObserver loop error (#17984) @cherniavskii
 - [DataGrid] Fix column management `toggleColumn` event type (#18023) @KenanYusuf
-- [DataGrid][Pagination] Remove unnecessary `any` type (#17979) @sai6855
+- [DataGrid] Remove unnecessary `any` type (#17979) @sai6855
 
 #### `@mui/x-data-grid-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
