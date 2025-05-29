@@ -92,9 +92,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       popperRef.current?.update();
     };
 
+    element.addEventListener('pointerdown', handleMove);
     element.addEventListener('pointermove', handleMove);
 
     return () => {
+      element.removeEventListener('pointerdown', handleMove);
       element.removeEventListener('pointermove', handleMove);
     };
   }, [svgRef, positionRef]);
@@ -116,30 +118,33 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     [positionRef],
   );
 
+  const isMouse = pointerType?.pointerType === 'mouse' || pointerType?.pointerType === undefined;
+  const isTouch = pointerType?.pointerType === 'touch';
+
   const modifiers = React.useMemo(
     () => [
       {
         name: 'offset',
         options: {
           offset: () => {
-            if (pointerType?.pointerType !== 'touch') {
-              // The popper offset: [skidding, distance]
-              return [0, 8];
+            if (isTouch) {
+              return [0, 64];
             }
-            return [0, 64];
+            // The popper offset: [skidding, distance]
+            return [0, 8];
           },
         },
       },
-      ...(pointerType?.pointerType === 'mouse'
-        ? [] // Keep default behavior
-        : [
+      ...(!isMouse
+        ? [
             {
               name: 'flip',
               options: {
                 fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
               },
             },
-          ]),
+          ]
+        : []), // Keep default behavior
     ],
     [pointerType],
   );
@@ -154,7 +159,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         <ChartsTooltipRoot
           className={classes?.root}
           open={isOpen}
-          placement={pointerType?.pointerType === 'mouse' ? 'right-start' : 'top'}
+          placement={isMouse ? 'right-start' : 'top'}
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}
