@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useId as useId,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { useUtils } from '../internals/hooks/useUtils';
