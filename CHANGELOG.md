@@ -35,6 +35,7 @@ Same changes as in `@mui/x-data-grid@8.5.0`, plus:
 
 - [DataGridPro] Allow multi sorting without modifier key (#17925) @cherniavskii
 - [DataGridPro] Row reordering icon improvements (#17947) @KenanYusuf
+- [DataGridPro] Fix pinned columns order in column management (#17950) @alisasanib
 
 #### `@mui/x-data-grid-premium@8.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
