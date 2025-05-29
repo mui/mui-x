@@ -119,6 +119,7 @@
   { "name": "chartsToolbarClasses", "kind": "Variable" },
   { "name": "ChartsToolbarClasses", "kind": "Interface" },
   { "name": "ChartsToolbarClassKey", "kind": "TypeAlias" },
+  { "name": "ChartsToolbarProps", "kind": "Interface" },
   { "name": "ChartsToolbarSlotProps", "kind": "Interface" },
   { "name": "ChartsToolbarSlots", "kind": "Interface" },
   { "name": "ChartsTooltip", "kind": "Function" },

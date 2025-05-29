@@ -1,5 +1,4 @@
 import { Toolbar, ChartsToolbarProps } from '@mui/x-charts/Toolbar';
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useChartContext, useSelector, useChartsSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
