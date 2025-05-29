@@ -1,8 +1,9 @@
-# Data Grid - Translated components
+# Data Grid - Localization
 
-<p class="description">The Data Grid allows to support users from different locales, with formatting, and localized strings.</p>
+<p class="description">The Data Grid's localization features provide the appropriate translations and formatting for users around the world.</p>
 
-The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
+The default locale of MUI X is English (United States).
+To use other locales, follow the instructions below.
 
 ## Translation keys
 

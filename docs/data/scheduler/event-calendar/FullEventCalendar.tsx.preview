@@ -1,1 +1,1 @@
-<EventCalendar events={events} />
+<EventCalendar events={events} className={classes.Container} />

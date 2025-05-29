@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
-import { CalendarEvent } from '@mui/x-scheduler/joy/models/events';
+import { CalendarEvent } from '@mui/x-scheduler/joy';
+import classes from './FullEventCalendar.module.css';
 
 const events: CalendarEvent[] = [
   {
@@ -49,5 +50,5 @@ const events: CalendarEvent[] = [
 ];
 
 export default function FullEventCalendar() {
-  return <EventCalendar events={events} />;
+  return <EventCalendar events={events} className={classes.Container} />;
 }

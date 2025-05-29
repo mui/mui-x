@@ -21,4 +21,4 @@ This package is not published yet.
 
 ## Day Grid
 
-TODO
+{{"demo": "DayGridPrimitives.js", "bg": "inline", "defaultCodeOpen": false}}

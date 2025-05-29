@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import '../index.css';
 import './EventCalendar.css';
 import { EventCalendarProps } from './EventCalendar.types';
+import { WeekView } from '../week-view/WeekView';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -13,12 +14,12 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   return (
     <div
-      className={clsx(className, 'EventCalendarRoot', 'mui', 'light')}
+      className={clsx(className, 'EventCalendarRoot', 'joy', 'light')}
       ref={forwardedRef}
       {...other}
     >
       <aside className="EventCalendarSidePanel">
-        <span style={{ height: 72, paddingTop: 18 }}>TODO: Time nav</span>
+        <span style={{ display: 'flex', alignItems: 'center', height: 42 }}>TODO: Time nav</span>
         <section
           className="EventCalendarMonthCalendarPlaceholder"
           // TODO: Add localization
@@ -30,7 +31,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           // TODO: Add localization
           aria-label="Resource legend"
         >
-          <span style={{ height: 200, paddingTop: 24 }}>TODO: Resource legend</span>
+          <span>TODO: Resource legend</span>
         </section>
       </aside>
       <div className="EventCalendarMainPanel">
@@ -38,11 +39,11 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           <span>TODO: View switch</span>
         </header>
         <section
-          className="EventCalendarContent"
           // TODO: Add localization
+          className="EventCalendarContent"
           aria-label="Calendar content"
         >
-          Content: {events.length} events loaded
+          <WeekView events={events} />
         </section>
       </div>
     </div>
