@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import { ToolbarContextProvider } from './internals/ToolbarContext';
+import { ToolbarContextProvider } from '@mui/x-internals/ToolbarContext';
 import { chartsToolbarClasses } from './chartToolbarClasses';
 
 const ToolbarRoot = styled('div', {
