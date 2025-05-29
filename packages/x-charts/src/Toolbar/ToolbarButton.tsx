@@ -2,11 +2,10 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import useId from '@mui/utils/useId';
 import useForkRef from '@mui/utils/useForkRef';
-import { useToolbarContext } from './internals/ToolbarContext';
 import { useChartsSlots } from '../context/ChartsSlotsContext';
 import { ChartsSlotProps } from '../internals/material';
+import { useRegisterToolbarButton } from './internals/useRegisterToolbarButton';
 
 export type ToolbarButtonProps = ChartsSlotProps['baseIconButton'] & {
   /**
@@ -20,57 +19,15 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
     const { render, onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled, ...other } = props;
     const { slots, slotProps } = useChartsSlots();
 
-    const id = useId();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(buttonRef, ref);
-    const {
-      focusableItemId,
-      registerItem,
-      unregisterItem,
-      onItemKeyDown,
-      onItemFocus,
-      onItemDisabled,
-    } = useToolbarContext();
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-      onItemKeyDown(event);
-      onKeyDown?.(event);
-    };
-
-    const handleFocus = (event: React.FocusEvent<HTMLButtonElement>) => {
-      onItemFocus(id!);
-      onFocus?.(event);
-    };
-
-    React.useEffect(() => {
-      registerItem(id!, buttonRef);
-      return () => unregisterItem(id!);
-    }, [id, registerItem, unregisterItem]);
-
-    const previousDisabled = React.useRef(disabled);
-    React.useEffect(() => {
-      if (previousDisabled.current !== disabled && disabled === true) {
-        onItemDisabled(id!, disabled);
-      }
-      previousDisabled.current = disabled;
-    }, [disabled, id, onItemDisabled]);
-
-    const previousAriaDisabled = React.useRef(ariaDisabled);
-    React.useEffect(() => {
-      if (previousAriaDisabled.current !== ariaDisabled && ariaDisabled === true) {
-        onItemDisabled(id!, true);
-      }
-      previousAriaDisabled.current = ariaDisabled;
-    }, [ariaDisabled, id, onItemDisabled]);
+    const { tabIndex, ...toolbarButtonProps } = useRegisterToolbarButton(props, buttonRef);
 
     const element = useComponentRenderer(slots.baseIconButton, render, {
       ...slotProps?.baseIconButton,
-      tabIndex: focusableItemId === id ? 0 : -1,
+      tabIndex,
       ...other,
-      disabled,
-      'aria-disabled': ariaDisabled,
-      onKeyDown: handleKeyDown,
-      onFocus: handleFocus,
+      ...toolbarButtonProps,
       ref: handleRef,
     });
 
