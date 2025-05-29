@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.29.5
 
-_May 28, 2025_
+_May 29, 2025_
 
 We'd like to extend a big thank you to @cherniavskii, who made this release possible.
 
