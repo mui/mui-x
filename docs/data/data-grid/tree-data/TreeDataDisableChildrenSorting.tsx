@@ -135,7 +135,7 @@ export default function TreeDataDisableChildrenSorting() {
           }
           label={
             <Typography component="span">
-              Enable <code>disableChildrenSorting</code>
+              Apply <code>disableChildrenSorting</code>
             </Typography>
           }
         />
