@@ -143,7 +143,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   return (
     <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {props.showToolbar ? <Toolbar /> : null}
+        {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
