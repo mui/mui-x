@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📊 `RadarChart` is now stable.
 
 Special thanks go out to the community members for their valuable contributions:
-@xBlizZer.
+@xBlizZer, @sai6855, @alisasanib.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @oliviertassinari, @sai6855.
 
