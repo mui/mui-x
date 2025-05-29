@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { useToolbarContext } from './ToolbarContext';
