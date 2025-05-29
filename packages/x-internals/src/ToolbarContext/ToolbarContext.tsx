@@ -31,6 +31,7 @@ type Item = {
 
 export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
   const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
+  const focusableItemIdRef = React.useRef<string | null>(focusableItemId);
   const [items, setItems] = React.useState<Item[]>([]);
 
   const getSortedItems = React.useCallback(() => items.sort(sortByDocumentPosition), [items]);
@@ -143,16 +144,22 @@ export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
   );
 
   React.useEffect(() => {
+    focusableItemIdRef.current = focusableItemId;
+  }, [focusableItemId]);
+
+  React.useEffect(() => {
     const sortedItems = getSortedItems();
 
     if (sortedItems.length > 0) {
       // Set initial focusable item
-      if (!focusableItemId) {
+      if (!focusableItemIdRef.current) {
         setFocusableItemId(sortedItems[0].id);
         return;
       }
 
-      const focusableItemIndex = sortedItems.findIndex((item) => item.id === focusableItemId);
+      const focusableItemIndex = sortedItems.findIndex(
+        (item) => item.id === focusableItemIdRef.current,
+      );
 
       if (!sortedItems[focusableItemIndex]) {
         // Last item has been removed from the items array
@@ -170,7 +177,6 @@ export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getSortedItems, findEnabledItem]);
 
   const contextValue = React.useMemo(

@@ -22,7 +22,7 @@ const ToolbarRoot = styled('div', {
   borderRadius: 4,
 }));
 
-export interface ChartsToolbarProps extends React.ComponentProps<'div'> {
+export interface ToolbarProps extends React.ComponentProps<'div'> {
   className?: string;
   /**
    * A function to customize rendering of the component.
@@ -30,7 +30,7 @@ export interface ChartsToolbarProps extends React.ComponentProps<'div'> {
   render?: RenderProp<React.ComponentProps<typeof ToolbarRoot>>;
 }
 
-export const Toolbar = React.forwardRef<HTMLDivElement, ChartsToolbarProps>(function Toolbar(
+export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
   { className, render, ...other },
   ref,
 ) {
