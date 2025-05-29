@@ -6,11 +6,11 @@ import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
 
 declare module '@mui/x-charts' {
   interface ChartsToolbarProps {
-    items: string[];
+    items?: string[];
   }
 }
 
-function CustomToolbar({ items = ['Item 1', 'Item 2', 'Item 3'] }: { items: string[] }) {
+function CustomToolbar({ items = ['Item 1', 'Item 2', 'Item 3'] }: { items?: string[] }) {
   return (
     <Toolbar>
       {items.map((item) => (
