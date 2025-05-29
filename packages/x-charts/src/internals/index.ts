@@ -51,6 +51,7 @@ export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 export * from './dateHelpers';
+export * from './invertScale';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
