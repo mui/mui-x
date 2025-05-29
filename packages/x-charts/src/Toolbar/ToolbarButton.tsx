@@ -45,8 +45,7 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
     React.useEffect(() => {
       registerItem(id!, buttonRef);
       return () => unregisterItem(id!);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id, registerItem, unregisterItem]);
 
     const previousDisabled = React.useRef(disabled);
     React.useEffect(() => {
