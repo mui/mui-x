@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
+import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { ToolbarContextProvider } from './internals/ToolbarContext';
 import { chartsToolbarClasses } from './chartToolbarClasses';
 
 const ToolbarRoot = styled('div', {
@@ -22,11 +24,26 @@ const ToolbarRoot = styled('div', {
 
 export interface ChartsToolbarProps extends React.ComponentProps<'div'> {
   className?: string;
+  /**
+   * A function to customize rendering of the component.
+   */
+  render?: RenderProp<React.ComponentProps<typeof ToolbarRoot>>;
 }
 
-export function Toolbar({ className, ...other }: ChartsToolbarProps) {
-  return <ToolbarRoot className={clsx(chartsToolbarClasses.root, className)} {...other} />;
-}
+export const Toolbar = React.forwardRef<HTMLDivElement, ChartsToolbarProps>(function Toolbar(
+  { className, render, ...other },
+  ref,
+) {
+  const element = useComponentRenderer(ToolbarRoot, render, {
+    role: 'toolbar',
+    'aria-orientation': 'horizontal',
+    className: clsx(chartsToolbarClasses.root, className),
+    ...other,
+    ref,
+  });
+
+  return <ToolbarContextProvider>{element}</ToolbarContextProvider>;
+});
 
 Toolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
