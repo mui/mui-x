@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
 import {
   AxisId,
+  ComputedAxis,
   getSVGPoint,
+  invertScale,
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
@@ -13,10 +15,7 @@ import {
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import {
-  getAxisIndex,
-  getAxisValue,
-} from '@mui/x-charts/internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
+import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -68,31 +67,7 @@ export function ChartAxisZoomSliderActiveTrack({
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
-
-  const formatValue = (value: Date | number | null) => {
-    if (axis.valueFormatter) {
-      return axis.valueFormatter(value, { location: 'zoom-slider-tooltip' });
-    }
-
-    return value;
-  };
-
-  const start = axisDirection === 'x' ? drawingArea.left : drawingArea.top;
-  const size = axisDirection === 'x' ? drawingArea.width : drawingArea.height;
-  const end = start + size;
-  const tooltipStartDataIndex = getAxisIndex(axis, start);
-  const tooltipEndDataIndex = getAxisIndex(axis, end);
-
-  const tooltipStart = formatValue(
-    getAxisValue(axis, start, tooltipStartDataIndex === -1 ? 0 : tooltipStartDataIndex),
-  );
-  const tooltipEnd = formatValue(
-    getAxisValue(
-      axis,
-      end,
-      tooltipEndDataIndex === -1 ? (axis.data?.length ?? 1) - 1 : tooltipEndDataIndex,
-    ),
-  );
+  const { tooltipStart, tooltipEnd } = getZoomSliderTooltipsText(axis, drawingArea);
 
   const previewThumbWidth =
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_WIDTH : ZOOM_SLIDER_THUMB_HEIGHT;
@@ -333,18 +308,48 @@ export function ChartAxisZoomSliderActiveTrack({
       />
       <ChartsTooltipZoomSliderValue
         anchorEl={startThumbEl}
-        open={showTooltip}
+        open={showTooltip && tooltipStart !== ''}
         placement={axisPosition}
       >
         {tooltipStart}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
         anchorEl={endThumbEl}
-        open={showTooltip}
+        open={showTooltip && tooltipEnd !== ''}
         placement={axisPosition}
       >
         {tooltipEnd}
       </ChartsTooltipZoomSliderValue>
     </React.Fragment>
   );
+}
+
+/**
+ * Returns the text for the tooltips on the thumbs of the zoom slider.
+ */
+function getZoomSliderTooltipsText(axis: ComputedAxis, drawingArea: ChartDrawingArea) {
+  const formatValue = (value: Date | number | null) => {
+    if (axis.valueFormatter) {
+      return axis.valueFormatter(value, { location: 'zoom-slider-tooltip' });
+    }
+
+    return `${value}`;
+  };
+
+  const axisDirection = axis.position === 'top' || axis.position === 'bottom' ? 'x' : 'y';
+
+  let start = axisDirection === 'x' ? drawingArea.left : drawingArea.top;
+  const size = axisDirection === 'x' ? drawingArea.width : drawingArea.height;
+  let end = start + size;
+  if (axisDirection === 'y') {
+    [start, end] = [end, start]; // Invert for y-axis
+  }
+
+  const startValue = invertScale(axis.scale, axis.data ?? [], start) ?? axis.data?.[0];
+  const endValue = invertScale(axis.scale, axis.data ?? [], end) ?? axis.data?.at(-1);
+
+  const tooltipStart = formatValue(startValue);
+  const tooltipEnd = formatValue(endValue);
+
+  return { tooltipStart, tooltipEnd };
 }
