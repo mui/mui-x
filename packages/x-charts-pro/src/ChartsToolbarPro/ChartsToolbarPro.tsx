@@ -46,11 +46,3 @@ export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarPro
 
   return <Toolbar {...props}>{children}</Toolbar>;
 }
-
-ChartsToolbarPro.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  className: PropTypes.string,
-} as any;

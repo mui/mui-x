@@ -47,6 +47,7 @@ ToolbarButton.propTypes = {
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   style: PropTypes.object,
+  tabIndex: PropTypes.number,
 } as any;
 
 export { ToolbarButton };
