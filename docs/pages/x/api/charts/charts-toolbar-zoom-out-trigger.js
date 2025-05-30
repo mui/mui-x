@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './charts-toolbar-zoom-in-button.json';
+import jsonPageContent from './charts-toolbar-zoom-out-trigger.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-toolbar-zoom-in-button',
+    'docsx/translations/api-docs/charts/charts-toolbar-zoom-out-trigger',
     false,
-    /\.\/charts-toolbar-zoom-in-button.*.json$/,
+    /\.\/charts-toolbar-zoom-out-trigger.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

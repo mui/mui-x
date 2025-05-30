@@ -156,6 +156,7 @@
       "default": "BarLabel",
       "class": null
     },
+    { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
     { "name": "baseTooltip", "description": "", "class": null },
     {

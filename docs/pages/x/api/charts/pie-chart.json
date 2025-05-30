@@ -51,6 +51,7 @@
     "import { PieChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
+    { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "legend",

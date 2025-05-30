@@ -3,8 +3,8 @@ import ZoomIn from '@mui/icons-material/ZoomIn';
 import ZoomOut from '@mui/icons-material/ZoomOut';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import {
-  ChartsToolbarZoomInButton,
-  ChartsToolbarZoomOutButton,
+  ChartsToolbarZoomInTrigger,
+  ChartsToolbarZoomOutTrigger,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { chartsToolbarClasses, Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
 import { useChartApiContext } from '@mui/x-charts-pro/context';
@@ -59,14 +59,14 @@ function CustomToolbar() {
       </Typography>
       <Stack direction="row" flex={1} justifyContent={{ xs: 'center', sm: 'end' }}>
         <Tooltip title="Zoom in">
-          <ChartsToolbarZoomInButton>
+          <ChartsToolbarZoomInTrigger render={<ToolbarButton />}>
             <ZoomIn />
-          </ChartsToolbarZoomInButton>
+          </ChartsToolbarZoomInTrigger>
         </Tooltip>
         <Tooltip title="Zoom out">
-          <ChartsToolbarZoomOutButton>
+          <ChartsToolbarZoomOutTrigger render={<ToolbarButton />}>
             <ZoomOut />
-          </ChartsToolbarZoomOutButton>
+          </ChartsToolbarZoomOutTrigger>
         </Tooltip>
 
         <ResetZoomButton>Reset</ResetZoomButton>

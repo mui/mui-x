@@ -1,5 +1,5 @@
 {
-  "componentDescription": "The zoom-out button for the chart toolbar.",
+  "componentDescription": "A button that zooms the chart in.\nIt renders the `baseButton` slot.",
   "propDescriptions": {
     "render": { "description": "A function to customize the rendering of the component." }
   },

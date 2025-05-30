@@ -1,7 +1,7 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
-components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInButton, ChartsToolbarZoomOutButton
+components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger
 ---
 
 # Charts - Toolbar 🧪
@@ -45,7 +45,7 @@ The `render` prop can be used to customize the rendering of the toolbar's elemen
 
 You can pass a React element to the `render` prop of the `ToolbarButton` component to replace the default button with your own component.
 
-This is useful when you want to render a custom component but want to keep the toolbar's functionality intact.
+This is useful when you want to render a custom component but want to use the toolbar's [accessibility](#accessibility) features, such as keyboard navigation and ARIA attributes, without having to implement them yourself.
 
 ```tsx
 <ToolbarButton render={<MyButton />} />
@@ -68,3 +68,29 @@ You can achieve this by providing a custom component to the `toolbar` slot.
 Components such as `Toolbar` and `ToolbarButton` can be used to build your own toolbar using the default components as a base, or you can create your own custom toolbar from scratch.
 
 {{"demo": "ChartsToolbarCustomToolbar.js"}}
+
+## Accessibility
+
+(WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
+
+The component follows the WAI-ARIA authoring practices.
+
+### ARIA
+
+- The element rendered by the `<Toolbar />` component has the `toolbar` role.
+- The element rendered by the `<Toolbar />` component has `aria-orientation` set to `horizontal`.
+- You must apply a text label or an `aria-label` attribute to the `<ToolbarButton />`.
+
+### Keyboard
+
+The Toolbar component supports keyboard navigation.
+It implements the roving tabindex pattern.
+
+|                                                               Keys | Description                              |
+| -----------------------------------------------------------------: | :--------------------------------------- |
+|                                         <kbd class="key">Tab</kbd> | Moves focus into and out of the toolbar. |
+| <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> | Moves focus into and out of the toolbar. |
+|                                        <kbd class="key">Left</kbd> | Moves focus to the previous button.      |
+|                                       <kbd class="key">Right</kbd> | Moves focus to the next button.          |
+|                                        <kbd class="key">Home</kbd> | Moves focus to the first button.         |
+|                                         <kbd class="key">End</kbd> | Moves focus to the last button.          |
