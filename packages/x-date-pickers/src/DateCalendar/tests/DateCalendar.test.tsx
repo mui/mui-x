@@ -95,7 +95,8 @@ describe('<DateCalendar />', () => {
     // days are disabled
     const cells = screen.getAllByRole('gridcell');
     const disabledDays = cells.filter(
-      (cell) => cell.getAttribute('disabled') !== null && cell.tagName === 'BUTTON',
+      (cell) =>
+        cell.getAttribute('disabled') !== null && cell.getAttribute('data-testid') === 'day',
     );
 
     expect(cells.length).to.equal(35);
@@ -184,7 +185,7 @@ describe('<DateCalendar />', () => {
       // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
-          '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+          '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="day"]',
         ),
       ).to.have.text('1');
     });

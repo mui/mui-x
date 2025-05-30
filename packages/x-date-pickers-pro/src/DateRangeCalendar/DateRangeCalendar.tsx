@@ -57,6 +57,7 @@ import {
   PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
+import { dateRangePickerDay2Classes } from '../DateRangePickerDay2';
 
 const releaseInfo = '__RELEASE_INFO__';
 
@@ -84,7 +85,7 @@ const InnerDayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
-    [`& .${dayClasses.day}`]: {
+    [`& .${dateRangePickerDay2Classes.root}, & .${dayClasses.day}`]: {
       cursor: 'grabbing',
     },
     [`& .${dayClasses.root}:not(.${dayClasses.rangeIntervalDayHighlightStart}):not(.${dayClasses.rangeIntervalDayHighlightEnd}) .${dayClasses.day}:not(.${dayClasses.notSelectedDate})`]:
