@@ -32,6 +32,17 @@ const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuConta
       [hideMenu],
     );
 
+    const handleMenuScrollCapture = React.useCallback(
+      (event: React.WheelEvent | React.TouchEvent) => {
+        if (!event.currentTarget.contains(event.target as Node)) {
+          return;
+        }
+
+        event.stopPropagation();
+      },
+      [],
+    );
+
     return (
       <StyledMenuList
         as={rootProps.slots.baseMenuList}
@@ -39,6 +50,8 @@ const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuConta
         className={clsx(gridClasses.menuList, className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
+        onWheel={handleMenuScrollCapture}
+        onTouchMove={handleMenuScrollCapture}
         autoFocus={open}
         {...other}
         ref={ref}
