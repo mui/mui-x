@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run mocha\" \"pnpm run server\"",
+    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run test\" \"pnpm run server\"",
     "build": "cross-env TEST_BUILD=true vite build",
     "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
-    "mocha": "mocha --config .mocharc.js --timeout 8000 '**/*.test.{js,ts,tsx}'",
+    "test": "vitest",
     "server": "serve . -p 5001"
   },
   "devDependencies": {

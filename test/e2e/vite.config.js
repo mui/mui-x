@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { alias } from '../../vitest.shared.mjs';
 
 export default defineConfig({
   build: {
@@ -15,4 +16,7 @@ export default defineConfig({
       },
     },
   ],
+  resolve: {
+    alias,
+  },
 });
