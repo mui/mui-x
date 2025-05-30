@@ -6,45 +6,48 @@ import './EventCalendar.css';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { HeaderToolbar } from '../header-toolbar';
+import { TranslationsProvider } from '../utils/TranslationsContext';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, onEventsChange, className, ...other } = props;
+  const { events, onEventsChange, translations, className, ...other } = props;
 
   return (
-    <div
-      className={clsx(className, 'EventCalendarRoot', 'joy', 'light')}
-      ref={forwardedRef}
-      {...other}
-    >
-      <aside className="EventCalendarSidePanel">
-        <span style={{ display: 'flex', alignItems: 'center', height: 42 }}>TODO: Time nav</span>
-        <section
-          className="EventCalendarMonthCalendarPlaceholder"
-          // TODO: Add localization
-          aria-label="Month calendar"
-        >
-          Month Calendar
-        </section>
-        <section
-          // TODO: Add localization
-          aria-label="Resource legend"
-        >
-          <span>TODO: Resource legend</span>
-        </section>
-      </aside>
-      <div className="EventCalendarMainPanel">
-        <HeaderToolbar onTodayClick={() => {}} />
-        <section
-          // TODO: Add localization
-          className="EventCalendarContent"
-          aria-label="Calendar content"
-        >
-          <WeekView events={events} />
-        </section>
+    <TranslationsProvider translations={translations}>
+      <div
+        className={clsx(className, 'EventCalendarRoot', 'joy', 'light')}
+        ref={forwardedRef}
+        {...other}
+      >
+        <aside className="EventCalendarSidePanel">
+          <span style={{ display: 'flex', alignItems: 'center', height: 42 }}>TODO: Time nav</span>
+          <section
+            className="EventCalendarMonthCalendarPlaceholder"
+            // TODO: Add localization
+            aria-label="Month calendar"
+          >
+            Month Calendar
+          </section>
+          <section
+            // TODO: Add localization
+            aria-label="Resource legend"
+          >
+            <span>TODO: Resource legend</span>
+          </section>
+        </aside>
+        <div className="EventCalendarMainPanel">
+          <HeaderToolbar onTodayClick={() => {}} />
+          <section
+            // TODO: Add localization
+            className="EventCalendarContent"
+            aria-label="Calendar content"
+          >
+            <WeekView events={events} />
+          </section>
+        </div>
       </div>
-    </div>
+    </TranslationsProvider>
   );
 });

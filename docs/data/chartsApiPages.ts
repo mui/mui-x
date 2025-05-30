@@ -236,6 +236,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'PieChart',
   },
   {
+    pathname: '/x/api/charts/pie-chart-pro',
+    title: 'PieChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
   },

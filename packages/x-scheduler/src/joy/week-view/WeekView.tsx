@@ -8,6 +8,7 @@ import { WeekViewProps } from './WeekView.types';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
 import './WeekView.css';
+import { useTranslations } from '../utils/TranslationsContext';
 
 function getCurrentWeekDays(today: SchedulerValidDate) {
   const startOfWeek = today.startOf('week');
@@ -21,6 +22,7 @@ export const WeekView = React.forwardRef(function WeekView(
   const { events, className, ...other } = props;
 
   const adapter = useAdapter();
+  const translations = useTranslations();
   const today = adapter.date('2025-05-26');
   const currentWeekDays = getCurrentWeekDays(today);
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -74,8 +76,7 @@ export const WeekView = React.forwardRef(function WeekView(
               className="WeekViewAllDayEventsCell WeekViewAllDayEventsHeaderCell"
               role="columnheader"
             >
-              {/* TODO: Add localization */}
-              All day
+              {translations.allDay}
             </div>
             {currentWeekDays.map((day) => (
               <div
