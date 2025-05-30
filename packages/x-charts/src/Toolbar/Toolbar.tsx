@@ -17,8 +17,8 @@ const ToolbarRoot = styled('div', {
   borderRadius: 4,
 }));
 
-export interface ToolbarProps extends React.PropsWithChildren {}
+export interface ChartsToolbarProps extends React.PropsWithChildren {}
 
-export function Toolbar({ children }: ToolbarProps) {
+export function Toolbar({ children }: ChartsToolbarProps) {
   return <ToolbarRoot>{children}</ToolbarRoot>;
 }

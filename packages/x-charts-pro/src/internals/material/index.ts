@@ -16,6 +16,10 @@ const iconSlots: Omit<ChartsIconSlotsPro, keyof ChartsIconSlots> = {
 
 export type ChartsSlotsPro = ChartsBaseSlotsPro & ChartsIconSlotsPro;
 
+export type ChartsSlotPropsPro = {
+  [key in keyof ChartsSlotsPro]: React.ComponentProps<ChartsSlotsPro[key]>;
+};
+
 export const defaultSlotsMaterial: ChartsSlotsPro = {
   ...communityDefaultSlotsMaterial,
   ...baseSlots,
