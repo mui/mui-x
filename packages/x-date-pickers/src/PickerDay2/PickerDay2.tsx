@@ -240,7 +240,8 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
     <PickerDay2Root
       ref={handleRef}
       centerRipple
-      data-testid="day"
+      // compat with PickersDay for tests
+      data-testid={ownerState.isDayFillerCell ? undefined : 'day'}
       disabled={disabled}
       tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}
@@ -253,7 +254,8 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >
-      {children ?? utils.format(day, 'dayOfMonth')}
+      {/* `ownerState.isDayFillerCell` is used for compat with `PickersDay` for tests */}
+      {children ?? (ownerState.isDayFillerCell ? null : utils.format(day, 'dayOfMonth'))}
     </PickerDay2Root>
   );
 });
