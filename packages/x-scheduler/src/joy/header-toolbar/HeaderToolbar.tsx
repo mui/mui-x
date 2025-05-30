@@ -3,8 +3,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
-import './HeaderToolbar.css';
 import { useTranslations } from '../utils/TranslationsContext';
+import './HeaderToolbar.css';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
