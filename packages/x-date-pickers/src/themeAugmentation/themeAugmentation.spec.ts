@@ -359,7 +359,7 @@ createTheme({
     MuiPickerDay2: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiPickersDay prop
+        // @ts-expect-error invalid MuiPickerDay2 prop
         someRandomProp: true,
       },
       styleOverrides: {
@@ -369,7 +369,7 @@ createTheme({
             backgroundColor: 'green',
           },
         },
-        // @ts-expect-error invalid MuiPickersDay class key
+        // @ts-expect-error invalid MuiPickerDay2 class key
         content: {
           backgroundColor: 'blue',
         },

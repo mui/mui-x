@@ -56,7 +56,7 @@ createTheme({
     MuiDateRangePickerDay2: {
       defaultProps: {
         color: 'red',
-        // @ts-expect-error invalid MuiDateRangePickerDay prop
+        // @ts-expect-error invalid MuiDateRangePickerDay2 prop
         someRandomProp: true,
       },
       styleOverrides: {
