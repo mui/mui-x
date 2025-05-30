@@ -8,7 +8,7 @@
   padding: var(--space-1);
 }
 
-.ViewSwitcherMenuTrigger {
+.ViewSwitcherMainItem {
   border: 0;
   background: none;
   user-select: none;
@@ -23,13 +23,13 @@
   font-weight: var(--font-weight-2);
 }
 
-.ViewSwitcherMenuTrigger[data-view='other'] {
+.ViewSwitcherMainItem[data-view='other'] {
   padding-inline-end: var(--space-2);
 }
 
-.ViewSwitcherMenuTrigger[data-pressed],
-.ViewSwitcherMenuTrigger[data-highlighted],
-.ViewSwitcherMenuTrigger:focus-visible {
+.ViewSwitcherMainItem[data-pressed],
+.ViewSwitcherMainItem[data-highlighted],
+.ViewSwitcherMainItem:focus-visible {
   background-color: var(--violet-3);
   color: var(--mauve-7);
 }

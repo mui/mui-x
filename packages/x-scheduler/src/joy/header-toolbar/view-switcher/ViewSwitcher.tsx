@@ -53,6 +53,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
   const selectedOverflowView = dropdown.includes(selectedView) ? selectedView : null;
+  // TODO: Add localization
   const dropdownLabel = selectedOverflowView ? LABELS[selectedOverflowView] : 'Other';
 
   return (
@@ -61,7 +62,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         {visible.map((view) => (
           <Menu.Root key={view}>
             <button
-              className="ViewSwitcherMenuTrigger"
+              className="ViewSwitcherMainItem"
               onClick={handleClick}
               data-view={view}
               role="menuitem"
@@ -75,7 +76,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         {dropdown.length > 0 && (
           <Menu.Root>
             <Menu.Trigger
-              className="ViewSwitcherMenuTrigger"
+              className="ViewSwitcherMainItem"
               data-view="other"
               data-highlighted={dropdown.includes(selectedView) || undefined}
             >
