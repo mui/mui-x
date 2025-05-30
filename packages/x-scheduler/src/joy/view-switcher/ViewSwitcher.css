@@ -1,0 +1,72 @@
+@import '../styles/tokens.css';
+
+.ViewSwitcherMenuBar {
+  display: flex;
+  gap: var(--space-1);
+  border: 1px solid var(--mauve-2);
+  border-radius: var(--radius-4);
+  padding: var(--space-1);
+}
+
+.ViewSwitcherMenuTrigger {
+  outline: 0;
+  border: 0;
+  background: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  color: var(--mauve-6);
+  border-radius: var(--radius-3);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-1);
+  font-weight: var(--font-weight-2);
+}
+
+.ViewSwitcherMenuTrigger[data-view='other'] {
+  padding-inline-end: var(--space-2);
+}
+
+.ViewSwitcherMenuTrigger[data-pressed],
+.ViewSwitcherMenuTrigger[data-highlighted],
+.ViewSwitcherMenuTrigger:focus-visible {
+  background-color: var(--violet-3);
+  color: var(--mauve-7);
+  outline: none;
+}
+
+.ViewSwitcherMenuPositioner {
+  outline: 0;
+  z-index: 3;
+}
+
+.ViewSwitcherMenuPopup {
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-4);
+  background-color: canvas;
+  outline: 1px solid var(--mauve-2);
+  box-shadow: -2px 2px 12px 0px rgba(0, 0, 0, 0.12);
+}
+
+.ViewSwitcherMenuItem {
+  outline: 0;
+  z-index: 3;
+  cursor: default;
+  user-select: none;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  font-weight: var(--font-weight-2);
+  color: var(--mauve-6);
+  border-radius: var(--radius-3);
+}
+
+.ViewSwitcherMenuItem[data-highlighted] {
+  color: var(--mauve-7);
+  background-color: var(--violet-3);
+}
