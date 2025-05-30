@@ -5,6 +5,7 @@ import '../index.css';
 import './EventCalendar.css';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
+import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../utils/TranslationsContext';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
@@ -37,9 +38,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           </section>
         </aside>
         <div className="EventCalendarMainPanel">
-          <header className="EventCalendarToolbar">
-            <span>TODO: View switch</span>
-          </header>
+          <HeaderToolbar onTodayClick={() => {}} />
           <section
             // TODO: Add localization
             className="EventCalendarContent"

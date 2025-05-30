@@ -1,0 +1,79 @@
+@import '../../styles/tokens.css';
+
+.ViewSwitcherContainer {
+  --switcher-text-regular: var(--mauve-6);
+  --switcher-text-strong: var(--mauve-7);
+}
+
+.mode-dark .ViewSwitcherContainer {
+  --switcher-text-regular: var(--mauve-2);
+  --switcher-text-strong: var(--mauve-9);
+}
+
+.ViewSwitcherMenuBar {
+  display: flex;
+  gap: var(--space-1);
+  border: 1px solid var(--mauve-2);
+  border-radius: var(--radius-4);
+  padding: var(--space-1);
+}
+
+.ViewSwitcherMainItem {
+  border: 0;
+  background: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  color: var(--switcher-text-regular);
+  border-radius: var(--radius-3);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-1);
+  font-weight: var(--font-weight-2);
+}
+
+.ViewSwitcherMainItem[data-view='other'] {
+  padding-inline-end: var(--space-2);
+}
+
+.ViewSwitcherMainItem[data-pressed],
+.ViewSwitcherMainItem[data-highlighted],
+.ViewSwitcherMainItem:focus-visible {
+  background-color: var(--violet-3);
+  color: var(--switcher-text-strong);
+}
+
+.ViewSwitcherMenuPositioner {
+  z-index: 3;
+}
+
+.ViewSwitcherMenuPopup {
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-4);
+  background-color: canvas;
+  outline: 1px solid var(--mauve-2);
+  box-shadow: -2px 2px 12px 0px rgba(0, 0, 0, 0.12);
+}
+
+.ViewSwitcherMenuItem {
+  z-index: 3;
+  cursor: default;
+  user-select: none;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  font-weight: var(--font-weight-2);
+  color: var(--switcher-text-regular);
+  border-radius: var(--radius-3);
+}
+
+.ViewSwitcherMenuItem[data-highlighted],
+.ViewSwitcherMenuItem[data-selected] {
+  color: var(--switcher-text-strong);
+  background-color: var(--violet-3);
+}
