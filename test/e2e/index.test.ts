@@ -100,7 +100,6 @@ async function initializeEnvironment(
 ) {
   browser = await browserType.launch({
     headless: true,
-    timeout: 20000,
   });
   // eslint-disable-next-line no-console
   console.log(`Running on: ${browserType.name()}, version: ${browser.version()}.`);
@@ -110,7 +109,7 @@ async function initializeEnvironment(
     ...contextOptions,
   });
   // Circle CI has low-performance CPUs.
-  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 8 : 4) * 1000);
+  context.setDefaultTimeout(process.env.CIRCLECI === 'true' ? 20000 : 5000);
   page = await context.newPage();
   // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
   // Update the Date accordingly in your test pages
