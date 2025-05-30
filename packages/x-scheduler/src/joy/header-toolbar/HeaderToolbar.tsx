@@ -16,7 +16,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   return (
     <header ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
       <ViewSwitcher views={views} />
-      <button className="HeaderToolbarButton" onClick={onTodayClick}>
+      <button className="HeaderToolbarButton" onClick={onTodayClick} type="button">
         {translations.today}
       </button>
     </header>
