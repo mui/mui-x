@@ -313,11 +313,6 @@ PickerDay2Raw.propTypes = {
    */
   disableTouchRipple: PropTypes.bool,
   /**
-   * If `true`, the day can be dragged to change the current date range.
-   * @default false
-   */
-  draggable: PropTypes.bool,
-  /**
    * If `true`, the base button will have a keyboard focus ripple.
    * @default false
    */

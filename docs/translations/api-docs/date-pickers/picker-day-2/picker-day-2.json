@@ -22,9 +22,6 @@
     "disableTouchRipple": {
       "description": "If <code>true</code>, the touch ripple effect is disabled."
     },
-    "draggable": {
-      "description": "If <code>true</code>, the day can be dragged to change the current date range."
-    },
     "focusRipple": {
       "description": "If <code>true</code>, the base button will have a keyboard focus ripple."
     },
