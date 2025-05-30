@@ -55,6 +55,7 @@
   { "name": "bluePaletteLight", "kind": "Variable" },
   { "name": "CartesianSeriesType", "kind": "TypeAlias" },
   { "name": "ChartApi", "kind": "TypeAlias" },
+  { "name": "ChartBaseButtonProps", "kind": "TypeAlias" },
   { "name": "ChartBaseCommonProps", "kind": "TypeAlias" },
   { "name": "ChartBaseIconButtonProps", "kind": "TypeAlias" },
   { "name": "ChartBaseIconProps", "kind": "TypeAlias" },

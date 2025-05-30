@@ -14,11 +14,11 @@ import {
   UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
 
-interface ChartsToolbarZoomOutButtonProps {
+interface ChartsToolbarZoomOutTriggerProps {
   /**
    * A function to customize the rendering of the component.
    */
-  render?: RenderProp<ChartsSlotProps['baseIconButton']>;
+  render?: RenderProp<ChartsSlotProps['baseButton']>;
 }
 
 /**
@@ -27,7 +27,7 @@ interface ChartsToolbarZoomOutButtonProps {
  */
 const ChartsToolbarZoomOutTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.PropsWithChildren<ChartsToolbarZoomOutButtonProps>
+  React.PropsWithChildren<ChartsToolbarZoomOutTriggerProps>
 >(function ChartsToolbarZoomOutTrigger({ render, ...other }, ref) {
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } = useChartContext<[UseChartProZoomSignature]>();

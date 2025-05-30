@@ -40,6 +40,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "baseButton": "",
     "baseIconButton": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
