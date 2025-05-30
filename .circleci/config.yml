@@ -293,7 +293,6 @@ jobs:
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
-
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
