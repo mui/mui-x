@@ -7,7 +7,7 @@
     "build": "cross-env TEST_BUILD=true vite build",
     "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
     "test": "vitest",
-    "server": "serve . -p 5001"
+    "server": "serve . -L -p 5001"
   },
   "devDependencies": {
     "@babel/runtime": "^7.27.1",
