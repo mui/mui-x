@@ -5,8 +5,8 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Brak danych',
   noResultsOverlayLabel: 'Nie znaleziono wyników.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Brak kolumn',
+  noColumnsOverlayManageColumns: 'Zarządzaj kolumnami',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -43,7 +43,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // toolbarPivot: 'Pivot',
 
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'Asystent AI',
 
   // Columns management text
   columnsManagementSearchTitle: 'Szukaj',
@@ -179,18 +179,18 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Wierszy na stronę:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({
+    from,
+    to,
+    count,
+    estimated
+  }) => {
+    if (!estimated) {
+      return `${from}–${to} z ${count !== -1 ? count : `więcej niż ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `około ${estimated}` : `więcej niż ${to}`;
+    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Przejdź do pierwszej strony';
@@ -246,19 +246,19 @@ const plPLGrid: Partial<GridLocaleText> = {
   // pivotQuarterColumnHeaderName: '(Quarter)',
 
   // AI Assistant panel
-  // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelClose: 'Close AI Assistant',
-  // aiAssistantPanelNewConversation: 'New conversation',
-  // aiAssistantPanelConversationHistory: 'Conversation history',
-  // aiAssistantPanelEmptyConversation: 'No prompt history',
-  // aiAssistantSuggestions: 'Suggestions',
+  aiAssistantPanelTitle: 'Asystent AI',
+  aiAssistantPanelClose: 'Zamknij asystenta AI',
+  aiAssistantPanelNewConversation: 'Nowa konwersacja',
+  aiAssistantPanelConversationHistory: 'Historia konwersacji',
+  aiAssistantPanelEmptyConversation: 'Brak historii poleceń',
+  aiAssistantSuggestions: 'Sugestie',
 
   // Prompt field
   promptFieldLabel: 'Wprowadź polecenie',
   promptFieldPlaceholder: 'Wpisz polecenie…',
   promptFieldPlaceholderWithRecording: 'Wpisz lub nagraj polecenie…',
   promptFieldPlaceholderListening: 'Nasłuchiwanie polecenia…',
-  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSpeechRecognitionNotSupported: 'Rozpoznawanie głosy nie jest obsługiwane przez Twoją przeglądarkę.',
   promptFieldSend: 'Wyślij',
   promptFieldRecord: 'Nagrywaj',
   promptFieldStopRecording: 'Zatrzymaj nagrywanie',
