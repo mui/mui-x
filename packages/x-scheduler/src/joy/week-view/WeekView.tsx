@@ -74,7 +74,7 @@ export const WeekView = React.forwardRef(function WeekView(
               className="WeekViewAllDayEventsCell WeekViewAllDayEventsHeaderCell"
               role="columnheader"
             >
-              {/* // TODO: Add localization */}
+              {/* TODO: Add localization */}
               All day
             </div>
             {currentWeekDays.map((day) => (
