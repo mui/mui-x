@@ -8,7 +8,7 @@ components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, Ra
 
 <p class="description">Charts can be printed and exported as PDF.</p>
 
-Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `<Heatmap />`, `<FunnelChart />` and `<RadarChartPro />`.
+Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `PieChartPro />`, `<Heatmap />`, `<FunnelChart />` and `<RadarChartPro />`.
 
 ## Print/Export as PDF
 
