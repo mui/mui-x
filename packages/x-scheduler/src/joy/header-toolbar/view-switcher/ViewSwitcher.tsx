@@ -20,6 +20,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useForkRef(forwardedRef, containerRef);
   const translations = useTranslations();
+  const [selectedView, setSelectedView] = React.useState<ViewType>('week');
 
   const LABELS: Record<string, string> = React.useMemo(
     () => ({
@@ -31,8 +32,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
     }),
     [translations],
   );
-
-  const [selectedView, setSelectedView] = React.useState<ViewType>('week');
 
   const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
     const view = event.currentTarget.getAttribute('data-view');
