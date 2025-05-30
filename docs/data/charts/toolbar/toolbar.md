@@ -45,7 +45,7 @@ The `render` prop can be used to customize the rendering of the toolbar's elemen
 
 You can pass a React element to the `render` prop of the `ToolbarButton` component to replace the default button with your own component.
 
-This is useful when you want to render a custom component but want to keep the toolbar's functionality intact.
+This is useful when you want to render a custom component but want to use the toolbar's [accessibility](#accessibility) features, such as keyboard navigation and ARIA attributes, without having to implement them yourself.
 
 ```tsx
 <ToolbarButton render={<MyButton />} />
