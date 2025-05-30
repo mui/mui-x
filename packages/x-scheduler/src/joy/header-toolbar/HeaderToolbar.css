@@ -1,0 +1,22 @@
+@import '../styles/tokens.css';
+
+.HeaderToolbarContainer {
+  display: flex;
+  gap: var(--space-4);
+  width: 100%;
+  justify-content: center;
+}
+
+.HeaderToolbarButton {
+  outline: 0;
+  border: 0;
+  background: none;
+  user-select: none;
+  padding: var(--space-3) var(--space-4);
+  color: var(--mauve-7);
+  border: 1px solid var(--mauve-2);
+  border-radius: var(--radius-4);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-1);
+  font-weight: var(--font-weight-2);
+}

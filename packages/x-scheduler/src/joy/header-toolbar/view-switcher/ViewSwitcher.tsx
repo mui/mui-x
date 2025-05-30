@@ -2,11 +2,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { ViewSwitcherProps, ViewType } from './ViewSwitcher.types';
-import './ViewSwitcher.css';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { Menu } from '@base-ui-components/react/menu';
 import useForkRef from '@mui/utils/useForkRef';
 import { ChevronDown } from 'lucide-react';
+import './ViewSwitcher.css';
 
 const DEFAULT_VIEWS = ['week', 'day', 'month', 'agenda'] as ViewType[];
 

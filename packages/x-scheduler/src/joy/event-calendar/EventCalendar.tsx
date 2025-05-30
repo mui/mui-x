@@ -5,7 +5,7 @@ import '../index.css';
 import './EventCalendar.css';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
-import { ViewSwitcher } from '../view-switcher';
+import { HeaderToolbar } from '../header-toolbar';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -37,7 +37,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       </aside>
       <div className="EventCalendarMainPanel">
         <header className="EventCalendarToolbar">
-          <ViewSwitcher />
+          <HeaderToolbar />
         </header>
         <section
           // TODO: Add localization
