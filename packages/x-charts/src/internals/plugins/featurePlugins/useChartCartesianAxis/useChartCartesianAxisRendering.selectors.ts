@@ -185,6 +185,11 @@ export const selectorChartYAxis = createSelector(
     }),
 );
 
+export const selectorChartAxis = createSelector(
+  [selectorChartXAxis, selectorChartYAxis, (_, axisId: AxisId) => axisId],
+  (xAxes, yAxes, axisId) => xAxes?.axis[axisId] ?? yAxes?.axis[axisId],
+);
+
 export const selectorChartRawAxis = createSelector(
   [selectorChartRawXAxis, selectorChartRawYAxis, (state, axisId: AxisId) => axisId],
   (xAxes, yAxes, axisId) => {
