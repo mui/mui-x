@@ -37,6 +37,7 @@ export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';
 export * from '../RadarChart/RadarChart.plugins';
+export * from '../PieChart/PieChart.plugins';
 
 // utils
 export * from './defaultizeValueFormatter';
