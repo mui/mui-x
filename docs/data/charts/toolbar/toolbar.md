@@ -1,7 +1,7 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
-components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInButton, ChartsToolbarZoomOutButton
+components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger
 ---
 
 # Charts - Toolbar 🧪
