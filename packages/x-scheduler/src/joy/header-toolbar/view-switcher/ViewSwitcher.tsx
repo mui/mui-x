@@ -11,18 +11,6 @@ import './ViewSwitcher.css';
 
 const DEFAULT_VIEWS = ['week', 'day', 'month', 'agenda'] as ViewType[];
 
-function useStableContainer(ref: React.RefObject<HTMLElement | null>) {
-  const [container, setContainer] = React.useState<HTMLElement | null>(null);
-
-  React.useLayoutEffect(() => {
-    if (ref.current) {
-      setContainer(ref.current);
-    }
-  }, [ref]);
-
-  return container;
-}
-
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   props: ViewSwitcherProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -30,7 +18,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const { className, views = DEFAULT_VIEWS, ...other } = props;
 
   const containerRef = React.useRef<HTMLElement | null>(null);
-  const container = useStableContainer(containerRef);
   const handleRef = useForkRef(forwardedRef, containerRef);
   const translations = useTranslations();
 
@@ -85,7 +72,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             >
               {dropdownLabel} <ChevronDown size={16} strokeWidth={2} />
             </Menu.Trigger>
-            <Menu.Portal container={container}>
+            <Menu.Portal container={containerRef}>
               <Menu.Positioner
                 className="ViewSwitcherMenuPositioner"
                 sideOffset={9}
