@@ -186,7 +186,13 @@ You can pass a custom component to replace the year button, as shown below:
 
 {{"demo": "YearButtonComponent.js"}}
 
-## Day slot
+## Picker day
+
+:::info
+The examples below use the new components, which might need further changes on your side to adjust to the new structure.
+
+Be sure to check that any custom styling configuration is compatible with the new structure.
+:::
 
 The `day` slot allows users to change the selected day in the calendar.
 
