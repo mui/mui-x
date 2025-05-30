@@ -100,6 +100,7 @@ async function initializeEnvironment(
 ) {
   browser = await browserType.launch({
     headless: true,
+    timeout: 20000,
   });
   // eslint-disable-next-line no-console
   console.log(`Running on: ${browserType.name()}, version: ${browser.version()}.`);
