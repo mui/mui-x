@@ -349,7 +349,7 @@ function getZoomSliderTooltipsText(axis: ComputedAxis, drawingArea: ChartDrawing
     [start, end] = [end, start]; // Reverse the start and end if the axis is reversed
   }
 
-  const startValue = invertScale(axis.scale, axis.data ?? [], start) ?? axis.data?.[0];
+  const startValue = invertScale(axis.scale, axis.data ?? [], start) ?? axis.data?.at(0);
   const endValue = invertScale(axis.scale, axis.data ?? [], end) ?? axis.data?.at(-1);
 
   const tooltipStart = formatValue(startValue);
