@@ -1,6 +1,6 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector } from '../../utils/selectors';
-import { AxisId, ChartsAxisProps } from '../../../../models/axis';
+import { AxisId, CartesianAxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
@@ -26,15 +26,20 @@ function indexGetter(
     ? ids.map((id) => getAxisIndex(axes.axis[id], value))
     : getAxisIndex(axes.axis[ids], value);
 }
+export const selectChartsInteractionAxisIndex = (
+  value: number | null,
+  axes: ComputeResult<ChartsAxisProps>,
+  id?: AxisId,
+) => (value === null ? null : indexGetter(value, axes, id));
 
 export const selectorChartsInteractionXAxisIndex = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisId],
-  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
+  selectChartsInteractionAxisIndex,
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisId],
-  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
+  selectChartsInteractionAxisIndex,
 );
 
 /**
@@ -111,7 +116,8 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
       .map(
-        (axisId): AxisItemIdentifier => ({
+        (axisId): CartesianAxisItemIdentifier => ({
+          direction: 'x',
           axisId,
           dataIndex: getAxisIndex(axes.axis[axisId], value),
         }),
@@ -141,7 +147,8 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
       .map(
-        (axisId): AxisItemIdentifier => ({
+        (axisId): CartesianAxisItemIdentifier => ({
+          direction: 'y',
           axisId,
           dataIndex: getAxisIndex(axes.axis[axisId], value),
         }),
@@ -165,5 +172,3 @@ export const selectorChartsInteractionAxisTooltip = createSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
-
-export type AxisItemIdentifier = { axisId: string; dataIndex: number };

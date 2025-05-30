@@ -45,11 +45,32 @@ This kind of interaction is controlled by series properties `highlightScope` whi
 
 ## Controlled highlight
 
-The highlight can be controlled by the user when they set `highlightedItem` and `onHighlightChange`.
+### Item
+
+The item highlight can be controlled by using `highlightedItem` and `onHighlightChange`.
 
 You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
 
 {{"demo": "ControlledHighlight.js"}}
+
+### Axis
+
+The highlight can be controlled by using `highlightedAxis` prop.
+Its value can be `null` to remove axis highlight, or an object `{ direction: 'x' | 'y', axisId: string, dataIndex: number }`.
+
+The `onAxisInteraction` handler is trigger each time the pointer crosses the boundaries between two axis values.
+Its parameter is an array of objects `{ direction, axisId, dataIndex }`.
+One per axis.
+Axes without data are ignored by the handler.
+
+:::warning
+The handler gets an array of objects.
+Whereas the controlled value only accept one object.
+
+For now highlight components assume you use the first axis.
+:::
+
+{{"demo": "ControlledAxisHighlight.js"}}
 
 ### Synchronizing highlights
 

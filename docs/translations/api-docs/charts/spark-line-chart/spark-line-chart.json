@@ -22,6 +22,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "highlightedAxis": {
+      "description": "The controlled axis highlighted. Indicates the direction, axis id, and data index to highlight."
+    },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },
@@ -38,6 +41,10 @@
         "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
         "data": "The data about the clicked axis and items associated with it."
       }
+    },
+    "onAxisInteraction": {
+      "description": "The function called when pointer moves from one axis value to another.",
+      "typeDescriptions": { "newAxisInteraction": "The array of item per axis." }
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",

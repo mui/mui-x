@@ -38,6 +38,10 @@
         "data": "The data about the clicked axis and items associated with it."
       }
     },
+    "onAxisInteraction": {
+      "description": "The function called when pointer moves from one axis value to another.",
+      "typeDescriptions": { "newAxisInteraction": "The array of item per axis." }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }

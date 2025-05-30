@@ -27,6 +27,12 @@
     },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
+    "highlightedAxis": {
+      "type": {
+        "name": "shape",
+        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex: number, direction: 'x'<br>&#124;&nbsp;'y' }"
+      }
+    },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -48,6 +54,13 @@
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
+      }
+    },
+    "onAxisInteraction": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newAxisInteraction: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["newAxisInteraction"]
       }
     },
     "onHighlightChange": {

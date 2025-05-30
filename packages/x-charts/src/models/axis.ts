@@ -515,6 +515,45 @@ export interface ChartsAxisData {
   seriesValues: Record<string, number | null | undefined>;
 }
 
+export type CartesianDirection = 'x' | 'y';
+export type PolarDirection = 'rotation' | 'radius';
+
+/**
+ * The data used to identify pointer interaction with axis
+ */
+export interface CartesianAxisItemIdentifier {
+  /**
+   * The axis direction.
+   */
+  direction: CartesianDirection;
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index.
+   */
+  dataIndex: number;
+}
+
+/**
+ * The data used to identify pointer interaction with axis
+ */
+export interface PolarAxisItemIdentifier {
+  /**
+   * The axis direction.
+   */
+  direction: PolarDirection;
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index.
+   */
+  dataIndex: number;
+}
+
 export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
   ? MakeOptional<AxisConfig<S, V, ChartsXAxisProps>, 'id'>
   : never;

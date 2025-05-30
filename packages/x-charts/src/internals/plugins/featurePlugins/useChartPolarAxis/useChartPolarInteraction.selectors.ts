@@ -1,7 +1,7 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { AxisId, ChartsAxisProps } from '../../../../models/axis';
+import { AxisId, ChartsAxisProps, PolarAxisItemIdentifier } from '../../../../models/axis';
 import { createSelector } from '../../utils/selectors';
-import type { AxisItemIdentifier } from '../useChartCartesianAxis/useChartCartesianInteraction.selectors';
+
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
@@ -98,7 +98,13 @@ export const selectorChartsInteractionTooltipRotationAxes = createSelector(
     }
 
     return axes.axisIds
-      .map((axisId, axisIndex): AxisItemIdentifier => ({ axisId, dataIndex: indexes[axisIndex] }))
+      .map(
+        (axisId, axisIndex): PolarAxisItemIdentifier => ({
+          direction: 'rotation',
+          axisId,
+          dataIndex: indexes[axisIndex],
+        }),
+      )
       .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
   },
   {
