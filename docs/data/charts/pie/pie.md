@@ -1,7 +1,7 @@
 ---
 title: React Pie chart
 productId: x-charts
-components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot, PieChartPro
 ---
 
 # Charts - Pie
