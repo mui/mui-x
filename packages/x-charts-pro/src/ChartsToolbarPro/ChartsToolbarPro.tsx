@@ -1,10 +1,10 @@
-import { Toolbar, ChartsToolbarProps } from '@mui/x-charts/Toolbar';
+import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import * as React from 'react';
 import { useChartContext, useSelector, useChartsSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
-import { ChartsToolbarZoomInButton } from './ChartsToolbarZoomInButton';
-import { ChartsToolbarZoomOutButton } from './ChartsToolbarZoomOutButton';
+import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
+import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsSlotsPro } from '../internals/material';
 
 /**
@@ -25,16 +25,16 @@ export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarPro
 
     children.push(
       <Tooltip key="zoom-in" {...slotProps.baseTooltip} title={localeText.zoomIn}>
-        <ChartsToolbarZoomInButton>
+        <ChartsToolbarZoomInTrigger render={<ToolbarButton />}>
           <ZoomInIcon {...slotProps.zoomInIcon} />
-        </ChartsToolbarZoomInButton>
+        </ChartsToolbarZoomInTrigger>
       </Tooltip>,
     );
     children.push(
       <Tooltip key="zoom-out" {...slotProps.baseTooltip} title={localeText.zoomOut}>
-        <ChartsToolbarZoomOutButton>
+        <ChartsToolbarZoomOutTrigger render={<ToolbarButton />}>
           <ZoomOutIcon {...slotProps.zoomOutIcon} />
-        </ChartsToolbarZoomOutButton>
+        </ChartsToolbarZoomOutTrigger>
       </Tooltip>,
     );
   }

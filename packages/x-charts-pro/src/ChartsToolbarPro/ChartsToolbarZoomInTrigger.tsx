@@ -2,9 +2,13 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useChartContext, ChartsSlotProps, useSelector } from '@mui/x-charts/internals';
+import {
+  useChartContext,
+  ChartsSlotProps,
+  useSelector,
+  useChartsSlots,
+} from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   selectorChartCanZoomIn,
   UseChartProZoomSignature,
@@ -18,16 +22,19 @@ interface ChartsToolbarZoomInButtonProps {
 }
 
 /**
- * The zoom-in button for the chart toolbar.
+ * A button that zooms the chart in.
+ * It renders the `baseButton` slot.
  */
-const ChartsToolbarZoomInButton = React.forwardRef<
+const ChartsToolbarZoomInTrigger = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarZoomInButtonProps>
->(function ChartsToolbarZoomInButton({ render, ...other }, ref) {
+>(function ChartsToolbarZoomInTrigger({ render, ...other }, ref) {
+  const { slots, slotProps } = useChartsSlots();
   const { instance, store } = useChartContext<[UseChartProZoomSignature]>();
   const disabled = useSelector(store, selectorChartCanZoomIn);
 
-  const element = useComponentRenderer(ToolbarButton, render, {
+  const element = useComponentRenderer(slots.baseButton, render, {
+    ...slotProps.baseButton,
     onClick: () => instance.zoomIn(),
     disabled,
     ...other,
@@ -37,7 +44,7 @@ const ChartsToolbarZoomInButton = React.forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarZoomInButton.propTypes = {
+ChartsToolbarZoomInTrigger.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -48,4 +55,4 @@ ChartsToolbarZoomInButton.propTypes = {
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
-export { ChartsToolbarZoomInButton };
+export { ChartsToolbarZoomInTrigger };
