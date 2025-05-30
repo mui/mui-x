@@ -289,12 +289,6 @@ jobs:
   test_e2e:
     <<: *default-job
     steps:
-      - run:
-          command: cat /etc/apt/sources.list
-      - run:
-          command: sudo sed -i "s|http://archive\.ubuntu\.com|https://archive.ubuntu.com|g" /etc/apt/sources.list
-      - run:
-          command: cat /etc/apt/sources.list
       - checkout
       - install_js:
           playwright: true
