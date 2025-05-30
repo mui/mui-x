@@ -11,12 +11,16 @@ import {
   pickerDay2Classes,
   PickerDay2ClassKey,
   getPickerDay2UtilityClass,
+  PickerDay2Classes,
 } from './pickerDay2Classes';
 import { useUtils } from '../internals/hooks/useUtils';
 import { PickerDay2OwnerState, PickerDay2Props } from './PickerDay2.types';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
-const useUtilityClasses = (ownerState: PickerDay2OwnerState) => {
+const useUtilityClasses = (
+  ownerState: PickerDay2OwnerState,
+  classes?: Partial<PickerDay2Classes>,
+) => {
   const {
     isDaySelected,
     disableHighlightToday,
@@ -37,7 +41,7 @@ const useUtilityClasses = (ownerState: PickerDay2OwnerState) => {
     ],
   };
 
-  return composeClasses(slots, getPickerDay2UtilityClass, {});
+  return composeClasses(slots, getPickerDay2UtilityClass, classes);
 };
 
 const PickerDay2Root = styled(ButtonBase, {
@@ -192,7 +196,7 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
     isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
   };
 
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState, classesProp);
 
   const ref = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);

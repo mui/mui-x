@@ -12,12 +12,16 @@ import {
   DateRangePickerDay2Props,
 } from './DateRangePickerDay2.types';
 import {
+  DateRangePickerDay2Classes,
   dateRangePickerDay2Classes,
   DateRangePickerDay2ClassKey,
   getDateRangePickerDay2UtilityClass,
 } from './dateRangePickerDay2Classes';
 
-const useUtilityClasses = (ownerState: DateRangePickerDay2OwnerState) => {
+const useUtilityClasses = (
+  ownerState: DateRangePickerDay2OwnerState,
+  classes?: Partial<DateRangePickerDay2Classes>,
+) => {
   const {
     isDaySelected,
     disableHighlightToday,
@@ -62,7 +66,7 @@ const useUtilityClasses = (ownerState: DateRangePickerDay2OwnerState) => {
     ],
   };
 
-  return composeClasses(slots, getDateRangePickerDay2UtilityClass, {});
+  return composeClasses(slots, getDateRangePickerDay2UtilityClass, classes);
 };
 
 const highlightStyles = (theme: Theme) => ({
@@ -425,7 +429,7 @@ const DateRangePickerDay2Raw = React.forwardRef(function DateRangePickerDay2(
     isDayDraggable: Boolean(draggable),
   };
 
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState, classesProp);
 
   const ref = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);

@@ -83,7 +83,10 @@
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiPickerDay2",
+  "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers/src/PickerDay2/PickerDay2.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/playground/\">Customization playground</a></li></ul>",
