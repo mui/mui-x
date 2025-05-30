@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { ViewSwitcherProps, ViewType } from './ViewSwitcher.types';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { Menu } from '@base-ui-components/react/menu';
 import useForkRef from '@mui/utils/useForkRef';
 import { ChevronDown } from 'lucide-react';
+import { ViewSwitcherProps, ViewType } from './ViewSwitcher.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import './ViewSwitcher.css';
 
@@ -44,7 +44,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
   const selectedOverflowView = dropdown.includes(selectedView) ? selectedView : null;
-  const dropdownLabel = selectedOverflowView ? LABELS[selectedOverflowView] : LABELS['other'];
+  const dropdownLabel = selectedOverflowView ? LABELS[selectedOverflowView] : LABELS.other;
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
