@@ -77,13 +77,19 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
               }}
             >
               <Menu.Popup className="ViewSwitcherMenuPopup">
-                <Menu.Item className="ViewSwitcherMenuItem" onClick={handleClick} data-view="month">
+                <Menu.Item
+                  className="ViewSwitcherMenuItem"
+                  onClick={handleClick}
+                  data-view="month"
+                  data-selected={selectedView === 'month' || undefined}
+                >
                   Month
                 </Menu.Item>
                 <Menu.Item
                   className="ViewSwitcherMenuItem"
                   onClick={handleClick}
                   data-view="agenda"
+                  data-selected={selectedView === 'agenda' || undefined}
                 >
                   Agenda
                 </Menu.Item>

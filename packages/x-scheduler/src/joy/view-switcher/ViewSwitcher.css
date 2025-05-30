@@ -66,7 +66,8 @@
   border-radius: var(--radius-3);
 }
 
-.ViewSwitcherMenuItem[data-highlighted] {
+.ViewSwitcherMenuItem[data-highlighted],
+.ViewSwitcherMenuItem[data-selected] {
   color: var(--mauve-7);
   background-color: var(--violet-3);
 }
