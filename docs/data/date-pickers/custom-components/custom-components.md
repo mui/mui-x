@@ -186,7 +186,7 @@ You can pass a custom component to replace the year button, as shown below:
 
 {{"demo": "YearButtonComponent.js"}}
 
-## Picker day
+## Day
 
 :::info
 The examples below use the new components, which might need further changes on your side to adjust to the new structure.
