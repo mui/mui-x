@@ -294,6 +294,8 @@ jobs:
           playwright: true
           react-version: << parameters.react-version >>
       - run:
+          command: cat /etc/apt/sources.list
+      - run:
           name: Run e2e tests
           command: pnpm test:e2e
   test_e2e_website:
