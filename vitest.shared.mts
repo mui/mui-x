@@ -44,6 +44,7 @@ export default defineConfig({
         { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
         { lib: 'x-internals' },
         { lib: 'x-license' },
+        { lib: 'x-scheduler' },
         { lib: 'x-telemetry' },
       ].flatMap((v) => {
         return [
