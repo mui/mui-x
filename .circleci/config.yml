@@ -116,6 +116,10 @@ commands:
           condition: << parameters.playwright >>
           steps:
             - run:
+                name: Fix timeout issues
+                # https://www.reddit.com/r/Ubuntu/comments/1kxyig1
+                command: sudo sed -i "s|http://archive\.ubuntu\.com|https://archive.ubuntu.com|g" /etc/apt/sources.list
+            - run:
                 name: Install playwright & ffmpeg
                 command: |
                   pnpx playwright install --with-deps
