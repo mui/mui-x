@@ -154,6 +154,9 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
+          data-series-id={series.id}
+          data-highlighted={dataPoint.isHighlighted}
+          data-faded={dataPoint.isFaded}
           {...interactionItemProps[i]}
           {...markerProps}
         />
