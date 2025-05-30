@@ -12,11 +12,11 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const { className, views, onTodayClick, ...other } = props;
 
   return (
-    <div ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
+    <header ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
       <ViewSwitcher views={views} />
       <button className="HeaderToolbarButton" onClick={onTodayClick}>
         Today
       </button>
-    </div>
+    </header>
   );
 });

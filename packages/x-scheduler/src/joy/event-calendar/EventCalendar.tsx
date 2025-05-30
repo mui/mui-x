@@ -36,9 +36,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
         </section>
       </aside>
       <div className="EventCalendarMainPanel">
-        <header className="EventCalendarToolbar">
-          <HeaderToolbar onTodayClick={() => {}} />
-        </header>
+        <HeaderToolbar onTodayClick={() => {}} />
         <section
           // TODO: Add localization
           className="EventCalendarContent"
