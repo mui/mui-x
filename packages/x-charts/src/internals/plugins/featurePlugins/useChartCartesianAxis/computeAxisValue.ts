@@ -1,4 +1,5 @@
 import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
@@ -208,6 +209,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      valueFormatter: axis.valueFormatter ?? createScalarFormatter(tickNumber),
     };
   });
   return {
