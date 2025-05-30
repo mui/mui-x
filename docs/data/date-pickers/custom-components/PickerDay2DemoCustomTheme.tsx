@@ -20,9 +20,7 @@ export default function PickerDay2DemoCustomTheme() {
                 actions: ['accept', 'cancel'],
               },
             }}
-            slots={{
-              day: DateRangePickerDay2,
-            }}
+            slots={{ day: DateRangePickerDay2 }}
           />
         </ThemeProvider>
       </Box>

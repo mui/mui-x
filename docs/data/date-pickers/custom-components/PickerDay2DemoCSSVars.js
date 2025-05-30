@@ -21,9 +21,7 @@ export default function PickerDay2DemoCSSVars() {
               actions: ['accept', 'cancel'],
             },
           }}
-          slots={{
-            day: PickerDay2,
-          }}
+          slots={{ day: PickerDay2 }}
         />
       </Box>
     </LocalizationProvider>

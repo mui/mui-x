@@ -17,9 +17,7 @@ export default function PickerDay2Demo() {
               actions: ['accept', 'cancel'],
             },
           }}
-          slots={{
-            day: PickerDay2 as any,
-          }}
+          slots={{ day: PickerDay2 }}
         />
         <StaticDateRangePicker
           slotProps={{
@@ -27,9 +25,7 @@ export default function PickerDay2Demo() {
               actions: ['accept', 'cancel'],
             },
           }}
-          slots={{
-            day: DateRangePickerDay2,
-          }}
+          slots={{ day: DateRangePickerDay2 }}
         />
       </Box>
     </LocalizationProvider>

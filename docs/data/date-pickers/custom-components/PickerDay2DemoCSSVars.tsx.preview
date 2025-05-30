@@ -10,7 +10,5 @@
       actions: ['accept', 'cancel'],
     },
   }}
-  slots={{
-    day: PickerDay2 as any,
-  }}
+  slots={{ day: PickerDay2 }}
 />

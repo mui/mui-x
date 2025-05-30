@@ -5,8 +5,6 @@
         actions: ['accept', 'cancel'],
       },
     }}
-    slots={{
-      day: DateRangePickerDay2,
-    }}
+    slots={{ day: DateRangePickerDay2 }}
   />
 </ThemeProvider>
