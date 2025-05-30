@@ -258,7 +258,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   promptFieldPlaceholder: 'Wpisz polecenie…',
   promptFieldPlaceholderWithRecording: 'Wpisz lub nagraj polecenie…',
   promptFieldPlaceholderListening: 'Nasłuchiwanie polecenia…',
-  promptFieldSpeechRecognitionNotSupported: 'Rozpoznawanie głosy nie jest obsługiwane przez Twoją przeglądarkę.',
+  promptFieldSpeechRecognitionNotSupported: 'Rozpoznawanie głosu nie jest obsługiwane przez Twoją przeglądarkę.',
   promptFieldSend: 'Wyślij',
   promptFieldRecord: 'Nagrywaj',
   promptFieldStopRecording: 'Zatrzymaj nagrywanie',
