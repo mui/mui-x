@@ -2,13 +2,9 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  useChartContext,
-  useChartsSlots,
-  ChartsSlotProps,
-  useSelector,
-} from '@mui/x-charts/internals';
+import { useChartContext, ChartsSlotProps, useSelector } from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   selectorChartCanZoomIn,
   UseChartProZoomSignature,
@@ -28,12 +24,10 @@ const ChartsToolbarZoomInButton = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarZoomInButtonProps>
 >(function ChartsToolbarZoomInButton({ render, ...other }, ref) {
-  const { slots, slotProps } = useChartsSlots();
   const { instance, store } = useChartContext<[UseChartProZoomSignature]>();
   const disabled = useSelector(store, selectorChartCanZoomIn);
 
-  const element = useComponentRenderer(slots.baseIconButton, render, {
-    ...slotProps?.baseIconButton,
+  const element = useComponentRenderer(ToolbarButton, render, {
     onClick: () => instance.zoomIn(),
     disabled,
     ...other,
