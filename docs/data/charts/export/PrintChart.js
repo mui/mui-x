@@ -12,6 +12,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
+import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -58,6 +59,7 @@ export default function PrintChart() {
             <MenuItem value="scatter">Scatter</MenuItem>
             <MenuItem value="line">Line</MenuItem>
             <MenuItem value="bar">Bar</MenuItem>
+            <MenuItem value="pie">Pie</MenuItem>
             <MenuItem value="heatmap">Heatmap</MenuItem>
             <MenuItem value="funnel">Funnel</MenuItem>
             <MenuItem value="radar">Radar</MenuItem>
@@ -96,6 +98,25 @@ function Chart({ apiRef, type }) {
             { data: data.map((p) => Math.round(p.x1)).toSorted((a, b) => a - b) },
           ]}
           series={series}
+        />
+      );
+
+    case 'pie':
+      return (
+        <PieChartPro
+          apiRef={apiRef}
+          series={[
+            {
+              arcLabel: 'value',
+              data: [
+                { id: 0, value: 10, label: 'series A' },
+                { id: 1, value: 15, label: 'series B' },
+                { id: 2, value: 20, label: 'series C' },
+              ],
+            },
+          ]}
+          height={300}
+          hideLegend={false}
         />
       );
 

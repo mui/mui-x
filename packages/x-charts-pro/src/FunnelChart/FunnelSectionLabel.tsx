@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { consumeSlots, SeriesId } from '@mui/x-charts/internals';
 import { FunnelSectionClasses, useLabelUtilityClasses } from './funnelSectionClasses';
-import { useTheme } from '@mui/material/styles';
 
 export interface FunnelSectionLabelConfig {
   x: number;
