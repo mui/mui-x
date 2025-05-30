@@ -60,18 +60,25 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
       <Menubar className="ViewSwitcherMenuBar">
         {visible.map((view) => (
           <Menu.Root key={view}>
-            <Menu.Trigger
+            <button
               className="ViewSwitcherMenuTrigger"
               onClick={handleClick}
               data-view={view}
+              role="menuitem"
+              tabIndex={0}
+              data-pressed={selectedView === view || undefined}
             >
               {LABELS[view]}
-            </Menu.Trigger>
+            </button>
           </Menu.Root>
         ))}
         {dropdown.length > 0 && (
           <Menu.Root>
-            <Menu.Trigger className="ViewSwitcherMenuTrigger" data-view="other">
+            <Menu.Trigger
+              className="ViewSwitcherMenuTrigger"
+              data-view="other"
+              data-highlighted={dropdown.includes(selectedView) || undefined}
+            >
               {dropdownLabel} <ChevronDown size={16} strokeWidth={2} />
             </Menu.Trigger>
             <Menu.Portal container={container}>
