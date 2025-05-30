@@ -292,7 +292,7 @@ jobs:
       - run:
           command: cat /etc/apt/sources.list
       - run:
-          command: sudo sed -i 's|http://archive\\.ubuntu\\.com|https://archive.ubuntu.com|g' /etc/apt/sources.list
+          command: sudo sed -i "s|http://archive\.ubuntu\.com|https://archive.ubuntu.com|g" /etc/apt/sources.list
       - run:
           command: cat /etc/apt/sources.list
       - checkout
