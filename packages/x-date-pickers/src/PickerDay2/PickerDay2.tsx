@@ -112,7 +112,10 @@ const PickerDay2Root = styled(ButtonBase, {
     {
       props: { isDayFillerCell: true },
       style: {
-        visibility: 'hidden',
+        // visibility: 'hidden' does not work here as it hides the element from screen readers
+        // and results in unexpected relationships between week day and day columns.
+        opacity: 0,
+        pointerEvents: 'none',
       },
     },
     {
