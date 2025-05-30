@@ -360,29 +360,50 @@ workflows:
     jobs:
       - checkout:
           <<: *default-context
+          name: 'Checkout'
+
       - test_unit:
           <<: *default-context
+          name: 'JSDOM tests'
+
       - test_browser:
           <<: *default-context
+          name: 'Browser tests'
+
       - test_lint:
           <<: *default-context
+          name: 'Linting'
+
       - test_static:
           <<: *default-context
+          name: 'Generated files verification'
+
       - test_types:
           <<: *default-context
+          name: 'Typechecking'
+
       - test_e2e:
           <<: *default-context
+          name: 'E2E tests'
+
       - test_regressions:
           <<: *default-context
+          name: 'Regression tests'
+
       - test_package:
           <<: *default-context
+          name: 'Package verification'
+
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
       - checkout:
           <<: *default-context
-      - test_e2e_website
+          name: 'Checkout'
+      - test_e2e_website:
+          name: 'E2E tests'
+
   additional-tests:
     when:
       and:
@@ -394,19 +415,19 @@ workflows:
     jobs:
       - test_unit:
           <<: *default-context
-          name: test_unit_additional
+          name: 'JSDOM tests (Additional)'
           react-version: << pipeline.parameters.with-react-version >>
       - test_browser:
           <<: *default-context
-          name: test_browser_additional
+          name: 'Browser tests (Additional)'
           react-version: << pipeline.parameters.with-react-version >>
       - test_regressions:
           <<: *default-context
-          name: test_regressions_additional
+          name: 'Regression tests (Additional)'
           react-version: << pipeline.parameters.with-react-version >>
       - test_e2e:
           <<: *default-context
-          name: test_e2e_additional
+          name: 'E2E tests (Additional)'
           react-version: << pipeline.parameters.with-react-version >>
   additional-checks:
     when:
@@ -416,20 +437,21 @@ workflows:
     jobs:
       - test_types:
           <<: *default-context
-          name: test_types_additional
+          name: 'Typechecking (Additional)'
+
   test-react-18:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
       - test_unit:
           <<: *default-context
-          name: test_unit_react_18
+          name: 'JSDOM tests (React 18)'
           react-version: ^18
       - test_browser:
           <<: *default-context
-          name: test_browser_react_18
+          name: 'Browser tests (React 18)'
           react-version: ^18
       - test_e2e:
           <<: *default-context
-          name: test_e2e_react_18
+          name: 'E2E tests (React 18)'
           react-version: ^18
