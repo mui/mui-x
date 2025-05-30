@@ -9,7 +9,6 @@
 }
 
 .ViewSwitcherMenuTrigger {
-  outline: 0;
   border: 0;
   background: none;
   user-select: none;
@@ -33,11 +32,9 @@
 .ViewSwitcherMenuTrigger:focus-visible {
   background-color: var(--violet-3);
   color: var(--mauve-7);
-  outline: none;
 }
 
 .ViewSwitcherMenuPositioner {
-  outline: 0;
   z-index: 3;
 }
 
@@ -54,7 +51,6 @@
 }
 
 .ViewSwitcherMenuItem {
-  outline: 0;
   z-index: 3;
   cursor: default;
   user-select: none;
