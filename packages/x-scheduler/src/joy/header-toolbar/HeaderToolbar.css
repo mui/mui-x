@@ -1,6 +1,14 @@
 @import '../styles/tokens.css';
 
 .HeaderToolbarContainer {
+  --today-button-text: var(--mauve-7);
+}
+
+.mode-dark .HeaderToolbarContainer {
+  --today-button-text: var(--mauve-2);
+}
+
+.HeaderToolbarContainer {
   display: flex;
   gap: var(--space-4);
   width: 100%;
@@ -12,7 +20,7 @@
   background: none;
   user-select: none;
   padding: var(--space-3) var(--space-4);
-  color: var(--mauve-7);
+  color: var(--today-button-text);
   border: 1px solid var(--mauve-2);
   border-radius: var(--radius-4);
   font-size: var(--font-size-3);
