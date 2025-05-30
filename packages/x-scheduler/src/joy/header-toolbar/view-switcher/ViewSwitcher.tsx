@@ -6,17 +6,10 @@ import { Menubar } from '@base-ui-components/react/menubar';
 import { Menu } from '@base-ui-components/react/menu';
 import useForkRef from '@mui/utils/useForkRef';
 import { ChevronDown } from 'lucide-react';
+import { useTranslations } from '../../utils/TranslationsContext';
 import './ViewSwitcher.css';
 
 const DEFAULT_VIEWS = ['week', 'day', 'month', 'agenda'] as ViewType[];
-
-// TODO: Add localization
-const LABELS: Record<string, string> = {
-  week: 'Week',
-  day: 'Day',
-  month: 'Month',
-  agenda: 'Agenda',
-};
 
 function useStableContainer(ref: React.RefObject<HTMLElement | null>) {
   const [container, setContainer] = React.useState<HTMLElement | null>(null);
@@ -39,28 +32,40 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const container = useStableContainer(containerRef);
   const handleRef = useForkRef(forwardedRef, containerRef);
+  const translations = useTranslations();
+
+  const LABELS: Record<string, string> = React.useMemo(
+    () => ({
+      week: translations.week,
+      day: translations.day,
+      month: translations.month,
+      agenda: translations.agenda,
+      other: translations.other,
+    }),
+    [translations],
+  );
 
   const [selectedView, setSelectedView] = React.useState<ViewType>('week');
 
-  function handleClick(event: React.MouseEvent<HTMLElement>) {
+  const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
     const view = event.currentTarget.getAttribute('data-view');
     if (view) {
       setSelectedView(view as ViewType);
     }
-  }
+  }, []);
 
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
   const selectedOverflowView = dropdown.includes(selectedView) ? selectedView : null;
-  // TODO: Add localization
-  const dropdownLabel = selectedOverflowView ? LABELS[selectedOverflowView] : 'Other';
+  const dropdownLabel = selectedOverflowView ? LABELS[selectedOverflowView] : LABELS['other'];
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
       <Menubar className="ViewSwitcherMenuBar">
         {visible.map((view) => (
           <button
+            key={view}
             className="ViewSwitcherMainItem"
             onClick={handleClick}
             data-view={view}
