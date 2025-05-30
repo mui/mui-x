@@ -60,18 +60,16 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
       <Menubar className="ViewSwitcherMenuBar">
         {visible.map((view) => (
-          <Menu.Root key={view}>
-            <button
-              className="ViewSwitcherMainItem"
-              onClick={handleClick}
-              data-view={view}
-              type="button"
-              tabIndex={0}
-              data-pressed={selectedView === view || undefined}
-            >
-              {LABELS[view]}
-            </button>
-          </Menu.Root>
+          <button
+            className="ViewSwitcherMainItem"
+            onClick={handleClick}
+            data-view={view}
+            type="button"
+            tabIndex={0}
+            data-pressed={selectedView === view || undefined}
+          >
+            {LABELS[view]}
+          </button>
         ))}
         {dropdown.length > 0 && (
           <Menu.Root>
