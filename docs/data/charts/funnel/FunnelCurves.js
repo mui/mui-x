@@ -4,7 +4,14 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
-const curveTypes = ['bump', 'linear', 'step', 'pyramid', 'step-pyramid'];
+const curveTypes = [
+  'bump',
+  'linear',
+  'linear-sharp',
+  'step',
+  'pyramid',
+  'step-pyramid',
+];
 
 export default function FunnelCurves() {
   return (

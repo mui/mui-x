@@ -7,7 +7,7 @@ import {
 } from '@mui/x-charts/internals';
 import { Position } from '@mui/x-charts/models';
 import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { FunnelCurveType } from './curves';
+import { FunnelCurveType, FunnelPointShape } from './curves';
 
 export type FunnelItemId = string | number;
 
@@ -57,6 +57,7 @@ export interface FunnelSeriesType
    *
    * - `bump`: A curve that creates a smooth transition between points, with a bump in the middle.
    * - `linear`: A straight line between points.
+   * - `linear-sharp`: A straight line between points, the smaller end of the funnel is a triangle.
    * - `step`: A step line that creates a staircase effect.
    * - `pyramid`: A pyramid shape that connects the points.
    * - `step-pyramid`: A step line that creates a staircase effect, with a pyramid shape.
