@@ -4,51 +4,68 @@ title: Data Grid - Server-side lazy loading
 
 # Data Grid - Server-side lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Learn how to implement lazy-loading rows with a server-side data source.</p>
+<p class="description">Implement lazy-loading rows with server-side data in the Data Grid using the Data Source layer.</p>
 
-Lazy loading changes the way pagination works by removing page controls and loading data dynamically (in a single list) as the user scrolls through the grid.
+Lazy loading is a technique for deferring the loading of resources until they are actually needed, rather than loading everything when a page is first requested.
+Lazy loading changes the way pagination works in the Data Grid by removing page controls and instead loading data dynamically (in a single list) as the user scrolls.
 
-You can enable it with the `lazyLoading` prop paired with the `dataSource` prop.
+The Data Grid Pro can lazy-load server-side data using the [Data Source layer](/x/react-data-grid/server-side-data/#the-solution-the-data-source-layer).
 
-Initially, data for the first page is fetched and displayed in the grid.
+## Prerequisites
+
+To be able to lazy-load data from the server, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
+
+## Implementing server-side lazy loading
+
+To enable lazy loading, pass the `lazyLoading` prop to the Data Grid along with the `dataSource` prop.
+
+```tsx
+<DataGridPro dataSource={dataSource} lazyLoading />
+```
+
+Initially, data for the first page is fetched and displayed in the Grid.
 The value of the total row count determines when the next page's data is loaded:
 
-- If the total row count is known, the Data Grid is filled with skeleton rows and fetches more data if one of the skeleton rows falls into the rendering context.
-  This loading strategy is often referred to as [**viewport loading**](#viewport-loading).
+- **If the total row count is known**, the Data Grid is filled with skeleton rows and fetches more data if one of the skeleton rows falls into the rendering context.
+  This loading strategy is referred to as [**viewport loading**](#viewport-loading).
 
-- If the total row count is unknown, the Data Grid fetches more data when the user scrolls to the bottom.
-  This loading strategy is often referred to as [**infinite loading**](#infinite-loading).
+- **If the total row count is unknown**, the Data Grid fetches more data when the user scrolls to the bottom.
+  This loading strategy is referred to as [**infinite loading**](#infinite-loading).
 
-:::info
-You can provide the row count through one of the following ways:
+### Providing the row count for lazy loading
 
-- Pass it as the [`rowCount`](/x/api/data-grid/data-grid/#data-grid-prop-rowCount) prop
-- Return `rowCount` in the `getRows()` method of the [data source](/x/react-data-grid/server-side-data/#data-source)
-- Set the `rowCount` using the [`setRowCount()`](/x/api/data-grid/grid-api/#grid-api-prop-setRowCount) API method
+You can provide the row count through one of three ways:
 
-These options are presented in order of precedence, which means if the row count is set using the API, that value is overridden once a new value is returned by the `getRows()` method unless it's `undefined`.
-:::
+1. Pass it via the [`rowCount`](/x/api/data-grid/data-grid/#data-grid-prop-rowCount) prop
+2. Return `rowCount` in the `getRows()` method of the Data Source
+3. Set the `rowCount` using the [`setRowCount()`](/x/api/data-grid/grid-api/#grid-api-prop-setRowCount) API method
 
-## Viewport loading
+These options are presented in order of precedence, which means if the row count is set using the API, that value is overridden once a new value is returned by the `getRows()` method (unless it's `undefined`).
+
+## Lazy loading modes
+
+The Data Grid implements different strategies for lazy loading depending on whether or not the row count is known.
+
+### Viewport loading
 
 Viewport loading mode is enabled when the row count is known (and is greater than or equal to zero).
 The Grid fetches the first page immediately and adds skeleton rows to match the total row count.
 Other pages are fetched once the user starts scrolling and moves a skeleton row inside the rendering context (with the index range defined by [virtualization](/x/react-data-grid/virtualization/)).
 
-If the user scrolls too fast, the Grid loads multiple pages with one request (by adjusting `start` and `end` parameters) to reduce the server load.
+If the user scrolls too fast, the Grid loads multiple pages with one request (by adjusting the `start` and `end` parameters) to reduce the server load.
 
 The demo below shows how viewport loading mode works:
 
 {{"demo": "ServerSideLazyLoadingViewport.js", "bg": "inline"}}
 
 :::info
-The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+The Data Source demos use a `useMockServer` utility function to simulate server-side data fetching.
 In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
-### Request throttling
+#### Request throttling
 
 As a user scrolls through the Grid, the rendering context changes and the Grid tries to fill in any missing rows by making a new server request.
 It also throttles new data fetches to avoid making unnecessary requests.
@@ -57,37 +74,37 @@ Use the `lazyLoadingRequestThrottleMs` prop to set a custom time, as shown below
 
 {{"demo": "ServerSideLazyLoadingRequestThrottle.js", "bg": "inline"}}
 
-## Infinite loading
+### Infinite loading
 
-Infinite loading mode is enabled when the row count is unknown (either `-1` or `undefined`).
+Infinite loading mode is enabled when the row count is unknown (meaning its value is either `-1` or `undefined`).
 A new page is loaded when the scroll reaches the bottom of the viewport area.
 
 You can use the `scrollEndThreshold` prop to change the area that triggers new requests.
 
 The demo below shows how infinite loading mode works.
-Page size is set to `15` and the mock server is configured to return a total of 100 rows.
+The page size is set to `15` and the mock server is configured to return a total of 100 rows.
 When the response contains no new rows, the Grid stops requesting new data.
 
 {{"demo": "ServerSideLazyLoadingInfinite.js", "bg": "inline"}}
 
-## Updating the loading mode
+### Changing the loading mode
 
-The Grid changes the loading mode dynamically if the total row count gets updated by changing the `rowCount` prop, returning different `rowCount` in `GridGetRowsResponse` or via `setRowCount()` API.
+The Grid changes the loading mode dynamically if the total row count gets updated by changing the `rowCount` prop, returning a different `rowCount` in `GridGetRowsResponse`, or via the `setRowCount()` method.
 
-Based on the previous and the new value for the total row count, the following scenarios are possible:
+Depending on the previous and new values for the total row count, the following scenarios are possible:
 
-- **Unknown `rowCount` to known `rowCount`**: When the row count is set to a valid value from an unknown value, the Data Grid switches to viewport loading mode. It checks the number of already fetched rows and adds skeleton rows to match the provided row count.
+- **Unknown to known row count** – When the row count is set to a valid value from an unknown value, the Data Grid switches to viewport loading mode. It checks the number of already fetched rows and adds skeleton rows to match the provided row count.
 
-- **Known `rowCount` to unknown `rowCount`**: If the row count is updated and set to `-1`, the Data Grid resets, fetches the first page, then sets itself to infinite loading mode.
+- **Known to unknown row count** – If the row count is updated and set to `-1`, the Data Grid resets, fetches the first page, then sets itself to infinite loading mode.
 
-- **Known `rowCount` greater than the actual row count**: This can happen either by reducing the value of the row count after more rows were already fetched, or if the row count was unknown and the Grid (while in the infinite loading mode) already fetched more rows. In this case, the Grid resets, fetches the first page, and then continues in one mode or the other depending on the new value of the `rowCount`.
+- **Known row count greater than the actual row count** – This can happen either by reducing the value of the row count after more rows were already fetched, or if the row count was unknown and the Grid already fetched more rows while in infinite loading mode. In this case, the Grid resets, fetches the first page, and then continues in one mode or the other depending on the new value of the row count.
 
 :::warning
 `rowCount` is expected to be static.
-Changing its value can cause the Grid to reset and the cache to be cleared which may lead to performance and UX degradation.
+Changing its value can cause the Grid to reset and the cache to be cleared, which can lead to performance and UX degradation.
 :::
 
-The demo below serves as a showcase of the behavior described above, and is not representative of something you would implement in a real-world scenario.
+The following demo showcases how the loading mode can change as described above, and is not representative of something you would implement in a real-world scenario.
 
 {{"demo": "ServerSideLazyLoadingModeUpdate.js", "bg": "inline"}}
 
@@ -102,12 +119,12 @@ With this feature, you would be able to use the `lazyLoading` flag in use cases 
 
 ## Error handling
 
-To handle errors, use the `onDataSourceError()` prop as described in [Server-side data—Error handling](/x/react-data-grid/server-side-data/#error-handling).
+To handle errors, use the `onDataSourceError()` prop as described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
 You can pass the second parameter of type `GridGetRowsParams` to the `getRows()` method of the [`dataSource`](/x/api/data-grid/grid-api/#grid-api-prop-dataSource) to retry the request.
-If successful, the Data Grid uses `rows` and `rowCount` data to determine if the rows should be appended at the end of the grid or if the skeleton rows should be replaced.
+If successful, the Data Grid uses `rows` and `rowCount` data to determine if the rows should be appended at the end of the Grid or if the skeleton rows should be replaced.
 
-The following demo gives an example how to use `GridGetRowsParams` to retry a failed request.
+The following demo provides an example how to use `GridGetRowsParams` to retry a failed request:
 
 {{"demo": "ServerSideLazyLoadingErrorHandling.js", "bg": "inline"}}
 

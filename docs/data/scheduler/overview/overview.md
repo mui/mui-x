@@ -15,6 +15,5 @@ githubLabel: 'component: scheduler'
 This package is not published yet.
 :::
 
-## Event Calendar
-
-{{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false}}
+- [Joy - Event Calendar](/x/react-scheduler/event-calendar/)
+- [Primitives](/x/react-scheduler/primitives/)

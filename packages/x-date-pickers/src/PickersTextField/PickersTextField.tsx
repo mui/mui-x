@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
@@ -31,7 +31,9 @@ const VARIANT_COMPONENT = {
 const PickersTextFieldRoot = styled(FormControl, {
   name: 'MuiPickersTextField',
   slot: 'Root',
-})<{ ownerState: PickerTextFieldOwnerState }>({});
+})<{ ownerState: PickerTextFieldOwnerState }>({
+  maxWidth: '100%',
+});
 
 const useUtilityClasses = (
   classes: Partial<PickersTextFieldClasses> | undefined,

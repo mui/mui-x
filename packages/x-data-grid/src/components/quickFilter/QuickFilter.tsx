@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_debounce as debounce } from '@mui/utils';
+import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
