@@ -65,7 +65,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
               className="ViewSwitcherMainItem"
               onClick={handleClick}
               data-view={view}
-              role="menuitem"
+              type="button"
               tabIndex={0}
               data-pressed={selectedView === view || undefined}
             >
