@@ -6,5 +6,6 @@ export const frFR: Partial<SchedulerTranslations> = {
   day: 'Jour',
   month: 'Mois',
   other: 'Autre',
+  today: "Aujourd'hui",
   week: 'Semaine',
 };

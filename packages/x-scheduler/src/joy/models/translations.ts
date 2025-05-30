@@ -4,5 +4,6 @@ export interface SchedulerTranslations {
   day: string;
   month: string;
   other: string;
+  today: string;
   week: string;
 }

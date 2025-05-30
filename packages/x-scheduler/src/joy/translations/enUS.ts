@@ -6,5 +6,6 @@ export const enUS: SchedulerTranslations = {
   day: 'Day',
   month: 'Month',
   other: 'Other',
+  today: 'Today',
   week: 'Week',
 };
