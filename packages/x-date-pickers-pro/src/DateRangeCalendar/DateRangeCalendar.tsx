@@ -85,10 +85,7 @@ const InnerDayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
-    [`& .${dateRangePickerDay2Classes.root}`]: {
-      cursor: 'grabbing',
-    },
-    [`& .${dayClasses.day}`]: {
+    [`& .${dateRangePickerDay2Classes.root}, & .${dayClasses.day}`]: {
       cursor: 'grabbing',
     },
     [`& .${dayClasses.root}:not(.${dayClasses.rangeIntervalDayHighlightStart}):not(.${dayClasses.rangeIntervalDayHighlightEnd}) .${dayClasses.day}:not(.${dayClasses.notSelectedDate})`]:
