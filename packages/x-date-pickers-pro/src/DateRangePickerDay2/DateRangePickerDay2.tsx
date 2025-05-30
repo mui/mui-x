@@ -176,7 +176,10 @@ const DateRangePickerDay2Root = styled(ButtonBase, {
     {
       props: { isDayFillerCell: true },
       style: {
-        visibility: 'hidden',
+        // visibility: 'hidden' does not work here as it hides the element from screen readers
+        // and results in unexpected relationships between week day and day columns.
+        opacity: 0,
+        pointerEvents: 'none',
       },
     },
     {
@@ -470,8 +473,9 @@ const DateRangePickerDay2Raw = React.forwardRef(function DateRangePickerDay2(
     <DateRangePickerDay2Root
       ref={handleRef}
       centerRipple
-      data-testid="day"
-      disabled={disabled}
+      // compat with DateRangePickerDay for tests
+      data-testid={ownerState.isDayFillerCell ? undefined : 'DateRangePickerDay'}
+      disabled={ownerState.isDayFillerCell ? undefined : disabled}
       tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}
       onFocus={(event) => onFocus(event, day)}
@@ -484,7 +488,8 @@ const DateRangePickerDay2Raw = React.forwardRef(function DateRangePickerDay2(
       ownerState={ownerState}
       className={clsx(classes.root, className)}
     >
-      {children ?? utils.format(day, 'dayOfMonth')}
+      {/* `ownerState.isDayFillerCell` is used for compat with `PickersDay` for tests */}
+      {children ?? (ownerState.isDayFillerCell ? null : utils.format(day, 'dayOfMonth'))}
     </DateRangePickerDay2Root>
   );
 });
