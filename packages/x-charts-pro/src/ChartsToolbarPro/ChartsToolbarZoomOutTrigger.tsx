@@ -2,9 +2,13 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useChartContext, ChartsSlotProps, useSelector } from '@mui/x-charts/internals';
+import {
+  useChartContext,
+  ChartsSlotProps,
+  useSelector,
+  useChartsSlots,
+} from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import { ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   selectorChartCanZoomOut,
   UseChartProZoomSignature,
@@ -18,16 +22,19 @@ interface ChartsToolbarZoomOutButtonProps {
 }
 
 /**
- * The zoom-out button for the chart toolbar.
+ * A button that zooms the chart out.
+ * It renders the `baseButton` slot.
  */
-const ChartsToolbarZoomOutButton = React.forwardRef<
+const ChartsToolbarZoomOutTrigger = React.forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<ChartsToolbarZoomOutButtonProps>
->(function ChartsToolbarZoomOutButton({ render, ...other }, ref) {
+>(function ChartsToolbarZoomOutTrigger({ render, ...other }, ref) {
+  const { slots, slotProps } = useChartsSlots();
   const { instance, store } = useChartContext<[UseChartProZoomSignature]>();
   const disabled = useSelector(store, selectorChartCanZoomOut);
 
-  const element = useComponentRenderer(ToolbarButton, render, {
+  const element = useComponentRenderer(slots.baseButton, render, {
+    ...slotProps.baseButton,
     onClick: () => instance.zoomOut(),
     disabled,
     ...other,
@@ -37,7 +44,7 @@ const ChartsToolbarZoomOutButton = React.forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarZoomOutButton.propTypes = {
+ChartsToolbarZoomOutTrigger.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -48,4 +55,4 @@ ChartsToolbarZoomOutButton.propTypes = {
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
-export { ChartsToolbarZoomOutButton };
+export { ChartsToolbarZoomOutTrigger };
