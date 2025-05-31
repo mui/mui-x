@@ -81,7 +81,9 @@ async function main() {
   }
 
   describe('visual regressions', () => {
-    after(async () => {
+    // TODO: remove once mocha types are removed
+    // @ts-expect-error, will be set by the test
+    afterAll(async () => {
       await browser.close();
     });
 

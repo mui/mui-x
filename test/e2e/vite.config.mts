@@ -23,7 +23,6 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    alias,
     testTimeout: 20000,
     hookTimeout: 20000,
   },
