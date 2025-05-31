@@ -97,75 +97,74 @@ async function main() {
     });
 
     routes.forEach((route) => {
-      it(`creates screenshots of ${route}`, async function test() {
-        if (/^\/docs-charts-tooltip.*/.test(route)) {
-          // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
-          return;
-        }
+      it(
+        `creates screenshots of ${route}`,
+        {
+          // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
+          timeout: process.env.PWDEBUG ? 0 : route.includes('DataGridProDemo') ? 6000 : undefined,
+        },
+        // @ts-expect-error, mocha types are still used
+        async () => {
+          if (/^\/docs-charts-tooltip.*/.test(route)) {
+            // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
+            return;
+          }
 
-        // Move cursor offscreen to not trigger unwanted hover effects.
-        // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
-        await page.mouse.move(0, 0);
+          // Move cursor offscreen to not trigger unwanted hover effects.
+          // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
+          await page.mouse.move(0, 0);
 
-        // Skip animations
-        await page.emulateMedia({ reducedMotion: 'reduce' });
+          // Skip animations
+          await page.emulateMedia({ reducedMotion: 'reduce' });
 
-        // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
-        if (process.env.PWDEBUG) {
-          this.timeout(0);
-        }
+          try {
+            await navigateToTest(route);
+          } catch (error) {
+            // When one demo crashes, the page becomes empty and there are no links to demos,
+            // so navigation to the next demo throws an error.
+            // Reloading the page fixes this.
+            await page.reload();
+            await navigateToTest(route);
+          }
 
-        if (route.includes('DataGridProDemo')) {
-          this.timeout(6000);
-        }
+          const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
+          await fse.ensureDir(path.dirname(screenshotPath));
 
-        try {
-          await navigateToTest(route);
-        } catch (error) {
-          // When one demo crashes, the page becomes empty and there are no links to demos,
-          // so navigation to the next demo throws an error.
-          // Reloading the page fixes this.
-          await page.reload();
-          await navigateToTest(route);
-        }
+          const testcase = await page.waitForSelector(
+            `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+          );
 
-        const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
-
-        const testcase = await page.waitForSelector(
-          `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-        );
-
-        const images = await page.evaluate(() => document.querySelectorAll('img'));
-        if (images.length > 0) {
-          await page.evaluate(() => {
-            images.forEach((img) => {
-              if (!img.complete && img.loading === 'lazy') {
-                // Force lazy-loaded images to load
-                img.setAttribute('loading', 'eager');
-              }
+          const images = await page.evaluate(() => document.querySelectorAll('img'));
+          if (images.length > 0) {
+            await page.evaluate(() => {
+              images.forEach((img) => {
+                if (!img.complete && img.loading === 'lazy') {
+                  // Force lazy-loaded images to load
+                  img.setAttribute('loading', 'eager');
+                }
+              });
             });
-          });
-          // Wait for the flags to load
-          await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
-            timeout: 2000,
-          });
-        }
+            // Wait for the flags to load
+            await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
+              timeout: 2000,
+            });
+          }
 
-        if (/^\/docs-charts-.*/.test(route)) {
-          // Run one tick of the clock to get the final animation state
-          await sleep(10);
-        }
+          if (/^\/docs-charts-.*/.test(route)) {
+            // Run one tick of the clock to get the final animation state
+            await sleep(10);
+          }
 
-        if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
-          await sleep(100);
-        }
+          if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
+            await sleep(100);
+          }
 
-        // Wait for the page to settle after taking the screenshot.
-        await page.waitForLoadState();
+          // Wait for the page to settle after taking the screenshot.
+          await page.waitForLoadState();
 
-        await testcase.screenshot({ path: screenshotPath, type: 'png' });
-      });
+          await testcase.screenshot({ path: screenshotPath, type: 'png' });
+        },
+      );
 
       it(`should have no errors rendering ${route}`, () => {
         const msg = errorConsole;
@@ -229,9 +228,7 @@ async function main() {
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
 
-    it('should export a chart as PNG', async function test() {
-      this.timeout(10000);
-
+    it('should export a chart as PNG', async () => {
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
@@ -262,9 +259,7 @@ async function main() {
         await page.close();
       });
 
-      it('should take a screenshot of the data grid print preview', async function test() {
-        this.timeout(20000);
-
+      it('should take a screenshot of the data grid print preview', async () => {
         const route = '/docs-data-grid-export/ExportDefaultToolbar';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
@@ -292,9 +287,7 @@ async function main() {
         });
       });
 
-      it('should take a screenshot of the charts print preview', async function test() {
-        this.timeout(20000);
-
+      it('should take a screenshot of the charts print preview', async () => {
         const route = '/docs-charts-export/PrintChart';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
