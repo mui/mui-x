@@ -1,16 +1,15 @@
 import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
+import { alias } from '../../vitest.shared.mjs';
 
 export default defineConfig({
   build: {
     outDir: 'build',
   },
-  loader: {
-    '.js': 'jsx',
-  },
   resolve: {
     alias: {
+      ...alias,
       '@mui/docs': path.resolve(
         import.meta.dirname,
         '../../node_modules/@mui/monorepo/packages/mui-docs/src',
@@ -27,7 +26,9 @@ export default defineConfig({
       name: 'replace-code',
       enforce: 'post',
       async transform(code) {
-        return code.replaceAll('DISABLE_CHANCE_RANDOM', 'true');
+        return code
+          .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
+          .replaceAll('LICENSE_DISABLE_CHECK', 'true');
       },
     },
     {
@@ -44,4 +45,9 @@ export default defineConfig({
       },
     },
   ],
+  test: {
+    globals: true,
+    testTimeout: 20000,
+    hookTimeout: 20000,
+  },
 });
