@@ -420,17 +420,17 @@ export const useGridRowEditing = (
   const updateStateToStartRowEditMode = useEventCallback<[GridStartRowEditModeParams], void>(
     (params) => {
       const { id, fieldToFocus, deleteValue, initialValue } = params;
-  
+
       const row = apiRef.current.getRow(id);
       const columns = gridColumnDefinitionsSelector(apiRef);
-  
+
       const newProps = columns.reduce<Record<string, GridEditCellProps>>((acc, col) => {
         const field = col.field;
         const cellParams = apiRef.current.getCellParams(id, field);
         if (!cellParams.isEditable) {
           return acc;
         }
-  
+
         const column = apiRef.current.getColumn(field);
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
@@ -440,37 +440,39 @@ export const useGridRowEditing = (
             newValue = initialValue;
           }
         }
-  
+
         acc[field] = {
           value: newValue,
           error: false,
           isProcessingProps: column.editable && !!column.preProcessEditCellProps && deleteValue,
         };
-  
+
         return acc;
       }, {});
-  
+
       prevRowValuesLookup.current[id] = row;
       updateOrDeleteRowState(id, newProps);
-  
+
       if (fieldToFocus) {
         apiRef.current.setCellFocus(id, fieldToFocus);
       }
-  
+
       columns
         .filter((column) => {
           const field = column.field;
           const cellParams = apiRef.current.getCellParams(id, field);
-          return column.editable && 
-                 !!column.preProcessEditCellProps && 
-                 deleteValue && 
-                 cellParams.isEditable; 
+          return (
+            column.editable &&
+            !!column.preProcessEditCellProps &&
+            deleteValue &&
+            cellParams.isEditable
+          );
         })
         .forEach((column) => {
           const field = column.field;
           const value = apiRef.current.getCellValue(id, field);
           const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
-  
+
           if (newProps[field]) {
             Promise.resolve(
               column.preProcessEditCellProps!({
