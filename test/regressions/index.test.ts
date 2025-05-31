@@ -96,12 +96,25 @@ async function main() {
       expect(msg).to.equal(undefined);
     });
 
+    const getTimeout = (route: string) => {
+      // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
+      if (process.env.PWDEBUG) {
+        return 0;
+      }
+
+      // Some routes are more complex and take longer to render.
+      if (route.includes('DataGridProDemo')) {
+        return 6000;
+      }
+
+      return undefined;
+    };
+
     routes.forEach((route) => {
       it(
         `creates screenshots of ${route}`,
         {
-          // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
-          timeout: process.env.PWDEBUG ? 0 : route.includes('DataGridProDemo') ? 6000 : undefined,
+          timeout: getTimeout(route),
         },
         // @ts-expect-error, mocha types are still used
         async () => {
