@@ -87,7 +87,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
                         key={view}
                         className="ViewSwitcherRadioItem"
                         value={view}
-                        closeOnClick={true}
+                        closeOnClick
                       >
                         {translations[view]}
                       </Menu.RadioItem>
