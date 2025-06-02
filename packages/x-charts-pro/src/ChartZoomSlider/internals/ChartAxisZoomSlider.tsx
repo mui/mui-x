@@ -2,10 +2,12 @@
 import * as React from 'react';
 import {
   AxisId,
+  DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   useDrawingArea,
   useSelector,
   useStore,
   ZOOM_SLIDER_MARGIN,
+  ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { ZOOM_SLIDER_SIZE, ZOOM_SLIDER_TRACK_SIZE } from './constants';
@@ -32,6 +34,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   const store = useStore();
   const drawingArea = useDrawingArea();
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
 
@@ -43,6 +46,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   let y: number;
   let reverse: boolean;
   let axisPosition: 'top' | 'bottom' | 'left' | 'right';
+  let tooltipConditions: ZoomSliderShowTooltip;
 
   if (axisDirection === 'x') {
     const axis = xAxis[axisId];
@@ -60,6 +64,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         : drawingArea.top - axis.offset - axisSize - ZOOM_SLIDER_SIZE - ZOOM_SLIDER_MARGIN;
     reverse = axis.reverse ?? false;
     axisPosition = axis.position ?? 'bottom';
+    tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
   } else {
     const axis = yAxis[axisId];
 
@@ -76,6 +81,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
     y = drawingArea.top;
     reverse = axis.reverse ?? false;
     axisPosition = axis.position ?? 'left';
+    tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
   }
 
   const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_TRACK_SIZE) / 2;
@@ -92,6 +98,8 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         axisId={axisId}
         axisDirection={axisDirection}
         reverse={reverse}
+        onSelectStart={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
+        onSelectEnd={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
       />
       <ChartAxisZoomSliderActiveTrack
         zoomData={zoomData}
@@ -99,6 +107,11 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         axisPosition={axisPosition}
         axisDirection={axisDirection}
         reverse={reverse}
+        showTooltip={
+          (showTooltip && tooltipConditions !== 'never') || tooltipConditions === 'always'
+        }
+        onPointerEnter={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
+        onPointerLeave={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
       />
     </g>
   );

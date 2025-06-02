@@ -5,6 +5,8 @@ import { ScatterChartProPluginsSignatures } from '../ScatterChartPro/ScatterChar
 import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins';
 import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 import { FunnelChartPluginsSignatures } from '../FunnelChart/FunnelChart.plugins';
+import { RadarChartProPluginsSignatures } from '../RadarChartPro/RadarChartPro.plugins';
+import { PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
 
 type PluginsPerSeriesType = {
   heatmap: HeatmapPluginsSignatures;
@@ -12,6 +14,8 @@ type PluginsPerSeriesType = {
   scatter: ScatterChartProPluginsSignatures;
   bar: BarChartProPluginsSignatures;
   funnel: FunnelChartPluginsSignatures;
+  radar: RadarChartProPluginsSignatures;
+  pie: PieChartProPluginSignatures;
   /* Special value when creating a chart using composition. */
   composition: DefaultPluginSignatures;
 };
