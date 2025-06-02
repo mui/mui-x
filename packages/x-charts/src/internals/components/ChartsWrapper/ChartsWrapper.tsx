@@ -58,6 +58,7 @@ const Root = styled('div', {
   slot: 'Root',
 })<{ ownerState: ChartsWrapperProps }>(({ ownerState }) => ({
   display: 'flex',
+  height: '100%',
   flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
   flex: 1,
   justifyContent: 'center',
