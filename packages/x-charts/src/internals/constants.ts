@@ -7,3 +7,6 @@ export const ZOOM_SLIDER_MARGIN = 4;
 export const DEFAULT_ZOOM_SLIDER_SIZE = 20 + 2 * ZOOM_SLIDER_MARGIN;
 
 export const DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP: ZoomSliderShowTooltip = 'hover';
+
+/** Default margin for pie charts. */
+export const DEFAULT_PIE_CHART_MARGIN = { top: 5, bottom: 5, left: 5, right: 5 };

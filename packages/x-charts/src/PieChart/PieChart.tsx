@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
+import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
 import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { ChartsSlotProps, ChartsSlots } from '../internals/material';
@@ -79,8 +80,6 @@ export interface PieChartProps
   slotProps?: PieChartSlotProps;
 }
 
-const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
-
 /**
  * Demos:
  *
@@ -116,7 +115,7 @@ const PieChart = React.forwardRef(function PieChart(
     showToolbar,
     ...other
   } = props;
-  const margin = defaultizeMargin(marginProps, defaultMargin);
+  const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
