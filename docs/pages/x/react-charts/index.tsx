@@ -6,6 +6,7 @@ import AppHeader from 'docs/src/layouts/AppHeader';
 
 import MainDemo from 'docsx/src/modules/components/overview/charts/mainDemo/MainDemo';
 import FeaturesHighlight from 'docsx/src/modules/components/overview/charts/featuresHighlight/FeaturesHighlight';
+import ChartsCommunityOrPro from 'docsx/src/modules/components/overview/charts/ChartsCommunityOrPro';
 
 export default function ChartsBranding() {
   return (
@@ -21,6 +22,7 @@ export default function ChartsBranding() {
       <main id="main-content">
         <MainDemo />
         <FeaturesHighlight />
+        <ChartsCommunityOrPro />
       </main>
     </BrandingCssVarsProvider>
   );
