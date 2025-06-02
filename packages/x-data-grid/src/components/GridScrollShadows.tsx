@@ -27,10 +27,11 @@ const ScrollShadow = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
   inset: 0,
   pointerEvents: 'none',
   transition: vars.transition(['box-shadow'], { duration: vars.transitions.duration.short }),
-  '--size': theme.palette.mode === 'dark' ? '10px' : '5px',
+  '--length': theme.palette.mode === 'dark' ? '10px' : '5px',
+  '--length-end': 'calc(var(--length) * -1)',
   '--opacity': theme.palette.mode === 'dark' ? '0.6' : '0.18',
-  '--blur': 'var(--size)',
-  '--spread': 'calc(var(--size) * -1)',
+  '--blur': 'var(--length)',
+  '--spread': 'calc(var(--length) * -1)',
   '--color-start': 'rgba(0, 0, 0, calc(var(--hasScrollStart) * var(--opacity)))',
   '--color-end': 'rgba(0, 0, 0, calc(var(--hasScrollEnd) * var(--opacity)))',
   variants: [
@@ -41,7 +42,7 @@ const ScrollShadow = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
         bottom:
           'calc(var(--DataGrid-bottomContainerHeight) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
         boxShadow:
-          'inset 0 var(--size) var(--blur) var(--spread) var(--color-start), inset 0 var(--spread) var(--blur) var(--spread) var(--color-end)',
+          'inset 0 var(--length) var(--blur) var(--spread) var(--color-start), inset 0 var(--length-end) var(--blur) var(--spread) var(--color-end)',
       },
     },
     {
@@ -51,7 +52,7 @@ const ScrollShadow = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
         right:
           'calc(var(--DataGrid-rightPinnedWidth) + var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
         boxShadow:
-          'inset var(--size) 0 var(--blur) var(--spread) var(--color-start), inset var(--spread) 0 var(--blur) var(--spread) var(--color-end)',
+          'inset var(--length) 0 var(--blur) var(--spread) var(--color-start), inset var(--length-end) 0 var(--blur) var(--spread) var(--color-end)',
       },
     },
   ],
