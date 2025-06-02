@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { Menubar } from '@base-ui-components/react/menubar';
 import { Menu } from '@base-ui-components/react/menu';
 import useForkRef from '@mui/utils/useForkRef';
 import { ChevronDown } from 'lucide-react';
@@ -21,16 +20,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const handleRef = useForkRef(forwardedRef, containerRef);
   const translations = useTranslations();
 
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      const view = event.currentTarget.getAttribute('data-view');
-      if (view) {
-        setSelectedView(view as ViewType);
-      }
-    },
-    [setSelectedView],
-  );
-
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
@@ -41,55 +30,51 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
-      <Menubar className="ViewSwitcherMenuBar">
-        {visible.map((view) => (
-          <button
-            key={view}
-            className="ViewSwitcherMainItem"
-            onClick={handleClick}
-            data-view={view}
-            type="button"
-            data-pressed={selectedView === view || undefined}
-          >
-            {translations[view]}
-          </button>
-        ))}
-        {dropdown.length > 0 && (
-          <Menu.Root>
-            <Menu.Trigger
-              className="ViewSwitcherMainItem"
-              data-view="other"
-              data-highlighted={dropdown.includes(selectedView) || undefined}
-            >
-              {dropdownLabel} <ChevronDown size={16} strokeWidth={2} />
-            </Menu.Trigger>
-            <Menu.Portal container={containerRef}>
-              <Menu.Positioner
-                className="ViewSwitcherMenuPositioner"
-                sideOffset={9}
-                alignOffset={({ anchor, positioner }) => {
-                  const paddingLeft = 4;
-                  return -(positioner.width - anchor.width - paddingLeft);
-                }}
+      <Menu.Root>
+        <Menu.RadioGroup
+          className="ViewSwitcherMenuBar"
+          value={selectedView}
+          onValueChange={(view: ViewType) => setSelectedView(view)}
+        >
+          {visible.map((view) => (
+            <Menu.RadioItem key={view} className="ViewSwitcherMainItem" value={view} tabIndex={0}>
+              {translations[view]}
+            </Menu.RadioItem>
+          ))}
+          {dropdown.length > 0 && (
+            <React.Fragment>
+              <Menu.Trigger
+                className="ViewSwitcherMainItem"
+                data-view="other"
+                data-highlighted={dropdown.includes(selectedView) || undefined}
               >
-                <Menu.Popup className="ViewSwitcherMenuPopup">
-                  {dropdown.map((view) => (
-                    <Menu.Item
-                      key={view}
-                      className="ViewSwitcherMenuItem"
-                      onClick={handleClick}
-                      data-view={view}
-                      data-selected={selectedView === view || undefined}
-                    >
-                      {translations[view]}
-                    </Menu.Item>
-                  ))}
-                </Menu.Popup>
-              </Menu.Positioner>
-            </Menu.Portal>
-          </Menu.Root>
-        )}
-      </Menubar>
+                {dropdownLabel} <ChevronDown size={16} strokeWidth={2} />
+              </Menu.Trigger>
+              <Menu.Portal container={containerRef}>
+                <Menu.Positioner
+                  className="ViewSwitcherMenuPositioner"
+                  sideOffset={9}
+                  align="end"
+                  alignOffset={-4}
+                >
+                  <Menu.Popup className="ViewSwitcherMenuPopup">
+                    {dropdown.map((view) => (
+                      <Menu.RadioItem
+                        key={view}
+                        className="ViewSwitcherMenuItem"
+                        value={view}
+                        closeOnClick={true}
+                      >
+                        {translations[view]}
+                      </Menu.RadioItem>
+                    ))}
+                  </Menu.Popup>
+                </Menu.Positioner>
+              </Menu.Portal>
+            </React.Fragment>
+          )}
+        </Menu.RadioGroup>
+      </Menu.Root>
     </div>
   );
 });

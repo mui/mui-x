@@ -37,8 +37,9 @@
   padding-inline-end: var(--space-2);
 }
 
-.ViewSwitcherMainItem[data-pressed],
+.ViewSwitcherMainItem[data-checked],
 .ViewSwitcherMainItem[data-highlighted],
+.ViewSwitcherMainItem[data-pressed],
 .ViewSwitcherMainItem:focus-visible {
   background-color: var(--violet-3);
   color: var(--switcher-text-strong);
@@ -73,7 +74,7 @@
 }
 
 .ViewSwitcherMenuItem[data-highlighted],
-.ViewSwitcherMenuItem[data-selected] {
+.ViewSwitcherMenuItem[data-checked] {
   color: var(--switcher-text-strong);
   background-color: var(--violet-3);
 }
