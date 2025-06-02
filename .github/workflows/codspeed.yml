@@ -44,6 +44,7 @@ jobs:
           node-version: 20
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install
       # Ensure we are running on the prod version of our libs
       - run: pnpm --filter "@mui/x-charts-pro..." build
       - name: Run benchmarks
