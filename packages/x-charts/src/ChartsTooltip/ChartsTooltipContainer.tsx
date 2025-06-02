@@ -87,18 +87,18 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       return () => {};
     }
 
-    const handleMove = (event: PointerEvent) => {
+    const handlePointerEvent = (event: PointerEvent) => {
       // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x: event.clientX, y: event.clientY };
       popperRef.current?.update();
     };
 
-    element.addEventListener('pointerdown', handleMove);
-    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerdown', handlePointerEvent);
+    element.addEventListener('pointermove', handlePointerEvent);
 
     return () => {
-      element.removeEventListener('pointerdown', handleMove);
-      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerdown', handlePointerEvent);
+      element.removeEventListener('pointermove', handlePointerEvent);
     };
   }, [svgRef, positionRef]);
 
