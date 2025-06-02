@@ -115,6 +115,8 @@ commands:
       - when:
           condition: << parameters.playwright >>
           steps:
+            - restore_cache:
+                key: playwright-cache-{{ checksum "pnpm-lock.yaml" }}
             - run:
                 name: Install playwright & ffmpeg
                 command: |
@@ -126,6 +128,10 @@ commands:
                     exit 1
                   fi
                   ln -s "$ffmpeg_bin" ~/bin/ffmpeg
+            - save_cache:
+                key: playwright-cache-{{ checksum "pnpm-lock.yaml" }}
+                paths:
+                  - ~/.cache/ms-playwright
 
 jobs:
   checkout:

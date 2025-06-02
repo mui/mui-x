@@ -13,6 +13,7 @@ export const alias = [
     { lib: 'x-date-pickers', plans: ['pro'] },
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
+    { lib: 'x-scheduler' },
     { lib: 'x-internals' },
     { lib: 'x-license' },
     { lib: 'x-telemetry' },
