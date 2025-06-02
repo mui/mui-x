@@ -1,19 +1,9 @@
 @import '../../styles/tokens.css';
 
-.ViewSwitcherContainer {
-  --switcher-text-regular: var(--mauve-6);
-  --switcher-text-strong: var(--mauve-7);
-}
-
-.mode-dark .ViewSwitcherContainer {
-  --switcher-text-regular: var(--mauve-2);
-  --switcher-text-strong: var(--mauve-9);
-}
-
 .ViewSwitcherMenuBar {
   display: flex;
   gap: var(--space-1);
-  border: 1px solid var(--mauve-2);
+  border: 1px solid var(--gray-2);
   border-radius: var(--radius-4);
   padding: var(--space-1);
 }
@@ -26,11 +16,10 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  color: var(--switcher-text-regular);
+  color: var(--toolbar-text);
   border-radius: var(--radius-3);
-  font-size: var(--font-size-3);
-  line-height: var(--line-height-1);
-  font-weight: var(--font-weight-2);
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .ViewSwitcherMainItem[data-view='other'] {
@@ -41,8 +30,8 @@
 .ViewSwitcherMainItem[data-highlighted],
 .ViewSwitcherMainItem[data-pressed],
 .ViewSwitcherMainItem:focus-visible {
-  background-color: var(--violet-3);
-  color: var(--switcher-text-strong);
+  background-color: var(--primary-3);
+  color: var(--primary-13);
 }
 
 .ViewSwitcherMenuPositioner {
@@ -54,7 +43,7 @@
   padding: var(--space-2);
   border-radius: var(--radius-4);
   background-color: canvas;
-  outline: 1px solid var(--mauve-2);
+  outline: 1px solid var(--gray-2);
   box-shadow: -2px 2px 12px 0px rgba(0, 0, 0, 0.12);
 }
 
@@ -69,15 +58,14 @@
   cursor: default;
   user-select: none;
   padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-2);
-  line-height: var(--line-height-1);
-  font-weight: var(--font-weight-2);
-  color: var(--switcher-text-regular);
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--toolbar-text);
   border-radius: var(--radius-3);
 }
 
 .ViewSwitcherRadioItem[data-highlighted],
 .ViewSwitcherRadioItem[data-checked] {
-  color: var(--switcher-text-strong);
-  background-color: var(--violet-3);
+  color: var(--primary-13);
+  background-color: var(--primary-3);
 }

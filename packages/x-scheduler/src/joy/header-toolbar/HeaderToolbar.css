@@ -1,11 +1,11 @@
 @import '../styles/tokens.css';
 
 .HeaderToolbarContainer {
-  --today-button-text: var(--mauve-7);
+  --toolbar-text: var(--gray-9);
 }
 
 .mode-dark .HeaderToolbarContainer {
-  --today-button-text: var(--mauve-2);
+  --toolbar-text: var(--gray-2);
 }
 
 .HeaderToolbarContainer {
@@ -13,6 +13,10 @@
   gap: var(--space-4);
   width: 100%;
   justify-content: center;
+
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  font-weight: var(--font-weight-1);
 }
 
 .HeaderToolbarButton {
@@ -20,10 +24,9 @@
   background: none;
   user-select: none;
   padding: var(--space-3) var(--space-4);
-  color: var(--today-button-text);
-  border: 1px solid var(--mauve-2);
+  color: var(--toolbar-text);
+  border: 1px solid var(--gray-2);
   border-radius: var(--radius-4);
-  font-size: var(--font-size-3);
-  line-height: var(--line-height-1);
-  font-weight: var(--font-weight-2);
+  font-size: inherit;
+  line-height: inherit;
 }
