@@ -1943,6 +1943,9 @@ importers:
       vitest:
         specifier: 3.1.4
         version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.29)(@vitest/browser@3.1.4)(@vitest/ui@3.1.4)(jsdom@26.1.0)(lightningcss@1.29.3)(msw@2.7.3(@types/node@22.15.29)(typescript@5.8.3))(terser@5.39.0)(tsx@4.19.4)(yaml@2.7.0)
+      vitest-browser-react:
+        specifier: ^0.2.0
+        version: 0.2.0(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(@vitest/browser@3.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.1.4)
 
   test/regressions:
     devDependencies:
@@ -11918,6 +11921,22 @@ packages:
       tsx:
         optional: true
       yaml:
+        optional: true
+
+  vitest-browser-react@0.2.0:
+    resolution: {integrity: sha512-tVUVngdcTMFPSywxEo42hAAO074VjEF7Q1QkV8wqjI9oiYuguUfqp6Uw4mTbZ+DLFSITHXiked+PYQFH69XkLQ==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      '@types/react': '>18.0.0'
+      '@types/react-dom': '>18.0.0'
+      '@vitest/browser': '>=2.1.0'
+      react: '>18.0.0'
+      react-dom: '>18.0.0'
+      vitest: '>=2.1.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
         optional: true
 
   vitest-fail-on-console@0.7.1:
@@ -24215,6 +24234,16 @@ snapshots:
       terser: 5.39.0
       tsx: 4.19.4
       yaml: 2.7.0
+
+  vitest-browser-react@0.2.0(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(@vitest/browser@3.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.1.4):
+    dependencies:
+      '@vitest/browser': 3.1.4(msw@2.7.3(@types/node@22.15.29)(typescript@5.8.3))(playwright@1.52.0)(vite@6.3.5(@types/node@22.15.29)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.4)(yaml@2.7.0))(vitest@3.1.4)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      vitest: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.29)(@vitest/browser@3.1.4)(@vitest/ui@3.1.4)(jsdom@26.1.0)(lightningcss@1.29.3)(msw@2.7.3(@types/node@22.15.29)(typescript@5.8.3))(terser@5.39.0)(tsx@4.19.4)(yaml@2.7.0)
+    optionalDependencies:
+      '@types/react': 19.1.6
+      '@types/react-dom': 19.1.5(@types/react@19.1.6)
 
   vitest-fail-on-console@0.7.1(vite@6.3.5(@types/node@22.15.29)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.19.4)(yaml@2.7.0))(vitest@3.1.4):
     dependencies:
