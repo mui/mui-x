@@ -46,7 +46,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:23.11
+    - image: cimg/node:22.16
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -164,6 +164,8 @@ jobs:
 
   test_browser:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.52.0-noble
     resource_class: medium+
     steps:
       - checkout
@@ -294,6 +296,8 @@ jobs:
             NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.52.0-noble
     steps:
       - checkout
       - install_js:
@@ -304,6 +308,8 @@ jobs:
           command: pnpm test:e2e
   test_e2e_website:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.52.0-noble
     steps:
       - checkout
       - install_js:
@@ -347,6 +353,8 @@ jobs:
 
   test_regressions:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.52.0-noble
     steps:
       - checkout
       - install_js:
