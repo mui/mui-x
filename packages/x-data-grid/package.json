@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "8.4.0",
+  "version": "8.5.0",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
   "main": "src/index.ts",
@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.1",
-    "@mui/utils": "^7.0.2",
+    "@mui/utils": "^7.1.1",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
@@ -74,13 +74,13 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.8",
-    "@mui/material": "^7.0.2",
-    "@mui/system": "^7.0.2",
-    "@mui/types": "^7.4.1",
+    "@mui/material": "^7.1.1",
+    "@mui/system": "^7.1.1",
+    "@mui/types": "^7.4.3",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^1.5.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

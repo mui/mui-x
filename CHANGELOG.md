@@ -5,6 +5,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.5.0
+
+_May 29, 2025_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Add support for exporting `RadarChartPro`, `FunnelChart` and `Heatmap` as image and PDF.
+- 📊 `RadarChart` is now stable.
+
+Special thanks go out to the community members for their valuable contributions:
+@xBlizZer, @sai6855, @alisasanib.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.5.0`
+
+- [DataGrid] Avoid ResizeObserver loop error (#17984) @cherniavskii
+- [DataGrid] Fix column management `toggleColumn` event type (#18023) @KenanYusuf
+- [DataGrid] Remove unnecessary `any` type (#17979) @sai6855
+
+#### `@mui/x-data-grid-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.5.0`, plus:
+
+- [DataGridPro] Allow multi sorting without modifier key (#17925) @cherniavskii
+- [DataGridPro] Row reordering icon improvements (#17947) @KenanYusuf
+- [DataGridPro] Fix pinned columns order in column management (#17950) @alisasanib
+
+#### `@mui/x-data-grid-premium@8.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.5.0`, plus:
+
+- [DataGridPremium] Export `GridApiPremium` type (#18037) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.5.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.5.0`, plus:
+
+- [DateRangePicker] Allow to override the format in the field (#17972) @flaviendelangle
+
+### Charts
+
+#### `@mui/x-charts@8.5.0`
+
+- [charts] Add `render` prop to charts toolbar components (#17649) @bernardobelchior
+- [charts] Add configurable slots to toolbar (#17712) @bernardobelchior
+- [charts] Export `useFunnelSeries` and `useRadarSeries` (#18034) @JCQuintas
+- [charts] Expose `ChartApi` through context (#18004) @bernardobelchior
+- [charts] Mark Radar chart as stable (#17946) @alexfauquette
+- [charts] Only update store if interaction item is different (#17851) @bernardobelchior
+- [charts] Reuse shared date utils (#18014) @JCQuintas
+- [charts] Use Map for string cache instead of object (#17982) @bernardobelchior
+- [charts] Fix Population pyramid demo (#17987) @oliviertassinari
+
+#### `@mui/x-charts-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.5.0`, plus:
+
+- [charts-pro] Add range selection to zoom slider (#17949) @bernardobelchior
+- [charts-pro] Allow configuring zoom slider tooltip (#18030) @bernardobelchior
+- [charts-pro] Allow exporting a funnel chart (#17957) @bernardobelchior
+- [charts-pro] Allow exporting a heatmap chart (#17916) @bernardobelchior
+- [charts-pro] Allow exporting a radar chart (#17968) @bernardobelchior
+- [charts-pro] Always show both zoom slider tooltips (#18027) @bernardobelchior
+- [charts-pro] Show zoom slider tooltip when selecting range (#18028) @bernardobelchior
+- [charts-pro] Split `ChartAxisZoomSlider` into smaller files (#18011) @bernardobelchior
+- [charts-pro] Update zoom slider range selection cursor (#17977) @bernardobelchior
+- [charts-pro] Add support for Heatmap legend (#17943) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@8.5.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.5.0`.
+
+### Docs
+
+- [docs] Fix derived column pivoting demo crash (#17944) @arminmeh
+- [docs] Fix light/dark mode blink on pickers overview (#18002) @alexfauquette
+- [docs] Fix scatter shape demo causing horizontal overflow (#17974) @bernardobelchior
+
+### Core
+
+- [code-infra] Add bundle size monitor (#17754) @Janpot
+- [code-infra] Enable `babel-plugin-display-name` in vitest (#17903) @JCQuintas
+- [infra] Remove last deprecated `ponyfillGlobal` usage (#18003) @LukasTy
+- [infra] Use `babel-plugin-display-name` from npm (#18040) @LukasTy
+- [x-telemetry] Remove deprecated `ponyfillGlobal` (#17986) @xBlizZer
+
 ## 8.4.0
 
 _May 21, 2025_

@@ -3,3 +3,5 @@
 
 export * from './event-calendar';
 export * from './models/events';
+export * from './translations/enUS';
+export * from './translations/frFR';
