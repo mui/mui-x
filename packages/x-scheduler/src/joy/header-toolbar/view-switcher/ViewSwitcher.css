@@ -51,9 +51,6 @@
 
 .ViewSwitcherMenuPopup {
   min-width: 190px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
   padding: var(--space-2);
   border-radius: var(--radius-4);
   background-color: canvas;
@@ -61,7 +58,13 @@
   box-shadow: -2px 2px 12px 0px rgba(0, 0, 0, 0.12);
 }
 
-.ViewSwitcherMenuItem {
+.ViewSwitcherRadioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ViewSwitcherRadioItem {
   z-index: 3;
   cursor: default;
   user-select: none;
@@ -73,8 +76,8 @@
   border-radius: var(--radius-3);
 }
 
-.ViewSwitcherMenuItem[data-highlighted],
-.ViewSwitcherMenuItem[data-checked] {
+.ViewSwitcherRadioItem[data-highlighted],
+.ViewSwitcherRadioItem[data-checked] {
   color: var(--switcher-text-strong);
   background-color: var(--violet-3);
 }
