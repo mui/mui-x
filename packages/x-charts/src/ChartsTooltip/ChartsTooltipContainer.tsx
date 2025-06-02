@@ -147,7 +147,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           ]
         : []), // Keep default behavior
     ],
-    [pointerType],
+    [isMouse, isTouch],
   );
 
   if (trigger === 'none') {
