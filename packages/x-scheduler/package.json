@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.1",
-    "@floating-ui/react": "^0.27.8",
+    "@floating-ui/react": "^0.27.11",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1"
@@ -72,8 +72,8 @@
     "@types/luxon": "^3.6.2",
     "@types/prop-types": "^15.7.14",
     "luxon": "^3.6.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1",
     "use-isomorphic-layout-effect": "^1.2.1"
   },
