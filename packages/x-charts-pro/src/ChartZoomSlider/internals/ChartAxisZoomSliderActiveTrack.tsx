@@ -1,16 +1,21 @@
 import { styled } from '@mui/material/styles';
 import {
   AxisId,
+  ComputedAxis,
   getSVGPoint,
+  invertScale,
+  selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   useChartContext,
   useDrawingArea,
+  useSelector,
   useStore,
   ZoomData,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -34,8 +39,16 @@ const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
   },
 }));
 
-const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
-const zoomValueFormatter = (value: number) => formatter.format(value);
+export interface ChartAxisZoomSliderActiveTrackProps {
+  axisId: AxisId;
+  axisDirection: 'x' | 'y';
+  axisPosition: 'top' | 'bottom' | 'left' | 'right';
+  zoomData: ZoomData;
+  reverse?: boolean;
+  showTooltip: boolean;
+  onPointerEnter?: () => void;
+  onPointerLeave?: () => void;
+}
 
 export function ChartAxisZoomSliderActiveTrack({
   axisId,
@@ -43,22 +56,18 @@ export function ChartAxisZoomSliderActiveTrack({
   axisPosition,
   zoomData,
   reverse,
-  valueFormatter = zoomValueFormatter,
-}: {
-  axisId: AxisId;
-  axisDirection: 'x' | 'y';
-  axisPosition: 'top' | 'bottom' | 'left' | 'right';
-  zoomData: ZoomData;
-  reverse: boolean;
-  valueFormatter?: (value: number) => string;
-}) {
+  showTooltip,
+  onPointerEnter,
+  onPointerLeave,
+}: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
+  const axis = useSelector(store, selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
-  const [showTooltip, setShowTooltip] = React.useState<null | 'start' | 'end' | 'both'>(null);
+  const { tooltipStart, tooltipEnd } = getZoomSliderTooltipsText(axis, drawingArea);
 
   const previewThumbWidth =
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_WIDTH : ZOOM_SLIDER_THUMB_HEIGHT;
@@ -102,7 +111,6 @@ export function ChartAxisZoomSliderActiveTrack({
     const onPointerUp = () => {
       activePreviewRect.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
-      setShowTooltip(null);
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -128,7 +136,6 @@ export function ChartAxisZoomSliderActiveTrack({
       pointerZoomMin = pointerDownZoom - axisZoomData.start;
       pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
 
-      setShowTooltip('both');
       document.addEventListener('pointerup', onPointerUp);
       activePreviewRect.addEventListener('pointermove', onPointerMove);
     };
@@ -272,8 +279,8 @@ export function ChartAxisZoomSliderActiveTrack({
         y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
         width={previewWidth}
         height={previewHeight}
-        onPointerEnter={() => setShowTooltip('both')}
-        onPointerLeave={() => setShowTooltip(null)}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
       />
       <ChartAxisZoomSliderThumb
         ref={setStartThumbEl}
@@ -283,8 +290,8 @@ export function ChartAxisZoomSliderActiveTrack({
         height={previewThumbHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onMove={onStartThumbMove}
-        onPointerEnter={() => setShowTooltip('start')}
-        onPointerLeave={() => setShowTooltip(null)}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         placement="start"
       />
       <ChartAxisZoomSliderThumb
@@ -295,24 +302,58 @@ export function ChartAxisZoomSliderActiveTrack({
         height={previewThumbHeight}
         orientation={axisDirection === 'x' ? 'horizontal' : 'vertical'}
         onMove={onEndThumbMove}
-        onPointerEnter={() => setShowTooltip('end')}
-        onPointerLeave={() => setShowTooltip(null)}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         placement="end"
       />
       <ChartsTooltipZoomSliderValue
         anchorEl={startThumbEl}
-        open={showTooltip === 'start' || showTooltip === 'both'}
+        open={showTooltip && tooltipStart !== ''}
         placement={axisPosition}
       >
-        {valueFormatter(zoomData.start)}
+        {tooltipStart}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
         anchorEl={endThumbEl}
-        open={showTooltip === 'end' || showTooltip === 'both'}
+        open={showTooltip && tooltipEnd !== ''}
         placement={axisPosition}
       >
-        {valueFormatter(zoomData.end)}
+        {tooltipEnd}
       </ChartsTooltipZoomSliderValue>
     </React.Fragment>
   );
+}
+
+/**
+ * Returns the text for the tooltips on the thumbs of the zoom slider.
+ */
+function getZoomSliderTooltipsText(axis: ComputedAxis, drawingArea: ChartDrawingArea) {
+  const formatValue = (value: Date | number | null) => {
+    if (axis.valueFormatter) {
+      return axis.valueFormatter(value, { location: 'zoom-slider-tooltip' });
+    }
+
+    return `${value}`;
+  };
+
+  const axisDirection = axis.position === 'top' || axis.position === 'bottom' ? 'x' : 'y';
+
+  let start = axisDirection === 'x' ? drawingArea.left : drawingArea.top;
+  const size = axisDirection === 'x' ? drawingArea.width : drawingArea.height;
+  let end = start + size;
+  if (axisDirection === 'y') {
+    [start, end] = [end, start]; // Invert for y-axis
+  }
+
+  if (axis.reverse) {
+    [start, end] = [end, start]; // Reverse the start and end if the axis is reversed
+  }
+
+  const startValue = invertScale(axis.scale, axis.data ?? [], start) ?? axis.data?.at(0);
+  const endValue = invertScale(axis.scale, axis.data ?? [], end) ?? axis.data?.at(-1);
+
+  const tooltipStart = formatValue(startValue);
+  const tooltipEnd = formatValue(endValue);
+
+  return { tooltipStart, tooltipEnd };
 }

@@ -1,12 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_composeClasses as composeClasses,
-  unstable_ownerDocument as ownerDocument,
-  unstable_capitalize as capitalize,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
+import ownerDocument from '@mui/utils/ownerDocument';
+import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';

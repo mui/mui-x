@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

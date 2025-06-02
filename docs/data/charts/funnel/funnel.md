@@ -45,6 +45,12 @@ To format the labels, a `valueFormatter` function can be provided.
 
 {{"demo": "FunnelLabels.js"}}
 
+### Styling labels
+
+The labels can be styled by using the `funnelSectionClasses.label` helper.
+
+{{"demo": "FunnelLabelStyling.js"}}
+
 ### Positioning labels
 
 The labels can be positioned relative to the section they represent.

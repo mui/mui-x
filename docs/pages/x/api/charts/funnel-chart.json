@@ -105,7 +105,18 @@
       "class": null
     },
     { "name": "baseIconButton", "description": "", "class": null },
-    { "name": "funnelSection", "description": "", "class": null },
+    {
+      "name": "funnelSection",
+      "description": "Custom component for funnel section.",
+      "default": "FunnelSection",
+      "class": null
+    },
+    {
+      "name": "funnelSectionLabel",
+      "description": "Custom component for funnel section label.",
+      "default": "FunnelSectionLabel",
+      "class": null
+    },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
@@ -141,6 +152,6 @@
   "muiName": "MuiFunnelChart",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
   "cssComponent": false
 }

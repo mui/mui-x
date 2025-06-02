@@ -11,12 +11,10 @@ import MuiPopper, {
 import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_useEventCallback as useEventCallback,
-  unstable_ownerDocument as ownerDocument,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
@@ -116,8 +114,7 @@ const PickerPopperPaper = styled(MuiPaper, {
   transformOrigin: 'top center',
   variants: [
     {
-      props: ({ popperPlacement }: PickerPopperOwnerState) =>
-        ['top', 'top-start', 'top-end'].includes(popperPlacement),
+      props: ({ popperPlacement }) => new Set(['top', 'top-start', 'top-end']).has(popperPlacement),
       style: {
         transformOrigin: 'bottom center',
       },
