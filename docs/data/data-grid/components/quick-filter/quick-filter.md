@@ -9,9 +9,13 @@ githubLabel: 'component: data grid'
 
 <p class="description">Provide users with an expandable search field to filter data in the Data Grid.</p>
 
+The [quick filter feature](/x/react-data-grid/filtering/quick-filter/) is enabled by default when `showToolbar` is passed to the `<DataGrid />` component.
+
+You can use the Quick Filter and [Toolbar](/x/react-data-grid/components/toolbar/) components when you need to customize the quick filter, or when implementing a custom toolbar.
+
 ## Basic usage
 
-The demo below shows the default quick filter configuration.
+The demo below shows how to compose the various Quick Filter parts to look and behave like the built-in toolbar quick filter.
 
 {{"demo": "GridQuickFilter.js", "bg": "inline", "defaultCodeOpen": false}}
 

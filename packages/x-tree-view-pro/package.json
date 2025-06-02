@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "8.3.1",
+  "version": "8.5.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
   "main": "src/index.ts",
@@ -76,8 +76,8 @@
     "@mui/system": "^7.0.2",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^1.5.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

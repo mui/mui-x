@@ -9,12 +9,17 @@ import {
   UseChartHighlightSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
+import {
+  useChartProExport,
+  UseChartProExportSignature,
+} from '../internals/plugins/useChartProExport';
 
 export type HeatmapPluginsSignatures = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<'heatmap'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartProExportSignature,
 ];
 
 export const HEATMAP_PLUGINS = [
@@ -22,4 +27,5 @@ export const HEATMAP_PLUGINS = [
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
+  useChartProExport,
 ] as ConvertSignaturesIntoPlugins<HeatmapPluginsSignatures>;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
+import { RadarChart } from '@mui/x-charts/RadarChart';
 
 export default function RadarAxis() {
   return (

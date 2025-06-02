@@ -106,6 +106,16 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-button',
+    title: 'ChartsToolbarZoomInButton',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-button',
+    title: 'ChartsToolbarZoomOutButton',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-tooltip',
     title: 'ChartsTooltip',
   },
@@ -161,6 +171,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap-tooltip',
     title: 'HeatmapTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip-content',
+    title: 'HeatmapTooltipContent',
     plan: 'pro',
   },
   {
@@ -221,6 +236,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'PieChart',
   },
   {
+    pathname: '/x/api/charts/pie-chart-pro',
+    title: 'PieChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
   },
@@ -233,8 +253,9 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarChart',
   },
   {
-    pathname: '/x/api/charts/radar-data-provider',
-    title: 'RadarDataProvider',
+    pathname: '/x/api/charts/radar-chart-pro',
+    title: 'RadarChartPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/radar-grid',

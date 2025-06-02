@@ -73,7 +73,7 @@ function ExportParamsSelector({
 }
 
 export default function ExportChartAsImage() {
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = React.useRef<ChartProApi<'line'>>(undefined);
 
   return (
     <Stack width="100%" gap={2}>
