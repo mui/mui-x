@@ -22,17 +22,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const translations = useTranslations();
   const [selectedView, setSelectedView] = React.useState<ViewType>('week');
 
-  const LABELS: Record<string, string> = React.useMemo(
-    () => ({
-      week: translations.week,
-      day: translations.day,
-      month: translations.month,
-      agenda: translations.agenda,
-      other: translations.other,
-    }),
-    [translations],
-  );
-
   const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
     const view = event.currentTarget.getAttribute('data-view');
     if (view) {
@@ -44,7 +33,9 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
   const selectedOverflowView = dropdown.includes(selectedView) ? selectedView : null;
-  const dropdownLabel = selectedOverflowView ? LABELS[selectedOverflowView] : LABELS.other;
+  const dropdownLabel = selectedOverflowView
+    ? translations[selectedOverflowView]
+    : translations.other;
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
@@ -58,7 +49,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             type="button"
             data-pressed={selectedView === view || undefined}
           >
-            {LABELS[view]}
+            {translations[view]}
           </button>
         ))}
         {dropdown.length > 0 && (
@@ -88,7 +79,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
                       data-view={view}
                       data-selected={selectedView === view || undefined}
                     >
-                      {LABELS[view]}
+                      {translations[view]}
                     </Menu.Item>
                   ))}
                 </Menu.Popup>
