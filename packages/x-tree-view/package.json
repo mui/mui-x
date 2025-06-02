@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.1",
-    "@mui/utils": "^7.1.0",
+    "@mui/utils": "^7.1.1",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "^4.4.12",
     "clsx": "^2.1.1",
@@ -70,8 +70,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.8",
-    "@mui/material": "https://pkg.pr.new/mui/material-ui/@mui/material@1301df1",
-    "@mui/system": "https://pkg.pr.new/mui/material-ui/@mui/system@1301df1",
+    "@mui/material": "^7.1.1",
+    "@mui/system": "^7.1.1",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^1.5.0",
     "react": "^19.1.0",
