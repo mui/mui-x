@@ -10,12 +10,12 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, views, onTodayClick, ...other } = props;
+  const { className, views, onTodayClick, selectedView, setSelectedView, ...other } = props;
   const translations = useTranslations();
 
   return (
     <header ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
-      <ViewSwitcher views={views} />
+      <ViewSwitcher views={views} selectedView={selectedView} setSelectedView={setSelectedView} />
       <button className="HeaderToolbarButton" onClick={onTodayClick} type="button">
         {translations.today}
       </button>

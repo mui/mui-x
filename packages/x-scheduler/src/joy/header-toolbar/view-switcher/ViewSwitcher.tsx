@@ -9,18 +9,17 @@ import { ViewSwitcherProps, ViewType } from './ViewSwitcher.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import './ViewSwitcher.css';
 
-const DEFAULT_VIEWS = ['week', 'day', 'month', 'agenda'] as ViewType[];
+export const DEFAULT_VIEWS = ['week', 'day', 'month', 'agenda'] as ViewType[];
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   props: ViewSwitcherProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, views = DEFAULT_VIEWS, ...other } = props;
+  const { className, views = DEFAULT_VIEWS, setSelectedView, selectedView, ...other } = props;
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useForkRef(forwardedRef, containerRef);
   const translations = useTranslations();
-  const [selectedView, setSelectedView] = React.useState<ViewType>('week');
 
   const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
     const view = event.currentTarget.getAttribute('data-view');

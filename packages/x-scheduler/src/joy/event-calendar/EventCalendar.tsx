@@ -7,12 +7,33 @@ import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../utils/TranslationsContext';
+import { ViewType } from '../header-toolbar/view-switcher/ViewSwitcher.types';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { events, onEventsChange, translations, className, ...other } = props;
+
+  const [view, setView] = React.useState<ViewType>('week');
+
+  let content: React.ReactNode;
+  switch (view) {
+    case 'week':
+      content = <WeekView events={events} />;
+      break;
+    case 'day':
+      content = <div>TODO: Day view</div>;
+      break;
+    case 'month':
+      content = <div>TODO: Month view</div>;
+      break;
+    case 'agenda':
+      content = <div>TODO: Agenda view</div>;
+      break;
+    default:
+      content = null;
+  }
 
   return (
     <TranslationsProvider translations={translations}>
@@ -38,13 +59,13 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           </section>
         </aside>
         <div className="EventCalendarMainPanel">
-          <HeaderToolbar onTodayClick={() => {}} />
+          <HeaderToolbar onTodayClick={() => {}} selectedView={view} setSelectedView={setView} />
           <section
             // TODO: Add localization
             className="EventCalendarContent"
             aria-label="Calendar content"
           >
-            <WeekView events={events} />
+            {content}
           </section>
         </div>
       </div>
