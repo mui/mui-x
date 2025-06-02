@@ -21,12 +21,15 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const handleRef = useForkRef(forwardedRef, containerRef);
   const translations = useTranslations();
 
-  const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
-    const view = event.currentTarget.getAttribute('data-view');
-    if (view) {
-      setSelectedView(view as ViewType);
-    }
-  }, []);
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      const view = event.currentTarget.getAttribute('data-view');
+      if (view) {
+        setSelectedView(view as ViewType);
+      }
+    },
+    [setSelectedView],
+  );
 
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
