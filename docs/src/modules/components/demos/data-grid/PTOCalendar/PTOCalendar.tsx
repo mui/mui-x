@@ -440,7 +440,7 @@ const PTOCalendar: React.FC = () => {
         sx={{
           width: '100%',
           backgroundColor: '#ffffff',
-          borderRadius: 3,
+          borderRadius: 1,
           p: { xs: 2, sm: 3 },
           display: 'flex',
           flexDirection: 'column',
@@ -448,6 +448,8 @@ const PTOCalendar: React.FC = () => {
           flex: 1,
           minHeight: 0,
           overflow: 'hidden',
+          border: '1px solid',
+          borderColor: 'divider',
         }}
       >
         <CalendarHeader

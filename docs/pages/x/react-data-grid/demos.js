@@ -11,12 +11,8 @@ export default function Page() {
           display: 'none',
         },
         '& .MuiDocs-content-block': {
-          marginLeft: 0,
-          marginRight: 'auto',
-          maxWidth: 'unset',
-        },
-        '& .MuiDocs-content-block.MuiDocs-demo-block': {
-          maxWidth: 'unset',
+          mx: 'auto',
+          maxWidth: 'xl',
         },
       }}
       disableToc
