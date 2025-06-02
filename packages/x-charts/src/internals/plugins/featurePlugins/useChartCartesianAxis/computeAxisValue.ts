@@ -11,6 +11,7 @@ import {
   DefaultedXAxis,
   DefaultedYAxis,
   DefaultedAxis,
+  AxisValueFormatterContext,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -209,7 +210,12 @@ export function computeAxisValue<T extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
-      valueFormatter: axis.valueFormatter ?? createScalarFormatter(tickNumber),
+      valueFormatter:
+        axis.valueFormatter ??
+        (createScalarFormatter(tickNumber) as <TScaleName extends ScaleName>(
+          value: any,
+          context: AxisValueFormatterContext<TScaleName>,
+        ) => string),
     };
   });
   return {
