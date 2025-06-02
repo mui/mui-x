@@ -27,6 +27,6 @@ jobs:
         with:
           node-version: 23
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-      - run: pnpm install:codesandbox
-      - run: pnpm build:codesandbox
-      - run: pnpm pkg-pr-new-release
+      - run: pnpm pkg-pr-new:install
+      - run: pnpm pkg-pr-new:build
+      - run: pnpm pkg-pr-new:release
