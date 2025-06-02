@@ -13,7 +13,7 @@ The Data Grid Pro provides a single-column list view format to give users a bett
 
 To enable list view, pass the `listView` prop to the Data Grid.
 
-Unlike the default grid view which displays all columns, list view requires you to explicitly define how columns and cells are displayed by passing the `listViewColumn` prop with a `renderCell` function:
+Unlike the default grid view, list view requires you to explicitly define how columns and cells are displayed by passing the `listViewColumn` prop with a `renderCell` function:
 
 ```tsx
 function ListViewCell(params: GridRenderCellParams) {
