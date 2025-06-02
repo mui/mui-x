@@ -7,15 +7,15 @@ import {
   useSelector,
   useStore,
 } from '@mui/x-charts/internals';
+import { alpha } from '@mui/system';
 import {
   ChartDrawingArea,
   getValueToPositionMapper,
-  ScatterMarker,
   useScatterSeriesContext,
   useZAxes,
-} from '@mui/x-charts';
-import getColor from '@mui/x-charts/ScatterChart/seriesConfig/getColor';
-import { alpha } from '@mui/system';
+} from '@mui/x-charts/hooks';
+import { ScatterMarker } from '@mui/x-charts/ScatterChart';
+import { seriesConfig } from '@mui/x-charts/ScatterChart/seriesConfig';
 
 const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
   rx: 4,
@@ -96,7 +96,7 @@ function ScatterPreview({
         const series = allSeries[seriesId];
         const { xAxisId, yAxisId, zAxisId, color } = series;
 
-        const colorGetter = getColor(
+        const colorGetter = seriesConfig.colorProcessor(
           allSeries[seriesId],
           xAxis[xAxisId ?? defaultXAxisId],
           yAxis[yAxisId ?? defaultYAxisId],
@@ -113,16 +113,13 @@ function ScatterPreview({
         for (let i = 0; i < series.data.length; i += 1) {
           const scatterPoint = series.data[i];
 
-          const x = getXPosition(scatterPoint.x);
-          const y = getYPosition(scatterPoint.y);
-
           temp.push(
             <ScatterMarker
               key={scatterPoint.id}
               dataIndex={i}
               color={colorGetter ? colorGetter(i) : color}
-              x={x}
-              y={y}
+              x={getXPosition(scatterPoint.x)}
+              y={getYPosition(scatterPoint.y)}
               seriesId={series.id}
               size={1}
               isHighlighted={false}
