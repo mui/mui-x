@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.1",
-    "@mui/utils": "^7.0.2",
+    "@mui/utils": "^7.1.1",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
@@ -96,8 +96,8 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.8",
-    "@mui/material": "^7.0.2",
-    "@mui/system": "^7.0.2",
+    "@mui/material": "^7.1.1",
+    "@mui/system": "^7.1.1",
     "@types/luxon": "^3.6.2",
     "@types/prop-types": "^15.7.14",
     "date-fns": "^4.1.0",
