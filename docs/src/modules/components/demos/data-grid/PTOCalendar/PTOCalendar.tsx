@@ -1,10 +1,7 @@
-'use client';
-
 import React, { useMemo, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import {
@@ -20,10 +17,10 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { getHolidaysForCountries } from './data/holidays';
 import { useCalendarState } from './hooks/useCalendarState';
 import { usePTOData } from './hooks/usePTOData';
-import { CalendarHeader } from './CalendarHeader';
-import { FilterChips } from './FilterChips';
 import { findContinuousPeriods, isCurrentDay } from './utils/dateUtils';
 import { HolidayData } from './types/pto';
+import { CalendarContext } from './CalendarContext';
+import { CalendarToolbar } from './CalendarToolbar';
 
 interface RowData {
   id: number;
@@ -41,20 +38,8 @@ interface RowData {
 }
 
 const PTOCalendar: React.FC = () => {
-  const {
-    currentDate,
-    searchQuery,
-    isDatePickerOpen,
-    activeFilters,
-    dateConstraints,
-    handlePreviousMonth,
-    handleNextMonth,
-    handleDateChange,
-    handleSearchChange,
-    handleFilterRemove,
-    handleFilterAdd,
-    setIsDatePickerOpen,
-  } = useCalendarState();
+  const calendarState = useCalendarState();
+  const { currentDate, activeFilters } = calendarState;
 
   const [holidays, setHolidays] = React.useState<HolidayData>({});
   const ptoData = usePTOData(currentDate);
@@ -140,11 +125,8 @@ const PTOCalendar: React.FC = () => {
       return row;
     });
 
-    if (!searchQuery) return allRows;
-
-    const query = searchQuery.toLowerCase();
-    return allRows.filter((row) => row.employee.toLowerCase().includes(query));
-  }, [daysToShow, searchQuery, activeFilters, holidays, ptoData]);
+    return allRows;
+  }, [daysToShow, activeFilters, holidays, ptoData]);
 
   const columns = useMemo<GridColDef[]>(
     () => [
@@ -416,218 +398,179 @@ const PTOCalendar: React.FC = () => {
   );
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 3,
-        py: 3,
-        overflow: 'hidden',
-      }}
-    >
-      {/* <Typography
-        variant="h4"
-        sx={{
-          mb: 3,
-          pl: 1,
-          fontWeight: 'bold',
-        }}
-      >
-        Time Off Calendar
-      </Typography> */}
+    <CalendarContext.Provider value={calendarState}>
       <Box
         sx={{
           width: '100%',
-          backgroundColor: '#ffffff',
-          borderRadius: 1,
-          p: { xs: 2, sm: 3 },
           display: 'flex',
           flexDirection: 'column',
-          gap: { xs: 2, sm: 3 },
-          flex: 1,
-          minHeight: 0,
+          gap: 3,
+          py: 3,
           overflow: 'hidden',
-          border: '1px solid',
-          borderColor: 'divider',
         }}
       >
-        <CalendarHeader
-          currentDate={currentDate}
-          searchQuery={searchQuery}
-          isDatePickerOpen={isDatePickerOpen}
-          dateConstraints={dateConstraints}
-          onPreviousMonth={handlePreviousMonth}
-          onNextMonth={handleNextMonth}
-          onDateChange={handleDateChange}
-          onSearchChange={handleSearchChange}
-          onDatePickerOpen={() => setIsDatePickerOpen(true)}
-          onDatePickerClose={() => setIsDatePickerOpen(false)}
-        />
-
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 2,
-            pl: 1,
-            flexWrap: 'wrap',
-            '& .MuiStack-root': {
-              flex: 1,
-              minWidth: { xs: '100%', sm: 'auto' },
-            },
-          }}
-        >
-          <FilterChips
-            activeFilters={activeFilters}
-            onFilterRemove={handleFilterRemove}
-            onFilterAdd={handleFilterAdd}
-            employeeCount={Object.keys(ptoData).length}
-          />
-        </Box>
-        <Divider />
         <Box
           sx={{
             width: '100%',
+            backgroundColor: '#ffffff',
+            borderRadius: 1,
+            p: { xs: 2, sm: 3 },
             display: 'flex',
             flexDirection: 'column',
+            gap: { xs: 2, sm: 3 },
             flex: 1,
             minHeight: 0,
             overflow: 'hidden',
+            border: '1px solid',
+            borderColor: 'divider',
           }}
         >
           <Box
             sx={{
-              borderRadius: 1,
-              overflow: 'hidden',
+              width: '100%',
               display: 'flex',
               flexDirection: 'column',
-              height: '100%',
+              flex: 1,
+              minHeight: 0,
+              overflow: 'hidden',
             }}
           >
-            <DataGridPro
-              pinnedRows={pinnedRow}
-              rows={filteredRows}
-              columns={columns}
-              initialState={{
-                pinnedColumns: {
-                  left: ['employee'],
-                },
-                pagination: {
-                  paginationModel: { pageSize: 5 },
-                },
-              }}
-              pageSizeOptions={[5]}
-              checkboxSelection={false}
-              disableRowSelectionOnClick
-              hideFooter
-              columnHeaderHeight={40}
-              rowHeight={50}
-              getRowHeight={(params) => {
-                if (params.model.id === 'summary') {
-                  return 40;
-                }
-                return 50;
-              }}
+            <Box
               sx={{
-                border: 'none',
+                borderRadius: 1,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
                 height: '100%',
-                '& .MuiDataGrid-main': {
+              }}
+            >
+              <DataGridPro
+                pinnedRows={pinnedRow}
+                rows={filteredRows}
+                columns={columns}
+                initialState={{
+                  pinnedColumns: {
+                    left: ['employee'],
+                  },
+                  pagination: {
+                    paginationModel: { pageSize: 5 },
+                  },
+                }}
+                pageSizeOptions={[5]}
+                checkboxSelection={false}
+                disableRowSelectionOnClick
+                hideFooter
+                columnHeaderHeight={40}
+                rowHeight={50}
+                slots={{ toolbar: CalendarToolbar }}
+                showToolbar
+                getRowHeight={(params) => {
+                  if (params.model.id === 'summary') {
+                    return 40;
+                  }
+                  return 50;
+                }}
+                sx={{
                   border: 'none',
-                },
-                '& .MuiDataGrid-virtualScroller': {
-                  overflow: 'auto',
-                },
-                '& .MuiDataGrid-filler--pinnedLeft': {
-                  borderRight: 'none',
-                },
-                '& .MuiDataGrid-cell': {
-                  cursor: 'pointer',
-                  p: 0,
-                  border: 'none',
-                  '&:not([data-field="employee"])': {
-                    border: '0.75px solid #EAE7EC',
-                  },
-                },
-                '& .MuiDataGrid-columnHeader': {
-                  p: 0,
-                  backgroundColor: '#f7f6f9',
-                  border: 'none',
-                  '&:not([data-field="employee"])': {
-                    border: '0.75px solid #EAE7EC',
-                    borderTop: '0.75px solid #EAE7EC',
-                  },
-                },
-                '& .MuiDataGrid-columnHeaderTitleContainer': {
-                  p: 0,
-                  fontSize: '0.75rem',
-                  textTransform: 'uppercase',
-                  color: '#75758d',
-                },
-                '& .MuiDataGrid-columnHeaders': {
-                  backgroundColor: 'rgba(250,250,250,255)',
-                  '& .MuiDataGrid-columnHeader:first-of-type:not([data-field="employee"])': {
-                    borderTopLeftRadius: '10px',
-                  },
-                  '& .MuiDataGrid-columnHeader:last-of-type': {
-                    borderTopRightRadius: '10px',
-                  },
-                },
-                '& .MuiDataGrid-columnSeparator': {
-                  display: 'none',
-                },
-                '& .MuiDataGrid-cell[data-field="employee"]': {
-                  padding: '12px 8px',
-                  color: '#09090b',
-                  borderRight: 'none',
-                },
-                '& .MuiDataGrid-columnHeader[data-field="employee"]': {
-                  padding: '8px',
-                  borderRight: 'none',
-                  '& .MuiDataGrid-columnHeaderTitleContainer': {
-                    pl: 2,
-                    '& .MuiDataGrid-columnHeaderTitle': {
-                      fontWeight: 'bold',
-                      textTransform: 'uppercase',
-                      color: '#75758d',
-                    },
-                  },
-                },
-                '& .MuiDataGrid-pinnedRows': {
-                  backgroundColor: '#f7f6f9',
-                  mb: '5px',
-                  '& .MuiDataGrid-cell': {
+                  height: '100%',
+                  '& .MuiDataGrid-main': {
                     border: 'none',
                   },
-                },
-                '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell[data-field="employee"]': {
-                  backgroundColor: '#f7f6f9',
-                },
-                '& .MuiDataGrid-virtualScrollerContent': {
-                  '& .MuiDataGrid-row:last-child': {
-                    '& .MuiDataGrid-cell:not([data-field="employee"])': {
-                      borderBottom: '0.75px solid #EAE7EC',
-                    },
-                    '& .MuiDataGrid-cell:first-of-type:not([data-field="employee"])': {
-                      borderBottomLeftRadius: '10px',
-                    },
-                    '& .MuiDataGrid-cell:last-of-type': {
-                      borderBottomRightRadius: '10px',
+                  '& .MuiDataGrid-virtualScroller': {
+                    overflow: 'auto',
+                  },
+                  '& .MuiDataGrid-filler--pinnedLeft': {
+                    borderRight: 'none',
+                  },
+                  '& .MuiDataGrid-cell': {
+                    cursor: 'pointer',
+                    p: 0,
+                    border: 'none',
+                    '&:not([data-field="employee"])': {
+                      border: '0.75px solid #EAE7EC',
                     },
                   },
-                },
-                [`& .MuiDataGrid-columnHeader[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]: {
-                  backgroundColor: '#f7f6f9',
-                },
-                [`& .MuiDataGrid-cell[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]: {
-                  backgroundColor: '#f7f6f9',
-                },
-              }}
-            />
+                  '& .MuiDataGrid-columnHeader': {
+                    p: 0,
+                    backgroundColor: '#f7f6f9',
+                    border: 'none',
+                    '&:not([data-field="employee"])': {
+                      border: '0.75px solid #EAE7EC',
+                      borderTop: '0.75px solid #EAE7EC',
+                    },
+                  },
+                  '& .MuiDataGrid-columnHeaderTitleContainer': {
+                    p: 0,
+                    fontSize: '0.75rem',
+                    textTransform: 'uppercase',
+                    color: '#75758d',
+                  },
+                  '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: 'rgba(250,250,250,255)',
+                    '& .MuiDataGrid-columnHeader:first-of-type:not([data-field="employee"])': {
+                      borderTopLeftRadius: '10px',
+                    },
+                    '& .MuiDataGrid-columnHeader:last-of-type': {
+                      borderTopRightRadius: '10px',
+                    },
+                  },
+                  '& .MuiDataGrid-columnSeparator': {
+                    display: 'none',
+                  },
+                  '& .MuiDataGrid-cell[data-field="employee"]': {
+                    padding: '12px 8px',
+                    color: '#09090b',
+                    borderRight: 'none',
+                  },
+                  '& .MuiDataGrid-columnHeader[data-field="employee"]': {
+                    padding: '8px',
+                    borderRight: 'none',
+                    '& .MuiDataGrid-columnHeaderTitleContainer': {
+                      pl: 2,
+                      '& .MuiDataGrid-columnHeaderTitle': {
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase',
+                        color: '#75758d',
+                      },
+                    },
+                  },
+                  '& .MuiDataGrid-pinnedRows': {
+                    backgroundColor: '#f7f6f9',
+                    mb: '5px',
+                    '& .MuiDataGrid-cell': {
+                      border: 'none',
+                    },
+                  },
+                  '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell[data-field="employee"]': {
+                    backgroundColor: '#f7f6f9',
+                  },
+                  '& .MuiDataGrid-virtualScrollerContent': {
+                    '& .MuiDataGrid-row:last-child': {
+                      '& .MuiDataGrid-cell:not([data-field="employee"])': {
+                        borderBottom: '0.75px solid #EAE7EC',
+                      },
+                      '& .MuiDataGrid-cell:first-of-type:not([data-field="employee"])': {
+                        borderBottomLeftRadius: '10px',
+                      },
+                      '& .MuiDataGrid-cell:last-of-type': {
+                        borderBottomRightRadius: '10px',
+                      },
+                    },
+                  },
+                  [`& .MuiDataGrid-columnHeader[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]:
+                    {
+                      backgroundColor: '#f7f6f9',
+                    },
+                  [`& .MuiDataGrid-cell[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]: {
+                    backgroundColor: '#f7f6f9',
+                  },
+                }}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
+    </CalendarContext.Provider>
   );
 };
 

@@ -5,40 +5,29 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
+import Cancel from '@mui/icons-material/Cancel';
 import Search from '@mui/icons-material/Search';
+import { QuickFilter, QuickFilterClear, QuickFilterControl } from '@mui/x-data-grid-pro';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { useCalendarContext } from './CalendarContext';
+import InputAdornment from '@mui/material/InputAdornment';
+import { styled } from '@mui/material/styles';
 
-interface DateConstraints {
-  minDate: Date;
-  maxDate: Date;
-}
+const StyledQuickFilter = styled(QuickFilter)({
+  flex: 1,
+});
 
-interface CalendarHeaderProps {
-  currentDate: Date;
-  searchQuery: string;
-  isDatePickerOpen: boolean;
-  dateConstraints: DateConstraints;
-  onPreviousMonth: () => void;
-  onNextMonth: () => void;
-  onDateChange: (date: Date | null) => void;
-  onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onDatePickerOpen: () => void;
-  onDatePickerClose: () => void;
-}
-
-export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
-  currentDate,
-  searchQuery,
-  isDatePickerOpen,
-  dateConstraints,
-  onPreviousMonth,
-  onNextMonth,
-  onDateChange,
-  onSearchChange,
-  onDatePickerOpen,
-  onDatePickerClose,
-}) => {
+function CalendarHeader() {
+  const {
+    currentDate,
+    isDatePickerOpen,
+    dateConstraints,
+    setIsDatePickerOpen,
+    handlePreviousMonth,
+    handleNextMonth,
+    handleDateChange,
+  } = useCalendarContext();
   return (
     <Box
       sx={{
@@ -55,13 +44,10 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
           alignItems: 'center',
           gap: 1,
           flexShrink: 0,
-          p: 1,
-          borderRadius: 3,
-          height: '72px',
         }}
       >
         <IconButton
-          onClick={onPreviousMonth}
+          onClick={handlePreviousMonth}
           size="small"
           sx={{
             color: 'text.primary',
@@ -75,16 +61,16 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             value={currentDate}
-            onChange={onDateChange}
+            onChange={handleDateChange}
             open={isDatePickerOpen}
-            onOpen={onDatePickerOpen}
-            onClose={onDatePickerClose}
+            onOpen={() => setIsDatePickerOpen(true)}
+            onClose={() => setIsDatePickerOpen(false)}
             minDate={dateConstraints.minDate}
             maxDate={dateConstraints.maxDate}
             views={['month', 'year']}
             slotProps={{
               textField: {
-                onClick: onDatePickerOpen,
+                onClick: () => setIsDatePickerOpen(true),
                 sx: {
                   '& .MuiInputBase-root': {
                     height: '40px',
@@ -123,7 +109,7 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
           />
         </LocalizationProvider>
         <IconButton
-          onClick={onNextMonth}
+          onClick={handleNextMonth}
           size="small"
           sx={{
             color: 'text.primary',
@@ -136,7 +122,7 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
         </IconButton>
         <Button
           variant="outlined"
-          onClick={() => onDateChange(new Date(2025, 4, 1))}
+          onClick={() => handleDateChange(new Date(2025, 4, 1))}
           sx={{
             borderColor: '#000000',
             borderRadius: 2,
@@ -153,33 +139,50 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
         </Button>
       </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          p: 1,
-          borderRadius: 3,
-          height: '72px',
-          flex: 1,
-        }}
-      >
-        <TextField
-          placeholder="Search"
-          value={searchQuery}
-          onChange={onSearchChange}
-          sx={{
-            width: '100%',
-            '& .MuiOutlinedInput-root': {
-              height: '40px',
-              borderRadius: '20px',
-              backgroundColor: '#ffffff',
-            },
-          }}
-          InputProps={{
-            startAdornment: <Search sx={{ color: 'text.secondary', mr: 1 }} />,
-          }}
+      <StyledQuickFilter expanded>
+        <QuickFilterControl
+          render={({ ref, ...other }) => (
+            <TextField
+              {...other}
+              sx={{
+                flex: 1,
+                width: '100%',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '20px',
+                },
+              }}
+              inputRef={ref}
+              aria-label="Search"
+              placeholder="Search"
+              size="small"
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search sx={{ color: 'text.secondary' }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: other.value ? (
+                    <InputAdornment position="end">
+                      <QuickFilterClear
+                        edge="end"
+                        aria-label="Clear search"
+                        material={{ sx: { marginRight: -0.75 } }}
+                      >
+                        <Cancel />
+                      </QuickFilterClear>
+                    </InputAdornment>
+                  ) : null,
+                  ...other.slotProps?.input,
+                },
+                ...other.slotProps,
+              }}
+            />
+          )}
         />
-      </Box>
+      </StyledQuickFilter>
     </Box>
   );
-};
+}
+
+export { CalendarHeader };
