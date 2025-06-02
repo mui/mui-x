@@ -29,4 +29,4 @@ jobs:
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm pkg-pr-new:install
       - run: pnpm pkg-pr-new:build
-      - run: pnpm pkg-pr-new:packages
+      - run: pnpm pkg-pr-new:release
