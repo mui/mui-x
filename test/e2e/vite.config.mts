@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { alias } from '../../vitest.shared.mjs';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   build: {
@@ -17,10 +17,8 @@ export default defineConfig({
           .replaceAll('LICENSE_DISABLE_CHECK', 'true');
       },
     },
+    tsconfigPaths(),
   ],
-  resolve: {
-    alias,
-  },
   test: {
     globals: true,
     testTimeout: 20000,

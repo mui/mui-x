@@ -1,21 +1,11 @@
 import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
-import { alias } from '../../vitest.shared.mjs';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   build: {
     outDir: 'build',
-  },
-  resolve: {
-    alias: {
-      ...alias,
-      '@mui/docs': path.resolve(
-        import.meta.dirname,
-        '../../node_modules/@mui/monorepo/packages/mui-docs/src',
-      ),
-      docsx: path.resolve(import.meta.dirname, '../../docs'),
-    },
   },
   worker: {
     format: 'es',
@@ -44,6 +34,7 @@ export default defineConfig({
         });
       },
     },
+    tsconfigPaths(),
   ],
   test: {
     globals: true,
