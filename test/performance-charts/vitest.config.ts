@@ -1,11 +1,10 @@
 import { defineConfig } from 'vitest/config';
 import codspeedPlugin from '@codspeed/vitest-plugin';
-import react from '@vitejs/plugin-react';
 
 const isCI = process.env.CI === 'true';
 
 export default defineConfig({
-  plugins: [...(isCI ? [codspeedPlugin()] : []), react()],
+  plugins: [...(isCI ? [codspeedPlugin()] : [])],
   test: {
     setupFiles: ['./setup.ts'],
     environment: 'jsdom',
