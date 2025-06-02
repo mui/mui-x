@@ -4,18 +4,24 @@ import PTOCalendar from './PTOCalendar/PTOCalendar';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Paper from '@mui/material/Paper';
+import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import AccountBalance from '@mui/icons-material/AccountBalance';
+import Inventory2 from '@mui/icons-material/Inventory2';
 
-const DEMOS: { name: string; component: React.ComponentType<any> }[] = [
+const DEMOS: { name: string; icon: React.ReactNode; component: React.ComponentType<any> }[] = [
   {
     name: 'PTO Calendar',
+    icon: <CalendarMonth fontSize="small" />,
     component: PTOCalendar,
   },
   {
     name: 'Financial',
+    icon: <AccountBalance fontSize="small" />,
     component: () => <div>Financial</div>,
   },
   {
     name: 'Inventory',
+    icon: <Inventory2 fontSize="small" />,
     component: () => <div>Inventory</div>,
   },
 ];
@@ -61,6 +67,7 @@ export default function Demos() {
               title={demo.name}
               sx={{ flexGrow: 1, gap: 1, flexWrap: 'wrap' }}
             >
+              {demo.icon}
               {demo.name}
             </ToggleButton>
           ))}
