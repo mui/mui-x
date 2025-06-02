@@ -1,5 +1,6 @@
 import { beforeAll } from 'vitest';
 import { generateLicense, LicenseInfo } from '@mui/x-license';
+import 'vitest-browser-react';
 
 beforeAll(() => {
   const licenseKey = generateLicense({
