@@ -20,7 +20,9 @@ export default defineConfig({
         configFile: false,
       },
     }),
-    tsconfigPaths(),
+    tsconfigPaths({
+      skip: (dir) => dir.includes('x-charts-vendor'),
+    }),
   ],
   // We seem to need both this and the `env` property below to make it work.
   define: {

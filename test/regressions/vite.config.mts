@@ -1,5 +1,5 @@
-import path from 'path';
-import { defineConfig, transformWithEsbuild } from 'vite';
+import { transformWithEsbuild } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
