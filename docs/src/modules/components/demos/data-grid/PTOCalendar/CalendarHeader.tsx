@@ -1,23 +1,50 @@
 import React from 'react';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
-import Cancel from '@mui/icons-material/Cancel';
-import Search from '@mui/icons-material/Search';
-import { QuickFilter, QuickFilterClear, QuickFilterControl } from '@mui/x-data-grid-pro';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import {
+  DatePicker,
+  LocalizationProvider,
+  usePickerContext,
+  useSplitFieldProps,
+} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useCalendarContext } from './CalendarContext';
-import InputAdornment from '@mui/material/InputAdornment';
-import { styled } from '@mui/material/styles';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import { format } from 'date-fns';
 
-const StyledQuickFilter = styled(QuickFilter)({
-  flex: 1,
-});
-
+function ButtonField(props: any) {
+  const { forwardedProps } = useSplitFieldProps(props, 'date');
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
+  const valueStr = format(pickerContext.value, pickerContext.fieldFormat);
+  return (
+    <Button
+      {...forwardedProps}
+      variant="outlined"
+      ref={handleRef}
+      sx={{
+        px: 3,
+        borderColor: '#000000',
+        borderRadius: 2,
+        whiteSpace: 'nowrap',
+        textTransform: 'none',
+        color: '#000000',
+        height: '40px',
+        backgroundColor: '#ffffff',
+        fontWeight: 'bold',
+        boxShadow: 'none',
+      }}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
+    >
+      {pickerContext.label ?? valueStr}
+    </Button>
+  );
+}
 function CalendarHeader() {
   const {
     currentDate,
@@ -29,35 +56,37 @@ function CalendarHeader() {
     handleDateChange,
   } = useCalendarContext();
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: { xs: 'column', sm: 'row' },
-        alignItems: { xs: 'stretch', sm: 'center' },
-        gap: { xs: 2, sm: 3 },
-        width: '100%',
-      }}
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      flexWrap="wrap"
+      gap={2}
+      sx={{ borderBottom: '1px solid', borderBottomColor: 'divider', pb: 2 }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          flexShrink: 0,
-        }}
-      >
-        <IconButton
-          onClick={handlePreviousMonth}
-          size="small"
+      <Typography variant="h4" fontWeight="bold">
+        Time Off Calendar
+      </Typography>
+
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={() => handleDateChange(new Date(2025, 4, 1))}
           sx={{
-            color: 'text.primary',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-            },
+            px: 3,
+            borderColor: '#000000',
+            borderRadius: 2,
+            whiteSpace: 'nowrap',
+            textTransform: 'none',
+            color: '#000000',
+            height: '40px',
+            backgroundColor: '#ffffff',
+            fontWeight: 'bold',
+            boxShadow: 'none',
           }}
         >
-          <ChevronLeft />
-        </IconButton>
+          Today
+        </Button>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             value={currentDate}
@@ -68,32 +97,8 @@ function CalendarHeader() {
             minDate={dateConstraints.minDate}
             maxDate={dateConstraints.maxDate}
             views={['month', 'year']}
+            slots={{ field: ButtonField }}
             slotProps={{
-              textField: {
-                onClick: () => setIsDatePickerOpen(true),
-                sx: {
-                  '& .MuiInputBase-root': {
-                    height: '40px',
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                    },
-                  },
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                  '& .MuiInputBase-input': {
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    '&:hover': {
-                      textDecoration: 'underline',
-                    },
-                  },
-                  '& .MuiInputAdornment-root': {
-                    display: 'none',
-                  },
-                },
-              },
               popper: {
                 sx: {
                   '& .MuiPaper-root': {
@@ -108,80 +113,32 @@ function CalendarHeader() {
             }}
           />
         </LocalizationProvider>
-        <IconButton
-          onClick={handleNextMonth}
-          size="small"
-          sx={{
-            color: 'text.primary',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-            },
-          }}
-        >
-          <ChevronRight />
-        </IconButton>
-        <Button
-          variant="outlined"
-          onClick={() => handleDateChange(new Date(2025, 4, 1))}
-          sx={{
-            borderColor: '#000000',
-            borderRadius: 2,
-            whiteSpace: 'nowrap',
-            minWidth: '100px',
-            textTransform: 'none',
-            color: '#000000',
-            height: '40px',
-            backgroundColor: '#ffffff',
-            fontWeight: 'bold',
-          }}
-        >
-          Today
-        </Button>
+        <Box sx={{ display: 'flex', ml: -1 }}>
+          <IconButton
+            onClick={handlePreviousMonth}
+            sx={{
+              color: 'text.primary',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              },
+            }}
+          >
+            <ChevronLeft />
+          </IconButton>
+          <IconButton
+            onClick={handleNextMonth}
+            sx={{
+              color: 'text.primary',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              },
+            }}
+          >
+            <ChevronRight />
+          </IconButton>
+        </Box>
       </Box>
-
-      <StyledQuickFilter expanded>
-        <QuickFilterControl
-          render={({ ref, ...other }) => (
-            <TextField
-              {...other}
-              sx={{
-                flex: 1,
-                width: '100%',
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '20px',
-                },
-              }}
-              inputRef={ref}
-              aria-label="Search"
-              placeholder="Search"
-              size="small"
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search sx={{ color: 'text.secondary' }} />
-                    </InputAdornment>
-                  ),
-                  endAdornment: other.value ? (
-                    <InputAdornment position="end">
-                      <QuickFilterClear
-                        edge="end"
-                        aria-label="Clear search"
-                        material={{ sx: { marginRight: -0.75 } }}
-                      >
-                        <Cancel />
-                      </QuickFilterClear>
-                    </InputAdornment>
-                  ) : null,
-                  ...other.slotProps?.input,
-                },
-                ...other.slotProps,
-              }}
-            />
-          )}
-        />
-      </StyledQuickFilter>
-    </Box>
+    </Stack>
   );
 }
 

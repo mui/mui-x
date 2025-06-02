@@ -9,6 +9,10 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridPinnedRowsProp,
+  GridColumnHeaderParams,
+  useGridApiContext,
+  useGridSelector,
+  gridFilteredRowCountSelector,
 } from '@mui/x-data-grid-pro';
 import BeachAccess from '@mui/icons-material/BeachAccess';
 import Cake from '@mui/icons-material/Cake';
@@ -35,6 +39,16 @@ interface RowData {
         hasHoliday: boolean;
         show: boolean;
       };
+}
+
+function EmployeeHeader() {
+  const apiRef = useGridApiContext();
+  const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
+  return (
+    <Typography fontWeight="bold" fontSize="0.75rem">
+      Employees ({filteredRowCount})
+    </Typography>
+  );
 }
 
 const PTOCalendar: React.FC = () => {
@@ -98,7 +112,7 @@ const PTOCalendar: React.FC = () => {
     ],
   };
 
-  const filteredRows = useMemo(() => {
+  const rows = useMemo(() => {
     const allRows = Object.entries(ptoData).map(([name, data], index) => {
       const row: RowData = {
         id: index + 1,
@@ -139,6 +153,7 @@ const PTOCalendar: React.FC = () => {
         fixed: true,
         headerAlign: 'left' as const,
         align: 'left' as const,
+        renderHeader: EmployeeHeader,
         renderCell: (params: GridRenderCellParams) => {
           if (params.row.id === 'summary') {
             return (
@@ -446,7 +461,7 @@ const PTOCalendar: React.FC = () => {
             >
               <DataGridPro
                 pinnedRows={pinnedRow}
-                rows={filteredRows}
+                rows={rows}
                 columns={columns}
                 initialState={{
                   pinnedColumns: {
