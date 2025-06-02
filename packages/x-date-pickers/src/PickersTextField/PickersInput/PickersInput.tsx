@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersInputClasses,

@@ -7,6 +7,7 @@ import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-chart
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -145,7 +146,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ? valueAxisConfig
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
-  const chartContainerProps: ChartContainerProProps<'funnel'> = {
+  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginsSignatures> = {
     ...rest,
     series: series.map((s) => ({
       type: 'funnel' as const,
@@ -163,6 +164,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     onHighlightChange,
     className,
     apiRef,
+    plugins: FUNNEL_CHART_PLUGINS,
   };
 
   const funnelPlotProps: FunnelPlotProps = {

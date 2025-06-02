@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 import { PickerFieldUI, useFieldTextFieldProps } from '../internals/components/PickerFieldUI';
