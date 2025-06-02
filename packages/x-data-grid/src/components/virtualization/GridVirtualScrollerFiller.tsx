@@ -23,11 +23,9 @@ const Pinned = styled('div')({
 });
 const PinnedLeft = styled(Pinned)({
   left: 0,
-  borderRight: '1px solid var(--rowBorderColor)',
 });
 const PinnedRight = styled(Pinned)({
   right: 0,
-  borderLeft: '1px solid var(--rowBorderColor)',
 });
 
 const Main = styled('div')({
