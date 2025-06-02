@@ -1,7 +1,7 @@
 import { SchedulerTranslations } from '../models/translations';
 
 export const enUS: SchedulerTranslations = {
-  // View navigation
+  // ViewSwitcher
   agenda: 'Agenda',
   day: 'Day',
   month: 'Month',
@@ -9,6 +9,6 @@ export const enUS: SchedulerTranslations = {
   today: 'Today',
   week: 'Week',
 
-  // Week view
+  // WeekView
   allDay: 'All day',
 };

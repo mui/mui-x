@@ -1,5 +1,5 @@
 export interface SchedulerTranslations {
-  // View navigation
+  // ViewSwitcher
   agenda: string;
   day: string;
   month: string;
@@ -7,6 +7,6 @@ export interface SchedulerTranslations {
   today: string;
   week: string;
 
-  // Week view
+  // WeekView
   allDay: string;
 }
