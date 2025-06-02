@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
@@ -15,6 +15,7 @@ import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/se
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
+import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
@@ -35,18 +36,6 @@ function getRange(
       : [drawingArea.top + drawingArea.height, drawingArea.top];
 
   return axis.reverse ? [range[1], range[0]] : range;
-}
-
-const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] instanceof Date;
-
-function createDateFormatter(
-  axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,
-  range: number[],
-): AxisConfig<'band' | 'point', any, ChartsAxisProps>['valueFormatter'] {
-  const timeScale = scaleTime(axis.data!, range);
-
-  return (v, { location }) =>
-    location === 'tick' ? timeScale.tickFormat(axis.tickNumber)(v) : `${v.toLocaleString()}`;
 }
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;

@@ -76,9 +76,7 @@ Note: You can use `muiXTelemetrySettings.enableDebug();` to log telemetry data t
 You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `false` to enable telemetry:
 
 ```js
-import { ponyfillGlobal } from '@mui/utils';
-
-ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = false;
+globalThis.__MUI_X_TELEMETRY_DISABLED__ = false;
 ```
 
 <!--
@@ -112,9 +110,7 @@ muiXTelemetrySettings.disableTelemetry();
 You can set the `__MUI_X_TELEMETRY_DISABLED__` flag in your application to `true` to disable telemetry:
 
 ```js
-import { ponyfillGlobal } from '@mui/utils';
-
-ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true;
+globalThis.__MUI_X_TELEMETRY_DISABLED__ = true;
 ```
 
 -->
