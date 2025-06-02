@@ -104,7 +104,7 @@
     "@types/karma": "^6.3.9",
     "@types/lodash": "^4.17.16",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.29",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "@types/requestidlecallback": "^0.3.7",
