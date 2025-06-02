@@ -57,15 +57,13 @@ List view can be used in combination with the following features:
 - ✅ [Filtering](/x/react-data-grid/filtering/)
 - ✅ [Pagination](/x/react-data-grid/pagination/)
 - ✅ [Row selection](/x/react-data-grid/row-selection/)
-- ✅ [Multi filters](/x/react-data-grid/filtering/multi-filters/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+- ✅ [Multi-filters](/x/react-data-grid/filtering/multi-filters/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 - ✅ [Row pinning](/x/react-data-grid/row-pinning/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 - ✅ [Cell selection](/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 :::warning
 Features not listed here may not work as expected (or at all).
-
 If you're using a feature that's listed above and it's not working as expected, please [open a bug report](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cbug+%F0%9F%90%9B&projects=&template=1.bug.yml).
-
 If you need to use list view with any other features not listed, please [open a feature request](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cnew+feature&projects=&template=2.feature.yml).
 :::
 
