@@ -16,12 +16,13 @@ import {
 } from '@mui/x-charts/hooks';
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
 import { seriesConfig } from '@mui/x-charts/ScatterChart/seriesConfig';
+import useId from '@mui/utils/useId';
+import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 
 const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
   rx: 4,
   ry: 4,
   stroke: theme.palette.grey[700],
-  // TODO: Use masks to make it look like the designs: https://stackoverflow.com/questions/22579508/subtract-one-circle-from-another-in-svg
   fill: alpha(theme.palette.grey[700], 0.4),
 }));
 
@@ -43,9 +44,52 @@ export function ChartAxisZoomSliderPreview({
 }: ChartAxisZoomSliderPreviewProps) {
   return (
     <g {...props}>
-      <PreviewBackgroundRect {...props} />
+      <PreviewRectangles {...props} axisId={axisId} />
+      <rect {...props} fill="transparent" rx={4} ry={4} />
       <ScatterPreview {...props} />
     </g>
+  );
+}
+
+function PreviewRectangles({
+  axisId,
+  x,
+  y,
+  height,
+  width,
+}: {
+  axisId: AxisId;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}) {
+  const store = useStore();
+  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const id = useId();
+
+  if (!zoomData) {
+    return null;
+  }
+
+  const maskId = `zoom-preview-mask-${axisId}-${id}`;
+
+  return (
+    <React.Fragment>
+      <mask id={maskId}>
+        <rect x={x} y={y} width={width} height={height} fill="white" />
+        <rect
+          x={x + (zoomData.start / 100) * width}
+          y={y}
+          width={((zoomData.end - zoomData.start) / 100) * width}
+          height={height}
+          fill="black"
+          rx={4}
+          ry={4}
+        />
+      </mask>
+      <PreviewBackgroundRect x={x} y={y} width={width} height={height} mask={`url(#${maskId})`} />
+    </React.Fragment>
   );
 }
 
