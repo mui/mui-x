@@ -7,7 +7,7 @@ import {
 } from '@mui/x-charts/internals';
 import { Position } from '@mui/x-charts/models';
 import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { FunnelCurveType, FunnelPointShape } from './curves';
+import { FunnelCurveType } from './curves';
 
 export type FunnelItemId = string | number;
 

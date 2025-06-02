@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions, FunnelPointShape, Point } from './curve.types';
+import { CurveOptions, Point } from './curve.types';
 
 /**
  * This is a custom "bump" curve generator.
