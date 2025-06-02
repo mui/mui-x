@@ -8,6 +8,25 @@
   padding: var(--space-1);
 }
 
+.ViewSwitcherMenuPositioner {
+  z-index: 3;
+}
+
+.ViewSwitcherMenuPopup {
+  min-width: 190px;
+  padding: var(--space-2);
+  border-radius: var(--radius-4);
+  background-color: canvas;
+  outline: 1px solid var(--gray-2);
+  box-shadow: var(--shadow-5);
+}
+
+.ViewSwitcherRadioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
 .ViewSwitcherMainItem {
   border: 0;
   background: none;
@@ -26,33 +45,6 @@
   padding-inline-end: var(--space-2);
 }
 
-.ViewSwitcherMainItem[data-checked],
-.ViewSwitcherMainItem[data-highlighted],
-.ViewSwitcherMainItem[data-pressed],
-.ViewSwitcherMainItem:focus-visible {
-  background-color: var(--primary-3);
-  color: var(--primary-13);
-}
-
-.ViewSwitcherMenuPositioner {
-  z-index: 3;
-}
-
-.ViewSwitcherMenuPopup {
-  min-width: 190px;
-  padding: var(--space-2);
-  border-radius: var(--radius-4);
-  background-color: canvas;
-  outline: 1px solid var(--gray-2);
-  box-shadow: -2px 2px 12px 0px rgba(0, 0, 0, 0.12);
-}
-
-.ViewSwitcherRadioGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
 .ViewSwitcherRadioItem {
   z-index: 3;
   cursor: default;
@@ -64,8 +56,69 @@
   border-radius: var(--radius-3);
 }
 
-.ViewSwitcherRadioItem[data-highlighted],
+/* Hovered */
+.ViewSwitcherMainItem:hover,
+.ViewSwitcherRadioItem:hover {
+  background-color: var(--gray-2-rgba-50);
+}
+
+/* Active */
+.ViewSwitcherMainItem:active,
+.ViewSwitcherRadioItem:active {
+  background:
+    linear-gradient(to bottom, var(--primary-4-rgba-70), var(--primary-4-rgba-70)),
+    linear-gradient(to bottom, var(--gray-2-rgba-30), var(--gray-2-rgba-30));
+}
+
+/* Selected */
+.ViewSwitcherMainItem[data-highlighted],
+.ViewSwitcherMainItem[data-pressed],
 .ViewSwitcherRadioItem[data-checked] {
-  color: var(--primary-13);
   background-color: var(--primary-3);
+  color: var(--primary-13);
+}
+
+/* Selected and hovered */
+.ViewSwitcherMainItem[data-highlighted]:hover,
+.ViewSwitcherMainItem[data-pressed]:hover,
+.ViewSwitcherRadioItem[data-checked]:hover {
+  background-color: var(--primary-4);
+}
+
+/* Focused */
+.ViewSwitcherMainItem:focus-visible,
+.ViewSwitcherRadioItem:focus-visible {
+  background-color: var(--gray-2-rgba-50);
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Focused and hovered */
+.ViewSwitcherMainItem:focus-visible:hover,
+.ViewSwitcherRadioItem:focus-visible:hover {
+  background-color: var(--gray-2-rgba-80);
+}
+
+/* Active and focused */
+.ViewSwitcherMainItem:active:focus-visible,
+.ViewSwitcherRadioItem:active:focus-visible {
+  background:
+    linear-gradient(to bottom, var(--primary-4-rgba-80), var(--primary-4-rgba-80)),
+    linear-gradient(to bottom, var(--gray-2-rgba-40), var(--gray-2-rgba-40));
+}
+
+/* Selected and focused */
+.ViewSwitcherMainItem[data-highlighted]:focus-visible,
+.ViewSwitcherMainItem[data-pressed]:focus-visible,
+.ViewSwitcherRadioItem[data-checked]:focus-visible {
+  background-color: var(--primary-4);
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Selected and hovered and focused */
+.ViewSwitcherMainItem[data-highlighted]:focus-visible:hover,
+.ViewSwitcherMainItem[data-pressed]:focus-visible:hover,
+.ViewSwitcherRadioItem[data-checked]:focus-visible:hover {
+  background-color: var(--primary-5);
 }
