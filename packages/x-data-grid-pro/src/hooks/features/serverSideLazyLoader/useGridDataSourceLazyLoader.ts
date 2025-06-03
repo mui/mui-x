@@ -164,13 +164,14 @@ export const useGridDataSourceLazyLoader = (
       return;
     }
 
-    const expandedDetailPanels = gridDetailPanelExpandedRowIdsSelector(privateApiRef);
+    const expandedDetailPanels = new Set(gridDetailPanelExpandedRowIdsSelector(privateApiRef));
     const pageToSkip = adjustRowParams({
       start: renderedRowsIntervalCache.current.firstRowToRender,
       end: renderedRowsIntervalCache.current.lastRowToRender,
     } as GridGetRowsParams);
 
     let hasChanged = false;
+    let hasClosedDetailPanels = false;
     const isInitialPage =
       renderedRowsIntervalCache.current.firstRowToRender === 0 &&
       renderedRowsIntervalCache.current.lastRowToRender === 0;
@@ -198,6 +199,7 @@ export const useGridDataSourceLazyLoader = (
 
       // close the detail panel so that it is not visible while the row is being fetched again
       if (expandedDetailPanels.has(rowId)) {
+        hasClosedDetailPanels = true;
         expandedDetailPanels.delete(rowId);
         closedDetailPanels.current.add(rowId);
       }
@@ -227,6 +229,16 @@ export const useGridDataSourceLazyLoader = (
 
     if (!hasChanged) {
       return;
+    }
+
+    if (hasClosedDetailPanels) {
+      privateApiRef.current.setState((state) => ({
+        ...state,
+        detailPanel: {
+          ...state.detailPanel,
+          expandedRowIds: expandedDetailPanels,
+        },
+      }));
     }
 
     tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
@@ -266,7 +278,7 @@ export const useGridDataSourceLazyLoader = (
       }
 
       const { response, fetchParams } = params;
-      const expandedDetailPanels = gridDetailPanelExpandedRowIdsSelector(privateApiRef);
+      const expandedDetailPanels = new Set(gridDetailPanelExpandedRowIdsSelector(privateApiRef));
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
       const tree = privateApiRef.current.state.rows.tree;
       const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
@@ -289,6 +301,7 @@ export const useGridDataSourceLazyLoader = (
             ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
             : fetchParams.start;
 
+        let hasOpenedDetailPanels = false;
         // Check for duplicate rows
         let duplicateRowCount = 0;
         response.rows.forEach((row) => {
@@ -312,10 +325,21 @@ export const useGridDataSourceLazyLoader = (
 
           // re-open the detail panel if it was closed by this hook
           if (closedDetailPanels.current.has(rowId)) {
+            hasOpenedDetailPanels = true;
             expandedDetailPanels.add(rowId);
             closedDetailPanels.current.delete(rowId);
           }
         });
+
+        if (hasOpenedDetailPanels) {
+          privateApiRef.current.setState((state) => ({
+            ...state,
+            detailPanel: {
+              ...state.detailPanel,
+              expandedRowIds: expandedDetailPanels,
+            },
+          }));
+        }
 
         if (duplicateRowCount > 0) {
           tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
