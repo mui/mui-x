@@ -163,7 +163,7 @@ function PTOCalendar() {
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   fontWeight: 'bold',
-                  paddingLeft: '16px',
+                  paddingLeft: 1.25,
                 }}
               >
                 {params.value}
@@ -258,7 +258,7 @@ function PTOCalendar() {
                 height: '100%',
                 py: 0,
                 justifyContent: 'center',
-                backgroundColor: isCurrent ? '#f7f6f9' : 'transparent',
+                backgroundColor: isCurrent ? '#faf9fb' : 'transparent',
                 ...theme.applyStyles('dark', {
                   backgroundColor: isCurrent ? '#1e2429' : 'transparent',
                 }),
@@ -302,12 +302,6 @@ function PTOCalendar() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: isCurrent ? '#f7f6f9' : '#f7f6f9',
-                    ...theme.applyStyles('dark', {
-                      backgroundColor: isCurrent
-                        ? `${FILTER_COLORS.vacation.dark.background}`
-                        : '#141A1F',
-                    }),
                     color: isCurrent ? '#3E63DD' : 'text.secondary',
                     fontWeight: 'bold',
                     fontSize: '0.7rem',
@@ -368,7 +362,7 @@ function PTOCalendar() {
                     : showSick
                       ? FILTER_COLORS.sick.background
                       : isCurrent
-                        ? '#f7f6f9'
+                        ? '#faf9fb'
                         : 'transparent',
                   display: 'flex',
                   flexDirection: 'column',
@@ -508,6 +502,7 @@ function PTOCalendar() {
           hideFooter
           columnHeaderHeight={40}
           rowHeight={50}
+          showCellVerticalBorder
           slots={{ toolbar: CalendarToolbar }}
           showToolbar
           getRowHeight={(params) => {
@@ -519,28 +514,19 @@ function PTOCalendar() {
           sx={{
             border: 'none',
             height: '100%',
-            '& .MuiDataGrid-main': {
-              border: 'none',
-            },
+            '--DataGrid-rowBorderColor': '#EEEBF0',
+            ...theme.applyStyles('dark', {
+              '--DataGrid-rowBorderColor': '#38363E',
+            }),
             '& .MuiDataGrid-virtualScroller': {
               overflow: 'auto',
               ...theme.applyStyles('dark', {
                 backgroundColor: '#141A1F',
               }),
             },
-            '& .MuiDataGrid-filler--pinnedLeft': {
-              borderRight: 'none',
-            },
             '& .MuiDataGrid-cell': {
               cursor: 'pointer',
               p: 0,
-              border: 'none',
-              '&:not([data-field="employee"])': {
-                border: '0.75px solid #EAE7EC',
-                ...theme.applyStyles('dark', {
-                  borderColor: '#1e2429',
-                }),
-              },
               ...theme.applyStyles('dark', {
                 backgroundColor: '#141A1F',
               }),
@@ -548,27 +534,15 @@ function PTOCalendar() {
             '& .MuiDataGrid-row': {
               '&:hover': {
                 '& .MuiDataGrid-cell': {
-                  backgroundColor: '#e3f2fd',
+                  backgroundColor: '#f7f9ff',
                   ...theme.applyStyles('dark', {
-                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    backgroundColor: '#1e2933',
                   }),
                 },
               },
             },
             '& .MuiDataGrid-columnHeader': {
               p: 0,
-              backgroundColor: '#f7f6f9',
-              ...theme.applyStyles('dark', {
-                backgroundColor: '#141A1F',
-              }),
-              border: 'none',
-              '&:not([data-field="employee"])': {
-                border: '0.75px solid #EAE7EC',
-                borderTop: '0.75px solid #EAE7EC',
-                ...theme.applyStyles('dark', {
-                  border: 'none',
-                }),
-              },
             },
             '& .MuiDataGrid-columnHeaderTitleContainer': {
               p: 0,
@@ -589,15 +563,13 @@ function PTOCalendar() {
               display: 'none',
             },
             '& .MuiDataGrid-cell[data-field="employee"]': {
-              padding: '12px 8px',
+              padding: '12px 6px',
               color: '#09090b',
-              borderRight: 'none',
             },
             '& .MuiDataGrid-columnHeader[data-field="employee"]': {
               padding: '8px',
-              borderRight: 'none',
               '& .MuiDataGrid-columnHeaderTitleContainer': {
-                pl: 2,
+                pl: 1,
                 '& .MuiDataGrid-columnHeaderTitle': {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
@@ -605,26 +577,17 @@ function PTOCalendar() {
                 },
               },
             },
-            '& .MuiDataGrid-pinnedRows': {
-              mb: '5px',
-              '& .MuiDataGrid-cell': {
-                border: 'none',
-              },
+            '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell:not(.MuiDataGrid-cell--pinnedLeft)': {
+              borderRight: 0,
             },
-            '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell[data-field="employee"]': {
-              backgroundColor: '#f7f6f9',
+            '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell': {
+              backgroundColor: '#faf9fb',
               ...theme.applyStyles('dark', {
-                backgroundColor: '#141A1F',
+                backgroundColor: '#1e2429',
               }),
             },
             '& .MuiDataGrid-virtualScrollerContent': {
               '& .MuiDataGrid-row:last-child': {
-                '& .MuiDataGrid-cell:not([data-field="employee"])': {
-                  borderBottom: '0.75px solid #EAE7EC',
-                  ...theme.applyStyles('dark', {
-                    borderColor: '#1e2429',
-                  }),
-                },
                 '& .MuiDataGrid-cell:first-of-type:not([data-field="employee"])': {
                   borderBottomLeftRadius: '10px',
                 },
@@ -632,18 +595,6 @@ function PTOCalendar() {
                   borderBottomRightRadius: '10px',
                 },
               },
-            },
-            [`& .MuiDataGrid-columnHeader[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]: {
-              backgroundColor: '#f7f6f9',
-              ...theme.applyStyles('dark', {
-                backgroundColor: `${FILTER_COLORS.vacation.dark.background}`,
-              }),
-            },
-            [`& .MuiDataGrid-cell[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]: {
-              backgroundColor: '#f7f6f9',
-              ...theme.applyStyles('dark', {
-                backgroundColor: `${FILTER_COLORS.vacation.dark.background}`,
-              }),
             },
           }}
         />
@@ -665,7 +616,7 @@ function PTOCalendarContainer() {
             DataGrid: {
               bg: '#fff',
               pinnedBg: '#fff',
-              headerBg: '#fff',
+              headerBg: '#faf9fb',
             },
           },
         },
@@ -675,7 +626,7 @@ function PTOCalendarContainer() {
             DataGrid: {
               bg: '#141A1F',
               pinnedBg: '#141A1F',
-              headerBg: '#141A1F',
+              headerBg: '#1e2429',
             },
           },
         },

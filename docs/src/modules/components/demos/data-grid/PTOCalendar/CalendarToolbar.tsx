@@ -34,7 +34,12 @@ function CalendarToolbar() {
         justifyContent="space-between"
         flexWrap="wrap"
         gap={2}
-        sx={{ px: 2, py: 1.75 }}
+        sx={{
+          borderBottom: '1px solid',
+          borderBottomColor: 'divider',
+          px: 2,
+          py: 1.75,
+        }}
       >
         <FilterChips
           activeFilters={activeFilters}
