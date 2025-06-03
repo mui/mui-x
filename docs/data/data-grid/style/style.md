@@ -99,6 +99,10 @@ It is also called with a `GridCellParams` object.
 
 {{"demo": "StylingAllCells.js", "bg": "inline"}}
 
+3. Using the `sx` prop on the `DataGrid` component:
+
+{{"demo": "StylingCellsSx.js", "bg": "inline"}}
+
 ## Cell alignment
 
 Use the `align` property in `GridColDef` to change the alignment of content of the cells.
