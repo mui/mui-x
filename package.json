@@ -199,7 +199,7 @@
     "webpack": "^5.99.9",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "resolutions": {},
   "packageManager": "pnpm@10.11.0",
