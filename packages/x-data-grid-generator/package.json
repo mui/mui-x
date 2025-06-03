@@ -32,7 +32,7 @@
     "directory": "packages/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.4",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-premium": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
