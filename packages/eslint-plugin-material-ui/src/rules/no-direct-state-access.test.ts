@@ -1,18 +1,13 @@
-// The polyfill of `import.meta.url` used in @eslint/eslintrc tests the presence
-// of `document` to detect if it's on node or web. However, JSDOM sets `document`
-// so it thinks it's on the web and can't import correctly other modules.
-// The workaround here resets the `document` to make it detect that it's on node.
-// It can removed once this repo became an ESM package.
-const originalDocument = global.document;
-global.document = undefined;
+import { afterAll, it, describe } from 'vitest';
+import { RuleTester } from '@typescript-eslint/rule-tester';
+import TSESlintParser from '@typescript-eslint/parser';
+import rule from './no-direct-state-access';
+import path from 'node:path';
 
-const path = require('path');
-const mocha = require('mocha');
-const { RuleTester } = require('@typescript-eslint/rule-tester');
-const TSESlintParser = require('@typescript-eslint/parser');
-const rule = require('./no-direct-state-access');
-
-RuleTester.afterAll = mocha.after;
+RuleTester.afterAll = afterAll;
+RuleTester.it = it;
+RuleTester.itOnly = it.only;
+RuleTester.describe = describe;
 
 const ruleTester = new RuleTester({
   languageOptions: {
@@ -76,5 +71,3 @@ const useCustomHook = () => {
     },
   ],
 });
-
-global.document = originalDocument;
