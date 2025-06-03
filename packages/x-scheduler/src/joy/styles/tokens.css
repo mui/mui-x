@@ -244,8 +244,25 @@
   --cursor-button: default;
   --cursor-disabled: not-allowed;
 
+  /* Outline */
   --outline-focus: 2px solid var(--violet-4);
   --outline-focus-offset: 2px;
+
+  /* Interactive states */
+  --interactive-hover-bg: var(--gray-2-rgba-50);
+  --interactive-active-bg:
+    linear-gradient(to bottom, var(--primary-4-rgba-70), var(--primary-4-rgba-70)),
+    linear-gradient(to bottom, var(--gray-2-rgba-30), var(--gray-2-rgba-30));
+  --interactive-selected-bg: var(--primary-3);
+  --interactive-selected-text: var(--primary-13);
+  --interactive-selected-hover-bg: var(--primary-4);
+  --interactive-focused-bg: var(--gray-2-rgba-50);
+  --interactive-focused-hover-bg: var(--gray-2-rgba-80);
+  --interactive-active-focused-bg:
+    linear-gradient(to bottom, var(--primary-4-rgba-80), var(--primary-4-rgba-80)),
+    linear-gradient(to bottom, var(--gray-2-rgba-40), var(--gray-2-rgba-40));
+  --interactive-selected-focused-bg: var(--primary-4);
+  --interactive-selected-hover-focused-bg: var(--primary-5);
 
   /* Font */
 

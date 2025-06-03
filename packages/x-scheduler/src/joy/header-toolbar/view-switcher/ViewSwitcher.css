@@ -59,36 +59,34 @@
 /* Hovered */
 .ViewSwitcherMainItem:hover,
 .ViewSwitcherRadioItem:hover {
-  background-color: var(--gray-2-rgba-50);
+  background-color: var(--interactive-hover-bg);
 }
 
 /* Active */
 .ViewSwitcherMainItem:active,
 .ViewSwitcherRadioItem:active {
-  background:
-    linear-gradient(to bottom, var(--primary-4-rgba-70), var(--primary-4-rgba-70)),
-    linear-gradient(to bottom, var(--gray-2-rgba-30), var(--gray-2-rgba-30));
+  background: var(--interactive-active-bg);
 }
 
 /* Selected */
 .ViewSwitcherMainItem[data-highlighted],
 .ViewSwitcherMainItem[data-pressed],
 .ViewSwitcherRadioItem[data-checked] {
-  background-color: var(--primary-3);
-  color: var(--primary-13);
+  background-color: var(--interactive-selected-bg);
+  color: var(--interactive-selected-text);
 }
 
 /* Selected and hovered */
 .ViewSwitcherMainItem[data-highlighted]:hover,
 .ViewSwitcherMainItem[data-pressed]:hover,
 .ViewSwitcherRadioItem[data-checked]:hover {
-  background-color: var(--primary-4);
+  background-color: var(--interactive-selected-hover-bg);
 }
 
 /* Focused */
 .ViewSwitcherMainItem:focus-visible,
 .ViewSwitcherRadioItem:focus-visible {
-  background-color: var(--gray-2-rgba-50);
+  background-color: var(--interactive-focused-bg);
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
@@ -96,22 +94,20 @@
 /* Focused and hovered */
 .ViewSwitcherMainItem:focus-visible:hover,
 .ViewSwitcherRadioItem:focus-visible:hover {
-  background-color: var(--gray-2-rgba-80);
+  background-color: var(--interactive-focused-hover-bg);
 }
 
 /* Active and focused */
 .ViewSwitcherMainItem:active:focus-visible,
 .ViewSwitcherRadioItem:active:focus-visible {
-  background:
-    linear-gradient(to bottom, var(--primary-4-rgba-80), var(--primary-4-rgba-80)),
-    linear-gradient(to bottom, var(--gray-2-rgba-40), var(--gray-2-rgba-40));
+  background: var(--interactive-active-focused-bg);
 }
 
 /* Selected and focused */
 .ViewSwitcherMainItem[data-highlighted]:focus-visible,
 .ViewSwitcherMainItem[data-pressed]:focus-visible,
 .ViewSwitcherRadioItem[data-checked]:focus-visible {
-  background-color: var(--primary-4);
+  background-color: var(--interactive-selected-focused-bg);
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
@@ -120,5 +116,5 @@
 .ViewSwitcherMainItem[data-highlighted]:focus-visible:hover,
 .ViewSwitcherMainItem[data-pressed]:focus-visible:hover,
 .ViewSwitcherRadioItem[data-checked]:focus-visible:hover {
-  background-color: var(--primary-5);
+  background-color: var(--interactive-selected-hover-focused-bg);
 }
