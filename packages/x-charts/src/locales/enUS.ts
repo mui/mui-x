@@ -7,8 +7,15 @@ export const enUSLocaleText: ChartsLocaleText = {
   // Overlay
   loading: 'Loading data…',
   noData: 'No data to display',
+
+  // Toolbar
   zoomIn: 'Zoom in',
   zoomOut: 'Zoom out',
+
+  // Toolbar Export
+  toolbarExport: 'Export',
+  toolbarExportPrint: 'Print chart',
+  toolbarExportPng: 'Export as PNG',
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;

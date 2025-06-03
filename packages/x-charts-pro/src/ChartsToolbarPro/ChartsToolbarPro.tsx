@@ -1,5 +1,7 @@
-import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
+'use client';
+
 import * as React from 'react';
+import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   useChartContext,
   useSelector,
@@ -7,21 +9,43 @@ import {
   UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
+import useId from '@mui/utils/useId';
+import { ChartsExportDisplayOptions } from './export.types';
+import { ChartsMenu } from './ChartsMenu';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsSlotsPro } from '../internals/material';
+import {
+  ChartsToolbarPrintExportOptions,
+  ChartsToolbarPrintExportTrigger,
+} from './ChartsToolbarPrintExportTrigger';
+import { ChartsToolbarImageExportTrigger } from './ChartsToolbarImageExportTrigger';
 
-export interface ChartsToolbarProProps extends ChartsToolbarProps {}
+interface ChartsToolbarProProps extends ChartsToolbarProps {
+  printOptions?: ChartsToolbarPrintExportOptions;
+  imageExportOptions?: ChartsExportDisplayOptions;
+}
 
 /**
  * The chart toolbar component for the pro package.
  */
-export function ChartsToolbarPro(props: ChartsToolbarProProps) {
+export function ChartsToolbarPro({
+  printOptions,
+  imageExportOptions,
+  ...other
+}: ChartsToolbarProProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { store } = useChartContext<[UseChartCartesianAxisSignature]>();
   const { localeText } = useChartsLocalization();
+  const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
+  const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
+  const exportMenuId = useId();
+  const exportMenuTriggerId = useId();
   const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
+  const showExportMenu =
+    printOptions?.disableToolbarButton !== true ||
+    imageExportOptions?.disableToolbarButton !== true;
 
   const children: Array<React.JSX.Element> = [];
 
@@ -46,9 +70,68 @@ export function ChartsToolbarPro(props: ChartsToolbarProProps) {
     );
   }
 
+  if (showExportMenu) {
+    const Tooltip = slots.baseTooltip;
+    const MenuList = slots.baseMenuList;
+    const MenuItem = slots.baseMenuItem;
+    const ExportIcon = slots.exportIcon;
+
+    const closeExportMenu = () => setExportMenuOpen(false);
+
+    children.push(
+      <React.Fragment key="export-menu">
+        <Tooltip title={localeText.toolbarExport}>
+          <ToolbarButton
+            ref={exportMenuTriggerRef}
+            id={exportMenuTriggerId}
+            aria-controls={exportMenuId}
+            aria-haspopup="true"
+            aria-expanded={exportMenuOpen ? 'true' : undefined}
+            onClick={() => setExportMenuOpen(!exportMenuOpen)}
+          >
+            <ExportIcon />
+          </ToolbarButton>
+        </Tooltip>
+
+        <ChartsMenu
+          target={exportMenuTriggerRef.current}
+          open={exportMenuOpen}
+          onClose={closeExportMenu}
+          position="bottom-end"
+        >
+          <MenuList
+            id={exportMenuId}
+            aria-labelledby={exportMenuTriggerId}
+            autoFocusItem
+            {...slotProps?.baseMenuList}
+          >
+            {!printOptions?.disableToolbarButton && (
+              <ChartsToolbarPrintExportTrigger
+                render={<MenuItem {...slotProps?.baseMenuItem} />}
+                options={printOptions}
+                onClick={closeExportMenu}
+              >
+                {localeText.toolbarExportPrint}
+              </ChartsToolbarPrintExportTrigger>
+            )}
+            {!imageExportOptions?.disableToolbarButton && (
+              <ChartsToolbarImageExportTrigger
+                render={<MenuItem {...slotProps?.baseMenuItem} />}
+                options={imageExportOptions}
+                onClick={closeExportMenu}
+              >
+                {localeText.toolbarExportPng}
+              </ChartsToolbarImageExportTrigger>
+            )}
+          </MenuList>
+        </ChartsMenu>
+      </React.Fragment>,
+    );
+  }
+
   if (children.length === 0) {
     return null;
   }
 
-  return <Toolbar {...props}>{children}</Toolbar>;
+  return <Toolbar {...other}>{children}</Toolbar>;
 }
