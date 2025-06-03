@@ -16,7 +16,7 @@ declare global {
 // Checking the environment variables simplifies the scripts in the package.json
 // We use `cross-env BROWSER=true vitest` instead of `vitest --project "browser/*"`
 // Which allows us to run `pnpm test:browser --project "x-charts"` for example.
-const getWorkspaces = () => {
+const getProjects = () => {
   const getFill = () => {
     const isBrowser = process.env.BROWSER === 'true';
     // We delete the env to prevent it from being used in the tests
@@ -37,7 +37,7 @@ const getWorkspaces = () => {
 
 export default defineConfig({
   test: {
-    workspace: getWorkspaces(),
+    projects: getProjects(),
     coverage: {
       provider: 'v8',
       reporter: process.env.CI ? ['lcovonly'] : ['text'],

@@ -7,8 +7,8 @@ import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
-import './WeekView.css';
 import { useTranslations } from '../utils/TranslationsContext';
+import './WeekView.css';
 
 function getCurrentWeekDays(today: SchedulerValidDate) {
   const startOfWeek = today.startOf('week');
