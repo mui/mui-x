@@ -565,6 +565,7 @@ function PTOCalendar() {
             '& .MuiDataGrid-cell[data-field="employee"]': {
               padding: '12px 6px',
               color: '#09090b',
+              borderTopColor: 'transparent',
             },
             '& .MuiDataGrid-columnHeader[data-field="employee"]': {
               padding: '8px',
