@@ -1,74 +1,37 @@
+'use client';
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/system';
-import composeClasses from '@mui/utils/composeClasses';
-import clsx from 'clsx';
-import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
-import { vars } from '../../constants/cssVariables';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { ToolbarContext } from './ToolbarContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { sortByDocumentPosition } from './utils';
 
-export type ToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
-  /**
-   * A function to customize rendering of the component.
-   */
-  render?: RenderProp<React.ComponentProps<typeof ToolbarRoot>>;
-};
+export interface ToolbarContextValue {
+  focusableItemId: string | null;
+  registerItem: (id: string, ref: React.RefObject<HTMLButtonElement | null>) => void;
+  unregisterItem: (id: string) => void;
+  onItemKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onItemFocus: (id: string) => void;
+  onItemDisabled: (id: string, disabled: boolean) => void;
+}
 
-type OwnerState = DataGridProcessedProps;
+export const ToolbarContext = React.createContext<ToolbarContextValue | undefined>(undefined);
+
+export function useToolbarContext() {
+  const context = React.useContext(ToolbarContext);
+
+  if (context === undefined) {
+    throw new Error(
+      'MUI X: Missing context. Toolbar subcomponents must be placed within a <Toolbar /> component.',
+    );
+  }
+
+  return context;
+}
 
 type Item = {
   id: string;
   ref: React.RefObject<HTMLButtonElement | null>;
 };
 
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['toolbar'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
-const ToolbarRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'Toolbar',
-})({
-  flex: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'end',
-  gap: vars.spacing(0.25),
-  padding: vars.spacing(0.75),
-  minHeight: 52,
-  boxSizing: 'border-box',
-  borderBottom: `1px solid ${vars.colors.border.base}`,
-});
-
-/**
- * The top level Toolbar component that provides context to child components.
- * It renders a styled `<div />` element.
- *
- * Demos:
- *
- * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)
- *
- * API:
- *
- * - [Toolbar API](https://mui.com/x/api/data-grid/toolbar/)
- */
-const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props, ref) {
-  const { render, className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
-
+export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
   const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
+  const focusableItemIdRef = React.useRef<string | null>(focusableItemId);
   const [items, setItems] = React.useState<Item[]>([]);
 
   const getSortedItems = React.useCallback(() => items.sort(sortByDocumentPosition), [items]);
@@ -181,16 +144,22 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   );
 
   React.useEffect(() => {
+    focusableItemIdRef.current = focusableItemId;
+  }, [focusableItemId]);
+
+  React.useEffect(() => {
     const sortedItems = getSortedItems();
 
     if (sortedItems.length > 0) {
       // Set initial focusable item
-      if (!focusableItemId) {
+      if (!focusableItemIdRef.current) {
         setFocusableItemId(sortedItems[0].id);
         return;
       }
 
-      const focusableItemIndex = sortedItems.findIndex((item) => item.id === focusableItemId);
+      const focusableItemIndex = sortedItems.findIndex(
+        (item) => item.id === focusableItemIdRef.current,
+      );
 
       if (!sortedItems[focusableItemIndex]) {
         // Last item has been removed from the items array
@@ -208,7 +177,6 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getSortedItems, findEnabledItem]);
 
   const contextValue = React.useMemo(
@@ -223,27 +191,34 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
     [focusableItemId, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemDisabled],
   );
 
-  const element = useComponentRenderer(ToolbarRoot, render, {
-    role: 'toolbar',
-    'aria-orientation': 'horizontal',
-    'aria-label': rootProps.label || undefined,
-    className: clsx(classes.root, className),
-    ...other,
-    ref,
-  });
+  return <ToolbarContext.Provider value={contextValue}>{children}</ToolbarContext.Provider>;
+}
 
-  return <ToolbarContext.Provider value={contextValue}>{element}</ToolbarContext.Provider>;
-});
+/* eslint-disable no-bitwise */
+function sortByDocumentPosition(
+  a: { ref: React.RefObject<HTMLButtonElement | null> },
+  b: { ref: React.RefObject<HTMLButtonElement | null> },
+) {
+  if (!a.ref.current || !b.ref.current) {
+    return 0;
+  }
 
-Toolbar.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * A function to customize rendering of the component.
-   */
-  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-} as any;
+  const position = a.ref.current.compareDocumentPosition(b.ref.current);
 
-export { Toolbar };
+  if (!position) {
+    return 0;
+  }
+
+  if (
+    position & Node.DOCUMENT_POSITION_FOLLOWING ||
+    position & Node.DOCUMENT_POSITION_CONTAINED_BY
+  ) {
+    return -1;
+  }
+
+  if (position & Node.DOCUMENT_POSITION_PRECEDING || position & Node.DOCUMENT_POSITION_CONTAINS) {
+    return 1;
+  }
+
+  return 0;
+}
