@@ -102,7 +102,7 @@
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/karma": "^6.3.9",
-    "@types/lodash": "^4.17.16",
+    "@types/lodash": "^4.17.17",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.15.29",
     "@types/react": "^19.1.6",
@@ -119,7 +119,6 @@
     "autoprefixer": "^10.4.21",
     "axe-core": "4.10.3",
     "babel-loader": "^10.0.0",
-    "babel-plugin-istanbul": "^7.0.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-optimize-clsx": "^2.6.2",
     "babel-plugin-react-remove-properties": "^0.3.0",
@@ -200,7 +199,7 @@
     "webpack": "^5.99.9",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "resolutions": {},
   "packageManager": "pnpm@10.11.0",
