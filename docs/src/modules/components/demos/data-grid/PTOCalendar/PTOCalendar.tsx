@@ -24,7 +24,7 @@ import { findContinuousPeriods, isCurrentDay } from './utils/dateUtils';
 import { HolidayData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
-import { useTheme } from '@mui/material/styles';
+import { createTheme, useTheme } from '@mui/material/styles';
 import { FILTER_COLORS } from './constants';
 
 interface RowData {
@@ -477,11 +477,7 @@ function PTOCalendar() {
       <Box
         sx={{
           width: '100%',
-          backgroundColor: 'grey.80',
-          ...theme.applyStyles('dark', {
-            backgroundColor: '#141A1F',
-          }),
-          borderRadius: 1,
+          borderRadius: 3,
           display: 'flex',
           flexDirection: 'column',
           gap: { xs: 2, sm: 3 },
@@ -489,7 +485,11 @@ function PTOCalendar() {
           minHeight: 0,
           overflow: 'hidden',
           border: '1px solid',
-          borderColor: 'divider',
+          borderColor: '#EEEBF0',
+          ...theme.applyStyles('dark', {
+            borderColor: '#38363E',
+            backgroundColor: '#141A1F',
+          }),
         }}
       >
         <DataGridPro
@@ -608,7 +608,6 @@ function PTOCalendar() {
               },
             },
             '& .MuiDataGrid-pinnedRows': {
-              backgroundColor: '#f7f6f9',
               mb: '5px',
               '& .MuiDataGrid-cell': {
                 border: 'none',
@@ -656,8 +655,42 @@ function PTOCalendar() {
 }
 
 function PTOCalendarContainer() {
+  const docsTheme = useTheme();
+  const docsMode = docsTheme?.palette?.mode;
+
+  const theme = React.useMemo(() => {
+    const resultTheme = createTheme({
+      colorSchemes: {
+        light: {
+          palette: {
+            DataGrid: {
+              bg: '#fff',
+              pinnedBg: '#fff',
+              headerBg: '#fff',
+            },
+          },
+        },
+        dark: {
+          palette: {
+            DataGrid: {
+              bg: '#141A1F',
+              pinnedBg: '#141A1F',
+              headerBg: '#141A1F',
+            },
+          },
+        },
+      },
+    });
+
+    if (docsMode) {
+      Object.assign(resultTheme, resultTheme.colorSchemes[docsMode]);
+    }
+
+    return resultTheme;
+  }, [docsMode]);
+
   return (
-    <DemoInstanceThemeProvider runtimeTheme={undefined}>
+    <DemoInstanceThemeProvider runtimeTheme={theme}>
       <PTOCalendar />
     </DemoInstanceThemeProvider>
   );

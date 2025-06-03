@@ -20,18 +20,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      gap={2}
-      sx={{
-        overflow: 'auto',
-        py: 1,
-      }}
-    >
-      <Typography fontSize="1rem" sx={{ color: 'text.primary', fontWeight: 'bold' }}>
-        Filter
-      </Typography>
+    <Stack direction="row" alignItems="center" gap={1}>
       {FILTER_OPTIONS.map((filter) => {
         const isActive = activeFilters.includes(filter);
         return (

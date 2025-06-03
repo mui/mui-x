@@ -1,87 +1,52 @@
 import Stack from '@mui/material/Stack';
 import { FilterChips } from './FilterChips';
-import { CalendarHeader } from './CalendarHeader';
 import { useCalendarContext } from './CalendarContext';
-import TextField from '@mui/material/TextField';
-import Cancel from '@mui/icons-material/Cancel';
-import Search from '@mui/icons-material/Search';
-import { QuickFilter, QuickFilterClear, QuickFilterControl } from '@mui/x-data-grid-pro';
-import InputAdornment from '@mui/material/InputAdornment';
-import { styled, useTheme } from '@mui/material/styles';
-
-const StyledQuickFilter = styled(QuickFilter)({
-  flex: 1,
-  maxWidth: '260px',
-});
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import { CalendarNavigation } from './CalendarNavigation';
+import { CalendarSearch } from './CalendarSearch';
 
 function CalendarToolbar() {
   const { activeFilters, handleFilterRemove, handleFilterAdd } = useCalendarContext();
   const theme = useTheme();
+
   return (
-    <Stack
-      sx={{
-        bgcolor: 'grey.80',
-        ...theme.applyStyles('dark', {
-          backgroundColor: '#141A1F',
-        }),
-      }}
-    >
-      <CalendarHeader />
+    <Stack>
       <Stack
         direction="row"
         alignItems="center"
         justifyContent="space-between"
         flexWrap="wrap"
         gap={2}
-        sx={{ px: 2, py: 1.5 }}
+        sx={{
+          borderBottom: '1px solid',
+          borderBottomColor: '#f2eff3',
+          px: 2,
+          py: 1.75,
+          ...theme.applyStyles('dark', {
+            borderBottomColor: '#38363E',
+          }),
+        }}
+      >
+        <Typography fontSize="1.25rem" fontWeight="bold">
+          Time Off Calendar
+        </Typography>
+        <CalendarNavigation />
+      </Stack>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        gap={2}
+        sx={{ px: 2, py: 1.75 }}
       >
         <FilterChips
           activeFilters={activeFilters}
           onFilterRemove={handleFilterRemove}
           onFilterAdd={handleFilterAdd}
         />
-        <StyledQuickFilter expanded>
-          <QuickFilterControl
-            render={({ ref, ...other }) => (
-              <TextField
-                {...other}
-                sx={{
-                  flex: 1,
-                  width: '100%',
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                  },
-                }}
-                inputRef={ref}
-                aria-label="Search"
-                placeholder="Search employees"
-                size="small"
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search sx={{ color: 'text.secondary' }} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: other.value ? (
-                      <InputAdornment position="end">
-                        <QuickFilterClear
-                          edge="end"
-                          aria-label="Clear search"
-                          material={{ sx: { marginRight: -0.75 } }}
-                        >
-                          <Cancel />
-                        </QuickFilterClear>
-                      </InputAdornment>
-                    ) : null,
-                    ...other.slotProps?.input,
-                  },
-                  ...other.slotProps,
-                }}
-              />
-            )}
-          />
-        </StyledQuickFilter>
+        <CalendarSearch />
       </Stack>
     </Stack>
   );
