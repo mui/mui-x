@@ -17,7 +17,7 @@ export interface ChartsWrapperProps {
    * If `true`, the chart wrapper set `height: 100%`.
    * @default `false` if the `height` prop is set. And `true` otherwise.
    */
-  extendVerticaly?: boolean;
+  extendVertically?: boolean;
   children: React.ReactNode;
   sx?: SxProps<Theme>;
 }
@@ -66,7 +66,7 @@ const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically',
-})<{ ownerState: ChartsWrapperProps; extendVerticaly: boolean }>(({ ownerState }) => ({
+})<{ ownerState: ChartsWrapperProps; extendVertically: boolean }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
   flex: 1,
@@ -89,7 +89,7 @@ const Root = styled('div', {
  * Its main purpose is to position the HTML legend in the correct place.
  */
 function ChartsWrapper(props: ChartsWrapperProps) {
-  const { children, sx, extendVerticaly } = props;
+  const { children, sx, extendVertically } = props;
   const chartRootRef = useChartRootRef();
 
   const store = useStore();
@@ -100,7 +100,7 @@ function ChartsWrapper(props: ChartsWrapperProps) {
       ref={chartRootRef}
       ownerState={props}
       sx={sx}
-      extendVerticaly={extendVerticaly ?? propsHeight === undefined}
+      extendVertically={extendVertically ?? propsHeight === undefined}
     >
       {children}
     </Root>
