@@ -5,7 +5,7 @@
     "typescript": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.4",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@mui/material": "^7.1.1",

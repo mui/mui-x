@@ -56,7 +56,7 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.4",
     "@base-ui-components/react": "1.0.0-beta.0",
     "@floating-ui/react": "^0.27.11",
     "@mui/x-internals": "workspace:*",
