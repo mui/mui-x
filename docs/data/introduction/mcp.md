@@ -2,13 +2,13 @@
 
 <p class="description">Gain access to the official MUI X components and code in your AI client.</p>
 
-## Introduction & What is MCP?
+## What is MCP?
 
 The Model Context Protocol (MCP) is a new open standard for connecting AI assistants to real, trusted sources of documentation and code. For MUI X users, this means you get answers that are accurate, up-to-date, and directly reference the official docs.
 
 Want to learn more about MCP? See the [official MCP documentation](https://modelcontextprotocol.io/introduction).
 
-## Why the Model Context Protocol?
+## Why MCP?
 
 Traditional AI coding assistants are excellent at providing answers, especially to straightforward questions. However, when faced with a deeper, more complex question which requires understanding concepts from multiple parts of the documentation, they often hallucinate links, cite non-existent documentation, or provide answers that are hard to verify. MCP solves these problems by:
 
@@ -55,4 +55,4 @@ Apart from the setup provided above, VS Code requires the following conditions t
 
 ---
 
-For more details, examples, and troubleshooting, see the full MCP server [documentation and guide on the Material UI Docs](https://mui.com/material-ui/getting-started/mcp)
+For more details, examples, and troubleshooting, see the full MCP server [documentation and guide on the Material UI Docs](https://mui.com/material-ui/getting-started/mcp/)
