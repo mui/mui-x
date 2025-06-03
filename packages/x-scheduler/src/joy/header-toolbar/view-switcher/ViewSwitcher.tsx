@@ -5,7 +5,8 @@ import { Menu } from '@base-ui-components/react/menu';
 import useForkRef from '@mui/utils/useForkRef';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
-import { ViewSwitcherProps, ViewType } from './ViewSwitcher.types';
+import { ViewSwitcherProps } from './ViewSwitcher.types';
+import { ViewType } from '../../models/views';
 import { useTranslations } from '../../utils/TranslationsContext';
 import './ViewSwitcher.css';
 

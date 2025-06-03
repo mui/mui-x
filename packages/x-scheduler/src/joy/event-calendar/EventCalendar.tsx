@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import '../index.css';
-import './EventCalendar.css';
 import { EventCalendarProps } from './EventCalendar.types';
+import { ViewType } from '../models/views';
 import { WeekView } from '../week-view/WeekView';
 import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../utils/TranslationsContext';
-import { ViewType } from '../header-toolbar/view-switcher/ViewSwitcher.types';
+import '../index.css';
+import './EventCalendar.css';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
