@@ -1,6 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
+import { page } from '@vitest/browser/context';
+import { render } from 'vitest-browser-react';
 import { bench, describe } from 'vitest';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { options } from '../utils/options';
@@ -14,7 +14,7 @@ describe('PieChart', () => {
   bench(
     'PieChart with big data amount',
     async () => {
-      const { findByText } = render(
+      render(
         <PieChart
           series={[
             {
@@ -27,10 +27,7 @@ describe('PieChart', () => {
         />,
       );
 
-      const result = 1050;
-      await findByText(result);
-
-      cleanup();
+      page.getByText('1050');
     },
     options,
   );

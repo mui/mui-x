@@ -1,6 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
+import { page } from '@vitest/browser/context';
+import { render } from 'vitest-browser-react';
 import { bench, describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
@@ -17,7 +17,7 @@ describe('ScatterChartPro', () => {
   bench(
     'ScatterChartPro with big data amount',
     async () => {
-      const { findByText } = render(
+      render(
         <ScatterChartPro
           xAxis={[
             {
@@ -38,9 +38,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText('60', { ignore: 'span' });
-
-      cleanup();
+      page.getByText('60');
     },
     options,
   );
@@ -48,7 +46,7 @@ describe('ScatterChartPro', () => {
   bench(
     'ScatterChartPro with big data amount and zoomed in',
     async () => {
-      const { findByText } = render(
+      render(
         <ScatterChartPro
           xAxis={[
             {
@@ -69,9 +67,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText('50.06', { ignore: 'span' });
-
-      cleanup();
+      page.getByText('50.06');
     },
     options,
   );
