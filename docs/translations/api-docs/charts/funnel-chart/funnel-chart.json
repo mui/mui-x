@@ -21,9 +21,6 @@
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
-    "initialZoom": {
-      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
-    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {
@@ -57,8 +54,7 @@
     "slots": { "description": "Overridable component slots." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
-    },
-    "zoomData": { "description": "The list of zoom data related to each axis." }
+    }
   },
   "classDescriptions": {},
   "slotDescriptions": {
@@ -66,10 +62,13 @@
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
-    "funnelSection": "",
+    "baseIconButton": "",
+    "funnelSection": "Custom component for funnel section.",
+    "funnelSectionLabel": "Custom component for funnel section label.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper."
   }
 }

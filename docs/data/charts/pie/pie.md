@@ -1,7 +1,7 @@
 ---
 title: React Pie chart
 productId: x-charts
-components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot, PieChartPro
 ---
 
 # Charts - Pie
@@ -138,8 +138,8 @@ Here's how the Pie Chart is composed:
     <ChartsSurface>
       <PiePlot />
       <ChartsOverlay />
-      <ChartsTooltip trigger="item" />
     </ChartsSurface>
+    <ChartsTooltip trigger="item" />
   </ChartsWrapper>
 </ChartDataProvider>
 ```

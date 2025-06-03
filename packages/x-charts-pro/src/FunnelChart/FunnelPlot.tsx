@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { ComputedAxis, cartesianSeriesTypes } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { useTheme } from '@mui/material/styles';
 import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
 import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
 import { getFunnelCurve } from './curves';
+import { FunnelSectionLabel } from './FunnelSectionLabel';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -67,8 +67,6 @@ const useAggregatedData = (gap: number | undefined) => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const curve = getFunnelCurve(currentSeries.curve, isHorizontal, gap);
-
       const xPosition = (
         value: number,
         bandIndex: number,
@@ -95,7 +93,26 @@ const useAggregatedData = (gap: number | undefined) => {
         return yScale(isHorizontal ? value : value + (stackOffset || 0))!;
       };
 
-      return currentSeries.dataPoints.map((values, dataIndex) => {
+      const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
+        d.flatMap((v) =>
+          yPosition(v.y, baseScaleConfig.data?.[dataIndex], v.stackOffset, v.useBandWidth),
+        ),
+      );
+      const allX = currentSeries.dataPoints.flatMap((d, dataIndex) =>
+        d.flatMap((v) =>
+          xPosition(v.x, baseScaleConfig.data?.[dataIndex], v.stackOffset, v.useBandWidth),
+        ),
+      );
+      const minPoint = {
+        x: Math.min(...allX),
+        y: Math.min(...allY),
+      };
+      const maxPoint = {
+        x: Math.max(...allX),
+        y: Math.max(...allY),
+      };
+
+      return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;
         const id = `${seriesId}-${dataIndex}`;
         const sectionLabel =
@@ -106,6 +123,19 @@ const useAggregatedData = (gap: number | undefined) => {
                 value: currentSeries.data[dataIndex].value,
               })
             : currentSeries.sectionLabel;
+
+        const isIncreasing = currentSeries.dataDirection === 'increasing';
+
+        const curve = getFunnelCurve(currentSeries.curve, {
+          isHorizontal,
+          gap,
+          position: dataIndex,
+          sections: currentSeries.dataPoints.length,
+          borderRadius: currentSeries.borderRadius,
+          isIncreasing,
+          min: minPoint,
+          max: maxPoint,
+        });
 
         const line = d3Line<FunnelDataPoints>()
           .x((d) =>
@@ -122,6 +152,7 @@ const useAggregatedData = (gap: number | undefined) => {
           id,
           seriesId,
           dataIndex,
+          variant: currentSeries.variant,
           label: sectionLabel !== false && {
             ...positionLabel({
               ...sectionLabel,
@@ -149,13 +180,12 @@ const useAggregatedData = (gap: number | undefined) => {
 
 function FunnelPlot(props: FunnelPlotProps) {
   const { onItemClick, gap, ...other } = props;
-  const theme = useTheme();
 
   const data = useAggregatedData(gap);
 
   return (
     <React.Fragment>
-      {data.map(({ d, color, id, seriesId, dataIndex }) => (
+      {data.map(({ d, color, id, seriesId, dataIndex, variant }) => (
         <FunnelSection
           {...other}
           d={d}
@@ -163,6 +193,7 @@ function FunnelPlot(props: FunnelPlotProps) {
           key={id}
           dataIndex={dataIndex}
           seriesId={seriesId}
+          variant={variant}
           onClick={
             onItemClick &&
             ((event) => {
@@ -171,32 +202,19 @@ function FunnelPlot(props: FunnelPlotProps) {
           }
         />
       ))}
-      {data.map(({ id, label }) => {
-        if (!label) {
+      {data.map(({ id, label, seriesId, dataIndex }) => {
+        if (!label || !label.value) {
           return null;
         }
 
         return (
-          <text
+          <FunnelSectionLabel
             key={id}
-            x={label.x}
-            y={label.y}
-            textAnchor={label.textAnchor}
-            dominantBaseline={label.dominantBaseline}
-            stroke="none"
-            pointerEvents="none"
-            fontFamily={theme.typography.body2.fontFamily}
-            fontSize={theme.typography.body2.fontSize}
-            fontSizeAdjust={theme.typography.body2.fontSizeAdjust}
-            fontWeight={theme.typography.body2.fontWeight}
-            letterSpacing={theme.typography.body2.letterSpacing}
-            fontStretch={theme.typography.body2.fontStretch}
-            fontStyle={theme.typography.body2.fontStyle}
-            fontVariant={theme.typography.body2.fontVariant}
-            fill={(theme.vars || theme)?.palette?.text?.primary}
-          >
-            {label.value}
-          </text>
+            label={label}
+            dataIndex={dataIndex}
+            seriesId={seriesId}
+            {...other}
+          />
         );
       })}
     </React.Fragment>

@@ -1,127 +1,103 @@
+/* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-
-// From point1 to point2, get the x value from y
-const xFromY =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (y: number): number => {
-    if (y1 === y2) {
-      return x1;
-    }
-
-    const result = ((x2 - x1) * (y - y1)) / (y2 - y1) + x1;
-
-    return Number.isNaN(result) ? 0 : result;
-  };
-
-// From point1 to point2, get the y value from x
-const yFromX =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (x: number): number => {
-    if (x1 === x2) {
-      return y1;
-    }
-    const result = ((y2 - y1) * (x - x1)) / (x2 - x1) + y1;
-    return Number.isNaN(result) ? 0 : result;
-  };
+import { CurveOptions, Point } from './curve.types';
+import { borderRadiusPolygon } from './borderRadiusPolygon';
+import { lerpX, lerpY } from './utils';
 
 /**
  * This is a custom "linear" curve generator.
+ * It draws straight lines for the 4 provided points,
+ * with the option to add a gap between sections while also properly handling the border radius.
  *
- * It takes into account the gap between the points and draws a smooth curve between them.
- *
- * It is based on the d3-shape linear curve generator.
+ * The implementation is based on the d3-shape linear curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/linear.js
  */
 export class Linear implements CurveGenerator {
   private context: CanvasRenderingContext2D;
 
-  private line: number = NaN;
+  private position: number = 0;
 
-  private x: number = NaN;
-
-  private y: number = NaN;
-
-  private currentPoint: number = 0;
+  private sections: number = 0;
 
   private isHorizontal: boolean = false;
 
   private gap: number = 0;
 
-  constructor(context: CanvasRenderingContext2D, isHorizontal: boolean, gap: number = 0) {
+  private borderRadius: number = 0;
+
+  private points: Point[] = [];
+
+  constructor(
+    context: CanvasRenderingContext2D,
+    { isHorizontal, gap, position, sections, borderRadius }: CurveOptions,
+  ) {
     this.context = context;
-    this.isHorizontal = isHorizontal;
-    this.gap = gap / 2;
+    this.isHorizontal = isHorizontal ?? false;
+    this.gap = (gap ?? 0) / 2;
+    this.position = position ?? 0;
+    this.sections = sections ?? 1;
+    this.borderRadius = borderRadius ?? 0;
   }
 
-  areaStart(): void {
-    this.line = 0;
-  }
+  areaStart(): void {}
 
-  areaEnd(): void {
-    this.line = NaN;
-  }
+  areaEnd(): void {}
 
-  lineStart(): void {
-    this.currentPoint = 0;
-  }
+  lineStart(): void {}
 
-  lineEnd() {
-    if (this.line || (this.line !== 0 && this.currentPoint === 1)) {
-      this.context.closePath();
+  lineEnd(): void {}
+
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
     }
-    this.line = 1 - this.line;
+    if (this.position === 0) {
+      return [0, 0, this.borderRadius, this.borderRadius];
+    }
+    if (this.position === this.sections - 1) {
+      return [this.borderRadius, this.borderRadius];
+    }
+    return 0;
   }
 
-  point(x: number, y: number): void {
-    x = +x;
-    y = +y;
+  point(xIn: number, yIn: number): void {
+    this.points.push({ x: xIn, y: yIn });
+    if (this.points.length < 4) {
+      return;
+    }
 
-    // We draw the lines only at currentPoint 1 & 3 because we need
-    // The data of a pair of points to draw the lines.
-    // Hence currentPoint 1 draws a line from point 0 to point 1 and point 1 to point 2.
-    // currentPoint 3 draws a line from point 2 to point 3 and point 3 to point 0.
+    // Add gaps where they are needed.
+    this.points = this.points.map((point, index) => {
+      const slopeStart = this.points.at(index <= 1 ? 0 : 2)!;
+      const slopeEnd = this.points.at(index <= 1 ? 1 : 3)!;
+      if (this.isHorizontal) {
+        const yGetter = lerpY(
+          slopeStart.x - this.gap,
+          slopeStart.y,
+          slopeEnd.x - this.gap,
+          slopeEnd.y,
+        );
+        const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
 
-    if (this.isHorizontal) {
-      const yGetter = yFromX(this.x, this.y, x, y);
-      let xGap = 0;
-
-      // 0 is the top-left corner.
-      if (this.currentPoint === 1) {
-        xGap = this.x + this.gap;
-        this.context.moveTo(xGap, yGetter(xGap));
-        this.context.lineTo(xGap, yGetter(xGap));
-        xGap = x - this.gap;
-        this.context.lineTo(xGap, yGetter(xGap));
-      } else if (this.currentPoint === 3) {
-        xGap = this.x - this.gap;
-        this.context.lineTo(xGap, yGetter(xGap));
-        xGap = x + this.gap;
-        this.context.lineTo(xGap, yGetter(xGap));
+        return {
+          x: xGap,
+          y: yGetter(xGap),
+        };
       }
-    }
 
-    if (!this.isHorizontal) {
-      const xGetter = xFromY(this.x, this.y, x, y);
-      let yGap = 0;
+      const xGetter = lerpX(
+        slopeStart.x,
+        slopeStart.y - this.gap,
+        slopeEnd.x,
+        slopeEnd.y - this.gap,
+      );
+      const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
+      return {
+        x: xGetter(yGap),
+        y: yGap,
+      };
+    });
 
-      // 0 is the top-right corner.
-      if (this.currentPoint === 1) {
-        yGap = this.y + this.gap;
-        this.context.moveTo(xGetter(yGap), yGap);
-        this.context.lineTo(xGetter(yGap), yGap);
-        yGap = y - this.gap;
-        this.context.lineTo(xGetter(yGap), yGap);
-      } else if (this.currentPoint === 3) {
-        yGap = this.y - this.gap;
-        this.context.lineTo(xGetter(yGap), yGap);
-        yGap = y + this.gap;
-        this.context.lineTo(xGetter(yGap), yGap);
-      }
-    }
-
-    // Increment the values
-    this.currentPoint += 1;
-    this.x = x;
-    this.y = y;
+    borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
 }

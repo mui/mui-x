@@ -221,6 +221,10 @@
       },
       "default": "\"error\" (\"warn\" in dev mode)"
     },
+    "multipleColumnsSortingMode": {
+      "type": { "name": "enum", "description": "'always'<br>&#124;&nbsp;'withModifierKey'" },
+      "default": "\"withModifierKey\""
+    },
     "nonce": { "type": { "name": "string" } },
     "onCellClick": {
       "type": { "name": "func" },
@@ -1012,7 +1016,7 @@
       "name": "rowReorderIcon",
       "description": "Icon displayed on the `reorder` column type to reorder a row.",
       "default": "GridDragIcon",
-      "class": null
+      "class": "MuiDataGridPro-rowReorderIcon"
     },
     {
       "name": "quickFilterIcon",

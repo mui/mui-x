@@ -3,8 +3,24 @@
     "languageTag": "fr-FR",
     "importName": "frFR",
     "localeName": "French",
-    "missingKeysCount": 0,
-    "totalKeysCount": 2,
+    "missingKeysCount": 2,
+    "totalKeysCount": 4,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/frFR.ts"
+  },
+  {
+    "languageTag": "pt-PT",
+    "importName": "ptPT",
+    "localeName": "Portuguese",
+    "missingKeysCount": 0,
+    "totalKeysCount": 4,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/ptPT.ts"
+  },
+  {
+    "languageTag": "pt-BR",
+    "importName": "ptBR",
+    "localeName": "Portuguese (Brazil)",
+    "missingKeysCount": 0,
+    "totalKeysCount": 4,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/ptBR.ts"
   }
 ]

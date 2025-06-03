@@ -23,9 +23,9 @@ import { clampAngle } from '../internals/clampAngle';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
-  const { classes, position } = ownerState;
+  const { classes, position, id } = ownerState;
   const slots = {
-    root: ['root', 'directionY', position],
+    root: ['root', 'directionY', position, `id-${id}`],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
@@ -171,6 +171,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickInterval,
+    direction: 'y',
   });
 
   const positionSign = position === 'right' ? 1 : -1;
@@ -280,7 +281,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = instance.isPointInside({ x: -1, y: tickOffset }, { direction: 'y' });
+        const showLabel = instance.isYInside(tickOffset);
         const tickLabel = tickLabels.get(item);
 
         if (!showLabel) {

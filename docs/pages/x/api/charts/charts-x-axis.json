@@ -66,6 +66,12 @@
       "isGlobal": false
     },
     {
+      "key": "id",
+      "className": "MuiChartsXAxis-id",
+      "description": "Styles applied to the root element for the axis with the given ID.\nNeeds to be suffixed with the axis ID: `.${axisClasses.id}-${axisId}`.",
+      "isGlobal": false
+    },
+    {
       "key": "label",
       "className": "MuiChartsXAxis-label",
       "description": "Styles applied to the group containing the axis label.",

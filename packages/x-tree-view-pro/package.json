@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "8.2.0",
+  "version": "8.5.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
   "main": "src/index.ts",
@@ -42,8 +42,8 @@
     "directory": "packages/x-tree-view-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
-    "@mui/utils": "^7.0.2",
+    "@babel/runtime": "^7.27.4",
+    "@mui/utils": "^7.1.1",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
@@ -71,13 +71,13 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.7",
-    "@mui/material": "^7.0.2",
-    "@mui/system": "^7.0.2",
+    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/material": "^7.1.1",
+    "@mui/system": "^7.1.1",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^1.5.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

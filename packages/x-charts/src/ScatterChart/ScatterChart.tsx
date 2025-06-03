@@ -3,6 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import { ChartsSlots, ChartsSlotProps } from '../internals/material';
 import {
   ScatterPlot,
   ScatterPlotProps,
@@ -31,19 +33,24 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {}
 
 export interface ScatterChartProps
   extends Omit<
@@ -76,6 +83,11 @@ export interface ScatterChartProps
    * If `true`, the legend is not rendered.
    */
   hideLegend?: boolean;
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -126,10 +138,12 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
 
   return (
     <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar ? <Toolbar /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
@@ -140,9 +154,9 @@ const ScatterChart = React.forwardRef(function ScatterChart(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>
   );
@@ -264,6 +278,11 @@ ScatterChart.propTypes = {
    * An array of [[ScatterSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

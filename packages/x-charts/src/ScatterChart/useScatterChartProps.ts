@@ -43,6 +43,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    showToolbar,
     ...other
   } = props;
 
@@ -69,6 +70,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
       : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
     className,
     plugins: SCATTER_CHART_PLUGINS,
+    slots,
+    slotProps,
   };
 
   const chartsAxisProps: ChartsAxisProps = {
