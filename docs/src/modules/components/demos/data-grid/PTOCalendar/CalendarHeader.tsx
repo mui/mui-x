@@ -70,13 +70,14 @@ function CalendarHeader() {
         bgcolor: 'grey.80',
         borderBottom: '1px solid',
         borderBottomColor: 'divider',
-        pb: 2,
+        px: 2,
+        py: 1.5,
         ...theme.applyStyles('dark', {
           bgcolor: '#141A1F',
         }),
       }}
     >
-      <Typography variant="h4" fontWeight="bold">
+      <Typography fontSize="1.25rem" fontWeight="bold">
         Time Off Calendar
       </Typography>
 

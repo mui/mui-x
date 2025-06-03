@@ -7,6 +7,9 @@ export default function Page() {
     <MarkdownDocs
       {...pageProps}
       sx={{
+        '@media (min-width: 900px)': {
+          width: 'calc(100% + 121px)', // TODO: Fix at the cause of the issue
+        },
         '& .MuiDocs-footer-block': {
           display: 'none',
         },

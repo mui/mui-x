@@ -29,7 +29,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
         py: 1,
       }}
     >
-      <Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 'bold' }}>
+      <Typography fontSize="1rem" sx={{ color: 'text.primary', fontWeight: 'bold' }}>
         Filter
       </Typography>
       {FILTER_OPTIONS.map((filter) => {

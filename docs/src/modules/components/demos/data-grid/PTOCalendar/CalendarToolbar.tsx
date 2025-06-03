@@ -19,9 +19,7 @@ function CalendarToolbar() {
   const theme = useTheme();
   return (
     <Stack
-      gap={2}
       sx={{
-        pb: 3,
         bgcolor: 'grey.80',
         ...theme.applyStyles('dark', {
           backgroundColor: '#141A1F',
@@ -35,6 +33,7 @@ function CalendarToolbar() {
         justifyContent="space-between"
         flexWrap="wrap"
         gap={2}
+        sx={{ px: 2, py: 1.5 }}
       >
         <FilterChips
           activeFilters={activeFilters}
@@ -50,7 +49,7 @@ function CalendarToolbar() {
                   flex: 1,
                   width: '100%',
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: '20px',
+                    borderRadius: 2,
                   },
                 }}
                 inputRef={ref}

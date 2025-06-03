@@ -4,6 +4,7 @@ import PTOCalendar from './PTOCalendar/PTOCalendar';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
 import AccountBalance from '@mui/icons-material/AccountBalance';
 import Inventory2 from '@mui/icons-material/Inventory2';
@@ -39,7 +40,7 @@ export default function Demos() {
   const [selected, setSelected] = React.useState<(typeof DEMOS)[number]['name']>(DEMOS[0].name);
   const selectedDemo = DEMOS.find((demo) => demo.name === selected);
   return (
-    <>
+    <Stack gap={3}>
       <Paper
         elevation={0}
         sx={(theme) => ({
@@ -74,6 +75,6 @@ export default function Demos() {
         </StyledToggleButtonGroup>
       </Paper>
       {selectedDemo && <selectedDemo.component />}
-    </>
+    </Stack>
   );
 }
