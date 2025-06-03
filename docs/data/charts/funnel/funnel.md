@@ -91,8 +91,8 @@ The border radius of the sections can be customized by the `borderRadius` proper
 It accepts a number that represents the radius in pixels.
 
 - The `bump` curve interpolation will not respect the border radius.
-- The `linear`, `linear-sharp` and `pyramid` curve respects the border radius to some extent due to the angle of the sections.
-- The `step` and `step-pyramid` curve respects the border radius.
+- The `linear`, `linear-sharp` and `pyramid` curves respect the border radius to some extent due to the angle of the sections.
+- The `step` and `step-pyramid` curves respect the border radius.
 
 To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
 
