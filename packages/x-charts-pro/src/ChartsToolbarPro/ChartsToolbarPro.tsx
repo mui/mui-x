@@ -10,7 +10,7 @@ import { ChartsSlotsPro } from '../internals/material';
 /**
  * The chart toolbar component for the pro package.
  */
-export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarProps>) {
+export function ChartsToolbarPro(props: ChartsToolbarProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { store } = useChartContext();
   const { localeText } = useChartsLocalization();
