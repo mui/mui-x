@@ -4,37 +4,38 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   useChartContext,
-  useChartsSlots,
   ChartsSlotProps,
   useSelector,
+  useChartsSlots,
 } from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
-  selectorChartCanZoomOut,
+  selectorChartCanZoomIn,
   UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
 
-interface ChartsToolbarZoomOutButtonProps {
+interface ChartsToolbarZoomInTriggerProps {
   /**
    * A function to customize the rendering of the component.
    */
-  render?: RenderProp<ChartsSlotProps['baseIconButton']>;
+  render?: RenderProp<ChartsSlotProps['baseButton']>;
 }
 
 /**
- * The zoom-out button for the chart toolbar.
+ * A button that zooms the chart in.
+ * It renders the `baseButton` slot.
  */
-const ChartsToolbarZoomOutButton = React.forwardRef<
+const ChartsToolbarZoomInTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.PropsWithChildren<ChartsToolbarZoomOutButtonProps>
->(function ChartsToolbarZoomOutButton({ render, ...other }, ref) {
+  React.PropsWithChildren<ChartsToolbarZoomInTriggerProps>
+>(function ChartsToolbarZoomInTrigger({ render, ...other }, ref) {
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } = useChartContext<[UseChartProZoomSignature]>();
-  const disabled = useSelector(store, selectorChartCanZoomOut);
+  const disabled = useSelector(store, selectorChartCanZoomIn);
 
-  const element = useComponentRenderer(slots.baseIconButton, render, {
-    ...slotProps?.baseIconButton,
-    onClick: () => instance.zoomOut(),
+  const element = useComponentRenderer(slots.baseButton, render, {
+    ...slotProps.baseButton,
+    onClick: () => instance.zoomIn(),
     disabled,
     ...other,
     ref,
@@ -43,7 +44,7 @@ const ChartsToolbarZoomOutButton = React.forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarZoomOutButton.propTypes = {
+ChartsToolbarZoomInTrigger.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -54,4 +55,4 @@ ChartsToolbarZoomOutButton.propTypes = {
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
-export { ChartsToolbarZoomOutButton };
+export { ChartsToolbarZoomInTrigger };
