@@ -1517,7 +1517,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
   it('should not move the checkbox column to the front when it is explicitly defined in props', () => {
     render(
       <Test
-        columns={[{ field: 'id' }, { field: 'group' }, { field: 'username', width: 150 }, GRID_CHECKBOX_SELECTION_COL_DEF]}
+        columns={[
+          { field: 'id' },
+          { field: 'group' },
+          { field: 'username', width: 150 },
+          GRID_CHECKBOX_SELECTION_COL_DEF,
+        ]}
         rows={[
           { id: 1, group: 'A', username: 'username1' },
           { id: 2, group: 'A', username: 'username2' },

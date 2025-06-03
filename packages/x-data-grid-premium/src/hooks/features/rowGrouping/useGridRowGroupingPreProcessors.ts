@@ -141,9 +141,7 @@ export const useGridRowGroupingPreProcessors = (
       const groupingFields = groupingColDefs.map((colDef) => colDef.field);
 
       // If checkbox is explicitly defined in props, don't force it to front
-      if (props.columns.some(
-        (col) => col.field === GRID_CHECKBOX_SELECTION_FIELD,
-      )) {
+      if (props.columns.some((col) => col.field === GRID_CHECKBOX_SELECTION_FIELD)) {
         newColumnFields = [...groupingFields, ...newColumnFields];
       } else {
         // Move checkbox to front (GRID_CHECKBOX_SELECTION_FIELD is automatically added if checkboxSelection is true)
