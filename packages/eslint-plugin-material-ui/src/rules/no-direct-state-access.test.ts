@@ -1,8 +1,8 @@
 import { afterAll, it, describe } from 'vitest';
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import TSESlintParser from '@typescript-eslint/parser';
-import rule from './no-direct-state-access';
 import path from 'node:path';
+import rule from './no-direct-state-access';
 
 RuleTester.afterAll = afterAll;
 RuleTester.it = it;
