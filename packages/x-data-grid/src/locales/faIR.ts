@@ -42,6 +42,7 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+  // toolbarCharts: 'Configure charts',
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
