@@ -16,7 +16,7 @@
   min-width: 190px;
   padding: var(--space-2);
   border-radius: var(--radius-4);
-  background-color: canvas;
+  background-color: var(--surface);
   outline: 1px solid var(--gray-2);
   box-shadow: var(--shadow-5);
 }
@@ -29,7 +29,7 @@
 
 .ViewSwitcherMainItem {
   border: 0;
-  background: none;
+  background: var(--surface);
   user-select: none;
   display: flex;
   align-items: center;
@@ -59,7 +59,7 @@
 /* Hovered */
 .ViewSwitcherMainItem:hover,
 .ViewSwitcherRadioItem:hover {
-  background-color: var(--interactive-hover-bg);
+  background: var(--interactive-hover-bg);
 }
 
 /* Active */
@@ -72,7 +72,7 @@
 .ViewSwitcherMainItem[data-highlighted],
 .ViewSwitcherMainItem[data-pressed],
 .ViewSwitcherRadioItem[data-checked] {
-  background-color: var(--interactive-selected-bg);
+  background: var(--interactive-selected-bg);
   color: var(--interactive-selected-text);
 }
 
@@ -80,13 +80,13 @@
 .ViewSwitcherMainItem[data-highlighted]:hover,
 .ViewSwitcherMainItem[data-pressed]:hover,
 .ViewSwitcherRadioItem[data-checked]:hover {
-  background-color: var(--interactive-selected-hover-bg);
+  background: var(--interactive-selected-hover-bg);
 }
 
 /* Focused */
 .ViewSwitcherMainItem:focus-visible,
 .ViewSwitcherRadioItem:focus-visible {
-  background-color: var(--interactive-focused-bg);
+  background: var(--interactive-focused-bg);
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
@@ -94,7 +94,7 @@
 /* Focused and hovered */
 .ViewSwitcherMainItem:focus-visible:hover,
 .ViewSwitcherRadioItem:focus-visible:hover {
-  background-color: var(--interactive-focused-hover-bg);
+  background: var(--interactive-focused-hover-bg);
 }
 
 /* Active and focused */
@@ -107,7 +107,7 @@
 .ViewSwitcherMainItem[data-highlighted]:focus-visible,
 .ViewSwitcherMainItem[data-pressed]:focus-visible,
 .ViewSwitcherRadioItem[data-checked]:focus-visible {
-  background-color: var(--interactive-selected-focused-bg);
+  background: var(--interactive-selected-focused-bg);
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
@@ -116,5 +116,5 @@
 .ViewSwitcherMainItem[data-highlighted]:focus-visible:hover,
 .ViewSwitcherMainItem[data-pressed]:focus-visible:hover,
 .ViewSwitcherRadioItem[data-checked]:focus-visible:hover {
-  background-color: var(--interactive-selected-hover-focused-bg);
+  background: var(--interactive-selected-hover-focused-bg);
 }
