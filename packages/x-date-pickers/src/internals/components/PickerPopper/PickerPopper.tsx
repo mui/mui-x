@@ -422,7 +422,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
     ownerState: pickerOwnerState,
   });
 
-  const ownerState = React.useMemo(
+  const ownerState: PickerPopperOwnerState = React.useMemo(
     () => ({ ...pickerOwnerState, popperPlacement: popperProps.placement }),
     [pickerOwnerState, popperProps.placement],
   );
