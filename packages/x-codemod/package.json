@@ -35,7 +35,7 @@
     "@babel/traverse": "^7.27.1",
     "@mui/x-internals": "workspace:*",
     "jscodeshift": "17.1.2",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/jscodeshift": "^0.12.0",
