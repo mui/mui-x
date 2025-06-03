@@ -4,18 +4,23 @@ title: Data Grid - Multi-filters
 
 # Data Grid - Multi-filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Apply multiple filters at the same time.</p>
+<p class="description">Let end users apply multiple filters to the Data Grid simultaneously.</p>
 
-Multi filters allow filtering rows by multiple columns with multiple criteria.
-To add more filters, use the `Add Filter` button on the filter panel.
+By default, it's only possible to apply one filter at a time to the Data Grid.
+With the Data Grid Pro, end users can simultaneously apply multiple filters with multiple criteria for more fine-grained data analysis.
 
-The following demo lets you filter the rows according to several criteria at the same time.
+The following demo lets you filter rows according to several different criteria.
+You can add more filters with the **Add Filter** button on the filter panel.
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## One filter per column
+## Implementing multi-filters
 
-You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `slotProps.filterPanel`.
+The multi-filter feature is available by default on the Data Grid Pro.
+
+### One filter per column
+
+You can limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `slotProps.filterPanel`.
 
 ### Use cases
 
@@ -28,7 +33,7 @@ This demo implements a basic use case to prevent showing multiple filters for on
 
 ## Disable action buttons
 
-To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` or `disableRemoveAllButton` to `componentsProps.filterPanel`.
+To disable the **Add Filter** or **Remove All** buttons, pass `disableAddFilterButton` or `disableRemoveAllButton`, respectively, to `componentsProps.filterPanel` as shown below:
 
 {{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
