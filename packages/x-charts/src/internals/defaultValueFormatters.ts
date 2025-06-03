@@ -1,12 +1,10 @@
-import { AxisValueFormatterContext, ContinuousScaleName } from '../models/axis';
-
-const numberFormatter = new Intl.NumberFormat(undefined, { maximumSignificantDigits: 2 });
+import { AxisValueFormatterContext, ContinuousScaleName, D3ContinuousScale } from '../models/axis';
 
 /**
  * Creates a default formatter function for continuous scales (e.g., linear, sqrt, log).
  * @returns A formatter function for continuous values.
  */
-export function createScalarFormatter(tickNumber: number) {
+export function createScalarFormatter(tickNumber: number, zoomScale: D3ContinuousScale) {
   return function defaultScalarValueFormatter<S extends ContinuousScaleName = ContinuousScaleName>(
     value: any,
     context: AxisValueFormatterContext<S>,
@@ -15,8 +13,8 @@ export function createScalarFormatter(tickNumber: number) {
       return context.scale.tickFormat(tickNumber)(value);
     }
 
-    if (context.location === 'zoom-slider-tooltip' && typeof value === 'number') {
-      return numberFormatter.format(value);
+    if (context.location === 'zoom-slider-tooltip') {
+      return zoomScale.tickFormat(2)(value);
     }
 
     return `${value}`;

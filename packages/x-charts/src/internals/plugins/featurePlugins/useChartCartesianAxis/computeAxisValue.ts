@@ -212,7 +212,14 @@ export function computeAxisValue<T extends ChartSeriesType>({
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
       valueFormatter:
         axis.valueFormatter ??
-        (createScalarFormatter(tickNumber) as <TScaleName extends ScaleName>(
+        (createScalarFormatter(
+          tickNumber,
+          getScale(
+            scaleType,
+            range.map((v) => scale.invert(v)),
+            range,
+          ),
+        ) as <TScaleName extends ScaleName>(
           value: any,
           context: AxisValueFormatterContext<TScaleName>,
         ) => string),
