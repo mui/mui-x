@@ -85,21 +85,16 @@ export class Bump implements CurveGenerator {
     );
 
     // Line to point 2
-    if (p3 !== undefined) {
-      this.context.lineTo(p2.x - this.gap, p2.y);
-    }
-
-    const prevP = p3 ? p2 : p1;
-    const lastP = p3 ?? p2;
+    this.context.lineTo(p2.x - this.gap, p2.y);
 
     // Bezier curve back to point 3
     this.context.bezierCurveTo(
-      (prevP.x + lastP.x) / 2,
-      prevP.y,
-      (prevP.x + lastP.x) / 2,
-      lastP.y,
-      lastP.x + this.gap,
-      lastP.y,
+      (p2.x + p3.x) / 2,
+      p2.y,
+      (p2.x + p3.x) / 2,
+      p3.y,
+      p3.x + this.gap,
+      p3.y,
     );
 
     this.context.closePath();
@@ -123,21 +118,16 @@ export class Bump implements CurveGenerator {
     );
 
     // Line to point 2
-    if (p3 !== undefined) {
-      this.context.lineTo(p2.x, p2.y - this.gap);
-    }
-
-    const prevP = p3 ? p2 : p1;
-    const lastP = p3 ?? p2;
+    this.context.lineTo(p2.x, p2.y - this.gap);
 
     // Bezier curve back to point 3
     this.context.bezierCurveTo(
-      prevP.x,
-      (prevP.y + lastP.y) / 2,
-      lastP.x,
-      (prevP.y + lastP.y) / 2,
-      lastP.x,
-      lastP.y + this.gap,
+      p2.x,
+      (p2.y + p3.y) / 2,
+      p3.x,
+      (p2.y + p3.y) / 2,
+      p3.x,
+      p3.y + this.gap,
     );
 
     this.context.closePath();
