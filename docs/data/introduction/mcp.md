@@ -1,6 +1,6 @@
 # Model Context Protocol (MCP) for MUI
 
-<p class="description">Gain access to the official Material UI and code in your AI client.</p>
+<p class="description">Gain access to the official MUI X components and code in your AI client.</p>
 
 ## Introduction & What is MCP?
 
