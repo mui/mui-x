@@ -62,6 +62,7 @@
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
+    "baseButton": "",
     "baseIconButton": "",
     "funnelSection": "Custom component for funnel section.",
     "funnelSectionLabel": "Custom component for funnel section label.",
