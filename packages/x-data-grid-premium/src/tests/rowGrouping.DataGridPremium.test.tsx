@@ -1528,7 +1528,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       />,
     );
 
-    expect(getColumnHeaderCell(4).dataset['field']).to.equal(GRID_CHECKBOX_SELECTION_FIELD);
+    expect(getColumnHeaderCell(4).dataset.field).to.equal(GRID_CHECKBOX_SELECTION_FIELD);
   });
 
   // See https://github.com/mui/material-ui/issues/46261
@@ -1546,6 +1546,6 @@ describe('<DataGridPremium /> - Row grouping', () => {
       />,
     );
 
-    expect(getColumnHeaderCell(0).dataset['field']).to.equal(GRID_CHECKBOX_SELECTION_FIELD);
+    expect(getColumnHeaderCell(0).dataset.field).to.equal(GRID_CHECKBOX_SELECTION_FIELD);
   });
 });

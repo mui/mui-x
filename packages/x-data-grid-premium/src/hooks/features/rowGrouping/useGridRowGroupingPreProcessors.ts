@@ -161,7 +161,7 @@ export const useGridRowGroupingPreProcessors = (
 
       return columnsState;
     },
-    [getGroupingColDefs],
+    [getGroupingColDefs, props.columns],
   );
 
   const createRowTreeForRowGrouping = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
