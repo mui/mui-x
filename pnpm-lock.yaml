@@ -578,8 +578,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       jscodeshift:
-        specifier: 17.1.2
-        version: 17.1.2(@babel/preset-env@7.27.2(@babel/core@7.27.4))
+        specifier: 17.3.0
+        version: 17.3.0(@babel/preset-env@7.27.2(@babel/core@7.27.4))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -639,7 +639,7 @@ importers:
         version: 0.14.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       recast:
         specifier: ^0.23.9
-        version: 0.23.9
+        version: 0.23.11
       rifm:
         specifier: 0.12.1
         version: 0.12.1(react@19.1.0)
@@ -972,15 +972,15 @@ importers:
         specifier: workspace:*
         version: link:../x-internals/build
       jscodeshift:
-        specifier: 17.1.2
-        version: 17.1.2(@babel/preset-env@7.27.2(@babel/core@7.27.4))
+        specifier: 17.3.0
+        version: 17.3.0(@babel/preset-env@7.27.2(@babel/core@7.27.4))
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
     devDependencies:
       '@types/jscodeshift':
-        specifier: ^0.12.0
-        version: 0.12.0
+        specifier: ^17.3.0
+        version: 17.3.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -5292,8 +5292,8 @@ packages:
   '@types/istanbul-lib-coverage@2.0.6':
     resolution: {integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w==}
 
-  '@types/jscodeshift@0.12.0':
-    resolution: {integrity: sha512-Jr2fQbEoDmjwEa92TreR/mX2t9iAaY/l5P/GKezvK4BodXahex60PDLXaQR0vAgP0KfCzc1CivHusQB9NhzX8w==}
+  '@types/jscodeshift@17.3.0':
+    resolution: {integrity: sha512-ogvGG8VQQqAQQ096uRh+d6tBHrYuZjsumHirKtvBa5qEyTMN3IQJ7apo+sw9lxaB/iKWIhbbLlF3zmAWk9XQIg==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -8781,8 +8781,8 @@ packages:
   jsbn@1.1.0:
     resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
-  jscodeshift@17.1.2:
-    resolution: {integrity: sha512-uime4vFOiZ1o3ICT4Sm/AbItHEVw2oCxQ3a0egYVy3JMMOctxe07H3SKL1v175YqjMt27jn1N+3+Bj9SKDNgdQ==}
+  jscodeshift@17.3.0:
+    resolution: {integrity: sha512-LjFrGOIORqXBU+jwfC9nbkjmQfFldtMIoS6d9z2LG/lkmyNXsJAySPT+2SWXJEoE68/bCWcxKpXH37npftgmow==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -10724,12 +10724,8 @@ packages:
     resolution: {integrity: sha512-gNva8/6UAe8QYepIQH/jQ2qn91Qj0B9sYjMBBs3QOB8F2CXcKgLxQaJRP76sWVRQt+QU+8fAkCbCvjjMFu7Ycw==}
     engines: {node: '>= 0.8.0'}
 
-  recast@0.20.5:
-    resolution: {integrity: sha512-E5qICoPoNL4yU0H0NoBDntNB0Q5oMSNh9usFctYniLBluTthi3RsQVBXIJNbApOlvSwW/RGxIuokPcAc59J5fQ==}
-    engines: {node: '>= 4'}
-
-  recast@0.23.9:
-    resolution: {integrity: sha512-Hx/BGIbwj+Des3+xy5uAtAbdCyqK9y9wbBcDFDYanLS9JnMqf7OeF87HQwUimE87OEc72mr6tkKUKMBBL+hF9Q==}
+  recast@0.23.11:
+    resolution: {integrity: sha512-YTUo+Flmw4ZXiWfQKGcwwc11KnoRAYgzAE2E7mXKCjSviTKShtxBsN6YUUBB2gtaBzKzeKunxhUwNHQuRryhWA==}
     engines: {node: '>= 4'}
 
   rechoir@0.8.0:
@@ -16413,10 +16409,10 @@ snapshots:
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
-  '@types/jscodeshift@0.12.0':
+  '@types/jscodeshift@17.3.0':
     dependencies:
-      ast-types: 0.14.2
-      recast: 0.20.5
+      ast-types: 0.16.1
+      recast: 0.23.11
 
   '@types/json-schema@7.0.15': {}
 
@@ -20531,7 +20527,7 @@ snapshots:
 
   jsbn@1.1.0: {}
 
-  jscodeshift@17.1.2(@babel/preset-env@7.27.2(@babel/core@7.27.4)):
+  jscodeshift@17.3.0(@babel/preset-env@7.27.2(@babel/core@7.27.4)):
     dependencies:
       '@babel/core': 7.27.4
       '@babel/parser': 7.27.4
@@ -20548,7 +20544,7 @@ snapshots:
       micromatch: 4.0.8
       neo-async: 2.6.2
       picocolors: 1.1.1
-      recast: 0.23.9
+      recast: 0.23.11
       tmp: 0.2.3
       write-file-atomic: 5.0.1
     optionalDependencies:
@@ -22892,14 +22888,7 @@ snapshots:
 
   readline-sync@1.4.10: {}
 
-  recast@0.20.5:
-    dependencies:
-      ast-types: 0.14.2
-      esprima: 4.0.1
-      source-map: 0.6.1
-      tslib: 2.8.1
-
-  recast@0.23.9:
+  recast@0.23.11:
     dependencies:
       ast-types: 0.16.1
       esprima: 4.0.1
