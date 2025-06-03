@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react';
-import { DemoInstanceThemeProvider } from 'docs/src/theming';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -24,7 +24,6 @@ import { findContinuousPeriods, isCurrentDay } from './utils/dateUtils';
 import { HolidayData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
-import { createTheme, useTheme } from '@mui/material/styles';
 import { FILTER_COLORS } from './constants';
 
 interface RowData {
@@ -485,9 +484,8 @@ function PTOCalendar() {
           minHeight: 0,
           overflow: 'hidden',
           border: '1px solid',
-          borderColor: '#EEEBF0',
+          borderColor: 'divider',
           ...theme.applyStyles('dark', {
-            borderColor: '#38363E',
             backgroundColor: '#141A1F',
           }),
         }}
@@ -663,6 +661,7 @@ function PTOCalendarContainer() {
       colorSchemes: {
         light: {
           palette: {
+            divider: '#EEEBF0',
             DataGrid: {
               bg: '#fff',
               pinnedBg: '#fff',
@@ -672,6 +671,7 @@ function PTOCalendarContainer() {
         },
         dark: {
           palette: {
+            divider: '#38363E',
             DataGrid: {
               bg: '#141A1F',
               pinnedBg: '#141A1F',
@@ -690,9 +690,9 @@ function PTOCalendarContainer() {
   }, [docsMode]);
 
   return (
-    <DemoInstanceThemeProvider runtimeTheme={theme}>
+    <ThemeProvider theme={theme}>
       <PTOCalendar />
-    </DemoInstanceThemeProvider>
+    </ThemeProvider>
   );
 }
 

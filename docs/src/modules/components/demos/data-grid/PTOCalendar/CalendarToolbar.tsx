@@ -1,14 +1,12 @@
 import Stack from '@mui/material/Stack';
 import { FilterChips } from './FilterChips';
 import { useCalendarContext } from './CalendarContext';
-import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { CalendarNavigation } from './CalendarNavigation';
 import { CalendarSearch } from './CalendarSearch';
 
 function CalendarToolbar() {
   const { activeFilters, handleFilterRemove, handleFilterAdd } = useCalendarContext();
-  const theme = useTheme();
 
   return (
     <Stack>
@@ -20,12 +18,9 @@ function CalendarToolbar() {
         gap={2}
         sx={{
           borderBottom: '1px solid',
-          borderBottomColor: '#f2eff3',
+          borderBottomColor: 'divider',
           px: 2,
           py: 1.75,
-          ...theme.applyStyles('dark', {
-            borderBottomColor: '#38363E',
-          }),
         }}
       >
         <Typography fontSize="1.25rem" fontWeight="bold">
