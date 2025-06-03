@@ -10,4 +10,4 @@ export const usePTOData = (currentDate: Date): PTOData => {
     }
     return samplePTOData;
   }, [currentDate]);
-}; 
+};

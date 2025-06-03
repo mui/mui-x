@@ -25,6 +25,8 @@ import { findContinuousPeriods, isCurrentDay } from './utils/dateUtils';
 import { HolidayData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
+import { useTheme } from '@mui/material/styles';
+import { FILTER_COLORS } from './constants';
 
 interface RowData {
   id: number;
@@ -45,7 +47,7 @@ function EmployeeHeader() {
   const apiRef = useGridApiContext();
   const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
   return (
-    <Typography fontWeight="bold" fontSize="0.75rem">
+    <Typography fontWeight="bold" fontSize="0.75rem" color="text.primary">
       Employees ({filteredRowCount})
     </Typography>
   );
@@ -64,6 +66,7 @@ const PTOCalendar: React.FC = () => {
     () => eachDayOfInterval({ start: monthStart, end: monthEnd }),
     [monthStart, monthEnd],
   );
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchHolidays = async () => {
@@ -206,6 +209,7 @@ const PTOCalendar: React.FC = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: 0 }}>
                 <Typography
                   sx={{
+                    color: 'text.primary',
                     flex: 1,
                     whiteSpace: 'normal',
                     wordWrap: 'break-word',
@@ -257,13 +261,16 @@ const PTOCalendar: React.FC = () => {
                 py: 0,
                 justifyContent: 'center',
                 backgroundColor: isCurrent ? '#f7f6f9' : 'transparent',
+                ...theme.applyStyles('dark', {
+                  backgroundColor: isCurrent ? '#1e2429' : 'transparent',
+                }),
               }}
             >
               <Typography
                 variant="body2"
                 sx={{
                   fontWeight: 'bold',
-                  color: isCurrent ? '#3E63DD' : 'text.secondary',
+                  color: isCurrent ? '#3E63DD' : 'text.primary',
                   fontSize: '0.75rem',
                   lineHeight: 1,
                   mb: 0,
@@ -288,6 +295,7 @@ const PTOCalendar: React.FC = () => {
           renderCell: (params: GridRenderCellParams) => {
             if (params.row.id === 'summary') {
               const count = params.value as number;
+              const isCurrent = isCurrentDay(day);
               return (
                 <Box
                   sx={{
@@ -297,6 +305,11 @@ const PTOCalendar: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     backgroundColor: isCurrent ? '#f7f6f9' : '#f7f6f9',
+                    ...theme.applyStyles('dark', {
+                      backgroundColor: isCurrent
+                        ? `${FILTER_COLORS.vacation.dark.background}`
+                        : '#141A1F',
+                    }),
                     color: isCurrent ? '#3E63DD' : 'text.secondary',
                     fontWeight: 'bold',
                     fontSize: '0.7rem',
@@ -353,9 +366,9 @@ const PTOCalendar: React.FC = () => {
                             : '0'
                       : '0',
                   backgroundColor: showPTO
-                    ? '#C3E9D7' // --jade-5
+                    ? FILTER_COLORS.vacation.background
                     : showSick
-                      ? '#fffaa0'
+                      ? FILTER_COLORS.sick.background
                       : isCurrent
                         ? '#f7f6f9'
                         : 'transparent',
@@ -368,21 +381,66 @@ const PTOCalendar: React.FC = () => {
                     showPTO || showSick
                       ? isCurrent
                         ? '#ffffff'
-                        : 'text.secondary'
+                        : showPTO
+                          ? FILTER_COLORS.vacation.text
+                          : FILTER_COLORS.sick.text
                       : 'transparent',
                   '&:hover': {
                     backgroundColor:
                       showPTO || showSick ? 'none' : isCurrent ? '#c7e2fe' : '#e3f2fd',
                   },
-                  border: showPTO ? '2px solid #C3E9D7' : showSick ? '2px solid #fffaa0' : 'none',
+                  border: showPTO
+                    ? `2px solid ${FILTER_COLORS.vacation.border}`
+                    : showSick
+                      ? `2px solid ${FILTER_COLORS.sick.border}`
+                      : 'none',
                   alignSelf: 'center',
+                  ...theme.applyStyles('dark', {
+                    backgroundColor: showPTO
+                      ? FILTER_COLORS.vacation.dark.background
+                      : showSick
+                        ? FILTER_COLORS.sick.dark.background
+                        : isCurrent
+                          ? '#1e2429'
+                          : 'transparent',
+                    borderColor: showPTO
+                      ? FILTER_COLORS.vacation.dark.border
+                      : showSick
+                        ? FILTER_COLORS.sick.dark.border
+                        : 'transparent',
+                    color: showPTO
+                      ? FILTER_COLORS.vacation.dark.text
+                      : showSick
+                        ? FILTER_COLORS.sick.dark.text
+                        : 'transparent',
+                    '&:hover': {
+                      backgroundColor:
+                        showPTO || showSick ? 'none' : isCurrent ? 'transparent' : '#1e2429',
+                    },
+                  }),
                 }}
               >
                 {isFirstDayOfPTO && showPTO && (
-                  <BeachAccess sx={{ fontSize: '1rem', color: '#208368' /* --jade-11 */ }} />
+                  <BeachAccess
+                    sx={{
+                      fontSize: '1rem',
+                      color: FILTER_COLORS.vacation.text,
+                      ...theme.applyStyles('dark', {
+                        color: FILTER_COLORS.vacation.dark.text,
+                      }),
+                    }}
+                  />
                 )}
                 {isFirstDayOfSick && showSick && (
-                  <Sick sx={{ fontSize: '1rem', color: '#807d50' }} />
+                  <Sick
+                    sx={{
+                      fontSize: '1rem',
+                      color: FILTER_COLORS.sick.text,
+                      ...theme.applyStyles('dark', {
+                        color: FILTER_COLORS.sick.dark.text,
+                      }),
+                    }}
+                  />
                 )}
                 {isBirthday && cellData.show && (
                   <Cake sx={{ fontSize: '1rem', color: '#75758d' }} />
@@ -398,7 +456,10 @@ const PTOCalendar: React.FC = () => {
                         height: 16,
                         opacity: 0.9,
                         borderRadius: '50%',
-                        border: '2px solid #D2DEFF',
+                        border: `2px solid ${FILTER_COLORS.holidays.border}`,
+                        ...theme.applyStyles('dark', {
+                          border: `2px solid text.primary`,
+                        }),
                       }}
                     />
                   </Tooltip>
@@ -427,7 +488,10 @@ const PTOCalendar: React.FC = () => {
         <Box
           sx={{
             width: '100%',
-            backgroundColor: '#ffffff',
+            backgroundColor: 'grey.80',
+            ...theme.applyStyles('dark', {
+              backgroundColor: '#141A1F',
+            }),
             borderRadius: 1,
             p: { xs: 2, sm: 3 },
             display: 'flex',
@@ -493,6 +557,9 @@ const PTOCalendar: React.FC = () => {
                   },
                   '& .MuiDataGrid-virtualScroller': {
                     overflow: 'auto',
+                    ...theme.applyStyles('dark', {
+                      backgroundColor: '#141A1F',
+                    }),
                   },
                   '& .MuiDataGrid-filler--pinnedLeft': {
                     borderRight: 'none',
@@ -503,15 +570,37 @@ const PTOCalendar: React.FC = () => {
                     border: 'none',
                     '&:not([data-field="employee"])': {
                       border: '0.75px solid #EAE7EC',
+                      ...theme.applyStyles('dark', {
+                        borderColor: '#1e2429',
+                      }),
+                    },
+                    ...theme.applyStyles('dark', {
+                      backgroundColor: '#141A1F',
+                    }),
+                  },
+                  '& .MuiDataGrid-row': {
+                    '&:hover': {
+                      '& .MuiDataGrid-cell': {
+                        backgroundColor: '#e3f2fd',
+                        ...theme.applyStyles('dark', {
+                          backgroundColor: '#1e2429',
+                        }),
+                      },
                     },
                   },
                   '& .MuiDataGrid-columnHeader': {
                     p: 0,
                     backgroundColor: '#f7f6f9',
+                    ...theme.applyStyles('dark', {
+                      backgroundColor: '#141A1F',
+                    }),
                     border: 'none',
                     '&:not([data-field="employee"])': {
                       border: '0.75px solid #EAE7EC',
                       borderTop: '0.75px solid #EAE7EC',
+                      ...theme.applyStyles('dark', {
+                        border: 'none',
+                      }),
                     },
                   },
                   '& .MuiDataGrid-columnHeaderTitleContainer': {
@@ -558,11 +647,17 @@ const PTOCalendar: React.FC = () => {
                   },
                   '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell[data-field="employee"]': {
                     backgroundColor: '#f7f6f9',
+                    ...theme.applyStyles('dark', {
+                      backgroundColor: '#141A1F',
+                    }),
                   },
                   '& .MuiDataGrid-virtualScrollerContent': {
                     '& .MuiDataGrid-row:last-child': {
                       '& .MuiDataGrid-cell:not([data-field="employee"])': {
                         borderBottom: '0.75px solid #EAE7EC',
+                        ...theme.applyStyles('dark', {
+                          borderColor: '#1e2429',
+                        }),
                       },
                       '& .MuiDataGrid-cell:first-of-type:not([data-field="employee"])': {
                         borderBottomLeftRadius: '10px',
@@ -575,9 +670,15 @@ const PTOCalendar: React.FC = () => {
                   [`& .MuiDataGrid-columnHeader[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]:
                     {
                       backgroundColor: '#f7f6f9',
+                      ...theme.applyStyles('dark', {
+                        backgroundColor: `${FILTER_COLORS.vacation.dark.background}`,
+                      }),
                     },
                   [`& .MuiDataGrid-cell[data-field="${format(new Date(), 'yyyy-MM-dd')}"]`]: {
                     backgroundColor: '#f7f6f9',
+                    ...theme.applyStyles('dark', {
+                      backgroundColor: `${FILTER_COLORS.vacation.dark.background}`,
+                    }),
                   },
                 }}
               />

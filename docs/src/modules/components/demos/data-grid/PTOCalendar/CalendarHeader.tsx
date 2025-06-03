@@ -16,12 +16,14 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useCalendarContext } from './CalendarContext';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { format } from 'date-fns';
+import { useTheme } from '@mui/material/styles';
 
 function ButtonField(props: any) {
   const { forwardedProps } = useSplitFieldProps(props, 'date');
   const pickerContext = usePickerContext();
   const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
   const valueStr = format(pickerContext.value, pickerContext.fieldFormat);
+
   return (
     <Button
       {...forwardedProps}
@@ -46,6 +48,7 @@ function ButtonField(props: any) {
   );
 }
 function CalendarHeader() {
+  const theme = useTheme();
   const {
     currentDate,
     isDatePickerOpen,
@@ -55,6 +58,7 @@ function CalendarHeader() {
     handleNextMonth,
     handleDateChange,
   } = useCalendarContext();
+
   return (
     <Stack
       direction="row"
@@ -62,7 +66,15 @@ function CalendarHeader() {
       justifyContent="space-between"
       flexWrap="wrap"
       gap={2}
-      sx={{ borderBottom: '1px solid', borderBottomColor: 'divider', pb: 2 }}
+      sx={{
+        bgcolor: 'grey.80',
+        borderBottom: '1px solid',
+        borderBottomColor: 'divider',
+        pb: 2,
+        ...theme.applyStyles('dark', {
+          bgcolor: '#141A1F',
+        }),
+      }}
     >
       <Typography variant="h4" fontWeight="bold">
         Time Off Calendar

@@ -7,7 +7,7 @@ import Cancel from '@mui/icons-material/Cancel';
 import Search from '@mui/icons-material/Search';
 import { QuickFilter, QuickFilterClear, QuickFilterControl } from '@mui/x-data-grid-pro';
 import InputAdornment from '@mui/material/InputAdornment';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 const StyledQuickFilter = styled(QuickFilter)({
   flex: 1,
@@ -16,8 +16,18 @@ const StyledQuickFilter = styled(QuickFilter)({
 
 function CalendarToolbar() {
   const { activeFilters, handleFilterRemove, handleFilterAdd } = useCalendarContext();
+  const theme = useTheme();
   return (
-    <Stack gap={2} sx={{ pb: 3 }}>
+    <Stack
+      gap={2}
+      sx={{
+        pb: 3,
+        bgcolor: 'grey.80',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#141A1F',
+        }),
+      }}
+    >
       <CalendarHeader />
       <Stack
         direction="row"

@@ -5,6 +5,7 @@ import Chip from '@mui/material/Chip';
 import { FilterType } from './types/pto';
 import { FILTER_OPTIONS, FILTER_LABELS, FILTER_COLORS } from './constants';
 import Check from '@mui/icons-material/Check';
+import { useTheme } from '@mui/material/styles';
 
 interface FilterChipsProps {
   activeFilters: FilterType[];
@@ -17,9 +18,18 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
   onFilterRemove,
   onFilterAdd,
 }) => {
+  const theme = useTheme();
   return (
-    <Stack direction="row" alignItems="center" gap={2} sx={{ overflow: 'auto', py: 1 }}>
-      <Typography variant="h6" sx={{ color: '#09090b', fontWeight: 'bold' }}>
+    <Stack
+      direction="row"
+      alignItems="center"
+      gap={2}
+      sx={{
+        overflow: 'auto',
+        py: 1,
+      }}
+    >
+      <Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 'bold' }}>
         Filter
       </Typography>
       {FILTER_OPTIONS.map((filter) => {
@@ -37,6 +47,10 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
               '&.MuiChip-filled': {
                 backgroundColor: FILTER_COLORS[filter].background,
                 color: FILTER_COLORS[filter].text,
+                ...theme.applyStyles('dark', {
+                  backgroundColor: FILTER_COLORS[filter].dark.background,
+                  color: FILTER_COLORS[filter].dark.text,
+                }),
                 '& .MuiChip-deleteIcon': {
                   color: FILTER_COLORS[filter].text,
                 },
