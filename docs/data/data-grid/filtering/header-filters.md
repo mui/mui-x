@@ -4,9 +4,10 @@ title: Data Grid - Header filters
 
 # Data Grid - Header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Quickly accessible per-column filters on grid header.</p>
+<p class="description">Give users quick-access column filters in the Data Grid header.</p>
 
-Header filters add a new header row that lets users quickly filter the columns. The filters added on the filter panel are synchronized with the header filters and vice versa.
+Header filters add a new header row that lets users quickly filter the columns.
+The filters added on the filter panel are synchronized with the header filters and vice versa.
 
 You can switch between different operators by clicking the operator button in the header filter cell or pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS) when focusing on a header filter cell.
 
@@ -28,9 +29,9 @@ The clear button is within the header filter menu by default. To display the cle
 
 There are multiple ways to customize header filters.
 
-### `renderHeaderFilter` method
+### renderHeaderFilter() method
 
-You can use the `renderHeaderFilter` method of the `GridColDef` to customize the header filter cell for a specific column.
+You can use the `renderHeaderFilter()` method of the `GridColDef` to customize the header filter cell for a specific column.
 
 ```tsx
 const columns: GridColDef[] = [
@@ -43,11 +44,11 @@ const columns: GridColDef[] = [
 ];
 ```
 
-The following demo uses the `renderHeaderFilter` method to customize the header filter cell for the `isAdmin` column and hide the filter cell for the `phone` column.
+The following demo uses the `renderHeaderFilter()` method to customize the header filter cell for the `isAdmin` column and hide the filter cell for the `phone` column.
 
 {{"demo": "CustomHeaderFilterSingleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Customize using `filterOperators`
+### filterOperators prop
 
 If the filter operator has a [custom `InputComponent`](/x/react-data-grid/filtering/customization/#custom-input-component), the same component is being used for the header filter.
 
@@ -55,9 +56,10 @@ When rendered as a header filter, the `InputComponent` also receives the `header
 
 {{"demo": "CustomHeaderFilterOperatorDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### `headerFilterCell` slot
+### headerFilterCell slot
 
-You can use `slots.headerFilterCell` to customize the header filter cell completely. Since the default slot component handles keyboard navigation and focus management, you may have to handle them yourself if you are using a custom component.
+You can use `slots.headerFilterCell` to customize the header filter cell completely.
+Since the default slot component handles keyboard navigation and focus management, you may have to handle them yourself if you are using a custom component.
 
 Additionally, `slots.headerFilterMenu` could also be used to customize the menu of the header filter cell.
 
@@ -78,7 +80,8 @@ You can customize the height of the header filter cell using the `headerFilterHe
 
 ## Ignore diacritics (accents)
 
-You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
+You can ignore diacritics (accents) when filtering the rows.
+See [Quick filter—Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents) for more details.
 
 ## API
 
