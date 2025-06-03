@@ -10,6 +10,7 @@ import {
   getSelectByName,
   getRow,
   sleep,
+  getColumnHeaderCell,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -21,6 +22,8 @@ import {
   GridRowsProp,
   useGridApiRef,
   GridLogicOperator,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
+  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -1508,5 +1511,41 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
 
     expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+  });
+
+  // See https://github.com/mui/material-ui/issues/46261
+  it('should not move the checkbox column to the front when it is explicitly defined in props', () => {
+    render(
+      <Test
+        columns={[{ field: 'id' }, { field: 'group' }, { field: 'username', width: 150 }, GRID_CHECKBOX_SELECTION_COL_DEF]}
+        rows={[
+          { id: 1, group: 'A', username: 'username1' },
+          { id: 2, group: 'A', username: 'username2' },
+        ]}
+        rowGroupingModel={['group']}
+        defaultGroupingExpansionDepth={-1}
+        checkboxSelection
+      />,
+    );
+
+    expect(getColumnHeaderCell(4).dataset['field']).to.equal(GRID_CHECKBOX_SELECTION_FIELD);
+  });
+
+  // See https://github.com/mui/material-ui/issues/46261
+  it('should automatically move the checkbox column to the front when it is not explicitly defined in props', () => {
+    render(
+      <Test
+        columns={[{ field: 'id' }, { field: 'group' }, { field: 'username', width: 150 }]}
+        rows={[
+          { id: 1, group: 'A', username: 'username1' },
+          { id: 2, group: 'A', username: 'username2' },
+        ]}
+        rowGroupingModel={['group']}
+        defaultGroupingExpansionDepth={-1}
+        checkboxSelection
+      />,
+    );
+
+    expect(getColumnHeaderCell(0).dataset['field']).to.equal(GRID_CHECKBOX_SELECTION_FIELD);
   });
 });

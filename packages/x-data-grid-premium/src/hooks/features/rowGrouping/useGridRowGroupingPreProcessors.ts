@@ -50,6 +50,7 @@ export const useGridRowGroupingPreProcessors = (
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
     | 'dataSource'
+    | 'columns'
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
@@ -137,17 +138,23 @@ export const useGridRowGroupingPreProcessors = (
         newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
 
-      const checkBoxFieldIndex = newColumnFields.findIndex(
-        (field) => field === GRID_CHECKBOX_SELECTION_FIELD,
-      );
-      const checkBoxColumn =
-        checkBoxFieldIndex !== -1 ? newColumnFields.splice(checkBoxFieldIndex, 1) : [];
+      const groupingFields = groupingColDefs.map((colDef) => colDef.field);
 
-      newColumnFields = [
-        ...checkBoxColumn,
-        ...groupingColDefs.map((colDef) => colDef.field),
-        ...newColumnFields,
-      ];
+      // If checkbox is explicitly defined in props, don't force it to front
+      if (props.columns.some(
+        (col) => col.field === GRID_CHECKBOX_SELECTION_FIELD,
+      )) {
+        newColumnFields = [...groupingFields, ...newColumnFields];
+      } else {
+        // Move checkbox to front (GRID_CHECKBOX_SELECTION_FIELD is automatically added if checkboxSelection is true)
+        const checkboxIndex = newColumnFields.indexOf(GRID_CHECKBOX_SELECTION_FIELD);
+        if (checkboxIndex !== -1) {
+          newColumnFields.splice(checkboxIndex, 1);
+          newColumnFields = [GRID_CHECKBOX_SELECTION_FIELD, ...groupingFields, ...newColumnFields];
+        } else {
+          newColumnFields = [...groupingFields, ...newColumnFields];
+        }
+      }
 
       columnsState.orderedFields = newColumnFields;
       columnsState.lookup = newColumnsLookup;
