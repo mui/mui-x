@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
-import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { ChartsSlotProps, ChartsSlots } from '../internals/material';
 import { ChartContainerProps } from '../ChartContainer';
@@ -138,7 +137,7 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
+  const Toolbar = props.slots?.toolbar;
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
@@ -147,7 +146,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
       >
-        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
             direction={props?.slotProps?.legend?.direction ?? 'vertical'}

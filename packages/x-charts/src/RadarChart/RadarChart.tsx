@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { RadarChartPluginsSignatures } from './RadarChart.plugins';
-import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -91,12 +90,12 @@ const RadarChart = React.forwardRef(function RadarChart(
   } = useRadarChartProps(props);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
+  const Toolbar = props.slots?.toolbar;
 
   return (
     <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
