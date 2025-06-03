@@ -9,7 +9,6 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridPinnedRowsProp,
-  GridColumnHeaderParams,
   useGridApiContext,
   useGridSelector,
   gridFilteredRowCountSelector,
@@ -583,7 +582,7 @@ const PTOCalendar: React.FC = () => {
                       '& .MuiDataGrid-cell': {
                         backgroundColor: '#e3f2fd',
                         ...theme.applyStyles('dark', {
-                          backgroundColor: '#1e2429',
+                          backgroundColor: 'rgba(255, 255, 255, 0.02)',
                         }),
                       },
                     },
