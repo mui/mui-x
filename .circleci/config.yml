@@ -162,12 +162,6 @@ jobs:
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
-      - run:
-          name: Run server
-          environment:
-            TZ: UTC
-          command: |
-            node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" &
 
       - when:
           condition:
@@ -176,9 +170,11 @@ jobs:
           steps:
             - run:
                 environment:
+                  TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
-                command: pnpm test:unit:browser
+                command: |
+                  node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" & pnpm test:unit:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
@@ -186,8 +182,10 @@ jobs:
             - run:
                 name: Test Browser + Coverage
                 environment:
+                  TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                command: pnpm test:unit:browser --coverage
+                command: |
+                  node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" & pnpm test:unit:browser --coverage
 
             - run:
                 name: Check coverage generated
