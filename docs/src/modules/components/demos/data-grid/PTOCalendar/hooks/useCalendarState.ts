@@ -5,6 +5,7 @@ import { DATE_CONSTRAINTS, DEMO_YEAR } from '../constants';
 import { isWithinDemoYear } from '../utils/dateUtils';
 
 export const useCalendarState = () => {
+  const [density, setDensity] = React.useState<'compact' | 'comfortable'>('compact');
   const [currentDate, setCurrentDate] = React.useState(new Date(DEMO_YEAR, 4, 1));
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
   const [activeFilters, setActiveFilters] = React.useState<FilterType[]>([
@@ -45,17 +46,31 @@ export const useCalendarState = () => {
   const value = React.useMemo(
     () => ({
       currentDate,
+      density,
       isDatePickerOpen,
       activeFilters,
       dateConstraints: DATE_CONSTRAINTS,
-      handlePreviousMonth,
-      handleNextMonth,
-      handleDateChange,
+      setDensity,
+      setIsDatePickerOpen,
       handleFilterRemove,
       handleFilterAdd,
-      setIsDatePickerOpen,
+      handleDateChange,
+      handleNextMonth,
+      handlePreviousMonth,
     }),
-    [currentDate, isDatePickerOpen, activeFilters],
+    [
+      currentDate,
+      isDatePickerOpen,
+      activeFilters,
+      density,
+      setDensity,
+      setIsDatePickerOpen,
+      handleFilterRemove,
+      handleFilterAdd,
+      handleDateChange,
+      handleNextMonth,
+      handlePreviousMonth,
+    ],
   );
 
   return value;

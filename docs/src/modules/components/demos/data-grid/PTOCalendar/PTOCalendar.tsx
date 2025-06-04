@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, Theme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -117,13 +117,15 @@ interface CellSxParams {
   isMiddleOfPeriod: boolean;
   isEndOfPeriodInRange: boolean;
   isFirstVisibleDayOfPTO: boolean;
-  theme: any;
+  theme: Theme;
+  showLabel: boolean;
 }
 function getCellSx({
   showHoliday,
   hasHolidayBooked,
   showPTO,
   showSick,
+  showLabel,
   isCurrent,
   isMiddleOfPeriod,
   isEndOfPeriodInRange,
@@ -153,7 +155,7 @@ function getCellSx({
                 : 'transparent',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'start',
+    justifyContent: showLabel ? 'start' : 'center',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -224,26 +226,26 @@ function getCellSx({
 
 interface RenderCellIconLabelParams {
   showHoliday: boolean;
-  hasHolidayBooked: boolean;
   ptoData: any;
   params: PTOParams;
-  theme: any;
+  theme: Theme;
   isFirstVisibleDayOfPTO: boolean;
   showPTO: boolean;
   isFirstDayOfSick: boolean;
   showSick: boolean;
   isBirthday: boolean;
   cellData: CellData;
+  showLabel: boolean;
 }
 function renderCellIconLabel({
   showHoliday,
-  hasHolidayBooked,
   ptoData,
   params,
   theme,
   isFirstVisibleDayOfPTO,
   showPTO,
   isFirstDayOfSick,
+  showLabel,
   showSick,
   isBirthday,
   cellData,
@@ -266,7 +268,7 @@ function renderCellIconLabel({
             }),
           }}
         />
-        Holiday
+        {showLabel && 'Holiday'}
       </>
     );
   }
@@ -282,7 +284,7 @@ function renderCellIconLabel({
             }),
           }}
         />
-        Vacation
+        {showLabel && 'Vacation'}
       </>
     );
   }
@@ -298,7 +300,7 @@ function renderCellIconLabel({
             }),
           }}
         />
-        Sick leave
+        {showLabel && 'Sick leave'}
       </>
     );
   }
@@ -306,7 +308,7 @@ function renderCellIconLabel({
     return (
       <>
         <Cake sx={{ fontSize: '1rem', color: '#75758d' }} />
-        Birthday
+        {showLabel && 'Birthday'}
       </>
     );
   }
@@ -316,7 +318,7 @@ function renderCellIconLabel({
 function PTOCalendar() {
   const theme = useTheme();
   const calendarState = useCalendarState();
-  const { currentDate, activeFilters } = calendarState;
+  const { currentDate, activeFilters, density } = calendarState;
 
   const [holidays, setHolidays] = React.useState<HolidayData>({});
   const ptoData = usePTOData(currentDate);
@@ -414,12 +416,7 @@ function PTOCalendar() {
       {
         field: 'employee',
         headerName: 'Employees',
-        flex: 0,
-        minWidth: 200,
-        maxWidth: 220,
-        fixed: true,
-        headerAlign: 'left' as const,
-        align: 'left' as const,
+        width: 200,
         renderHeader: EmployeeHeader,
         renderCell: (params: GridRenderCellParams) => {
           if (params.row.id === 'summary') {
@@ -505,12 +502,13 @@ function PTOCalendar() {
           field: dateStr,
           headerName: format(day, 'EEE d'),
           description: format(day, 'MMMM d, yyyy'),
-          width: 110,
+          width: density === 'compact' ? 50 : 110,
           type: 'boolean' as const,
           renderHeader: () => (
             <Box
               sx={{
                 display: 'flex',
+                flexDirection: density === 'compact' ? 'column' : 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 0.5,
@@ -659,6 +657,7 @@ function PTOCalendar() {
                     hasHolidayBooked: !!cellData.hasHolidayBooked,
                     showPTO,
                     showSick,
+                    showLabel: density === 'comfortable',
                     isCurrent: isCurrentDay(day),
                     isMiddleOfPeriod: !!isMiddleOfPeriod,
                     isEndOfPeriodInRange: !!isEndOfPeriodInRange,
@@ -668,10 +667,10 @@ function PTOCalendar() {
                 >
                   {renderCellIconLabel({
                     showHoliday,
-                    hasHolidayBooked: !!cellData.hasHolidayBooked,
                     ptoData,
                     params,
                     theme,
+                    showLabel: density === 'comfortable',
                     isFirstVisibleDayOfPTO: !!isFirstVisibleDayOfPTO,
                     showPTO,
                     isFirstDayOfSick: !!isFirstDayOfSick,
@@ -686,7 +685,7 @@ function PTOCalendar() {
         };
       }),
     ],
-    [daysToShow, holidays, ptoData, activeFilters],
+    [daysToShow, holidays, ptoData, activeFilters, density],
   );
 
   return (
@@ -766,6 +765,92 @@ function PTOCalendarContainer() {
         borderRadius: 10,
       },
       components: {
+        MuiButtonBase: {
+          defaultProps: {
+            disableRipple: true,
+            disableTouchRipple: true,
+          },
+          styleOverrides: {
+            root: {
+              '&:hover': {
+                backgroundColor: '#f7f9ff',
+              },
+              '&:focus-visible': {
+                outline: '2px solid #3E63DD',
+                outlineOffset: '-1px',
+              },
+            },
+          },
+        },
+        MuiToggleButtonGroup: {
+          styleOverrides: {
+            root: {
+              display: 'flex',
+              gap: 2,
+              background: '#faf9fb',
+            },
+          },
+        },
+        MuiToggleButton: {
+          styleOverrides: {
+            root: {
+              textTransform: 'none',
+              letterSpacing: '0.01em',
+              padding: '6px 12px',
+              borderRadius: '10px !important',
+              borderColor: 'transparent',
+              margin: '0 !important',
+              '&.Mui-selected': {
+                background: '#fff',
+                borderColor: '#EEEBF0',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+                '&:hover': {
+                  background: '#fff',
+                },
+              },
+            },
+          },
+        },
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              padding: '0 12px',
+              background: '#fff',
+              borderColor: '#EEEBF0',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+              borderRadius: '10px',
+              whiteSpace: 'nowrap',
+              textTransform: 'none',
+              color: '#000000',
+              letterSpacing: '0.01em',
+            },
+          },
+        },
+        MuiIconButton: {
+          styleOverrides: {
+            root: {
+              color: 'rgba(0, 0, 0, 0.87)',
+              '&:hover': {
+                backgroundColor: '#f7f9ff',
+              },
+            },
+          },
+        },
+        MuiOutlinedInput: {
+          styleOverrides: {
+            root: {
+              borderRadius: '10px',
+              fontSize: '0.875rem',
+              height: 36,
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#3E63DD',
+              },
+            },
+            notchedOutline: {
+              borderColor: '#EEEBF0',
+            },
+          },
+        },
         MuiDataGrid: {
           styleOverrides: {
             root: ({ theme }) => ({

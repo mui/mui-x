@@ -14,6 +14,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useCalendarContext } from './CalendarContext';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { format } from 'date-fns';
+import { ToolbarButton } from '@mui/x-data-grid';
 
 function ButtonField(props: any) {
   const { forwardedProps } = useSplitFieldProps(props, 'date');
@@ -22,26 +23,16 @@ function ButtonField(props: any) {
   const valueStr = format(pickerContext.value, pickerContext.fieldFormat);
 
   return (
-    <Button
+    <ToolbarButton
       {...forwardedProps}
-      variant="outlined"
       ref={handleRef}
-      sx={{
-        px: 3,
-        borderColor: '#000000',
-        borderRadius: 2,
-        whiteSpace: 'nowrap',
-        textTransform: 'none',
-        color: '#000000',
-        height: '40px',
-        backgroundColor: '#ffffff',
-        fontWeight: 'bold',
-        boxShadow: 'none',
-      }}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
-    >
-      {pickerContext.label ?? valueStr}
-    </Button>
+      render={
+        <Button variant="outlined" size="small">
+          {pickerContext.label ?? valueStr}
+        </Button>
+      }
+    />
   );
 }
 function CalendarNavigation() {
@@ -56,25 +47,15 @@ function CalendarNavigation() {
   } = useCalendarContext();
 
   return (
-    <Box sx={{ display: 'flex', gap: 2 }}>
-      <Button
-        variant="outlined"
+    <Box sx={{ display: 'flex', gap: 1 }}>
+      <ToolbarButton
         onClick={() => handleDateChange(new Date(2025, 4, 1))}
-        sx={{
-          px: 3,
-          borderColor: '#000000',
-          borderRadius: 2,
-          whiteSpace: 'nowrap',
-          textTransform: 'none',
-          color: '#000000',
-          height: '40px',
-          backgroundColor: '#ffffff',
-          fontWeight: 'bold',
-          boxShadow: 'none',
-        }}
-      >
-        Today
-      </Button>
+        render={
+          <Button variant="outlined" size="small">
+            Today
+          </Button>
+        }
+      />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DatePicker
           value={currentDate}
@@ -101,29 +82,13 @@ function CalendarNavigation() {
           }}
         />
       </LocalizationProvider>
-      <Box sx={{ display: 'flex', ml: -1 }}>
-        <IconButton
-          onClick={handlePreviousMonth}
-          sx={{
-            color: 'text.primary',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-            },
-          }}
-        >
+      <Box sx={{ display: 'flex' }}>
+        <ToolbarButton size="small" onClick={handlePreviousMonth}>
           <ChevronLeft />
-        </IconButton>
-        <IconButton
-          onClick={handleNextMonth}
-          sx={{
-            color: 'text.primary',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-            },
-          }}
-        >
+        </ToolbarButton>
+        <ToolbarButton size="small" onClick={handleNextMonth}>
           <ChevronRight />
-        </IconButton>
+        </ToolbarButton>
       </Box>
     </Box>
   );
