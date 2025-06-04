@@ -79,7 +79,6 @@
     "bar": "The component that renders the bar.",
     "barLabel": "The component that renders the bar label.",
     "baseButton": "",
-    "baseDivider": "",
     "baseIconButton": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",

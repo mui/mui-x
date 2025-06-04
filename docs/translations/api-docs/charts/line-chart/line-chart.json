@@ -70,7 +70,6 @@
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
     "baseButton": "",
-    "baseDivider": "",
     "baseIconButton": "",
     "legend": "Custom rendering of the legend.",
     "line": "The component that renders the line.",

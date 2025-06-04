@@ -67,3 +67,8 @@ export type ChartBaseMenuItemProps = ChartBaseCommonProps & {
   value?: number | string | readonly string[];
   style?: React.CSSProperties;
 };
+
+export type ChartBaseDividerProps = ChartBaseCommonProps & {
+  ref?: React.Ref<HTMLHRElement>;
+  orientation?: 'horizontal' | 'vertical';
+};

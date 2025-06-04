@@ -1,6 +1,7 @@
 import { ChartsBaseSlots } from '@mui/x-charts/models';
 import * as React from 'react';
 import {
+  ChartBaseDividerProps,
   ChartBaseMenuItemProps,
   ChartBaseMenuListProps,
   ChartBasePopperProps,
@@ -8,8 +9,9 @@ import {
 } from './chartBaseSlotProps';
 
 export interface ChartsBaseSlotsPro extends ChartsBaseSlots {
-  baseTooltip: React.ComponentType<ChartBaseTooltipProps>;
-  basePopper: React.ComponentType<ChartBasePopperProps>;
-  baseMenuList: React.ComponentType<ChartBaseMenuListProps>;
+  baseDivider: React.ComponentType<ChartBaseDividerProps>;
   baseMenuItem: React.ComponentType<ChartBaseMenuItemProps>;
+  baseMenuList: React.ComponentType<ChartBaseMenuListProps>;
+  basePopper: React.ComponentType<ChartBasePopperProps>;
+  baseTooltip: React.ComponentType<ChartBaseTooltipProps>;
 }

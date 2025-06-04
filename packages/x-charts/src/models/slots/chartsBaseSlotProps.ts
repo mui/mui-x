@@ -25,8 +25,3 @@ export type ChartBaseIconButtonProps = ChartBaseCommonProps & {
   disabled?: boolean;
   tabIndex?: number;
 };
-
-export type ChartBaseDividerProps = ChartBaseCommonProps & {
-  ref?: React.Ref<HTMLHRElement>;
-  orientation?: 'horizontal' | 'vertical';
-};

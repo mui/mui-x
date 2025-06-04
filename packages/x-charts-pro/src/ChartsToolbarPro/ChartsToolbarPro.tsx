@@ -2,10 +2,11 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, ChartsToolbarProps, ToolbarButton, ToolbarDivider } from '@mui/x-charts/Toolbar';
+import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import { useChartContext, useSelector, useChartsSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
+import { ChartsToolbarDivider } from './ChartsToolbarDivider';
 import { ChartsMenu } from './ChartsMenu';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
@@ -89,7 +90,7 @@ function ChartsToolbarPro({
     };
 
     if (children.length > 0) {
-      children.push(<ToolbarDivider key="divider" />);
+      children.push(<ChartsToolbarDivider key="divider" />);
     }
 
     children.push(
