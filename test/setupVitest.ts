@@ -58,10 +58,8 @@ if (!globalThis.after) {
   (globalThis as any).after = afterAll;
 }
 
-const isJsdom = typeof window !== 'undefined' && window.navigator.userAgent.includes('jsdom');
-
 // Only necessary when not in browser mode.
-if (isJsdom) {
+if (isJSDOM) {
   class Touch {
     instance: any;
 
