@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
+import { Toolbar, ChartsToolbarProps, ToolbarButton, ToolbarDivider } from '@mui/x-charts/Toolbar';
 import {
   useChartContext,
   useSelector,
@@ -57,14 +57,14 @@ export function ChartsToolbarPro({
     children.push(
       <Tooltip key="zoom-in" {...slotProps.baseTooltip} title={localeText.zoomIn}>
         <ChartsToolbarZoomInTrigger render={<ToolbarButton />}>
-          <ZoomInIcon {...slotProps.zoomInIcon} />
+          <ZoomInIcon fontSize="small" {...slotProps.zoomInIcon} />
         </ChartsToolbarZoomInTrigger>
       </Tooltip>,
     );
     children.push(
       <Tooltip key="zoom-out" {...slotProps.baseTooltip} title={localeText.zoomOut}>
         <ChartsToolbarZoomOutTrigger render={<ToolbarButton />}>
-          <ZoomOutIcon {...slotProps.zoomOutIcon} />
+          <ZoomOutIcon fontSize="small" {...slotProps.zoomOutIcon} />
         </ChartsToolbarZoomOutTrigger>
       </Tooltip>,
     );
@@ -88,6 +88,10 @@ export function ChartsToolbarPro({
       }
     };
 
+    if (children.length > 0) {
+      children.push(<ToolbarDivider />);
+    }
+
     children.push(
       <React.Fragment key="export-menu">
         <Tooltip title={localeText.toolbarExport}>
@@ -99,7 +103,7 @@ export function ChartsToolbarPro({
             aria-expanded={exportMenuOpen ? 'true' : undefined}
             onClick={() => setExportMenuOpen(!exportMenuOpen)}
           >
-            <ExportIcon />
+            <ExportIcon fontSize="small" />
           </ToolbarButton>
         </Tooltip>
 
