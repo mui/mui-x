@@ -25,6 +25,7 @@ import { HolidayData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
 import { FILTER_COLORS } from './constants';
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 interface RowData {
   id: number;
@@ -98,20 +99,23 @@ function PTOCalendar() {
     return summary;
   }, [daysToShow, ptoData]);
 
-  const pinnedRow: GridPinnedRowsProp = {
-    top: [
-      {
-        id: 'summary',
-        employee: 'Out of office:',
-        ...Object.fromEntries(
-          daysToShow.map((day) => {
-            const dateStr = format(day, 'yyyy-MM-dd');
-            return [dateStr, employeesOutOfOffice[dateStr]];
-          }),
-        ),
-      },
-    ],
-  };
+  const pinnedRow: GridPinnedRowsProp = React.useMemo(
+    () => ({
+      top: [
+        {
+          id: 'summary',
+          employee: 'Out of office:',
+          ...Object.fromEntries(
+            daysToShow.map((day) => {
+              const dateStr = format(day, 'yyyy-MM-dd');
+              return [dateStr, employeesOutOfOffice[dateStr]];
+            }),
+          ),
+        },
+      ],
+    }),
+    [daysToShow, employeesOutOfOffice],
+  );
 
   const rows = useMemo(() => {
     const allRows = Object.entries(ptoData).map(([name, data], index) => {
@@ -163,7 +167,6 @@ function PTOCalendar() {
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   fontWeight: 'bold',
-                  paddingLeft: 1.25,
                 }}
               >
                 {params.value}
@@ -183,9 +186,7 @@ function PTOCalendar() {
                 height: '100%',
                 display: 'flex',
                 alignItems: 'center',
-                pl: 1,
                 gap: 1,
-                py: 1,
               }}
             >
               <Avatar
@@ -238,7 +239,6 @@ function PTOCalendar() {
       ...daysToShow.map((day) => {
         const dateStr = format(day, 'yyyy-MM-dd');
         const isCurrent = isCurrentDay(day);
-
         return {
           field: dateStr,
           headerName: format(day, 'EEE d'),
@@ -399,10 +399,6 @@ function PTOCalendar() {
                           ? FILTER_COLORS.vacation.text
                           : FILTER_COLORS.sick.text
                       : 'transparent',
-                  '&:hover': {
-                    backgroundColor:
-                      showPTO || showSick ? 'none' : isCurrent ? '#c7e2fe' : '#e3f2fd',
-                  },
                   border: showPTO
                     ? `2px solid ${FILTER_COLORS.vacation.border}`
                     : showSick
@@ -525,93 +521,6 @@ function PTOCalendar() {
           slots={{ toolbar: CalendarToolbar }}
           showToolbar
           getRowHeight={(params) => (params.model.id === 'summary' ? 40 : 50)}
-          sx={{
-            border: 'none',
-            height: '100%',
-            '--DataGrid-rowBorderColor': '#EEEBF0',
-            ...theme.applyStyles('dark', {
-              '--DataGrid-rowBorderColor': '#38363E',
-            }),
-            '& .MuiDataGrid-virtualScroller': {
-              overflow: 'auto',
-              ...theme.applyStyles('dark', {
-                backgroundColor: '#141A1F',
-              }),
-            },
-            '& .MuiDataGrid-cell': {
-              cursor: 'pointer',
-              p: 0,
-              ...theme.applyStyles('dark', {
-                backgroundColor: '#141A1F',
-              }),
-            },
-            '& .MuiDataGrid-row': {
-              '&:hover': {
-                '& .MuiDataGrid-cell': {
-                  backgroundColor: '#f7f9ff',
-                  ...theme.applyStyles('dark', {
-                    backgroundColor: '#1e2933',
-                  }),
-                },
-              },
-            },
-            '& .MuiDataGrid-columnHeader': {
-              p: 0,
-            },
-            '& .MuiDataGrid-columnHeaderTitleContainer': {
-              p: 0,
-              fontSize: '0.75rem',
-              textTransform: 'uppercase',
-              color: '#75758d',
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              backgroundColor: 'rgba(250,250,250,255)',
-              '& .MuiDataGrid-columnHeader:first-of-type:not([data-field="employee"])': {
-                borderTopLeftRadius: '10px',
-              },
-              '& .MuiDataGrid-columnHeader:last-of-type': {
-                borderTopRightRadius: '10px',
-              },
-            },
-            '& .MuiDataGrid-columnSeparator': {
-              display: 'none',
-            },
-            '& .MuiDataGrid-cell[data-field="employee"]': {
-              padding: '12px 6px',
-              color: '#09090b',
-              borderTopColor: 'transparent',
-            },
-            '& .MuiDataGrid-columnHeader[data-field="employee"]': {
-              padding: '8px',
-              '& .MuiDataGrid-columnHeaderTitleContainer': {
-                pl: 1,
-                '& .MuiDataGrid-columnHeaderTitle': {
-                  fontWeight: 'bold',
-                  textTransform: 'uppercase',
-                  color: '#75758d',
-                },
-              },
-            },
-            '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell:not(.MuiDataGrid-cell--pinnedLeft)': {
-              borderRight: 0,
-            },
-            '& .MuiDataGrid-pinnedRows .MuiDataGrid-cell': {
-              backgroundColor: '#faf9fb',
-              ...theme.applyStyles('dark', {
-                backgroundColor: '#1e2429',
-              }),
-            },
-            '& .MuiDataGrid-virtualScrollerContent': {
-              '& .MuiDataGrid-row:last-child': {
-                '& .MuiDataGrid-cell:first-of-type:not([data-field="employee"])': {
-                  borderBottomLeftRadius: '10px',
-                },
-                '& .MuiDataGrid-cell:last-of-type': {
-                  borderBottomRightRadius: '10px',
-                },
-              },
-            },
-          }}
         />
       </Box>
     </CalendarContext.Provider>
@@ -642,6 +551,58 @@ function PTOCalendarContainer() {
               bg: '#141A1F',
               pinnedBg: '#141A1F',
               headerBg: '#1e2429',
+            },
+          },
+        },
+      },
+      components: {
+        MuiDataGrid: {
+          styleOverrides: {
+            root: ({ theme }) => ({
+              border: 'none',
+              height: '100%',
+              '--DataGrid-rowBorderColor': '#EEEBF0',
+              ...theme.applyStyles('dark', {
+                '--DataGrid-rowBorderColor': '#38363E',
+              }),
+            }),
+            cell: {
+              padding: 0,
+              '&:focus': {
+                outline: 'none',
+              },
+              '&:focus-within': {
+                outline: 'none',
+              },
+            },
+            'cell--pinnedLeft': {
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 16px',
+              color: '#09090b',
+              borderTopColor: 'transparent',
+            },
+            row: ({ theme }) => ({
+              '&:hover': {
+                backgroundColor: '#f7f9ff',
+                ...theme.applyStyles('dark', {
+                  backgroundColor: '#1e2933',
+                }),
+              },
+            }),
+            columnSeparator: {
+              display: 'none',
+            },
+            columnHeaderTitleContainer: {
+              fontSize: '0.75rem',
+              textTransform: 'uppercase',
+              color: '#75758d',
+            },
+            columnHeaders: {
+              backgroundColor: 'rgba(250,250,250,255)',
+            },
+            'columnHeader--pinnedLeft': {
+              padding: '0 16px',
             },
           },
         },
