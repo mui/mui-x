@@ -78,6 +78,16 @@ export function ChartsToolbarPro({
 
     const closeExportMenu = () => setExportMenuOpen(false);
 
+    const handleListKeyDown = (event: React.KeyboardEvent) => {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+      }
+
+      if (isHideMenuKey(event.key)) {
+        closeExportMenu();
+      }
+    };
+
     children.push(
       <React.Fragment key="export-menu">
         <Tooltip title={localeText.toolbarExport}>
@@ -102,6 +112,7 @@ export function ChartsToolbarPro({
           <MenuList
             id={exportMenuId}
             aria-labelledby={exportMenuTriggerId}
+            onKeyDown={handleListKeyDown}
             autoFocusItem
             {...slotProps?.baseMenuList}
           >
@@ -134,4 +145,8 @@ export function ChartsToolbarPro({
   }
 
   return <Toolbar {...other}>{children}</Toolbar>;
+}
+
+function isHideMenuKey(key: React.KeyboardEvent['key']) {
+  return key === 'Tab' || key === 'Escape';
 }
