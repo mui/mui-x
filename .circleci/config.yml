@@ -165,7 +165,7 @@ jobs:
       - run:
           name: Run server
           command: |
-            node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" 
+            node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" &
             echo 'export PLAYWRIGHT_SERVER_WS=ws://localhost:9050/mui-browser' >> $BASH_ENV
 
       - when:
