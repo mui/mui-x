@@ -1,5 +1,5 @@
 import { GridProSlotProps } from '@mui/x-data-grid-pro/internals';
-import { GridChartsConfigurationPanelProps } from '../components/chartsConfigurationPanel/GridChartsConfigurationPanel';
+import type { GridChartsConfigurationPanelProps } from '../components/chartsConfigurationPanel/GridChartsConfigurationPanel';
 
 // Overrides for module augmentation
 export interface GridChartsConfigurationPanelPropsOverrides {}
