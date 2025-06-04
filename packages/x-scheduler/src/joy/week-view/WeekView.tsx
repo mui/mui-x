@@ -52,7 +52,7 @@ export const WeekView = React.forwardRef(function WeekView(
   }, [events]);
 
   return (
-    <div ref={forwardedRef} className={clsx('WeekViewContainer', className)} {...other}>
+    <div ref={forwardedRef} className={clsx('WeekViewContainer', 'joy', className)} {...other}>
       <TimeGrid.Root className="WeekViewRoot">
         <div ref={headerWrapperRef} className="WeekViewHeader">
           <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
