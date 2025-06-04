@@ -1,7 +1,8 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useGridComponentRenderer, RenderProp } from '@mui/x-data-grid-pro/internals';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { RenderProp } from '@mui/x-data-grid-pro/internals';
 import { GridSlotProps, useGridSelector } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -55,7 +56,7 @@ const ChartsConfigurationPanelTrigger = forwardRef<
     onClick?.(event);
   };
 
-  const element = useGridComponentRenderer(
+  const element = useComponentRenderer(
     rootProps.slots.baseButton,
     render,
     {
