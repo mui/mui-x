@@ -20,8 +20,7 @@ function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) 
           data: s.data,
           label: s.label,
         }))}
-        height={300}
-        width={500}
+        height={350}
       />
     );
   }
@@ -35,8 +34,7 @@ function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) 
           data: s.data,
           label: s.label,
         }))}
-        height={300}
-        width={500}
+        height={350}
       />
     );
   }
@@ -55,8 +53,8 @@ function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) 
             outerRadius: 120,
           },
         ]}
-        width={300}
-        height={300}
+        width={350}
+        height={350}
         slotProps={{
           legend: {
             direction: 'horizontal',
@@ -70,7 +68,7 @@ function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) 
     );
   }
 
-  return <span>No chart renderer found for the chart type: {chartType}</span>;
+  return null;
 }
 
 ChartsRenderer.propTypes = {
