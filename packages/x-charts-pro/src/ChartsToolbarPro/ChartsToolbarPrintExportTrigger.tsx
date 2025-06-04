@@ -2,14 +2,17 @@ import * as React from 'react';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
-import { ChartsExportDisplayOptions } from './export.types';
 import { useChartApiContext } from '../context';
 import { ChartPrintExportOptions } from '../internals/plugins/useChartProExport';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 
-export interface ChartsToolbarPrintExportOptions
-  extends ChartPrintExportOptions,
-    ChartsExportDisplayOptions {}
+export interface ChartsToolbarPrintExportOptions extends ChartPrintExportOptions {
+  /**
+   * If `true`, this export option will be removed from the ChartsToolbarExport menu.
+   * @default false
+   */
+  disableToolbarButton?: boolean;
+}
 
 export type ChartsToolbarPrintExportTriggerProps = ChartsSlotPropsPro['baseButton'] & {
   /**

@@ -24,9 +24,13 @@ export interface ChartsLocaleText {
    */
   toolbarExportPrint: string;
   /**
-   * Text for the "Export as PNG" button in the toolbar's export menu.
+   * Text for an "Export as {image type}" button in the toolbar's export menu.
+   * The only format supported in all browsers is 'image/png'.
+   *
+   * @param {string} mimeType The MIME type of the image to export, e.g., 'image/png'.
+   * @returns {string} The localized string for an export image button.
    */
-  toolbarExportPng: string;
+  toolbarExportImage: (mimeType: 'image/png' | string) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;
