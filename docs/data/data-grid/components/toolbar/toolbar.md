@@ -22,7 +22,7 @@ The demo below shows how to compose the Toolbar and various other components to 
 ## Anatomy
 
 ```tsx
-import { Toolbar, ToolbarButton, ToolbarDivider } from '@mui/x-data-grid';
+import { Toolbar, ToolbarButton } from '@mui/x-data-grid';
 
 <Toolbar>
   <ToolbarButton />
