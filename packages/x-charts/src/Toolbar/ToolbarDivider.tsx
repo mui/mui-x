@@ -1,16 +1,14 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
+import { ChartBaseDividerProps } from '../models';
 import { useChartsSlots } from '../context/ChartsSlotsContext';
-import { ChartsSlotProps } from '../internals/material';
 import { chartsToolbarClasses } from './chartToolbarClasses';
+import { NotRendered } from '../internals/components/NotRendered';
 
-export type ToolbarDividerProps = ChartsSlotProps['baseDivider'];
+export interface ToolbarDividerProps extends ChartBaseDividerProps {}
 
-export function NotRendered<T>(_props: T): React.ReactNode {
-  throw new Error('Failed assertion: should not be rendered');
-}
-
-const Divider = styled(NotRendered<ChartsSlotProps['baseDivider']>, {
+const Divider = styled(NotRendered<ChartBaseDividerProps>, {
   name: 'MuiChartsToolbar',
   slot: 'Divider',
 })(({ theme }) => ({
@@ -18,7 +16,7 @@ const Divider = styled(NotRendered<ChartsSlotProps['baseDivider']>, {
   height: '50%',
 }));
 
-export const ToolbarDivider = React.forwardRef<HTMLHRElement, ToolbarDividerProps>(
+const ToolbarDivider = React.forwardRef<HTMLHRElement, ToolbarDividerProps>(
   function ToolbarDivider(props, ref) {
     const { className, ...other } = props;
     const { slots, slotProps } = useChartsSlots();
@@ -35,3 +33,15 @@ export const ToolbarDivider = React.forwardRef<HTMLHRElement, ToolbarDividerProp
     );
   },
 );
+
+ToolbarDivider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+  style: PropTypes.object,
+} as any;
+
+export { ToolbarDivider };
