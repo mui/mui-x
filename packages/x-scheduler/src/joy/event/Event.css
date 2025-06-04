@@ -1,0 +1,24 @@
+@import '../styles/tokens.css';
+
+.EventContainer {
+}
+
+.mode-dark .EventContainer {
+}
+
+.EventPositioned {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: var(--y-position);
+  bottom: calc(100% - var(--y-position) - var(--height));
+  z-index: 2;
+}
+
+.EventCard {
+  border-radius: var(--radius-4);
+  padding: var(--space-1);
+  font-size: 10px;
+  background-color: var(--primary-3);
+  color: #34317c;
+}
