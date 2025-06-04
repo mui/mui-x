@@ -5,16 +5,16 @@ import { getChartsLocalization } from './utils/getChartsLocalization';
 // This object is not Partial<ChartsLocaleText> because it is the default values
 
 export const enUSLocaleText: ChartsLocaleText = {
-  // Overlay
+  /* Overlay */
   loading: 'Loading data…',
   noData: 'No data to display',
 
-  // Toolbar
+  /* Toolbar */
   zoomIn: 'Zoom in',
   zoomOut: 'Zoom out',
-
-  // Toolbar Export
   toolbarExport: 'Export',
+
+  /* Toolbar Export Menu */
   toolbarExportPrint: 'Print',
   toolbarExportImage: (mimeType) =>
     `Export as ${imageMimeTypes[mimeType as keyof typeof imageMimeTypes] ?? mimeType}`,

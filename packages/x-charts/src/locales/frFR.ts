@@ -9,9 +9,9 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   // Toolbar
   // zoomIn: 'Zoom in',
   // zoomOut: 'Zoom out',
-
-  // Toolbar Export
   // toolbarExport: 'Export',
+
+  // Toolbar Export Menu
   // toolbarExportPrint: 'Print',
   // toolbarExportImage: mimeType => `Export as ${imageMimeTypes[mimeType as keyof typeof imageMimeTypes] ?? mimeType}`,
 };
