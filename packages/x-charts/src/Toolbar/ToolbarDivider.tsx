@@ -8,7 +8,10 @@ import { NotRendered } from '../internals/components/NotRendered';
 
 export interface ToolbarDividerProps extends ChartBaseDividerProps {}
 
-const Divider = styled(NotRendered<ChartBaseDividerProps>, {
+// Need this cast because api-docs-builder does not support the `NotRendered<ChartBaseDividerProps>` expression.
+const NotRenderedDivider = NotRendered as unknown as React.ComponentType<ChartBaseDividerProps>;
+
+const Divider = styled(NotRenderedDivider, {
   name: 'MuiChartsToolbar',
   slot: 'Divider',
 })(({ theme }) => ({
