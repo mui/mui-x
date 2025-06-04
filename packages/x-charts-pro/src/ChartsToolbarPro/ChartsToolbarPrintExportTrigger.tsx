@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
@@ -24,7 +25,7 @@ export type ChartsToolbarPrintExportTriggerProps = ChartsSlotPropsPro['baseButto
    * @demos
    *   - [Print/Export as PDF](/x/react-charts/export/#print-export-as-pdf)
    */
-  options?: ChartsToolbarPrintExportOptions;
+  options?: ChartPrintExportOptions;
 };
 
 /**
@@ -35,7 +36,7 @@ export type ChartsToolbarPrintExportTriggerProps = ChartsSlotPropsPro['baseButto
  *
  * - [Export](/x/react-charts/export/)
  */
-export const ChartsToolbarPrintExportTrigger = forwardRef<
+const ChartsToolbarPrintExportTrigger = forwardRef<
   HTMLButtonElement,
   ChartsToolbarPrintExportTriggerProps
 >(function ChartsToolbarPrintExportTrigger(props, ref) {
@@ -57,3 +58,29 @@ export const ChartsToolbarPrintExportTrigger = forwardRef<
 
   return <React.Fragment>{element}</React.Fragment>;
 });
+
+ChartsToolbarPrintExportTrigger.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  id: PropTypes.string,
+  /**
+   * The options to apply on the Print export.
+   * @demos
+   *   - [Print/Export as PDF](/x/react-charts/export/#print-export-as-pdf)
+   */
+  options: PropTypes.shape({
+    fileName: PropTypes.string,
+  }),
+  /**
+   * A function to customize the rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  style: PropTypes.object,
+  tabIndex: PropTypes.number,
+} as any;
+
+export { ChartsToolbarPrintExportTrigger };
