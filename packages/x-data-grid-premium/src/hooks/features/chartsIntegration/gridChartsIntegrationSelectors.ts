@@ -7,5 +7,15 @@ const gridChartsIntegrationStateSelector = createRootSelector(
 
 export const gridChartsConfigurationPanelOpenSelector = createSelector(
   gridChartsIntegrationStateSelector,
-  (chartsIntegration) => chartsIntegration?.configurationPanel?.open,
+  (chartsIntegration) => chartsIntegration.configurationPanel.open,
+);
+
+export const gridChartsCategoriesSelector = createSelector(
+  gridChartsIntegrationStateSelector,
+  (chartsIntegration) => chartsIntegration.categories,
+);
+
+export const gridChartsSeriesSelector = createSelector(
+  gridChartsIntegrationStateSelector,
+  (chartsIntegration) => chartsIntegration.series,
 );

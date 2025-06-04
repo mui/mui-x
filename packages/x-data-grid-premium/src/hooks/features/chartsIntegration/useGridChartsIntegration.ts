@@ -20,9 +20,14 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridChartsIntegrationContextValue } from '../../../models/gridChartsIntegration';
 import {
   GridChartsIntegrationApi,
+  GridChartsIntegrationPrivateApi,
   GridChartsIntegrationState,
 } from './gridChartsIntegrationInterfaces';
-import { gridChartsConfigurationPanelOpenSelector } from './gridChartsIntegrationSelectors';
+import {
+  gridChartsConfigurationPanelOpenSelector,
+  gridChartsCategoriesSelector,
+  gridChartsSeriesSelector,
+} from './gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
@@ -38,6 +43,8 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
         configurationPanel: {
           open: false,
         },
+        categories: [],
+        series: [],
       } as GridChartsIntegrationState,
     };
   }
@@ -51,6 +58,8 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           props.initialState?.chartsIntegration?.configurationPanel?.open ??
           false,
       },
+      categories: props.initialState?.chartsIntegration?.categories ?? [],
+      series: props.initialState?.chartsIntegration?.series ?? [],
     } as GridChartsIntegrationState,
   };
 };
@@ -73,13 +82,14 @@ export const useGridChartsIntegration = (
     | 'chartsIntegration'
     | 'chartsConfigurationPanelOpen'
     | 'onChartsConfigurationPanelOpenChange'
+    | 'initialState'
     | 'slotProps'
   >,
 ) => {
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
 
-  const { configuration, setConfiguration, setChartType, setCategories, setSeries } =
+  const { setConfiguration, setChartType, setCategories, setSeries } =
     context || EMPTY_CHART_INTEGRATION_CONTEXT;
 
   apiRef.current.registerControlState({
@@ -94,9 +104,9 @@ export const useGridChartsIntegration = (
     const columns = gridColumnLookupSelector(apiRef);
     const rows = Object.values(gridFilteredSortedRowEntriesSelector(apiRef)).map((r) => r.model);
 
-    // TODO: should be configurable
-    const category = Object.values(columns).find((c) => c.type === 'string')?.field;
-    const series = Object.values(columns).find((c) => c.type === 'number')?.field;
+    const selectedSeries = gridChartsSeriesSelector(apiRef);
+    const category = gridChartsCategoriesSelector(apiRef)[0];
+    const series = Object.values(columns).find((c) => c.field === selectedSeries[0]);
 
     if (!category || !series) {
       return;
@@ -105,9 +115,9 @@ export const useGridChartsIntegration = (
     setCategories(rows.map((r) => r[category]));
     setSeries([
       {
-        id: columns[series].field,
-        label: columns[series].headerName || columns[series].field,
-        data: rows.map((r) => r[series]),
+        id: series.field,
+        label: series.headerName || series.field,
+        data: rows.map((r) => r[series.field]),
       },
     ]);
   }, [apiRef, setCategories, setSeries]);
@@ -140,27 +150,19 @@ export const useGridChartsIntegration = (
 
   useEnhancedEffect(() => {
     if (props.chartsConfigurationPanelOpen !== undefined) {
-      apiRef.current.setPivotPanelOpen(props.chartsConfigurationPanelOpen);
+      apiRef.current.setChartsConfigurationPanelOpen(props.chartsConfigurationPanelOpen);
     }
   }, [apiRef, props.chartsConfigurationPanelOpen]);
 
   useEnhancedEffect(() => {
     if (props.slotProps?.chartsConfigurationPanel?.schema !== undefined) {
       setConfiguration(props.slotProps?.chartsConfigurationPanel?.schema);
-
-      // select first chart type
-      // TODO: should come from the initial state
-      if (configuration.chartType === undefined) {
-        setChartType(props.slotProps?.chartsConfigurationPanel?.schema.chartType[0]);
-      }
     }
-  }, [
-    apiRef,
-    configuration.chartType,
-    props.slotProps?.chartsConfigurationPanel?.schema,
-    setConfiguration,
-    setChartType,
-  ]);
+  }, [apiRef, props.slotProps?.chartsConfigurationPanel?.schema, setConfiguration, setChartType]);
+
+  useEnhancedEffect(() => {
+    setChartType(props.initialState?.chartsIntegration?.chartType || '');
+  }, [apiRef, props.initialState?.chartsIntegration?.chartType, setChartType]);
 
   useOnMount(() => {
     if (!isChartsIntegrationAvailable) {
@@ -185,6 +187,71 @@ export const useGridChartsIntegration = (
     return unsubscribe;
   });
 
+  const updateCategories = React.useCallback(
+    (categories: string[]) => {
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          chartsIntegration: {
+            ...state.chartsIntegration,
+            categories,
+          },
+        };
+      });
+      handleDataUpdate();
+    },
+    [handleDataUpdate],
+  );
+
+  const updateSeries = React.useCallback(
+    (series: string[]) => {
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          chartsIntegration: {
+            ...state.chartsIntegration,
+            series,
+          },
+        };
+      });
+      handleDataUpdate();
+    },
+    [handleDataUpdate],
+  );
+
+  const updateDataReference = React.useCallback<
+    GridChartsIntegrationPrivateApi['chartsIntegration']['updateDataReference']
+  >(
+    (field, originSection, targetSection, targetField, placementRelativeToTargetField) => {
+      const columns = gridColumnLookupSelector(apiRef);
+      const categories = gridChartsCategoriesSelector(apiRef);
+      const series = gridChartsSeriesSelector(apiRef);
+
+      //TODO: update UI for this
+      if (targetSection === 'series' && columns[field].type !== 'number') {
+        return;
+      }
+
+      if (originSection) {
+        const method = originSection === 'categories' ? updateCategories : updateSeries;
+        const currentItems = originSection === 'categories' ? categories : series;
+        method(currentItems.filter((item) => item !== field));
+      }
+
+      if (targetSection) {
+        const method = targetSection === 'categories' ? updateCategories : updateSeries;
+        //const currentItems = targetSection === 'categories' ? categories : series;
+        //method([...currentItems, field]);
+        // TODO: allow more fields in section
+        method([field]);
+      }
+    },
+    [apiRef, updateCategories, updateSeries],
+  );
+
+  useGridApiMethod(apiRef, { chartsIntegration: { updateDataReference } }, 'private');
+
   useGridEvent(apiRef, 'columnsChange', runIf(isChartsIntegrationAvailable, handleDataUpdate));
   useGridEvent(apiRef, 'filteredRowsSet', runIf(isChartsIntegrationAvailable, handleDataUpdate));
+  useGridEvent(apiRef, 'sortedRowsSet', runIf(isChartsIntegrationAvailable, handleDataUpdate));
 };
