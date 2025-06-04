@@ -1,3 +1,4 @@
+import { imageMimeTypes } from './utils/imageMimeTypes';
 import { ChartsLocaleText } from './utils/chartsLocaleTextApi';
 import { getChartsLocalization } from './utils/getChartsLocalization';
 
@@ -14,8 +15,9 @@ export const enUSLocaleText: ChartsLocaleText = {
 
   // Toolbar Export
   toolbarExport: 'Export',
-  toolbarExportPrint: 'Print chart',
-  toolbarExportPng: 'Export as PNG',
+  toolbarExportPrint: 'Print',
+  toolbarExportImage: (mimeType) =>
+    `Export as ${imageMimeTypes[mimeType as keyof typeof imageMimeTypes] ?? mimeType}`,
 };
 
 export const DEFAULT_LOCALE = enUSLocaleText;
