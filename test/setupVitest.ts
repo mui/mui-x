@@ -1,6 +1,5 @@
 import { beforeAll, afterAll } from 'vitest';
 import 'test/utils/addChaiAssertions';
-import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
 import { configure } from '@mui/internal-test-utils';
