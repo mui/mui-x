@@ -42,6 +42,7 @@ ToolbarButton.propTypes = {
   // ----------------------------------------------------------------------
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  id: PropTypes.string,
   /**
    * A function to customize the rendering of the component.
    */

@@ -105,6 +105,7 @@
       "class": null
     },
     { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "funnelSection",

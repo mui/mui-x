@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { Toolbar, ChartsToolbarProps, ToolbarButton, ToolbarDivider } from '@mui/x-charts/Toolbar';
 import {
   useChartContext,
@@ -34,7 +35,7 @@ const DEFAULT_IMAGE_EXPORT_OPTIONS: ChartsToolbarImageExportOptions[] = [{ type:
 /**
  * The chart toolbar component for the pro package.
  */
-export function ChartsToolbarPro({
+function ChartsToolbarPro({
   printOptions,
   imageExportOptions: rawImageExportOptions,
   ...other
@@ -155,6 +156,23 @@ export function ChartsToolbarPro({
 
   return <Toolbar {...other}>{children}</Toolbar>;
 }
+
+ChartsToolbarPro.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  imageExportOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      fileName: PropTypes.string,
+      quality: PropTypes.number,
+      type: PropTypes.string.isRequired,
+    }),
+  ),
+  printOptions: PropTypes.object,
+} as any;
+
+export { ChartsToolbarPro };
 
 function isHideMenuKey(key: React.KeyboardEvent['key']) {
   return key === 'Tab' || key === 'Escape';
