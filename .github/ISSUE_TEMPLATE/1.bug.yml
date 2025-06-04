@@ -30,6 +30,7 @@ body:
         - Date and Time Pickers
         - Charts
         - Tree View
+        - Scheduler
   - type: textarea
     attributes:
       label: Steps to reproduce
