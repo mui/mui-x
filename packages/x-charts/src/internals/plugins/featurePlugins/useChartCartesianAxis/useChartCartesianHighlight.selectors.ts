@@ -1,11 +1,10 @@
 import { createSelector } from '../../utils/selectors';
-import { CartesianAxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import { AxisId, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 
 import {
   selectorChartsInteractionXAxisIndex,
   selectorChartsInteractionXAxisValue,
-  selectorChartsInteractionYAxisIndex,
   selectorChartsInteractionYAxisValue,
 } from './useChartCartesianInteraction.selectors';
 import { ChartState } from '../../models/chart';
@@ -16,96 +15,110 @@ const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.controlledCartesianAxisHighlight;
 
-const selectValue =
-  (direction: 'x' | 'y') => (value: CartesianAxisItemIdentifier | null | undefined) => {
-    if (value === undefined) {
-      // Undefined means not controlled
-      return undefined;
-    }
-    return value?.direction === direction ? value : null;
-  };
-
-export const selectorChartsControlledXAxisHighlight = createSelector(
+export const selectorChartsControlledIndex = createSelector(
   [selectorChartControlledCartesianAxisHighlight],
-  selectValue('x'),
+  (value) => {
+    if (value == null) {
+      return value;
+    }
+    return value.dataIndex;
+  },
 );
 
-export const selectorChartsControlledYAxisHighlight = createSelector(
+export const selectorChartsControlledId = createSelector(
   [selectorChartControlledCartesianAxisHighlight],
-  selectValue('y'),
+  (value) => {
+    if (value == null) {
+      return value;
+    }
+    return value.axisId;
+  },
 );
 
 export const selectorChartsHighlightXAxisIndex = createSelector(
-  [selectorChartsInteractionXAxisIndex, selectorChartsControlledXAxisHighlight],
-  (computedIndex, controlledItem) =>
-    controlledItem !== undefined ? (controlledItem?.dataIndex ?? null) : computedIndex,
+  [selectorChartsInteractionXAxisIndex, selectorChartsControlledIndex],
+  (computedIndex, controlledIndex) =>
+    controlledIndex !== undefined ? controlledIndex : computedIndex,
 );
 
 export const selectorChartsHighlightYAxisIndex = createSelector(
-  [selectorChartsInteractionYAxisIndex, selectorChartsControlledYAxisHighlight],
-  (computedIndex, controlledItem) =>
-    controlledItem !== undefined ? (controlledItem?.dataIndex ?? null) : computedIndex,
+  [selectorChartsInteractionXAxisIndex, selectorChartsControlledIndex],
+  (computedIndex, controlledIndex) =>
+    controlledIndex !== undefined ? controlledIndex : computedIndex,
 );
 
 export const selectorChartsHighlightXAxisValue = createSelector(
-  [selectorChartsInteractionXAxisValue, selectorChartsControlledXAxisHighlight, selectorChartXAxis],
-  (computedValue, controlledItem, axis) => {
-    if (controlledItem === undefined) {
+  [
+    selectorChartsInteractionXAxisValue,
+    selectorChartsControlledId,
+    selectorChartsControlledIndex,
+    selectorChartXAxis,
+  ],
+  (computedValue, controlledId, controlledIndex, axis) => {
+    if (controlledId === undefined) {
       return computedValue;
     }
 
-    if (controlledItem === null) {
+    if (controlledId === null || controlledIndex == null) {
       return null;
     }
-    if (controlledItem.dataIndex !== null) {
-      return axis.axis[controlledItem.axisId].data?.[controlledItem.dataIndex];
+
+    if (axis.axis[controlledId]?.data === undefined) {
+      // The controlled id does not correspond to an x-axis.
+      // Or it has no data associated.
+      return null;
     }
-    return null;
+    return axis.axis[controlledId].data[controlledIndex];
   },
 );
 
 export const selectorChartsHighlightYAxisValue = createSelector(
-  [selectorChartsInteractionYAxisValue, selectorChartsControlledYAxisHighlight, selectorChartYAxis],
-  (computedValue, controlledItem, axis) => {
-    if (controlledItem === undefined) {
+  [
+    selectorChartsInteractionYAxisValue,
+    selectorChartsControlledId,
+    selectorChartsControlledIndex,
+    selectorChartYAxis,
+  ],
+  (computedValue, controlledId, controlledIndex, axis) => {
+    if (controlledId === undefined) {
       return computedValue;
     }
 
-    if (controlledItem === null) {
+    if (controlledId === null || controlledIndex == null) {
       return null;
     }
-    if (controlledItem.dataIndex !== null) {
-      return axis.axis[controlledItem.axisId].data?.[controlledItem.dataIndex];
+
+    if (axis.axis[controlledId]?.data === undefined) {
+      // The controlled id does not correspond to an x-axis.
+      // Or it has no data associated.
+      return null;
     }
-    return null;
+    return axis.axis[controlledId].data[controlledIndex];
   },
 );
 
 /**
  * Get the scale of the axis with highlight if controlled. The default axis otherwise.
  * @param controlledItem The controlled value of highlightedAxis
- * @param axis The axis stats after all the processing
- * @returns axis scale
+ * @param axis The axis state after all the processing
+ * @returns axis state
  */
-const selectScale = (
-  controlledItem: CartesianAxisItemIdentifier | null | undefined,
-  axis: ComputeResult<ChartsAxisProps>,
-) => {
-  if (controlledItem === undefined) {
-    return axis.axis[axis.axisIds[0]].scale;
+const selectAxis = (axisId: AxisId | null | undefined, axis: ComputeResult<ChartsAxisProps>) => {
+  if (axisId === undefined) {
+    return axis.axis[axis.axisIds[0]];
   }
-  if (controlledItem !== null) {
-    return axis.axis[controlledItem.axisId]?.scale;
+  if (axisId !== null) {
+    return axis.axis[axisId];
   }
-  return axis.axis[axis.axisIds[0]].scale;
+  return null;
 };
 
-export const selectorChartsHighlightXAxisScale = createSelector(
-  [selectorChartsControlledXAxisHighlight, selectorChartXAxis],
-  selectScale,
+export const selectorChartsHighlightXAxis = createSelector(
+  [selectorChartsControlledId, selectorChartXAxis],
+  selectAxis,
 );
 
-export const selectorChartsHighlightYAxisScale = createSelector(
-  [selectorChartsControlledYAxisHighlight, selectorChartYAxis],
-  selectScale,
+export const selectorChartsHighlightYAxis = createSelector(
+  [selectorChartsControlledId, selectorChartYAxis],
+  selectAxis,
 );

@@ -5,7 +5,7 @@ import { isBandScale } from '../internals/isBandScale';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectorChartsHighlightXAxisScale,
+  selectorChartsHighlightXAxis,
   selectorChartsHighlightXAxisValue,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -27,8 +27,12 @@ export default function ChartsXHighlight(props: {
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const axisXValue = useSelector(store, selectorChartsHighlightXAxisValue);
-  const xScale = useSelector(store, selectorChartsHighlightXAxisScale);
+  const xAxis = useSelector(store, selectorChartsHighlightXAxis);
 
+  if (xAxis === null) {
+    return null;
+  }
+  const xScale = xAxis.scale;
   const getXPosition = getValueToPositionMapper(xScale);
 
   const isBandScaleX = type === 'band' && axisXValue !== null && isBandScale(xScale);

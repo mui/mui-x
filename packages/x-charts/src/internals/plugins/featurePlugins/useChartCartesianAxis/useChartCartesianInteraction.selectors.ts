@@ -1,6 +1,6 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector } from '../../utils/selectors';
-import { AxisId, CartesianAxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
@@ -116,8 +116,7 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
       .map(
-        (axisId): CartesianAxisItemIdentifier => ({
-          direction: 'x',
+        (axisId): AxisItemIdentifier => ({
           axisId,
           dataIndex: getAxisIndex(axes.axis[axisId], value),
         }),
@@ -147,8 +146,7 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
     return axes.axisIds
       .filter((id) => axes.axis[id].triggerTooltip)
       .map(
-        (axisId): CartesianAxisItemIdentifier => ({
-          direction: 'y',
+        (axisId): AxisItemIdentifier => ({
           axisId,
           dataIndex: getAxisIndex(axes.axis[axisId], value),
         }),

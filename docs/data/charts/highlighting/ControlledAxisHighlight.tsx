@@ -9,15 +9,14 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { CartesianAxisItemIdentifier } from '@mui/x-charts/models';
+import { AxisItemIdentifier } from '@mui/x-charts/models';
 import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
 
 export default function ControlledAxisHighlight() {
   const [highlightedAxis, setHighlightedAxis] =
-    React.useState<CartesianAxisItemIdentifier | null>({
+    React.useState<AxisItemIdentifier | null>({
       axisId: 'x-axis',
       dataIndex: 2,
-      direction: 'x',
     });
 
   const [chartType, setChartType] = React.useState<'bar' | 'line'>('bar');
@@ -32,7 +31,6 @@ export default function ControlledAxisHighlight() {
     setHighlightedAxis({
       axisId: 'x-axis',
       dataIndex: Number(event.target.value),
-      direction: 'x',
     });
   };
 

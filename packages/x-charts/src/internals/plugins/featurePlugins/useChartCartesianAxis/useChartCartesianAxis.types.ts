@@ -9,7 +9,7 @@ import type {
   XAxis,
   DefaultedXAxis,
   DefaultedYAxis,
-  CartesianAxisItemIdentifier,
+  AxisItemIdentifier,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
@@ -52,12 +52,12 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * The function called when pointer moves from one axis value to another.
    * @param {AxisItemIdentifier[]} newAxisInteraction The array of item per axis.
    */
-  onAxisInteraction?: (newAxisInteraction: CartesianAxisItemIdentifier[] | null) => void;
+  onAxisInteraction?: (newAxisInteraction: AxisItemIdentifier[] | null) => void;
   /**
    * The controlled axis highlighted.
    * Indicates the direction, axis id, and data index to highlight.
    */
-  highlightedAxis?: CartesianAxisItemIdentifier | null;
+  highlightedAxis?: AxisItemIdentifier | null;
   /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
@@ -98,7 +98,7 @@ export interface UseChartCartesianAxisState {
   /**
    * The controlled axis item highlighted.
    */
-  controlledCartesianAxisHighlight?: CartesianAxisItemIdentifier | null;
+  controlledCartesianAxisHighlight?: AxisItemIdentifier | null;
 }
 
 export type ExtremumFilter = (

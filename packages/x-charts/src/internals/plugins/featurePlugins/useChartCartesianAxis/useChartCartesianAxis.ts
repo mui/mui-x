@@ -4,7 +4,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartPlugin } from '../../models';
-import { CartesianAxisItemIdentifier } from '../../../../models/axis';
+import { AxisItemIdentifier } from '../../../../models/axis';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { useSelector } from '../../../store/useSelector';
@@ -123,7 +123,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         const xAxes = selectorChartXAxis(store.value);
         const yAxes = selectorChartYAxis(store.value);
 
-        const newAxisPointerInteraction: CartesianAxisItemIdentifier[] = [];
+        const newAxisPointerInteraction: AxisItemIdentifier[] = [];
         let isSame = true;
 
         for (const axisId of xAxes.axisIds) {
@@ -135,7 +135,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           }
 
           if (nextAxisIndex !== null) {
-            newAxisPointerInteraction.push({ direction: 'x', axisId, dataIndex: nextAxisIndex });
+            newAxisPointerInteraction.push({ axisId, dataIndex: nextAxisIndex });
           }
         }
 
@@ -148,7 +148,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           }
 
           if (nextAxisIndex !== null) {
-            newAxisPointerInteraction.push({ direction: 'y', axisId, dataIndex: nextAxisIndex });
+            newAxisPointerInteraction.push({ axisId, dataIndex: nextAxisIndex });
           }
         }
 

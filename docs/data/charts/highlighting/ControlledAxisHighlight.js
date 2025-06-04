@@ -16,7 +16,6 @@ export default function ControlledAxisHighlight() {
   const [highlightedAxis, setHighlightedAxis] = React.useState({
     axisId: 'x-axis',
     dataIndex: 2,
-    direction: 'x',
   });
 
   const [chartType, setChartType] = React.useState('bar');
@@ -31,7 +30,6 @@ export default function ControlledAxisHighlight() {
     setHighlightedAxis({
       axisId: 'x-axis',
       dataIndex: Number(event.target.value),
-      direction: 'x',
     });
   };
 

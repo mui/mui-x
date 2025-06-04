@@ -355,7 +355,6 @@ SparkLineChart.propTypes = {
   highlightedAxis: PropTypes.shape({
     axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     dataIndex: PropTypes.number.isRequired,
-    direction: PropTypes.oneOf(['x', 'y']).isRequired,
   }),
   /**
    * The highlighted item.

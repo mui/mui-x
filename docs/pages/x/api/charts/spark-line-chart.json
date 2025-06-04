@@ -24,7 +24,7 @@
     "highlightedAxis": {
       "type": {
         "name": "shape",
-        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex: number, direction: 'x'<br>&#124;&nbsp;'y' }"
+        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }"
       }
     },
     "highlightedItem": {

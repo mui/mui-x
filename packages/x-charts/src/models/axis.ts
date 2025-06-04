@@ -521,29 +521,7 @@ export type PolarDirection = 'rotation' | 'radius';
 /**
  * The data used to identify pointer interaction with axis
  */
-export interface CartesianAxisItemIdentifier {
-  /**
-   * The axis direction.
-   */
-  direction: CartesianDirection;
-  /**
-   * The axis id.
-   */
-  axisId: AxisId;
-  /**
-   * The data index.
-   */
-  dataIndex: number;
-}
-
-/**
- * The data used to identify pointer interaction with axis
- */
-export interface PolarAxisItemIdentifier {
-  /**
-   * The axis direction.
-   */
-  direction: PolarDirection;
+export interface AxisItemIdentifier {
   /**
    * The axis id.
    */
