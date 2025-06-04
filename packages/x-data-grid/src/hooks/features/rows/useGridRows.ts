@@ -45,6 +45,7 @@ import {
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { gridPivotActiveSelector } from '../pivoting';
+import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
@@ -83,6 +84,7 @@ export const useGridRows = (
     | 'loading'
     | 'dataSource'
   >,
+  configuration: GridConfiguration,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
     try {
@@ -98,6 +100,9 @@ export const useGridRows = (
   const lastUpdateMs = React.useRef(Date.now());
   const lastRowCount = React.useRef(props.rowCount);
   const timeout = useTimeout();
+
+  // Get overridable methods from configuration
+  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(apiRef);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => {
@@ -338,56 +343,6 @@ export const useGridRows = (
       return children;
     },
     [apiRef],
-  );
-
-  const setRowIndex = React.useCallback<GridRowProApi['setRowIndex']>(
-    (rowId, targetIndex) => {
-      const node = gridRowNodeSelector(apiRef, rowId);
-
-      if (!node) {
-        throw new Error(`MUI X: No row with id #${rowId} found.`);
-      }
-
-      if (node.parent !== GRID_ROOT_GROUP_ID) {
-        throw new Error(`MUI X: The row reordering do not support reordering of grouped rows yet.`);
-      }
-
-      if (node.type !== 'leaf') {
-        throw new Error(
-          `MUI X: The row reordering do not support reordering of footer or grouping rows.`,
-        );
-      }
-
-      apiRef.current.setState((state) => {
-        const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
-        const allRows = group.children;
-        const oldIndex = allRows.findIndex((row) => row === rowId);
-        if (oldIndex === -1 || oldIndex === targetIndex) {
-          return state;
-        }
-
-        logger.debug(`Moving row ${rowId} to index ${targetIndex}`);
-
-        const updatedRows = [...allRows];
-        updatedRows.splice(targetIndex, 0, updatedRows.splice(oldIndex, 1)[0]);
-
-        return {
-          ...state,
-          rows: {
-            ...state.rows,
-            tree: {
-              ...state.rows.tree,
-              [GRID_ROOT_GROUP_ID]: {
-                ...group,
-                children: updatedRows,
-              },
-            },
-          },
-        };
-      });
-      apiRef.current.publishEvent('rowsSet');
-    },
-    [apiRef, logger],
   );
 
   const replaceRows = React.useCallback<GridRowApi['unstable_replaceRows']>(

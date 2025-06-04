@@ -44,7 +44,6 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     () =>
       !!rootProps.rowReordering &&
       !sortModel.length &&
-      treeDepth === 1 &&
       Object.keys(editRowsState).length === 0,
     [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
   );
