@@ -46,7 +46,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:23.11
+    - image: cimg/node:22.16
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -174,7 +174,7 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: |
-                  node ./scripts/playwrightLaunchServer.ts & pnpm test:unit:browser
+                  node ./scripts/playwrightLaunchServer.mts & pnpm test:unit:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
@@ -185,7 +185,7 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  node ./scripts/playwrightLaunchServer.ts & pnpm test:unit:browser --coverage
+                  node ./scripts/playwrightLaunchServer.mts & pnpm test:unit:browser --coverage
 
             - run:
                 name: Check coverage generated
