@@ -164,6 +164,8 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Run server
+          environment:
+            TZ: UTC
           command: |
             node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" &
 
@@ -174,7 +176,7 @@ jobs:
           steps:
             - run:
                 environment:
-                  PLAYWRIGHT_SERVER_WS: 'ws://localhost:9050/mui-browser'
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: pnpm test:unit:browser
       - when:
@@ -184,7 +186,7 @@ jobs:
             - run:
                 name: Test Browser + Coverage
                 environment:
-                  PLAYWRIGHT_SERVER_WS: 'ws://localhost:9050/mui-browser'
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: pnpm test:unit:browser --coverage
 
             - run:
