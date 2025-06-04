@@ -15,7 +15,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import BeachAccess from '@mui/icons-material/BeachAccess';
 import Cake from '@mui/icons-material/Cake';
-import Sick from '@mui/icons-material/Sick';
+import Sick from '@mui/icons-material/LocalHospital';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfDay } from 'date-fns';
 import { getHolidaysForCountries } from './data/holidays';
 import { useCalendarState } from './hooks/useCalendarState';
@@ -38,18 +38,279 @@ interface RowData {
         hasPTO: boolean;
         hasSick: boolean;
         hasHoliday: boolean;
+        hasHolidayBooked: boolean;
         show: boolean;
       };
+}
+
+interface CellData {
+  hasPTO: boolean;
+  hasSick: boolean;
+  hasHoliday: boolean;
+  hasHolidayBooked: boolean;
+  show: boolean;
 }
 
 function EmployeeHeader() {
   const apiRef = useGridApiContext();
   const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
   return (
-    <Typography fontWeight="bold" fontSize="0.75rem" color="text.primary">
+    <Typography fontWeight="bold" fontSize="0.75rem">
       Employees ({filteredRowCount})
     </Typography>
   );
+}
+
+type PTOParams = GridRenderCellParams<RowData, CellData>;
+function getIsFirstVisibleDayOfPTO(
+  params: PTOParams,
+  daysToShow: Date[],
+  activeFilters: string[],
+  isFirstDayOfPTO: boolean,
+): boolean {
+  if (!params.value?.hasPTO) return false;
+  if (isFirstDayOfPTO) return true;
+  const prevDayIndex = daysToShow.findIndex((d) => format(d, 'yyyy-MM-dd') === params.field) - 1;
+  if (prevDayIndex >= 0) {
+    const prevDayStr = format(daysToShow[prevDayIndex], 'yyyy-MM-dd');
+    const prevCell = (params.row as Record<string, CellData>)[prevDayStr];
+    if (prevCell && prevCell.hasHoliday && activeFilters.includes('holidays')) {
+      return true;
+    }
+  }
+  return false;
+}
+
+interface TooltipTitleParams {
+  showHoliday: boolean;
+  hasHolidayBooked: boolean;
+  holidayName: string;
+  showPTO: boolean;
+  currentPTOPeriod: string[] | undefined;
+  showSick: boolean;
+  currentSickPeriod: string[] | undefined;
+}
+function getCellTooltipTitle({
+  showHoliday,
+  hasHolidayBooked,
+  holidayName,
+  showPTO,
+  currentPTOPeriod,
+  showSick,
+  currentSickPeriod,
+}: TooltipTitleParams): string {
+  if (showHoliday && hasHolidayBooked) return `${holidayName} (booked as PTO)`;
+  if (showHoliday) return `${holidayName}`;
+  if (showPTO)
+    return `Vacation (${currentPTOPeriod?.length} day${currentPTOPeriod?.length === 1 ? '' : 's'})`;
+  if (showSick)
+    return `Sick leave (${currentSickPeriod?.length} day${currentSickPeriod?.length === 1 ? '' : 's'})`;
+  return '';
+}
+
+interface CellSxParams {
+  showHoliday: boolean;
+  hasHolidayBooked: boolean;
+  showPTO: boolean;
+  showSick: boolean;
+  isCurrent: boolean;
+  isMiddleOfPeriod: boolean;
+  isEndOfPeriodInRange: boolean;
+  isFirstVisibleDayOfPTO: boolean;
+  theme: any;
+}
+function getCellSx({
+  showHoliday,
+  hasHolidayBooked,
+  showPTO,
+  showSick,
+  isCurrent,
+  isMiddleOfPeriod,
+  isEndOfPeriodInRange,
+  isFirstVisibleDayOfPTO,
+  theme,
+}: CellSxParams) {
+  return {
+    width: '100%',
+    height: showPTO || showSick || showHoliday ? '40px' : '100%',
+    marginLeft: !isMiddleOfPeriod || showHoliday || isFirstVisibleDayOfPTO ? 0.5 : 0,
+    marginRight: isEndOfPeriodInRange || showHoliday ? 0.5 : 0,
+    borderTopLeftRadius: !isMiddleOfPeriod || showHoliday || isFirstVisibleDayOfPTO ? '12px' : 0,
+    borderBottomLeftRadius: !isMiddleOfPeriod || showHoliday || isFirstVisibleDayOfPTO ? '12px' : 0,
+    borderTopRightRadius: isEndOfPeriodInRange || showHoliday ? '12px' : '0',
+    borderBottomRightRadius: isEndOfPeriodInRange || showHoliday ? '12px' : '0',
+    backgroundColor:
+      showHoliday && hasHolidayBooked
+        ? FILTER_COLORS.holidays.background
+        : showHoliday
+          ? 'transparent'
+          : showPTO
+            ? FILTER_COLORS.vacation.background
+            : showSick
+              ? FILTER_COLORS.sick.background
+              : isCurrent
+                ? '#faf9fb'
+                : 'transparent',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'start',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    px: 1.5,
+    fontSize: '0.75rem',
+    fontWeight: 'medium',
+    gap: 0.75,
+    color:
+      showHoliday && hasHolidayBooked
+        ? FILTER_COLORS.holidays.text
+        : showHoliday
+          ? FILTER_COLORS.holidays.text
+          : showPTO
+            ? FILTER_COLORS.vacation.text
+            : showSick
+              ? FILTER_COLORS.sick.text
+              : 'transparent',
+    border:
+      showHoliday && hasHolidayBooked
+        ? `1px solid ${FILTER_COLORS.holidays.border}`
+        : showHoliday
+          ? `1px dashed ${FILTER_COLORS.holidays.border}`
+          : showPTO
+            ? `1px solid ${FILTER_COLORS.vacation.border}`
+            : showSick
+              ? `1px solid ${FILTER_COLORS.sick.border}`
+              : 'none',
+    alignSelf: 'center',
+    ...theme.applyStyles('dark', {
+      backgroundColor:
+        showHoliday && hasHolidayBooked
+          ? FILTER_COLORS.holidays.dark.background
+          : showHoliday
+            ? 'transparent'
+            : showPTO
+              ? FILTER_COLORS.vacation.dark.background
+              : showSick
+                ? FILTER_COLORS.sick.dark.background
+                : isCurrent
+                  ? '#1e2429'
+                  : 'transparent',
+      borderColor:
+        showHoliday && hasHolidayBooked
+          ? FILTER_COLORS.holidays.dark.border
+          : showHoliday
+            ? FILTER_COLORS.holidays.dark.border
+            : showPTO
+              ? FILTER_COLORS.vacation.dark.border
+              : showSick
+                ? FILTER_COLORS.sick.dark.border
+                : 'transparent',
+      color:
+        showHoliday && hasHolidayBooked
+          ? FILTER_COLORS.holidays.dark.text
+          : showHoliday
+            ? FILTER_COLORS.holidays.dark.text
+            : showPTO
+              ? FILTER_COLORS.vacation.dark.text
+              : showSick
+                ? FILTER_COLORS.sick.dark.text
+                : 'transparent',
+      '&:hover': {
+        backgroundColor: showPTO || showSick ? 'none' : isCurrent ? 'transparent' : '#1e2429',
+      },
+    }),
+  };
+}
+
+interface RenderCellIconLabelParams {
+  showHoliday: boolean;
+  hasHolidayBooked: boolean;
+  ptoData: any;
+  params: PTOParams;
+  theme: any;
+  isFirstVisibleDayOfPTO: boolean;
+  showPTO: boolean;
+  isFirstDayOfSick: boolean;
+  showSick: boolean;
+  isBirthday: boolean;
+  cellData: CellData;
+}
+function renderCellIconLabel({
+  showHoliday,
+  hasHolidayBooked,
+  ptoData,
+  params,
+  theme,
+  isFirstVisibleDayOfPTO,
+  showPTO,
+  isFirstDayOfSick,
+  showSick,
+  isBirthday,
+  cellData,
+}: RenderCellIconLabelParams) {
+  if (showHoliday) {
+    return (
+      <>
+        <Box
+          component="img"
+          src={`https://flagcdn.com/w20/${ptoData[params.row.employee].nationality.toLowerCase()}.png`}
+          alt={`${ptoData[params.row.employee].nationality} flag`}
+          sx={{
+            width: 18,
+            height: 18,
+            opacity: 0.9,
+            borderRadius: '50%',
+            border: `2px solid ${FILTER_COLORS.holidays.border}`,
+            ...theme.applyStyles('dark', {
+              border: `2px solid text.primary`,
+            }),
+          }}
+        />
+        Holiday
+      </>
+    );
+  }
+  if (isFirstVisibleDayOfPTO && showPTO) {
+    return (
+      <>
+        <BeachAccess
+          sx={{
+            fontSize: '1rem',
+            color: FILTER_COLORS.vacation.text,
+            ...theme.applyStyles('dark', {
+              color: FILTER_COLORS.vacation.dark.text,
+            }),
+          }}
+        />
+        Vacation
+      </>
+    );
+  }
+  if (isFirstDayOfSick && showSick) {
+    return (
+      <>
+        <Sick
+          sx={{
+            fontSize: '1rem',
+            color: FILTER_COLORS.sick.text,
+            ...theme.applyStyles('dark', {
+              color: FILTER_COLORS.sick.dark.text,
+            }),
+          }}
+        />
+        Sick leave
+      </>
+    );
+  }
+  if (isBirthday && cellData.show) {
+    return (
+      <>
+        <Cake sx={{ fontSize: '1rem', color: '#75758d' }} />
+        Birthday
+      </>
+    );
+  }
+  return null;
 }
 
 function PTOCalendar() {
@@ -128,12 +389,13 @@ function PTOCalendar() {
         const dateStr = format(day, 'yyyy-MM-dd');
         const hasPTO = data.ptoDates.includes(dateStr);
         const hasSick = data.sickDates.includes(dateStr);
-        const hasHoliday = Boolean(holidays[data.nationality]?.[dateStr]);
+        const hasHoliday = !!holidays[data.nationality]?.[dateStr];
 
         row[dateStr] = {
           hasPTO,
           hasSick,
           hasHoliday,
+          hasHolidayBooked: hasHoliday && hasPTO,
           show:
             (hasPTO && activeFilters.includes('vacation')) ||
             (hasSick && activeFilters.includes('sick')) ||
@@ -166,7 +428,7 @@ function PTOCalendar() {
                 sx={{
                   color: 'text.secondary',
                   fontSize: '0.75rem',
-                  fontWeight: 'bold',
+                  fontWeight: 'medium',
                 }}
               >
                 {params.value}
@@ -243,19 +505,15 @@ function PTOCalendar() {
           field: dateStr,
           headerName: format(day, 'EEE d'),
           description: format(day, 'MMMM d, yyyy'),
-          width: 50,
+          width: 110,
           type: 'boolean' as const,
-          headerAlign: 'center' as const,
-          align: 'center' as const,
           renderHeader: () => (
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
-                height: '100%',
-                py: 0,
                 justifyContent: 'center',
+                gap: 0.5,
                 backgroundColor: isCurrent ? '#faf9fb' : 'transparent',
                 ...theme.applyStyles('dark', {
                   backgroundColor: isCurrent ? '#1e2429' : 'transparent',
@@ -266,10 +524,9 @@ function PTOCalendar() {
                 variant="body2"
                 sx={{
                   fontWeight: 'bold',
-                  color: isCurrent ? '#3E63DD' : 'text.primary',
+                  color: isCurrent ? '#3E63DD' : 'text.secondary',
                   fontSize: '0.75rem',
                   lineHeight: 1,
-                  mb: 0,
                 }}
               >
                 {format(day, 'd')}
@@ -278,10 +535,9 @@ function PTOCalendar() {
                 variant="caption"
                 sx={{
                   color: isCurrent ? '#3E63DD' : 'text.secondary',
-                  fontWeight: isCurrent ? 'bold' : 'normal',
+                  fontWeight: isCurrent ? 'bold' : 'medium',
                   fontSize: '0.7rem',
                   lineHeight: 1,
-                  mt: 0,
                 }}
               >
                 {format(day, 'EEE')}
@@ -294,18 +550,29 @@ function PTOCalendar() {
 
             const fields = Object.keys(row).filter((f) => f !== 'id' && f !== 'employee');
             const colIndex = fields.indexOf(column.field);
-            const currentCellType = value.hasPTO ? 'vacation' : value.hasSick ? 'sick' : 'holidays';
+            const currentCellType =
+              value.hasHoliday && activeFilters.includes('holidays')
+                ? 'holidays'
+                : value.hasPTO
+                  ? 'vacation'
+                  : value.hasSick
+                    ? 'sick'
+                    : '';
 
             let span = 1;
             for (let i = colIndex + 1; i < fields.length; i++) {
               const nextCell = row[fields[i]];
-              if (!nextCell?.show) break;
+              if (!nextCell?.show || (nextCell.hasHoliday && activeFilters.includes('holidays')))
+                break;
 
-              const nextCellType = nextCell.hasPTO
-                ? 'vacation'
-                : nextCell.hasSick
-                  ? 'sick'
-                  : 'holidays';
+              const nextCellType =
+                nextCell.hasHoliday && activeFilters.includes('holidays')
+                  ? 'holidays'
+                  : nextCell.hasPTO
+                    ? 'vacation'
+                    : nextCell.hasSick
+                      ? 'sick'
+                      : '';
               if (nextCellType !== currentCellType) break;
 
               span++;
@@ -338,6 +605,7 @@ function PTOCalendar() {
               hasPTO: boolean;
               hasSick: boolean;
               hasHoliday: boolean;
+              hasHolidayBooked: boolean;
               show: boolean;
             };
             if (!cellData.show) return null;
@@ -362,119 +630,57 @@ function PTOCalendar() {
             const showPTO = cellData.hasPTO && activeFilters.includes('vacation');
             const showSick = cellData.hasSick && activeFilters.includes('sick');
             const showHoliday = cellData.hasHoliday && activeFilters.includes('holidays');
+
             const holidayName = showHoliday
               ? holidays[ptoData[params.row.employee].nationality][params.field]
               : '';
-
             const isBirthday = format(day, 'MM-dd') === ptoData[params.row.employee].birthday;
 
+            const isFirstVisibleDayOfPTO = getIsFirstVisibleDayOfPTO(
+              params,
+              daysToShow,
+              activeFilters,
+              !!isFirstDayOfPTO,
+            );
+            const title = getCellTooltipTitle({
+              showHoliday,
+              hasHolidayBooked: cellData.hasHolidayBooked,
+              holidayName,
+              showPTO,
+              currentPTOPeriod,
+              showSick,
+              currentSickPeriod,
+            });
             return (
-              <Box
-                sx={{
-                  width: '100%',
-                  height: showPTO || showSick ? '40px' : '100%',
-                  marginLeft: !isMiddleOfPeriod ? 0.5 : 0,
-                  marginRight: isEndOfPeriodInRange ? 0.5 : 0,
-                  borderTopLeftRadius: !isMiddleOfPeriod ? '20px' : 0,
-                  borderBottomLeftRadius: !isMiddleOfPeriod ? '20px' : 0,
-                  borderTopRightRadius: isEndOfPeriodInRange ? '20px' : '0',
-                  borderBottomRightRadius: isEndOfPeriodInRange ? '20px' : '0',
-                  backgroundColor: showPTO
-                    ? FILTER_COLORS.vacation.background
-                    : showSick
-                      ? FILTER_COLORS.sick.background
-                      : isCurrent
-                        ? '#faf9fb'
-                        : 'transparent',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 0.5,
-                  color:
-                    showPTO || showSick
-                      ? isCurrent
-                        ? '#ffffff'
-                        : showPTO
-                          ? FILTER_COLORS.vacation.text
-                          : FILTER_COLORS.sick.text
-                      : 'transparent',
-                  border: showPTO
-                    ? `2px solid ${FILTER_COLORS.vacation.border}`
-                    : showSick
-                      ? `2px solid ${FILTER_COLORS.sick.border}`
-                      : 'none',
-                  alignSelf: 'center',
-                  ...theme.applyStyles('dark', {
-                    backgroundColor: showPTO
-                      ? FILTER_COLORS.vacation.dark.background
-                      : showSick
-                        ? FILTER_COLORS.sick.dark.background
-                        : isCurrent
-                          ? '#1e2429'
-                          : 'transparent',
-                    borderColor: showPTO
-                      ? FILTER_COLORS.vacation.dark.border
-                      : showSick
-                        ? FILTER_COLORS.sick.dark.border
-                        : 'transparent',
-                    color: showPTO
-                      ? FILTER_COLORS.vacation.dark.text
-                      : showSick
-                        ? FILTER_COLORS.sick.dark.text
-                        : 'transparent',
-                    '&:hover': {
-                      backgroundColor:
-                        showPTO || showSick ? 'none' : isCurrent ? 'transparent' : '#1e2429',
-                    },
-                  }),
-                }}
-              >
-                {isFirstDayOfPTO && showPTO && (
-                  <BeachAccess
-                    sx={{
-                      fontSize: '1rem',
-                      color: FILTER_COLORS.vacation.text,
-                      ...theme.applyStyles('dark', {
-                        color: FILTER_COLORS.vacation.dark.text,
-                      }),
-                    }}
-                  />
-                )}
-                {isFirstDayOfSick && showSick && (
-                  <Sick
-                    sx={{
-                      fontSize: '1rem',
-                      color: FILTER_COLORS.sick.text,
-                      ...theme.applyStyles('dark', {
-                        color: FILTER_COLORS.sick.dark.text,
-                      }),
-                    }}
-                  />
-                )}
-                {isBirthday && cellData.show && (
-                  <Cake sx={{ fontSize: '1rem', color: '#75758d' }} />
-                )}
-                {showHoliday && (
-                  <Tooltip title={holidayName}>
-                    <Box
-                      component="img"
-                      src={`https://flagcdn.com/w20/${ptoData[params.row.employee].nationality.toLowerCase()}.png`}
-                      alt={`${ptoData[params.row.employee].nationality} flag`}
-                      sx={{
-                        width: 18,
-                        height: 18,
-                        opacity: 0.9,
-                        borderRadius: '50%',
-                        border: `2px solid ${FILTER_COLORS.holidays.border}`,
-                        ...theme.applyStyles('dark', {
-                          border: `2px solid text.primary`,
-                        }),
-                      }}
-                    />
-                  </Tooltip>
-                )}
-              </Box>
+              <Tooltip title={title}>
+                <Box
+                  sx={getCellSx({
+                    showHoliday,
+                    hasHolidayBooked: !!cellData.hasHolidayBooked,
+                    showPTO,
+                    showSick,
+                    isCurrent: isCurrentDay(day),
+                    isMiddleOfPeriod: !!isMiddleOfPeriod,
+                    isEndOfPeriodInRange: !!isEndOfPeriodInRange,
+                    isFirstVisibleDayOfPTO: !!isFirstVisibleDayOfPTO,
+                    theme,
+                  })}
+                >
+                  {renderCellIconLabel({
+                    showHoliday,
+                    hasHolidayBooked: !!cellData.hasHolidayBooked,
+                    ptoData,
+                    params,
+                    theme,
+                    isFirstVisibleDayOfPTO: !!isFirstVisibleDayOfPTO,
+                    showPTO,
+                    isFirstDayOfSick: !!isFirstDayOfSick,
+                    showSick,
+                    isBirthday: !!isBirthday,
+                    cellData,
+                  })}
+                </Box>
+              </Tooltip>
             );
           },
         };
@@ -509,14 +715,19 @@ function PTOCalendar() {
           }}
           pageSizeOptions={[5]}
           checkboxSelection={false}
-          disableRowSelectionOnClick
-          hideFooter
           columnHeaderHeight={40}
-          rowHeight={50}
-          showCellVerticalBorder
           slots={{ toolbar: CalendarToolbar }}
-          showToolbar
           getRowHeight={(params) => (params.model.id === 'summary' ? 40 : 50)}
+          getCellClassName={(params) =>
+            params.field === format(new Date(), 'yyyy-MM-dd') ? 'today' : ''
+          }
+          showToolbar
+          hideFooter
+          showCellVerticalBorder
+          disableColumnMenu
+          disableColumnSorting
+          disableColumnReorder
+          disableRowSelectionOnClick
         />
       </Box>
     </CalendarContext.Provider>
@@ -561,18 +772,25 @@ function PTOCalendarContainer() {
               borderColor: '#EEEBF0',
               '--DataGrid-rowBorderColor': '#EEEBF0',
               ...theme.applyStyles('dark', {
+                borderColor: '#38363E',
                 '--DataGrid-rowBorderColor': '#38363E',
               }),
             }),
-            cell: {
+            cell: ({ theme }) => ({
               padding: 0,
+              '&.today': {
+                backgroundColor: '#f7f9ff',
+                ...theme.applyStyles('dark', {
+                  backgroundColor: '#1e2933',
+                }),
+              },
               '&:focus': {
                 outline: 'none',
               },
               '&:focus-within': {
                 outline: 'none',
               },
-            },
+            }),
             'cell--pinnedLeft': {
               display: 'flex',
               alignItems: 'center',
@@ -591,13 +809,18 @@ function PTOCalendarContainer() {
             columnSeparator: {
               display: 'none',
             },
+            columnHeader: {
+              '&:focus': {
+                outline: 'none',
+              },
+              '&:focus-within': {
+                outline: 'none',
+              },
+            },
             columnHeaderTitleContainer: {
               fontSize: '0.75rem',
               textTransform: 'uppercase',
               color: '#75758d',
-            },
-            columnHeaders: {
-              backgroundColor: 'rgba(250,250,250,255)',
             },
             'columnHeader--pinnedLeft': {
               padding: '0 16px',

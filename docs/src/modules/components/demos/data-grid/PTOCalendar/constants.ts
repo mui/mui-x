@@ -1,40 +1,40 @@
 export const FILTER_OPTIONS = ['holidays', 'vacation', 'sick'] as const;
 
 export const FILTER_LABELS: Record<string, string> = {
-  holidays: 'Public Holidays',
+  holidays: 'Public holidays',
   vacation: 'Vacation',
-  sick: 'Sick Leave',
+  sick: 'Sick leave',
 };
 
 export const FILTER_COLORS = {
   holidays: {
-    background: '#D2DEFF',
+    background: '#edf2fe',
     text: '#3E63DD',
-    border: '#D2DEFF',
+    border: '#e1e9ff',
     dark: {
-      background: '#1e2429',
-      text: '#8BA4FF',
-      border: '#1e2429',
+      background: '#1f2d5c',
+      text: '#d2deff',
+      border: '#3a5bc7',
     },
   },
   vacation: {
-    background: '#C3E9D7',
+    background: '#e6f7ed',
     text: '#208368',
-    border: '#C3E9D7',
+    border: '#d6f1e3',
     dark: {
-      background: '#1e2429',
-      text: '#4ECB9E',
-      border: '#1e2429',
+      background: '#1d3b31',
+      text: '#c3e9d7',
+      border: '#208368',
     },
   },
   sick: {
-    background: '#fffaa0',
-    text: '#807d50',
-    border: '#fffaa0',
+    background: '#ffffd8',
+    text: '#726c1c',
+    border: '#f0edc3',
     dark: {
-      background: '#1e2429',
+      background: '#3b310b',
       text: '#FFE066',
-      border: '#1e2429',
+      border: '#877320',
     },
   },
 };

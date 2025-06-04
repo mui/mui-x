@@ -1,5 +1,4 @@
 import React from 'react';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import { FilterType } from './types/pto';
@@ -33,12 +32,15 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
             variant={isActive ? 'filled' : 'outlined'}
             sx={{
               px: 0.5,
+              borderRadius: '12px',
               '&.MuiChip-filled': {
                 backgroundColor: FILTER_COLORS[filter].background,
                 color: FILTER_COLORS[filter].text,
+                border: `1px solid ${FILTER_COLORS[filter].border}`,
                 ...theme.applyStyles('dark', {
                   backgroundColor: FILTER_COLORS[filter].dark.background,
                   color: FILTER_COLORS[filter].dark.text,
+                  borderColor: FILTER_COLORS[filter].dark.border,
                 }),
                 '& .MuiChip-deleteIcon': {
                   color: FILTER_COLORS[filter].text,
