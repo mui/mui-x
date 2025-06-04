@@ -2,8 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { ComputedAxis, cartesianSeriesTypes } from '@mui/x-charts/internals';
-import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { ComputedAxis, cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
 import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -11,6 +10,10 @@ import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
 import { getFunnelCurve } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
+import {
+  selectorChartXAxis,
+  selectorChartYAxis,
+} from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -31,10 +34,12 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const useAggregatedData = (gap: number | undefined) => {
+const useAggregatedData = (gapIn: number | undefined) => {
   const seriesData = useFunnelSeriesContext();
-  const { xAxis, xAxisIds } = useXAxes();
-  const { yAxis, yAxisIds } = useYAxes();
+  const store = useStore();
+  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const gap = gapIn ?? 0;
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -104,12 +109,12 @@ const useAggregatedData = (gap: number | undefined) => {
         ),
       );
       const minPoint = {
-        x: Math.min(...allX),
-        y: Math.min(...allY),
+        x: Math.min(...allX) + gap / 2,
+        y: Math.min(...allY) + gap / 2,
       };
       const maxPoint = {
-        x: Math.max(...allX),
-        y: Math.max(...allY),
+        x: Math.max(...allX) - gap / 2,
+        y: Math.max(...allY) - gap / 2,
       };
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {

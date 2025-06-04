@@ -94,6 +94,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   return (
     <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
       {...chartDataProviderProProps}
+      gap={themedProps.gap}
       seriesConfig={seriesConfig}
       plugins={FUNNEL_CHART_PLUGINS}
     >

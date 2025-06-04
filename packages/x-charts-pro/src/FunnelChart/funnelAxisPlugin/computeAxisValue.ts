@@ -28,6 +28,24 @@ import {
 } from '@mui/x-charts/internals';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
 
+export const xRangeGetter = (
+  drawingArea: ChartDrawingArea,
+  gap: number,
+  reverse?: boolean,
+): [number, number] => {
+  const range: [number, number] = [drawingArea.left, drawingArea.left + drawingArea.width];
+  return reverse ? [range[1] + gap, range[0] - gap] : [range[0] - gap, range[1] + gap];
+};
+
+export const yRangeGetter = (
+  drawingArea: ChartDrawingArea,
+  gap: number,
+  reverse?: boolean,
+): [number, number] => {
+  const range: [number, number] = [drawingArea.top + drawingArea.height, drawingArea.top];
+  return reverse ? [range[1] - gap, range[0] + gap] : [range[0] + gap, range[1] - gap];
+};
+
 function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'x' | 'y',
@@ -35,12 +53,9 @@ function getRange(
   gap: number,
 ): [number, number] {
   gap /= 2;
-  const range: [number, number] =
-    axisDirection === 'x'
-      ? [drawingArea.left - gap, drawingArea.left + drawingArea.width + gap]
-      : [drawingArea.top + drawingArea.height + gap, drawingArea.top - gap];
-
-  return axis.reverse ? [range[1], range[0]] : range;
+  return axisDirection === 'x'
+    ? xRangeGetter(drawingArea, gap, axis.reverse)
+    : yRangeGetter(drawingArea, gap, axis.reverse);
 }
 
 export type ComputeResult<T extends ChartsAxisProps> = {

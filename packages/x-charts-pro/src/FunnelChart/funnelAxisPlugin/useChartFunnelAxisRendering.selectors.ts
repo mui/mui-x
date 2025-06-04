@@ -5,12 +5,13 @@ import {
   selectorChartDrawingArea,
   selectorChartRawXAxis,
   selectorChartRawYAxis,
+  ChartState,
 } from '@mui/x-charts/internals';
 import { computeAxisValue } from './computeAxisValue';
+import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 
-/**
- * The only interesting selectors that merge axis data and zoom if provided.
- */
+export const selectorFunnelGap = (state: ChartState<[], [UseChartFunnelAxisSignature]>) =>
+  state.funnel?.gap ?? 0;
 
 export const selectorChartXAxis = createSelector(
   [
@@ -18,15 +19,16 @@ export const selectorChartXAxis = createSelector(
     selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
+    selectorFunnelGap,
   ],
-  (axis, drawingArea, formattedSeries, seriesConfig) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, gap) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
       axis,
       seriesConfig,
       axisDirection: 'x',
-      gap: 0,
+      gap,
     }),
 );
 
@@ -36,14 +38,15 @@ export const selectorChartYAxis = createSelector(
     selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
+    selectorFunnelGap,
   ],
-  (axis, drawingArea, formattedSeries, seriesConfig) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, gap) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
       axis,
       seriesConfig,
       axisDirection: 'y',
-      gap: 0,
+      gap,
     }),
 );

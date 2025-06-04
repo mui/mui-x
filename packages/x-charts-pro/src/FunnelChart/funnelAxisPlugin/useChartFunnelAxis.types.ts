@@ -10,7 +10,7 @@ import {
 export type UseChartFunnelAxisSignature = ChartPluginSignature<{
   params: UseChartCartesianAxisParameters & { gap?: number };
   defaultizedParams: UseChartCartesianAxisDefaultizedParameters & { gap: number };
-  state: Pick<UseChartCartesianAxisState, 'cartesianAxis'>;
+  state: Pick<UseChartCartesianAxisState, 'cartesianAxis'> & { funnel: { gap: number } };
   dependencies: [UseChartSeriesSignature<'funnel'>];
   optionalDependencies: [UseChartInteractionSignature];
 }>;
