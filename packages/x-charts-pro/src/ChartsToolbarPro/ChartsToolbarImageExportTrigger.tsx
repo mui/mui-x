@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
@@ -31,7 +32,7 @@ export type ChartsToolbarImageExportTriggerProps = ChartsSlotPropsPro['baseButto
  *
  * - [Export](/x/react-charts/export/)
  */
-export const ChartsToolbarImageExportTrigger = forwardRef<
+const ChartsToolbarImageExportTrigger = forwardRef<
   HTMLButtonElement,
   ChartsToolbarImageExportTriggerProps
 >(function ChartsToolbarImageExportTrigger(props, ref) {
@@ -53,3 +54,31 @@ export const ChartsToolbarImageExportTrigger = forwardRef<
 
   return <React.Fragment>{element}</React.Fragment>;
 });
+
+ChartsToolbarImageExportTrigger.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  id: PropTypes.string,
+  /**
+   * The options to apply on the image export.
+   * @demos
+   *   - [Export as Image](/x/react-charts/export/#export-as-image)
+   */
+  options: PropTypes.shape({
+    fileName: PropTypes.string,
+    quality: PropTypes.number,
+    type: PropTypes.string.isRequired,
+  }),
+  /**
+   * A function to customize the rendering of the component.
+   */
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  style: PropTypes.object,
+  tabIndex: PropTypes.number,
+} as any;
+
+export { ChartsToolbarImageExportTrigger };
