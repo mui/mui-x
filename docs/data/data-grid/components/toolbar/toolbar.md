@@ -1,6 +1,6 @@
 ---
 productId: x-data-grid
-components: Toolbar, ToolbarButton
+components: Toolbar, ToolbarButton, ToolbarDivider
 packageName: '@mui/x-data-grid'
 githubLabel: 'scope: data grid'
 ---
@@ -22,9 +22,11 @@ The demo below shows how to compose the Toolbar and various other components to 
 ## Anatomy
 
 ```tsx
-import { Toolbar, ToolbarButton } from '@mui/x-data-grid';
+import { Toolbar, ToolbarButton, ToolbarDivider } from '@mui/x-data-grid';
 
 <Toolbar>
+  <ToolbarButton />
+  <ToolbarDivider />
   <ToolbarButton />
 </Toolbar>;
 ```
@@ -38,6 +40,11 @@ It renders a styled `<div />` element.
 
 `<ToolbarButton />` is a button for performing actions from the toolbar.
 It renders the `baseIconButton` slot.
+
+### Toolbar Divider
+
+`<ToolbarDivider />` is a component that separates toolbar items.
+It renders the `baseDivider` slot.
 
 ## Recipes
 
