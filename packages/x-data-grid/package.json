@@ -48,7 +48,7 @@
     "directory": "packages/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.4",
     "@mui/utils": "^7.1.1",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
@@ -73,7 +73,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/internal-test-utils": "^2.0.9",
     "@mui/material": "^7.1.1",
     "@mui/system": "^7.1.1",
     "@mui/types": "^7.4.3",
