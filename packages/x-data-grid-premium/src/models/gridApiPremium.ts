@@ -24,7 +24,10 @@ import type {
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import { GridAiAssistantApi } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { GridSidebarApi } from '../hooks/features/sidebar/gridSidebarInterfaces';
-import { GridChartsIntegrationApi } from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import {
+  GridChartsIntegrationApi,
+  GridChartsIntegrationPrivateApi,
+} from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -55,4 +58,5 @@ export interface GridPrivateApiPremium
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
     GridDetailPanelPrivateApi,
-    GridPivotingPrivateApi {}
+    GridPivotingPrivateApi,
+    GridChartsIntegrationPrivateApi {}
