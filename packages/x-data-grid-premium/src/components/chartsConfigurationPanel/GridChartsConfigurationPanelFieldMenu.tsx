@@ -5,7 +5,6 @@ import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { FieldTransferObject } from './GridChartsConfigurationPanelBody';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { gridPivotModelSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import {
   gridChartsCategoriesSelector,
@@ -36,7 +35,6 @@ function GridChartsConfigurationPanelFieldMenu(props: GridChartsConfigurationPan
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector);
   const series = useGridSelector(apiRef, gridChartsSeriesSelector);
   const isAvailableField = zone === null;
-  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const fieldIndexInModel = !isAvailableField
     ? (zone === 'categories' ? categories : series).findIndex((item) => item === field)
     : -1;

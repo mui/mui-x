@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
-import { useGridRootProps } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { GridChartsIcon } from '../../material/icons';
 
