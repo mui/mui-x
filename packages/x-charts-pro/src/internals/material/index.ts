@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import MenuList from '@mui/material/MenuList';
-import Divider from '@mui/material/Divider';
 import { ChartsBaseSlots, ChartsIconSlots } from '@mui/x-charts/models';
 import { defaultSlotsMaterial as communityDefaultSlotsMaterial } from '@mui/x-charts/internals';
 import { BaseMenuItem } from './components/BaseMenuItem';
@@ -15,7 +14,6 @@ const baseSlots: Omit<ChartsBaseSlotsPro, keyof ChartsBaseSlots> = {
   basePopper: BasePopper,
   baseMenuList: MenuList,
   baseMenuItem: BaseMenuItem,
-  baseDivider: Divider,
 };
 
 const iconSlots: Omit<ChartsIconSlotsPro, keyof ChartsIconSlots> = {

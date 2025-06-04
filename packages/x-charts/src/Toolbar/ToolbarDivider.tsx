@@ -1,7 +1,5 @@
-'use client';
-
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { useChartsSlots } from '../context/ChartsSlotsContext';
 import { ChartsSlotProps } from '../internals/material';
 import { chartsToolbarClasses } from './chartToolbarClasses';
