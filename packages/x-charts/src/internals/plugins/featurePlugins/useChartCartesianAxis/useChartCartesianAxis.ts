@@ -3,7 +3,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
-import { ChartPlugin } from '../../models';
+import { ChartPlugin, ChartState } from '../../models';
 import { AxisItemIdentifier } from '../../../../models/axis';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -14,12 +14,19 @@ import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { getAxisIndex } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
-import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
+import {
+  selectorChartsInteractionIsInitialized,
+  UseChartInteractionSignature,
+} from '../useChartInteraction';
 import {
   selectChartsInteractionAxisIndex,
   selectorChartsInteractionXAxisIndex,
   selectorChartsInteractionYAxisIndex,
 } from './useChartCartesianInteraction.selectors';
+import {
+  selectorChartRawXAxis,
+  selectorChartRawYAxis,
+} from './useChartCartesianAxisLayout.selectors';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -99,6 +106,86 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const usedYAxis = yAxisIds[0];
 
   React.useEffect(() => {
+    const subscribeModifications = (
+      newStoreState: ChartState<
+        [UseChartCartesianAxisSignature<any>],
+        [UseChartInteractionSignature]
+      >,
+      prevStoreState: ChartState<
+        [UseChartCartesianAxisSignature<any>],
+        [UseChartInteractionSignature]
+      >,
+    ) => {
+      if (!onAxisInteraction) {
+        return;
+      }
+
+      const newXAxisIds = selectorChartRawXAxis(newStoreState)?.map((axis) => axis.id) ?? [];
+      const newYAxisIds = selectorChartRawYAxis(newStoreState)?.map((axis) => axis.id) ?? [];
+
+      const newAxisPointerInteraction: AxisItemIdentifier[] = [];
+      let isSame = true;
+
+      for (const axisId of newXAxisIds) {
+        const prevAxisIndex = selectorChartsInteractionXAxisIndex(prevStoreState, axisId);
+        const nextAxisIndex = selectorChartsInteractionXAxisIndex(newStoreState, axisId);
+
+        if (prevAxisIndex !== nextAxisIndex) {
+          isSame = false;
+        }
+
+        if (nextAxisIndex !== null) {
+          newAxisPointerInteraction.push({ axisId, dataIndex: nextAxisIndex });
+        }
+      }
+
+      for (const axisId of newYAxisIds) {
+        const prevAxisIndex = selectorChartsInteractionYAxisIndex(prevStoreState, axisId);
+        const nextAxisIndex = selectorChartsInteractionYAxisIndex(newStoreState, axisId);
+
+        if (prevAxisIndex !== nextAxisIndex) {
+          isSame = false;
+        }
+
+        if (nextAxisIndex !== null) {
+          newAxisPointerInteraction.push({ axisId, dataIndex: nextAxisIndex });
+        }
+      }
+
+      if (isSame) {
+        const prevXAxisIds = selectorChartRawXAxis(prevStoreState)?.map((axis) => axis.id) ?? [];
+        const prevYAxisIds = selectorChartRawYAxis(prevStoreState)?.map((axis) => axis.id) ?? [];
+
+        if (
+          prevXAxisIds.some(
+            (id) =>
+              !newXAxisIds.includes(id) &&
+              selectorChartsInteractionXAxisIndex(prevStoreState, id) !== null,
+          ) ||
+          prevYAxisIds.some(
+            (id) =>
+              !newYAxisIds.includes(id) &&
+              selectorChartsInteractionYAxisIndex(prevStoreState, id) !== null,
+          )
+        ) {
+          // If one axis previously with dataIndex got removed.
+          isSame = false;
+        }
+      }
+      if (!isSame) {
+        onAxisInteraction(
+          newAxisPointerInteraction.length === 0 ? null : newAxisPointerInteraction,
+        );
+      }
+    };
+
+    const unsubscribe = store.subscribe(subscribeModifications);
+    return () => {
+      unsubscribe();
+    };
+  }, [onAxisInteraction]);
+
+  React.useEffect(() => {
     const element = svgRef.current;
     if (!isInteractionEnabled || element === null || params.disableAxisListener) {
       return () => {};
@@ -115,48 +202,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
         instance.cleanInteraction?.();
 
-        onAxisInteraction?.(null);
         return;
-      }
-
-      if (onAxisInteraction) {
-        const xAxes = selectorChartXAxis(store.value);
-        const yAxes = selectorChartYAxis(store.value);
-
-        const newAxisPointerInteraction: AxisItemIdentifier[] = [];
-        let isSame = true;
-
-        for (const axisId of xAxes.axisIds) {
-          const prevAxisIndex = selectorChartsInteractionXAxisIndex(store.value, axisId);
-          const nextAxisIndex = selectChartsInteractionAxisIndex(svgPoint.x, xAxes, axisId);
-
-          if (prevAxisIndex !== nextAxisIndex) {
-            isSame = false;
-          }
-
-          if (nextAxisIndex !== null) {
-            newAxisPointerInteraction.push({ axisId, dataIndex: nextAxisIndex });
-          }
-        }
-
-        for (const axisId of yAxes.axisIds) {
-          const prevAxisIndex = selectorChartsInteractionYAxisIndex(store.value, axisId);
-          const nextAxisIndex = selectChartsInteractionAxisIndex(svgPoint.y, yAxes, axisId);
-
-          if (prevAxisIndex !== nextAxisIndex) {
-            isSame = false;
-          }
-
-          if (nextAxisIndex !== null) {
-            newAxisPointerInteraction.push({ axisId, dataIndex: nextAxisIndex });
-          }
-        }
-
-        if (!isSame) {
-          onAxisInteraction(
-            newAxisPointerInteraction.length === 0 ? null : newAxisPointerInteraction,
-          );
-        }
       }
 
       instance.setPointerCoordinate?.(svgPoint);
@@ -196,7 +242,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     instance,
     params.disableAxisListener,
     isInteractionEnabled,
-    onAxisInteraction,
   ]);
 
   React.useEffect(() => {
