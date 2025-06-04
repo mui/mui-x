@@ -20,7 +20,7 @@ By default, the Data Grid Pro lets users reorder columns by dragging and droppin
 
 ## Column reordering events
 
-Column reordering emits the following events for you to import as needed:
+Column reordering emits the following events:
 
 - `columnHeaderDragStart`: emitted when the user starts dragging the header cell.
 - `columnHeaderDragEnter`: emitted when the cursor enters another header cell while dragging.

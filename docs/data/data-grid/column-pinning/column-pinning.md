@@ -20,7 +20,7 @@ The Data Grid Pro provides column pinning to end users by default, and there are
 
 ### Column pinning on initialization
 
-To set pinned columns when the Data Grid is initialized, pass an object with the following shape to the `initialState` prop:
+To set pinned columns when the Data Grid is initialized, pass a value to the `pinnedColumns` property of the `initialState` prop with the following shape:
 
 ```ts
 interface GridPinnedColumnFields {
@@ -80,7 +80,7 @@ You can do this in one of three ways:
 
 1. Initialized pinning with `initialState`
 2. Controlled pinning with `pinnedColumns`
-3. Using the `setPinnedColumns()` method
+3. Using the [`setPinnedColumns()` method](#apiref)
 
 The code snippets below illustrate these three approaches:
 
