@@ -200,7 +200,7 @@ export const useGridChartsIntegration = (
       });
       handleDataUpdate();
     },
-    [handleDataUpdate],
+    [apiRef, handleDataUpdate],
   );
 
   const updateSeries = React.useCallback(
@@ -216,18 +216,19 @@ export const useGridChartsIntegration = (
       });
       handleDataUpdate();
     },
-    [handleDataUpdate],
+    [apiRef, handleDataUpdate],
   );
 
   const updateDataReference = React.useCallback<
     GridChartsIntegrationPrivateApi['chartsIntegration']['updateDataReference']
   >(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (field, originSection, targetSection, targetField, placementRelativeToTargetField) => {
       const columns = gridColumnLookupSelector(apiRef);
       const categories = gridChartsCategoriesSelector(apiRef);
       const series = gridChartsSeriesSelector(apiRef);
 
-      //TODO: update UI for this
+      // TODO: update UI for this
       if (targetSection === 'series' && columns[field].type !== 'number') {
         return;
       }
@@ -240,8 +241,8 @@ export const useGridChartsIntegration = (
 
       if (targetSection) {
         const method = targetSection === 'categories' ? updateCategories : updateSeries;
-        //const currentItems = targetSection === 'categories' ? categories : series;
-        //method([...currentItems, field]);
+        // const currentItems = targetSection === 'categories' ? categories : series;
+        // method([...currentItems, field]);
         // TODO: allow more fields in section
         method([field]);
       }

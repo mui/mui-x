@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -61,7 +62,12 @@ const TabPanel = styled('div', {
   flexDirection: 'column',
 }));
 
-function GridChartsConfigurationPanel() {
+export interface GridChartsConfigurationPanelProps {
+  schema?: Record<string, any>;
+}
+
+function GridChartsConfigurationPanel(props: GridChartsConfigurationPanelProps) {
+  const { schema } = props;
   const [activeTab, setActiveTab] = React.useState<'chartType' | 'data' | 'configuration'>(
     'chartType',
   );
@@ -113,7 +119,7 @@ function GridChartsConfigurationPanel() {
         </rootProps.slots.baseIconButton>
       </TabList>
       <TabPanel role="tabpanel" hidden={activeTab !== 'chartType'} aria-labelledby="chart-type-tab">
-        <GridChartTypeSelector />
+        <GridChartTypeSelector schema={schema} />
       </TabPanel>
       <TabPanel role="tabpanel" hidden={activeTab !== 'data'} aria-labelledby="data-tab">
         <GridChartsConfigurationPanelHeader
@@ -134,5 +140,13 @@ function GridChartsConfigurationPanel() {
     </TabsRoot>
   );
 }
+
+GridChartsConfigurationPanel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  schema: PropTypes.object,
+} as any;
 
 export { GridChartsConfigurationPanel };

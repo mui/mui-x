@@ -6,7 +6,7 @@ import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { FieldTransferObject, DropPosition } from './GridChartsConfigurationPanelBody';
+import type { FieldTransferObject, DropPosition } from './GridChartsConfigurationPanelBody';
 import { GridChartsConfigurationPanelFieldMenu } from './GridChartsConfigurationPanelFieldMenu';
 
 type GridChartsConfigurationPanelFieldProps = {
