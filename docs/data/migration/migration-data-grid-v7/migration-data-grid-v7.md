@@ -129,7 +129,7 @@ You have to import it from `@mui/x-license` instead:
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - ✅ The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
-  This is the reverse of the previous "Unselect all" behavior, where clicking on an indeterminate checkbox "unselects" the selected descendants.
+  This is the reverse of the previous **Unselect all** behavior, where clicking on an indeterminate checkbox would deselect the selected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - ✅ The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
   Using `Set` allows for a more efficient row selection management.
