@@ -174,7 +174,7 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: |
-                  node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" & pnpm test:unit:browser
+                  node ./scripts/playwrightLaunchServer.ts & pnpm test:unit:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
@@ -185,7 +185,7 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  node -e "import { chromium } from'@playwright/test';(async () => {const browserServer = await chromium.launchServer({port: 9050, wsPath: 'mui-browser', ignoreDefaultArgs: ['--hide-scrollbars']});console.log(browserServer.wsEndpoint());})();" & pnpm test:unit:browser --coverage
+                  node ./scripts/playwrightLaunchServer.ts & pnpm test:unit:browser --coverage
 
             - run:
                 name: Check coverage generated
