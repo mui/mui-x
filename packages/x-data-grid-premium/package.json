@@ -44,7 +44,7 @@
     "directory": "packages/x-data-grid-premium"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.4",
     "@mui/utils": "^7.1.1",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
@@ -73,7 +73,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/internal-test-utils": "^2.0.9",
     "@mui/material": "^7.1.1",
     "@mui/system": "^7.1.1",
     "@types/prop-types": "^15.7.14",

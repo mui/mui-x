@@ -64,7 +64,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
   return (
     <RadarDataProvider<RadarChartProPluginsSignatures> {...radarDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {props.showToolbar ? <Toolbar /> : null}
+        {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />

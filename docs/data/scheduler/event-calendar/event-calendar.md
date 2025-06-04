@@ -29,7 +29,7 @@ TODO: Add a demo of a standalone `<DayView />` when available.
 
 ### Week
 
-TODO: Add a demo of a standalone `<WeekView />` when available.
+{{"demo": "StandaloneWeekView.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Month
 

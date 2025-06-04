@@ -87,6 +87,7 @@
     "axisTickLabel": "Custom component for tick label.",
     "bar": "The component that renders the bar.",
     "barLabel": "The component that renders the bar label.",
+    "baseButton": "",
     "baseIconButton": "",
     "baseTooltip": "",
     "legend": "Custom rendering of the legend.",

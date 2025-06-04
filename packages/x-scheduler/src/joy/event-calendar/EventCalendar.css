@@ -21,12 +21,6 @@
   gap: var(--space-4);
 }
 
-.EventCalendarToolbar {
-  height: 42px;
-  display: flex;
-  align-items: center;
-}
-
 .EventCalendarContent {
   display: flex;
   flex: 1;
