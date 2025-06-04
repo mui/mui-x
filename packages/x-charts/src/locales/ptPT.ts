@@ -6,8 +6,12 @@ export const ptPTLocaleText: Partial<ChartsLocaleText> = {
   // Overlay
   loading: 'Carregando dados…',
   noData: 'Sem dados para mostrar',
+
+  // Toolbar
   zoomIn: 'Aumentar zoom',
   zoomOut: 'Diminuir zoom',
+
+  // Toolbar Export
   toolbarExport: 'Exportar',
   toolbarExportPrint: 'Imprimir',
   toolbarExportImage: (mimeType) =>
