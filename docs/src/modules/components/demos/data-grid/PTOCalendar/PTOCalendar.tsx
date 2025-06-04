@@ -487,13 +487,9 @@ function PTOCalendar() {
     <CalendarContext.Provider value={calendarState}>
       <Box
         sx={{
-          flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          borderRadius: 3,
-          border: '1px solid',
-          borderColor: 'divider',
-          overflow: 'hidden',
+          height: 800,
           ...theme.applyStyles('dark', {
             backgroundColor: '#141A1F',
           }),
@@ -555,12 +551,14 @@ function PTOCalendarContainer() {
           },
         },
       },
+      shape: {
+        borderRadius: 10,
+      },
       components: {
         MuiDataGrid: {
           styleOverrides: {
             root: ({ theme }) => ({
-              border: 'none',
-              height: '100%',
+              borderColor: '#EEEBF0',
               '--DataGrid-rowBorderColor': '#EEEBF0',
               ...theme.applyStyles('dark', {
                 '--DataGrid-rowBorderColor': '#38363E',
