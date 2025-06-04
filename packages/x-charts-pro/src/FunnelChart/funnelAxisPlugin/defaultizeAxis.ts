@@ -8,10 +8,8 @@ import {
 import { DatasetType, DefaultedXAxis, DefaultedYAxis } from '@mui/x-charts/internals';
 import { XAxis, YAxis } from '@mui/x-charts/models';
 
-type InXAxis = XAxis;
-
 export function defaultizeXAxis(
-  inAxes: readonly InXAxis[] | undefined,
+  inAxes: readonly XAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
 ): DefaultedXAxis[] {
   const offsets = {

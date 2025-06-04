@@ -8,12 +8,11 @@ import {
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,
   selectorChartsInteractionIsInitialized,
-  selectorChartXAxis,
-  selectorChartYAxis,
   useSelector,
 } from '@mui/x-charts/internals';
 import { UseChartFunnelAxisSignature } from './useChartCartesianAxis.types';
 import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
+import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRendering.selectors';
 
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   params,
@@ -156,22 +155,6 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
       const seriesValues: Record<string, number | null | undefined> = {};
-
-      Object.keys(processedSeries)
-        .filter((seriesType): seriesType is 'bar' | 'line' => ['bar', 'line'].includes(seriesType))
-        .forEach((seriesType) => {
-          processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
-            const seriesItem = processedSeries[seriesType]!.series[seriesId];
-
-            const providedXAxisId = seriesItem.xAxisId;
-            const providedYAxisId = seriesItem.yAxisId;
-
-            const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
-            if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-              seriesValues[seriesId] = seriesItem.data[dataIndex];
-            }
-          });
-        });
 
       onAxisClick(event, { dataIndex, axisValue, seriesValues });
     };

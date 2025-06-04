@@ -30,13 +30,15 @@ import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/
 
 function getRange(
   drawingArea: ChartDrawingArea,
-  axisDirection: 'x' | 'y', // | 'rotation' | 'radius',
+  axisDirection: 'x' | 'y',
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
+  gap: number,
 ): [number, number] {
+  gap /= 2;
   const range: [number, number] =
     axisDirection === 'x'
-      ? [drawingArea.left, drawingArea.left + drawingArea.width]
-      : [drawingArea.top + drawingArea.height, drawingArea.top];
+      ? [drawingArea.left - gap, drawingArea.left + drawingArea.width + gap]
+      : [drawingArea.top + drawingArea.height + gap, drawingArea.top - gap];
 
   return axis.reverse ? [range[1], range[0]] : range;
 }
@@ -53,6 +55,7 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   zoomMap?: Map<AxisId, ZoomData>;
   zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
+  gap: number;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -76,6 +79,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   zoomOptions,
   getFilters,
+  gap,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -100,7 +104,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
-    const range = getRange(drawingArea, axisDirection, axis);
+    const range = getRange(drawingArea, axisDirection, axis, gap);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
