@@ -16,7 +16,7 @@ import {
 import BeachAccess from '@mui/icons-material/BeachAccess';
 import Cake from '@mui/icons-material/Cake';
 import Sick from '@mui/icons-material/Sick';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfDay } from 'date-fns';
 import { getHolidaysForCountries } from './data/holidays';
 import { useCalendarState } from './hooks/useCalendarState';
 import { usePTOData } from './hooks/usePTOData';
@@ -189,7 +189,7 @@ function PTOCalendar() {
               }}
             >
               <Avatar
-                src={`/assets/${ptoData[params.value].avatar}.jpg`}
+                src={`/assets/${ptoData[params.value].avatar}.jpg`} // TODO: add assets to docs
                 sx={{
                   width: 40,
                   height: 40,
@@ -243,9 +243,7 @@ function PTOCalendar() {
           field: dateStr,
           headerName: format(day, 'EEE d'),
           description: format(day, 'MMMM d, yyyy'),
-          flex: 1,
-          minWidth: 40,
-          editable: true,
+          width: 50,
           type: 'boolean' as const,
           headerAlign: 'center' as const,
           align: 'center' as const,
@@ -290,9 +288,33 @@ function PTOCalendar() {
               </Typography>
             </Box>
           ),
+          colSpan: (value: any, row: any, column: any) => {
+            if (row.id === 'summary') return 1;
+            if (!value.show) return 1;
+
+            const fields = Object.keys(row).filter((f) => f !== 'id' && f !== 'employee');
+            const colIndex = fields.indexOf(column.field);
+            const currentCellType = value.hasPTO ? 'vacation' : value.hasSick ? 'sick' : 'holidays';
+
+            let span = 1;
+            for (let i = colIndex + 1; i < fields.length; i++) {
+              const nextCell = row[fields[i]];
+              if (!nextCell?.show) break;
+
+              const nextCellType = nextCell.hasPTO
+                ? 'vacation'
+                : nextCell.hasSick
+                  ? 'sick'
+                  : 'holidays';
+              if (nextCellType !== currentCellType) break;
+
+              span++;
+            }
+            return span;
+          },
           renderCell: (params: GridRenderCellParams) => {
             if (params.row.id === 'summary') {
-              const count = params.value as number;
+              const count = params.value;
               const isCurrent = isCurrentDay(day);
               return (
                 <Box
@@ -326,6 +348,17 @@ function PTOCalendar() {
             const currentSickPeriod = sickPeriods.find((period) => period.includes(params.field));
             const isFirstDayOfPTO = currentPTOPeriod && currentPTOPeriod[0] === params.field;
             const isFirstDayOfSick = currentSickPeriod && currentSickPeriod[0] === params.field;
+            const isMiddleOfPeriod = !isFirstDayOfPTO && !isFirstDayOfSick;
+            const lastDayOfPeriod = daysToShow[daysToShow.length - 1];
+            const isEndOfPTOPeriodInRange =
+              currentPTOPeriod &&
+              startOfDay(new Date(currentPTOPeriod[currentPTOPeriod.length - 1])) <=
+                startOfDay(lastDayOfPeriod);
+            const isEndOfSickPeriodInRange =
+              currentSickPeriod &&
+              startOfDay(new Date(currentSickPeriod[currentSickPeriod.length - 1])) <=
+                startOfDay(lastDayOfPeriod);
+            const isEndOfPeriodInRange = isEndOfPTOPeriodInRange || isEndOfSickPeriodInRange;
             const showPTO = cellData.hasPTO && activeFilters.includes('vacation');
             const showSick = cellData.hasSick && activeFilters.includes('sick');
             const showHoliday = cellData.hasHoliday && activeFilters.includes('holidays');
@@ -339,24 +372,13 @@ function PTOCalendar() {
               <Box
                 sx={{
                   width: '100%',
-                  height: showPTO || showSick ? '42px' : '100%',
-                  borderRadius: showPTO
-                    ? currentPTOPeriod?.length === 1
-                      ? '20px'
-                      : currentPTOPeriod?.[0] === params.field
-                        ? '20px 0 0 20px'
-                        : currentPTOPeriod?.[currentPTOPeriod.length - 1] === params.field
-                          ? '0 20px 20px 0'
-                          : '0'
-                    : showSick
-                      ? currentSickPeriod?.length === 1
-                        ? '20px'
-                        : currentSickPeriod?.[0] === params.field
-                          ? '20px 0 0 20px'
-                          : currentSickPeriod?.[currentSickPeriod.length - 1] === params.field
-                            ? '0 20px 20px 0'
-                            : '0'
-                      : '0',
+                  height: showPTO || showSick ? '40px' : '100%',
+                  marginLeft: !isMiddleOfPeriod ? 0.5 : 0,
+                  marginRight: isEndOfPeriodInRange ? 0.5 : 0,
+                  borderTopLeftRadius: !isMiddleOfPeriod ? '20px' : 0,
+                  borderBottomLeftRadius: !isMiddleOfPeriod ? '20px' : 0,
+                  borderTopRightRadius: isEndOfPeriodInRange ? '20px' : '0',
+                  borderBottomRightRadius: isEndOfPeriodInRange ? '20px' : '0',
                   backgroundColor: showPTO
                     ? FILTER_COLORS.vacation.background
                     : showSick
@@ -444,8 +466,8 @@ function PTOCalendar() {
                       src={`https://flagcdn.com/w20/${ptoData[params.row.employee].nationality.toLowerCase()}.png`}
                       alt={`${ptoData[params.row.employee].nationality} flag`}
                       sx={{
-                        width: 16,
-                        height: 16,
+                        width: 18,
+                        height: 18,
                         opacity: 0.9,
                         borderRadius: '50%',
                         border: `2px solid ${FILTER_COLORS.holidays.border}`,
@@ -469,16 +491,13 @@ function PTOCalendar() {
     <CalendarContext.Provider value={calendarState}>
       <Box
         sx={{
-          width: '100%',
-          borderRadius: 3,
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          gap: { xs: 2, sm: 3 },
-          flex: 1,
-          minHeight: 0,
-          overflow: 'hidden',
+          borderRadius: 3,
           border: '1px solid',
           borderColor: 'divider',
+          overflow: 'hidden',
           ...theme.applyStyles('dark', {
             backgroundColor: '#141A1F',
           }),
@@ -505,12 +524,7 @@ function PTOCalendar() {
           showCellVerticalBorder
           slots={{ toolbar: CalendarToolbar }}
           showToolbar
-          getRowHeight={(params) => {
-            if (params.model.id === 'summary') {
-              return 40;
-            }
-            return 50;
-          }}
+          getRowHeight={(params) => (params.model.id === 'summary' ? 40 : 50)}
           sx={{
             border: 'none',
             height: '100%',

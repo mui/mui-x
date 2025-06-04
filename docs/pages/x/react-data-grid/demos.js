@@ -10,9 +10,6 @@ export default function Page() {
         '@media (min-width: 900px)': {
           width: 'calc(100% + 121px)', // TODO: Fix at the cause of the issue
         },
-        '& .MuiDocs-footer-block': {
-          display: 'none',
-        },
         '& .MuiDocs-content-block': {
           mx: 'auto',
           maxWidth: 'xl',

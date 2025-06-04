@@ -20,7 +20,8 @@ export async function getHolidays(year: number, country: string): Promise<Holida
   try {
     const response = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`);
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      console.error(response);
+      return [];
     }
     const data = (await response.json()) as HolidayApiResponse[];
     return data.map((holiday: HolidayApiResponse) => ({
