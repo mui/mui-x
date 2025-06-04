@@ -89,7 +89,7 @@ function ChartsToolbarPro({
     };
 
     if (children.length > 0) {
-      children.push(<ToolbarDivider />);
+      children.push(<ToolbarDivider key="divider" />);
     }
 
     children.push(
