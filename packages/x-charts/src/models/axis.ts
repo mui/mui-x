@@ -516,6 +516,23 @@ export interface ChartsAxisData {
   seriesValues: Record<string, number | null | undefined>;
 }
 
+export type CartesianDirection = 'x' | 'y';
+export type PolarDirection = 'rotation' | 'radius';
+
+/**
+ * The data used to identify pointer interaction with axis
+ */
+export interface AxisItemIdentifier {
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index.
+   */
+  dataIndex: number;
+}
+
 export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
   ? MakeOptional<AxisConfig<S, V, ChartsXAxisProps>, 'id'>
   : never;

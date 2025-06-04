@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
-import { getValueToPositionMapper, useXScale } from '../hooks/useScale';
+import { getValueToPositionMapper } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectorChartsInteractionXAxisValue,
+  selectorChartsHighlightXAxis,
+  selectorChartsHighlightXAxisValue,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
@@ -24,11 +25,14 @@ export default function ChartsXHighlight(props: {
 
   const { top, height } = useDrawingArea();
 
-  const xScale = useXScale();
-
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const axisXValue = useSelector(store, selectorChartsInteractionXAxisValue);
+  const axisXValue = useSelector(store, selectorChartsHighlightXAxisValue);
+  const xAxis = useSelector(store, selectorChartsHighlightXAxis);
 
+  if (xAxis === null) {
+    return null;
+  }
+  const xScale = xAxis.scale;
   const getXPosition = getValueToPositionMapper(xScale);
 
   const isBandScaleX = type === 'band' && axisXValue !== null && isBandScale(xScale);

@@ -27,14 +27,20 @@ function indexGetter(
     : getAxisIndex(axes.axis[ids], value);
 }
 
+export const selectChartsInteractionAxisIndex = (
+  value: number | null,
+  axes: ComputeResult<ChartsAxisProps>,
+  id?: AxisId,
+) => (value === null ? null : indexGetter(value, axes, id));
+
 export const selectorChartsInteractionXAxisIndex = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisId],
-  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
+  selectChartsInteractionAxisIndex,
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisId],
-  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
+  selectChartsInteractionAxisIndex,
 );
 
 /**
