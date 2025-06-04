@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.4.0",
+  "version": "8.5.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "main": "src/index.js",
@@ -38,8 +38,8 @@
     "directory": "packages/x-charts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
-    "@mui/utils": "^7.0.2",
+    "@babel/runtime": "^7.27.4",
+    "@mui/utils": "^7.1.1",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "bezier-easing": "^2.1.0",
@@ -65,14 +65,14 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
-    "@mui/material": "^7.0.2",
-    "@mui/system": "^7.0.2",
+    "@mui/internal-test-utils": "^2.0.9",
+    "@mui/material": "^7.1.1",
+    "@mui/system": "^7.1.1",
     "@types/prop-types": "^15.7.14",
     "@types/use-sync-external-store": "^1.5.0",
     "csstype": "^3.1.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

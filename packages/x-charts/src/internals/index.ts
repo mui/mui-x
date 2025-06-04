@@ -37,6 +37,7 @@ export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';
 export * from '../RadarChart/RadarChart.plugins';
+export * from '../PieChart/PieChart.plugins';
 
 // utils
 export * from './defaultizeValueFormatter';
@@ -51,6 +52,7 @@ export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 export * from './dateHelpers';
+export * from './invertScale';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
