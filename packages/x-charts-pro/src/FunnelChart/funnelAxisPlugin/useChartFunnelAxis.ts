@@ -9,9 +9,10 @@ import {
   selectorChartSeriesProcessed,
   selectorChartsInteractionIsInitialized,
   useSelector,
+  defaultizeXAxis,
+  defaultizeYAxis,
 } from '@mui/x-charts/internals';
 import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
-import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRendering.selectors';
 
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
