@@ -19,7 +19,6 @@ import {
   UseChartInteractionSignature,
 } from '../useChartInteraction';
 import {
-  selectChartsInteractionAxisIndex,
   selectorChartsInteractionXAxisIndex,
   selectorChartsInteractionYAxisIndex,
 } from './useChartCartesianInteraction.selectors';
