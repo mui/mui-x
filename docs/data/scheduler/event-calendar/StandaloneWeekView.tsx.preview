@@ -1,0 +1,1 @@
+<WeekView events={events} className={classes.Container} />

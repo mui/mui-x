@@ -26,5 +26,9 @@ export const getFunnelCurve = (
   curve: FunnelCurveType | undefined,
   options: CurveOptions,
 ): CurveFactory => {
+  if (curve === 'linear-sharp') {
+    options.pointShape = 'sharp';
+  }
+
   return (context) => new (curveConstructor(curve))(context as any, options);
 };
