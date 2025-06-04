@@ -86,8 +86,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4(@swc/core@1.11.29)(esbuild@0.25.5)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))
       '@mui/internal-markdown':
-        specifier: ^2.0.6
-        version: 2.0.6
+        specifier: https://pkg.csb.dev/mui/material-ui/commit/07544490/@mui/internal-markdown
+        version: https://pkg.csb.dev/mui/material-ui/commit/07544490/@mui/internal-markdown
       '@mui/internal-test-utils':
         specifier: ^2.0.9
         version: 2.0.9(@babel/core@7.27.4)(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(chai@5.2.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -95,8 +95,8 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(@emotion/react@11.14.0(@types/react@19.1.6)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.6)(react@19.1.0))(@types/react@19.1.6)(react@19.1.0))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#8cd3aa5849fe8fc2dd98eccc75366fae364d15f8
-        version: https://codeload.github.com/mui/material-ui/tar.gz/8cd3aa5849fe8fc2dd98eccc75366fae364d15f8(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)
+        specifier: github:cherniavskii/material-ui#07544490cb3ee6e4bc98c34d3a0b7b6b5f9738d4
+        version: https://codeload.github.com/cherniavskii/material-ui/tar.gz/07544490cb3ee6e4bc98c34d3a0b7b6b5f9738d4(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)
       '@mui/utils':
         specifier: ^7.1.1
         version: 7.1.1(@types/react@19.1.6)(react@19.1.0)
@@ -3919,9 +3919,9 @@ packages:
   '@mui/internal-markdown@2.0.6':
     resolution: {integrity: sha512-odKEYkeVxH6hz8C3XtykU2NiDYanVTWLubymArF6OVo7Od38rA07nbpCWTVAYIIOphXxHZuS3+zegYColpqkiw==}
 
-  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/1b203e8a/@mui/internal-markdown':
-    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/1b203e8a/@mui/internal-markdown}
-    version: 2.0.5
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/07544490/@mui/internal-markdown':
+    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/07544490/@mui/internal-markdown}
+    version: 2.0.6
 
   '@mui/internal-scripts@2.0.8':
     resolution: {integrity: sha512-lDe6wawXmadnxS0jYJPSW5eOy3JE3AEozQnnIqj7ufSYxX1dJNBv2vbLSkHzb7zg70QTjduzIWsasmqa066rNg==}
@@ -4009,10 +4009,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/cherniavskii/material-ui/tar.gz/1b203e8ab4a173d19595a8e96dd3d0d4f9a6d99a':
-    resolution: {tarball: https://codeload.github.com/cherniavskii/material-ui/tar.gz/1b203e8ab4a173d19595a8e96dd3d0d4f9a6d99a}
-    version: 7.1.0
-    engines: {pnpm: 10.10.0}
+  '@mui/monorepo@https://codeload.github.com/cherniavskii/material-ui/tar.gz/07544490cb3ee6e4bc98c34d3a0b7b6b5f9738d4':
+    resolution: {tarball: https://codeload.github.com/cherniavskii/material-ui/tar.gz/07544490cb3ee6e4bc98c34d3a0b7b6b5f9738d4}
+    version: 7.1.1
+    engines: {pnpm: 10.11.0}
 
   '@mui/private-theming@5.17.1':
     resolution: {integrity: sha512-XMxU0NTYcKqdsG8LRmSoxERPXwMbp16sIXPcLVgLGII/bVNagX0xaheWAwFv8+zDK7tI3ajllkuD3GZZE++ICQ==}
@@ -14800,11 +14800,11 @@ snapshots:
       marked: 15.0.12
       prismjs: 1.30.0
 
-  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/1b203e8a/@mui/internal-markdown':
+  '@mui/internal-markdown@https://pkg.csb.dev/mui/material-ui/commit/07544490/@mui/internal-markdown':
     dependencies:
-      '@babel/runtime': 7.27.1
+      '@babel/runtime': 7.27.4
       lodash: 4.17.21
-      marked: 15.0.11
+      marked: 15.0.12
       prismjs: 1.30.0
 
   '@mui/internal-scripts@2.0.8':
@@ -14920,7 +14920,7 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.1.6)(react@19.1.0))(@types/react@19.1.6)(react@19.1.0)
       '@types/react': 19.1.6
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/8cd3aa5849fe8fc2dd98eccc75366fae364d15f8(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)':
+  '@mui/monorepo@https://codeload.github.com/cherniavskii/material-ui/tar.gz/07544490cb3ee6e4bc98c34d3a0b7b6b5f9738d4(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.40.0)
