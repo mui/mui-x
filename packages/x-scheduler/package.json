@@ -70,7 +70,7 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/internal-test-utils": "^2.0.9",
     "@types/luxon": "^3.6.2",
     "@types/prop-types": "^15.7.14",
     "luxon": "^3.6.1",
