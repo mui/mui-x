@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { useGridChartsIntegrationContext } from '../hooks/utils/useGridChartIntegration';
+import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
 export interface GridChartsRendererBridgeProps {
   renderer: React.ComponentType<{
-    categories: string[];
-    series: Array<{ id: string; label: string; data: (number | null)[] }>;
-    chartType: string;
+    categories: GridChartsIntegrationContextValue['categories'];
+    series: GridChartsIntegrationContextValue['series'];
+    chartType: GridChartsIntegrationContextValue['chartType'];
   }>;
 }
 
