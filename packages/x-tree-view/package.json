@@ -69,7 +69,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/internal-test-utils": "^2.0.9",
     "@mui/material": "^7.1.1",
     "@mui/system": "^7.1.1",
     "@types/prop-types": "^15.7.14",

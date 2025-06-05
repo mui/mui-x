@@ -33,7 +33,7 @@ const FunnelSectionLabel = consumeSlots(
     props: FunnelSectionLabelProps,
     ref: React.Ref<SVGTextElement>,
   ) {
-    const { classes, color, onClick, className, label, ...other } = props;
+    const { classes, color, onClick, className, label, seriesId, dataIndex, ...other } = props;
     const theme = useTheme();
 
     return (

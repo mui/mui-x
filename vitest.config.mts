@@ -31,7 +31,13 @@ const getProjects = () => {
 
   return [
     `packages/*/vitest.config.${fill}.mts`,
-    ...(fill.includes('jsdom') ? [`docs/vitest.config.${fill}.mts`] : []),
+    ...(fill === 'jsdom'
+      ? [
+          `docs/vitest.config.${fill}.mts`,
+          // We also run node tests when running in jsdom mode
+          `packages/*/vitest.config.node.mts`,
+        ]
+      : []),
   ];
 };
 
