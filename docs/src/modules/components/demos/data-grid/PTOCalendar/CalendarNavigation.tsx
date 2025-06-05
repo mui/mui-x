@@ -1,7 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import {
@@ -49,7 +48,7 @@ function CalendarNavigation() {
   return (
     <Box sx={{ display: 'flex', gap: 1 }}>
       <ToolbarButton
-        onClick={() => handleDateChange(new Date(2025, 4, 1))}
+        onClick={() => handleDateChange(new Date())}
         render={
           <Button variant="outlined" size="small">
             Today

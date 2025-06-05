@@ -31,8 +31,6 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
             color={isActive ? 'primary' : 'default'}
             variant={isActive ? 'filled' : 'outlined'}
             sx={{
-              borderRadius: '12px',
-              fontWeight: 'medium',
               '&.MuiChip-filled': {
                 backgroundColor: FILTER_COLORS[filter].background,
                 color: FILTER_COLORS[filter].text,

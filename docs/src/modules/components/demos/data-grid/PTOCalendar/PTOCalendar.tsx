@@ -13,9 +13,9 @@ import {
   useGridSelector,
   gridFilteredRowCountSelector,
 } from '@mui/x-data-grid-pro';
-import BeachAccess from '@mui/icons-material/BeachAccess';
 import Cake from '@mui/icons-material/Cake';
-import Sick from '@mui/icons-material/LocalHospital';
+import BeachAccessOutlined from '@mui/icons-material/BeachAccessOutlined';
+import DeviceThermostatOutlined from '@mui/icons-material/DeviceThermostatOutlined';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfDay } from 'date-fns';
 import { getHolidaysForCountries } from './data/holidays';
 import { useCalendarState } from './hooks/useCalendarState';
@@ -160,9 +160,9 @@ function getCellSx({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     px: 1.5,
-    fontSize: '0.75rem',
+    fontSize: '0.8125rem',
     fontWeight: 'medium',
-    gap: 0.75,
+    gap: 0.5,
     color:
       showHoliday && hasHolidayBooked
         ? FILTER_COLORS.holidays.text
@@ -228,7 +228,6 @@ interface RenderCellIconLabelParams {
   showHoliday: boolean;
   ptoData: any;
   params: PTOParams;
-  theme: Theme;
   isFirstVisibleDayOfPTO: boolean;
   showPTO: boolean;
   isFirstDayOfSick: boolean;
@@ -241,7 +240,6 @@ function renderCellIconLabel({
   showHoliday,
   ptoData,
   params,
-  theme,
   isFirstVisibleDayOfPTO,
   showPTO,
   isFirstDayOfSick,
@@ -255,17 +253,13 @@ function renderCellIconLabel({
       <>
         <Box
           component="img"
-          src={`https://flagcdn.com/w20/${ptoData[params.row.employee].nationality.toLowerCase()}.png`}
+          src={`https://flagcdn.com/w40/${ptoData[params.row.employee].nationality.toLowerCase()}.png`}
           alt={`${ptoData[params.row.employee].nationality} flag`}
           sx={{
             width: 18,
             height: 18,
-            opacity: 0.9,
+            margin: '1px',
             borderRadius: '50%',
-            border: `2px solid ${FILTER_COLORS.holidays.border}`,
-            ...theme.applyStyles('dark', {
-              border: `2px solid text.primary`,
-            }),
           }}
         />
         {showLabel && 'Holiday'}
@@ -275,15 +269,7 @@ function renderCellIconLabel({
   if (isFirstVisibleDayOfPTO && showPTO) {
     return (
       <>
-        <BeachAccess
-          sx={{
-            fontSize: '1rem',
-            color: FILTER_COLORS.vacation.text,
-            ...theme.applyStyles('dark', {
-              color: FILTER_COLORS.vacation.dark.text,
-            }),
-          }}
-        />
+        <BeachAccessOutlined fontSize="small" />
         {showLabel && 'Vacation'}
       </>
     );
@@ -291,15 +277,7 @@ function renderCellIconLabel({
   if (isFirstDayOfSick && showSick) {
     return (
       <>
-        <Sick
-          sx={{
-            fontSize: '1rem',
-            color: FILTER_COLORS.sick.text,
-            ...theme.applyStyles('dark', {
-              color: FILTER_COLORS.sick.dark.text,
-            }),
-          }}
-        />
+        <DeviceThermostatOutlined fontSize="small" />
         {showLabel && 'Sick leave'}
       </>
     );
@@ -307,7 +285,7 @@ function renderCellIconLabel({
   if (isBirthday && cellData.show) {
     return (
       <>
-        <Cake sx={{ fontSize: '1rem', color: '#75758d' }} />
+        <Cake fontSize="small" />
         {showLabel && 'Birthday'}
       </>
     );
@@ -416,7 +394,7 @@ function PTOCalendar() {
       {
         field: 'employee',
         headerName: 'Employees',
-        width: 200,
+        width: 190,
         renderHeader: EmployeeHeader,
         renderCell: (params: GridRenderCellParams) => {
           if (params.row.id === 'summary') {
@@ -453,8 +431,7 @@ function PTOCalendar() {
                 sx={{
                   width: 40,
                   height: 40,
-                  bgcolor: '#e1d7fb',
-                  borderTopLeftRadius: 0,
+                  backgroundColor: '#e1d7fb',
                   color: '#1f1f20',
                   fontSize: '0.75rem',
                   fontWeight: 'bold',
@@ -502,7 +479,7 @@ function PTOCalendar() {
           field: dateStr,
           headerName: format(day, 'EEE d'),
           description: format(day, 'MMMM d, yyyy'),
-          width: density === 'compact' ? 50 : 110,
+          width: density === 'compact' ? 50 : 120,
           type: 'boolean' as const,
           renderHeader: () => (
             <Box
@@ -669,7 +646,6 @@ function PTOCalendar() {
                     showHoliday,
                     ptoData,
                     params,
-                    theme,
                     showLabel: density === 'comfortable',
                     isFirstVisibleDayOfPTO: !!isFirstVisibleDayOfPTO,
                     showPTO,
@@ -773,7 +749,7 @@ function PTOCalendarContainer() {
           styleOverrides: {
             root: {
               '&:hover': {
-                backgroundColor: '#f7f9ff',
+                backgroundColor: '#f6f6f6',
               },
               '&:focus-visible': {
                 outline: '2px solid #3E63DD',
@@ -786,7 +762,7 @@ function PTOCalendarContainer() {
           styleOverrides: {
             root: {
               display: 'flex',
-              gap: 2,
+              gap: '1px',
               background: '#faf9fb',
             },
           },
@@ -800,9 +776,12 @@ function PTOCalendarContainer() {
               borderRadius: '10px !important',
               borderColor: 'transparent',
               margin: '0 !important',
+              '&:hover': {
+                background: '#f6f6f6',
+              },
               '&.Mui-selected': {
                 background: '#fff',
-                borderColor: '#EEEBF0',
+                borderColor: 'rgba(46, 43, 48, 0.1)',
                 boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
                 '&:hover': {
                   background: '#fff',
@@ -816,7 +795,7 @@ function PTOCalendarContainer() {
             root: {
               padding: '0 12px',
               background: '#fff',
-              borderColor: '#EEEBF0',
+              borderColor: 'rgba(46, 43, 48, 0.1)',
               boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
               borderRadius: '10px',
               whiteSpace: 'nowrap',
@@ -830,9 +809,6 @@ function PTOCalendarContainer() {
           styleOverrides: {
             root: {
               color: 'rgba(0, 0, 0, 0.87)',
-              '&:hover': {
-                backgroundColor: '#f7f9ff',
-              },
             },
           },
         },
@@ -851,6 +827,16 @@ function PTOCalendarContainer() {
             },
           },
         },
+        MuiChip: {
+          styleOverrides: {
+            root: {
+              borderRadius: '10px',
+            },
+            label: {
+              fontWeight: '500',
+            },
+          },
+        },
         MuiDataGrid: {
           styleOverrides: {
             root: ({ theme }) => ({
@@ -861,6 +847,9 @@ function PTOCalendarContainer() {
                 '--DataGrid-rowBorderColor': '#38363E',
               }),
             }),
+            // scrollbar: {
+            //   scrollbarWidth: 'thin',
+            // },
             cell: ({ theme }) => ({
               padding: 0,
               '&.today': {
