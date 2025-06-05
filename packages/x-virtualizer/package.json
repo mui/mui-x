@@ -1,0 +1,60 @@
+{
+  "name": "@mui/x-virtualizer",
+  "version": "0.0.1",
+  "author": "MUI Team",
+  "description": "MUI virtualization library",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui-org"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "virtualization"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
+    "build:node": "node ../../scripts/build.mjs node",
+    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../scripts/copyFiles.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-virtualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.27.4",
+    "@mui/x-internals": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "^2.0.9",
+    "@mui/types": "^7.4.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "rimraf": "^6.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
