@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
-import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
 import { BrowserSpeechRecognition } from '../../utils/speechRecognition';
@@ -133,7 +133,7 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
       onClick?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseIconButton,
       render,
       {
