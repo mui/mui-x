@@ -15,7 +15,9 @@ export function GridChartsIntegrationContextProvider({
   >([]);
   const [series, setSeries] = React.useState<GridChartsIntegrationContextValue['series']>([]);
   const [chartType, setChartType] = React.useState<string>('');
-  const [configuration, setConfiguration] = React.useState<{ [key: string]: any }>({});
+  const [configuration, setConfiguration] = React.useState<
+    GridChartsIntegrationContextValue['configuration']
+  >({});
 
   const value = React.useMemo<GridChartsIntegrationContextValue>(
     () => ({

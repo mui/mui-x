@@ -7,7 +7,7 @@ import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartI
 import { GridChartsIcon } from '../../material/icons';
 
 export interface GridChartTypeSelectorProps {
-  schema?: Record<string, any>;
+  schema: Record<string, any>;
 }
 
 interface ChartTypeButtonProps {
@@ -48,24 +48,17 @@ const ChartTypeButton = styled('button', {
   };
 });
 
-function GridChartTypeSelector(props: GridChartTypeSelectorProps) {
-  const { schema } = props;
-  const {
-    configuration: contextConfiguration,
-    setChartType,
-    chartType,
-  } = useGridChartsIntegrationContext();
-
-  const configuration = React.useMemo(
-    () => ({ ...contextConfiguration, ...(schema || {}) }),
-    [contextConfiguration, schema],
-  );
+function GridChartTypeSelector() {
+  const { setChartType, chartType } = useGridChartsIntegrationContext();
   const rootProps = useGridRootProps();
+  const chartTypes = React.useMemo(() => {
+    return Object.keys(rootProps.slotProps?.chartsConfigurationPanel?.schema || {});
+  }, [rootProps.slotProps?.chartsConfigurationPanel?.schema]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <ChartTypeButtonRow>
-        {configuration.chartType?.map((type: string) => (
+        {chartTypes.map((type: string) => (
           <ChartTypeButton
             key={type}
             isSelected={type === chartType}
