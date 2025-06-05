@@ -55,7 +55,7 @@ function EmployeeHeader() {
   const apiRef = useGridApiContext();
   const filteredRowCount = useGridSelector(apiRef, gridFilteredRowCountSelector);
   return (
-    <Typography fontWeight="bold" fontSize="0.75rem">
+    <Typography fontWeight="medium" fontSize="0.875rem">
       Employees ({filteredRowCount})
     </Typography>
   );
@@ -434,14 +434,14 @@ function PTOCalendar() {
                   backgroundColor: '#e1d7fb',
                   color: '#1f1f20',
                   fontSize: '0.75rem',
-                  fontWeight: 'bold',
+                  fontWeight: 'medium',
                   border: '1px solid #fafafa',
                   flexShrink: 0,
                 }}
               >
                 {initials}
               </Avatar>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: 0 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25, minWidth: 0 }}>
                 <Typography
                   sx={{
                     color: 'text.primary',
@@ -450,7 +450,7 @@ function PTOCalendar() {
                     wordWrap: 'break-word',
                     lineHeight: 1,
                     fontSize: '0.875rem',
-                    fontWeight: 'bold',
+                    fontWeight: 'medium',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                   }}
@@ -485,10 +485,10 @@ function PTOCalendar() {
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: density === 'compact' ? 'column' : 'row',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 0.5,
+                gap: 0.75,
                 backgroundColor: isCurrent ? '#faf9fb' : 'transparent',
                 ...theme.applyStyles('dark', {
                   backgroundColor: isCurrent ? '#1e2429' : 'transparent',
@@ -496,26 +496,27 @@ function PTOCalendar() {
               }}
             >
               <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: 'bold',
-                  color: isCurrent ? '#3E63DD' : 'text.secondary',
-                  fontSize: '0.75rem',
-                  lineHeight: 1,
-                }}
-              >
-                {format(day, 'd')}
-              </Typography>
-              <Typography
                 variant="caption"
                 sx={{
                   color: isCurrent ? '#3E63DD' : 'text.secondary',
                   fontWeight: isCurrent ? 'bold' : 'medium',
-                  fontSize: '0.7rem',
+                  fontSize: '0.75rem',
+                  lineHeight: 1,
+                  textTransform: 'none',
+                }}
+              >
+                {format(day, density === 'compact' ? 'eee' : 'eeee')}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: 'medium',
+                  color: isCurrent ? '#3E63DD' : 'text.secondary',
+                  fontSize: '1rem',
                   lineHeight: 1,
                 }}
               >
-                {format(day, 'EEE')}
+                {format(day, 'd')}
               </Typography>
             </Box>
           ),
@@ -567,8 +568,8 @@ function PTOCalendar() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: isCurrent ? '#3E63DD' : 'text.secondary',
-                    fontWeight: 'bold',
-                    fontSize: '0.7rem',
+                    fontWeight: 'medium',
+                    fontSize: '0.75rem',
                   }}
                 >
                   {count > 0 ? count : '0'}
@@ -690,9 +691,9 @@ function PTOCalendar() {
           }}
           pageSizeOptions={[5]}
           checkboxSelection={false}
-          columnHeaderHeight={40}
+          columnHeaderHeight={50}
+          rowHeight={50}
           slots={{ toolbar: CalendarToolbar }}
-          getRowHeight={(params) => (params.model.id === 'summary' ? 40 : 50)}
           getCellClassName={(params) =>
             params.field === format(new Date(), 'yyyy-MM-dd') ? 'today' : ''
           }
@@ -919,11 +920,6 @@ function PTOCalendarContainer() {
               '&:focus-within': {
                 outline: 'none',
               },
-            },
-            columnHeaderTitleContainer: {
-              fontSize: '0.75rem',
-              textTransform: 'uppercase',
-              color: '#75758d',
             },
             'columnHeader--pinnedLeft': {
               padding: '0 16px',
