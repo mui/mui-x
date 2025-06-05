@@ -185,7 +185,7 @@ const rows = [
   },
   {
     id: 30,
-    path: ['Group & Pivot', 'Master-detail panels'],
+    path: ['Group & Pivot', 'Master-detail row panels'],
     plan: 'Pro',
     developed: false,
   },
