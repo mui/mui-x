@@ -8,9 +8,10 @@ export interface ChartsRendererProps {
   categories: { id: string; label: string; data: (string | number | null)[] }[];
   series: { id: string; label: string; data: (number | null)[] }[];
   chartType: string;
+  configuration: Record<string, any>;
 }
 
-function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) {
+function ChartsRenderer({ categories, series, chartType, configuration }: ChartsRendererProps) {
   const categoryData = categories[0]?.data || [];
 
   if (chartType === 'bar') {

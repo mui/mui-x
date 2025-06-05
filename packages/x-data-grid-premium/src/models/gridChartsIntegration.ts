@@ -2,9 +2,7 @@ export interface GridChartsIntegrationContextValue {
   categories: { id: string; label: string; data: (string | number | null)[] }[];
   series: { id: string; label: string; data: (number | null)[] }[];
   chartType: string;
-  configuration: {
-    [key: string]: any;
-  };
+  configuration: Record<string, any>;
   setCategories: (
     categories: { id: string; label: string; data: (string | number | null)[] }[],
   ) => void;

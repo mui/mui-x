@@ -64,12 +64,10 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   };
 };
 
-const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
+const EMPTY_CHART_INTEGRATION_CONTEXT: Partial<GridChartsIntegrationContextValue> = {
   categories: [],
   series: [],
   chartType: '',
-  configuration: {},
-  setConfiguration: () => {},
   setChartType: () => {},
   setCategories: () => {},
   setSeries: () => {},
@@ -89,8 +87,7 @@ export const useGridChartsIntegration = (
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
 
-  const { setConfiguration, setChartType, setCategories, setSeries } =
-    context || EMPTY_CHART_INTEGRATION_CONTEXT;
+  const { setChartType, setCategories, setSeries } = context || EMPTY_CHART_INTEGRATION_CONTEXT;
 
   apiRef.current.registerControlState({
     stateId: 'chartsConfigurationPanelOpen',
@@ -162,12 +159,6 @@ export const useGridChartsIntegration = (
       apiRef.current.setChartsConfigurationPanelOpen(props.chartsConfigurationPanelOpen);
     }
   }, [apiRef, props.chartsConfigurationPanelOpen]);
-
-  useEnhancedEffect(() => {
-    if (props.slotProps?.chartsConfigurationPanel?.schema !== undefined) {
-      setConfiguration(props.slotProps?.chartsConfigurationPanel?.schema);
-    }
-  }, [apiRef, props.slotProps?.chartsConfigurationPanel?.schema, setConfiguration, setChartType]);
 
   useEnhancedEffect(() => {
     setChartType(props.initialState?.chartsIntegration?.chartType || '');

@@ -4,7 +4,7 @@ import {
   DataGridPremium,
   GridChartsConfigurationPanel,
   GridChartsIntegrationContextProvider,
-  GridChartsRendererBridge,
+  GridChartsRendererProxy,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
@@ -46,7 +46,7 @@ export default function GridChartsIntegrationExample() {
             }}
           />
         </div>
-        <GridChartsRendererBridge renderer={ChartsRenderer} />
+        <GridChartsRendererProxy renderer={ChartsRenderer} />
       </div>
     </GridChartsIntegrationContextProvider>
   );

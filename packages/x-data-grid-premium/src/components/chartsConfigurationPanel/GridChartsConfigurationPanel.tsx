@@ -66,8 +66,7 @@ export interface GridChartsConfigurationPanelProps {
   schema?: Record<string, any>;
 }
 
-function GridChartsConfigurationPanel(props: GridChartsConfigurationPanelProps) {
-  const { schema } = props;
+function GridChartsConfigurationPanel() {
   const [activeTab, setActiveTab] = React.useState<'chartType' | 'data' | 'configuration'>(
     'chartType',
   );
@@ -119,7 +118,7 @@ function GridChartsConfigurationPanel(props: GridChartsConfigurationPanelProps) 
         </rootProps.slots.baseIconButton>
       </TabList>
       <TabPanel role="tabpanel" hidden={activeTab !== 'chartType'} aria-labelledby="chart-type-tab">
-        <GridChartTypeSelector schema={schema} />
+        <GridChartTypeSelector />
       </TabPanel>
       <TabPanel role="tabpanel" hidden={activeTab !== 'data'} aria-labelledby="data-tab">
         <GridChartsConfigurationPanelHeader
