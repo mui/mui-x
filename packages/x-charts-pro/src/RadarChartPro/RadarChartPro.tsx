@@ -9,6 +9,8 @@ import {
   RadarMetricLabels,
   RadarSeriesArea,
   RadarSeriesMarks,
+  RadarChartSlotProps,
+  RadarChartSlots,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
@@ -18,13 +20,38 @@ import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginsSignatures } from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+
+export interface RadarChartProSlots
+  extends Omit<RadarChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
+export interface RadarChartProSlotProps
+  extends Omit<RadarChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {}
 
 export interface RadarChartProProps
-  extends Omit<RadarChartProps, 'apiRef'>,
+  extends Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       RadarDataProviderProps<RadarChartProPluginsSignatures>,
       'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
-    > {}
+    > {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: RadarChartProSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: RadarChartProSlotProps;
+}
 
 /**
  * Demos:
