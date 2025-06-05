@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { configurationOptions } from './configuration';
 
 export interface ChartsRendererProps {
   categories: { id: string; label: string; data: (string | number | null)[] }[];
@@ -13,10 +14,21 @@ export interface ChartsRendererProps {
 
 function ChartsRenderer({ categories, series, chartType, configuration }: ChartsRendererProps) {
   const categoryData = categories[0]?.data || [];
+  const chartOptions = (configurationOptions as any)[chartType]?.customization || {};
+  const defaultOptions = Object.fromEntries(
+    Object.entries(chartOptions).map(([key, value]) => [key, (value as any).default]),
+  );
+
+  // merge passed options with the defaults
+  const chartConfiguration = React.useMemo(() => {
+    return {
+      ...defaultOptions,
+      ...configuration,
+    };
+  }, [defaultOptions, configuration]);
 
   if (chartType === 'bar') {
-    // TODO: instead of returning charts directly, each chart can have a helper that will get the configuration and set the props (and add the defaults)
-    return <BarChart xAxis={[{ data: categoryData }]} series={series} height={350} />;
+    return <BarChart xAxis={[{ data: categoryData }]} series={series} {...chartConfiguration} />;
   }
 
   if (chartType === 'line') {
@@ -25,7 +37,7 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
         xAxis={[{ data: categoryData, scaleType: 'point' }]}
         yAxis={[{ min: 0 }]}
         series={series}
-        height={350}
+        {...chartConfiguration}
       />
     );
   }
@@ -35,17 +47,14 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
       <PieChart
         series={[
           {
-            // TODO: should not be here
             data: series[0]?.data.map((item, index) => ({
               id: index,
               value: item || 0,
               label: String(categories[0].data[index]),
             })),
-            outerRadius: 120,
+            outerRadius: chartConfiguration.outerRadius,
           },
         ]}
-        width={350}
-        height={350}
         slotProps={{
           legend: {
             direction: 'horizontal',
@@ -55,6 +64,7 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
             },
           },
         }}
+        {...chartConfiguration}
       />
     );
   }
@@ -67,8 +77,15 @@ ChartsRenderer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])).isRequired,
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
   chartType: PropTypes.string.isRequired,
+  configuration: PropTypes.object.isRequired,
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
