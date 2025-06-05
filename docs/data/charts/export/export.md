@@ -10,21 +10,21 @@ components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, Ra
 
 Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `PieChartPro />`, `<Heatmap />`, `<FunnelChart />` and `<RadarChartPro />`.
 
-## Print/Export as PDF
+// TODO: Explain the options available for the export
 
-The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open the browser's print dialog.
+## Overview
 
-The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
+Charts can be exported using the browser's native print dialog or as an image.
 
-{{"demo": "PrintChart.js"}}
+To enable this functionality, you need to enable the chart's toolbar by passing the `showToolbar` prop to the chart component.
 
-## Export as image
+The toolbar will then display an "Export" button that opens a menu with the export options.
 
-The `apiRef` prop also exposes a `exportAsImage()` method to export the chart as an image.
+{{"demo": "ExportChartToolbar.js"}}
 
-### Dependency
+### Image export
 
-For `exportAsImage()` to work, you need to add the`rasterizehtml` npm dependency in your project.
+For image export to work, you need to add the `rasterizehtml` npm dependency in your project.
 
 <codeblock storageKey="package-manager">
 
@@ -42,7 +42,48 @@ yarn add rasterizehtml
 
 </codeblock>
 
-### Usage
+### Customization
+
+You can customize the export options by passing export options to the chart's toolbar `slotProps`.
+
+For example, you can set the file name for the exported image, or add more image export formats (depending on browser support), and hide certain export options.
+
+{{"demo": "ExportChartToolbarCustomization.js"}}
+
+Bear in mind that adding image formats that are not supported by the browser will result in the export defaulting to PNG.
+
+## Composition
+
+As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
+
+When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
+As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
+
+If you want to use a custom wrapper element, you need to use the `useChartRootRef()` hook to set the reference to the chart's root element so that exporting works properly, as exemplified below.
+
+{{"demo": "ExportCompositionNoSnap.js"}}
+
+## Imperative API
+
+### Print/Export as PDF
+
+The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open the browser's print dialog.
+
+The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
+
+{{"demo": "PrintChart.js"}}
+
+### Export as image
+
+The `apiRef` prop also exposes a `exportAsImage()` method to export the chart as an image.
+
+:::warning
+Image export requires the `rasterizehtml` npm dependency to be installed in your project.
+
+Follow the installation instructions [here](#image-export).
+:::
+
+#### Usage
 
 The function accepts an options object with the `type` property, which specifies the image format. The available formats are:
 
@@ -55,14 +96,3 @@ Additionally, for lossy formats such as `image/jpeg` and `image/webp`, the optio
 The default value is 0.9.
 
 {{"demo": "ExportChartAsImage.js"}}
-
-## Composition
-
-As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
-
-When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
-As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
-
-If you want to use a custom wrapper element, you need to use the `useChartRootRef()` hook to set the reference to the chart's root element so that exporting works properly, as exemplified below.
-
-{{"demo": "ExportCompositionNoSnap.js"}}
