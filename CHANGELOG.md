@@ -208,7 +208,6 @@ Same changes as in `@mui/x-tree-view@8.5.0`.
 
 ### Docs
 
-- [docs] Update `valueFormatter` signature in migration guide (#18226) @michelengelen
 - [docs] Fix derived column pivoting demo crash (#17944) @arminmeh
 - [docs] Fix light/dark mode blink on pickers overview (#18002) @alexfauquette
 - [docs] Fix scatter shape demo causing horizontal overflow (#17974) @bernardobelchior
