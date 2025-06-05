@@ -18,8 +18,8 @@ const ZoomSliderTrack = styled('rect', {
 })<{ axisDirection: 'x' | 'y'; isSelecting: boolean }>(({ theme }) => ({
   fill:
     theme.palette.mode === 'dark'
-      ? (theme.vars || theme).palette.grey[800]
-      : (theme.vars || theme).palette.grey[300],
+      ? (theme.vars || theme).palette.grey[900]
+      : (theme.vars || theme).palette.grey[200],
   cursor: 'pointer',
   variants: [
     {

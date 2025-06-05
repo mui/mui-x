@@ -1,7 +1,7 @@
-export const ZOOM_SLIDER_TRACK_SIZE = 8;
-export const ZOOM_SLIDER_ACTIVE_TRACK_SIZE = 10;
-export const ZOOM_SLIDER_THUMB_HEIGHT = 20;
-export const ZOOM_SLIDER_THUMB_WIDTH = 10;
+export const ZOOM_SLIDER_TRACK_SIZE = 14;
+export const ZOOM_SLIDER_ACTIVE_TRACK_SIZE = 14;
+export const ZOOM_SLIDER_THUMB_HEIGHT = 10;
+export const ZOOM_SLIDER_THUMB_WIDTH = 3;
 
 export const ZOOM_SLIDER_SIZE = Math.max(
   ZOOM_SLIDER_TRACK_SIZE,

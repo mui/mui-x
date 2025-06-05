@@ -10,7 +10,7 @@ import {
   ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { ZOOM_SLIDER_SIZE, ZOOM_SLIDER_TRACK_SIZE } from './constants';
+import { ZOOM_SLIDER_SIZE, ZOOM_SLIDER_THUMB_WIDTH, ZOOM_SLIDER_TRACK_SIZE } from './constants';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderTrack } from './ChartAxisZoomSliderTrack';
 import { ChartAxisZoomSliderActiveTrack } from './ChartAxisZoomSliderActiveTrack';
@@ -93,8 +93,8 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         y={axisDirection === 'x' ? backgroundRectOffset : 0}
         height={axisDirection === 'x' ? ZOOM_SLIDER_TRACK_SIZE : drawingArea.height}
         width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_TRACK_SIZE}
-        rx={ZOOM_SLIDER_TRACK_SIZE / 2}
-        ry={ZOOM_SLIDER_TRACK_SIZE / 2}
+        rx={ZOOM_SLIDER_THUMB_WIDTH}
+        ry={ZOOM_SLIDER_THUMB_WIDTH}
         axisId={axisId}
         axisDirection={axisDirection}
         reverse={reverse}
