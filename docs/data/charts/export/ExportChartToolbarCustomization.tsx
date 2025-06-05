@@ -138,7 +138,6 @@ export default function ExportChartToolbarCustomization() {
         grid={{ horizontal: true }}
         slotProps={{
           toolbar: {
-            // TODO: Fix toolbar props not being typed with charts toolbar pro props
             printOptions: { disableToolbarButton: !formats.print, fileName },
             imageExportOptions,
           },

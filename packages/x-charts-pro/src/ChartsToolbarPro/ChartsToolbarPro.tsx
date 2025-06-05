@@ -26,7 +26,7 @@ import {
   ChartsToolbarImageExportTrigger,
 } from './ChartsToolbarImageExportTrigger';
 
-interface ChartsToolbarProProps extends ChartsToolbarProps {
+export interface ChartsToolbarProProps extends ChartsToolbarProps {
   printOptions?: ChartsToolbarPrintExportOptions;
   imageExportOptions?: ChartsToolbarImageExportOptions[];
 }

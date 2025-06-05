@@ -10,8 +10,6 @@ components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, Ra
 
 Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `PieChartPro />`, `<Heatmap />`, `<FunnelChart />` and `<RadarChartPro />`.
 
-// TODO: Explain the options available for the export
-
 ## Overview
 
 Charts can be exported using the browser's native print dialog or as an image.
