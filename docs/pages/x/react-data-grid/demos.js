@@ -14,6 +14,9 @@ export default function Page() {
           mx: 'auto',
           maxWidth: 'xl',
         },
+        '& .MuiDocs-footer-block': {
+          display: 'none',
+        },
       }}
       disableToc
       disableAd

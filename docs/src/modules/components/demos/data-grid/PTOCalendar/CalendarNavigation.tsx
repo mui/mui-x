@@ -14,7 +14,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useCalendarContext } from './CalendarContext';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { format } from 'date-fns';
-import { ToolbarButton } from '@mui/x-data-grid';
+import { ToolbarButton } from '@mui/x-data-grid-premium';
+import { CalendarSearch } from './CalendarSearch';
 
 function ButtonField(props: any) {
   const { forwardedProps } = useSplitFieldProps(props, 'date');
@@ -49,6 +50,7 @@ function CalendarNavigation() {
 
   return (
     <Box sx={{ display: 'flex', gap: 1 }}>
+      <CalendarSearch />
       <ToolbarButton
         onClick={() => handleDateChange(new Date())}
         render={

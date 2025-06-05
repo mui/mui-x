@@ -1,18 +1,18 @@
 import React, { useMemo, useEffect } from 'react';
-import { createTheme, Theme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import {
-  DataGridPro,
+  DataGridPremium,
   GridColDef,
   GridRenderCellParams,
   GridPinnedRowsProp,
   useGridApiContext,
   useGridSelector,
   gridFilteredRowCountSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import Cake from '@mui/icons-material/Cake';
 import BeachAccessOutlined from '@mui/icons-material/BeachAccessOutlined';
 import DeviceThermostatOutlined from '@mui/icons-material/DeviceThermostatOutlined';
@@ -25,7 +25,7 @@ import { HolidayData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
 import { FILTER_COLORS } from './constants';
-import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-data-grid-premium/themeAugmentation';
 
 interface RowData {
   id: number;
@@ -659,13 +659,13 @@ function PTOCalendar() {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          height: 800,
+          height: '100%',
           ...theme.applyStyles('dark', {
             backgroundColor: '#141A1F',
           }),
         }}
       >
-        <DataGridPro
+        <DataGridPremium
           pinnedRows={pinnedRow}
           rows={rows}
           columns={columns}

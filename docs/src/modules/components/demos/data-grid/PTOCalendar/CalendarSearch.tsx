@@ -8,7 +8,7 @@ import {
   QuickFilterControl,
   QuickFilterTrigger,
   ToolbarButton,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import InputAdornment from '@mui/material/InputAdornment';
 import { styled } from '@mui/material/styles';
 

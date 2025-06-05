@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
 import AccountBalance from '@mui/icons-material/AccountBalance';
-import Inventory2 from '@mui/icons-material/Inventory2';
+import Box from '@mui/material/Box';
 
 const DEMOS: { name: string; icon: React.ReactNode; component: React.ComponentType<any> }[] = [
   {
@@ -16,14 +16,9 @@ const DEMOS: { name: string; icon: React.ReactNode; component: React.ComponentTy
     component: PTOCalendar,
   },
   {
-    name: 'Financial',
+    name: 'Stocks',
     icon: <AccountBalance fontSize="small" />,
     component: () => <div>Financial</div>,
-  },
-  {
-    name: 'Inventory',
-    icon: <Inventory2 fontSize="small" />,
-    component: () => <div>Inventory</div>,
   },
 ];
 
@@ -74,7 +69,13 @@ export default function Demos() {
           ))}
         </StyledToggleButtonGroup>
       </Paper>
-      {selectedDemo && <selectedDemo.component />}
+      <Box
+        sx={{
+          height: 'calc(100vh - 320px)', // TODO: Find a way to fill height without magic number
+        }}
+      >
+        {selectedDemo && <selectedDemo.component />}
+      </Box>
     </Stack>
   );
 }

@@ -3,9 +3,8 @@ import { FilterChips } from './FilterChips';
 import { useCalendarContext } from './CalendarContext';
 import Typography from '@mui/material/Typography';
 import { CalendarNavigation } from './CalendarNavigation';
-import { CalendarSearch } from './CalendarSearch';
 import { CalendarDensity } from './CalendarDensity';
-import { Toolbar } from '@mui/x-data-grid';
+import { Toolbar } from '@mui/x-data-grid-premium';
 import { styled } from '@mui/material/styles';
 
 const StyledToolbar = styled(Toolbar)({
@@ -58,7 +57,6 @@ function CalendarToolbar() {
           onFilterRemove={handleFilterRemove}
           onFilterAdd={handleFilterAdd}
         />
-        <CalendarSearch />
         <CalendarNavigation />
       </Stack>
     </StyledToolbar>

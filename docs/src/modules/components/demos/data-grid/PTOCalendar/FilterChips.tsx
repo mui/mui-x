@@ -1,6 +1,6 @@
 import React from 'react';
 import Stack from '@mui/material/Stack';
-import { ToolbarButton } from '@mui/x-data-grid-pro';
+import { ToolbarButton } from '@mui/x-data-grid-premium';
 import Chip from '@mui/material/Chip';
 import { FilterType } from './types/pto';
 import { FILTER_OPTIONS, FILTER_LABELS, FILTER_COLORS } from './constants';

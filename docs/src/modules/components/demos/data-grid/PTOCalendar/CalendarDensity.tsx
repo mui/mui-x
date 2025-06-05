@@ -2,7 +2,7 @@ import React from 'react';
 import { useCalendarContext } from './CalendarContext';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { ToolbarButton } from '@mui/x-data-grid-pro';
+import { ToolbarButton } from '@mui/x-data-grid-premium';
 
 function CalendarDensity() {
   const { density, setDensity } = useCalendarContext();
