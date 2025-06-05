@@ -159,23 +159,32 @@ export class Linear implements CurveGenerator {
       const isLastSection = this.position === this.sections - 1;
       const isFirstSection = this.position === 0;
 
+      let firstPoint: Point | null = null;
+      let secondPoint: Point | null = null;
+
       if (isFirstSection && this.isIncreasing) {
-        this.points = [
-          this.isHorizontal
-            ? { x: this.max.x + this.gap, y: (this.max.y + this.min.y) / 2 }
-            : { x: (this.max.x + this.min.x) / 2, y: this.max.y + this.gap },
-          this.points[1],
-          this.points[2],
-        ];
+        firstPoint = this.points[1];
+        secondPoint = this.points[2];
       }
 
       if (isLastSection && !this.isIncreasing) {
+        firstPoint = this.points[3];
+        secondPoint = this.points[0];
+      }
+
+      if (firstPoint && secondPoint) {
         this.points = [
-          this.points[0],
+          // Sharp point at the start
           this.isHorizontal
-            ? { x: this.max.x - this.gap, y: (this.max.y + this.min.y) / 2 }
-            : { x: (this.max.x + this.min.x) / 2, y: this.max.y - this.gap },
-          this.points[3],
+            ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+          // Then other points
+          this.isHorizontal
+            ? { x: firstPoint.x, y: firstPoint.y - this.gap / 2 }
+            : { x: firstPoint.x + this.gap / 2, y: firstPoint.y },
+          this.isHorizontal
+            ? { x: secondPoint.x, y: secondPoint.y + this.gap / 2 }
+            : { x: secondPoint.x - this.gap / 2, y: secondPoint.y },
         ];
       }
     }
