@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { GridTreeNode, GridRowId } from '../gridRows';
-import { GridPrivateApiCommunity } from '../api/gridApiCommunity';
 import { RefObject } from '@mui/x-internals/types';
+import { GridTreeNode, GridRowId } from '../gridRows';
 
 /**
  * Get the ARIA attributes for a row
@@ -21,8 +20,8 @@ export interface GridRowAriaAttributesInternalHook {
 /**
  * Overridable row methods interface, these methods could be overriden in a higher package.
  */
-export interface GridRowsOverridableMethodsInternalHook {
-  useGridRowsOverridableMethods: (apiRef: RefObject<GridPrivateApiCommunity>) => {
+export interface GridRowsOverridableMethodsInternalHook<Api> {
+  useGridRowsOverridableMethods: (apiRef: RefObject<Api>) => {
     setRowIndex: (rowId: GridRowId, targetIndex: number) => void;
   };
 }

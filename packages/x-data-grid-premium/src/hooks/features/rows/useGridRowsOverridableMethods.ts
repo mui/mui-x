@@ -5,8 +5,8 @@ import {
   gridRowNodeSelector,
   gridSortedRowIdsSelector,
 } from '@mui/x-data-grid';
-import { GridPrivateApiPremium } from '@mui/x-data-grid-premium/models/gridApiPremium';
 import { RefObject } from '@mui/x-internals/types';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPremium>) => {
   const setRowIndex = React.useCallback(
@@ -157,16 +157,40 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           const updatedSourceChildren = [...sourceChildren].filter((row) => row !== sourceRowId);
           const updatedTargetChildren = [sourceRowId, ...targetChildren];
 
+          let sourceGroupRemoved = false;
+          const updatedTree = { ...state.rows.tree };
+          if (updatedSourceChildren.length === 0) {
+            delete updatedTree[sourceGroup.id];
+            sourceGroupRemoved = true;
+          }
+
+          const sourceGroupParent = gridRowTreeSelector(apiRef)[
+            sourceGroup.parent!
+          ] as GridGroupNode;
+
           return {
             ...state,
             rows: {
               ...state.rows,
+              totalTopLevelRowCount:
+                state.rows.totalTopLevelRowCount - (sourceGroupRemoved ? 1 : 0),
               tree: {
-                ...state.rows.tree,
-                [sourceNode.parent!]: {
-                  ...sourceGroup,
-                  children: updatedSourceChildren,
-                },
+                ...updatedTree,
+                ...(sourceGroupRemoved
+                  ? {
+                      [sourceGroupParent.id]: {
+                        ...sourceGroupParent,
+                        children: sourceGroupParent.children.filter(
+                          (childId) => childId !== sourceGroup.id,
+                        ),
+                      },
+                    }
+                  : {
+                      [sourceNode.parent!]: {
+                        ...sourceGroup,
+                        children: updatedSourceChildren,
+                      },
+                    }),
                 [targetNode.id]: {
                   ...targetNode,
                   childrenExpanded: true,

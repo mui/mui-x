@@ -37,7 +37,7 @@ import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRow
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPremium> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
@@ -85,7 +85,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     ) : null;
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}

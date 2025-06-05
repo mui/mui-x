@@ -4,7 +4,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   GridRenderCellParams,
   GridRowEventLookup,
-  gridRowMaximumTreeDepthSelector,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
@@ -34,18 +33,18 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   // eslint-disable-next-line no-underscore-dangle
   const cellValue = params.row.__reorder__ || params.id;
 
-  // TODO: remove sortModel and treeDepth checks once row reorder is compatible
+  // TODO: remove sortModel and treeData checks once row reorder is compatible
   const isDraggable = React.useMemo(
     () =>
       !!rootProps.rowReordering &&
       !sortModel.length &&
+      !rootProps.treeData &&
       Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
+    [rootProps.rowReordering, sortModel, rootProps.treeData, editRowsState],
   );
 
   const ownerState = { isDraggable, classes: rootProps.classes };

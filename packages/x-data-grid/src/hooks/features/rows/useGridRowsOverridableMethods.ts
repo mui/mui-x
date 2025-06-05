@@ -1,9 +1,8 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridRowId, GridGroupNode } from '../../../models/gridRows';
-import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowTreeSelector, gridRowNodeSelector } from './gridRowsSelector';
 import { GRID_ROOT_GROUP_ID } from './gridRowsUtils';
-import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCommunity>) => {
