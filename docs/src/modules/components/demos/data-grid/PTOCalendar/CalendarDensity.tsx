@@ -2,6 +2,7 @@ import React from 'react';
 import { useCalendarContext } from './CalendarContext';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import { ToolbarButton } from '@mui/x-data-grid-pro';
 
 function CalendarDensity() {
   const { density, setDensity } = useCalendarContext();
@@ -12,8 +13,8 @@ function CalendarDensity() {
       size="small"
       exclusive
     >
-      <ToggleButton value="compact">Compact</ToggleButton>
-      <ToggleButton value="comfortable">Comfortable</ToggleButton>
+      <ToolbarButton render={<ToggleButton value="compact">Compact</ToggleButton>} />
+      <ToolbarButton render={<ToggleButton value="comfortable">Comfortable</ToggleButton>} />
     </ToggleButtonGroup>
   );
 }

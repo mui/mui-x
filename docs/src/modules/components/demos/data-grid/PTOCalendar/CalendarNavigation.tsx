@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
+import Tooltip from '@mui/material/Tooltip';
 import {
   DatePicker,
   LocalizationProvider,
@@ -83,12 +84,16 @@ function CalendarNavigation() {
         />
       </LocalizationProvider>
       <Box sx={{ display: 'flex' }}>
-        <ToolbarButton size="small" onClick={handlePreviousMonth}>
-          <ChevronLeft />
-        </ToolbarButton>
-        <ToolbarButton size="small" onClick={handleNextMonth}>
-          <ChevronRight />
-        </ToolbarButton>
+        <Tooltip title="Previous month">
+          <ToolbarButton size="small" onClick={handlePreviousMonth}>
+            <ChevronLeft />
+          </ToolbarButton>
+        </Tooltip>
+        <Tooltip title="Next month">
+          <ToolbarButton size="small" onClick={handleNextMonth}>
+            <ChevronRight />
+          </ToolbarButton>
+        </Tooltip>
       </Box>
     </Box>
   );

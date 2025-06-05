@@ -1,5 +1,6 @@
 import React from 'react';
 import Stack from '@mui/material/Stack';
+import { ToolbarButton } from '@mui/x-data-grid-pro';
 import Chip from '@mui/material/Chip';
 import { FilterType } from './types/pto';
 import { FILTER_OPTIONS, FILTER_LABELS, FILTER_COLORS } from './constants';
@@ -23,32 +24,36 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
       {FILTER_OPTIONS.map((filter) => {
         const isActive = activeFilters.includes(filter);
         return (
-          <Chip
+          <ToolbarButton
             key={filter}
-            label={FILTER_LABELS[filter]}
             onClick={!isActive ? () => onFilterAdd(filter) : () => onFilterRemove(filter)}
-            icon={isActive ? <Check fontSize="small" /> : undefined}
-            color={isActive ? 'primary' : 'default'}
-            variant={isActive ? 'filled' : 'outlined'}
-            sx={{
-              '&.MuiChip-filled': {
-                backgroundColor: FILTER_COLORS[filter].background,
-                color: FILTER_COLORS[filter].text,
-                border: `1px solid ${FILTER_COLORS[filter].border}`,
-                ...theme.applyStyles('dark', {
-                  backgroundColor: FILTER_COLORS[filter].dark.background,
-                  color: FILTER_COLORS[filter].dark.text,
-                  borderColor: FILTER_COLORS[filter].dark.border,
-                }),
-                '& .MuiChip-deleteIcon': {
-                  color: FILTER_COLORS[filter].text,
-                },
-              },
-              '&.MuiChip-outlined': {
-                borderColor: FILTER_COLORS[filter].border,
-                color: FILTER_COLORS[filter].text,
-              },
-            }}
+            render={
+              <Chip
+                label={FILTER_LABELS[filter]}
+                icon={isActive ? <Check fontSize="small" /> : undefined}
+                color={isActive ? 'primary' : 'default'}
+                variant={isActive ? 'filled' : 'outlined'}
+                sx={{
+                  '&.MuiChip-filled': {
+                    backgroundColor: FILTER_COLORS[filter].background,
+                    color: FILTER_COLORS[filter].text,
+                    border: `1px solid ${FILTER_COLORS[filter].border}`,
+                    ...theme.applyStyles('dark', {
+                      backgroundColor: FILTER_COLORS[filter].dark.background,
+                      color: FILTER_COLORS[filter].dark.text,
+                      borderColor: FILTER_COLORS[filter].dark.border,
+                    }),
+                    '& .MuiChip-deleteIcon': {
+                      color: FILTER_COLORS[filter].text,
+                    },
+                  },
+                  '&.MuiChip-outlined': {
+                    borderColor: FILTER_COLORS[filter].border,
+                    color: FILTER_COLORS[filter].text,
+                  },
+                }}
+              />
+            }
           />
         );
       })}
