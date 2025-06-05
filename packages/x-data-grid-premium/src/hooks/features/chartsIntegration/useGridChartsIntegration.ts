@@ -101,12 +101,13 @@ export const useGridChartsIntegration = (
   });
 
   const handleDataUpdate = React.useCallback(() => {
-    const columns = gridColumnLookupSelector(apiRef);
+    const columns = Object.values(gridColumnLookupSelector(apiRef));
     const rows = Object.values(gridFilteredSortedRowEntriesSelector(apiRef)).map((r) => r.model);
 
     const selectedSeries = gridChartsSeriesSelector(apiRef);
-    const category = gridChartsCategoriesSelector(apiRef)[0];
-    const series = Object.values(columns).find((c) => c.field === selectedSeries[0]);
+    const selectedCategories = gridChartsCategoriesSelector(apiRef);
+    const series = columns.find((c) => c.field === selectedSeries[0]);
+    const category = columns.find((c) => c.field === selectedCategories[0]);
 
     if (!category || !series) {
       setCategories([]);
@@ -114,7 +115,13 @@ export const useGridChartsIntegration = (
       return;
     }
 
-    setCategories(rows.map((r) => r[category]));
+    setCategories([
+      {
+        id: category.field,
+        label: category.headerName || category.field,
+        data: rows.map((r) => r[category.field]),
+      },
+    ]);
     setSeries([
       {
         id: series.field,

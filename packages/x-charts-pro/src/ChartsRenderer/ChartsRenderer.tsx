@@ -5,35 +5,25 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 export interface ChartsRendererProps {
-  categories: string[];
-  series: Array<{ id: string; label: string; data: (number | null)[] }>;
+  categories: { id: string; label: string; data: (string | number | null)[] }[];
+  series: { id: string; label: string; data: (number | null)[] }[];
   chartType: string;
 }
 
 function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) {
+  const categoryData = categories[0]?.data || [];
+
   if (chartType === 'bar') {
     // TODO: instead of returning charts directly, each chart can have a helper that will get the configuration and set the props (and add the defaults)
-    return (
-      <BarChart
-        xAxis={[{ data: categories }]}
-        series={series.map((s) => ({
-          data: s.data,
-          label: s.label,
-        }))}
-        height={350}
-      />
-    );
+    return <BarChart xAxis={[{ data: categoryData }]} series={series} height={350} />;
   }
 
   if (chartType === 'line') {
     return (
       <LineChart
-        xAxis={[{ data: categories, scaleType: 'point' }]}
+        xAxis={[{ data: categoryData, scaleType: 'point' }]}
         yAxis={[{ min: 0 }]}
-        series={series.map((s) => ({
-          data: s.data,
-          label: s.label,
-        }))}
+        series={series}
         height={350}
       />
     );
@@ -48,7 +38,7 @@ function ChartsRenderer({ categories, series, chartType }: ChartsRendererProps) 
             data: series[0]?.data.map((item, index) => ({
               id: index,
               value: item || 0,
-              label: categories[index],
+              label: categories[index].label,
             })),
             outerRadius: 120,
           },
