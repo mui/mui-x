@@ -11,11 +11,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jun 5, 2025_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 📚 Documentation improvements
 - 🌎 Improve Portuguese (ptPT) translations on the Data Grid
-- 🌎 Improve Portuguese (ptPT) translations on Charts
+- 🌎 Improve Portuguese (ptPT, ptBR) translations on Charts
 - 🌎 Improve Arabic (ar-SD) locale
 - 🐞 Bugfixes
 
@@ -74,6 +74,7 @@ Same changes as in `@mui/x-charts@8.5.1`, plus:
 - [charts-pro] Fix initial render for zoom slider selection (#18208) @bernardobelchior
 - [charts-pro] Fix props being passed to DOM in FunnelChart (#18192) @JCQuintas
 - [charts-pro] Show axis value in zoom slider tooltip (#18054) @bernardobelchior
+- [charts-pro] Render the toolbar in the heatmap chart (#18247) @bernardobelchior 
 
 ### Tree View
 
@@ -101,7 +102,7 @@ Same changes as in `@mui/x-tree-view@8.5.1`.
 - [code-infra] Replace `mocha` with `vitest` on e2e and regression tests (#18071) @JCQuintas
 - [code-infra] Upgrade @mui/internal-test-utils (#18191) @JCQuintas
 - [code-infra] Use vitest for `no-direct-state-access` tests (#18209) @JCQuintas
-- [data-grid] Use `useComponentRenderer` from x-internals (#18203) @bernardobelchior
+- [DataGrid] Use `useComponentRenderer` from x-internals (#18203) @bernardobelchior
 - [infra] Improve test setup (#18228) @LukasTy
 - [infra] Update bug and feature request templates to standardize label types (#18198) @michelengelen
 - [infra] Use `playwright` docker image (#18186) @LukasTy
