@@ -10,9 +10,10 @@ import FormGroup from '@mui/material/FormGroup';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
 import { inflationData } from './inflationData';
-import { populationGdpPerCapitaData } from './populationGdpPerCapitaData';
-
-// TODO: Categorize countries by continent
+import {
+  continents,
+  populationGdpPerCapitaData,
+} from './populationGdpPerCapitaData';
 
 const populationFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
@@ -23,21 +24,20 @@ const gdpPerCapitaFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
 });
 
-const series = [
-  {
-    data: populationGdpPerCapitaData.map((p) => ({
-      x: p.population,
-      y: p.gdpPerCapita,
-      id: p.country,
-    })),
-    valueFormatter: (value) =>
-      `${value.id}: ${populationFormatter.format(value.x)} people, ${gdpPerCapitaFormatter.format(value.y)} GDP per capita`,
-    highlightScope: {
-      highlight: 'item',
-      fade: 'global',
-    },
+const series = continents.map((continent) => ({
+  label: continent,
+  data: populationGdpPerCapitaData[continent].map((p) => ({
+    x: p.population,
+    y: p.gdpPerCapita,
+    id: p.country,
+  })),
+  valueFormatter: (value) =>
+    `${value.id}: ${populationFormatter.format(value.x)} people, ${gdpPerCapitaFormatter.format(value.y)} GDP per capita`,
+  highlightScope: {
+    highlight: 'item',
+    fade: 'global',
   },
-];
+}));
 
 const fileName = 'Population_vs_GDP_Per_Capita_USD_2019';
 
