@@ -18,11 +18,12 @@ export default mergeConfig(sharedConfig, {
                   wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
                 },
               }
-            : {}),
-          launch: {
-            // Required for tests which use scrollbars.
-            ignoreDefaultArgs: ['--hide-scrollbars'],
-          },
+            : {
+                launch: {
+                  // Required for tests which use scrollbars.
+                  ignoreDefaultArgs: ['--hide-scrollbars'],
+                },
+              }),
         },
       ],
     },
