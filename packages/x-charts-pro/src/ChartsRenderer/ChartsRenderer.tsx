@@ -39,7 +39,7 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
             data: series[0]?.data.map((item, index) => ({
               id: index,
               value: item || 0,
-              label: categories[index].label,
+              label: String(categories[0].data[index]),
             })),
             outerRadius: 120,
           },
