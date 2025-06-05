@@ -79,6 +79,13 @@ export default defineConfig({
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
+      orchestratorScripts: [
+        {
+          id: 'vitest-reload-on-error',
+          content: `window.addEventListener('vite:preloadError', (event) => { window.location.reload(); });`,
+          async: true,
+        },
+      ],
     },
     // Disable isolation to speed up the tests.
     isolate: false,
