@@ -18,7 +18,7 @@ export function GridChartsConfigurationForm() {
   const { chartType, configuration, setConfiguration } = useGridChartsIntegrationContext();
 
   const options = React.useMemo(() => {
-    return rootProps.slotProps?.chartsConfigurationPanel?.schema?.[chartType].customization || {};
+    return rootProps.slotProps?.chartsConfigurationPanel?.schema?.[chartType]?.customization || {};
   }, [rootProps.slotProps?.chartsConfigurationPanel?.schema, chartType]);
 
   const handleChange = (field: string, value: any) => {
