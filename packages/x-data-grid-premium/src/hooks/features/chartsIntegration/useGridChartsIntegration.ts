@@ -109,6 +109,8 @@ export const useGridChartsIntegration = (
     const series = Object.values(columns).find((c) => c.field === selectedSeries[0]);
 
     if (!category || !series) {
+      setCategories([]);
+      setSeries([]);
       return;
     }
 
@@ -232,6 +234,14 @@ export const useGridChartsIntegration = (
       if (targetSection === 'series' && columns[field].type !== 'number') {
         return;
       }
+
+      console.log('updateDataReference', {
+        field,
+        originSection,
+        targetSection,
+        targetField,
+        placementRelativeToTargetField,
+      });
 
       if (originSection) {
         const method = originSection === 'categories' ? updateCategories : updateSeries;
