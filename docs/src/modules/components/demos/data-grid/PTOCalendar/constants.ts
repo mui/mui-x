@@ -39,10 +39,9 @@ export const FILTER_COLORS = {
   },
 };
 
-export const DEMO_YEAR = 2025;
-export const DEMO_MONTH = 4;
+const currentYear = new Date().getFullYear();
 
 export const DATE_CONSTRAINTS = {
-  minDate: new Date(DEMO_YEAR, 0, 1),
-  maxDate: new Date(DEMO_YEAR, 11, 31),
+  minDate: new Date(currentYear, 0, 1),
+  maxDate: new Date(currentYear, 11, 31),
 };

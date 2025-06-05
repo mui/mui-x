@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { addMonths, subMonths } from 'date-fns';
 import { FilterType } from '../types/pto';
-import { DATE_CONSTRAINTS, DEMO_YEAR } from '../constants';
-import { isWithinDemoYear } from '../utils/dateUtils';
+import { DATE_CONSTRAINTS } from '../constants';
 
 export const useCalendarState = () => {
   const [density, setDensity] = React.useState<'compact' | 'comfortable'>('compact');
-  const [currentDate, setCurrentDate] = React.useState(new Date(DEMO_YEAR, 4, 1));
+  const [currentDate, setCurrentDate] = React.useState(new Date());
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
   const [activeFilters, setActiveFilters] = React.useState<FilterType[]>([
     'holidays',
@@ -15,21 +14,21 @@ export const useCalendarState = () => {
   ]);
 
   const handlePreviousMonth = React.useCallback(() => {
-    const newDate = subMonths(currentDate, 1);
-    if (isWithinDemoYear(newDate)) {
-      setCurrentDate(newDate);
-    }
-  }, [currentDate]);
+    setCurrentDate((prev) => {
+      const newDate = subMonths(prev, 1);
+      return newDate >= DATE_CONSTRAINTS.minDate ? newDate : prev;
+    });
+  }, []);
 
   const handleNextMonth = React.useCallback(() => {
-    const newDate = addMonths(currentDate, 1);
-    if (isWithinDemoYear(newDate)) {
-      setCurrentDate(newDate);
-    }
-  }, [currentDate]);
+    setCurrentDate((prev) => {
+      const newDate = addMonths(prev, 1);
+      return newDate <= DATE_CONSTRAINTS.maxDate ? newDate : prev;
+    });
+  }, []);
 
   const handleDateChange = React.useCallback((newDate: Date | null) => {
-    if (newDate && isWithinDemoYear(newDate)) {
+    if (newDate && newDate >= DATE_CONSTRAINTS.minDate && newDate <= DATE_CONSTRAINTS.maxDate) {
       setCurrentDate(newDate);
       setIsDatePickerOpen(false);
     }
@@ -43,35 +42,18 @@ export const useCalendarState = () => {
     setActiveFilters((prev) => [...prev, filter]);
   }, []);
 
-  const value = React.useMemo(
-    () => ({
-      currentDate,
-      density,
-      isDatePickerOpen,
-      activeFilters,
-      dateConstraints: DATE_CONSTRAINTS,
-      setDensity,
-      setIsDatePickerOpen,
-      handleFilterRemove,
-      handleFilterAdd,
-      handleDateChange,
-      handleNextMonth,
-      handlePreviousMonth,
-    }),
-    [
-      currentDate,
-      isDatePickerOpen,
-      activeFilters,
-      density,
-      setDensity,
-      setIsDatePickerOpen,
-      handleFilterRemove,
-      handleFilterAdd,
-      handleDateChange,
-      handleNextMonth,
-      handlePreviousMonth,
-    ],
-  );
-
-  return value;
+  return {
+    density,
+    setDensity,
+    currentDate,
+    isDatePickerOpen,
+    setIsDatePickerOpen,
+    activeFilters,
+    dateConstraints: DATE_CONSTRAINTS,
+    handlePreviousMonth,
+    handleNextMonth,
+    handleDateChange,
+    handleFilterRemove,
+    handleFilterAdd,
+  };
 };

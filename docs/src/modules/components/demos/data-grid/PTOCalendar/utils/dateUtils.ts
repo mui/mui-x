@@ -13,14 +13,6 @@ export const isCurrentDay = (date: Date): boolean => {
   );
 };
 
-export const isDemoMonth = (date: Date): boolean => {
-  return date.getMonth() === 0; // January
-};
-
-export const isWithinDemoYear = (date: Date): boolean => {
-  return date.getFullYear() === 2025;
-};
-
 export const findContinuousPeriods = (dates: string[]): string[][] => {
   if (dates.length === 0) return [];
 
