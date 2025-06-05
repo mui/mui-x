@@ -747,52 +747,72 @@ function PTOCalendarContainer() {
             disableTouchRipple: true,
           },
           styleOverrides: {
-            root: {
+            root: ({ theme }) => ({
               '&:hover': {
                 backgroundColor: '#f6f6f6',
+                ...theme.applyStyles('dark', {
+                  backgroundColor: '#252d34',
+                }),
               },
               '&:focus-visible': {
                 outline: '2px solid #3E63DD',
                 outlineOffset: '-1px',
               },
-            },
+            }),
           },
         },
         MuiToggleButtonGroup: {
           styleOverrides: {
-            root: {
+            root: ({ theme }) => ({
               display: 'flex',
               gap: '1px',
               background: '#faf9fb',
-            },
+              ...theme.applyStyles('dark', {
+                background: '#1e2933',
+              }),
+            }),
           },
         },
         MuiToggleButton: {
           styleOverrides: {
-            root: {
+            root: ({ theme }) => ({
               textTransform: 'none',
               letterSpacing: '0.01em',
               padding: '6px 12px',
               borderRadius: '10px !important',
               borderColor: 'transparent',
               margin: '0 !important',
+              ...theme.applyStyles('dark', {
+                color: '#bcbac7',
+              }),
               '&:hover': {
                 background: '#f6f6f6',
+                ...theme.applyStyles('dark', {
+                  background: '#1e2933',
+                }),
               },
               '&.Mui-selected': {
                 background: '#fff',
                 borderColor: 'rgba(46, 43, 48, 0.1)',
                 boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+                ...theme.applyStyles('dark', {
+                  background: '#1d2329',
+                  borderColor: '#38363e',
+                  color: '#f2eff3',
+                }),
                 '&:hover': {
                   background: '#fff',
+                  ...theme.applyStyles('dark', {
+                    background: '#1d2329',
+                  }),
                 },
               },
-            },
+            }),
           },
         },
         MuiButton: {
           styleOverrides: {
-            root: {
+            root: ({ theme }) => ({
               padding: '0 12px',
               background: '#fff',
               borderColor: 'rgba(46, 43, 48, 0.1)',
@@ -800,16 +820,25 @@ function PTOCalendarContainer() {
               borderRadius: '10px',
               whiteSpace: 'nowrap',
               textTransform: 'none',
-              color: '#000000',
+              color: '#131313',
               letterSpacing: '0.01em',
-            },
+              ...theme.applyStyles('dark', {
+                color: '#f2eff3',
+                background: '#1d2329',
+                borderColor: '#38363e',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+              }),
+            }),
           },
         },
         MuiIconButton: {
           styleOverrides: {
-            root: {
-              color: 'rgba(0, 0, 0, 0.87)',
-            },
+            root: ({ theme }) => ({
+              color: '#131313',
+              ...theme.applyStyles('dark', {
+                color: '#e3dfe6',
+              }),
+            }),
           },
         },
         MuiOutlinedInput: {
