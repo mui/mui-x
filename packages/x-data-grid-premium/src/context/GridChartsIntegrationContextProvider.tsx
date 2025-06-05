@@ -10,7 +10,9 @@ export interface GridChartsIntegrationContextProviderProps {
 export function GridChartsIntegrationContextProvider({
   children,
 }: GridChartsIntegrationContextProviderProps) {
-  const [categories, setCategories] = React.useState<string[]>([]);
+  const [categories, setCategories] = React.useState<
+    GridChartsIntegrationContextValue['categories']
+  >([]);
   const [series, setSeries] = React.useState<GridChartsIntegrationContextValue['series']>([]);
   const [chartType, setChartType] = React.useState<string>('');
   const [configuration, setConfiguration] = React.useState<{ [key: string]: any }>({});
