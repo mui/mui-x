@@ -54,7 +54,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/column-groups' },
               {
                 pathname: '/x/react-data-grid/column-ordering',
-                title: 'Drag-and-drop reordering',
+                title: 'Column reordering',
                 plan: 'pro',
               },
               { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
