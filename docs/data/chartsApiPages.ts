@@ -106,13 +106,13 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
-    pathname: '/x/api/charts/charts-toolbar-zoom-in-button',
-    title: 'ChartsToolbarZoomInButton',
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
+    title: 'ChartsToolbarZoomInTrigger',
     plan: 'pro',
   },
   {
-    pathname: '/x/api/charts/charts-toolbar-zoom-out-button',
-    title: 'ChartsToolbarZoomOutButton',
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-trigger',
+    title: 'ChartsToolbarZoomOutTrigger',
     plan: 'pro',
   },
   {
@@ -234,6 +234,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/pie-chart',
     title: 'PieChart',
+  },
+  {
+    pathname: '/x/api/charts/pie-chart-pro',
+    title: 'PieChartPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/pie-plot',

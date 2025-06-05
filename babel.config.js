@@ -170,18 +170,6 @@ module.exports = function getBabelConfig(api) {
       /prettier/,
     ],
     env: {
-      coverage: {
-        plugins: [
-          'babel-plugin-istanbul',
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
-            },
-          ],
-        ],
-      },
       development: {
         plugins: [
           [
@@ -189,18 +177,6 @@ module.exports = function getBabelConfig(api) {
             {
               alias: defaultAlias,
               root: ['./'],
-            },
-          ],
-        ],
-      },
-      test: {
-        sourceMaps: 'both',
-        plugins: [
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
             },
           ],
         ],
