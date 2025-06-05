@@ -15,6 +15,8 @@ We'd like to extend a big thank you to the 10 contributors who made this release
 
 - 📚 Documentation improvements
 - 🌎 Improve Portuguese (ptPT) translations on the Data Grid
+- 🌎 Improve Portuguese (ptPT) translations on Charts
+- 🌎 Improve Arabic (ar-SD) locale
 - 🐞 Bugfixes
 
 Special thanks go out to the community members for their valuable contributions: @moosekebab, @TiagoPortfolio.
