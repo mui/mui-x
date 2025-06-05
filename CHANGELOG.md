@@ -13,6 +13,7 @@ _Jun 5, 2025_
 
 We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
 
+- 📊 Allow exporting pie charts
 - 📚 Documentation improvements
 - 🌎 Improve Portuguese (ptPT) translations on the Data Grid
 - 🌎 Improve Portuguese (ptPT, ptBR) translations on Charts
@@ -32,6 +33,9 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Fix `registerPipeProcessor()` for Node v20 (#18241) @arminmeh
 - [DataGrid] Fix background color in column header filler cells (#18188) @KenanYusuf
 - [DataGrid] Keep pipe pre-processors execution order when callback reference changes (#17558) @arminmeh
+- [DataGrid] Use `useComponentRenderer` from x-internals (#18203) @bernardobelchior
+- [l10n] Improve Arabic (ar-SD) locale (#17959) @moosekebab
+- [l10n] Improve Portuguese from Portugal (pt-PT) locale (#18064) @TiagoPortfolio
 
 #### `@mui/x-data-grid-pro@8.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -63,6 +67,7 @@ Same changes as in `@mui/x-date-pickers@8.5.1`.
 - [charts] Fix responsive height for ChartsWrapper (#18183) @alexfauquette
 - [charts] Improve charts toolbar accessibility (#18056) @bernardobelchior
 - [charts] Let line series propagate null from the dataset (#18223) @alexfauquette
+- [l10n] Add Portuguese locales for charts (pt-PT, pt-BR) (#18069) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -74,7 +79,7 @@ Same changes as in `@mui/x-charts@8.5.1`, plus:
 - [charts-pro] Fix initial render for zoom slider selection (#18208) @bernardobelchior
 - [charts-pro] Fix props being passed to DOM in FunnelChart (#18192) @JCQuintas
 - [charts-pro] Show axis value in zoom slider tooltip (#18054) @bernardobelchior
-- [charts-pro] Render the toolbar in the heatmap chart (#18247) @bernardobelchior 
+- [charts-pro] Render the toolbar in the heatmap chart (#18247) @bernardobelchior
 
 ### Tree View
 
@@ -85,6 +90,12 @@ Internal changes.
 #### `@mui/x-tree-view-pro@8.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-tree-view@8.5.1`.
+
+### Docs
+
+- [docs] Update `valueFormatter` signature in migration guide (#18226) @michelengelen
+
+### Core
 
 - chore(deps): bump @next/eslint-plugin-next to 15.3.3 (#18155) @renovate[bot]
 - chore(deps): bump @types/lodash to ^4.17.17 (#17990) @renovate[bot]
@@ -102,13 +113,9 @@ Same changes as in `@mui/x-tree-view@8.5.1`.
 - [code-infra] Replace `mocha` with `vitest` on e2e and regression tests (#18071) @JCQuintas
 - [code-infra] Upgrade @mui/internal-test-utils (#18191) @JCQuintas
 - [code-infra] Use vitest for `no-direct-state-access` tests (#18209) @JCQuintas
-- [DataGrid] Use `useComponentRenderer` from x-internals (#18203) @bernardobelchior
 - [infra] Improve test setup (#18228) @LukasTy
 - [infra] Update bug and feature request templates to standardize label types (#18198) @michelengelen
 - [infra] Use `playwright` docker image (#18186) @LukasTy
-- [l10n] Add Portuguese locales for charts (pt-PT, pt-BR) (#18069) @bernardobelchior
-- [l10n] Improve Arabic (ar-SD) locale (#17959) @moosekebab
-- [l10n] Improve Portuguese from Portugal (pt-PT) locale (#18064) @TiagoPortfolio
 
 ## 8.5.0
 
