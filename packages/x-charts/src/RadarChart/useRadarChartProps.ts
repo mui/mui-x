@@ -6,6 +6,7 @@ import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';
+import { RadarChartPluginsSignatures } from './RadarChart.plugins';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -16,6 +17,7 @@ import { RadarGridProps } from './RadarGrid';
  */
 export const useRadarChartProps = (props: RadarChartProps) => {
   const {
+    apiRef,
     series,
     radar,
     width,
@@ -35,10 +37,12 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     shape,
     stripeColor,
     highlight = 'axis',
+    showToolbar,
     ...other
   } = props;
 
-  const radarDataProviderProps: RadarDataProviderProps = {
+  const radarDataProviderProps: RadarDataProviderProps<RadarChartPluginsSignatures> = {
+    apiRef,
     series,
     radar,
     highlight,

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   GridRenderCellParams,
@@ -8,8 +9,9 @@ import {
   useGridApiContext,
   useGridSelector,
   getDataGridUtilityClass,
+  gridClasses,
 } from '@mui/x-data-grid';
-import { gridEditRowsStateSelector, isEventTargetInPortal } from '@mui/x-data-grid/internals';
+import { gridEditRowsStateSelector, isEventTargetInPortal, vars } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -24,10 +26,18 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['rowReorderCell', isDraggable && 'rowReorderCell--draggable'],
     placeholder: ['rowReorderCellPlaceholder'],
+    icon: ['rowReorderIcon'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+const RowReorderIcon = styled('svg', {
+  name: 'MuiDataGrid',
+  slot: 'RowReorderIcon',
+})<{ ownerState: OwnerState }>({
+  color: vars.colors.foreground.muted,
+});
 
 function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
@@ -75,11 +85,34 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     [apiRef, params.id],
   );
 
+  const handleMouseDown = React.useCallback(() => {
+    // Prevent text selection as it will block all the drag events. More context: https://github.com/mui/mui-x/issues/16303
+    apiRef.current.rootElementRef?.current?.classList.add(
+      gridClasses['root--disableUserSelection'],
+    );
+  }, [apiRef]);
+
+  const handleMouseUp = React.useCallback(() => {
+    apiRef.current.rootElementRef?.current?.classList.remove(
+      gridClasses['root--disableUserSelection'],
+    );
+  }, [apiRef]);
+
+  const handleDragEnd = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      handleMouseUp();
+      publish('rowDragEnd')(event);
+    },
+    [publish, handleMouseUp],
+  );
+
   const draggableEventHandlers = isDraggable
     ? {
         onDragStart: publish('rowDragStart'),
         onDragOver: publish('rowDragOver'),
-        onDragEnd: publish('rowDragEnd'),
+        onDragEnd: handleDragEnd,
+        onMouseDown: handleMouseDown,
+        onMouseUp: handleMouseUp,
       }
     : null;
 
@@ -89,7 +122,12 @@ function GridRowReorderCell(params: GridRenderCellParams) {
 
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
-      <rootProps.slots.rowReorderIcon />
+      <RowReorderIcon
+        as={rootProps.slots.rowReorderIcon}
+        ownerState={ownerState}
+        className={classes.icon}
+        fontSize="small"
+      />
       <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );

@@ -143,6 +143,7 @@ RichTreeView.propTypes = {
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
       getParentId: PropTypes.func.isRequired,
+      setEditedItem: PropTypes.func.isRequired,
       setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
       setItemSelection: PropTypes.func.isRequired,
@@ -191,6 +192,15 @@ RichTreeView.propTypes = {
    * @default 'content'
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
+  /**
+   * Used to determine the children of a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {R[]} The children of the item.
+   * @default (item) => item.children
+   */
+  getItemChildren: PropTypes.func,
   /**
    * Used to determine the id of a given item.
    *

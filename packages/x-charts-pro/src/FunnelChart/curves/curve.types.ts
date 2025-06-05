@@ -9,6 +9,10 @@ export type CurveOptions = {
    */
   isHorizontal?: boolean;
   /**
+   * Indicates if the segments values are increasing or decreasing.
+   */
+  isIncreasing?: boolean;
+  /**
    * The order position of the segment.
    */
   position?: number;
@@ -30,9 +34,21 @@ export type CurveOptions = {
    * The maximum point for all the segments.
    */
   max?: Point;
+  /**
+   * The shape of the point of the funnel for the curves that support it.
+   */
+  pointShape?: FunnelPointShape;
 };
 
-export type FunnelCurveType = 'linear' | 'step' | 'bump' | 'pyramid' | 'step-pyramid';
+export type FunnelCurveType =
+  | 'linear'
+  | 'linear-sharp'
+  | 'step'
+  | 'bump'
+  | 'pyramid'
+  | 'step-pyramid';
+
+export type FunnelPointShape = 'square' | 'sharp';
 
 export type Point = {
   x: number;

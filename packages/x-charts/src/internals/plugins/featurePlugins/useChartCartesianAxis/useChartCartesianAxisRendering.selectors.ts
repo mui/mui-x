@@ -184,3 +184,21 @@ export const selectorChartYAxis = createSelector(
       getFilters,
     }),
 );
+
+export const selectorChartAxis = createSelector(
+  [selectorChartXAxis, selectorChartYAxis, (_, axisId: AxisId) => axisId],
+  (xAxes, yAxes, axisId) => xAxes?.axis[axisId] ?? yAxes?.axis[axisId],
+);
+
+export const selectorChartRawAxis = createSelector(
+  [selectorChartRawXAxis, selectorChartRawYAxis, (state, axisId: AxisId) => axisId],
+  (xAxes, yAxes, axisId) => {
+    const axis = xAxes?.find((a) => a.id === axisId) ?? yAxes?.find((a) => a.id === axisId) ?? null;
+
+    if (!axis) {
+      return undefined;
+    }
+
+    return axis;
+  },
+);

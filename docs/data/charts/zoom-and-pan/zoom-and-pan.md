@@ -62,6 +62,24 @@ You can provide an overview and allow the manipulation of the zoomed area by set
 
 {{"demo": "ZoomSlider.js"}}
 
+You can set the `zoom.slider.size` property to customize the size reserved for the zoom slider.
+This can be useful if you're using a custom zoom slider and want to update the space reserved for it.
+If you're using the default zoom slider, updating `zoom.slider.size` effectively changes the padding around the slider.
+
+The size is the height on an x-axis and the width on a y-axis.
+
+### Tooltip
+
+The zoom slider supports a tooltip that displays the current zoom range.
+
+You can configure the tooltip by setting the `zoom.slider.showTooltip` property on the axis config. The following options are available:
+
+- `true`: The tooltip is always displayed.
+- `'hover'`: The tooltip is displayed on hover (default).
+- `false`: The tooltip is never displayed.
+
+{{"demo": "ZoomSliderTooltip.js"}}
+
 ### Composition
 
 When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.

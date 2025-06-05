@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
+import { RadarChart } from '@mui/x-charts/RadarChart';
 
 // Data from https://ourworldindata.org/emissions-by-fuel
 

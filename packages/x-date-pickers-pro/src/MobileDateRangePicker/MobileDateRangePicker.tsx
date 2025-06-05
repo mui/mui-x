@@ -9,7 +9,7 @@ import {
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -54,7 +54,8 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: utils.formats.keyboardDate,
+    // TODO: Replace with resolveDateFormat() once we support month and year views
+    format: defaultizedProps.format ?? utils.formats.keyboardDate,
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     // force current calendar position, since we only have one calendar

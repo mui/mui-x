@@ -5,12 +5,10 @@ import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_composeClasses as composeClasses,
-  unstable_useControlled as useControlled,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
+import useControlled from '@mui/utils/useControlled';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { YearCalendarButton } from './YearCalendarButton';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
