@@ -12,6 +12,8 @@ export interface PickersInputBaseClasses {
   readOnly: string;
   /** State class applied to the root element if `error=true`. */
   error: string;
+  /** State class applied to the root element if `size=small`. */
+  inputSizeSmall: string;
   /** Styles applied to the NotchedOutline element. */
   notchedOutline: string;
   /** Styles applied to the real hidden input element. */
