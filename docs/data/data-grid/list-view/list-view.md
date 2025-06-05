@@ -39,7 +39,7 @@ The demo below automatically switches to a list layout when the viewport width i
 
 ## List view with editable rows
 
-The [editing feature](/x/react-data-grid/editing/) is not supported while in list view, but it is possible to build an editing experience from within a custom cell renderer, as shown below:
+The [editing feature](/x/react-data-grid/editing/) is not supported while in list view, but it's possible to build an editing experience from within a custom cell renderer, as shown below:
 
 {{"demo": "ListViewEdit.js", "bg": true}}
 
