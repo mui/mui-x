@@ -22,7 +22,7 @@ export const GridPieChartIcon = createSvgIcon(
 
 export const configurationOptions = {
   bar: {
-    label: 'Bar Chart',
+    label: 'Bar',
     icon: GridBarChartIcon,
     customization: {
       height: { label: 'Height', type: 'number', default: 350 },
@@ -36,7 +36,7 @@ export const configurationOptions = {
     },
   },
   line: {
-    label: 'Line Chart',
+    label: 'Line',
     icon: GridLineChartIcon,
     customization: {
       height: { label: 'Height', type: 'number', default: 350 },
@@ -45,7 +45,7 @@ export const configurationOptions = {
     },
   },
   pie: {
-    label: 'Pie Chart',
+    label: 'Pie',
     icon: GridPieChartIcon,
     customization: {
       height: { label: 'Height', type: 'number', default: 350 },
