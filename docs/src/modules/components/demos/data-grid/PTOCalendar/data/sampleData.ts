@@ -1,6 +1,12 @@
 import { PTOData } from '../types/pto';
 
 const year = new Date().getFullYear();
+const today = new Date();
+
+// We only want to show sick days that are in the past
+const filterPastDates = (dates: string[]): string[] => {
+  return dates.filter((date) => new Date(date) <= today);
+};
 
 export const samplePTOData: PTOData = {
   'Faustino Shields': {
@@ -23,14 +29,14 @@ export const samplePTOData: PTOData = {
       `${year}-11-21`,
       `${year}-11-22`,
     ],
-    sickDates: [
+    sickDates: filterPastDates([
       `${year}-02-03`,
       `${year}-02-04`,
       `${year}-06-15`,
       `${year}-06-16`,
       `${year}-10-12`,
       `${year}-12-15`,
-    ],
+    ]),
     nationality: 'US',
     team: 'Engineering',
     birthday: '05-15',
@@ -53,7 +59,7 @@ export const samplePTOData: PTOData = {
       `${year}-12-21`,
       `${year}-12-22`,
     ],
-    sickDates: [`${year}-03-18`, `${year}-07-05`, `${year}-11-30`],
+    sickDates: filterPastDates([`${year}-03-18`, `${year}-07-05`, `${year}-11-30`]),
     nationality: 'DE',
     team: 'Engineering',
     birthday: '09-15',
@@ -77,7 +83,7 @@ export const samplePTOData: PTOData = {
       `${year}-12-05`,
       `${year}-12-06`,
     ],
-    sickDates: [`${year}-02-14`, `${year}-06-22`, `${year}-10-08`],
+    sickDates: filterPastDates([`${year}-02-14`, `${year}-06-22`, `${year}-10-08`]),
     nationality: 'UK',
     team: 'Product',
     birthday: '01-20',
@@ -100,7 +106,7 @@ export const samplePTOData: PTOData = {
       `${year}-12-16`,
       `${year}-12-17`,
     ],
-    sickDates: [`${year}-01-10`, `${year}-05-18`, `${year}-09-30`],
+    sickDates: filterPastDates([`${year}-01-10`, `${year}-05-18`, `${year}-09-30`]),
     nationality: 'NL',
     team: 'Design',
     birthday: '03-25',
@@ -122,7 +128,7 @@ export const samplePTOData: PTOData = {
       `${year}-11-26`,
       `${year}-11-27`,
     ],
-    sickDates: [`${year}-02-28`, `${year}-06-05`, `${year}-10-15`],
+    sickDates: filterPastDates([`${year}-02-28`, `${year}-06-05`, `${year}-10-15`]),
     nationality: 'FR',
     team: 'Design',
     birthday: '02-18',
@@ -147,7 +153,12 @@ export const samplePTOData: PTOData = {
       `${year}-11-11`,
       `${year}-11-12`,
     ],
-    sickDates: [`${year}-01-25`, `${year}-05-02`, `${year}-08-18`, `${year}-12-05`],
+    sickDates: filterPastDates([
+      `${year}-01-25`,
+      `${year}-05-02`,
+      `${year}-08-18`,
+      `${year}-12-05`,
+    ]),
     nationality: 'US',
     team: 'People',
     birthday: '07-28',
@@ -170,7 +181,7 @@ export const samplePTOData: PTOData = {
       `${year}-11-16`,
       `${year}-11-17`,
     ],
-    sickDates: [`${year}-02-20`, `${year}-06-08`, `${year}-10-25`],
+    sickDates: filterPastDates([`${year}-02-20`, `${year}-06-08`, `${year}-10-25`]),
     nationality: 'MX',
     team: 'Engineering',
     birthday: '07-28',
@@ -202,7 +213,12 @@ export const samplePTOData: PTOData = {
       `${year}-12-21`,
       `${year}-12-22`,
     ],
-    sickDates: [`${year}-02-05`, `${year}-07-01`, `${year}-09-28`, `${year}-11-30`],
+    sickDates: filterPastDates([
+      `${year}-02-05`,
+      `${year}-07-01`,
+      `${year}-09-28`,
+      `${year}-11-30`,
+    ]),
     nationality: 'UK',
     team: 'Engineering',
     birthday: '12-26',
@@ -230,7 +246,12 @@ export const samplePTOData: PTOData = {
       `${year}-11-11`,
       `${year}-11-12`,
     ],
-    sickDates: [`${year}-01-18`, `${year}-06-12`, `${year}-08-28`, `${year}-12-15`],
+    sickDates: filterPastDates([
+      `${year}-01-18`,
+      `${year}-06-12`,
+      `${year}-08-28`,
+      `${year}-12-15`,
+    ]),
     nationality: 'BR',
     team: 'Operations',
     birthday: '06-27',
@@ -254,7 +275,7 @@ export const samplePTOData: PTOData = {
       `${year}-11-19`,
       `${year}-11-20`,
     ],
-    sickDates: [`${year}-02-05`, `${year}-06-15`, `${year}-10-25`],
+    sickDates: filterPastDates([`${year}-02-05`, `${year}-06-15`, `${year}-10-25`]),
     nationality: 'US',
     team: 'Marketing',
     birthday: '01-15',
@@ -280,7 +301,12 @@ export const samplePTOData: PTOData = {
       `${year}-11-26`,
       `${year}-11-27`,
     ],
-    sickDates: [`${year}-03-08`, `${year}-04-19`, `${year}-08-22`, `${year}-12-03`],
+    sickDates: filterPastDates([
+      `${year}-03-08`,
+      `${year}-04-19`,
+      `${year}-08-22`,
+      `${year}-12-03`,
+    ]),
     nationality: 'AU',
     team: 'Product',
     birthday: '01-15',
@@ -302,7 +328,7 @@ export const samplePTOData: PTOData = {
       `${year}-11-23`,
       `${year}-11-24`,
     ],
-    sickDates: [`${year}-02-12`, `${year}-05-23`, `${year}-09-17`],
+    sickDates: filterPastDates([`${year}-02-12`, `${year}-05-23`, `${year}-09-17`]),
     nationality: 'ES',
     team: 'Engineering',
     birthday: '01-15',
@@ -324,7 +350,12 @@ export const samplePTOData: PTOData = {
       `${year}-11-29`,
       `${year}-11-30`,
     ],
-    sickDates: [`${year}-01-08`, `${year}-04-11`, `${year}-08-05`, `${year}-12-19`],
+    sickDates: filterPastDates([
+      `${year}-01-08`,
+      `${year}-04-11`,
+      `${year}-08-05`,
+      `${year}-12-19`,
+    ]),
     nationality: 'US',
     team: 'People',
     birthday: '01-15',
@@ -347,7 +378,7 @@ export const samplePTOData: PTOData = {
       `${year}-11-27`,
       `${year}-11-28`,
     ],
-    sickDates: [`${year}-02-19`, `${year}-06-07`, `${year}-10-14`],
+    sickDates: filterPastDates([`${year}-02-19`, `${year}-06-07`, `${year}-10-14`]),
     nationality: 'IE',
     team: 'Engineering',
     birthday: '01-15',

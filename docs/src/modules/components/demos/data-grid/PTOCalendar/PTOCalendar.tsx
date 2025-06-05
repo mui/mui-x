@@ -499,7 +499,7 @@ function PTOCalendar() {
                 variant="caption"
                 sx={{
                   color: isCurrent ? '#3E63DD' : 'text.secondary',
-                  fontWeight: isCurrent ? 'bold' : 'medium',
+                  fontWeight: isCurrent ? 'medium' : 'regular',
                   fontSize: '0.75rem',
                   lineHeight: 1,
                   textTransform: 'none',
