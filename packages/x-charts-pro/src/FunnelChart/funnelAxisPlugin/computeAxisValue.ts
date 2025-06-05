@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
@@ -6,17 +6,12 @@ import {
   ChartSeriesType,
   ProcessedSeries,
   ChartSeriesConfig,
-  AxisId,
-  ZoomData,
-  DefaultizedZoomOptions,
-  GetZoomAxisFilters,
   DefaultedYAxis,
   DefaultedXAxis,
   DefaultedAxis,
   CartesianChartSeriesType,
   getAxisExtremum,
   isBandScaleConfig,
-  isPointScaleConfig,
   getScale,
   getColorScale,
   getOrdinalColorScale,
@@ -67,9 +62,6 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   drawingArea: ChartDrawingArea;
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
-  zoomMap?: Map<AxisId, ZoomData>;
-  zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
-  getFilters?: GetZoomAxisFilters;
   gap: number;
 };
 
@@ -91,9 +83,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
   axis: allAxis,
   seriesConfig,
   axisDirection,
-  zoomMap,
-  zoomOptions,
-  getFilters,
   gap,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
@@ -116,9 +105,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const zoomOption = zoomOptions?.[axis.id];
-    const zoom = zoomMap?.get(axis.id);
-    const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis, gap);
 
     const [minData, maxData] = getAxisExtremum(
@@ -127,7 +113,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
       seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
       axisIndex,
       formattedSeries,
-      zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
     );
 
     const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
@@ -137,7 +122,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
     if (isBandScaleConfig(axis)) {
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
-      const zoomedRange = scaleRange;
 
       completeAxis[axis.id] = {
         offset: 0,
@@ -147,31 +131,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         triggerTooltip,
         ...axis,
         data,
-        scale: scaleBand(axis.data!, zoomedRange),
-        tickNumber: axis.data!.length,
-        colorScale:
-          axis.colorMap &&
-          (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
-      };
-
-      if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, scaleRange);
-        completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
-      }
-    }
-    if (isPointScaleConfig(axis)) {
-      const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
-      const zoomedRange = scaleRange;
-
-      completeAxis[axis.id] = {
-        offset: 0,
-        height: 0,
-        triggerTooltip,
-        ...axis,
-        data,
-        scale: scalePoint(axis.data!, zoomedRange),
+        scale: scaleBand(axis.data!, scaleRange),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
@@ -186,9 +146,14 @@ export function computeAxisValue<T extends ChartSeriesType>({
       }
     }
 
-    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
-      // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
+    if (axis.scaleType === 'band') {
       return;
+    }
+
+    if (axis.scaleType === 'point') {
+      throw new Error(
+        'Point scale is not supported in FunnelChart. Please use band scale instead.',
+      );
     }
 
     const scaleType = axis.scaleType ?? ('linear' as const);
@@ -204,11 +169,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
-    const zoomedRange = range;
-
-    const scale = getScale(scaleType, axisExtremums, zoomedRange);
+    const scale = getScale(scaleType, axisExtremums, range);
     const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
