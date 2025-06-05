@@ -266,6 +266,9 @@ export interface GridLocaleText {
   promptFieldSend: string;
   promptFieldRecord: string;
   promptFieldStopRecording: string;
+
+  // Internationalization
+  intlNumberFormat: (number: number) => string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

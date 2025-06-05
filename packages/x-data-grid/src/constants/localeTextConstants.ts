@@ -1,5 +1,9 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
+const internationalization = {
+  numberFormat: new Intl.NumberFormat("en-US"),
+}
+
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   noRowsLabel: 'No rows',
@@ -296,4 +300,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+
+  // Internationalization
+  intlNumberFormat: (number: number) => internationalization.numberFormat.format(number),
 };
