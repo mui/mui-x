@@ -9,7 +9,7 @@ export const FILTER_LABELS: Record<string, string> = {
 export const FILTER_COLORS = {
   holidays: {
     background: '#edf2fe',
-    text: '#3E63DD',
+    text: '#2D4492',
     border: '#e1e9ff',
     dark: {
       background: '#1f2d5c',
@@ -19,7 +19,7 @@ export const FILTER_COLORS = {
   },
   vacation: {
     background: '#e6f7ed',
-    text: '#208368',
+    text: '#1F5F4D',
     border: '#d6f1e3',
     dark: {
       background: '#1d3b31',
@@ -28,13 +28,13 @@ export const FILTER_COLORS = {
     },
   },
   sick: {
-    background: '#ffffd8',
-    text: '#726c1c',
-    border: '#f0edc3',
+    background: '#fff7f7',
+    text: '#99222A',
+    border: '#feebec',
     dark: {
-      background: '#3b310b',
-      text: '#FFE066',
-      border: '#877320',
+      background: '#641723',
+      text: '#ffdbdc',
+      border: '#ce2c31',
     },
   },
 };

@@ -286,7 +286,7 @@ function PTOCalendar() {
               <Typography
                 sx={{
                   color: 'text.secondary',
-                  fontSize: '0.75rem',
+                  fontSize: '0.8125rem',
                   fontWeight: 'medium',
                 }}
               >
@@ -373,32 +373,34 @@ function PTOCalendar() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 0.75,
-                backgroundColor: isCurrent ? '#faf9fb' : 'transparent',
-                ...theme.applyStyles('dark', {
-                  backgroundColor: isCurrent ? '#1e2429' : 'transparent',
-                }),
               }}
             >
               <Typography
                 variant="caption"
-                sx={{
-                  color: isCurrent ? '#3E63DD' : 'text.secondary',
+                sx={(theme) => ({
+                  color: isCurrent ? '#6550b9' : '#494657',
                   fontWeight: isCurrent ? 'medium' : 'regular',
                   fontSize: '0.75rem',
                   lineHeight: 1,
                   textTransform: 'none',
-                }}
+                  ...theme.applyStyles('dark', {
+                    color: isCurrent ? '#aa99ec' : '#faf8ff',
+                  }),
+                })}
               >
                 {format(day, density === 'compact' ? 'eee' : 'eeee')}
               </Typography>
               <Typography
                 variant="body2"
-                sx={{
+                sx={(theme) => ({
                   fontWeight: 'medium',
-                  color: isCurrent ? '#3E63DD' : 'text.secondary',
+                  color: isCurrent ? '#6550b9' : '#494657',
                   fontSize: '1rem',
                   lineHeight: 1,
-                }}
+                  ...theme.applyStyles('dark', {
+                    color: isCurrent ? '#aa99ec' : '#faf8ff',
+                  }),
+                })}
               >
                 {format(day, 'd')}
               </Typography>
@@ -445,16 +447,19 @@ function PTOCalendar() {
               const isCurrent = isCurrentDay(day);
               return (
                 <Box
-                  sx={{
+                  sx={(theme) => ({
                     width: '100%',
                     height: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: isCurrent ? '#3E63DD' : 'text.secondary',
+                    color: isCurrent ? '#6550b9' : '#76747f',
                     fontWeight: 'medium',
-                    fontSize: '0.75rem',
-                  }}
+                    fontSize: '0.8125rem',
+                    ...theme.applyStyles('dark', {
+                      color: isCurrent ? '#aa99ec' : '#faf8ff',
+                    }),
+                  })}
                 >
                   {count > 0 ? count : '0'}
                 </Box>
@@ -645,7 +650,7 @@ function PTOCalendar() {
         };
       }),
     ],
-    [daysToShow, holidays, ptoData, activeFilters, density],
+    [daysToShow, holidays, ptoData, activeFilters, density, theme.palette.mode],
   );
 
   return (
@@ -702,17 +707,31 @@ function PTOCalendarContainer() {
       colorSchemes: {
         light: {
           palette: {
+            text: {
+              primary: '#38363f',
+              secondary: '#76747f',
+            },
             divider: '#EEEBF0',
+            action: {
+              hover: '#6550b9',
+            },
             DataGrid: {
               bg: '#fff',
               pinnedBg: '#fff',
-              headerBg: '#faf9fb',
+              headerBg: '#fdfcfe',
             },
           },
         },
         dark: {
           palette: {
+            text: {
+              primary: '#faf8ff',
+              secondary: '#d0cdd7',
+            },
             divider: '#38363E',
+            action: {
+              hover: '#558bbc',
+            },
             DataGrid: {
               bg: '#141A1F',
               pinnedBg: '#141A1F',
@@ -733,7 +752,7 @@ function PTOCalendarContainer() {
           styleOverrides: {
             root: ({ theme }) => ({
               '&:hover': {
-                backgroundColor: '#f6f6f6',
+                backgroundColor: '#faf8ff',
                 ...theme.applyStyles('dark', {
                   backgroundColor: '#252d34',
                 }),
@@ -750,7 +769,7 @@ function PTOCalendarContainer() {
             root: ({ theme }) => ({
               display: 'flex',
               gap: '1px',
-              background: '#faf9fb',
+              background: '#faf8ff',
               ...theme.applyStyles('dark', {
                 background: '#1e2933',
               }),
@@ -766,15 +785,10 @@ function PTOCalendarContainer() {
               borderRadius: '10px !important',
               borderColor: 'transparent',
               margin: '0 !important',
+              color: '#76747f',
               ...theme.applyStyles('dark', {
                 color: '#bcbac7',
               }),
-              '&:hover': {
-                background: '#f6f6f6',
-                ...theme.applyStyles('dark', {
-                  background: '#1e2933',
-                }),
-              },
               '&.Mui-selected': {
                 background: '#fff',
                 borderColor: 'rgba(46, 43, 48, 0.1)',
@@ -804,7 +818,7 @@ function PTOCalendarContainer() {
               borderRadius: '10px',
               whiteSpace: 'nowrap',
               textTransform: 'none',
-              color: '#131313',
+              color: '#38363f',
               letterSpacing: '0.01em',
               ...theme.applyStyles('dark', {
                 color: '#f2eff3',
@@ -818,7 +832,10 @@ function PTOCalendarContainer() {
         MuiIconButton: {
           styleOverrides: {
             root: ({ theme }) => ({
-              color: '#131313',
+              color: '#38363f',
+              '&:hover': {
+                backgroundColor: '#faf8ff',
+              },
               ...theme.applyStyles('dark', {
                 color: '#e3dfe6',
               }),
@@ -867,7 +884,7 @@ function PTOCalendarContainer() {
           },
           styleOverrides: {
             tooltip: ({ theme }) => ({
-              color: '#131313',
+              color: '#38363f',
               backgroundColor: '#fff',
               borderRadius: '8px',
               border: '1px solid rgba(46, 43, 48, 0.1)',
@@ -898,7 +915,7 @@ function PTOCalendarContainer() {
             cell: ({ theme }) => ({
               padding: 0,
               '&.today': {
-                backgroundColor: '#f7f9ff',
+                backgroundColor: '#faf8ff',
                 ...theme.applyStyles('dark', {
                   backgroundColor: '#1e2933',
                 }),
@@ -917,14 +934,14 @@ function PTOCalendarContainer() {
               color: '#09090b',
               borderTopColor: 'transparent',
             },
-            row: ({ theme }) => ({
-              '&:hover': {
-                backgroundColor: '#f7f9ff',
-                ...theme.applyStyles('dark', {
-                  backgroundColor: '#1e2933',
-                }),
-              },
-            }),
+            // row: ({ theme }) => ({
+            //   '&:hover': {
+            //     backgroundColor: '#f7f9ff',
+            //     ...theme.applyStyles('dark', {
+            //       backgroundColor: '#1e2933',
+            //     }),
+            //   },
+            // }),
             columnSeparator: {
               display: 'none',
             },
