@@ -7,6 +7,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridChartTypeSelector } from './GridChartTypeSelector';
 import { GridChartsConfigurationPanelHeader } from './GridChartsConfigurationPanelHeader';
 import { GridChartsConfigurationPanelBody } from './GridChartsConfigurationPanelBody';
+import { GridChartsConfigurationForm } from './GridChartsConfigurationForm';
 
 const TabsRoot = styled('div', {
   name: 'MuiDataGrid',
@@ -132,9 +133,7 @@ function GridChartsConfigurationPanel() {
         hidden={activeTab !== 'configuration'}
         aria-labelledby="configuration-tab"
       >
-        <p style={{ padding: '0 16px' }}>
-          Will contain chart specific configuration - legend, axes, etc.
-        </p>
+        <GridChartsConfigurationForm />
       </TabPanel>
     </TabsRoot>
   );

@@ -4,7 +4,6 @@ import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
-import { GridChartsIcon } from '../../material/icons';
 
 export interface GridChartTypeSelectorProps {
   schema: Record<string, any>;
@@ -16,8 +15,8 @@ interface ChartTypeButtonProps {
 
 const ChartTypeButtonRow = styled('div')({
   display: 'flex',
-  gap: 4,
-  padding: 4,
+  gap: 12,
+  padding: 12,
 });
 
 const ChartTypeButton = styled('button', {
@@ -29,8 +28,8 @@ const ChartTypeButton = styled('button', {
     backgroundColor: isSelected ? vars.colors.interactive.hover : vars.colors.background.base,
     color: isSelected ? vars.colors.interactive.selected : vars.colors.foreground.muted,
     cursor: 'pointer',
-    width: 96,
-    height: 96,
+    width: 84,
+    height: 84,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -51,22 +50,20 @@ const ChartTypeButton = styled('button', {
 function GridChartTypeSelector() {
   const { setChartType, chartType } = useGridChartsIntegrationContext();
   const rootProps = useGridRootProps();
-  const chartTypes = React.useMemo(() => {
-    return Object.keys(rootProps.slotProps?.chartsConfigurationPanel?.schema || {});
-  }, [rootProps.slotProps?.chartsConfigurationPanel?.schema]);
+  const chartConfig = rootProps.slotProps?.chartsConfigurationPanel?.schema || {};
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <ChartTypeButtonRow>
-        {chartTypes.map((type: string) => (
+        {Object.entries(chartConfig).map(([type, config]) => (
           <ChartTypeButton
             key={type}
             isSelected={type === chartType}
             onClick={() => setChartType(type)}
             {...rootProps.slotProps?.baseButton}
           >
-            <GridChartsIcon />
-            {`${type.charAt(0).toUpperCase()}${type.slice(1)} chart`}
+            <config.icon style={{ width: 48, height: 48 }} />
+            {config.label}
           </ChartTypeButton>
         ))}
       </ChartTypeButtonRow>

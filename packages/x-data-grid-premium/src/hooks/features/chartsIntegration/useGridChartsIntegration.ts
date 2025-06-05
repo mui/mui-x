@@ -233,14 +233,6 @@ export const useGridChartsIntegration = (
         return;
       }
 
-      console.log('updateDataReference', {
-        field,
-        originSection,
-        targetSection,
-        targetField,
-        placementRelativeToTargetField,
-      });
-
       if (originSection) {
         const method = originSection === 'categories' ? updateCategories : updateSeries;
         const currentItems = originSection === 'categories' ? categories : series;
