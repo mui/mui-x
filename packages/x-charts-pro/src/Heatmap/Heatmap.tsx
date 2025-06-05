@@ -369,6 +369,11 @@ Heatmap.propTypes = {
    */
   seriesConfig: PropTypes.object,
   /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
