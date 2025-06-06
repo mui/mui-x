@@ -305,6 +305,8 @@
   { "name": "RadarAxisHighlightProps", "kind": "Interface" },
   { "name": "RadarChart", "kind": "Variable" },
   { "name": "RadarChartProps", "kind": "Interface" },
+  { "name": "RadarChartSlotProps", "kind": "Interface" },
+  { "name": "RadarChartSlots", "kind": "Interface" },
   { "name": "RadarDataProvider", "kind": "Function" },
   { "name": "RadarDataProviderProps", "kind": "TypeAlias" },
   { "name": "RadarGrid", "kind": "Function" },

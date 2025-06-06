@@ -52,7 +52,11 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/column-menu' },
               { pathname: '/x/react-data-grid/column-spanning' },
               { pathname: '/x/react-data-grid/column-groups' },
-              { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/column-ordering',
+                title: 'Column reordering',
+                plan: 'pro',
+              },
               { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/column-recipes', title: 'Recipes' },
             ],

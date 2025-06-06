@@ -13,9 +13,19 @@ import { ChartsSlotsPro, ChartsSlotPropsPro } from '../internals/material';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { PIE_CHART_PRO_PLUGINS, PieChartProPluginSignatures } from './PieChartPro.plugins';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
 
-export interface PieChartProSlots extends PieChartSlots, Partial<ChartsSlotsPro> {}
-export interface PieChartProSlotProps extends PieChartSlotProps, Partial<ChartsSlotPropsPro> {}
+export interface PieChartProSlots
+  extends Omit<PieChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
+export interface PieChartProSlotProps
+  extends Omit<PieChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {}
 
 export interface PieChartProProps
   extends Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps'>,

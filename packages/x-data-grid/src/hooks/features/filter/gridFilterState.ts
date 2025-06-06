@@ -52,8 +52,9 @@ export interface GridAggregatedFilterItemApplierResult {
 }
 
 /**
- * @param {GridRowId} rowId The id of the row we want to filter.
+ * @param {GridValidRowModel} row The model of the row we want to filter.
  * @param {(filterItem: GridFilterItem) => boolean} shouldApplyItem An optional callback to allow the filtering engine to only apply some items.
+ * @param {GridAggregatedFilterItemApplierResult} result The previous result of the filtering engine.
  */
 export type GridAggregatedFilterItemApplier = (
   row: GridValidRowModel,

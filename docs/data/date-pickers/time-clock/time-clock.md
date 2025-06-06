@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Time Clock component
 components: TimeClock
-githubLabel: 'component: TimePicker'
+githubLabel: 'scope: TimePicker'
 packageName: '@mui/x-date-pickers'
 ---
 

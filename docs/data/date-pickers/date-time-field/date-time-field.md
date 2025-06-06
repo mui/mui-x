@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Field component
 components: DateTimeField
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 

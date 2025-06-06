@@ -31,7 +31,6 @@ import {
   ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -42,12 +41,16 @@ import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
 
 export interface HeatmapSlots
   extends ChartsAxisSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots,
-    ChartsToolbarSlots,
+    ChartsToolbarProSlots,
     Partial<ChartsSlotsPro> {
   /**
    * Custom component for the tooltip.
@@ -65,7 +68,7 @@ export interface HeatmapSlotProps
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
     ChartsLegendSlotProps,
-    ChartsToolbarSlotProps,
+    ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
   tooltip?: Partial<HeatmapTooltipProps>;
 }
