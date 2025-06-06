@@ -6,13 +6,6 @@ title: Data Grid - Drag-and-drop column reordering
 
 <p class="description">The Data Grid Pro lets users drag and drop columns to reorder them.</p>
 
-:::warning
-There is [a known issue with Firefox v129](https://github.com/mui/mui-x/issues/14263) that impacts this feature.
-Reordering does not work on that specific version of Firefox because the value for `event.dataTransfer` is `null`, which results in an error.
-
-You must upgrade to Firefox v130 or higher to avoid this issue.
-:::
-
 Columns are organized according to the order in which they're provided in the `columns` array.
 By default, the Data Grid Pro lets users reorder columns by dragging and dropping the header cells—give it a try in the demo below:
 
