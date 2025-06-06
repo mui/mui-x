@@ -93,6 +93,7 @@ export function useValueAndOpenStates<
     clockShallowValue: undefined,
     lastCommittedValue: value,
     hasBeenModifiedSinceMount: false,
+    isPartiallyFilled: false,
   }));
 
   const { getValidationErrorForNewValue } = useValidation({
@@ -101,6 +102,7 @@ export function useValueAndOpenStates<
     timezone,
     value,
     onError: props.onError,
+    isPartiallyFilled: state.isPartiallyFilled,
   });
 
   const setOpen = useEventCallback((action: React.SetStateAction<boolean>) => {
@@ -122,6 +124,7 @@ export function useValueAndOpenStates<
     const {
       changeImportance = 'accept',
       skipPublicationIfPristine = false,
+      isPartiallyFilled = false,
       validationError,
       shortcut,
       shouldClose = changeImportance === 'accept',
@@ -147,6 +150,7 @@ export function useValueAndOpenStates<
       clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
       lastCommittedValue: shouldFireOnAccept ? value : prevState.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
+      isPartiallyFilled,
     }));
 
     let cachedContext: PickerChangeHandlerContext<TError> | null = null;

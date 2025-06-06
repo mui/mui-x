@@ -214,7 +214,14 @@ export type FieldChangeHandler<TValue extends PickerValidValue, TError> = (
 ) => void;
 
 export interface FieldChangeHandlerContext<TError> {
+  /**
+   * The validation error associated to the value passed to the `onChange` callback.
+   */
   validationError: TError;
+  /**
+   * Whether the value has some sections that are not filled but not all.
+   */
+  isPartiallyFilled: boolean;
 }
 
 export type FieldParsedSelectedSections = number | 'all' | null;

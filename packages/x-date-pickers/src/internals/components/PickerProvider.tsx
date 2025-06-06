@@ -319,6 +319,13 @@ export interface SetValueActionOptions<TError = string | null> {
    * @default changeImportance === "accept"
    */
   shouldClose?: boolean;
+  /**
+   * Whether the value is partially filled or not.
+   * This is useful when your UI has several elements to fill (for example a field UI with one section for the year, one for the month, etc.).
+   * Until all the elements are filled, the value is `null`, but the validation should treat it as an invalid value.
+   * @default false
+   */
+  isPartiallyFilled?: boolean;
 }
 
 export interface PickerPrivateContextValue {

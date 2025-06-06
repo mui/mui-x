@@ -213,6 +213,10 @@ export interface UsePickerState<TValue extends PickerValidValue> {
    * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dismissing the Picker should not.
    */
   hasBeenModifiedSinceMount: boolean;
+  /**
+   * Whether the value is partially filled or not.
+   */
+  isPartiallyFilled: boolean;
 }
 
 export interface PickerViewsRendererBaseExternalProps
