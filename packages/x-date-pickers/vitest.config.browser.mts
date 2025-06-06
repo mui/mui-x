@@ -18,6 +18,7 @@ export default mergeConfig(sharedConfig, {
   test: {
     name: getTestName(import.meta.url),
     environment: 'browser',
+    setupFiles: [new URL('../../test/utils/setupPickers.js', import.meta.url).pathname],
     browser: {
       enabled: true,
       instances: [
