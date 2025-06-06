@@ -278,7 +278,7 @@ function PTOCalendar() {
       {
         field: 'employee',
         headerName: 'Employees',
-        width: 190,
+        width: 180,
         renderHeader: EmployeeHeader,
         renderCell: (params: GridRenderCellParams) => {
           if (params.row.id === 'summary') {
@@ -312,16 +312,15 @@ function PTOCalendar() {
               }}
             >
               <Avatar
-                src={`/assets/${ptoData[params.value].avatar}.jpg`} // TODO: add assets to docs
+                // src={`/assets/${ptoData[params.value].avatar}.jpg`} // TODO: add assets to docs
                 sx={{
+                  flexShrink: 0,
                   width: 32,
                   height: 32,
                   backgroundColor: '#e1d7fb',
-                  color: '#1f1f20',
                   fontSize: '0.75rem',
                   fontWeight: 'medium',
-                  border: '1px solid #fafafa',
-                  flexShrink: 0,
+                  color: '#1f1f20',
                 }}
               >
                 {initials}
@@ -671,24 +670,17 @@ function PTOCalendar() {
           pinnedRows={pinnedRow}
           rows={rows}
           columns={columns}
-          initialState={{
-            pinnedColumns: {
-              left: ['employee'],
-            },
-            pagination: {
-              paginationModel: { pageSize: 5 },
-            },
+          pinnedColumns={{
+            left: ['employee'],
           }}
-          pageSizeOptions={[5]}
-          checkboxSelection={false}
           columnHeaderHeight={50}
           rowHeight={50}
           slots={{ toolbar: CalendarToolbar }}
           getCellClassName={(params) =>
             params.field === format(new Date(), 'yyyy-MM-dd') ? 'today' : ''
           }
-          showToolbar
           hideFooter
+          showToolbar
           showCellVerticalBorder
           disableColumnMenu
           disableColumnSorting

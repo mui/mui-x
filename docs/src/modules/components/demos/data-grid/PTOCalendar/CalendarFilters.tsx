@@ -7,13 +7,13 @@ import { FILTER_OPTIONS, FILTER_LABELS, FILTER_COLORS } from './constants';
 import Check from '@mui/icons-material/Check';
 import { useTheme } from '@mui/material/styles';
 
-interface FilterChipsProps {
+interface CalendarFiltersProps {
   activeFilters: FilterType[];
   onFilterRemove: (filter: FilterType) => void;
   onFilterAdd: (filter: FilterType) => void;
 }
 
-export const FilterChips: React.FC<FilterChipsProps> = ({
+export const CalendarFilters: React.FC<CalendarFiltersProps> = ({
   activeFilters,
   onFilterRemove,
   onFilterAdd,

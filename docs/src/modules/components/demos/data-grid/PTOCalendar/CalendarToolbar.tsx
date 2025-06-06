@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import { FilterChips } from './FilterChips';
+import { CalendarFilters } from './CalendarFilters';
 import { useCalendarContext } from './CalendarContext';
 import Typography from '@mui/material/Typography';
 import { CalendarNavigation } from './CalendarNavigation';
@@ -52,7 +52,7 @@ function CalendarToolbar() {
           py: 1.5,
         }}
       >
-        <FilterChips
+        <CalendarFilters
           activeFilters={activeFilters}
           onFilterRemove={handleFilterRemove}
           onFilterAdd={handleFilterAdd}
