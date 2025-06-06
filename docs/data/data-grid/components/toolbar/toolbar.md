@@ -2,7 +2,7 @@
 productId: x-data-grid
 components: Toolbar, ToolbarButton
 packageName: '@mui/x-data-grid'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
 # Data Grid - Toolbar component
