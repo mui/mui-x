@@ -157,6 +157,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     }
     inputAdditionalProps.label = label;
   }
+  inputAdditionalProps.hiddenLabel = other.hiddenLabel ?? false;
 
   return (
     <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
@@ -173,7 +174,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
         ownerState={ownerState}
         {...other}
       >
-        {label != null && label !== '' && (
+        {label != null && label !== '' && !inputAdditionalProps.hiddenLabel && (
           <InputLabel htmlFor={id} id={inputLabelId} {...InputLabelProps}>
             {label}
           </InputLabel>
