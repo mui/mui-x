@@ -16,8 +16,9 @@ A typical release goes like this:
 
 The following steps must be proposed as a pull request.
 
-1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
-   To do so, use `pnpm release:changelog` The options are the following:
+1. Compare the last tag with the branch upon which you want to release.
+   To do so, use `pnpm release:changelog --lastRelease v7._._`.
+   The options are the following:
 
 ```bash
 pnpm release:changelog

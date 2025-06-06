@@ -1044,6 +1044,32 @@ describe('<DataGridPro /> - Row selection', () => {
 
         expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
       });
+
+      it('should not apply row selection propagation on filtered rows', async () => {
+        const { user } = render(
+          <SelectionPropagationGrid
+            keepNonExistentRowsSelected
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        await user.click(getCell(3, 0).querySelector('input')!);
+        expect(apiRef.current.getSelectedRows()).to.have.keys([3]);
+
+        await act(async () => {
+          apiRef.current?.setFilterModel({
+            items: [
+              {
+                field: 'jobTitle',
+                value: 'a-value-that-does-not-exist',
+                operator: 'equals',
+              },
+            ],
+          });
+        });
+
+        expect(apiRef.current.getSelectedRows()).to.have.keys([3]);
+      });
     });
   });
 

@@ -10,10 +10,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 <p class="description">The Time Range Picker lets the user select a range of time.</p>
 
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4460](https://github.com/mui/mui-x/issues/4460) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+:::success
+The Time Range Picker is available in MUI X v8+.
+You must [upgrade from v7](https://mui.com/x/migration/migration-pickers-v7/) to use this component.
 :::

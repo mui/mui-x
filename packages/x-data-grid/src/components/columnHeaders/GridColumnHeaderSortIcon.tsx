@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import clsx from 'clsx';
 import { GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -15,6 +16,7 @@ export interface GridColumnHeaderSortIconProps {
   index: number | undefined;
   sortingOrder: readonly GridSortDirection[];
   disabled?: boolean;
+  className?: string;
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
@@ -25,6 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
+    root: ['sortButton'],
     icon: ['sortIcon'],
   };
 
@@ -51,7 +54,7 @@ function getIcon(
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { direction, index, sortingOrder, disabled, ...other } = props;
+  const { direction, index, sortingOrder, disabled, className, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -69,6 +72,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
       disabled={disabled}
+      className={clsx(classes.root, className)}
       {...rootProps.slotProps?.baseIconButton}
       {...other}
     >
@@ -96,6 +100,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  className: PropTypes.string,
   direction: PropTypes.oneOf(['asc', 'desc']),
   disabled: PropTypes.bool,
   field: PropTypes.string.isRequired,

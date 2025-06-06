@@ -581,6 +581,10 @@ export interface GridClasses {
    */
   selectedRowCount: string;
   /**
+   * Styles applied to the sort button element.
+   */
+  sortButton: string;
+  /**
    * Styles applied to the sort icon element.
    */
   sortIcon: string;
@@ -800,6 +804,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbarFiller--borderBottom',
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
+  'sortButton',
   'sortIcon',
   'toolbarContainer',
   'toolbarFilterList',

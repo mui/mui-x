@@ -1133,6 +1133,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
+    "sortButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the sort button element"
+    },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"
