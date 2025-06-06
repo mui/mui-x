@@ -86,7 +86,6 @@ const generateMockStockData = (): StockData[] => {
 export const useStocksMockServer = () => {
   const [isDataReady, setDataReady] = React.useState(false);
   const dataRef = React.useRef<GridDemoData | null>(null);
-  const [lastUpdate, setLastUpdate] = React.useState<number>(Date.now());
 
   React.useEffect(() => {
     const cacheKey = 'stocks-initial';
@@ -111,14 +110,10 @@ export const useStocksMockServer = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!dataRef.current) return;
+    const currentData = dataRef.current;
+    if (!currentData) return;
 
     const interval = setInterval(() => {
-      setLastUpdate(Date.now());
-
-      const currentData = dataRef.current;
-      if (!currentData) return;
-
       const updatedRows = currentData.rows.map((row) => {
         const priceChange = (Math.random() - 0.5) * (row.price * 0.01);
         const newPrice = Number((row.price + priceChange).toFixed(2));
