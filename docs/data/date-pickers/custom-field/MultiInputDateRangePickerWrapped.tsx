@@ -6,7 +6,7 @@ import {
   MultiInputDateRangeField,
   MultiInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer } from '../_shared/DemoContainer';
 
 function WrappedMultiInputDateRangeField(
   props: MultiInputDateRangeFieldProps<true>,

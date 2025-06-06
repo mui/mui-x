@@ -1,10 +1,10 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+import { DemoContainer, DemoItem } from '../_shared/DemoContainer';
 
 const lastSunday = dayjs().startOf('week').subtract(1, 'day');
 const nextSunday = dayjs().endOf('week').startOf('day');

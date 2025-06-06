@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
+import { DemoItem } from '../_shared/DemoContainer';
 
 export default function ClearableProp() {
   const [cleared, setCleared] = React.useState(false);
