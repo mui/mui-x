@@ -271,6 +271,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
     }
+
+    return () => {
+      // ignore the current request on unmount
+      lastRequestId.current = 0;
+    };
   }, [apiRef, props.dataSource]);
 
   return {
