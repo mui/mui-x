@@ -9,6 +9,7 @@
 
   /* Compact */
   --compact-accepted-bg: var(--surface);
+  --compact-square-bg: var(--primary-12);
   --compact-accepted-primary-text: var(--primary-12);
   --compact-accepted-secondary-text: var(--primary-12);
 
@@ -84,6 +85,29 @@
   --event-background: var(--compact-accepted-bg);
   --event-primary-text: var(--compact-accepted-primary-text);
   --event-secondary-text: var(--compact-accepted-secondary-text);
+
+  position: relative;
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1) 0 var(--space-1) var(--space-4);
+}
+
+.EventCard--compact::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-1);
+  border: 1px solid var(--compact-square-bg);
+  background-color: var(--compact-square-bg);
+}
+
+.EventCard--compact .EventTime {
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
 .EventCard--allDay {

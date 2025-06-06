@@ -17,13 +17,65 @@ export const Event = React.forwardRef(function Event(
   const containerRef = React.useRef<HTMLDivElement>(null);
   const titleRef = React.useRef<HTMLParagraphElement>(null);
 
+  const renderContent = React.useMemo(() => {
+    switch (variant) {
+      case 'regular':
+        return (
+          <React.Fragment>
+            <p
+              ref={titleRef}
+              className={clsx('EventTitle', 'LinesClamp')}
+              style={{ '--number-of-lines': titleLines } as React.CSSProperties}
+            >
+              {event.title}
+            </p>
+            <time
+              className={clsx('EventTime', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              {adapter.formatByString(event.start, 'h:mm a')} -{' '}
+              {adapter.formatByString(event.end, 'h:mm a')}
+            </time>
+          </React.Fragment>
+        );
+      case 'compact':
+        return (
+          <React.Fragment>
+            <time className={clsx('EventTime')}>
+              {adapter.formatByString(event.start, 'h:mm a')}
+            </time>
+            <p
+              ref={titleRef}
+              className={clsx('EventTitle', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              {event.title}
+            </p>
+          </React.Fragment>
+        );
+      case 'allDay':
+        return (
+          <p
+            ref={titleRef}
+            className={clsx('EventTitle', 'LinesClamp')}
+            style={{ '--number-of-lines': 1 } as React.CSSProperties}
+          >
+            {event.title}
+          </p>
+        );
+    }
+  }, [variant]);
+
   React.useEffect(() => {
     if (!containerRef.current || !titleRef.current) return;
 
     const measure = () => {
       const containerHeight = containerRef.current!.clientHeight;
       const titleLineHeight = parseFloat(getComputedStyle(titleRef.current!).lineHeight);
-      setTitleLines(containerHeight >= titleLineHeight * 3 ? 2 : 1);
+      setTitleLines((prev) => {
+        const newLines = containerHeight >= titleLineHeight * 3 ? 2 : 1;
+        return prev === newLines ? prev : newLines;
+      });
     };
 
     measure();
@@ -43,20 +95,7 @@ export const Event = React.forwardRef(function Event(
         aria-labelledby={ariaLabelledBy}
         ref={containerRef}
       >
-        <p
-          ref={titleRef}
-          className={clsx('EventTitle', 'LinesClamp')}
-          style={{ '--number-of-lines': titleLines } as React.CSSProperties}
-        >
-          {event.title}
-        </p>
-        <time
-          className={clsx('EventTime', 'LinesClamp')}
-          style={{ '--number-of-lines': 1 } as React.CSSProperties}
-        >
-          {adapter.formatByString(event.start, 'h:mm a')} -{' '}
-          {adapter.formatByString(event.end, 'h:mm a')}
-        </time>
+        {renderContent}
       </TimeGrid.Event>
     </div>
   );
