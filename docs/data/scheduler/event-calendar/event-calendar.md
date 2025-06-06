@@ -25,7 +25,7 @@ All the views of the Event Calendar can be used as standalone components:
 
 ### Day
 
-TODO: Add a demo of a standalone `<DayView />` when available.
+{{"demo": "StandaloneDayView.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Week
 

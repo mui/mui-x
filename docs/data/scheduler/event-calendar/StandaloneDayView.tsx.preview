@@ -1,0 +1,1 @@
+<DayView events={events} className={classes.Container} />
