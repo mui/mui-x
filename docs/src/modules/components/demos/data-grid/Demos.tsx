@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
 import AccountBalance from '@mui/icons-material/AccountBalance';
 import Box from '@mui/material/Box';
+import StockDashboard from './FinancialDashboard/StockDashboard';
 
 const DEMOS: { name: string; icon: React.ReactNode; component: React.ComponentType<any> }[] = [
   {
