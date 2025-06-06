@@ -45,6 +45,9 @@ export interface GridLocaleText {
   // Toolbar pivot button
   toolbarPivot: string;
 
+  // Toolbar charts button
+  toolbarCharts: string;
+
   // Toolbar AI Assistant button
   toolbarAssistant: React.ReactNode;
 
