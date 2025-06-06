@@ -86,9 +86,10 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   | null;
 
 /**
- * Return an array of the axes that should trigger the tooltip.
- *
  * If `axisId` is set to undefined, the default axis will be used.
+ *
+ * @param {Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>} series A map of series ID to their series configuration.
+ * @returns {{ direction: Directions; axisId: AxisId | undefined }[]} an array of the axes that should trigger the tooltip.
  */
 export type AxisTooltipGetter<
   TSeriesType extends ChartSeriesType,
