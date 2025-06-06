@@ -26,6 +26,7 @@ import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
 import { FILTER_COLORS } from './constants';
 import { ptoCalendarTheme } from './theme';
+import { DemoThemeProvider } from '../DemoThemeProvider';
 
 interface RowData {
   id: number;
@@ -654,60 +655,44 @@ function PTOCalendar() {
   );
 
   return (
-    <CalendarContext.Provider value={calendarState}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          minHeight: 700,
-          ...theme.applyStyles('dark', {
-            backgroundColor: '#141A1F',
-          }),
-        }}
-      >
-        <DataGridPremium
-          pinnedRows={pinnedRow}
-          rows={rows}
-          columns={columns}
-          pinnedColumns={{
-            left: ['employee'],
+    <DemoThemeProvider theme={ptoCalendarTheme}>
+      <CalendarContext.Provider value={calendarState}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            minHeight: 700,
+            ...theme.applyStyles('dark', {
+              backgroundColor: '#141A1F',
+            }),
           }}
-          columnHeaderHeight={50}
-          rowHeight={50}
-          slots={{ toolbar: CalendarToolbar }}
-          getCellClassName={(params) =>
-            params.field === format(new Date(), 'yyyy-MM-dd') ? 'today' : ''
-          }
-          hideFooter
-          showToolbar
-          showCellVerticalBorder
-          disableColumnMenu
-          disableColumnSorting
-          disableColumnReorder
-          disableRowSelectionOnClick
-        />
-      </Box>
-    </CalendarContext.Provider>
+        >
+          <DataGridPremium
+            pinnedRows={pinnedRow}
+            rows={rows}
+            columns={columns}
+            pinnedColumns={{
+              left: ['employee'],
+            }}
+            columnHeaderHeight={50}
+            rowHeight={50}
+            slots={{ toolbar: CalendarToolbar }}
+            getCellClassName={(params) =>
+              params.field === format(new Date(), 'yyyy-MM-dd') ? 'today' : ''
+            }
+            hideFooter
+            showToolbar
+            showCellVerticalBorder
+            disableColumnMenu
+            disableColumnSorting
+            disableColumnReorder
+            disableRowSelectionOnClick
+          />
+        </Box>
+      </CalendarContext.Provider>
+    </DemoThemeProvider>
   );
 }
 
-function PTOCalendarContainer() {
-  const docsTheme = useTheme();
-  const docsMode = docsTheme?.palette?.mode;
-
-  const theme = React.useMemo(() => {
-    if (docsMode) {
-      Object.assign(ptoCalendarTheme, ptoCalendarTheme.colorSchemes[docsMode]);
-    }
-    return ptoCalendarTheme;
-  }, [docsMode]);
-
-  return (
-    <ThemeProvider theme={theme}>
-      <PTOCalendar />
-    </ThemeProvider>
-  );
-}
-
-export default PTOCalendarContainer;
+export default PTOCalendar;

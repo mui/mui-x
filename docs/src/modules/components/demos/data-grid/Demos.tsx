@@ -6,7 +6,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
-import AccountBalance from '@mui/icons-material/AccountBalance';
+import BarChart from '@mui/icons-material/BarChart';
 import Box from '@mui/material/Box';
 import StockDashboard from './FinancialDashboard/StockDashboard';
 
@@ -17,8 +17,8 @@ const DEMOS: { name: string; icon: React.ReactNode; component: React.ComponentTy
     component: PTOCalendar,
   },
   {
-    name: 'Stocks',
-    icon: <AccountBalance fontSize="small" />,
+    name: 'Stock Market',
+    icon: <BarChart fontSize="small" />,
     component: StockDashboard,
   },
 ];

@@ -17,8 +17,10 @@ import { format } from 'date-fns';
 import type { StockData } from './types/stocks';
 import { useStocksMockServer } from './hooks/useMockStockServer';
 import { getLogoUrl } from './utils/stockUtils';
+import { DemoThemeProvider } from '../DemoThemeProvider';
+import { stockDashboardTheme } from './theme';
 
-const StockDashboard: React.FC = () => {
+function StockDashboard() {
   const [stocks, setStocks] = useState<StockData[]>([]);
   const [selectedStock, setSelectedStock] = useState<StockData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -254,161 +256,161 @@ const StockDashboard: React.FC = () => {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: 800,
-        width: '100%',
-      }}
-    >
-      <Typography fontSize="1.2rem" fontWeight="bold" sx={{ px: 3, py: 1.5 }}>
-        Stock Dashboard
-      </Typography>
-
-      {error && (
-        <Alert severity="warning" sx={{ mx: 2, mb: 2 }}>
-          {error}
-        </Alert>
-      )}
-
-      <Paper
+    <DemoThemeProvider theme={stockDashboardTheme}>
+      <Box
         sx={{
-          flex: 1,
-          mx: 2,
-          mb: 2,
           display: 'flex',
           flexDirection: 'column',
-          minHeight: 0,
-          boxShadow: 'none',
+          height: 800,
+          width: '100%',
         }}
       >
-        <DataGridPro
-          rows={stocks}
-          columns={columns}
-          onRowClick={(params) => setSelectedStock(params.row)}
-          sx={{
-            '& .MuiDataGrid-cell': {
-              display: 'flex',
-              alignItems: 'center',
-              outline: 'none',
-              fontSize: '0.875rem',
-            },
-            '& .MuiDataGrid-row': {
-              minHeight: '52px !important',
-            },
-            '& .MuiDataGrid-columnHeader': {
-              backgroundColor: 'grey.100',
-              ...theme.applyStyles('dark', {
-                backgroundColor: '#141A1F',
-              }),
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              minHeight: '52px !important',
-              fontSize: '0.875rem',
-            },
-            '& .MuiDataGrid-footerContainer': {
-              backgroundColor: 'grey.100',
-              borderTop: '1px solid',
-              borderColor: 'divider',
-              ...theme.applyStyles('dark', {
-                backgroundColor: '#141A1F',
-              }),
-            },
-            borderRadius: 1,
-            border: '1px solid',
-            borderColor: 'divider',
-            '& .MuiDataGrid-cell:focus': {
-              outline: 'none',
-            },
-            '& .MuiDataGrid-columnHeader:focus': {
-              outline: 'none',
-            },
-            '& [data-field="name"]': {
-              display: { xs: 'none', sm: 'flex' },
-            },
-            '& [data-field="name"] .MuiDataGrid-columnHeader': {
-              display: { xs: 'none', sm: 'flex' },
-            },
-            '& [data-field="trend"]': {
-              display: { xs: 'none', sm: 'flex' },
-            },
-            '& [data-field="trend"] .MuiDataGrid-columnHeader': {
-              display: { xs: 'none', sm: 'flex' },
-            },
-          }}
-          getRowHeight={() => 'auto'}
-        />
-      </Paper>
+        <Typography fontSize="1.2rem" fontWeight="bold" sx={{ px: 3, py: 1.5 }}>
+          Stock Dashboard
+        </Typography>
 
-      {selectedStock && (
+        {error && (
+          <Alert severity="warning" sx={{ mx: 2, mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
         <Paper
           sx={{
-            height: 400,
-            p: 2,
-            position: 'sticky',
-            bottom: 0,
-            zIndex: 1,
+            flex: 1,
+            mx: 2,
+            mb: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+            boxShadow: 'none',
           }}
         >
-          <Box
+          <DataGridPro
+            rows={stocks}
+            columns={columns}
+            onRowClick={(params) => setSelectedStock(params.row)}
             sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 2,
+              '& .MuiDataGrid-cell': {
+                display: 'flex',
+                alignItems: 'center',
+                outline: 'none',
+                fontSize: '0.875rem',
+              },
+              '& .MuiDataGrid-row': {
+                minHeight: '52px !important',
+              },
+              '& .MuiDataGrid-columnHeader': {
+                backgroundColor: 'grey.100',
+                ...theme.applyStyles('dark', {
+                  backgroundColor: '#141A1F',
+                }),
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                minHeight: '52px !important',
+                fontSize: '0.875rem',
+              },
+              '& .MuiDataGrid-footerContainer': {
+                backgroundColor: 'grey.100',
+                borderTop: '1px solid',
+                borderColor: 'divider',
+                ...theme.applyStyles('dark', {
+                  backgroundColor: '#141A1F',
+                }),
+              },
+              borderRadius: 1,
+              border: '1px solid',
+              borderColor: 'divider',
+              '& .MuiDataGrid-cell:focus': {
+                outline: 'none',
+              },
+              '& .MuiDataGrid-columnHeader:focus': {
+                outline: 'none',
+              },
+              '& [data-field="name"]': {
+                display: { xs: 'none', sm: 'flex' },
+              },
+              '& [data-field="name"] .MuiDataGrid-columnHeader': {
+                display: { xs: 'none', sm: 'flex' },
+              },
+              '& [data-field="trend"]': {
+                display: { xs: 'none', sm: 'flex' },
+              },
+              '& [data-field="trend"] .MuiDataGrid-columnHeader': {
+                display: { xs: 'none', sm: 'flex' },
+              },
             }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              {selectedStock.symbol} - Price History
-            </Typography>
-            <IconButton
-              onClick={() => setSelectedStock(null)}
-              size="small"
-              sx={{
-                color: 'text.secondary',
-                '&:hover': {
-                  color: 'text.primary',
-                },
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <LineChart
-            series={[
-              {
-                type: 'line',
-                data: selectedStock.history.map((h: { price: number }) => h.price),
-                color: selectedStock.change >= 0 ? '#2e7d32' : '#d32f2f',
-              },
-            ]}
-            xAxis={[
-              {
-                data: selectedStock.history.map((h: { date: string }) => new Date(h.date)),
-                scaleType: 'time',
-                valueFormatter: (value: Date) => format(value, 'MM/dd'),
-              },
-            ]}
-            yAxis={[
-              {
-                min:
-                  Math.min(...selectedStock.history.map((h: { price: number }) => h.price)) * 0.99,
-                max:
-                  Math.max(...selectedStock.history.map((h: { price: number }) => h.price)) * 1.01,
-              },
-            ]}
-            height={300}
-            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            getRowHeight={() => 'auto'}
           />
         </Paper>
-      )}
-    </Box>
-  );
-};
 
-function StockDashboardContainer() {
-  return <StockDashboard />;
+        {selectedStock && (
+          <Paper
+            sx={{
+              height: 400,
+              p: 2,
+              position: 'sticky',
+              bottom: 0,
+              zIndex: 1,
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 2,
+              }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                {selectedStock.symbol} - Price History
+              </Typography>
+              <IconButton
+                onClick={() => setSelectedStock(null)}
+                size="small"
+                sx={{
+                  color: 'text.secondary',
+                  '&:hover': {
+                    color: 'text.primary',
+                  },
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            <LineChart
+              series={[
+                {
+                  type: 'line',
+                  data: selectedStock.history.map((h: { price: number }) => h.price),
+                  color: selectedStock.change >= 0 ? '#2e7d32' : '#d32f2f',
+                },
+              ]}
+              xAxis={[
+                {
+                  data: selectedStock.history.map((h: { date: string }) => new Date(h.date)),
+                  scaleType: 'time',
+                  valueFormatter: (value: Date) => format(value, 'MM/dd'),
+                },
+              ]}
+              yAxis={[
+                {
+                  min:
+                    Math.min(...selectedStock.history.map((h: { price: number }) => h.price)) *
+                    0.99,
+                  max:
+                    Math.max(...selectedStock.history.map((h: { price: number }) => h.price)) *
+                    1.01,
+                },
+              ]}
+              height={300}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            />
+          </Paper>
+        )}
+      </Box>
+    </DemoThemeProvider>
+  );
 }
 
-export default StockDashboardContainer;
+export default StockDashboard;
