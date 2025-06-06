@@ -192,17 +192,17 @@ export const useFieldState = <
     [state.sections],
   );
 
-  const isPartiallyFilled = React.useMemo(() => {
-    const filledSectionCount = state.sections.filter((section) => section.value !== '').length;
-    return filledSectionCount > 0 && filledSectionCount < state.sections.length;
-  }, [state.sections]);
+  const forcedError = React.useMemo(
+    () => fieldValueManager.getPartiallyFilledError(state.sections),
+    [fieldValueManager, state.sections],
+  );
 
   const { hasValidationError } = useValidation({
     props: internalPropsWithDefaults,
     validator,
     timezone,
     value,
-    isPartiallyFilled,
+    forcedError,
     onError: internalPropsWithDefaults.onError,
   });
 
@@ -216,14 +216,13 @@ export const useFieldState = <
     return hasValidationError;
   }, [hasValidationError, errorProp]);
 
-  const publishValue = (newValue: TValue, isNewValuePartiallyFilled: boolean) => {
+  const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {
-      isPartiallyFilled,
       validationError: validator({
         adapter,
         value: newValue,
         timezone,
-        isPartiallyFilled: isNewValuePartiallyFilled,
+        forcedError: fieldValueManager.getPartiallyFilledError(state.sections),
         props: internalPropsWithDefaults,
       }),
     };
@@ -272,7 +271,7 @@ export const useFieldState = <
       }));
     } else {
       setState((prevState) => ({ ...prevState, characterQuery: null }));
-      publishValue(valueManager.emptyValue, false);
+      publishValue(valueManager.emptyValue);
     }
   };
 
@@ -323,7 +322,7 @@ export const useFieldState = <
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
-    publishValue(newValue, false);
+    publishValue(newValue);
   };
 
   const cleanActiveDateSectionsIfValueNullTimeout = useTimeout();

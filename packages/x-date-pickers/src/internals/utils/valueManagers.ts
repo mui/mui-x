@@ -37,7 +37,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
     value == null ? null : utils.setTimezone(value, timezone),
 };
 
-export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
+export const singleItemFieldValueManager: FieldValueManager<PickerValue, any> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     utils.isValid(value) ? value : prevReferenceValue,
   getSectionsFromValue: (date, getSectionsFromDate) => getSectionsFromDate(date),
@@ -49,4 +49,19 @@ export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   getDateSectionsFromValue: (sections) => sections,
   updateDateInValue: (value, activeSection, activeDate) => activeDate,
   clearDateSections: (sections) => sections.map((section) => ({ ...section, value: '' })),
+  getPartiallyFilledError: (sections) => {
+    let hasEmptySection = false;
+    let hasFilledSection = false;
+
+    for (const section of sections) {
+      if (section.value === '') {
+        hasEmptySection = true;
+      } else {
+        hasFilledSection = true;
+      }
+    }
+
+    const isPartiallyFilled = hasEmptySection && hasFilledSection;
+    return isPartiallyFilled ? 'partiallyFilledDate' : null;
+  },
 };

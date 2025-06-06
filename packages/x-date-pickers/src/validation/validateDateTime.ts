@@ -11,7 +11,7 @@ import {
   ValidateTimeProps,
   ValidateTimePropsToDefault,
 } from './validateTime';
-import { DateTimeValidationError } from '../models';
+import { DateTimeValidationError, DateValidationError, TimeValidationError } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeValidationProps } from '../internals/models/validation';
 import { PickerValue } from '../internals/models';
@@ -40,11 +40,12 @@ export const validateDateTime: Validator<
   PickerValue,
   DateTimeValidationError,
   ValidateDateTimeProps
-> = ({ adapter, value, timezone, props }) => {
+> = ({ adapter, value, timezone, forcedError, props }) => {
   const dateValidationResult = validateDate({
     adapter,
     value,
     timezone,
+    forcedError: forcedError as DateValidationError,
     props,
   });
 
@@ -56,6 +57,7 @@ export const validateDateTime: Validator<
     adapter,
     value,
     timezone,
+    forcedError: forcedError as TimeValidationError,
     props,
   });
 };

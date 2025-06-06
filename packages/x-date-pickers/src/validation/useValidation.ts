@@ -12,8 +12,8 @@ export type Validator<TValue extends PickerValidValue, TError, TValidationProps>
     adapter: MuiPickersAdapterContextValue;
     value: TValue;
     timezone: PickersTimezone;
+    forcedError: TError;
     props: TValidationProps;
-    isPartiallyFilled?: boolean;
   }): TError;
   valueManager: PickerValueManager<TValue, any>;
 };
@@ -44,11 +44,11 @@ interface UseValidationParameters<
    */
   props: TValidationProps;
   /**
-   * Whether the value is partially filled or not.
+   * The error to force whatever the validation returns.
    * This is useful when the UI you are validating has several elements to fill (for example a field UI with one section for the year, one for the month, etc.).
-   * Until all the elements are filled, the value is `null`, but the validation should treat it as an invalid value.
+   * Until all the elements are filled, the value remains `null`, but the validation should treat it as an invalid value.
    */
-  isPartiallyFilled?: boolean;
+  forcedError?: TError | undefined;
 }
 
 export interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
@@ -67,10 +67,10 @@ export interface UseValidationReturnValue<TValue extends PickerValidValue, TErro
    * This can be used to validate the value in a change handler before updating the state.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} newValue The value to validate.
-   * @param {boolean} [newIsPartiallyFilled] Whether the value is partially filled or not.
+   * @param {TError} [newForcedError]  The error to force whatever the validation returns.
    * @returns {TError} The validation error associated to the new value.
    */
-  getValidationErrorForNewValue: (newValue: TValue, newIsPartiallyFilled?: boolean) => TError;
+  getValidationErrorForNewValue: (newValue: TValue, newForcedError?: TError) => TError;
 }
 
 /**
@@ -87,14 +87,28 @@ export interface UseValidationReturnValue<TValue extends PickerValidValue, TErro
 export function useValidation<TValue extends PickerValidValue, TError, TValidationProps extends {}>(
   parameters: UseValidationParameters<TValue, TError, TValidationProps>,
 ): UseValidationReturnValue<TValue, TError> {
-  const { props, validator, value, timezone, onError, isPartiallyFilled } = parameters;
+  const {
+    props,
+    validator,
+    value,
+    timezone,
+    onError,
+    forcedError = validator.valueManager.defaultErrorState,
+  } = parameters;
 
   const adapter = useLocalizationContext();
   const previousValidationErrorRef = React.useRef<TError | null>(
     validator.valueManager.defaultErrorState,
   );
 
-  const validationError = validator({ adapter, value, timezone, props, isPartiallyFilled });
+  const validationError = validator({
+    adapter,
+    value,
+    timezone,
+    forcedError,
+    props,
+  });
+
   const hasValidationError = validator.valueManager.hasError(validationError);
 
   React.useEffect(() => {
@@ -109,13 +123,13 @@ export function useValidation<TValue extends PickerValidValue, TError, TValidati
   }, [validator, onError, validationError, value]);
 
   const getValidationErrorForNewValue = useEventCallback(
-    (newValue: TValue, newIsPartiallyFilled?: boolean) => {
+    (newValue: TValue, newForcedError: TError = validator.valueManager.defaultErrorState) => {
       return validator({
         adapter,
         value: newValue,
         timezone,
+        forcedError: newForcedError,
         props,
-        isPartiallyFilled: newIsPartiallyFilled,
       });
     },
   );

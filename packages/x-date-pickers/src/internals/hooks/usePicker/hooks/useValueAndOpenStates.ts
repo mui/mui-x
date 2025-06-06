@@ -87,13 +87,13 @@ export function useValueAndOpenStates<
     valueManager,
   });
 
-  const [state, setState] = React.useState<UsePickerState<TValue>>(() => ({
+  const [state, setState] = React.useState<UsePickerState<TValue, TError>>(() => ({
     open: false,
     lastExternalValue: value,
     clockShallowValue: undefined,
     lastCommittedValue: value,
     hasBeenModifiedSinceMount: false,
-    isPartiallyFilled: false,
+    forcedError: valueManager.defaultErrorState,
   }));
 
   const { getValidationErrorForNewValue } = useValidation({
@@ -102,7 +102,7 @@ export function useValueAndOpenStates<
     timezone,
     value,
     onError: props.onError,
-    isPartiallyFilled: state.isPartiallyFilled,
+    forcedError: state.forcedError,
   });
 
   const setOpen = useEventCallback((action: React.SetStateAction<boolean>) => {
@@ -118,6 +118,13 @@ export function useValueAndOpenStates<
     if (!newOpen) {
       onClose?.();
     }
+  });
+
+  const setForcedError = useEventCallback((isPartiallyFilled: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isPartiallyFilled,
+    }));
   });
 
   const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) => {
