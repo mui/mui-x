@@ -19,7 +19,7 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
-import { FunnelChartPluginsSignatures } from './FunnelChart.plugins';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 
 export interface FunnelChartProps
   extends Omit<
@@ -94,7 +94,9 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   return (
     <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
       {...chartDataProviderProProps}
+      gap={themedProps.gap}
       seriesConfig={seriesConfig}
+      plugins={FUNNEL_CHART_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}

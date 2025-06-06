@@ -1,7 +1,5 @@
 import {
   ConvertSignaturesIntoPlugins,
-  useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
   useChartHighlight,
   UseChartHighlightSignature,
   useChartInteraction,
@@ -11,16 +9,18 @@ import {
   useChartProExport,
   UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
+import { useChartFunnelAxis } from './funnelAxisPlugin/useChartFunnelAxis';
+import { UseChartFunnelAxisSignature } from './funnelAxisPlugin/useChartFunnelAxis.types';
 
 export type FunnelChartPluginsSignatures = [
-  UseChartCartesianAxisSignature,
+  UseChartFunnelAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartProExportSignature,
 ];
 
 export const FUNNEL_CHART_PLUGINS: ConvertSignaturesIntoPlugins<FunnelChartPluginsSignatures> = [
-  useChartCartesianAxis,
+  useChartFunnelAxis,
   useChartInteraction,
   useChartHighlight,
   useChartProExport,

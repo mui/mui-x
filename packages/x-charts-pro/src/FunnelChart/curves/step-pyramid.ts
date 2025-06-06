@@ -36,7 +36,7 @@ export class StepPyramid implements CurveGenerator {
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
-    this.gap = (gap ?? 0) / 2;
+    this.gap = gap ?? 0;
     this.position = position ?? 0;
     this.sections = sections ?? 1;
     this.borderRadius = borderRadius ?? 0;
@@ -163,28 +163,26 @@ export class StepPyramid implements CurveGenerator {
       return;
     }
 
-    // Add gaps where they are needed.
+    // Replace funnel points by pyramids ones.
     this.points = this.points.map((point, index) => {
       const slopeStart = this.slopeStart(index);
       const slopeEnd = this.slopeEnd(index);
 
       if (this.isHorizontal) {
         const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-        const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
         const xInitial = this.initialX(index);
 
         return {
-          x: xGap,
+          x: point.x,
           y: yGetter(xInitial),
         };
       }
 
       const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-      const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
       const yInitial = this.initialY(index);
       return {
         x: xGetter(yInitial),
-        y: yGap,
+        y: point.y,
       };
     });
 
