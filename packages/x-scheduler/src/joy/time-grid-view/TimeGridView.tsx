@@ -43,6 +43,8 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
     header.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
   }, [events]);
 
+  const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
+
   return (
     <div ref={forwardedRef} className={clsx('TimeGridViewContainer', className)} {...other}>
       <TimeGrid.Root className="TimeGridViewRoot">
@@ -67,7 +69,11 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
               </div>
             ))}
           </div>
-          <div className="TimeGridViewGridRow TimeGridViewAllDayEventsRow" role="row">
+          <div
+            className={clsx('TimeGridViewGridRow', 'TimeGridViewAllDayEventsRow')}
+            role="row"
+            data-weekend={lastIsWeekend ? '' : undefined}
+          >
             <div
               className="TimeGridViewAllDayEventsCell TimeGridViewAllDayEventsHeaderCell"
               role="columnheader"

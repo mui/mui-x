@@ -20,11 +20,19 @@ export const WeekView = React.forwardRef(function WeekView(
     [getDayList, today],
   );
 
+  const weekStart = adapter.startOfDay(currentWeekDays[0]);
+  const weekEnd = adapter.endOfDay(currentWeekDays[6]);
+
+  const filteredEvents = React.useMemo(
+    () => events.filter((event) => adapter.isWithinRange(event.start, [weekStart, weekEnd])),
+    [events, weekStart, weekEnd, adapter],
+  );
+
   return (
     <TimeGridView
       ref={forwardedRef}
       days={currentWeekDays}
-      events={events}
+      events={filteredEvents}
       className={className}
       {...other}
     />

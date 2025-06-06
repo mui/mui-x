@@ -59,6 +59,10 @@
 
 .TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewAllDayEventsRow {
   overflow-y: scroll;
+  scrollbar-color: transparent transparent;
+}
+
+.TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewAllDayEventsRow[data-weekend] {
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 
@@ -68,6 +72,11 @@
 }
 
 .TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewAllDayEventsRow::-webkit-scrollbar {
+  background: transparent;
+}
+
+.TimeGridViewHeader[style*='--has-scroll: 1']
+  .TimeGridViewAllDayEventsRow[data-weekend]::-webkit-scrollbar {
   background: var(--weekend-background);
 }
 

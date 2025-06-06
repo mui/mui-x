@@ -1,1 +1,1 @@
-export * from './DayView';
+export * from './TimeGridView';
