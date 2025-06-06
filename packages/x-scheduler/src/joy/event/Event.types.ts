@@ -1,4 +1,4 @@
-import { CalendarEvent } from '../models/events';
+import { CalendarEvent, EventVariant } from '../models/events';
 
 export interface EventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -8,9 +8,9 @@ export interface EventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * ID of the header this event is associated with (for aria-labelledby).
    */
-  ariaLabelledBy?: string;
+  ariaLabelledBy: string;
   /**
-   * Whether the event should be absolutely positioned in the calendar grid.
+   * The variant of the event, which determines its styling.
    */
-  isPositioned?: boolean;
+  variant: EventVariant;
 }

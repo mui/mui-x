@@ -122,7 +122,7 @@ export const WeekView = React.forwardRef(function WeekView(
                       <Event
                         key={event.id}
                         event={event}
-                        isPositioned
+                        variant="regular"
                         ariaLabelledBy={`WeekViewHeaderCell-${day.day.toString()}`}
                       />
                     ))}
