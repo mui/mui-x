@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Time Range Picker component
 components: DateTimeRangePicker, DesktopDateTimeRangePicker, MobileDateTimeRangePicker, DateRangeCalendar, DateRangePickerDay, DigitalClock, MultiSectionDigitalClock, DateTimeRangePickerTabs, DateTimeRangePickerToolbar
-githubLabel: 'component: DateTimeRangePicker'
+githubLabel: 'scope: DateTimeRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
