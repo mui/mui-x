@@ -19,6 +19,7 @@ import {
   gridDimensionsSelector,
 } from '@mui/x-data-grid-pro';
 import { randomCreatedDate, randomEmail } from '@mui/x-data-grid-generator';
+
 function DetailPanelContent({ row: rowProp }: { row: Email }) {
   const apiRef = useGridApiContext();
   const width = useGridSelector(apiRef, gridDimensionsSelector).viewportInnerSize
