@@ -156,6 +156,21 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [onZoomChange, store, removeIsInteracting],
   );
 
+  const setAxisZoomData = React.useCallback(
+    (axisId: AxisId, zoomData: ZoomData | ((prev: ZoomData) => ZoomData)) => {
+      setZoomDataCallback((prev) =>
+        prev.map((prevZoom) => {
+          if (prevZoom.axisId !== axisId) {
+            return prevZoom;
+          }
+
+          return typeof zoomData === 'function' ? zoomData(prevZoom) : zoomData;
+        }),
+      );
+    },
+    [setZoomDataCallback],
+  );
+
   const moveZoomRange = React.useCallback(
     (axisId: AxisId, by: number) => {
       setZoomDataCallback((prevZoomData) => {
@@ -287,7 +302,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     const handleDown = (event: PointerEvent) => {
       panningEventCacheRef.current.push(event);
       const point = getSVGPoint(element, event);
-      if (!instance.isPointInside(point)) {
+      if (!instance.isPointInside(point.x, point.y)) {
         return;
       }
       // If there is only one pointer, prevent selecting text
@@ -352,7 +367,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
       const point = getSVGPoint(element, event);
 
-      if (!instance.isPointInside(point)) {
+      if (!instance.isPointInside(point.x, point.y)) {
         return;
       }
 
@@ -509,11 +524,13 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       zoomIn,
       zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       moveZoomRange,
       zoomIn,
       zoomOut,

@@ -7,8 +7,8 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { TriggerOptions, usePointerType } from './utils';
-import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
@@ -59,10 +59,12 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     props: inProps,
     name: 'MuiChartsTooltipContainer',
   });
-  const { trigger = 'axis', classes, children, ...other } = props;
+  const { trigger = 'axis', classes: propClasses, children, ...other } = props;
+  const classes = useUtilityClasses(propClasses);
 
   const svgRef = useSvgRef();
   const pointerType = usePointerType();
+  const isFineMainPointer = useIsFineMainPointer();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
@@ -79,24 +81,24 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       : selectorChartsInteractionItemIsDefined,
   );
 
-  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
-
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null) {
       return () => {};
     }
 
-    const handleMove = (event: PointerEvent) => {
+    const handlePointerEvent = (event: PointerEvent) => {
       // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x: event.clientX, y: event.clientY };
       popperRef.current?.update();
     };
 
-    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointerdown', handlePointerEvent);
+    element.addEventListener('pointermove', handlePointerEvent);
 
     return () => {
-      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointerdown', handlePointerEvent);
+      element.removeEventListener('pointermove', handlePointerEvent);
     };
   }, [svgRef, positionRef]);
 
@@ -117,32 +119,35 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     [positionRef],
   );
 
+  const isMouse = pointerType?.pointerType === 'mouse' || isFineMainPointer;
+  const isTouch = pointerType?.pointerType === 'touch' || !isFineMainPointer;
+
   const modifiers = React.useMemo(
     () => [
       {
         name: 'offset',
         options: {
           offset: () => {
-            if (pointerType?.pointerType !== 'touch') {
-              // The popper offset: [skidding, distance]
-              return [0, 8];
+            if (isTouch) {
+              return [0, 64];
             }
-            return [0, 64];
+            // The popper offset: [skidding, distance]
+            return [0, 8];
           },
         },
       },
-      ...(pointerType?.pointerType === 'mouse'
-        ? [] // Keep default behavior
-        : [
+      ...(!isMouse
+        ? [
             {
               name: 'flip',
               options: {
                 fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
               },
             },
-          ]),
+          ]
+        : []), // Keep default behavior
     ],
-    [pointerType],
+    [isMouse, isTouch],
   );
 
   if (trigger === 'none') {
@@ -151,11 +156,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <NoSsr>
-      {popperOpen && (
+      {isOpen && (
         <ChartsTooltipRoot
           className={classes?.root}
-          open={popperOpen}
-          placement={pointerType?.pointerType === 'mouse' ? 'right-start' : 'top'}
+          open={isOpen}
+          placement={isMouse ? 'right-start' : 'top'}
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}

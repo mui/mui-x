@@ -51,11 +51,11 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   aggregationRowsScope: 'filtered',
   getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
   disableClipboardPaste: false,
-  splitClipboardPastedText: (pastedText) => {
+  splitClipboardPastedText: (pastedText, delimiter = '\t') => {
     // Excel on Windows adds an empty line break at the end of the copied text.
     // See https://github.com/mui/mui-x/issues/9103
     const text = pastedText.replace(/\r?\n$/, '');
-    return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
+    return text.split(/\r\n|\n|\r/).map((row) => row.split(delimiter));
   },
   disablePivoting: false,
   getPivotDerivedColumns: defaultGetPivotDerivedColumns,

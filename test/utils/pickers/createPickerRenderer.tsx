@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
-import sinon from 'sinon';
+import { vi } from 'vitest';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
-interface CreatePickerRendererOptions extends CreateRendererOptions {
+interface CreatePickerRendererOptions
+  extends Omit<CreateRendererOptions, 'clock' | 'clockOptions'> {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: { code: string } | any;
   adapterName?: AdapterName;
@@ -15,29 +16,21 @@ export function createPickerRenderer({
   locale,
   adapterName,
   instance,
-  clock: inClock,
   clockConfig,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
-  // TODO: Temporary until vitest is enabled
-  // If only clockConfig='2020/02/20' is provided, we just fake the Date, not the timers
-  // Most of the time we are using the clock we just want to fake the Date
-  // If timers are faked it can create inconsistencies with the tests.
-  // In some cases it also prevents us from really testing the real behavior of the component.
-  if (!inClock && clockConfig) {
-    let timer: sinon.SinonFakeTimers | null = null;
-    beforeEach(() => {
-      timer = sinon.useFakeTimers({ now: clockConfig, toFake: ['Date'] });
-    });
-    afterEach(() => {
-      timer?.restore();
-    });
-  }
-
-  const { clock, render: clientRender } = createRenderer({
+  const { render: clientRender } = createRenderer({
     ...createRendererOptions,
-    // TODO: Temporary until vitest is enabled
-    ...(inClock ? { clock: inClock, clockConfig } : {}),
+  });
+  beforeEach(() => {
+    if (clockConfig) {
+      vi.setSystemTime(clockConfig);
+    }
+  });
+  afterEach(() => {
+    if (clockConfig) {
+      vi.useRealTimers();
+    }
   });
 
   let adapterLocale = [
@@ -67,7 +60,6 @@ export function createPickerRenderer({
   }
 
   return {
-    clock,
     render(node: React.ReactElement<any>, options?: Omit<RenderOptions, 'wrapper'>) {
       return clientRender(node, { ...options, wrapper: Wrapper });
     },

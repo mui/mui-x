@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { CSSInterpolation } from '@mui/system';
 import ButtonBase from '@mui/material/ButtonBase';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-} from '@mui/utils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import composeClasses from '@mui/utils/composeClasses';
+import useForkRef from '@mui/utils/useForkRef';
 import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';

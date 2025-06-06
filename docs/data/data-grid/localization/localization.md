@@ -1,15 +1,16 @@
-# Data Grid - Translated components
+# Data Grid - Localization
 
-<p class="description">The Data Grid allows to support users from different locales, with formatting, and localized strings.</p>
+<p class="description">The Data Grid's localization features provide the appropriate translations and formatting for users around the world.</p>
 
-The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
+The default locale of MUI X is English (United States).
+To use other locales, follow the instructions below.
 
 ## Translation keys
 
 You can use the `localeText` prop to pass in your own text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/-/packages/x-data-grid/src/constants/localeTextConstants.ts)
 in the GitHub repository.
-In the following example, the labels of the density selector are customized.
+In the following example, the label of the quick filter placeholder is customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
 

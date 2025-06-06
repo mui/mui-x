@@ -1,31 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { Point } from './curve.types';
+import { CurveOptions, FunnelPointShape, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
-
-// From point1 to point2, get the x value from y
-const xFromY =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (y: number): number => {
-    if (y1 === y2) {
-      return x1;
-    }
-
-    const result = ((x2 - x1) * (y - y1)) / (y2 - y1) + x1;
-
-    return Number.isNaN(result) ? 0 : result;
-  };
-
-// From point1 to point2, get the y value from x
-const yFromX =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (x: number): number => {
-    if (x1 === x2) {
-      return y1;
-    }
-    const result = ((y2 - y1) * (x - x1)) / (x2 - x1) + y1;
-    return Number.isNaN(result) ? 0 : result;
-  };
+import { lerpX, lerpY } from './utils';
 
 /**
  * This is a custom "linear" curve generator.
@@ -44,11 +21,19 @@ export class Linear implements CurveGenerator {
 
   private isHorizontal: boolean = false;
 
+  private isIncreasing: boolean = false;
+
   private gap: number = 0;
 
   private borderRadius: number = 0;
 
+  private min: Point = { x: 0, y: 0 };
+
+  private max: Point = { x: 0, y: 0 };
+
   private points: Point[] = [];
+
+  private pointShape: FunnelPointShape = 'square';
 
   constructor(
     context: CanvasRenderingContext2D,
@@ -58,20 +43,29 @@ export class Linear implements CurveGenerator {
       position,
       sections,
       borderRadius,
-    }: {
-      isHorizontal: boolean;
-      gap?: number;
-      position?: number;
-      sections?: number;
-      borderRadius?: number;
-    },
+      min,
+      max,
+      isIncreasing,
+      pointShape,
+    }: CurveOptions,
   ) {
     this.context = context;
-    this.isHorizontal = isHorizontal;
+    this.isHorizontal = isHorizontal ?? false;
     this.gap = (gap ?? 0) / 2;
     this.position = position ?? 0;
     this.sections = sections ?? 1;
     this.borderRadius = borderRadius ?? 0;
+    this.isIncreasing = isIncreasing ?? false;
+    this.min = min ?? { x: 0, y: 0 };
+    this.max = max ?? { x: 0, y: 0 };
+    this.pointShape = pointShape ?? 'square';
+
+    if (isIncreasing) {
+      const currentMin = this.min;
+      const currentMax = this.max;
+      this.min = currentMax;
+      this.max = currentMin;
+    }
   }
 
   areaStart(): void {}
@@ -81,6 +75,45 @@ export class Linear implements CurveGenerator {
   lineStart(): void {}
 
   lineEnd(): void {}
+
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
+    }
+
+    if (this.isIncreasing) {
+      // Is largest section
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === 0 && this.pointShape === 'sharp') {
+        return [0, 0, this.borderRadius];
+      }
+      // Is smallest section
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius, this.borderRadius];
+      }
+    }
+
+    if (!this.isIncreasing) {
+      // Is largest section
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === this.sections - 1 && this.pointShape === 'sharp') {
+        return [this.borderRadius];
+      }
+
+      // Is smallest section
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius, this.borderRadius];
+      }
+    }
+
+    return 0;
+  }
 
   point(xIn: number, yIn: number): void {
     this.points.push({ x: xIn, y: yIn });
@@ -92,13 +125,13 @@ export class Linear implements CurveGenerator {
     this.points = this.points.map((point, index) => {
       const slopeStart = this.points.at(index <= 1 ? 0 : 2)!;
       const slopeEnd = this.points.at(index <= 1 ? 1 : 3)!;
-      const yGetter = yFromX(
-        slopeStart.x - this.gap,
-        slopeStart.y,
-        slopeEnd.x - this.gap,
-        slopeEnd.y,
-      );
       if (this.isHorizontal) {
+        const yGetter = lerpY(
+          slopeStart.x - this.gap,
+          slopeStart.y,
+          slopeEnd.x - this.gap,
+          slopeEnd.y,
+        );
         const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
 
         return {
@@ -107,7 +140,7 @@ export class Linear implements CurveGenerator {
         };
       }
 
-      const xGetter = xFromY(
+      const xGetter = lerpX(
         slopeStart.x,
         slopeStart.y - this.gap,
         slopeEnd.x,
@@ -120,19 +153,33 @@ export class Linear implements CurveGenerator {
       };
     });
 
-    const getBorderRadius = () => {
-      if (this.gap > 0) {
-        return this.borderRadius;
-      }
-      if (this.position === 0) {
-        return [0, 0, this.borderRadius, this.borderRadius];
-      }
-      if (this.position === this.sections - 1) {
-        return [this.borderRadius, this.borderRadius];
-      }
-      return 0;
-    };
+    if (this.pointShape === 'sharp') {
+      // In the last section, to form a triangle we need 3 points instead of 4
+      // Else the algorithm will break.
+      const isLastSection = this.position === this.sections - 1;
+      const isFirstSection = this.position === 0;
 
-    borderRadiusPolygon(this.context, this.points, getBorderRadius());
+      if (isFirstSection && this.isIncreasing) {
+        this.points = [
+          this.isHorizontal
+            ? { x: this.max.x + this.gap, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y + this.gap },
+          this.points[1],
+          this.points[2],
+        ];
+      }
+
+      if (isLastSection && !this.isIncreasing) {
+        this.points = [
+          this.points[0],
+          this.isHorizontal
+            ? { x: this.max.x - this.gap, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y - this.gap },
+          this.points[3],
+        ];
+      }
+    }
+
+    borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
 }

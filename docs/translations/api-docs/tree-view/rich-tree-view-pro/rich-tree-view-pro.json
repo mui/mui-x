@@ -34,6 +34,10 @@
     "expansionTrigger": {
       "description": "The slot that triggers the item&#39;s expansion when clicked."
     },
+    "getItemChildren": {
+      "description": "Used to determine the children of a given item.",
+      "typeDescriptions": { "item": "The item to check.", "Array<R>": "The children of the item." }
+    },
     "getItemId": {
       "description": "Used to determine the id of a given item.",
       "typeDescriptions": { "item": "The item to check.", "string": "The id of the item." }

@@ -34,7 +34,10 @@ function filterCommit(commitsItem) {
   // TODO: Use labels
 
   // Filter dependency updates
-  return !commitsItem.commit.message.startsWith('Bump');
+  return (
+    !commitsItem.commit.message.startsWith('Bump') &&
+    !commitsItem.commit.message.includes('[scheduler]')
+  );
 }
 
 async function findLatestTaggedVersion(octokit) {
@@ -47,17 +50,20 @@ function resolvePackagesByLabels(labels) {
   const resolvedPackages = [];
   labels.forEach((label) => {
     switch (label.name) {
-      case 'component: data grid':
+      case 'scope: data grid':
         resolvedPackages.push('DataGrid');
         break;
-      case 'component: pickers':
+      case 'scope: pickers':
         resolvedPackages.push('pickers');
         break;
-      case 'component: charts':
+      case 'scope: charts':
         resolvedPackages.push('charts');
         break;
-      case 'component: tree view':
+      case 'scope: tree view':
         resolvedPackages.push('TreeView');
+        break;
+      case 'scope: scheduler':
+        resolvedPackages.push('Scheduler');
         break;
       default:
         break;
@@ -274,6 +280,8 @@ async function main(argv) {
                 break;
             }
           });
+        } else {
+          otherCommits.push(commitItem);
         }
         break;
       }
@@ -332,7 +340,7 @@ async function main(argv) {
   };
 
   const logTeamSection = () => {
-    return `Following are all team members who have contributed to this release:\n${Array.from(
+    return `The following are all team members who have contributed to this release:\n${Array.from(
       community.team,
     )
       .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
@@ -344,7 +352,7 @@ async function main(argv) {
 <!-- generated comparing ${lastRelease}..${release} -->
 _${nowFormatted}_
 
-We'd like to offer a big thanks to the ${
+We'd like to extend a big thank you to the ${
     authors.length
   } contributors who made this release possible. Here are some highlights ✨:
 
@@ -397,8 +405,8 @@ Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? 
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
 ### Tree View
 ${logChangelogMessages('TreeView')}
-#### \`@mui/x-tree-view@__VERSION__\` 
-${logChangelogSection(treeViewProCommits) || 'Internal changes.'}
+#### \`@mui/x-tree-view@__VERSION__\`
+${logChangelogSection(treeViewCommits) || 'Internal changes.'}
 
 #### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
