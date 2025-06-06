@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "8.5.0",
+  "version": "8.5.1",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Date and Time Picker components.",
   "main": "src/index.ts",
@@ -97,7 +97,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/internal-test-utils": "^2.0.9",
     "@mui/material": "^7.1.1",
     "@mui/system": "^7.1.1",
     "@types/luxon": "^3.6.2",
@@ -112,8 +112,8 @@
     "moment-hijri": "^3.0.0",
     "moment-jalaali": "^0.10.4",
     "moment-timezone": "^0.6.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

@@ -6,4 +6,4 @@ export * from './useGridNativeEventListener';
 export * from './useFirstRender';
 export * from './useOnMount';
 export * from './useRunOnce';
-export type { RenderProp } from './useGridComponentRenderer';
+export type { RenderProp } from '@mui/x-internals/useComponentRenderer';

@@ -72,7 +72,7 @@ It also accepts a function that receives the data object and should return the l
 ### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'`, `'pyramid'`, `'step'` and `'step-pyramid'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'linear-sharp'`, `'bump'`, `'pyramid'`, `'step'` and `'step-pyramid'`.
 
 This series property adds the option to control the interpolation of a series.
 
@@ -91,8 +91,8 @@ The border radius of the sections can be customized by the `borderRadius` proper
 It accepts a number that represents the radius in pixels.
 
 - The `bump` curve interpolation will not respect the border radius.
-- The `linear` and `pyramid` curve respects the border radius to some extent due to the angle of the sections.
-- The `step` and `step-pyramid` curve respects the border radius.
+- The `linear`, `linear-sharp` and `pyramid` curves respect the border radius to some extent due to the angle of the sections.
+- The `step` and `step-pyramid` curves respect the border radius.
 
 To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
 

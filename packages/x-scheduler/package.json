@@ -70,12 +70,12 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/internal-test-utils": "^2.0.9",
     "@types/luxon": "^3.6.2",
     "@types/prop-types": "^15.7.14",
     "luxon": "^3.6.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "rimraf": "^6.0.1",
     "use-isomorphic-layout-effect": "^1.2.1"
   },

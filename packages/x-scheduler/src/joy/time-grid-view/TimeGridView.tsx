@@ -46,7 +46,7 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
   return (
-    <div ref={forwardedRef} className={clsx('TimeGridViewContainer', className)} {...other}>
+    <div ref={forwardedRef} className={clsx('TimeGridViewContainer', 'joy', className)} {...other}>
       <TimeGrid.Root className="TimeGridViewRoot">
         <div ref={headerWrapperRef} className="TimeGridViewHeader">
           <div className="TimeGridViewGridRow TimeGridViewHeaderRow" role="row">

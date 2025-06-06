@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "8.5.0",
+  "version": "8.5.1",
   "author": "MUI Team",
   "description": "MUI X License verification.",
   "main": "src/index.ts",
@@ -40,9 +40,9 @@
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "@mui/internal-test-utils": "^2.0.9",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "rimraf": "^6.0.1"
   },
   "engines": {

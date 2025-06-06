@@ -26,10 +26,18 @@ import {
   SCATTER_CHART_PRO_PLUGINS,
   ScatterChartProPluginsSignatures,
 } from './ScatterChartPro.plugins';
+import {
+  ChartsToolbarProSlots,
+  ChartsToolbarProSlotProps,
+} from '../ChartsToolbarPro/Toolbar.types';
 
-export interface ScatterChartProSlots extends ScatterChartSlots, Partial<ChartsSlotsPro> {}
+export interface ScatterChartProSlots
+  extends Omit<ScatterChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
 export interface ScatterChartProSlotProps
-  extends ScatterChartSlotProps,
+  extends Omit<ScatterChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface ScatterChartProProps
@@ -98,7 +106,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {showToolbar ? <Toolbar /> : null}
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
