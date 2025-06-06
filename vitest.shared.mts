@@ -65,6 +65,7 @@ export default defineConfig({
   },
   resolve: {
     alias,
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
   },
   test: {
     globals: true,
