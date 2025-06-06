@@ -49,6 +49,8 @@ export default function ZoomSliderTooltip() {
           {
             id: 'x',
             data: xLabels,
+            valueFormatter: (value, { location }) =>
+              location === 'zoom-slider-tooltip' ? `${value.slice(5)}` : `${value}`,
             zoom: { slider: { enabled: true, showTooltip } },
           },
         ]}
