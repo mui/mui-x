@@ -5,7 +5,6 @@ import { GridSlotProps, GridBaseIconProps } from '../../models/gridSlotsComponen
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
-  label: string;
   icon?: React.JSXElementConstructor<GridBaseIconProps> | React.ReactNode;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
@@ -13,7 +12,7 @@ interface GridActionsCellItemCommonProps {
 
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
-    | ({ showInMenu?: false; icon: React.ReactElement<any> } & Omit<
+    | ({ showInMenu?: false; icon: React.ReactElement<any>; label: string } & Omit<
         GridSlotProps['baseIconButton'],
         'component'
       >)
@@ -25,6 +24,7 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
          */
         closeMenuOnClick?: boolean;
         closeMenu?: () => void;
+        label: React.ReactNode;
       } & Omit<GridSlotProps['baseMenuItem'], 'component'>)
   );
 
@@ -93,7 +93,7 @@ GridActionsCellItem.propTypes = {
     PropTypes.string,
     PropTypes.bool,
   ]),
-  label: PropTypes.string.isRequired,
+  label: PropTypes.node,
   showInMenu: PropTypes.bool,
   style: PropTypes.object,
 } as any;
