@@ -34,11 +34,11 @@
     "@babel/runtime": "^7.27.4",
     "@babel/traverse": "^7.27.4",
     "@mui/x-internals": "workspace:*",
-    "jscodeshift": "17.1.2",
+    "jscodeshift": "17.3.0",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^0.12.0",
+    "@types/jscodeshift": "^17.3.0",
     "dayjs": "^1.11.13",
     "moment-timezone": "^0.6.0",
     "rimraf": "^6.0.1"
