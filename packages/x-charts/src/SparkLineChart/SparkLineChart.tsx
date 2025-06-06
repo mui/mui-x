@@ -349,6 +349,14 @@ SparkLineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The controlled axis highlighted.
+   * Indicates the direction, axis id, and data index to highlight.
+   */
+  highlightedAxis: PropTypes.shape({
+    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    dataIndex: PropTypes.number.isRequired,
+  }),
+  /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
@@ -388,6 +396,11 @@ SparkLineChart.propTypes = {
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * The function called when pointer moves from one axis value to another.
+   * @param {AxisItemIdentifier[]} newAxisInteraction The array of item per axis.
+   */
+  onAxisInteraction: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

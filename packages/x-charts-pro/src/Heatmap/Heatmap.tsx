@@ -76,7 +76,14 @@ export interface HeatmapSlotProps
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'xAxis'
+      | 'yAxis'
+      | 'skipAnimation'
+      | 'slots'
+      | 'slotProps'
+      | 'highlightedAxis'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -355,6 +362,11 @@ Heatmap.propTypes = {
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * The function called when pointer moves from one axis value to another.
+   * @param {AxisItemIdentifier[]} newAxisInteraction The array of item per axis.
+   */
+  onAxisInteraction: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
