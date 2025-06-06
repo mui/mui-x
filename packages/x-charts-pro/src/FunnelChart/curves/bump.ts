@@ -29,7 +29,7 @@ export class Bump implements CurveGenerator {
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
-    this.gap = (gap ?? 0) / 2;
+    this.gap = gap ?? 0;
     this.min = min ?? { x: 0, y: 0 };
     this.max = max ?? { x: 0, y: 0 };
 
@@ -71,31 +71,17 @@ export class Bump implements CurveGenerator {
     const [p0, p1, p2, p3] = this.points;
 
     // 0 is the top-left corner
-    this.context.moveTo(p0.x + this.gap, p0.y);
-    this.context.lineTo(p0.x + this.gap, p0.y);
+    this.context.moveTo(p0.x, p0.y);
+    this.context.lineTo(p0.x, p0.y);
 
     // Bezier curve to point 1
-    this.context.bezierCurveTo(
-      (p0.x + p1.x) / 2,
-      p0.y,
-      (p0.x + p1.x) / 2,
-      p1.y,
-      p1.x - this.gap,
-      p1.y,
-    );
+    this.context.bezierCurveTo((p0.x + p1.x) / 2, p0.y, (p0.x + p1.x) / 2, p1.y, p1.x, p1.y);
 
     // Line to point 2
-    this.context.lineTo(p2.x - this.gap, p2.y);
+    this.context.lineTo(p2.x, p2.y);
 
     // Bezier curve back to point 3
-    this.context.bezierCurveTo(
-      (p2.x + p3.x) / 2,
-      p2.y,
-      (p2.x + p3.x) / 2,
-      p3.y,
-      p3.x + this.gap,
-      p3.y,
-    );
+    this.context.bezierCurveTo((p2.x + p3.x) / 2, p2.y, (p2.x + p3.x) / 2, p3.y, p3.x, p3.y);
 
     this.context.closePath();
   }
@@ -104,31 +90,17 @@ export class Bump implements CurveGenerator {
     const [p0, p1, p2, p3] = this.points;
 
     // 0 is the top-right corner
-    this.context.moveTo(p0.x, p0.y + this.gap);
-    this.context.lineTo(p0.x, p0.y + this.gap);
+    this.context.moveTo(p0.x, p0.y);
+    this.context.lineTo(p0.x, p0.y);
 
     // Bezier curve to point 1
-    this.context.bezierCurveTo(
-      p0.x,
-      (p0.y + p1.y) / 2,
-      p1.x,
-      (p0.y + p1.y) / 2,
-      p1.x,
-      p1.y - this.gap,
-    );
+    this.context.bezierCurveTo(p0.x, (p0.y + p1.y) / 2, p1.x, (p0.y + p1.y) / 2, p1.x, p1.y);
 
     // Line to point 2
-    this.context.lineTo(p2.x, p2.y - this.gap);
+    this.context.lineTo(p2.x, p2.y);
 
     // Bezier curve back to point 3
-    this.context.bezierCurveTo(
-      p2.x,
-      (p2.y + p3.y) / 2,
-      p3.x,
-      (p2.y + p3.y) / 2,
-      p3.x,
-      p3.y + this.gap,
-    );
+    this.context.bezierCurveTo(p2.x, (p2.y + p3.y) / 2, p3.x, (p2.y + p3.y) / 2, p3.x, p3.y);
 
     this.context.closePath();
   }

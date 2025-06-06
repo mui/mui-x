@@ -1,5 +1,5 @@
 import { Position } from '@mui/x-charts/models';
-import { FunnelDataPoints, FunnelLabelOptions } from './funnel.types';
+import { FunnelDataPoints, FunnelLabelOptions, PositionGetter } from './funnel.types';
 
 /**
  * It tries to keep the label inside the bounds of the section based on the position.
@@ -52,18 +52,8 @@ export const positionLabel = ({
   dataIndex,
   baseScaleData,
 }: Omit<FunnelLabelOptions, 'textAnchor' | 'dominantBaseline'> & {
-  xPosition: (
-    value: number,
-    bandIndex: number,
-    stackOffset?: number,
-    useBand?: boolean,
-  ) => number | undefined;
-  yPosition: (
-    value: number,
-    bandIndex: number,
-    stackOffset?: number,
-    useBand?: boolean,
-  ) => number | undefined;
+  xPosition: PositionGetter;
+  yPosition: PositionGetter;
   isHorizontal: boolean;
   values: readonly FunnelDataPoints[];
   dataIndex: number;
@@ -102,54 +92,79 @@ export const positionLabel = ({
     maxBottom = yPosition(values[3].y, baseScaleData[dataIndex], stackOffset)! + mv;
     minRight = 0;
     maxRight =
-      xPosition(Math.min(...values.map((v) => v.x)), baseScaleData[dataIndex], stackOffset, true)! +
-      mh;
+      xPosition(
+        Math.min(...values.map((v) => v.x)),
+        dataIndex,
+        baseScaleData[dataIndex],
+        stackOffset,
+        true,
+      )! + mh;
     minLeft = 0;
     maxLeft =
-      xPosition(Math.max(...values.map((v) => v.x)), baseScaleData[dataIndex], stackOffset)! + mh;
+      xPosition(
+        Math.max(...values.map((v) => v.x)),
+        dataIndex,
+        baseScaleData[dataIndex],
+        stackOffset,
+      )! + mh;
     center = maxRight - (maxRight - maxLeft) / 2;
     leftCenter = 0;
     rightCenter = 0;
-    middle = yPosition(0, baseScaleData[dataIndex], stackOffset)! - mv;
+    middle = yPosition(0, dataIndex, baseScaleData[dataIndex], stackOffset)! - mv;
     topMiddle =
       yPosition(
         values[0].y - (values[0].y - values[1].y) / 2,
+        dataIndex,
         baseScaleData[dataIndex],
         stackOffset,
       )! - mv;
     bottomMiddle =
       yPosition(
         values[3].y - (values[3].y - values[2].y) / 2,
+        dataIndex,
         baseScaleData[dataIndex],
         stackOffset,
       )! + mv;
   } else {
     minTop = 0;
     maxTop =
-      yPosition(Math.max(...values.map((v) => v.y)), baseScaleData[dataIndex], stackOffset)! - mv;
+      yPosition(
+        Math.max(...values.map((v) => v.y)),
+        dataIndex,
+        baseScaleData[dataIndex],
+        stackOffset,
+      )! - mv;
     minBottom = 0;
     maxBottom =
-      yPosition(Math.min(...values.map((v) => v.y)), baseScaleData[dataIndex], stackOffset, true)! -
-      mv;
-    maxRight = xPosition(values[0].x, baseScaleData[dataIndex], stackOffset)! + mh;
-    minRight = xPosition(values[1].x, baseScaleData[dataIndex], stackOffset)! + mh;
-    minLeft = xPosition(values[2].x, baseScaleData[dataIndex], stackOffset)! - mh;
-    maxLeft = xPosition(values[3].x, baseScaleData[dataIndex], stackOffset)! - mh;
-    center = xPosition(0, baseScaleData[dataIndex], stackOffset)! - mh;
+      yPosition(
+        Math.min(...values.map((v) => v.y)),
+        dataIndex,
+        baseScaleData[dataIndex],
+        stackOffset,
+        true,
+      )! - mv;
+    maxRight = xPosition(values[0].x, dataIndex, baseScaleData[dataIndex], stackOffset)! + mh;
+    minRight = xPosition(values[1].x, dataIndex, baseScaleData[dataIndex], stackOffset)! + mh;
+    minLeft = xPosition(values[2].x, dataIndex, baseScaleData[dataIndex], stackOffset)! - mh;
+    maxLeft = xPosition(values[3].x, dataIndex, baseScaleData[dataIndex], stackOffset)! - mh;
+    center = xPosition(0, dataIndex, baseScaleData[dataIndex], stackOffset)! - mh;
     rightCenter =
       xPosition(
         values[0].x - (values[0].x - values[1].x) / 2,
+        dataIndex,
         baseScaleData[dataIndex],
         stackOffset,
       )! + mh;
     leftCenter =
       xPosition(
         values[3].x - (values[3].x - values[2].x) / 2,
+        dataIndex,
         baseScaleData[dataIndex],
         stackOffset,
       )! - mh;
     middle = yPosition(
       values[0].y - (values[0].y - values[1].y) / 2,
+      dataIndex,
       baseScaleData[dataIndex],
       stackOffset,
     )!;

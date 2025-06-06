@@ -97,7 +97,7 @@ export class Pyramid implements CurveGenerator {
       return;
     }
 
-    // Add gaps where they are needed.
+    // Replace funnel points by pyramids ones.
     this.points = this.points.map((point, index) => {
       if (this.isHorizontal) {
         const slopeEnd = {
@@ -112,7 +112,7 @@ export class Pyramid implements CurveGenerator {
                 y: this.max.y,
               };
         const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-        const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
+        const xGap = point.x;
 
         return {
           x: xGap,
@@ -132,7 +132,7 @@ export class Pyramid implements CurveGenerator {
             }
           : this.min;
       const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-      const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
+      const yGap = point.y;
       return {
         x: xGetter(yGap),
         y: yGap,

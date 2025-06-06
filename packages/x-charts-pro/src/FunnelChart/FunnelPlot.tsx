@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { ComputedAxis, cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
-import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
+import { FunnelItemIdentifier, FunnelDataPoints, PositionGetter } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
 import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
@@ -13,16 +13,13 @@ import { FunnelSectionLabel } from './FunnelSectionLabel';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
+  selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
+import { isBandScale } from '@mui/x-charts/internals/isBandScale';
 
 cartesianSeriesTypes.addType('funnel');
 
 export interface FunnelPlotProps extends FunnelPlotSlotExtension {
-  /**
-   * The gap, in pixels, between funnel sections.
-   * @default 0
-   */
-  gap?: number;
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -34,12 +31,12 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
   ) => void;
 }
 
-const useAggregatedData = (gapIn: number | undefined) => {
+const useAggregatedData = () => {
   const seriesData = useFunnelSeriesContext();
   const store = useStore();
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const gap = gapIn ?? 0;
+  const gap = useSelector(store, selectorFunnelGap);
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -72,49 +69,69 @@ const useAggregatedData = (gapIn: number | undefined) => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const xPosition = (
-        value: number,
-        bandIndex: number,
-        stackOffset?: number,
-        useBand?: boolean,
+      const xPosition: PositionGetter = (
+        value,
+        bandIndex,
+        bandIdentifier,
+        stackOffset,
+        useBand,
       ) => {
-        if (isXAxisBand) {
-          const position = xScale(bandIndex)!;
+        if (isBandScale(xScale)) {
+          const position = xScale(bandIdentifier)!;
           return useBand ? position + bandWidth : position;
         }
-        return xScale(isHorizontal ? value + (stackOffset || 0) : value)!;
+        if (isHorizontal) {
+          return xScale(value + (stackOffset || 0))! + bandIndex * gap;
+        }
+        return xScale(value)!;
       };
 
       const yPosition = (
         value: number,
         bandIndex: number,
+        bandIdentifier: string | number,
         stackOffset?: number,
         useBand?: boolean,
       ) => {
-        if (isYAxisBand) {
-          const position = yScale(bandIndex);
+        if (isBandScale(yScale)) {
+          const position = yScale(bandIdentifier);
           return useBand ? position! + bandWidth : position!;
         }
-        return yScale(isHorizontal ? value : value + (stackOffset || 0))!;
+        if (isHorizontal) {
+          return yScale(value)!;
+        }
+        return yScale(value + (stackOffset || 0))! + bandIndex * gap;
       };
 
       const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
         d.flatMap((v) =>
-          yPosition(v.y, baseScaleConfig.data?.[dataIndex], v.stackOffset, v.useBandWidth),
+          yPosition(
+            v.y,
+            dataIndex,
+            baseScaleConfig.data?.[dataIndex],
+            v.stackOffset,
+            v.useBandWidth,
+          ),
         ),
       );
       const allX = currentSeries.dataPoints.flatMap((d, dataIndex) =>
         d.flatMap((v) =>
-          xPosition(v.x, baseScaleConfig.data?.[dataIndex], v.stackOffset, v.useBandWidth),
+          xPosition(
+            v.x,
+            dataIndex,
+            baseScaleConfig.data?.[dataIndex],
+            v.stackOffset,
+            v.useBandWidth,
+          ),
         ),
       );
       const minPoint = {
-        x: Math.min(...allX) + gap / 2,
-        y: Math.min(...allY) + gap / 2,
+        x: Math.min(...allX),
+        y: Math.min(...allY),
       };
       const maxPoint = {
-        x: Math.max(...allX) - gap / 2,
-        y: Math.max(...allY) - gap / 2,
+        x: Math.max(...allX),
+        y: Math.max(...allY),
       };
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
@@ -144,10 +161,22 @@ const useAggregatedData = (gapIn: number | undefined) => {
 
         const line = d3Line<FunnelDataPoints>()
           .x((d) =>
-            xPosition(d.x, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
+            xPosition(
+              d.x,
+              dataIndex,
+              baseScaleConfig.data?.[dataIndex],
+              d.stackOffset,
+              d.useBandWidth,
+            ),
           )
           .y((d) =>
-            yPosition(d.y, baseScaleConfig.data?.[dataIndex], d.stackOffset, d.useBandWidth),
+            yPosition(
+              d.y,
+              dataIndex,
+              baseScaleConfig.data?.[dataIndex],
+              d.stackOffset,
+              d.useBandWidth,
+            ),
           )
           .curve(curve);
 
@@ -184,9 +213,9 @@ const useAggregatedData = (gapIn: number | undefined) => {
 };
 
 function FunnelPlot(props: FunnelPlotProps) {
-  const { onItemClick, gap, ...other } = props;
+  const { onItemClick, ...other } = props;
 
-  const data = useAggregatedData(gap);
+  const data = useAggregatedData();
 
   return (
     <React.Fragment>
@@ -231,11 +260,6 @@ FunnelPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * The gap, in pixels, between funnel sections.
-   * @default 0
-   */
-  gap: PropTypes.number,
   /**
    * Callback fired when a funnel item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

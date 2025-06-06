@@ -342,6 +342,7 @@
   { "name": "pinkPaletteDark", "kind": "Variable" },
   { "name": "pinkPaletteLight", "kind": "Variable" },
   { "name": "Position", "kind": "TypeAlias" },
+  { "name": "PositionGetter", "kind": "TypeAlias" },
   { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "purplePalette", "kind": "Variable" },
   { "name": "purplePaletteDark", "kind": "Variable" },

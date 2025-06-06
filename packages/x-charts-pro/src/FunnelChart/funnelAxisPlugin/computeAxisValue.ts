@@ -25,32 +25,37 @@ import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/
 
 export const xRangeGetter = (
   drawingArea: ChartDrawingArea,
-  gap: number,
   reverse?: boolean,
+  removedSpace: number = 0,
 ): [number, number] => {
-  const range: [number, number] = [drawingArea.left, drawingArea.left + drawingArea.width];
-  return reverse ? [range[1] + gap, range[0] - gap] : [range[0] - gap, range[1] + gap];
+  const range: [number, number] = [
+    drawingArea.left,
+    drawingArea.left + drawingArea.width - removedSpace,
+  ];
+  return reverse ? [range[1], range[0]] : [range[0], range[1]];
 };
 
 export const yRangeGetter = (
   drawingArea: ChartDrawingArea,
-  gap: number,
   reverse?: boolean,
+  removedSpace: number = 0,
 ): [number, number] => {
-  const range: [number, number] = [drawingArea.top + drawingArea.height, drawingArea.top];
-  return reverse ? [range[1] - gap, range[0] + gap] : [range[0] + gap, range[1] - gap];
+  const range: [number, number] = [
+    drawingArea.top + drawingArea.height - removedSpace,
+    drawingArea.top,
+  ];
+  return reverse ? [range[1], range[0]] : [range[0], range[1]];
 };
 
 function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'x' | 'y',
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
-  gap: number,
+  removedSpace: number = 0,
 ): [number, number] {
-  gap /= 2;
   return axisDirection === 'x'
-    ? xRangeGetter(drawingArea, gap, axis.reverse)
-    : yRangeGetter(drawingArea, gap, axis.reverse);
+    ? xRangeGetter(drawingArea, axis.reverse, removedSpace)
+    : yRangeGetter(drawingArea, axis.reverse, removedSpace);
 }
 
 export type ComputeResult<T extends ChartsAxisProps> = {
@@ -58,33 +63,33 @@ export type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: string[];
 };
 
-type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
+type ComputeCommonParams<T extends ChartSeriesType = 'funnel'> = {
   drawingArea: ChartDrawingArea;
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
   gap: number;
 };
 
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue(
+  options: ComputeCommonParams<'funnel'> & {
     axis?: DefaultedYAxis[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>(
-  options: ComputeCommonParams<T> & {
+export function computeAxisValue(
+  options: ComputeCommonParams<'funnel'> & {
     axis?: DefaultedXAxis[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsXAxisProps>;
-export function computeAxisValue<T extends ChartSeriesType>({
+export function computeAxisValue({
   drawingArea,
   formattedSeries,
   axis: allAxis,
   seriesConfig,
   axisDirection,
   gap,
-}: ComputeCommonParams<T> & {
+}: ComputeCommonParams<'funnel'> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
 }) {
@@ -105,7 +110,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const range = getRange(drawingArea, axisDirection, axis, gap);
+    let range = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
@@ -122,6 +127,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     if (isBandScaleConfig(axis)) {
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
+      const rangeSpace = Math.abs(range[1] - range[0]);
 
       completeAxis[axis.id] = {
         offset: 0,
@@ -131,7 +137,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
         triggerTooltip,
         ...axis,
         data,
-        scale: scaleBand(axis.data!, scaleRange),
+        scale: scaleBand(axis.data!, scaleRange)
+          .paddingInner((gap * axis.data!.length - 1) / rangeSpace)
+          .paddingOuter(0),
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
@@ -154,6 +162,17 @@ export function computeAxisValue<T extends ChartSeriesType>({
       throw new Error(
         'Point scale is not supported in FunnelChart. Please use band scale instead.',
       );
+    }
+
+    const isHorizontal = Object.values(formattedSeries.funnel?.series ?? {}).some(
+      (s) => s.layout === 'horizontal',
+    );
+    if (isHorizontal ? axisDirection === 'x' : axisDirection === 'y') {
+      // For linear scale replacing the band scale, we remove the space needed for gap from the scale range.
+      const itemNumber =
+        formattedSeries.funnel?.series[formattedSeries.funnel.seriesOrder[0]].data.length ?? 0;
+      const spaceToRemove = gap * (itemNumber - 1);
+      range = getRange(drawingArea, axisDirection, axis, spaceToRemove);
     }
 
     const scaleType = axis.scaleType ?? ('linear' as const);
