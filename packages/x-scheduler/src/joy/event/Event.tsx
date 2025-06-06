@@ -1,9 +1,11 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { ResizeObserver } from '../utils/ResizeObserver';
 import { TimeGrid } from '../../primitives/time-grid';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { EventProps } from './Event.types';
+
 import './Event.css';
 
 export const Event = React.forwardRef(function Event(
@@ -83,7 +85,7 @@ export const Event = React.forwardRef(function Event(
 
     measure();
 
-    const observer = new window.ResizeObserver(measure);
+    const observer = new ResizeObserver(measure);
     observer.observe(containerRef.current);
 
     return () => observer.disconnect();
