@@ -19,25 +19,6 @@ export const Event = React.forwardRef(function Event(
 
   const renderContent = React.useMemo(() => {
     switch (variant) {
-      case 'regular':
-        return (
-          <React.Fragment>
-            <p
-              ref={titleRef}
-              className={clsx('EventTitle', 'LinesClamp')}
-              style={{ '--number-of-lines': titleLines } as React.CSSProperties}
-            >
-              {event.title}
-            </p>
-            <time
-              className={clsx('EventTime', 'LinesClamp')}
-              style={{ '--number-of-lines': 1 } as React.CSSProperties}
-            >
-              {adapter.formatByString(event.start, 'h:mm a')} -{' '}
-              {adapter.formatByString(event.end, 'h:mm a')}
-            </time>
-          </React.Fragment>
-        );
       case 'compact':
         return (
           <React.Fragment>
@@ -63,11 +44,33 @@ export const Event = React.forwardRef(function Event(
             {event.title}
           </p>
         );
+      case 'regular':
+      default:
+        return (
+          <React.Fragment>
+            <p
+              ref={titleRef}
+              className={clsx('EventTitle', 'LinesClamp')}
+              style={{ '--number-of-lines': titleLines } as React.CSSProperties}
+            >
+              {event.title}
+            </p>
+            <time
+              className={clsx('EventTime', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              {adapter.formatByString(event.start, 'h:mm a')} -{' '}
+              {adapter.formatByString(event.end, 'h:mm a')}
+            </time>
+          </React.Fragment>
+        );
     }
-  }, [variant]);
+  }, [adapter, event.end, event.start, event.title, titleLines, variant]);
 
   React.useEffect(() => {
-    if (!containerRef.current || !titleRef.current) return;
+    if (!containerRef.current || !titleRef.current) {
+      return () => {};
+    }
 
     const measure = () => {
       const containerHeight = containerRef.current!.clientHeight;
