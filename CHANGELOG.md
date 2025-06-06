@@ -5,6 +5,221 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.5.1
+
+<!-- generated comparing v8.5.0..master -->
+
+_Jun 5, 2025_
+
+We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Allow exporting pie charts
+- 📚 Documentation improvements
+- 🌎 Improve Portuguese (ptPT) translations on the Data Grid
+- 🌎 Improve Portuguese (ptPT, ptBR) translations on Charts
+- 🌎 Improve Arabic (ar-SD) locale
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions: @moosekebab, @TiagoPortfolio.
+The following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen, @arminmeh.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.5.1`
+
+- [DataGrid] Fix `registerPipeProcessor()` for Node v20 (#18241) @arminmeh
+- [DataGrid] Fix background color in column header filler cells (#18188) @KenanYusuf
+- [DataGrid] Keep pipe pre-processors execution order when callback reference changes (#17558) @arminmeh
+- [DataGrid] Use `useComponentRenderer` from x-internals (#18203) @bernardobelchior
+- [l10n] Improve Arabic (ar-SD) locale (#17959) @moosekebab
+- [l10n] Improve Portuguese from Portugal (pt-PT) locale (#18064) @TiagoPortfolio
+
+#### `@mui/x-data-grid-pro@8.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.5.1`, plus:
+
+- [DataGridPro] Skip rendering detail panels of the rows turned into skeleton rows with lazy loading (#17958) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.5.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.5.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.5.1`
+
+- [pickers] Fix `transformOrigin` resolving based on popper `placement` (#18206) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.5.1`.
+
+### Charts
+
+#### `@mui/x-charts@8.5.1`
+
+- [charts] Allow skipping tooltip render (#18050) @alexfauquette
+- [charts] Fix act warnings in toolbar tests (#18212) @JCQuintas
+- [charts] Fix prop typo in `extendVertically` (#18211) @JCQuintas
+- [charts] Fix responsive height for ChartsWrapper (#18183) @alexfauquette
+- [charts] Improve charts toolbar accessibility (#18056) @bernardobelchior
+- [charts] Let line series propagate null from the dataset (#18223) @alexfauquette
+- [l10n] Add Portuguese locales for charts (pt-PT, pt-BR) (#18069) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.5.1`, plus:
+
+- [charts-pro] Add `linear-sharp` curve as alternative to square edge (#17966) @JCQuintas
+- [charts-pro] Add correct classes to `FunnelSectionLabel` (#18061) @JCQuintas
+- [charts-pro] Allow exporting a pie chart (#18063) @bernardobelchior
+- [charts-pro] Fix initial render for zoom slider selection (#18208) @bernardobelchior
+- [charts-pro] Fix props being passed to DOM in FunnelChart (#18192) @JCQuintas
+- [charts-pro] Show axis value in zoom slider tooltip (#18054) @bernardobelchior
+- [charts-pro] Render the toolbar in the heatmap chart (#18247) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.5.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.5.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.5.1`.
+
+### Docs
+
+- [docs] Update `valueFormatter` signature in migration guide (#18226) @michelengelen
+
+### Core
+
+- chore(deps): bump @next/eslint-plugin-next to 15.3.3 (#18155) @renovate[bot]
+- chore(deps): bump @types/lodash to ^4.17.17 (#17990) @renovate[bot]
+- chore(deps): bump babel (#18157) @renovate[bot]
+- chore(deps): bump eslint to ^9.28.0 (#17352) @renovate[bot]
+- chore(deps): bump material ui (#17802) @renovate[bot]
+- chore(deps): bump next to ^15.3.3 (#18159) @renovate[bot]
+- chore(deps): bump ossf/scorecard-action action to v2.4.2 (#18160) @renovate[bot]
+- chore(deps): bump react-router to ^7.6.1 (#18162) @renovate[bot]
+- chore(deps): bump yargs to ^18.0.0 (#18169) @renovate[bot]
+- [code-infra] Different approach to console testing for `processRowUpdate` (#18213) @JCQuintas
+- [code-infra] Fix act warnings in DataGrid/toolbar (#18207) @JCQuintas
+- [code-infra] Remove `istanbul` references (#18194) @JCQuintas
+- [code-infra] Remove codesandbox:ci (#18179) @JCQuintas
+- [code-infra] Replace `mocha` with `vitest` on e2e and regression tests (#18071) @JCQuintas
+- [code-infra] Upgrade @mui/internal-test-utils (#18191) @JCQuintas
+- [code-infra] Use vitest for `no-direct-state-access` tests (#18209) @JCQuintas
+- [infra] Improve test setup (#18228) @LukasTy
+- [infra] Update bug and feature request templates to standardize label types (#18198) @michelengelen
+- [infra] Use `playwright` docker image (#18186) @LukasTy
+
+## 8.5.0
+
+_May 29, 2025_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Add support for exporting `RadarChartPro`, `FunnelChart` and `Heatmap` as image and PDF.
+- 📊 `RadarChart` is now stable.
+
+Special thanks go out to the community members for their valuable contributions:
+@xBlizZer, @sai6855, @alisasanib.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.5.0`
+
+- [DataGrid] Avoid ResizeObserver loop error (#17984) @cherniavskii
+- [DataGrid] Fix column management `toggleColumn` event type (#18023) @KenanYusuf
+- [DataGrid] Remove unnecessary `any` type (#17979) @sai6855
+
+#### `@mui/x-data-grid-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.5.0`, plus:
+
+- [DataGridPro] Allow multi sorting without modifier key (#17925) @cherniavskii
+- [DataGridPro] Row reordering icon improvements (#17947) @KenanYusuf
+- [DataGridPro] Fix pinned columns order in column management (#17950) @alisasanib
+
+#### `@mui/x-data-grid-premium@8.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.5.0`, plus:
+
+- [DataGridPremium] Export `GridApiPremium` type (#18037) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.5.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.5.0`, plus:
+
+- [DateRangePicker] Allow to override the format in the field (#17972) @flaviendelangle
+
+### Charts
+
+#### `@mui/x-charts@8.5.0`
+
+- [charts] Add `render` prop to charts toolbar components (#17649) @bernardobelchior
+- [charts] Add configurable slots to toolbar (#17712) @bernardobelchior
+- [charts] Export `useFunnelSeries` and `useRadarSeries` (#18034) @JCQuintas
+- [charts] Expose `ChartApi` through context (#18004) @bernardobelchior
+- [charts] Mark Radar chart as stable (#17946) @alexfauquette
+- [charts] Only update store if interaction item is different (#17851) @bernardobelchior
+- [charts] Reuse shared date utils (#18014) @JCQuintas
+- [charts] Use Map for string cache instead of object (#17982) @bernardobelchior
+- [charts] Fix Population pyramid demo (#17987) @oliviertassinari
+
+#### `@mui/x-charts-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.5.0`, plus:
+
+- [charts-pro] Add range selection to zoom slider (#17949) @bernardobelchior
+- [charts-pro] Allow configuring zoom slider tooltip (#18030) @bernardobelchior
+- [charts-pro] Allow exporting a funnel chart (#17957) @bernardobelchior
+- [charts-pro] Allow exporting a heatmap chart (#17916) @bernardobelchior
+- [charts-pro] Allow exporting a radar chart (#17968) @bernardobelchior
+- [charts-pro] Always show both zoom slider tooltips (#18027) @bernardobelchior
+- [charts-pro] Show zoom slider tooltip when selecting range (#18028) @bernardobelchior
+- [charts-pro] Split `ChartAxisZoomSlider` into smaller files (#18011) @bernardobelchior
+- [charts-pro] Update zoom slider range selection cursor (#17977) @bernardobelchior
+- [charts-pro] Add support for Heatmap legend (#17943) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@8.5.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.5.0`.
+
+### Docs
+
+- [docs] Fix derived column pivoting demo crash (#17944) @arminmeh
+- [docs] Fix light/dark mode blink on pickers overview (#18002) @alexfauquette
+- [docs] Fix scatter shape demo causing horizontal overflow (#17974) @bernardobelchior
+
+### Core
+
+- [code-infra] Add bundle size monitor (#17754) @Janpot
+- [code-infra] Enable `babel-plugin-display-name` in vitest (#17903) @JCQuintas
+- [infra] Remove last deprecated `ponyfillGlobal` usage (#18003) @LukasTy
+- [infra] Use `babel-plugin-display-name` from npm (#18040) @LukasTy
+- [x-telemetry] Remove deprecated `ponyfillGlobal` (#17986) @xBlizZer
+
 ## 8.4.0
 
 _May 21, 2025_

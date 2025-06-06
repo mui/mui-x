@@ -36,12 +36,6 @@
       }
     },
     "id": { "type": { "name": "string" } },
-    "initialZoom": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
@@ -78,13 +72,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "width": { "type": { "name": "number" } },
-    "zoomData": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
-      }
-    }
+    "width": { "type": { "name": "number" } }
   },
   "name": "FunnelChart",
   "imports": [
@@ -116,7 +104,20 @@
       "default": "ChartsText",
       "class": null
     },
-    { "name": "funnelSection", "description": "", "class": null },
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    {
+      "name": "funnelSection",
+      "description": "Custom component for funnel section.",
+      "default": "FunnelSection",
+      "class": null
+    },
+    {
+      "name": "funnelSectionLabel",
+      "description": "Custom component for funnel section label.",
+      "default": "FunnelSectionLabel",
+      "class": null
+    },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
@@ -136,6 +137,12 @@
       "class": null
     },
     {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
       "name": "tooltip",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
@@ -146,6 +153,6 @@
   "muiName": "MuiFunnelChart",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
   "cssComponent": false
 }
