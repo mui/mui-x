@@ -51,6 +51,7 @@
     "@babel/runtime": "^7.27.4",
     "@mui/utils": "^7.1.1",
     "@mui/x-internals": "workspace:*",
+    "@mui/x-virtualizer": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "reselect": "^5.1.1",

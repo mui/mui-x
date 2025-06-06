@@ -1015,6 +1015,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
+      '@mui/x-virtualizer':
+        specifier: workspace:*
+        version: link:../x-virtualizer/build
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1671,6 +1674,32 @@ importers:
       '@types/use-sync-external-store':
         specifier: ^1.5.0
         version: 1.5.0
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.1.0(react@19.1.0)
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+    publishDirectory: build
+
+  packages/x-virtualizer:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.27.4
+        version: 7.27.4
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: ^2.0.9
+        version: 2.0.9(@babel/core@7.27.4)(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(chai@5.2.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mui/types':
+        specifier: ^7.4.3
+        version: 7.4.3(@types/react@19.1.6)
       react:
         specifier: ^19.1.0
         version: 19.1.0
