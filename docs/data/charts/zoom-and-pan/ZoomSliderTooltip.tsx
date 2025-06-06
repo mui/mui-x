@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import type { ZoomSliderShowTooltip } from '@mui/x-charts-pro/models';
+import { AxisValueFormatterContext } from '@mui/x-charts/models/axis';
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 const pData = [2400, 1398, -9800, 3908, 4800, -3800, 4300];
@@ -53,6 +54,11 @@ export default function ZoomSliderTooltip() {
           {
             id: 'x',
             data: xLabels,
+            valueFormatter: (
+              value: string,
+              { location }: AxisValueFormatterContext,
+            ) =>
+              location === 'zoom-slider-tooltip' ? `${value.slice(5)}` : `${value}`,
             zoom: { slider: { enabled: true, showTooltip } },
           },
         ]}
