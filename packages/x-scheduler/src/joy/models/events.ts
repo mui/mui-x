@@ -1,5 +1,7 @@
 import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
 
+export type EventVariant = 'regular' | 'compact' | 'allDay';
+
 export interface CalendarEvent {
   /**
    * The unique identifier of the event.
