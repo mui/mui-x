@@ -51,6 +51,8 @@ You can set the `highlightedItem` value based on inputs, and sync it when the us
 
 {{"demo": "ControlledHighlight.js"}}
 
+{{"demo": "ControlledAxisHighlight.js"}}
+
 ### Synchronizing highlights
 
 Having a controlled highlight allows you to control it in multiple charts at the same time.
