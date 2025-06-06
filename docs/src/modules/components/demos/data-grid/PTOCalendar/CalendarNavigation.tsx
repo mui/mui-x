@@ -68,21 +68,8 @@ function CalendarNavigation() {
           onClose={() => setIsDatePickerOpen(false)}
           minDate={dateConstraints.minDate}
           maxDate={dateConstraints.maxDate}
-          views={['month', 'year']}
+          views={['month']}
           slots={{ field: ButtonField }}
-          slotProps={{
-            popper: {
-              sx: {
-                '& .MuiPaper-root': {
-                  borderRadius: '12px',
-                  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-                },
-                '& .MuiPickersCalendarNavigation-root': {
-                  marginTop: '8px',
-                },
-              },
-            },
-          }}
         />
       </LocalizationProvider>
       <Box sx={{ display: 'flex' }}>

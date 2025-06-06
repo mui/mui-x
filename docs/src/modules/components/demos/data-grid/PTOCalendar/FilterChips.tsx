@@ -38,18 +38,31 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
                     backgroundColor: FILTER_COLORS[filter].background,
                     color: FILTER_COLORS[filter].text,
                     border: `1px solid ${FILTER_COLORS[filter].border}`,
+                    '&:hover': {
+                      backgroundColor: `color-mix(in srgb, ${FILTER_COLORS[filter].background} 50%, #fff)`,
+                    },
                     ...theme.applyStyles('dark', {
                       backgroundColor: FILTER_COLORS[filter].dark.background,
                       color: FILTER_COLORS[filter].dark.text,
                       borderColor: FILTER_COLORS[filter].dark.border,
+                      '&:hover': {
+                        backgroundColor: `color-mix(in srgb, ${FILTER_COLORS[filter].dark.background} 90%, #fff)`,
+                      },
                     }),
-                    '& .MuiChip-deleteIcon': {
-                      color: FILTER_COLORS[filter].text,
-                    },
                   },
                   '&.MuiChip-outlined': {
                     borderColor: FILTER_COLORS[filter].border,
                     color: FILTER_COLORS[filter].text,
+                    '&:hover': {
+                      backgroundColor: FILTER_COLORS[filter].background,
+                    },
+                    ...theme.applyStyles('dark', {
+                      color: FILTER_COLORS[filter].dark.text,
+                      borderColor: FILTER_COLORS[filter].dark.border,
+                      '&:hover': {
+                        backgroundColor: FILTER_COLORS[filter].dark.background,
+                      },
+                    }),
                   },
                 }}
               />
