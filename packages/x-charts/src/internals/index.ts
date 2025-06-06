@@ -2,6 +2,7 @@
 export * from './components/ChartsAxesGradients';
 export * from './components/ChartsWrapper';
 export * from '../ChartsLabel/ChartsLabelMark';
+export * from './components/NotRendered';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';

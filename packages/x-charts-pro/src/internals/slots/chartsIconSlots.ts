@@ -12,4 +12,9 @@ export interface ChartsIconSlotsPro extends ChartsIconSlots {
    * @default ChartsZoomOutIcon
    */
   zoomOutIcon: React.ComponentType<ChartBaseIconProps>;
+  /**
+   * Icon displayed on the toolbar's export button.
+   * @default ChartsExportIcon
+   */
+  exportIcon: React.ComponentType<ChartBaseIconProps>;
 }

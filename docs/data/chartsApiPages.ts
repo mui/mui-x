@@ -101,6 +101,16 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-image-export-trigger',
+    title: 'ChartsToolbarImageExportTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-print-export-trigger',
+    title: 'ChartsToolbarPrintExportTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-toolbar-pro',
     title: 'ChartsToolbarPro',
     plan: 'pro',
