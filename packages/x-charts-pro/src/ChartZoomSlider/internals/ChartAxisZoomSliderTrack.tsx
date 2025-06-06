@@ -16,10 +16,7 @@ const ZoomSliderTrack = styled('rect', {
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'axisDirection' && prop !== 'isSelecting',
 })<{ axisDirection: 'x' | 'y'; isSelecting: boolean }>(({ theme }) => ({
-  fill:
-    theme.palette.mode === 'dark'
-      ? (theme.vars || theme).palette.grey[900]
-      : (theme.vars || theme).palette.grey[200],
+  fill: theme.palette.mode === 'dark' ? '#262734' : (theme.vars || theme).palette.grey[200],
   cursor: 'pointer',
   variants: [
     {

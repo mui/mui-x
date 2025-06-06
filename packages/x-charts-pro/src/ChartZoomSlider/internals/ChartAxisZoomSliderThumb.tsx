@@ -13,10 +13,7 @@ import {
 
 const Rect = styled('rect')(({ theme }) => ({
   [`&.${chartAxisZoomSliderThumbClasses.root}`]: {
-    fill:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[300]
-        : (theme.vars || theme).palette.common.white,
+    fill: (theme.vars || theme).palette.common.white,
     // stroke:
     //   theme.palette.mode === 'dark'
     //     ? (theme.vars || theme).palette.grey[600]

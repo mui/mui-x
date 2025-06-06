@@ -31,10 +31,7 @@ import {
 
 const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
   '&': {
-    fill:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[700]
-        : (theme.vars || theme).palette.grey[400],
+    fill: theme.palette.mode === 'dark' ? '#5a5d79' : '#343646',
     cursor: 'grab',
   },
 }));
