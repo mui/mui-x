@@ -1,0 +1,16 @@
+<StaticDatePicker
+  slotProps={{
+    actionBar: {
+      actions: ['accept', 'cancel'],
+    },
+  }}
+  slots={{ day: PickerDay2 }}
+/>
+<StaticDateRangePicker
+  slotProps={{
+    actionBar: {
+      actions: ['accept', 'cancel'],
+    },
+  }}
+  slots={{ day: DateRangePickerDay2 }}
+/>
