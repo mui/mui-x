@@ -159,7 +159,7 @@ function ScatterPreview({
 
           temp.push(
             <ScatterMarker
-              key={scatterPoint.id}
+              key={scatterPoint.id ?? i}
               dataIndex={i}
               color={colorGetter ? colorGetter(i) : color}
               x={getXPosition(scatterPoint.x)}
