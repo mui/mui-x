@@ -7,13 +7,13 @@ import {
   gridHasScrollXSelector,
   gridHasScrollYSelector,
 } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import { gridRenderContextSelector } from '../../hooks/features/virtualization/gridVirtualizationSelectors';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
@@ -85,6 +85,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
   const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
+  const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const { getOverlay, overlaysProps } = useGridOverlays();
   const ownerState = {
     classes: rootProps.classes,
@@ -94,7 +95,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const virtualScroller = useGridVirtualScroller();
+  const virtualScroller = apiRef.current.virtualScroller;
   const {
     getContainerProps,
     getScrollerProps,
