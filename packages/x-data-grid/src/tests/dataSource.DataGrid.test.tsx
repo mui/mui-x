@@ -301,7 +301,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       const onDataSourceError = spy();
       render(<TestDataSource onDataSourceError={onDataSourceError} shouldRequestsFail />);
       await waitFor(() => {
-        expect(onDataSourceError.called).to.equal(true);
+        expect(onDataSourceError.callCount).to.equal(1);
       });
     });
 

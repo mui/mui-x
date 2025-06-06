@@ -274,7 +274,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
     return () => {
       // ignore the current request on unmount
-      lastRequestId.current = 0;
+      lastRequestId.current += 1;
     };
   }, [apiRef, props.dataSource]);
 
