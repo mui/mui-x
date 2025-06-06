@@ -2,8 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { alpha } from '@mui/material/styles';
 
-export default function SxProp() {
+export default function StylingCellsSx() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
@@ -14,19 +15,19 @@ export default function SxProp() {
     <Box sx={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
-        sx={{
+        sx={(theme) => ({
           '& .MuiDataGrid-columnHeader': {
             paddingLeft: 3,
             paddingRight: 3,
           },
-          // You must avoid targeting the empty cells, otherwise the empty
-          // filler cells at the end of grid rows will be affected and
-          // this will break the layout.
-          '& .MuiDataGrid-cell:not(.MuiDataGrid-cellEmpty)': {
-            paddingLeft: 3,
-            paddingRight: 3,
+          '& .MuiDataGrid-cell': {
+            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+            '&:not(.MuiDataGrid-cellEmpty)': {
+              paddingLeft: 3,
+              paddingRight: 3,
+            },
           },
-        }}
+        })}
       />
     </Box>
   );

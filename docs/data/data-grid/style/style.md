@@ -99,9 +99,13 @@ It is also called with a `GridCellParams` object.
 
 {{"demo": "StylingAllCells.js", "bg": "inline"}}
 
-3. Using the `sx` prop on the `DataGrid` component:
+3. Using the `sx` prop on the Data Grid component:
 
 {{"demo": "StylingCellsSx.js", "bg": "inline"}}
+
+:::warning
+When applying styles that affect cell dimensions (such as padding, margins, or borders), ensure your selectors exclude the `cellEmpty` class. These cells appear at the end of grid rows as layout fillers, and applying dimensional styles to them can disrupt the grid's layout integrity.
+:::
 
 ## Cell alignment
 
