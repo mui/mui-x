@@ -50,5 +50,14 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "baseButton": "",
+    "baseIconButton": "",
+    "legend": "Custom rendering of the legend.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip popper."
+  }
 }
