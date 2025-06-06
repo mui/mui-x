@@ -1,4 +1,4 @@
-import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { ChartDrawingArea } from '../../../../hooks';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -201,26 +201,16 @@ export const selectorChartXAxis = createSelector(
 export const selectorChartYAxis = createSelector(
   [
     selectorChartRawYAxis,
-    selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
-    selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    (state, drawingArea?: ChartDrawingArea) => drawingArea,
+    selectorChartDrawingArea,
+    selectorChartZoomMap,
   ],
-  (
-    axis,
-    chartDrawingArea,
-    formattedSeries,
-    seriesConfig,
-    zoomMap,
-    zoomOptions,
-    getFilters,
-    drawingArea,
-  ) =>
+  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, drawingArea, zoomMap) =>
     computeAxisValue({
-      drawingArea: drawingArea ?? chartDrawingArea,
+      drawingArea,
       formattedSeries,
       axis,
       seriesConfig,
