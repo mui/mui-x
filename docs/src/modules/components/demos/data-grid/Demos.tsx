@@ -18,7 +18,7 @@ const DEMOS: { name: string; icon: React.ReactNode; component: React.ComponentTy
   {
     name: 'Stocks',
     icon: <AccountBalance fontSize="small" />,
-    component: () => <div>Financial</div>,
+    component: StockDashboard,
   },
 ];
 
