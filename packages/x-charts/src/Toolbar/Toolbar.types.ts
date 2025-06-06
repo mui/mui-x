@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ChartsToolbarProps } from './Toolbar';
+
+export interface ChartsToolbarProps {}
 
 export interface ChartsToolbarSlots {
   /**

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.5.0",
+  "version": "8.5.1",
   "author": "MUI Team",
   "description": "MUI X Telemetry.",
   "main": "src/index.ts",
@@ -32,7 +32,7 @@
     "directory": "packages/x-telemetry"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
+    "@babel/runtime": "^7.27.4",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
     "ci-info": "^4.2.0",
     "conf": "^11.0.2",
@@ -40,7 +40,7 @@
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
+    "@mui/internal-test-utils": "^2.0.9",
     "@types/device-uuid": "^1.0.3",
     "rimraf": "^6.0.1"
   },
