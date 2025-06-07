@@ -1,4 +1,4 @@
-import { lruMemoize, createSelectorCreator } from '@mui/x-internals/reselect';
+import { lruMemoize, createSelectorCreator } from 'reselect';
 import type { CreateSelectorFunction } from './createSelectorType';
 
 export type { CreateSelectorFunction } from './createSelectorType';

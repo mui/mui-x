@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { lruMemoize } from '@mui/x-internals/reselect';
+import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';

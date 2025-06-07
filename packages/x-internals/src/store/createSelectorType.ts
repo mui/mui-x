@@ -1,4 +1,4 @@
-import type { Selector } from '@mui/x-internals/reselect';
+import type { Selector } from 'reselect';
 
 export type CreateSelectorFunction = <
   const Args extends any[],

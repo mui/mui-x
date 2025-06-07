@@ -3,7 +3,7 @@ import {
   createSelector as baseCreateSelector,
   createSelectorMemoized as baseCreateSelectorMemoized,
   CreateSelectorFunction,
-} from '../base-utils/store';
+} from '@mui/x-internals/store';
 
 export interface OutputSelector<State, Args, Result> {
   (apiRef: RefObject<{ state: State } | null>, args?: Args): Result;
