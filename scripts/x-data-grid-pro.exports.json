@@ -666,7 +666,7 @@
   { "name": "useGridLogger", "kind": "Function" },
   { "name": "useGridNativeEventListener", "kind": "Variable" },
   { "name": "useGridRootProps", "kind": "Variable" },
-  { "name": "useGridSelector", "kind": "Variable" },
+  { "name": "useGridSelector", "kind": "Function" },
   { "name": "useGridVirtualization", "kind": "Function" },
   { "name": "useOnMount", "kind": "Function" },
   { "name": "useRunOnce", "kind": "Variable" },
