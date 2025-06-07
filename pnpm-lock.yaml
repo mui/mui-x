@@ -1685,6 +1685,9 @@ importers:
       reselect:
         specifier: 'catalog:'
         version: 5.1.1
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.5.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1692,6 +1695,9 @@ importers:
       '@mui/system':
         specifier: 'catalog:'
         version: 7.1.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.5.0
       react:
         specifier: 'catalog:'
         version: 19.0.0
