@@ -1,1 +1,1 @@
-export { lruMemoize } from 'reselect';
+export { lruMemoize } from '@mui/x-internals/reselect';
