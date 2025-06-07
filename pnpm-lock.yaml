@@ -1021,9 +1021,6 @@ importers:
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
-      reselect:
-        specifier: ^5.1.1
-        version: 5.1.1
       use-sync-external-store:
         specifier: ^1.5.0
         version: 1.5.0(react@19.0.0)
@@ -1148,9 +1145,6 @@ importers:
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
-      reselect:
-        specifier: ^5.1.1
-        version: 5.1.1
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.9
@@ -1216,9 +1210,6 @@ importers:
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
-      reselect:
-        specifier: ^5.1.1
-        version: 5.1.1
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.9
@@ -1423,6 +1414,9 @@ importers:
       '@mui/utils':
         specifier: ^7.1.1
         version: 7.1.1(@types/react@19.0.12)(react@19.0.0)
+      reselect:
+        specifier: ^5.1.1
+        version: 5.1.1
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.9
