@@ -20,8 +20,8 @@
     "@vitest/browser": "3.2.2",
     "@vitest/ui": "3.2.2",
     "jsdom": "^26.1.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "vitest": "3.2.2"
   }
 }
