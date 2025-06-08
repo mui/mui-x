@@ -3,15 +3,12 @@
   "version": "0.0.1",
   "author": "MUI Team",
   "description": "MUI virtualization library",
-  "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://mui.com",
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": false,
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/mui-org"
