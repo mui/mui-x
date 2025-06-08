@@ -412,8 +412,6 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     const isPinnedSection = params.position !== undefined;
 
     let rowIndexOffset: number;
-    // FIXME: Why is the switch check exhaustiveness not validated with typescript-eslint?
-    // eslint-disable-next-line default-case
     switch (params.position) {
       case 'top':
         rowIndexOffset = 0;
@@ -422,6 +420,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
         rowIndexOffset = pinnedRows.top.length + rows.length;
         break;
       case undefined:
+      default:
         rowIndexOffset = pinnedRows.top.length;
         break;
     }
