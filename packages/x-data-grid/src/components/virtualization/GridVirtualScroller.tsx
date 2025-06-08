@@ -94,6 +94,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
+  // @ts-ignore XXX
   const virtualScroller = apiRef.current.virtualScroller.use();
   const {
     getContainerProps,
