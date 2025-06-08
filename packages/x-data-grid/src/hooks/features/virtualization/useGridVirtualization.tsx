@@ -134,7 +134,6 @@ export function useGridVirtualization(
   const autoHeight = rootProps.autoHeight;
 
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
-  console.log('render', renderContext);
 
   const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
 
@@ -186,7 +185,6 @@ export function useGridVirtualization(
       dimensions: () => apiRef.current.state.dimensions,
       renderContext: () => apiRef.current.state.virtualization.renderContext,
       setRenderContext: (nextRenderContext: GridRenderContext) => {
-        console.log('setRenderContext', nextRenderContext);
         apiRef.current.setState((state) => {
           return {
             ...state,
