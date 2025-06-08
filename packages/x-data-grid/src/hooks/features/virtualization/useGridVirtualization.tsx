@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
-import { useVirtualizer, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer/useVirtualizer';
+import { useVirtualizer, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
