@@ -2,18 +2,13 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { RefObject } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
-import reactMajor from '@mui/x-internals/reactMajor';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
-// import {
-//   gridVisibleColumnDefinitionsSelector,
-//   gridVisiblePinnedColumnDefinitionsSelector,
-//   gridColumnPositionsSelector,
-//   gridHasColSpanSelector,
-// } from '../columns/gridColumnsSelector';
+import reactMajor from '@mui/x-internals/reactMajor';
+import { Store, useSelector } from '@mui/x-internals/store';
 
 import {
   Column,
@@ -677,7 +672,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     return undefined;
   });
 
-  return {
+  const state = {
     renderContext,
     forceUpdateRenderContext,
     setPanels,
@@ -713,6 +708,17 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     getScrollAreaProps: () => ({
       scrollPosition,
     }),
+  };
+
+  const store = useLazyRef(() => new Store(state)).current;
+
+  React.useEffect(() => {
+    store.update(state);
+  }, Object.values(state));
+
+  return {
+    use: () => useSelector(store, (state) => state),
+    forceUpdateRenderContext,
   };
 };
 
