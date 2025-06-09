@@ -43,7 +43,7 @@ catalog:
   "@types/semver": ^7.7.0
   "@types/use-sync-external-store": ^1.5.0
   "@typescript-eslint/parser": ^8.33.0
-  "@vitejs/plugin-react": ^4.5.0
+  "@vitejs/plugin-react": ^4.5.1
   autoprefixer: ^10.4.21
   babel-plugin-module-resolver: ^5.0.2
   babel-plugin-optimize-clsx: ^2.6.2
@@ -79,6 +79,6 @@ catalog:
   stylis-plugin-rtl: ^2.1.1
   tsx: ^4.19.4
   use-sync-external-store: ^1.5.0
-  vitest: 3.2.0
+  vitest: 3.2.2
   webpack-bundle-analyzer: ^4.10.2
   yargs: ^18.0.0
