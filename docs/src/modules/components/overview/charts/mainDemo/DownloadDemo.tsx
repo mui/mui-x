@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Select from '@mui/material/Select';
@@ -74,7 +75,7 @@ export default function DownloadDemo() {
   const [selectedFormat, setSelectedFormat] = React.useState<'absolute' | 'relative'>('absolute');
 
   return (
-    <Stack spacing={1} direction="column" sx={{ height: '100%' }}>
+    <Stack spacing={1} direction="column" sx={{ height: '100%', minHeight: 0 }}>
       <Stack direction="row" justifyContent="space-between" width="100%">
         <Select
           size="small"
@@ -95,12 +96,12 @@ export default function DownloadDemo() {
           value={selectedFormat}
           onChange={(event) => setSelectedFormat(event.target.value as 'absolute' | 'relative')}
         >
-          <MenuItem value="absolute">absolute</MenuItem>
-          <MenuItem value="relative">relative</MenuItem>
+          <MenuItem value="absolute">Absolute</MenuItem>
+          <MenuItem value="relative">Relative</MenuItem>
         </Select>
       </Stack>
 
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ flex: 1, minHeight: 0 }}>
         <LineChartPro
           skipAnimation
           dataset={packages[selectedPackage]}

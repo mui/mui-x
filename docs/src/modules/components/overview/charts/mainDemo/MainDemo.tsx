@@ -31,7 +31,7 @@ export default function MainDemo() {
               <StatCard key={index} {...card} />
             ))}
           </Stack>
-          <Box component="div" sx={{ flexGrow: 1 }}>
+          <Box component="div" sx={{ flexGrow: 1, minHeight: 0 }}>
             <DownloadDemo />
           </Box>
         </Stack>
