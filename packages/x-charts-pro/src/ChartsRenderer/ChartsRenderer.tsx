@@ -30,7 +30,18 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
   if (chartType === 'bar') {
     const axis = chartConfiguration.layout === 'vertical' ? 'xAxis' : 'yAxis';
     const axisProp = { [axis]: [{ data: categoryData }] };
-    return <BarChart {...axisProp} series={series} {...chartConfiguration} />;
+    const seriesProp = chartConfiguration.stacked
+      ? series.map((ser) => ({ ...ser, stack: 'stack' }))
+      : series;
+    return (
+      <BarChart
+        {...axisProp}
+        series={seriesProp}
+        hideLegend={chartConfiguration.hideLegend}
+        height={chartConfiguration.height}
+        layout={chartConfiguration.layout}
+      />
+    );
   }
 
   if (chartType === 'line') {
