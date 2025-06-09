@@ -45,15 +45,6 @@ const GridToolbarExportContainer = forwardRef<
 
   const handleMenuClose = () => setOpen(false);
 
-  const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-    }
-    if (isHideMenuKey(event.key)) {
-      handleMenuClose();
-    }
-  };
-
   if (children == null) {
     return null;
   }
@@ -92,7 +83,6 @@ const GridToolbarExportContainer = forwardRef<
           id={exportMenuId}
           className={gridClasses.menuList}
           aria-labelledby={exportButtonId}
-          onKeyDown={handleListKeyDown}
           autoFocusItem={open}
         >
           {React.Children.map(children, (child) => {

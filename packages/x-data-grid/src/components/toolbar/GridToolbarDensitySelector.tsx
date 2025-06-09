@@ -84,15 +84,6 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
       setOpen(false);
     };
 
-    const handleListKeyDown = (event: React.KeyboardEvent) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();
-      }
-      if (isHideMenuKey(event.key)) {
-        setOpen(false);
-      }
-    };
-
     // Disable the button if the corresponding is disabled
     if (rootProps.disableDensitySelector) {
       return null;
@@ -143,7 +134,6 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
             id={densityMenuId}
             className={gridClasses.menuList}
             aria-labelledby={densityButtonId}
-            onKeyDown={handleListKeyDown}
             autoFocusItem={open}
           >
             {densityElements}
