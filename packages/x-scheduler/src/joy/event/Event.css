@@ -72,6 +72,7 @@
 .EventCard--regular.UnderHourEventCard {
   display: flex;
   align-items: center;
+  line-height: 1;
 }
 
 .UnderHourEventCard {
