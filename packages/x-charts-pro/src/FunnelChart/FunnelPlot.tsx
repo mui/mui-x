@@ -9,7 +9,7 @@ import {
   useStore,
   isBandScale,
 } from '@mui/x-charts/internals';
-import { FunnelItemIdentifier, FunnelDataPoints, PositionGetter } from './funnel.types';
+import { FunnelItemIdentifier, FunnelDataPoints } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
 import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
@@ -21,6 +21,7 @@ import {
   selectorChartYAxis,
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
+import { PositionGetter } from './positionGetter';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -91,7 +92,7 @@ const useAggregatedData = () => {
         return xScale(value)!;
       };
 
-      const yPosition = (
+      const yPosition: PositionGetter = (
         value: number,
         bandIndex: number,
         bandIdentifier: string | number,

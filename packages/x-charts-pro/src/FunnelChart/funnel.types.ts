@@ -171,11 +171,3 @@ export type FunnelLabelOptions = {
    */
   offset?: number | { x?: number; y?: number };
 };
-
-export type PositionGetter = (
-  value: number,
-  bandIndex: number,
-  bandIdentifier: string | number,
-  stackOffset?: number,
-  useBand?: boolean,
-) => number;
