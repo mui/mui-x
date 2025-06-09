@@ -60,13 +60,13 @@ Community and Pro users must upgrade to a Premium license to purchase priority s
 MUI accept priority support requests through two main channels: the public repositories on GitHub (preferred), and our private support system on Zendesk.
 Please be sure to follow the instructions exactly as described below to ensure your request is handled in a timely manner.
 
-### On GitHub
+### Public repositories
 
 Depending on the product you need support for, visit either the [MUI X](https://github.com/mui/mui-x) or the [Material UI](https://github.com/mui/material-ui) repo.
 Create a new issue using the **Priority support: SLA ⏰** template—this ensures it will include the necessary labels to trigger our automated process.
 After you've created the issue, a GitHub action will prompt you to follow an external link to validate your support key.
 Once your support key is validated, the action comment will update to confirm that your SLA is now in effect, and the issue labels will update accordingly.
 
-### Support website
+### Private support desk
 
 If your support request includes sensitive information that you can't share publicly, you can submit a [support request](https://support.mui.com/hc/en-us/requests/new) through our website.
