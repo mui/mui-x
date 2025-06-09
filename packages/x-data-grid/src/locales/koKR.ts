@@ -41,7 +41,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   toolbarPivot: '피벗',
-  // toolbarCharts: 'Configure charts',
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI 어시스턴트',
