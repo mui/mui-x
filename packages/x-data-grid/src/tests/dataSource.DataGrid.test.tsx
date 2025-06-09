@@ -10,6 +10,9 @@ import {
   GridDataSource,
   GridGetRowsParams,
   GridGetRowsResponse,
+  type GridRowId,
+  type GridRowModel,
+  GridUpdateRowParams,
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
@@ -61,6 +64,44 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     return null;
   }
 
+  class MockServerDataSource implements GridDataSource {
+    fetchRows: (url: string) => Promise<GridGetRowsResponse>;
+
+    editRow: (rowId: GridRowId, updatedRow: GridRowModel) => Promise<GridRowModel>;
+
+    constructor(
+      fetchRows: (url: string) => Promise<GridGetRowsResponse>,
+      editRow: (rowId: GridRowId, updatedRow: GridRowModel) => Promise<GridRowModel>,
+    ) {
+      this.fetchRows = fetchRows;
+      this.editRow = editRow;
+    }
+
+    async getRows(params: GridGetRowsParams) {
+      const urlParams = new URLSearchParams({
+        filterModel: JSON.stringify(params.filterModel),
+        sortModel: JSON.stringify(params.sortModel),
+        start: `${params.start}`,
+        end: `${params.end}`,
+      });
+
+      const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
+      fetchRowsSpy(url);
+      const getRowsResponse = await this.fetchRows(url);
+
+      return {
+        rows: getRowsResponse.rows,
+        rowCount: getRowsResponse.rowCount,
+      };
+    }
+
+    async updateRow(params: GridUpdateRowParams) {
+      editRowSpy(params);
+      const syncedRow = await this.editRow(params.rowId, params.updatedRow);
+      return syncedRow;
+    }
+  }
+
   function TestDataSource(
     props: Partial<DataGridProps> & {
       shouldRequestsFail?: boolean;
@@ -78,30 +119,7 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     const { fetchRows, editRow } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(() => {
-      return {
-        getRows: async (params: GridGetRowsParams) => {
-          const urlParams = new URLSearchParams({
-            filterModel: JSON.stringify(params.filterModel),
-            sortModel: JSON.stringify(params.sortModel),
-            start: `${params.start}`,
-            end: `${params.end}`,
-          });
-
-          const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-          fetchRowsSpy(url);
-          const getRowsResponse = await fetchRows(url);
-
-          return {
-            rows: getRowsResponse.rows,
-            rowCount: getRowsResponse.rowCount,
-          };
-        },
-        updateRow: async (params) => {
-          editRowSpy(params);
-          const syncedRow = await editRow(params.rowId, params.updatedRow);
-          return syncedRow;
-        },
-      };
+      return new MockServerDataSource(fetchRows, editRow);
     }, [fetchRows, editRow]);
 
     if (!mockServer.isReady) {

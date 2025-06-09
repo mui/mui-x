@@ -75,7 +75,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
-      const getRows = props.dataSource?.getRows;
+      const getRows = props.dataSource?.getRows?.bind(props.dataSource);
       if (!getRows) {
         return;
       }
@@ -160,7 +160,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       cache,
       apiRef,
       defaultRowsUpdateStrategyActive,
-      props.dataSource?.getRows,
+      props.dataSource,
       onDataSourceErrorProp,
       options,
       props.signature,
@@ -197,17 +197,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     [apiRef],
   );
 
-  const dataSourceUpdateRow = props.dataSource?.updateRow;
   const handleEditRowOption = options.handleEditRow;
 
   const editRow = React.useCallback<GridDataSourceApiBase['editRow']>(
     async (params) => {
-      if (!dataSourceUpdateRow) {
+      const updateRow = props.dataSource?.updateRow?.bind(props.dataSource);
+      if (!updateRow) {
         return undefined;
       }
 
       try {
-        const finalRowUpdate = await dataSourceUpdateRow(params);
+        const finalRowUpdate = await updateRow(params);
         if (typeof handleEditRowOption === 'function') {
           handleEditRowOption(params, finalRowUpdate);
           return finalRowUpdate;
@@ -240,7 +240,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         throw errorThrown; // Let the caller handle the error further
       }
     },
-    [apiRef, dataSourceUpdateRow, onDataSourceErrorProp, handleEditRowOption],
+    [apiRef, props.dataSource, onDataSourceErrorProp, handleEditRowOption],
   );
 
   const dataSourceApi: GridDataSourceApi = {
