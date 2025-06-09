@@ -1,9 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useDayList } from '../../primitives/use-day-list';
-import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
+import { useDayList } from '../../primitives/use-day-list/useDayList';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { WeekViewProps } from './WeekView.types';
 import { TimeGridView } from '../time-grid-view/TimeGridView';
+
+const adapter = getAdapter();
 
 export const WeekView = React.forwardRef(function WeekView(
   props: WeekViewProps,
@@ -11,7 +13,6 @@ export const WeekView = React.forwardRef(function WeekView(
 ) {
   const { events, className, ...other } = props;
 
-  const adapter = useAdapter();
   const today = adapter.date('2025-05-26');
   const getDayList = useDayList();
 
@@ -25,7 +26,7 @@ export const WeekView = React.forwardRef(function WeekView(
 
   const filteredEvents = React.useMemo(
     () => events.filter((event) => adapter.isWithinRange(event.start, [weekStart, weekEnd])),
-    [events, weekStart, weekEnd, adapter],
+    [events, weekStart, weekEnd],
   );
 
   return (

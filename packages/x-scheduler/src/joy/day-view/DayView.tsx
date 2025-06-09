@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
-import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { DayViewProps } from './DayView.types';
 import { TimeGridView } from '../time-grid-view/TimeGridView';
+
+const adapter = getAdapter();
 
 export const DayView = React.forwardRef(function DayView(
   props: DayViewProps,
@@ -10,7 +12,6 @@ export const DayView = React.forwardRef(function DayView(
 ) {
   const { events, className, ...other } = props;
 
-  const adapter = useAdapter();
   const day = adapter.date('2025-05-26');
 
   const dayStart = adapter.startOfDay(day);
