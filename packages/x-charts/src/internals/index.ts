@@ -57,6 +57,7 @@ export * from './colorScale';
 export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';
+export * from './isBandScale';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';

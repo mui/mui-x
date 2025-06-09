@@ -2,7 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { ComputedAxis, cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
+import {
+  ComputedAxis,
+  cartesianSeriesTypes,
+  useSelector,
+  useStore,
+  isBandScale,
+} from '@mui/x-charts/internals';
 import { FunnelItemIdentifier, FunnelDataPoints, PositionGetter } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -15,7 +21,6 @@ import {
   selectorChartYAxis,
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
-import { isBandScale } from '@mui/x-charts/internals/isBandScale';
 
 cartesianSeriesTypes.addType('funnel');
 

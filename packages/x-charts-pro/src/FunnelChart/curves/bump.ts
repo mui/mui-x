@@ -15,8 +15,6 @@ export class Bump implements CurveGenerator {
 
   private isHorizontal: boolean = false;
 
-  private gap: number = 0;
-
   private min: Point = { x: 0, y: 0 };
 
   private max: Point = { x: 0, y: 0 };
@@ -25,11 +23,10 @@ export class Bump implements CurveGenerator {
 
   constructor(
     context: CanvasRenderingContext2D,
-    { isHorizontal, gap, min, max, isIncreasing }: CurveOptions,
+    { isHorizontal, min, max, isIncreasing }: CurveOptions,
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
-    this.gap = gap ?? 0;
     this.min = min ?? { x: 0, y: 0 };
     this.max = max ?? { x: 0, y: 0 };
 
