@@ -15,6 +15,8 @@ packageName: '@mui/x-charts'
 {{"component": "modules/components/overview/charts/featuresHighlight/FeaturesHighlight"}}
 {{"component": "modules/components/overview/charts/ChartsCommunityOrPro"}}
 
+{{"component": "modules/components/overview/charts/essentialCharts/EssentialCharts"}}
+
 ## All MUI X Charts
 
 {{"component": "modules/components/ChartComponentsGrid.js"}}
