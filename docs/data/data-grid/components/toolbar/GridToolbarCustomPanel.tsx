@@ -26,10 +26,6 @@ function CustomToolbar() {
   const [newPanelOpen, setNewPanelOpen] = React.useState(false);
   const newPanelTriggerRef = React.useRef<HTMLButtonElement>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setNewPanelOpen(true);
-  };
-
   const handleClose = () => {
     setNewPanelOpen(false);
   };
@@ -60,7 +56,7 @@ function CustomToolbar() {
         <ToolbarButton
           ref={newPanelTriggerRef}
           aria-describedby="new-panel"
-          onClick={handleClick}
+          onClick={() => setNewPanelOpen((prev) => !prev)}
         >
           <AddIcon fontSize="small" />
         </ToolbarButton>
