@@ -11,7 +11,20 @@ title: MUI X - Priority support
 The MUI X team offers priority support as an add-on service for Premium license holders.
 With priority support you get expedited assistance and troubleshooting for your critical applications, ensuring the fastest possible resolution times.
 
-Unlike standard support services—which are provided to all Pro and Premium license holders and only cover MUI X components—priority support covers the entire MUI ecosystem, including Material UI and Base UI.
+Unlike MUI X's standard support services—which are provided to all Pro and Premium license holders and only cover MUI X components—priority support covers the entire MUI ecosystem, including Material UI and Base UI.
+
+### Why teams choose priority support
+
+Priority support is tailored for enterprise teams who rely on the MUI ecosystem at scale and want faster turnaround on bug reports, closer collaboration on issue triaging, and coverage across the entire component library.
+
+Priority support covers _all_ MUI products, including:
+
+- The entire MUI X suite: Data Grid, Date and Time Pickers, Tree View, and Charts
+- Material UI
+- Base UI
+- MUI System
+- Pigment CSS
+- Joy UI
 
 ### Service-level agreement (SLA)
 
@@ -34,19 +47,6 @@ Support requests are prioritized based on the type of license the developer hold
 2. Premium license with standard support (no SLA)
 3. Pro license
 4. Community (free) license
-
-## Why teams choose priority support
-
-Priority support is tailored for enterprise teams who rely on the MUI ecosystem at scale and want faster turnaround on bug reports, closer collaboration on issue triaging, and coverage across the entire component library.
-
-Priority support covers _all_ MUI products, including:
-
-- The entire MUI X suite: Data Grid, Date and Time Pickers, Tree View, and Charts
-- Material UI
-- Base UI
-- MUI System
-- Pigment CSS
-- Joy UI
 
 ## How to purchase priority support
 
