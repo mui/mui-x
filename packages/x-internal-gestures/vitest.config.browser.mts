@@ -1,7 +1,6 @@
 /// <reference types="@vitest/browser/providers/playwright" />
 import { mergeConfig } from 'vitest/config';
 import sharedConfig from '../../vitest.shared.mts';
-
 import { getTestName } from '../../scripts/getTestName.mts';
 
 export default mergeConfig(sharedConfig, {
@@ -13,6 +12,13 @@ export default mergeConfig(sharedConfig, {
       instances: [
         {
           browser: 'chromium',
+          ...(process.env.PLAYWRIGHT_SERVER_WS
+            ? {
+                connect: {
+                  wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
+                },
+              }
+            : {}),
         },
       ],
     },
