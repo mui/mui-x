@@ -14,7 +14,7 @@ export function calculateCentroid(pointers: PointerData[]): { x: number; y: numb
       acc.y += pointer.clientY;
       return acc;
     },
-    { x: 0, y: 0 }
+    { x: 0, y: 0 },
   );
 
   return {

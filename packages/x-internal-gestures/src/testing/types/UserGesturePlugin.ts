@@ -1,6 +1,5 @@
 import { PointerManager } from '../PointerManager';
 
- 
 export type UserGesturePlugin<Options extends Record<string, any> = any> = {
   /**
    * The name of the gesture.

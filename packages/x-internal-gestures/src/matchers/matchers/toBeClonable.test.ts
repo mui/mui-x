@@ -49,7 +49,7 @@ describe('toBeClonable matcher', () => {
     const result = matcher(MockBadCloneGesture);
     expect(result.pass).toBe(false);
     expect(result.message()).toBe(
-      'Expected clone to be a different instance than the original, but they are the same.'
+      'Expected clone to be a different instance than the original, but they are the same.',
     );
   });
 
@@ -63,7 +63,7 @@ describe('toBeClonable matcher', () => {
     const result = matcher(MockBadOverrideGesture, { preventDefault: true });
     expect(result.pass).toBe(false);
     expect(result.message()).toBe(
-      'Expected clone to have overridden properties applied, but it does not.'
+      'Expected clone to have overridden properties applied, but it does not.',
     );
   });
 
@@ -71,7 +71,7 @@ describe('toBeClonable matcher', () => {
     const result = matcher(MockBadOverrideIgnoreGesture);
     expect(result.pass).toBe(false);
     expect(result.message()).toBe(
-      'Expected non-overridden properties to match the original, but they do not.'
+      'Expected non-overridden properties to match the original, but they do not.',
     );
   });
 
@@ -82,11 +82,10 @@ describe('toBeClonable matcher', () => {
   });
 
   it('should handle invalid gesture instances gracefully', () => {
-     
     const result = matcher(null as any);
     expect(result.pass).toBe(false);
     expect(result.message()).toBe(
-      'Expected a valid gesture class, but received invalid input or an instantiated class instead.'
+      'Expected a valid gesture class, but received invalid input or an instantiated class instead.',
     );
   });
 });

@@ -17,7 +17,6 @@ import { createProxy } from './utils/createProxy';
 /**
  * Used for providing a custom touch gesture.
  */
- 
 export interface TouchUserGestureRootExtension {}
 
 /**

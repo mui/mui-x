@@ -19,13 +19,13 @@ export type GestureElement<
       : never,
   >(
     type: K,
-     
+
     listener: (this: TargetElement, ev: GestureEvent) => any,
     options?: boolean | AddEventListenerOptions,
   ): void;
   addEventListener<K extends keyof HTMLElementEventMap>(
     type: K,
-     
+
     listener: (this: TargetElement, ev: HTMLElementEventMap[K]) => any,
     options?: boolean | AddEventListenerOptions,
   ): void;
@@ -41,13 +41,13 @@ export type GestureElement<
       : never,
   >(
     type: K,
-     
+
     listener: (this: TargetElement, ev: GestureEvent) => any,
     options?: boolean | EventListenerOptions,
   ): void;
   removeEventListener<K extends keyof HTMLElementEventMap>(
     type: K,
-     
+
     listener: (this: TargetElement, ev: HTMLElementEventMap[K]) => any,
     options?: boolean | EventListenerOptions,
   ): void;

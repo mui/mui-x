@@ -15,7 +15,6 @@ import { createProxy } from './utils/createProxy';
 /**
  * Used for providing a custom mouse gesture.
  */
- 
 export interface MouseUserGestureRootExtension {}
 
 /**

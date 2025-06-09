@@ -45,7 +45,6 @@ describe('toUpdateOptions matcher', () => {
   });
 
   it('should not pass when handling invalid gesture instances', () => {
-     
     const result = matcher(null as any, { preventDefault: true });
     expect(result.pass).toBe(false);
     expect(result.message()).toBe(
