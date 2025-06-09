@@ -615,7 +615,9 @@ export const useVirtualizer = (params: VirtualizerParams) => {
   }, [enabledForColumns, enabledForRows]);
 
   useEnhancedEffect(() => {
-    refs.scroller.current!.scrollLeft = 0;
+    if (refs.scroller.current) {
+      refs.scroller.current.scrollLeft = 0;
+    }
   }, [refs.scroller, scrollReset]);
 
   useRunOnce(renderContext !== EMPTY_RENDER_CONTEXT, () => {
