@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import useForkRef from '@mui/utils/useForkRef';
-import { useGridPreferencePanelContext } from '../panel/GridPreferencePanelContext';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useGridPanelContext } from '../panel/GridPanelContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import {
   gridPreferencePanelStateSelector,
@@ -11,7 +12,6 @@ import {
   useGridSelector,
 } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
 
 export interface ColumnsPanelState {
@@ -56,7 +56,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.columns;
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
-    const { columnsPanelTriggerRef } = useGridPreferencePanelContext();
+    const { columnsPanelTriggerRef } = useGridPanelContext();
     const handleRef = useForkRef(ref, columnsPanelTriggerRef);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -75,7 +75,7 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
       onPointerUp?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseButton,
       render,
       {
@@ -84,10 +84,10 @@ const ColumnsPanelTrigger = forwardRef<HTMLButtonElement, ColumnsPanelTriggerPro
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
-        onClick: handleClick,
-        onPointerUp: handlePointerUp,
         className: resolvedClassName,
         ...other,
+        onPointerUp: handlePointerUp,
+        onClick: handleClick,
         ref: handleRef,
       },
       state,

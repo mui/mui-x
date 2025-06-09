@@ -1,7 +1,7 @@
 ---
 title: React Charts
 productId: x-charts
-githubLabel: 'component: charts'
+githubLabel: 'scope: charts'
 packageName: '@mui/x-charts'
 ---
 

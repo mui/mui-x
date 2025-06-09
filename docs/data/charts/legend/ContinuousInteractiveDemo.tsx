@@ -62,7 +62,7 @@ export default function ContinuousInteractiveDemo() {
             {
               disableLine: true,
               disableTicks: true,
-              valueFormatter: (value) => `${value}°`,
+              valueFormatter: (value: number) => `${value}°`,
               colorMap: {
                 type: 'continuous',
                 min: -0.5,

@@ -3,7 +3,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -34,7 +35,6 @@ const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
 const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -44,7 +44,6 @@ const TimeClockRoot = styled(PickerViewRoot, {
 const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
-  overridesResolver: (props, styles) => styles.arrowSwitcher,
 })<{ ownerState: PickerOwnerState }>({
   position: 'absolute',
   right: 12,

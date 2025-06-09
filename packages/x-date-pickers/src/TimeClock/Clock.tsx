@@ -3,10 +3,8 @@ import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import composeClasses from '@mui/utils/composeClasses';
 import { ClockPointer } from './ClockPointer';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
@@ -50,7 +48,7 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProp
   classes?: Partial<ClockClasses>;
 }
 
-interface ClockOwnerState extends PickerOwnerState {
+export interface ClockOwnerState extends PickerOwnerState {
   /**
    * `true` if the clock is disabled, `false` otherwise.
    */
@@ -82,7 +80,6 @@ const useUtilityClasses = (
 const ClockRoot = styled('div', {
   name: 'MuiClock',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
@@ -93,7 +90,6 @@ const ClockRoot = styled('div', {
 const ClockClock = styled('div', {
   name: 'MuiClock',
   slot: 'Clock',
-  overridesResolver: (_, styles) => styles.clock,
 })({
   backgroundColor: 'rgba(0,0,0,.07)',
   borderRadius: '50%',
@@ -107,7 +103,6 @@ const ClockClock = styled('div', {
 const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
-  overridesResolver: (_, styles) => styles.wrapper,
 })({
   '&:focus': {
     outline: 'none',
@@ -117,7 +112,6 @@ const ClockWrapper = styled('div', {
 const ClockSquareMask = styled('div', {
   name: 'MuiClock',
   slot: 'SquareMask',
-  overridesResolver: (_, styles) => styles.squareMask,
 })<{ ownerState: ClockOwnerState }>({
   width: '100%',
   height: '100%',
@@ -146,7 +140,6 @@ const ClockSquareMask = styled('div', {
 const ClockPin = styled('div', {
   name: 'MuiClock',
   slot: 'Pin',
-  overridesResolver: (_, styles) => styles.pin,
 })(({ theme }) => ({
   width: 6,
   height: 6,
@@ -184,7 +177,6 @@ const meridiemButtonCommonStyles = (
 const ClockAmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'AmButton',
-  overridesResolver: (_, styles) => styles.amButton,
 })<{ ownerState: ClockOwnerState }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'am'),
   // keeping it here to make TS happy
@@ -195,7 +187,6 @@ const ClockAmButton = styled(IconButton, {
 const ClockPmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'PmButton',
-  overridesResolver: (_, styles) => styles.pmButton,
 })<{ ownerState: ClockOwnerState }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'pm'),
   // keeping it here to make TS happy
@@ -205,8 +196,7 @@ const ClockPmButton = styled(IconButton, {
 
 const ClockMeridiemText = styled(Typography, {
   name: 'MuiClock',
-  slot: 'meridiemText',
-  overridesResolver: (_, styles) => styles.meridiemText,
+  slot: 'MeridiemText',
 })({
   overflow: 'hidden',
   whiteSpace: 'nowrap',

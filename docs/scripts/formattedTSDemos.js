@@ -17,6 +17,7 @@ const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
 const yargs = require('yargs');
+const { hideBin } = require('yargs/helpers');
 const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
@@ -192,7 +193,7 @@ async function main(argv) {
   console.log('\nWatching for file changes...');
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'transpile TypeScript demos',

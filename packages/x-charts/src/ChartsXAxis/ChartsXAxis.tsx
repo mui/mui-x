@@ -10,13 +10,13 @@ import { useIsHydrated } from '../hooks/useIsHydrated';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
+import { AxisConfig, ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
-import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
+import { useDrawingArea, ChartDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -26,9 +26,9 @@ import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultT
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
-  const { classes, position } = ownerState;
+  const { classes, position, id } = ownerState;
   const slots = {
-    root: ['root', 'directionX', position],
+    root: ['root', 'directionX', position, `id-${id}`],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
@@ -53,12 +53,12 @@ function getVisibleLabels(
     tickLabelMinGap,
     reverse,
     isMounted,
-    isPointInside,
+    isXInside,
   }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse'> & {
+    Pick<ComputedXAxis, 'reverse'> & {
       isMounted: boolean;
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
-      isPointInside: (position: number) => boolean;
+      isXInside: (x: number) => boolean;
     },
 ): Set<TickItemType> {
   const getTickLabelSize = (tick: TickItemType) => {
@@ -94,7 +94,7 @@ function getVisibleLabels(
         return false;
       }
 
-      if (!isPointInside(textPosition)) {
+      if (!isXInside(textPosition)) {
         return false;
       }
 
@@ -184,7 +184,6 @@ function shortenLabels(
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })({});
 
 const defaultProps = {
@@ -285,6 +284,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    direction: 'x',
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {
@@ -293,7 +293,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     reverse,
     isMounted,
-    isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
+    isXInside: instance.isXInside,
   });
 
   const axisLabelProps = useSlotProps({
@@ -363,7 +363,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
-        const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const showTick = instance.isXInside(tickOffset);
         const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 

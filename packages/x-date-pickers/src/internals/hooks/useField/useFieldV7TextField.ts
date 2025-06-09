@@ -159,6 +159,11 @@ export const useFieldV7TextField = <
   });
 
   const handleRootClick = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // The click event on the clear or open button would propagate to the input, trigger this handler and result in an inadvertent section selection.
+    // We avoid this by checking if the call of `handleInputClick` is actually intended, or a propagated call, which should be skipped.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
     onClick?.(event);
     rootProps.onClick(event);
   });
@@ -187,16 +192,22 @@ export const useFieldV7TextField = <
   });
 
   const elements = React.useMemo<PickersSectionElement[]>(() => {
-    return state.sections.map((section, sectionIndex) => ({
-      container: createSectionContainerProps(sectionIndex),
-      content: createSectionContentProps(section, sectionIndex),
-      before: {
-        children: section.startSeparator,
-      },
-      after: {
-        children: section.endSeparator,
-      },
-    }));
+    return state.sections.map((section, sectionIndex) => {
+      const content = createSectionContentProps(section, sectionIndex);
+      return {
+        container: createSectionContainerProps(sectionIndex),
+        content: createSectionContentProps(section, sectionIndex),
+        before: {
+          children: section.startSeparator,
+        },
+        after: {
+          children: section.endSeparator,
+          'data-range-position': section.isEndFormatSeparator
+            ? content['data-range-position']
+            : undefined,
+        },
+      };
+    });
   }, [state.sections, createSectionContainerProps, createSectionContentProps]);
 
   React.useEffect(() => {

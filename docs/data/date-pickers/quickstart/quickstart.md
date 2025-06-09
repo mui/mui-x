@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: Date and Time Pickers - Quickstart
 packageName: '@mui/x-date-pickers'
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
@@ -17,8 +17,6 @@ Install the Date and Time Pickers package that best suits your needs—Community
 The Pickers currently support [Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), [Luxon](https://moment.github.io/luxon/#/), and [Moment.js](https://momentjs.com/).
 
 Choose your packages and manager through the toggles below, then run the commands as provided to install:
-
-<!-- #default-branch-switch -->
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
@@ -96,22 +94,7 @@ To use the Date and Time Pickers with a custom locale, see [Date and format loca
 
 With the component, adapter, and provider properly configured, you're now ready to render a Date Picker as shown below:
 
-```tsx
-import * as React from 'react';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-export default function App() {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker />
-    </LocalizationProvider>
-  );
-}
-```
-
-{{"demo": "FirstComponent.js"}}
+{{"demo": "FirstComponent.js", "defaultCodeOpen": true}}
 
 ## TypeScript
 

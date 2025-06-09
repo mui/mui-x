@@ -3,10 +3,22 @@ import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
+import { selectorIsItemEditable } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {
-  const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
-    store.update((prevState) => ({ ...prevState, label: { ...prevState.label, editedItemId } }));
+  const setEditedItem = (editedItemId: TreeViewItemId | null) => {
+    if (editedItemId !== null) {
+      const isEditable = selectorIsItemEditable(store.value, editedItemId);
+
+      if (!isEditable) {
+        return;
+      }
+    }
+
+    store.update((prevState) => ({
+      ...prevState,
+      label: { ...prevState.label, editedItemId },
+    }));
   };
 
   const updateItemLabel = (itemId: TreeViewItemId, label: string) => {
@@ -40,22 +52,22 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
   };
 
   useEnhancedEffect(() => {
-    const isItemEditable = params.isItemEditable;
     store.update((prevState) => ({
       ...prevState,
       label: {
         ...prevState.label,
-        isItemEditable: typeof isItemEditable === 'boolean' ? () => isItemEditable : isItemEditable,
+        isItemEditable: params.isItemEditable,
       },
     }));
   }, [store, params.isItemEditable]);
 
   return {
     instance: {
-      setEditedItemId,
+      setEditedItem,
       updateItemLabel,
     },
     publicAPI: {
+      setEditedItem,
       updateItemLabel,
     },
   };
@@ -63,15 +75,14 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
 
 useTreeViewLabel.itemPlugin = useTreeViewLabelItemPlugin;
 
-useTreeViewLabel.getDefaultizedParams = ({ params }) => ({
+useTreeViewLabel.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   isItemEditable: params.isItemEditable ?? false,
 });
 
-useTreeViewLabel.getInitialState = ({ isItemEditable }) => ({
+useTreeViewLabel.getInitialState = (params) => ({
   label: {
-    isItemEditable:
-      typeof isItemEditable === 'boolean' ? () => isItemEditable as boolean : isItemEditable,
+    isItemEditable: params.isItemEditable,
     editedItemId: null,
   },
 });

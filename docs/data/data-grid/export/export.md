@@ -1,6 +1,6 @@
 # Data Grid - Export
 
-<p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
+<p class="description">Export the rows in CSV or Excel formats, or use the browser's print dialog to print or save as PDF.</p>
 
 ## Enabling export
 
@@ -16,14 +16,14 @@ See the [Export component](/x/react-data-grid/components/export/) for examples o
 
 ## Export options
 
-By default, the toolbar displays all the available export formats, according to your license, which are
+Following are the available export options:
 
 - [Print](#print-export)
 - [CSV](#csv-export)
+- [Clipboard](#clipboard)
 - [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') (🚧 Not delivered yet)
 
-You can customize their respective behavior by passing an options object either to `slots.toolbar` or to the Export trigger itself if you have a custom toolbar:
+Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
 
 ```tsx
 // Default toolbar:
@@ -494,10 +494,12 @@ For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#c
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the export feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the Data Grid.
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
 ### CSV

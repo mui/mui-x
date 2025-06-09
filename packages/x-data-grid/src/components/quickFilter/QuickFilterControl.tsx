@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
 import { QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
 
@@ -67,7 +67,7 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
       onChange?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseTextField,
       render,
       {
@@ -102,6 +102,7 @@ QuickFilterControl.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   autoComplete: PropTypes.string,
+  autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -119,6 +120,7 @@ QuickFilterControl.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  multiline: PropTypes.bool,
   placeholder: PropTypes.string,
   /**
    * A function to customize rendering of the component.

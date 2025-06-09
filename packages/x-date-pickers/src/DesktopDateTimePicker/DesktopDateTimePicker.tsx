@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
@@ -42,6 +42,8 @@ const rendererInterceptor = function RendererInterceptor(
 
   const finalProps = {
     ...otherProps,
+    // we control the focused view manually
+    autoFocus: false,
     focusedView: null,
     sx: [
       {
@@ -246,7 +248,7 @@ DesktopDateTimePicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
-   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

@@ -2,29 +2,56 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsLegend } from '../ChartsLegend';
-import { ChartsOverlay, ChartsOverlayProps } from '../ChartsOverlay/ChartsOverlay';
+import { RadarChartPluginsSignatures } from './RadarChart.plugins';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsOverlay,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
+} from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface } from '../ChartsSurface';
-import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsWrapper, ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesPlot } from './RadarSeriesPlot';
+import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
+import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
+import { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 
-export interface RadarChartSlots {}
-export interface RadarChartSlotProps {}
+export interface RadarChartSlots
+  extends ChartsTooltipSlots,
+    ChartsOverlaySlots,
+    ChartsLegendSlots,
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
+
+export interface RadarChartSlotProps
+  extends ChartsTooltipSlotProps,
+    ChartsOverlaySlotProps,
+    ChartsLegendSlotProps,
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
-    RadarGridProps,
-    Partial<RadarAxisHighlightProps>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<RadarGridProps, 'classes'>,
+    Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    Pick<ChartsWrapperProps, 'sx'>,
+    Omit<ChartsSurfaceProps, 'sx'> {
   /**
    * If `true`, the legend is not rendered.
    */
   hideLegend?: boolean;
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -37,6 +64,15 @@ export interface RadarChartProps
   slotProps?: RadarChartSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Radar Chart](https://mui.com/x/react-charts/radar/)
+ *
+ * API:
+ *
+ * - [RadarChart API](https://mui.com/x/api/charts/radar-chart/)
+ */
 const RadarChart = React.forwardRef(function RadarChart(
   inProps: RadarChartProps,
   ref: React.Ref<SVGSVGElement>,
@@ -47,25 +83,30 @@ const RadarChart = React.forwardRef(function RadarChart(
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
-    radarAxisHighlight,
     overlayProps,
     legendProps,
     highlight,
     children,
   } = useRadarChartProps(props);
 
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar;
+
   return (
-    <RadarDataProvider {...radarDataProviderProps}>
+    <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
-          <RadarSeriesPlot />
-          {highlight === 'axis' && <RadarAxisHighlight {...radarAxisHighlight} />}
+          <RadarSeriesArea />
+          {highlight === 'axis' && <RadarAxisHighlight />}
+          <RadarSeriesMarks />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </RadarDataProvider>
   );
@@ -79,18 +120,6 @@ RadarChart.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  /**
-   * Switch between different axis highlight visualization.
-   * - points: display points on each highlighted value. Recommended for radar with multiple series.
-   * - slice: display a slice around the highlighted value. Recommended for radar with a single series.
-   * The default value is computed depending on the number of series provided.
-   */
-  axisHighlightShape: PropTypes.oneOf(['points', 'slice']),
-  children: PropTypes.node,
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: PropTypes.object,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -140,6 +169,10 @@ RadarChart.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
@@ -191,6 +224,11 @@ RadarChart.propTypes = {
    */
   shape: PropTypes.oneOf(['circular', 'sharp']),
   /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
+  /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
@@ -205,6 +243,13 @@ RadarChart.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Get stripe fill color. Set it to `null` to remove stripes
+   * @param {number} index The index of the stripe band.
+   * @returns {string} The color to fill the stripe.
+   * @default (index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'
+   */
+  stripeColor: PropTypes.func,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -74,11 +74,21 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
         ];
       }
 
+      // Go to the start date or the end date
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: adapterToUse.format(value[setEndDate ? 1 : 0], 'shortDate'),
+        }),
+      );
+
       fireEvent.click(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
       );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
         newValue[setEndDate ? 1 : 0],
@@ -92,13 +102,16 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Single Input', () => {
         }),
       );
       if (hasMeridiem) {
-        // meridiem is an extra view on `DesktopDateTimeRangePicker`
-        // we need to click it to finish selection
         fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 
       if (closeMobilePicker) {
-        fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+        if (setEndDate) {
+          fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+        } else {
+          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+          fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        }
       }
 
       return newValue;

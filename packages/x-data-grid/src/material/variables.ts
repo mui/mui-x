@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
-import { hash } from '@mui/x-internals/hash';
+import { hash, stringify } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
 
 export function useMaterialCSSVariables() {
   const theme = useTheme();
   return React.useMemo(() => {
-    const id = hash(JSON.stringify(theme));
+    const id = hash(stringify(theme));
     const variables = transformTheme(theme);
     return { id, variables };
   }, [theme]);
@@ -50,8 +50,9 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.muted]: (t.vars || t).palette.text.secondary,
     [k.colors.foreground.accent]: (t.vars || t).palette.primary.dark,
     [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
+    [k.colors.foreground.error]: (t.vars || t).palette.error.dark,
 
-    [k.colors.interactive.hover]: removeOpacity((t.vars || t).palette.action.hover),
+    [k.colors.interactive.hover]: (t.vars || t).palette.action.hover,
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
     [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
@@ -116,6 +117,11 @@ function removeOpacity(color: string) {
   return setOpacity(color, 1);
 }
 
-function formatFont(font: React.CSSProperties) {
+function formatFont(font: React.CSSProperties | undefined) {
+  // Accounts for disabled typography variants
+  // See: https://github.com/mui/mui-x/issues/17812
+  if (!font) {
+    return undefined;
+  }
   return `${font.fontWeight} ${font.fontSize} / ${font.lineHeight} ${font.fontFamily}`;
 }

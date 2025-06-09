@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { SinonFakeTimers, spy, useFakeTimers } from 'sinon';
+import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { act } from '@mui/internal-test-utils/createRenderer';
 import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (
@@ -99,14 +100,14 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, false], fieldType);
     });
     describe('with fake timers', () => {
-      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-      let timer: SinonFakeTimers | null = null;
       beforeEach(() => {
-        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+        vi.setSystemTime(new Date(2018, 0, 1));
       });
+
       afterEach(() => {
-        timer?.restore();
+        vi.useRealTimers();
       });
+
       it('should apply disablePast', () => {
         const onErrorMock = spy();
         const now = adapterToUse.date();

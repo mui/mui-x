@@ -24,8 +24,9 @@
     "expansionTrigger": {
       "description": "The slot that triggers the item&#39;s expansion when clicked."
     },
-    "experimentalFeatures": {
-      "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
+    "getItemChildren": {
+      "description": "Used to determine the children of a given item.",
+      "typeDescriptions": { "item": "The item to check.", "Array<R>": "The children of the item." }
     },
     "getItemId": {
       "description": "Used to determine the id of a given item.",

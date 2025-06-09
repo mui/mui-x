@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersFilledInputClasses,
@@ -14,7 +14,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersFilledInputProps extends PickersInputBaseProps {
@@ -27,12 +27,12 @@ export interface PickerFilledInputOwnerState extends PickerTextFieldOwnerState {
    * `true` if the input  has an underline, `false` otherwise.
    */
   inputHasUnderline: boolean;
+  hiddenLabel?: boolean;
 }
 
 const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersFilledInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
 })<{ ownerState: PickerFilledInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
@@ -147,7 +147,6 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
 const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer, {
   name: 'MuiPickersFilledInput',
   slot: 'sectionsContainer',
-  overridesResolver: (props, styles) => styles.sectionsContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'hiddenLabel',
 })<{ ownerState: PickerFilledInputOwnerState }>({
   paddingTop: 25,
@@ -269,6 +268,7 @@ PickersFilledInput.propTypes = {
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   disableUnderline: PropTypes.bool,
   /**
    * The elements to render.
@@ -296,7 +296,7 @@ PickersFilledInput.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([

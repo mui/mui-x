@@ -119,9 +119,9 @@ You can change this behavior with the property `reverse`.
 You can add a grid in the background of the cartesian chart with the `grid` prop.
 
 It accepts an object with `vertical` and `horizontal` properties.
-Setting those properties to `true` will display the grid lines.
+Setting those properties to `true` displays the grid lines.
 
-If you use composition you can pass those properties to the `<ChartsGrid />` component.
+If you use composition you can pass those as props to the `<ChartsGrid />` component.
 
 ```jsx
 <BarChart grid={{ vertical: true }}>
@@ -214,9 +214,13 @@ The axis is still computed and used for the scaling.
 You can display multiple axes on the same side.
 If two or more axes share the same `position`, they are displayed in the order they are defined from closest to the chart to farthest.
 
-To avoid overlapping, you can use the `height` prop for `xAxis` and `width` for `yAxis` to increase the space between the axes.
-
 {{"demo": "MultipleAxes.js"}}
+
+### Grouped Axes
+
+You can group axes together by rendering more than one axis on the same side.
+
+{{"demo": "GroupedAxes.js"}}
 
 ## Axis customization
 
@@ -230,7 +234,7 @@ If you would like to reduce clipping due to overflow, you can [apply an angle to
 In the following demo, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
 The first and last tick labels may bleed into the margin. If that margin is not enough to display the label, it might be clipped.
-To avoid this, you can use the `margin` property to increase the space between the chart and the edge of the container.
+To avoid this, you can use the `margin` prop to increase the space between the chart and the edge of the container.
 
 {{"demo": "MarginAndLabelPosition.js"}}
 
@@ -256,7 +260,7 @@ If you are using composition, you have to provide the axis settings in the `<Cha
 It will provide all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>` components as children.
 Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
 
-You can choose their position with `position` props which accept `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
+You can choose their position with `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
 Other props are similar to the ones defined in the [previous section](/x/react-charts/axis/#rendering).
 
 {{"demo": "AxisWithComposition.js"}}

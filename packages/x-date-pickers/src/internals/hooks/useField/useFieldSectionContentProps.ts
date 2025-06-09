@@ -8,6 +8,8 @@ import { useUtils } from '../useUtils';
 import { usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
+import { FieldRangeSection } from '../../models';
+import { PickersSectionElement } from '../../../PickersSectionList';
 
 /**
  * Generate the props to pass to the content element of each section of the field.
@@ -148,12 +150,15 @@ export function useFieldSectionContentProps(
     event.dataTransfer.dropEffect = 'none';
   });
 
-  const createFocusHandler = useEventCallback((sectionIndex: number) => () => {
-    if (disabled) {
-      return;
-    }
-    setSelectedSections(sectionIndex);
-  });
+  const createFocusHandler = React.useCallback(
+    (sectionIndex: number) => () => {
+      if (disabled) {
+        return;
+      }
+      setSelectedSections(sectionIndex);
+    },
+    [disabled, setSelectedSections],
+  );
 
   return React.useCallback(
     (section, sectionIndex) => {
@@ -186,12 +191,10 @@ export function useFieldSectionContentProps(
         contentEditable: !isContainerEditable && !disabled && !readOnly,
         role: 'spinbutton',
         id: `${id}-${section.type}`,
+        'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
         autoCapitalize: isEditable ? 'off' : undefined,
         autoCorrect: isEditable ? 'off' : undefined,
-        [parseInt(React.version, 10) >= 17 ? 'enterKeyHint' : 'enterkeyhint']: isEditable
-          ? 'next'
-          : undefined,
         children: section.value || section.placeholder,
         inputMode: section.contentType === 'letter' ? 'text' : 'numeric',
       };
@@ -228,7 +231,7 @@ interface UseFieldSectionContentPropsParameters {
 type UseFieldSectionContentPropsReturnValue = (
   section: FieldSection,
   sectionIndex: number,
-) => React.HTMLAttributes<HTMLSpanElement>;
+) => PickersSectionElement['content'];
 
 function getSectionValueText(section: FieldSection, utils: MuiPickersAdapter): string | undefined {
   if (!section.value) {

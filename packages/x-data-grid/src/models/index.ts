@@ -21,7 +21,7 @@ export type { GridSlotsComponent } from './gridSlotsComponent';
 export * from './gridSlotsComponentsProps';
 export * from './gridDensity';
 export * from './logger';
-export * from './muiEvent';
+export type { MuiBaseEvent, MuiEvent } from '@mui/x-internals/types';
 export * from './events';
 export type {
   GridSortCellParams,
@@ -30,7 +30,7 @@ export type {
   GridSortModel,
 } from './gridSortModel';
 export * from './gridColumnGrouping';
-export type { GridDataSourceCache } from './gridDataSource';
+export type { GridDataSourceCache, GridUpdateRowParams } from './gridDataSource';
 // Do not export GridExportFormat and GridExportExtension which are override in pro package
 export type {
   GridExportOptions,

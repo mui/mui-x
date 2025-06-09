@@ -16,7 +16,7 @@ export default function BarsDataset() {
   return (
     <BarChart
       dataset={dataset}
-      xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+      xAxis={[{ dataKey: 'month' }]}
       series={[
         { dataKey: 'london', label: 'London', valueFormatter },
         { dataKey: 'paris', label: 'Paris', valueFormatter },

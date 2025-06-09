@@ -139,6 +139,56 @@ describeTreeView<
         expect(view.getFocusedItemId()).to.equal('1.1');
       });
 
+      it('should move the focus to the last visible and enabled descendant of the previous sibling', () => {
+        const view = render({
+          items: [
+            {
+              id: '1',
+              children: [
+                { id: '1-1' },
+                {
+                  id: '1-2',
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3' }],
+                },
+              ],
+            },
+            { id: '2' },
+          ],
+          defaultExpandedItems: ['1', '1-2'],
+        });
+
+        act(() => {
+          view.getItemRoot('2').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
+        expect(view.getFocusedItemId()).to.equal('1-2-3');
+      });
+
+      it('should move the focus to the last visible descendant of the previous sibling, skipping disabled items', () => {
+        const view = render({
+          items: [
+            {
+              id: '1',
+              children: [
+                { id: '1-1' },
+                {
+                  id: '1-2',
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3', disabled: true }],
+                },
+              ],
+            },
+            { id: '2' },
+          ],
+          defaultExpandedItems: ['1', '1-2'],
+        });
+
+        act(() => {
+          view.getItemRoot('2').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
+        expect(view.getFocusedItemId()).to.equal('1-2-2');
+      });
+
       it('should skip disabled items', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2', disabled: true }, { id: '3' }],
@@ -914,7 +964,7 @@ describeTreeView<
       });
 
       describe('key: Home', () => {
-        it('should select select the focused item and all the items above when Home is pressed while holding Shift + Ctrl', () => {
+        it('should select the focused item and all the items above when Home is pressed while holding Shift + Ctrl', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }, { id: '4' }],
             multiSelect: true,
@@ -975,7 +1025,7 @@ describeTreeView<
       });
 
       describe('key: End', () => {
-        it('should select select the focused item and all the items below when End is pressed while holding Shift + Ctrl', () => {
+        it('should select the focused item and all the items below when End is pressed while holding Shift + Ctrl', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }, { id: '4' }],
             multiSelect: true,

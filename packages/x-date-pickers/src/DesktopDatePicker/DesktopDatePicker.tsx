@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
@@ -13,15 +13,11 @@ import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import { PickerLayoutOwnerState } from '../PickersLayout';
-import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
-
-const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -74,10 +70,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: emptyActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
     },
   };
 
@@ -145,7 +137,7 @@ DesktopDatePicker.propTypes = {
   disableHighlightToday: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
-   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

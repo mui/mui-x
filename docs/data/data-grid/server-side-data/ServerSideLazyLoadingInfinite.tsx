@@ -7,8 +7,8 @@ import {
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 function ServerSideLazyLoadingInfinite() {
-  const { fetchRows, ...props } = useMockServer(
-    { rowLength: 100 },
+  const { fetchRows, editRow, ...props } = useMockServer(
+    { rowLength: 100, editable: true },
     { useCursorPagination: false, minDelay: 200, maxDelay: 500 },
   );
 
@@ -29,8 +29,12 @@ function ServerSideLazyLoadingInfinite() {
           rows: getRowsResponse.rows,
         };
       },
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   return (

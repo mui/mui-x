@@ -8,6 +8,8 @@
       },
       "required": true
     },
+    "isFaded": { "type": { "name": "bool" }, "default": "false" },
+    "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } }
   },
   "name": "MarkElement",
@@ -39,6 +41,12 @@
       "key": "root",
       "className": "MuiMarkElement-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiMarkElement-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

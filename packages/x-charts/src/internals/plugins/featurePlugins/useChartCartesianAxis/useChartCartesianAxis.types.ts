@@ -1,37 +1,41 @@
-import type { MakeOptional } from '@mui/x-internals/types';
 import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import type {
-  AxisDefaultized,
+  ComputedAxis,
   ScaleName,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
   AxisId,
-  AxisConfig,
   ChartsAxisData,
+  YAxis,
+  XAxis,
+  DefaultedXAxis,
+  DefaultedYAxis,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import type { ZoomData, ZoomOptions } from './zoom.types';
+import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 
-export type DefaultizedAxisConfig<AxisProps extends ChartsAxisProps> = {
-  [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
+/**
+ * The axes' configuration after computing.
+ * An axis in this state already contains a scale function and all the necessary properties to be rendered.
+ */
+export type ComputedAxisConfig<AxisProps extends ChartsAxisProps> = {
+  [axisId: AxisId]: ComputedAxis<ScaleName, any, AxisProps>;
 };
 
-export interface UseChartCartesianAxisParameters {
+export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName> {
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis?: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  xAxis?: ReadonlyArray<XAxis<S>>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis?: readonly MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  yAxis?: ReadonlyArray<YAxis<S>>;
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
@@ -40,7 +44,7 @@ export interface UseChartCartesianAxisParameters {
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
-   * @param {null | AxisData} data The data about the clicked axis and items associated with it.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
   /**
@@ -51,14 +55,21 @@ export interface UseChartCartesianAxisParameters {
   disableAxisListener?: boolean;
 }
 
-export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisParameters & {
-  defaultizedXAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
-  defaultizedYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
-};
+export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
+  UseChartCartesianAxisParameters<S> & {
+    defaultizedXAxis: DefaultedXAxis<S>[];
+    defaultizedYAxis: DefaultedYAxis<S>[];
+  };
 
-export interface DefaultizedZoomOptions extends Required<ZoomOptions> {
+export interface DefaultedZoomSliderOptions
+  extends Omit<NonNullable<Required<ZoomOptions['slider']>>, 'showTooltip'> {
+  showTooltip: ZoomSliderShowTooltip;
+}
+
+export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slider'>> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
+  slider: DefaultedZoomSliderOptions;
 }
 
 export interface UseChartCartesianAxisState {
@@ -70,8 +81,8 @@ export interface UseChartCartesianAxisState {
     zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
-    x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
-    y: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    x: DefaultedXAxis[];
+    y: DefaultedYAxis[];
   };
 }
 
@@ -80,14 +91,11 @@ export type ExtremumFilter = (
   dataIndex: number,
 ) => boolean;
 
-export interface UseChartCartesianAxisInstance {}
-
 export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartCartesianAxisParameters;
     defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
     state: UseChartCartesianAxisState;
-    // instance: UseChartCartesianAxisInstance;
     dependencies: [UseChartSeriesSignature<SeriesType>];
     optionalDependencies: [UseChartInteractionSignature];
   }>;

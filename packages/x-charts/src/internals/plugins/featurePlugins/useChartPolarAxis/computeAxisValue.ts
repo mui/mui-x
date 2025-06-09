@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsAxisProps,
@@ -12,13 +12,15 @@ import {
 } from '../../../../models/axis';
 import { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber } from '../../../../hooks/useTicks';
+import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
+import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { deg2rad } from '../../../angleConversion';
+import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 
 export type DefaultizedAxisConfig<
   AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
@@ -54,22 +56,10 @@ function getRange(
   return [0, Math.min(drawingArea.height, drawingArea.width) / 2];
 }
 
-const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] instanceof Date;
-
-function createDateFormatter(
-  axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,
-  range: number[],
-): AxisConfig<'band' | 'point', any, ChartsAxisProps>['valueFormatter'] {
-  const timeScale = scaleTime(axis.data!, range);
-
-  return (v, { location }) =>
-    location === 'tick' ? timeScale.tickFormat(axis.tickNumber)(v) : `${v.toLocaleString()}`;
-}
-
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
-type ComputeResult<T extends ChartsAxisProps> = {
+export type ComputeResult<T extends ChartsAxisProps> = {
   axis: DefaultizedAxisConfig<T>;
   axisIds: string[];
 };
@@ -109,6 +99,13 @@ export function computeAxisValue<T extends ChartSeriesType>({
     };
   }
 
+  const axisIdsTriggeringTooltip = getAxisTriggerTooltip(
+    axisDirection,
+    seriesConfig as ChartSeriesConfig<PolarChartSeriesType>,
+    formattedSeries,
+    allAxis[0].id,
+  );
+
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
@@ -121,6 +118,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
       axisIndex,
       formattedSeries,
     );
+
+    const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
+
     const data = axis.data ?? [];
 
     if (isBandScaleConfig(axis)) {
@@ -131,6 +131,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         offset: 0,
         categoryGapRatio,
         barGapRatio,
+        triggerTooltip,
         ...axis,
         data,
         scale: scaleBand(axis.data!, range)
@@ -152,6 +153,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     if (isPointScaleConfig(axis)) {
       completeAxis[axis.id] = {
         offset: 0,
+        triggerTooltip,
         ...axis,
         data,
         scale: scalePoint(axis.data!, range),
@@ -187,7 +189,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    const tickNumber = rawTickNumber / ((range[1] - range[0]) / 100);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
     const scale = getScale(scaleType, axisExtremums, range);
     const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
@@ -196,6 +198,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     completeAxis[axis.id] = {
       offset: 0,
+      triggerTooltip,
       ...axis,
       data,
       scaleType: scaleType as any,

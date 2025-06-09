@@ -3,12 +3,11 @@ import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-
 import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import useId from '@mui/utils/useId';
-import { ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
-import { ChartsWrapperProps, defaultizeMargin } from '@mui/x-charts/internals';
+import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
 import { warnOnce } from '@mui/x-internals/warning';
+import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -18,19 +17,19 @@ function getCategoryAxisConfig(
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
   direction: 'y',
-): AxisConfig<ScaleName, any, ChartsYAxisProps>;
+): YAxis;
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
   direction: 'x',
-): AxisConfig<ScaleName, any, ChartsXAxisProps>;
-function getCategoryAxisConfig(
+): XAxis;
+function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
   categoryAxis: FunnelChartProps['categoryAxis'],
   series: FunnelChartProps['series'],
   isHorizontal: boolean,
-  direction: 'x' | 'y',
-): AxisConfig<ScaleName, any, any> {
+  direction: D,
+): XAxis | YAxis {
   const maxSeriesLength = Math.max(...series.map((s) => (s.data ?? []).length), 0);
   const maxSeriesValue = Array.from({ length: maxSeriesLength }, (_, index) =>
     series.reduce((a, s) => a + (s.data?.[index]?.value ?? 0), 0),
@@ -43,7 +42,7 @@ function getCategoryAxisConfig(
     ) {
       warnOnce(
         [
-          `MUI X: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
+          `MUI X Charts: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
           `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
         ],
         'warning',
@@ -56,13 +55,12 @@ function getCategoryAxisConfig(
     id: direction === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY,
     ...categoryAxis,
     ...(categoryAxis?.size ? { [isHorizontal ? 'height' : 'width']: categoryAxis.size } : {}),
-    position: categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none'),
-  } as const;
+    position: (categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none')) as any,
+  };
 
   // If the scaleType is not defined or is 'band', our job is simple.
   if (!categoryAxis?.scaleType || categoryAxis.scaleType === 'band') {
     return {
-      scaleType: 'band',
       categoryGapRatio: 0,
       // Use the categories as the domain if they are defined.
       data: categoryAxis?.categories
@@ -71,7 +69,8 @@ function getCategoryAxisConfig(
           Array.from({ length: maxSeriesLength }, (_, index) => index),
       tickLabelPlacement: 'middle',
       ...categoryValues,
-    } as const;
+      scaleType: 'band',
+    };
   }
 
   // If the scaleType is other than 'band', we have to do some magic.
@@ -85,7 +84,6 @@ function getCategoryAxisConfig(
   ];
 
   return {
-    scaleType: categoryAxis.scaleType,
     domainLimit: 'strict',
     tickLabelPlacement: 'middle',
     tickInterval: tickValues,
@@ -93,10 +91,10 @@ function getCategoryAxisConfig(
     tickLabelInterval: (_: any, i: number) => i !== 0,
     // We trick the valueFormatter to show the category values.
     // By using the index of the tickValues array we can get the category value.
-    valueFormatter: (value) =>
+    valueFormatter: (value: any) =>
       `${categoryAxis.categories?.toReversed()[tickValues.findIndex((v) => v === value) - 1]}`,
     ...categoryValues,
-  } as const;
+  };
 }
 
 /**
@@ -127,12 +125,10 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     hideLegend,
     axisHighlight,
     apiRef,
+    gap,
     ...rest
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
-
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
 
   const isHorizontal = series.some((s) => s.layout === 'horizontal');
 
@@ -150,7 +146,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ? valueAxisConfig
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
-  const chartContainerProps: ChartContainerProProps<'funnel'> = {
+  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginsSignatures> = {
     ...rest,
     series: series.map((s) => ({
       type: 'funnel' as const,
@@ -160,7 +156,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     width,
     height,
     margin,
-    colors,
+    colors: colors ?? strawberrySkyPalette,
     xAxis: [xAxis],
     yAxis: [yAxis],
     sx,
@@ -168,9 +164,11 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     onHighlightChange,
     className,
     apiRef,
+    plugins: FUNNEL_CHART_PLUGINS,
   };
 
   const funnelPlotProps: FunnelPlotProps = {
+    gap,
     onItemClick,
     slots,
     slotProps,
@@ -192,14 +190,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     slotProps,
   };
 
-  const clipPathGroupProps = {
-    clipPath: `url(#${clipPathId})`,
-  };
-
-  const clipPathProps: ChartsClipPathProps = {
-    id: clipPathId,
-  };
-
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
     legendPosition: props.slotProps?.legend?.position,
@@ -216,8 +206,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     overlayProps,
     chartsAxisProps,
     legendProps,
-    clipPathGroupProps,
-    clipPathProps,
     chartsWrapperProps,
     axisHighlightProps,
     children,

@@ -14,7 +14,7 @@ import {
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -53,7 +53,6 @@ const rendererInterceptor = function RendererInterceptor(
 
   const finalProps = {
     ...otherProps,
-    focusedView: null,
     sx: [
       {
         [`&.${multiSectionDigitalClockClasses.root}`]: {
@@ -272,7 +271,7 @@ DesktopDateTimeRangePicker.propTypes = {
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
-   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

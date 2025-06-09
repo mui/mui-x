@@ -26,6 +26,9 @@
     "outerRadius": {
       "description": "The radius between circle center and the end of the arc. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the maximal radius that fit into the drawing area."
     },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+    },
     "startAngle": { "description": "The start angle (deg)." },
     "value": {
       "description": "The value of the gauge. Set to <code>null</code> to not display a value."

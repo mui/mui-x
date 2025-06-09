@@ -31,7 +31,7 @@ const data: LineChartProps = {
     {
       disableLine: true,
       disableTicks: true,
-      valueFormatter: (value) => `${value}°`,
+      valueFormatter: (value: number) => `${value}°`,
     },
   ],
   grid: { horizontal: true },

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+}

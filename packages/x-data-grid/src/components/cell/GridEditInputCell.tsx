@@ -1,9 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { NotRendered } from '../../utils/assert';
@@ -89,10 +87,6 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.value;
 
-      if (onValueChange) {
-        await onValueChange(event, newValue);
-      }
-
       const column = apiRef.current.getColumn(field);
 
       let parsedValue = newValue;
@@ -105,6 +99,10 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
         { id, field, value: parsedValue, debounceMs, unstable_skipValueParser: true },
         event,
       );
+
+      if (onValueChange) {
+        await onValueChange(event, newValue);
+      }
     },
     [apiRef, debounceMs, field, id, onValueChange],
   );

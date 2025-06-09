@@ -15,6 +15,7 @@ type KeyType = {
   x?: number;
   y?: number;
   keyType?: 'navigate-left' | 'navigate-right' | 'input';
+  key?: string;
 };
 
 const keys: KeyType[][] = [
@@ -187,7 +188,15 @@ const keys: KeyType[][] = [
     { label: 'Control', width: 43, showLabel: true, location: 1, displayedLabel: 'Ctrl' },
     { label: 'Meta', width: 29, showLabel: false },
     { label: 'Alt', width: 42, showLabel: true, location: 1 },
-    { label: ' ', width: 119, showLabel: false, displayedLabel: 'Space' },
+    {
+      label: 'Space',
+      width: 119,
+      showLabel: true,
+      displayedLabel: 'Space',
+      keyCode: 32,
+      code: 'Space',
+      key: ' ',
+    },
     { label: 'Alt', width: 42, showLabel: true, location: 2 },
     { label: 'Control', width: 23, showLabel: true, location: 2, displayedLabel: 'Ctrl' },
   ],
@@ -219,6 +228,7 @@ const arrowKeys: KeyType[] = [
     height: 9,
     showLabel: false,
     shouldSelect: true,
+    keyCode: 40,
     x: 368.5,
     y: 166.5,
   },
@@ -265,9 +275,14 @@ const KeyText = styled('text')(({ theme }) => ({
 type KeyboardSvgProps = {
   handleKeySelection: HandleKeySelection;
   selectedKey: SelectedKey | null;
+  additionalSelected?: string[];
 };
 
-export default function KeyboardSvg({ selectedKey, handleKeySelection }: KeyboardSvgProps) {
+export default function KeyboardSvg({
+  selectedKey,
+  handleKeySelection,
+  additionalSelected,
+}: KeyboardSvgProps) {
   return (
     <svg viewBox="0 0 432 188" fill="none" xmlns="http://www.w3.org/2000/svg" tabIndex={-1}>
       <g className="root">
@@ -283,20 +298,25 @@ export default function KeyboardSvg({ selectedKey, handleKeySelection }: Keyboar
               (
                 {
                   label,
+                  key,
                   displayedLabel,
                   showLabel,
                   width = 23,
                   location = 0,
-                  shouldSelect = false,
+                  shouldSelect: shouldSelectProp = false,
                   code,
                   keyCode,
                 },
                 keyIndex,
               ) => {
+                const shouldSelect =
+                  (additionalSelected && additionalSelected.includes(label.toLowerCase())) ||
+                  shouldSelectProp;
                 const textXPosition = xPosition + width / 2;
                 const textYPosition = yPosition + 11.5;
                 const keyComponent = (
                   <KeyRoot
+                    tabIndex={-1}
                     key={`key-${rowIndex}-${keyIndex}`}
                     className={clsx(label, 'key-root', {
                       selected:
@@ -310,12 +330,15 @@ export default function KeyboardSvg({ selectedKey, handleKeySelection }: Keyboar
                         event.preventDefault();
 
                         handleKeySelection(event, {
-                          key: label,
+                          key: key || label,
                           location: location || 0,
                           code: code || label,
                           keyCode: keyCode || 0,
                         });
                       }
+                    }}
+                    onFocus={(event) => {
+                      event.preventDefault();
                     }}
                     onMouseUp={(event) => {
                       if (shouldSelect) {
@@ -331,7 +354,7 @@ export default function KeyboardSvg({ selectedKey, handleKeySelection }: Keyboar
                       rx="3.5"
                       className={clsx(label, 'key-rect')}
                     />
-                    {showLabel && (
+                    {(showLabel || shouldSelect) && (
                       <KeyText
                         x={textXPosition}
                         y={textYPosition}
@@ -352,19 +375,23 @@ export default function KeyboardSvg({ selectedKey, handleKeySelection }: Keyboar
         );
       })}
       {arrowKeys.map(
-        ({ label: key, location = 0, code = key, keyCode, width, height, x, y }, keyIndex) => {
+        ({ label, key, location = 0, code = label, keyCode, width, height, x, y }, keyIndex) => {
           return (
             <KeyRoot
+              tabIndex={-1}
               key={`arrow-${keyIndex}`}
-              className={clsx(key, 'key-root', {
-                selected: selectedKey && selectedKey.key.toLowerCase() === key.toLowerCase(),
+              className={clsx(label, 'key-root', {
+                selected: selectedKey && selectedKey.key.toLowerCase() === label.toLowerCase(),
               })}
               onMouseDown={(event) => {
                 event.preventDefault();
-                handleKeySelection(event, { key, location, code, keyCode });
+                handleKeySelection(event, { key: key || label, location, code, keyCode });
               }}
               onMouseUp={(event) => {
                 handleKeySelection(event, null);
+              }}
+              onFocus={(event) => {
+                event.preventDefault();
               }}
             >
               <KeyRectangle

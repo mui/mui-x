@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
+import useId from '@mui/utils/useId';
+import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
@@ -24,6 +25,9 @@ interface GridToolbarDensitySelectorProps {
   };
 }
 
+/**
+ * @deprecated See {@link https://mui.com/x/react-data-grid/accessibility/#set-the-density-programmatically Accessibility—Set the density programmatically} for an example of adding a density selector to the toolbar. This component will be removed in a future major release.
+ */
 const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDensitySelectorProps>(
   function GridToolbarDensitySelector(props, ref) {
     const { slotProps = {} } = props;

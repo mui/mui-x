@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
@@ -135,7 +135,7 @@ MobileDatePicker.propTypes = {
   disableHighlightToday: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
-   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

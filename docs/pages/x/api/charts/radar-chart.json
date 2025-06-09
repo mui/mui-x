@@ -11,10 +11,6 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "axisHighlightShape": {
-      "type": { "name": "enum", "description": "'points'<br>&#124;&nbsp;'slice'" }
-    },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -38,6 +34,7 @@
     },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
+    "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
@@ -55,12 +52,22 @@
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
     },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "stripeColor": {
+      "type": { "name": "func" },
+      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'",
+      "signature": {
+        "type": "function(index: number) => string",
+        "describedArgs": ["index"],
+        "returned": "string"
+      }
     },
     "width": { "type": { "name": "number" } }
   },
@@ -70,38 +77,47 @@
     "import { RadarChart } from '@mui/x-charts';",
     "import { RadarChart } from '@mui/x-charts-pro';"
   ],
-  "classes": [
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
     {
-      "key": "dot",
-      "className": "MuiRadarChart-dot",
-      "description": "Styles applied to every highlight dot.",
-      "isGlobal": false
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "ChartsLegend",
+      "class": null
     },
     {
-      "key": "line",
-      "className": "MuiRadarChart-line",
-      "description": "Styles applied to the highlighted axis line element.",
-      "isGlobal": false
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
     },
     {
-      "key": "root",
-      "className": "MuiRadarChart-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
+      "class": null
     },
     {
-      "key": "slice",
-      "className": "MuiRadarChart-slice",
-      "description": "Styles applied to every highlight slice.",
-      "isGlobal": false
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiRadarChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/RadarChart/RadarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
   "cssComponent": false
 }

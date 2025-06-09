@@ -15,6 +15,7 @@ export * from '@mui/x-charts/ChartsGrid';
 export * from '@mui/x-charts/ChartsText';
 export * from '@mui/x-charts/ChartsTooltip';
 export * from '@mui/x-charts/ChartsLegend';
+export * from '@mui/x-charts/ChartsLocalizationProvider';
 export * from '@mui/x-charts/ChartsAxisHighlight';
 export * from '@mui/x-charts/BarChart';
 export * from '@mui/x-charts/LineChart';
@@ -26,6 +27,13 @@ export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
+export type {
+  ZoomData,
+  ZoomFilterMode,
+  ZoomSliderShowTooltip,
+  ZoomOptions,
+  ZoomSliderOptions,
+} from '@mui/x-charts/internals';
 
 // Pro components
 export * from './hooks';
@@ -35,4 +43,8 @@ export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
 export * from './LineChartPro';
+export * from './PieChartPro';
 export * from './FunnelChart';
+export * from './RadarChartPro';
+export * from './ChartZoomSlider';
+export * from './ChartsToolbarPro';

@@ -12,23 +12,31 @@ import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 import { useMaterialCSSVariables } from '../material/variables';
+import type { GridConfiguration } from '../models/configuration/gridConfiguration';
+import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: () => null,
   },
 };
 
-const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
+const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const privateApiRef = useDataGridComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiCommunity, GridApiCommunity>(
+    props.apiRef,
+    props,
+  );
+  useDataGridComponent(privateApiRef, props);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGrid);
@@ -44,7 +52,7 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
       />
     </GridContextProvider>
   );
-});
+};
 
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
@@ -60,7 +68,7 @@ interface DataGridComponent {
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
  */
-export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
+export const DataGrid = React.memo(forwardRef(DataGridRaw)) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------

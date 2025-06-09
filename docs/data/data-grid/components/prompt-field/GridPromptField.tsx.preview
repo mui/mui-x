@@ -1,0 +1,8 @@
+<DataGridPremium
+  {...data}
+  loading={loading}
+  slots={{ toolbar: CustomToolbar }}
+  aiAssistant
+  onPrompt={mockPromptResolver}
+  showToolbar
+/>

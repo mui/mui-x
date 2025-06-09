@@ -18,12 +18,6 @@ export interface TreeViewItemMeta {
   label?: string;
 }
 
-export interface TreeViewModel<TValue> {
-  name: string;
-  value: TValue;
-  setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
-}
-
 export type TreeViewInstance<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
@@ -35,11 +29,6 @@ export type TreeViewPublicAPI<
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
 > = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'> &
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
-
-export type TreeViewExperimentalFeatures<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TSignatures, ...TOptionalSignatures], 'experimentalFeatures'>;
 
 export type TreeViewStateCacheKey = { id: number };
 

@@ -219,7 +219,10 @@ export const hydrateColumnsWidth = (
     });
 
     Object.keys(computedColumnWidths).forEach((field) => {
-      columnsLookup[field].computedWidth = computedColumnWidths[field].computedWidth;
+      columnsLookup[field] = {
+        ...columnsLookup[field],
+        computedWidth: computedColumnWidths[field].computedWidth,
+      };
     });
   }
 
@@ -294,7 +297,7 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
-function getDefaultColTypeDef(type: GridColDef['type']) {
+export function getDefaultColTypeDef(type: GridColDef['type']) {
   let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
   if (type && COLUMN_TYPES[type]) {
     colDef = COLUMN_TYPES[type];
@@ -431,16 +434,30 @@ export function getFirstNonSpannedColumnToRender({
   visibleRows: GridRowEntry[];
 }) {
   let firstNonSpannedColumnToRender = firstColumnToRender;
-  for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
-    const row = visibleRows[i];
-    if (row) {
-      const rowId = visibleRows[i].id;
-      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-        rowId,
-        firstColumnToRender,
-      );
-      if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
-        firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+  let foundStableColumn = false;
+
+  // Keep checking columns until we find one that's not spanned in any visible row
+  while (!foundStableColumn && firstNonSpannedColumnToRender >= 0) {
+    foundStableColumn = true;
+
+    for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+      const row = visibleRows[i];
+      if (row) {
+        const rowId = visibleRows[i].id;
+        const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+          rowId,
+          firstNonSpannedColumnToRender,
+        );
+
+        if (
+          cellColSpanInfo &&
+          cellColSpanInfo.spannedByColSpan &&
+          cellColSpanInfo.leftVisibleCellIndex < firstNonSpannedColumnToRender
+        ) {
+          firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+          foundStableColumn = false;
+          break; // Check the new column index against the visible rows, because it might be spanned
+        }
       }
     }
   }

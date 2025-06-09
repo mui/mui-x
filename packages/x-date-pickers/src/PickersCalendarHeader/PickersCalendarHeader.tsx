@@ -24,6 +24,7 @@ import {
 import { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
 import { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { DateView } from '../models/views';
 
 const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
   const slots = {
@@ -40,7 +41,6 @@ const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | unde
 const PickersCalendarHeaderRoot = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickerOwnerState;
 }>({
@@ -58,7 +58,6 @@ const PickersCalendarHeaderRoot = styled('div', {
 const PickersCalendarHeaderLabelContainer = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'LabelContainer',
-  overridesResolver: (_, styles) => styles.labelContainer,
 })<{
   ownerState: PickerOwnerState;
 }>(({ theme }) => ({
@@ -74,7 +73,6 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
 const PickersCalendarHeaderLabel = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'Label',
-  overridesResolver: (_, styles) => styles.label,
 })<{
   ownerState: PickerOwnerState;
 }>({
@@ -84,9 +82,8 @@ const PickersCalendarHeaderLabel = styled('div', {
 const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewButton',
-  overridesResolver: (_, styles) => styles.switchViewButton,
 })<{
-  ownerState: PickerOwnerState;
+  ownerState: PickerOwnerState & { view: DateView };
 }>({
   marginRight: 'auto',
   variants: [
@@ -104,7 +101,6 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
 const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
-  overridesResolver: (_, styles) => styles.switchViewIcon,
 })<{
   ownerState: PickerOwnerState;
 }>(({ theme }) => ({
@@ -170,7 +166,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
       size: 'small',
       'aria-label': translations.calendarViewSwitchingButtonAriaLabel(view),
     },
-    ownerState,
+    ownerState: { ...ownerState, view },
     className: classes.switchViewButton,
   });
 

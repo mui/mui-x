@@ -5,11 +5,9 @@ import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_useControlled as useControlled,
-  unstable_composeClasses as composeClasses,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useControlled from '@mui/utils/useControlled';
+import composeClasses from '@mui/utils/composeClasses';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { MonthCalendarButton } from './MonthCalendarButton';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
@@ -52,7 +50,6 @@ export function useMonthCalendarDefaultizedProps(
 const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'monthsPerRow',
 })<{ ownerState: PickerOwnerState; monthsPerRow: 3 | 4 }>({
   display: 'flex',

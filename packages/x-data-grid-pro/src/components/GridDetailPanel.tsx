@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { GridRowId } from '@mui/x-data-grid';
+import { GridRowId, gridRowNodeSelector } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -13,7 +13,6 @@ type OwnerState = DataGridProProcessedProps;
 const DetailPanel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
-  overridesResolver: (props, styles) => styles.detailPanel,
 })<{ ownerState: OwnerState }>({
   width:
     'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
@@ -40,6 +39,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const rootProps = useGridRootProps();
   const ownerState = rootProps;
   const hasAutoHeight = height === 'auto';
+  const rowNode = gridRowNodeSelector(apiRef, rowId);
 
   React.useLayoutEffect(() => {
     if (hasAutoHeight && typeof ResizeObserver === 'undefined') {
@@ -61,6 +61,10 @@ function GridDetailPanel(props: GridDetailPanelProps) {
     },
     hasAutoHeight,
   );
+
+  if (rowNode?.type === 'skeletonRow') {
+    return null;
+  }
 
   return (
     <DetailPanel

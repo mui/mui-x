@@ -71,6 +71,7 @@ export default chartsApiPages;
       'x-charts/src/LineChart/CircleMarkElement.tsx',
       'x-charts/src/ScatterChart/ScatterMarker.tsx',
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
+      'x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
@@ -78,7 +79,7 @@ export default chartsApiPages;
   importTranslationPagesDirectory: 'docsx/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
-    // propsWithoutDefaultVerification: [],
+    propsWithoutDefaultVerification: ['stripeColor'],
   },
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),

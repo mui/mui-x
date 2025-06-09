@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { AxisDefaultized } from '../models/axis';
+import { ComputedAxis } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './seriesConfig/getColor';
 import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
@@ -14,7 +14,7 @@ import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
-import { useSkipAnimation } from '../context/AnimationProvider';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 
@@ -122,9 +122,7 @@ const useAggregatedData = (): {
 
       checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxis, yAxisId, yAxis);
 
-      const baseScaleConfig = (
-        verticalLayout ? xAxisConfig : yAxisConfig
-      ) as AxisDefaultized<'band'>;
+      const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
@@ -143,6 +141,9 @@ const useAggregatedData = (): {
 
       return baseScaleConfig
         .data!.map((baseValue, dataIndex: number) => {
+          if (currentSeriesData[dataIndex] == null) {
+            return null;
+          }
           const values = stackedData[dataIndex];
           const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
@@ -213,7 +214,6 @@ const useAggregatedData = (): {
 const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${barElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',

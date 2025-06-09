@@ -1,3 +1,4 @@
+import { TreeViewItemId } from '../../../models';
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
@@ -6,13 +7,37 @@ const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (
   state.expansion;
 
 /**
+ * Get the expanded items.
+ * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
+ * @returns {TreeViewItemId[]} The expanded items.
+ */
+export const selectorExpandedItems = createSelector(
+  [selectorExpansion],
+  (expansionState) => expansionState.expandedItems,
+);
+
+/**
+ * Get the expanded items as a Map.
+ * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
+ * @returns {TreeViewExpansionValue} The expanded items as a Map.
+ */
+export const selectorExpandedItemsMap = createSelector([selectorExpandedItems], (expandedItems) => {
+  const expandedItemsMap = new Map<TreeViewItemId, true>();
+  expandedItems.forEach((id) => {
+    expandedItemsMap.set(id, true);
+  });
+
+  return expandedItemsMap;
+});
+
+/**
  * Check if an item is expanded.
  * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
  * @returns {boolean} `true` if the item is expanded, `false` otherwise.
  */
 export const selectorIsItemExpanded = createSelector(
-  [selectorExpansion, (_, itemId: string) => itemId],
-  (expansionState, itemId) => expansionState.expandedItemsMap.has(itemId),
+  [selectorExpandedItemsMap, (_, itemId: string) => itemId],
+  (expandedItemsMap, itemId) => expandedItemsMap.has(itemId),
 );
 
 /**

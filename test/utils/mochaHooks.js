@@ -3,7 +3,6 @@ import { restore } from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
-import { unstable_cleanupDOM as unstable_cleanupDOMCharts } from '@mui/x-charts/internals';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { generateTestLicenseKey, setupTestLicenseKey } from './testLicense';
 
@@ -21,6 +20,14 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     licenseKey = generateTestLicenseKey();
   });
 
+  // In Node.js>20: window.navigator !== navigator
+  mochaHooks.beforeAll.push(function func() {
+    Object.defineProperty(globalThis, 'navigator', {
+      value: globalThis.window.navigator,
+      configurable: false,
+    });
+  });
+
   mochaHooks.beforeEach.push(function setupCommon() {
     setupTestLicenseKey(licenseKey);
     // disable "react-transition-group" transitions
@@ -32,7 +39,6 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     unstable_resetCleanupTrackingDataGrid();
     unstable_resetCleanupTrackingDataGridPro();
     unstable_resetCleanupTrackingTreeView();
-    unstable_cleanupDOMCharts();
 
     // Restore Sinon default sandbox to avoid memory leak
     // See https://github.com/sinonjs/sinon/issues/1866

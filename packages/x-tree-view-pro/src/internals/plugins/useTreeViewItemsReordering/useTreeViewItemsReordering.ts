@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   TreeViewPlugin,
+  selectorIsItemBeingEdited,
   selectorItemIndex,
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
@@ -135,23 +136,45 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
-      store.update((prevState) => ({
-        ...prevState,
-        itemsReordering: {
-          ...prevState.itemsReordering,
-          currentReorder: {
-            targetItemId: itemId,
-            draggedItemId: itemId,
-            action: null,
-            newPosition: null,
+      store.update((prevState) => {
+        const isItemBeingEditing = selectorIsItemBeingEdited(prevState, itemId);
+        if (isItemBeingEditing) {
+          return prevState;
+        }
+
+        return {
+          ...prevState,
+          itemsReordering: {
+            ...prevState.itemsReordering,
+            currentReorder: {
+              targetItemId: itemId,
+              draggedItemId: itemId,
+              action: null,
+              newPosition: null,
+            },
           },
-        },
-      }));
+        };
+      });
     },
     [store],
   );
 
-  const stopDraggingItem = React.useCallback(
+  const cancelDraggingItem = React.useCallback(() => {
+    const currentReorder = selectorCurrentItemReordering(store.value);
+    if (currentReorder == null) {
+      return;
+    }
+
+    store.update((prevState) => ({
+      ...prevState,
+      itemsReordering: {
+        ...prevState.itemsReordering,
+        currentReorder: null,
+      },
+    }));
+  }, [store]);
+
+  const completeDraggingItem = React.useCallback(
     (itemId: string) => {
       const currentReorder = selectorCurrentItemReordering(store.value);
       if (currentReorder == null || currentReorder.draggedItemId !== itemId) {
@@ -267,7 +290,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       canItemBeDragged,
       getDroppingTargetValidActions,
       startDraggingItem,
-      stopDraggingItem,
+      cancelDraggingItem,
+      completeDraggingItem,
       setDragTargetItem,
     },
   };
@@ -275,7 +299,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
 useTreeViewItemsReordering.itemPlugin = useTreeViewItemsReorderingItemPlugin;
 
-useTreeViewItemsReordering.getDefaultizedParams = ({ params }) => ({
+useTreeViewItemsReordering.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   itemsReordering: params.itemsReordering ?? false,
 });

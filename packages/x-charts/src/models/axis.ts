@@ -1,16 +1,17 @@
 import type {
   ScaleBand,
-  ScaleLogarithmic,
-  ScalePower,
-  ScaleTime,
   ScaleLinear,
-  ScalePoint,
+  ScaleLogarithmic,
   ScaleOrdinal,
+  ScalePoint,
+  ScalePower,
   ScaleSequential,
   ScaleThreshold,
+  ScaleTime,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
-import { MakeRequired } from '@mui/x-internals/types';
+import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -323,6 +324,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tick'` The value is displayed on the axis ticks.
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
       location: 'legend';
     }
@@ -332,8 +334,9 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tick'` The value is displayed on the axis ticks.
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
-      location: 'tick' | 'tooltip';
+      location: 'tick' | 'tooltip' | 'zoom-slider-tooltip';
       /**
        * The d3-scale instance associated to the axis.
        */
@@ -345,7 +348,9 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
  */
 type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
-   * Id used to identify the axis.
+   * ID used to identify the axis.
+   *
+   * The ID must be unique across all axes in this chart.
    */
   id: AxisId;
   /**
@@ -414,6 +419,9 @@ export type PolarAxisConfig<
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisConfigExtension;
 
+/**
+ * Use this type for advanced typing. For basic usage, use `XAxis`, `YAxis`, `RotationAxis` or `RadiusAxis`.
+ */
 export type AxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
@@ -441,13 +449,18 @@ export type PolarAxisDefaultized<
   AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
 > = Omit<PolarAxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
-  AxisScaleComputedConfig[S];
+  AxisScaleComputedConfig[S] & {
+    /**
+     * If true, the contents of the axis will be displayed by a tooltip with `trigger='axis'`.
+     */
+    triggerTooltip?: boolean;
+  };
 
-export type AxisDefaultized<
+export type ComputedAxis<
   S extends ScaleName = ScaleName,
   V = any,
   AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = MakeRequired<Omit<AxisConfig<S, V, AxisProps>, 'scaleType'>, 'offset'> &
+> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**
@@ -463,6 +476,16 @@ export type AxisDefaultized<
     : AxisProps extends ChartsYAxisProps
       ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
       : AxisSideConfig<AxisProps>);
+export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
+  S,
+  V,
+  ChartsXAxisProps
+>;
+export type ComputedYAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
+  S,
+  V,
+  ChartsYAxisProps
+>;
 
 export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
@@ -493,3 +516,44 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<string, number | null | undefined>;
 }
+
+export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? MakeOptional<AxisConfig<S, V, ChartsXAxisProps>, 'id'>
+  : never;
+export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? MakeOptional<AxisConfig<S, V, ChartsYAxisProps>, 'id'>
+  : never;
+export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? AxisConfig<S, V, ChartsRotationAxisProps>
+  : never;
+export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
+  ? AxisConfig<S, V, ChartsRadiusAxisProps>
+  : never;
+
+/**
+ * The axis configuration with missing values filled with default values.
+ */
+export type DefaultedAxis<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = AxisConfig<S, V, AxisProps> & {
+  zoom: DefaultizedZoomOptions | undefined;
+};
+/**
+ * The x-axis configuration with missing values filled with default values.
+ */
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
+  S,
+  V,
+  ChartsXAxisProps
+>;
+
+/**
+ * The y-axis configuration with missing values filled with default values.
+ */
+export type DefaultedYAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
+  S,
+  V,
+  ChartsYAxisProps
+>;

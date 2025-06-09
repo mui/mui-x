@@ -9,9 +9,7 @@ import {
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
-import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
-import { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import refType from '@mui/utils/refType';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -24,8 +22,6 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
   props: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
-
-const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -59,7 +55,8 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     ...defaultizedProps,
     closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
-    format: utils.formats.keyboardDate,
+    // TODO: Replace with resolveDateFormat() once we support month and year views
+    format: defaultizedProps.format ?? utils.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
@@ -77,10 +74,6 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: emptyActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
     },
   };
 
@@ -174,7 +167,7 @@ DesktopDateRangePicker.propTypes = {
   disableHighlightToday: PropTypes.bool,
   /**
    * If `true`, the button to open the Picker will not be rendered (it will only render the field).
-   * @deprecated Use the [field component](https://next.mui.com/x/react-date-pickers/fields/) instead.
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,

@@ -2,7 +2,12 @@ packages:
   - packages/*
   - docs
   - test
-  - test/performance-charts
+  - test/*
+  - bundle-size
+
 ignoredBuiltDependencies:
   - '@mui/monorepo'
   - msw
+
+onlyBuiltDependencies:
+  - '@vvago/vale'

@@ -3,6 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
+import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import { ChartsSlotProps, ChartsSlots } from '../internals/material';
 import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
@@ -27,16 +30,23 @@ export interface PieChartSlots
   extends PiePlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
-    ChartsTooltipSlots {}
+    ChartsTooltipSlots,
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 
 export interface PieChartSlotProps
   extends PiePlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
-    ChartsTooltipSlotProps {}
+    ChartsTooltipSlotProps,
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {}
 
 export interface PieChartProps
-  extends Omit<ChartContainerProps<'pie', PieChartPluginSignatures>, 'series'>,
+  extends Omit<
+      ChartContainerProps<'pie', PieChartPluginSignatures>,
+      'series' | 'slots' | 'slotProps'
+    >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
@@ -53,6 +63,11 @@ export interface PieChartProps
    */
   onItemClick?: PiePlotProps['onItemClick'];
   /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -63,8 +78,6 @@ export interface PieChartProps
    */
   slotProps?: PieChartSlotProps;
 }
-
-const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
 
 /**
  * Demos:
@@ -98,9 +111,10 @@ const PieChart = React.forwardRef(function PieChart(
     highlightedItem,
     onHighlightChange,
     className,
+    showToolbar,
     ...other
   } = props;
-  const margin = defaultizeMargin(marginProps, defaultMargin);
+  const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
@@ -123,6 +137,8 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar;
+
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
@@ -130,6 +146,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
       >
+        {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
             direction={props?.slotProps?.legend?.direction ?? 'vertical'}
@@ -195,6 +212,10 @@ PieChart.propTypes = {
    */
   loading: PropTypes.bool,
   /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    *
@@ -224,6 +245,11 @@ PieChart.propTypes = {
    * An array of [[PieSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

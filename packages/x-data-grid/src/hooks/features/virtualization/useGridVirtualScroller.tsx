@@ -342,12 +342,14 @@ export const useGridVirtualScroller = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
-    // Prevents batching render context changes
-    ReactDOM.flushSync(() => {
-      updateRenderContext(nextRenderContext);
-    });
+    if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
+      // Prevents batching render context changes
+      ReactDOM.flushSync(() => {
+        updateRenderContext(nextRenderContext);
+      });
 
-    scrollTimeout.start(1000, triggerUpdateRenderContext);
+      scrollTimeout.start(1000, triggerUpdateRenderContext);
+    }
 
     return nextRenderContext;
   });
@@ -824,13 +826,6 @@ function computeRenderContext(
     lastColumnIndex: inputs.visibleColumns.length,
   };
 
-  if (inputs.listView) {
-    return {
-      ...renderContext,
-      lastColumnIndex: 1,
-    };
-  }
-
   const { top, left } = scrollPosition;
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
 
@@ -860,6 +855,13 @@ function computeRenderContext(
 
     renderContext.firstRowIndex = firstRowIndex;
     renderContext.lastRowIndex = lastRowIndex;
+  }
+
+  if (inputs.listView) {
+    return {
+      ...renderContext,
+      lastColumnIndex: 1,
+    };
   }
 
   if (inputs.enabledForColumns) {

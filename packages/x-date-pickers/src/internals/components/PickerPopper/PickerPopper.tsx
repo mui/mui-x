@@ -11,12 +11,10 @@ import MuiPopper, {
 import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_useEventCallback as useEventCallback,
-  unstable_ownerDocument as ownerDocument,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
@@ -26,7 +24,7 @@ import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
 import { PickerOwnerState } from '../../../models';
 import { usePickerContext } from '../../../hooks';
 
-interface PickerPopperOwnerState extends PickerOwnerState {
+export interface PickerPopperOwnerState extends PickerOwnerState {
   popperPlacement: PopperPlacementType;
 }
 
@@ -69,7 +67,7 @@ export interface PickerPopperSlotProps {
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
-  popper?: SlotComponentPropsFromProps<PopperProps, {}, PickerPopperOwnerState>;
+  popper?: SlotComponentPropsFromProps<PopperProps, {}, PickerOwnerState>;
 }
 
 export interface ExportedPickerPopperProps {
@@ -102,15 +100,13 @@ const useUtilityClasses = (classes: Partial<PickerPopperClasses> | undefined) =>
 const PickerPopperRoot = styled(MuiPopper, {
   name: 'MuiPickerPopper',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
 const PickerPopperPaper = styled(MuiPaper, {
   name: 'MuiPickerPopper',
   slot: 'Paper',
-  overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickerPopperOwnerState;
 }>({
@@ -118,8 +114,7 @@ const PickerPopperPaper = styled(MuiPaper, {
   transformOrigin: 'top center',
   variants: [
     {
-      props: ({ popperPlacement }: PickerPopperOwnerState) =>
-        ['top', 'top-start', 'top-end'].includes(popperPlacement),
+      props: ({ popperPlacement }) => new Set(['top', 'top-start', 'top-end']).has(popperPlacement),
       style: {
         transformOrigin: 'bottom center',
       },
@@ -332,7 +327,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
   const { open, popupRef, reduceAnimations } = usePickerContext();
-  const { dismissViews, getCurrentViewMode, triggerElement, viewContainerRole } =
+  const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
 
   React.useEffect(() => {
@@ -373,10 +368,6 @@ export function PickerPopper(inProps: PickerPopperProps) {
 
   const classes = useUtilityClasses(classesProp);
   const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
-  const ownerState: PickerPopperOwnerState = {
-    ...pickerOwnerState,
-    popperPlacement: placement,
-  };
 
   const handleClickAway = useEventCallback(() => {
     if (viewContainerRole === 'tooltip') {
@@ -428,8 +419,13 @@ export function PickerPopper(inProps: PickerPopperProps) {
       onKeyDown: handleKeyDown,
     },
     className: classes.root,
-    ownerState,
+    ownerState: pickerOwnerState,
   });
+
+  const ownerState: PickerPopperOwnerState = React.useMemo(
+    () => ({ ...pickerOwnerState, popperPlacement: popperProps.placement }),
+    [pickerOwnerState, popperProps.placement],
+  );
 
   return (
     <Popper {...popperProps}>
@@ -445,7 +441,15 @@ export function PickerPopper(inProps: PickerPopperProps) {
           isEnabled={() => true}
           {...slotProps?.desktopTrapFocus}
         >
-          <Transition {...TransitionProps} {...slotProps?.desktopTransition}>
+          <Transition
+            {...TransitionProps}
+            {...slotProps?.desktopTransition}
+            onExited={(event) => {
+              onPopperExited?.();
+              slotProps?.desktopTransition?.onExited?.(event);
+              TransitionProps?.onExited?.();
+            }}
+          >
             <PickerPopperPaperWrapper
               PaperComponent={Paper}
               ownerState={ownerState}
