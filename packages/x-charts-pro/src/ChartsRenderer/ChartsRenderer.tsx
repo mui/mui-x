@@ -28,7 +28,9 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
   }, [defaultOptions, configuration]);
 
   if (chartType === 'bar') {
-    return <BarChart xAxis={[{ data: categoryData }]} series={series} {...chartConfiguration} />;
+    const axis = chartConfiguration.layout === 'vertical' ? 'xAxis' : 'yAxis';
+    const axisProp = { [axis]: [{ data: categoryData }] };
+    return <BarChart {...axisProp} series={series} {...chartConfiguration} />;
   }
 
   if (chartType === 'line') {
