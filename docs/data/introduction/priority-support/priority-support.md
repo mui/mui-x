@@ -63,7 +63,7 @@ Please be sure to follow the instructions exactly as described below to ensure y
 ### On GitHub
 
 Depending on the product you need support for, visit either the [MUI X](https://github.com/mui/mui-x) or the [Material UI](https://github.com/mui/material-ui) repo.
-Create a new issue using the **Priority support: SLA ⏰** issue template—this ensures it includes the necessary labels to trigger our automated process.
+Create a new issue using the **Priority support: SLA ⏰** template—this ensures it will include the necessary labels to trigger our automated process.
 After you've created the issue, a GitHub action will prompt you to follow an external link to validate your support key.
 Once your support key is validated, the action comment will update to confirm that your SLA is now in effect, and the issue labels will update accordingly.
 
