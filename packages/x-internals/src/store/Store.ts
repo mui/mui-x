@@ -5,6 +5,10 @@ export class Store<State> {
 
   private listeners: Set<Listener<State>>;
 
+  static create<T>(state: T) {
+    return new Store(state);
+  }
+
   constructor(state: State) {
     this.state = state;
     this.listeners = new Set();
