@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../primitives/time-grid';
 import { TimeGridViewProps } from './TimeGridView.types';
 import { CalendarEvent } from '../models/events';
@@ -9,13 +9,14 @@ import { isWeekend } from '../utils/date-utils';
 import { useTranslations } from '../utils/TranslationsContext';
 import './TimeGridView.css';
 
+const adapter = getAdapter();
+
 export const TimeGridView = React.forwardRef(function TimeGridView(
   props: TimeGridViewProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { events, days, className, onDayHeaderClick, ...other } = props;
 
-  const adapter = useAdapter();
   const translations = useTranslations();
   const today = adapter.date('2025-05-26');
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -31,7 +32,7 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
       map.get(dayKey).push(event);
     }
     return map;
-  }, [adapter, events]);
+  }, [events]);
 
   React.useLayoutEffect(() => {
     const body = bodyRef.current;
