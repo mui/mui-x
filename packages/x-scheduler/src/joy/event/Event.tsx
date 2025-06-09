@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { ResizeObserver } from '../utils/ResizeObserver';
 import { TimeGrid } from '../../primitives/time-grid';
-import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { EventProps } from './Event.types';
-
 import './Event.css';
+
+const adapter = getAdapter();
 
 export const Event = React.forwardRef(function Event(
   props: EventProps,
@@ -14,10 +14,13 @@ export const Event = React.forwardRef(function Event(
 ) {
   const { event, ariaLabelledBy, variant, className, style, ...other } = props;
 
-  const adapter = useAdapter();
-  const [titleLines, setTitleLines] = React.useState(2);
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const titleRef = React.useRef<HTMLParagraphElement>(null);
+  const durationMs =
+    adapter.toJsDate(event.end).getTime() - adapter.toJsDate(event.start).getTime();
+  const durationMinutes = durationMs / 60000;
+  const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
+  const isLessThan30Minutes = durationMinutes < 30;
+  const isMoreThan90Minutes = durationMinutes >= 90;
+  const titleLineCountRegularVariant = isMoreThan90Minutes ? 2 : 1;
 
   const renderContent = React.useMemo(() => {
     switch (variant) {
@@ -28,7 +31,6 @@ export const Event = React.forwardRef(function Event(
               {adapter.formatByString(event.start, 'h:mm a')}
             </time>
             <p
-              ref={titleRef}
               className={clsx('EventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
@@ -39,7 +41,6 @@ export const Event = React.forwardRef(function Event(
       case 'allDay':
         return (
           <p
-            ref={titleRef}
             className={clsx('EventTitle', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
           >
@@ -48,12 +49,26 @@ export const Event = React.forwardRef(function Event(
         );
       case 'regular':
       default:
+        if (isBetween30and60Minutes || isLessThan30Minutes) {
+          return (
+            <p
+              className={clsx(
+                'UnderHourEvent',
+                'LinesClamp',
+                isLessThan30Minutes && 'Under30MinutesEvent',
+              )}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              <span className="EventTitle">{event.title}</span>
+              <time className="EventTime">{adapter.formatByString(event.start, 'h:mm a')}</time>
+            </p>
+          );
+        }
         return (
           <React.Fragment>
             <p
-              ref={titleRef}
               className={clsx('EventTitle', 'LinesClamp')}
-              style={{ '--number-of-lines': titleLines } as React.CSSProperties}
+              style={{ '--number-of-lines': titleLineCountRegularVariant } as React.CSSProperties}
             >
               {event.title}
             </p>
@@ -67,38 +82,27 @@ export const Event = React.forwardRef(function Event(
           </React.Fragment>
         );
     }
-  }, [adapter, event.end, event.start, event.title, titleLines, variant]);
-
-  React.useEffect(() => {
-    if (!containerRef.current || !titleRef.current) {
-      return () => {};
-    }
-
-    const measure = () => {
-      const containerHeight = containerRef.current!.clientHeight;
-      const titleLineHeight = parseFloat(getComputedStyle(titleRef.current!).lineHeight);
-      setTitleLines((prev) => {
-        const newLines = containerHeight >= titleLineHeight * 3 ? 2 : 1;
-        return prev === newLines ? prev : newLines;
-      });
-    };
-
-    measure();
-
-    const observer = new ResizeObserver(measure);
-    observer.observe(containerRef.current);
-
-    return () => observer.disconnect();
-  }, [event.title, event.start, event.end, variant]);
+  }, [
+    variant,
+    event.start,
+    event.title,
+    event.end,
+    isBetween30and60Minutes,
+    isLessThan30Minutes,
+    titleLineCountRegularVariant,
+  ]);
 
   return (
     <div ref={forwardedRef} className={clsx('EventContainer', className)} {...other}>
       <TimeGrid.Event
-        className={clsx('EventCard', `EventCard--${variant}`)}
+        className={clsx(
+          'EventCard',
+          `EventCard--${variant}`,
+          (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+        )}
         start={event.start}
         end={event.end}
         aria-labelledby={ariaLabelledBy}
-        ref={containerRef}
       >
         {renderContent}
       </TimeGrid.Event>

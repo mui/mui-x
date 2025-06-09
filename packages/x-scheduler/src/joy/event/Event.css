@@ -69,6 +69,28 @@
   --event-secondary-text: var(--regular-accepted-secondary-text);
 }
 
+.EventCard--regular.UnderHourEventCard {
+  display: flex;
+  align-items: center;
+}
+
+.UnderHourEventCard {
+  margin: 0.5px 0;
+}
+
+.UnderHourEvent .EventTitle {
+  margin-inline-end: var(--space-1);
+  white-space: nowrap;
+}
+
+.Under30MinutesEvent .EventTitle {
+  font-size: var(--font-size-1);
+}
+
+.Under30MinutesEvent .EventTime {
+  font-size: 10px;
+}
+
 .EventCard--regular::before {
   content: '';
   position: absolute;
