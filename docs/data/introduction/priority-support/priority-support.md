@@ -18,7 +18,7 @@ Unlike standard support services—which are provided to all Pro and Premium lic
 Priority support is governed by a service-level agreement (SLA) that ensures:
 
 - **24-hour response times**
-  Priority support requests receive an initial response within 24 hours.
+  Priority support requests receive an initial response within one business day.
 - **Four-hour pre-screenings**
   Priority requests undergo a review of up to four hours to validate and reproduce the issue.
 - **Issue escalation**
