@@ -9,6 +9,7 @@ declare global {
   interface MUIEnv {
     JSDOM?: string;
     BROWSER?: string;
+    PLAYWRIGHT_SERVER_WS?: string;
     CI?: string;
   }
 }

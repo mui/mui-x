@@ -51,11 +51,16 @@ async function run(argv) {
   const packageJsonPath = path.resolve('./package.json');
   const packageJson = JSON.parse(await fs.readFile(packageJsonPath, { encoding: 'utf8' }));
 
-  const babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
+  let babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
   if (!babelRuntimeVersion) {
     throw new Error(
       'package.json needs to have a dependency on `@babel/runtime` when building with `@babel/plugin-transform-runtime`.',
     );
+  } else if (babelRuntimeVersion === 'catalog:') {
+    // resolve the version from the given package
+    const { stdout: listedBabelRuntime } = await exec('pnpm list "@babel/runtime" --json');
+    const jsonListedDependencies = JSON.parse(listedBabelRuntime);
+    babelRuntimeVersion = jsonListedDependencies[0].dependencies['@babel/runtime'].version;
   }
 
   const babelConfigPath = path.resolve(getWorkspaceRoot(), 'babel.config.js');
