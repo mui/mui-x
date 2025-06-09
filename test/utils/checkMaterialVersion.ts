@@ -1,6 +1,4 @@
 import { expect } from 'chai';
-import { fileURLToPath } from 'node:url';
-import { resolve, dirname } from 'node:path';
 import semver from 'semver';
 import childProcess from 'child_process';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
@@ -23,17 +21,13 @@ export function checkMaterialVersion({
     let expectedVersion = packageJson.devDependencies['@mui/material'];
 
     if (expectedVersion === 'catalog:') {
-      let workingDirectory = testFilePath;
-      const providedTestsDirectory = dirname(fileURLToPath(testFilePath));
-      const testsFolderDepth = providedTestsDirectory.match('packages/(.*)')?.[1].split('/').length;
-      if (testsFolderDepth !== undefined) {
-        workingDirectory = resolve(
-          providedTestsDirectory,
-          Array.from({ length: testsFolderDepth - 1 })
-            .fill('..')
-            .join('/'),
-        );
-      }
+      // take only relevant part of the file path
+      // e.g. file:///Users/dev/mui/mui-x/packages/x-charts-pro/src/tests/materialVersion.test.tsx
+      // becomes packages/x-charts-pro
+      const workingDirectory = testFilePath.substring(
+        testFilePath.indexOf('packages/'),
+        testFilePath.indexOf('/src/'),
+      );
       const listedMuiMaterial = childProcess.execSync('pnpm list "@mui/material" --json', {
         cwd: workingDirectory,
       });
