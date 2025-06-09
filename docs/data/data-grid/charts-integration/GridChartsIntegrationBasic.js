@@ -11,7 +11,7 @@ import {
   configurationOptions,
 } from '@mui/x-charts-pro/ChartsRenderer';
 
-export default function GridChartsIntegrationExample() {
+export default function GridChartsIntegrationBasic() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     rowLength: 20,
