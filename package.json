@@ -105,7 +105,7 @@
     "@types/karma": "catalog:",
     "@types/lodash": "catalog:",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.15.29",
+    "@types/node": "^22.15.30",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/requestidlecallback": "^0.3.7",
