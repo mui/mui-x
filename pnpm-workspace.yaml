@@ -5,45 +5,45 @@ packages:
   - test/*
   - bundle-size
 ignoredBuiltDependencies:
-  - "@mui/monorepo"
+  - '@mui/monorepo'
   - msw
 onlyBuiltDependencies:
-  - "@vvago/vale"
+  - '@vvago/vale'
 catalog:
-  "@babel/core": ^7.27.4
-  "@babel/plugin-transform-react-constant-elements": ^7.27.1
-  "@babel/plugin-transform-runtime": ^7.27.4
-  "@babel/preset-typescript": ^7.27.1
-  "@babel/runtime": ^7.27.4
-  "@babel/traverse": ^7.27.4
-  "@emotion/cache": ^11.14.0
-  "@emotion/react": ^11.14.0
-  "@emotion/styled": ^11.14.0
-  "@mui/icons-material": ^7.1.1
-  "@mui/internal-test-utils": ^2.0.9
-  "@mui/material": ^7.1.1
-  "@mui/system": ^7.1.1
-  "@mui/utils": ^7.1.1
-  "@playwright/test": ^1.52.0
-  "@react-spring/web": ^10.0.1
-  "@types/chai": ^5.2.2
-  "@types/chance": ^1.1.6
-  "@types/d3-scale": ^4.0.9
-  "@types/format-util": ^1.0.4
-  "@types/karma": ^6.3.9
-  "@types/lodash": ^4.17.17
-  "@types/luxon": ^3.6.2
-  "@types/moment-hijri": ^2.1.4
-  "@types/moment-jalaali": ^0.7.9
-  "@types/prop-types": ^15.7.14
-  "@types/react": 19.0.12
-  "@types/react-dom": 19.0.4
-  "@types/react-router": ^5.1.20
-  "@types/react-transition-group": ^4.4.12
-  "@types/semver": ^7.7.0
-  "@types/use-sync-external-store": ^1.5.0
-  "@typescript-eslint/parser": ^8.33.0
-  "@vitejs/plugin-react": ^4.5.1
+  '@babel/core': ^7.27.4
+  '@babel/plugin-transform-react-constant-elements': ^7.27.1
+  '@babel/plugin-transform-runtime': ^7.27.4
+  '@babel/preset-typescript': ^7.27.1
+  '@babel/runtime': ^7.27.4
+  '@babel/traverse': ^7.27.4
+  '@emotion/cache': ^11.14.0
+  '@emotion/react': ^11.14.0
+  '@emotion/styled': ^11.14.0
+  '@mui/icons-material': ^7.1.1
+  '@mui/internal-test-utils': ^2.0.9
+  '@mui/material': ^7.1.1
+  '@mui/system': ^7.1.1
+  '@mui/utils': ^7.1.1
+  '@playwright/test': ^1.52.0
+  '@react-spring/web': ^10.0.1
+  '@types/chai': ^5.2.2
+  '@types/chance': ^1.1.6
+  '@types/d3-scale': ^4.0.9
+  '@types/format-util': ^1.0.4
+  '@types/karma': ^6.3.9
+  '@types/lodash': ^4.17.17
+  '@types/luxon': ^3.6.2
+  '@types/moment-hijri': ^2.1.4
+  '@types/moment-jalaali': ^0.7.9
+  '@types/prop-types': ^15.7.14
+  '@types/react': 19.0.12
+  '@types/react-dom': 19.0.4
+  '@types/react-router': ^5.1.20
+  '@types/react-transition-group': ^4.4.12
+  '@types/semver': ^7.7.0
+  '@types/use-sync-external-store': ^1.5.0
+  '@typescript-eslint/parser': ^8.33.0
+  '@vitejs/plugin-react': ^4.5.1
   autoprefixer: ^10.4.21
   babel-plugin-module-resolver: ^5.0.2
   babel-plugin-optimize-clsx: ^2.6.2
