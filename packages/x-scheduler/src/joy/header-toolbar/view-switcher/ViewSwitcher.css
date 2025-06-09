@@ -16,7 +16,7 @@
   min-width: 190px;
   padding: var(--space-2);
   border-radius: var(--radius-4);
-  background-color: var(--surface);
+  background-color: var(--toolbar-base-bg);
   outline: 1px solid var(--gray-2);
   box-shadow: var(--shadow-5);
 }
@@ -29,7 +29,7 @@
 
 .ViewSwitcherMainItem {
   border: 0;
-  background: var(--surface);
+  background: var(--toolbar-base-bg);
   user-select: none;
   display: flex;
   align-items: center;
