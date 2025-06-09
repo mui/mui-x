@@ -13,9 +13,10 @@ export type UserGesturePlugin<Options extends Record<string, any> = any> = {
    * This function will be called with the provided options.
    *
    * The function should return a promise that resolves when the gesture is done.
-   * @param pointerManager
-   * @param options
-   * @param advanceTimers
+   * @param {PointerManager} pointerManager - Manager for handling pointer events
+   * @param {Options} options - Configuration options for the gesture
+   * @param {(ms: number) => Promise<void>} advanceTimers - Function to advance timers in testing environment
+   * @returns {Promise<void>} A promise that resolves when the gesture is complete
    */
   gesture: (
     pointerManager: PointerManager,

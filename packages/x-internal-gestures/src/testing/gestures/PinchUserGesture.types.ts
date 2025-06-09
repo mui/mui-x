@@ -67,8 +67,8 @@ export type PinchUserGestureRoot = {
   /**
    * Sets up the pinch gesture with the given options.
    *
-   * @param options
-   * @returns The pinch gesture builder.
+   * @param {PinchUserGestureOptions} options - Configuration for the pinch gesture
+   * @returns {Promise<void>} A promise that resolves when the gesture is complete
    */
   pinch: (options: PinchUserGestureOptions) => Promise<void>;
 };

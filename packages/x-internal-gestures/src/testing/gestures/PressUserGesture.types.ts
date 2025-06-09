@@ -34,8 +34,8 @@ export type PressUserGestureRoot<P extends PointerType> = {
   /**
    * Press on the target element.
    *
-   * @param options
-   * @returns A promise that resolves when the press gesture is completed.
+   * @param {PressUserGestureOptions<P>} options - Configuration for the press gesture
+   * @returns {Promise<void>} A promise that resolves when the press gesture is completed
    */
   press: (options: PressUserGestureOptions<P>) => Promise<void>;
 };

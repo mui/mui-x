@@ -56,8 +56,8 @@ export type TurnWheelUserGestureRoot = {
   /**
    * Turns the mouse wheel on the target element.
    *
-   * @param options
-   * @returns A promise that resolves when the turnWheel gesture is completed.
+   * @param {TurnWheelUserGestureOptions} options - Configuration for the wheel turning gesture
+   * @returns {Promise<void>} A promise that resolves when the turnWheel gesture is completed
    */
   turnWheel: (options: TurnWheelUserGestureOptions) => Promise<void>;
 };

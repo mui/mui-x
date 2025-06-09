@@ -48,8 +48,8 @@ export type MoveUserGestureRoot = {
   /**
    * Sets up the move gesture with the given options.
    *
-   * @param options
-   * @returns The move gesture builder.
+   * @param {MoveUserGestureOptions} options - Configuration for the move gesture
+   * @returns {Promise<void>} A promise that resolves when the gesture is complete
    */
   move: (options: MoveUserGestureOptions) => Promise<void>;
 };

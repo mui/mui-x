@@ -9,7 +9,8 @@ export type UserGestureOptions = {
   /**
    * Custom function to replace setTimeout for advancing timers in tests.
    * Useful for testing with fake timers.
-   * @param ms
+   * @param {number} ms - The number of milliseconds to advance timers by
+   * @returns {Promise<void>} A promise that resolves when the timer has advanced
    */
   advanceTimers?: (ms: number) => Promise<void>;
   /**

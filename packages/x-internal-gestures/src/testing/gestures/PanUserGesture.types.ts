@@ -66,8 +66,8 @@ export type PanUserGestureRoot = {
   /**
    * Sets up the pan gesture with the given options.
    *
-   * @param options
-   * @returns The pan gesture builder.
+   * @param {PanUserGestureOptions} options - Configuration for the pan gesture
+   * @returns {Promise<void>} A promise that resolves when the gesture is complete
    */
   pan: (options: PanUserGestureOptions) => Promise<void>;
 };

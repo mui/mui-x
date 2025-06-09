@@ -40,8 +40,8 @@ export type TapUserGestureRoot<P extends PointerType> = {
   /**
    * Taps on the target element.
    *
-   * @param options
-   * @returns A promise that resolves when the tap gesture is completed.
+   * @param {TapUserGestureOptions<P>} options - Configuration for the tap gesture
+   * @returns {Promise<void>} A promise that resolves when the tap gesture is completed
    */
   tap: (options: TapUserGestureOptions<P>) => Promise<void>;
 };

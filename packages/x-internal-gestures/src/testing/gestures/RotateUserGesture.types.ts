@@ -59,8 +59,8 @@ export type RotateUserGestureRoot = {
   /**
    * Sets up the rotate gesture with the given options.
    *
-   * @param options
-   * @returns The rotate gesture builder.
+   * @param {RotateUserGestureOptions} options - Configuration for the rotate gesture
+   * @returns {Promise<void>} A promise that resolves when the gesture is complete
    */
   rotate: (options: RotateUserGestureOptions) => Promise<void>;
 };
