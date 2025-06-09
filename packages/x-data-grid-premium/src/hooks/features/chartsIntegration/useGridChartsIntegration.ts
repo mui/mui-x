@@ -112,11 +112,17 @@ export const useGridChartsIntegration = (
       return;
     }
 
+    const itemCount = new Map<string, number>();
     setCategories([
       {
         id: category.field,
         label: category.headerName || category.field,
-        data: rows.map((r) => r[category.field]),
+        data: rows.map((r) => {
+          const value = r[category.field];
+          const currentCount = itemCount.get(value) || 0;
+          itemCount.set(value, currentCount + 1);
+          return currentCount ? `${value} (${currentCount})` : value;
+        }),
       },
     ]);
     setSeries([
