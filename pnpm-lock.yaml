@@ -311,8 +311,8 @@ importers:
         specifier: 'catalog:'
         version: 7.1.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#8cd3aa5849fe8fc2dd98eccc75366fae364d15f8
-        version: https://codeload.github.com/mui/material-ui/tar.gz/8cd3aa5849fe8fc2dd98eccc75366fae364d15f8(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)
+        specifier: github:mui/material-ui#9b3d36ed1204f8dc4f06a0ce644d273614eae666
+        version: https://codeload.github.com/mui/material-ui/tar.gz/9b3d36ed1204f8dc4f06a0ce644d273614eae666(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.1.1(@types/react@19.0.12)(react@19.0.0)
@@ -4221,10 +4221,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/8cd3aa5849fe8fc2dd98eccc75366fae364d15f8':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/8cd3aa5849fe8fc2dd98eccc75366fae364d15f8}
-    version: 7.1.0
-    engines: {pnpm: 10.10.0}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/9b3d36ed1204f8dc4f06a0ce644d273614eae666':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/9b3d36ed1204f8dc4f06a0ce644d273614eae666}
+    version: 7.1.1
+    engines: {pnpm: 10.12.1}
 
   '@mui/private-theming@5.17.1':
     resolution: {integrity: sha512-XMxU0NTYcKqdsG8LRmSoxERPXwMbp16sIXPcLVgLGII/bVNagX0xaheWAwFv8+zDK7tI3ajllkuD3GZZE++ICQ==}
@@ -6298,8 +6298,8 @@ packages:
   babel-plugin-search-and-replace@1.1.1:
     resolution: {integrity: sha512-fjP2VTF3mxxOUnc96mdK22llH92A6gu7A5AFapJmgnqsQi3bqLduIRP0FpA2r5vRZOYPpnX4rE5izQlpsMBjSA==}
 
-  babel-plugin-transform-import-meta@2.3.2:
-    resolution: {integrity: sha512-902o4GiQqI1GqAXfD5rEoz0PJamUfJ3VllpdWaNsFTwdaNjFSFHawvBO+cp5K2j+g2h3bZ4lnM1Xb6yFYGihtA==}
+  babel-plugin-transform-import-meta@2.3.3:
+    resolution: {integrity: sha512-bbh30qz1m6ZU1ybJoNOhA2zaDvmeXMnGNBMVMDOJ1Fni4+wMBoy/j7MTRVmqAUCIcy54/rEnr9VEBsfcgbpm3Q==}
     peerDependencies:
       '@babel/core': ^7.10.0
 
@@ -15129,12 +15129,12 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@types/react': 19.0.12
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/8cd3aa5849fe8fc2dd98eccc75366fae364d15f8(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/9b3d36ed1204f8dc4f06a0ce644d273614eae666(@babel/core@7.27.4)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.40.0)
       '@slack/bolt': 4.4.0(@types/express@5.0.0)
-      babel-plugin-transform-import-meta: 2.3.2(@babel/core@7.27.4)
+      babel-plugin-transform-import-meta: 2.3.3(@babel/core@7.27.4)
       execa: 9.6.0
       google-auth-library: 9.15.1(encoding@0.1.13)
     transitivePeerDependencies:
@@ -17620,7 +17620,7 @@ snapshots:
 
   babel-plugin-search-and-replace@1.1.1: {}
 
-  babel-plugin-transform-import-meta@2.3.2(@babel/core@7.27.4):
+  babel-plugin-transform-import-meta@2.3.3(@babel/core@7.27.4):
     dependencies:
       '@babel/core': 7.27.4
       '@babel/template': 7.27.2
