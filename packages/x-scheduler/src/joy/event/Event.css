@@ -58,7 +58,7 @@
 .EventCard--regular {
   position: absolute;
   left: 2px;
-  right: 2px;
+  right: var(--space-3);
   top: var(--y-position);
   bottom: calc(100% - var(--y-position) - var(--height));
   z-index: 2;
