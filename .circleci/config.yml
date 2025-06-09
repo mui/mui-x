@@ -156,7 +156,7 @@ jobs:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.52.0-noble
-    resource_class: medium+
+    resource_class: large
     steps:
       - checkout
       - install_js:
