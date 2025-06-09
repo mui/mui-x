@@ -11,7 +11,7 @@ title: MUI X - Priority support
 The MUI X team offers priority support as an add-on service for Premium license holders.
 With priority support you get expedited assistance and troubleshooting for your critical applications, ensuring the fastest possible resolution times.
 
-Unlike standard support services—which are provided to all paid licenses and only cover MUI X components—priority support covers the entire MUI ecosystem, including Material UI and Base UI.
+Unlike standard support services—which are provided to all Pro and Premium license holders and only cover MUI X components—priority support covers the entire MUI ecosystem, including Material UI and Base UI.
 
 ### Service-level agreement (SLA)
 
