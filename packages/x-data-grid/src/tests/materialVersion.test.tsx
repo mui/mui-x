@@ -5,5 +5,5 @@ import packageJson from '../../package.json';
 checkMaterialVersion({
   packageJson,
   materialPackageJson,
-  packageDirectory: 'packages/x-data-grid',
+  testFilePath: import.meta.url,
 });

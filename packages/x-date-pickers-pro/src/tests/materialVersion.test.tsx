@@ -5,5 +5,5 @@ import packageJson from '../../package.json';
 checkMaterialVersion({
   packageJson,
   materialPackageJson,
-  packageDirectory: 'packages/x-date-pickers-pro',
+  testFilePath: import.meta.url,
 });

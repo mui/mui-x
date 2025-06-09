@@ -1,4 +1,6 @@
 import { expect } from 'chai';
+import { fileURLToPath } from 'node:url';
+import { resolve, dirname } from 'node:path';
 import semver from 'semver';
 import childProcess from 'child_process';
 import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
@@ -11,18 +13,29 @@ type PackageJson = {
 export function checkMaterialVersion({
   packageJson,
   materialPackageJson,
-  packageDirectory,
+  testFilePath,
 }: {
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
-  packageDirectory: string;
+  testFilePath: string;
 }) {
   testSkipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
     let expectedVersion = packageJson.devDependencies['@mui/material'];
 
     if (expectedVersion === 'catalog:') {
+      let workingDirectory = testFilePath;
+      const providedTestsDirectory = dirname(fileURLToPath(testFilePath));
+      const testsFolderDepth = providedTestsDirectory.match('packages/(.*)')?.[1].split('/').length;
+      if (testsFolderDepth !== undefined) {
+        workingDirectory = resolve(
+          providedTestsDirectory,
+          Array.from({ length: testsFolderDepth - 1 })
+            .fill('..')
+            .join('/'),
+        );
+      }
       const listedMuiMaterial = childProcess.execSync('pnpm list "@mui/material" --json', {
-        cwd: packageDirectory,
+        cwd: workingDirectory,
       });
       if (listedMuiMaterial) {
         const jsonListedDependencies = JSON.parse(listedMuiMaterial.toString());
