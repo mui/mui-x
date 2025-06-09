@@ -103,8 +103,8 @@ export const useGridChartsIntegration = (
 
     const selectedSeries = gridChartsSeriesSelector(apiRef);
     const selectedCategories = gridChartsCategoriesSelector(apiRef);
-    const series = columns.find((c) => c.field === selectedSeries[0]);
-    const category = columns.find((c) => c.field === selectedCategories[0]);
+    const series = columns.filter((c) => selectedSeries.includes(c.field));
+    const category = columns.filter((c) => selectedCategories.includes(c.field));
 
     if (!category || !series) {
       setCategories([]);
@@ -113,25 +113,25 @@ export const useGridChartsIntegration = (
     }
 
     const itemCount = new Map<string, number>();
-    setCategories([
-      {
-        id: category.field,
-        label: category.headerName || category.field,
+    setCategories(
+      category.map((cat) => ({
+        id: cat.field,
+        label: cat.headerName || cat.field,
         data: rows.map((r) => {
-          const value = r[category.field];
+          const value = r[cat.field];
           const currentCount = itemCount.get(value) || 0;
           itemCount.set(value, currentCount + 1);
           return currentCount ? `${value} (${currentCount})` : value;
         }),
-      },
-    ]);
-    setSeries([
-      {
-        id: series.field,
-        label: series.headerName || series.field,
-        data: rows.map((r) => r[series.field]),
-      },
-    ]);
+      })),
+    );
+    setSeries(
+      series.map((ser) => ({
+        id: ser.field,
+        label: ser.headerName || ser.field,
+        data: rows.map((r) => r[ser.field]),
+      })),
+    );
   }, [apiRef, setCategories, setSeries]);
 
   const setChartsConfigurationPanelOpen = React.useCallback<
@@ -228,7 +228,6 @@ export const useGridChartsIntegration = (
   const updateDataReference = React.useCallback<
     GridChartsIntegrationPrivateApi['chartsIntegration']['updateDataReference']
   >(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (field, originSection, targetSection, targetField, placementRelativeToTargetField) => {
       const columns = gridColumnLookupSelector(apiRef);
       const categories = gridChartsCategoriesSelector(apiRef);
@@ -242,15 +241,31 @@ export const useGridChartsIntegration = (
       if (originSection) {
         const method = originSection === 'categories' ? updateCategories : updateSeries;
         const currentItems = originSection === 'categories' ? categories : series;
-        method(currentItems.filter((item) => item !== field));
+
+        // if the target is another section, remove the field from the origin section
+        if (targetSection !== originSection) {
+          method(currentItems.filter((item) => item !== field));
+        }
+        // otherwise, continue to add the field at the tagetted position
       }
 
       if (targetSection) {
         const method = targetSection === 'categories' ? updateCategories : updateSeries;
-        // const currentItems = targetSection === 'categories' ? categories : series;
-        // method([...currentItems, field]);
-        // TODO: allow more fields in section
-        method([field]);
+        const currentItems = targetSection === 'categories' ? categories : series;
+        const remainingItems =
+          targetSection === originSection
+            ? currentItems.filter((item) => item !== field)
+            : currentItems;
+
+        if (targetField) {
+          const targetFieldIndex = remainingItems.findIndex((item) => item === targetField);
+          const targetIndex =
+            placementRelativeToTargetField === 'top' ? targetFieldIndex : targetFieldIndex + 1;
+          remainingItems.splice(targetIndex, 0, field);
+          method(remainingItems);
+        } else {
+          method([...remainingItems, field]);
+        }
       }
     },
     [apiRef, updateCategories, updateSeries],
