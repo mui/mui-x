@@ -33,11 +33,12 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  function Test(props: Partial<DataGridProProps>) {
+  function Test(props: Partial<DataGridProProps> & { width?: number; height?: number }) {
     apiRef = useGridApiRef();
+    const { width = 300, height = 500, ...otherProps } = props;
     return (
-      <div style={{ width: 300, height: 300 }}>
-        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
+      <div style={{ width, height }}>
+        <DataGridPro apiRef={apiRef} {...baselineProps} {...otherProps} />
       </div>
     );
   }
@@ -702,6 +703,47 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
+    });
+  });
+
+  describeSkipIf(isJSDOM)('flex columns with pinned columns', () => {
+    it('should maintain correct widths and positions when flex columns are set', () => {
+      render(
+        <Test
+          columns={[
+            { field: 'name', headerName: 'Name', flex: 1, minWidth: 100, editable: true },
+            { field: 'email', headerName: 'Email', width: 200, editable: true },
+          ]}
+          initialState={{ pinnedColumns: { left: ['name'] } }}
+        />,
+      );
+
+      const firstColumn = getColumnHeaderCell(0);
+      expect(firstColumn.offsetWidth).to.equal(100);
+      const secondColumn = getColumnHeaderCell(1);
+      expect(secondColumn.offsetWidth).to.equal(200);
+    });
+
+    it('should grow flex column beyond minWidth when space is available', () => {
+      const columns = [
+        { field: 'name', headerName: 'Name', flex: 1, minWidth: 200, editable: true },
+        { field: 'email', headerName: 'Email', width: 200, editable: true },
+      ];
+
+      render(
+        <Test
+          width={600}
+          columns={columns}
+          initialState={{ pinnedColumns: { left: ['name'] } }}
+          disableVirtualization
+        />,
+      );
+
+      const firstColumn = getColumnHeaderCell(0);
+      const secondColumn = getColumnHeaderCell(1);
+
+      expect(firstColumn.offsetWidth).to.equal(398);
+      expect(secondColumn.offsetWidth).to.equal(200);
     });
   });
 });
