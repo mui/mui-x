@@ -88,6 +88,12 @@
   padding: 10px;
 }
 
+.TimeGridViewHeaderCell:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: -2px;
+  border-radius: var(--radius-3);
+}
+
 .TimeGridViewAllDayEventsHeaderCell {
   font-size: var(--font-size-1);
   font-style: var(--em-font-style);
