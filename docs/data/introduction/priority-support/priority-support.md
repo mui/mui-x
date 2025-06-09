@@ -20,7 +20,7 @@ Priority support is governed by a service-level agreement (SLA) that ensures:
 - **24-hour response times**
   Priority support requests receive an initial response within one business day.
 - **Four-hour pre-screenings**
-  Priority requests undergo a review of up to four hours to validate and reproduce the issue.
+  Priority requests undergo a review of up to four hours to validate and reproduce the issues.
 - **Issue escalation**
   Critical issues are escalated to senior engineers for focused attention and prompt resolutions.
 
