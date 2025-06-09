@@ -52,7 +52,7 @@ export function computeFlexColumnsWidth({
 }) {
   const uniqueFlexColumns = new Set<GridColDef['field']>(flexColumns.map((col) => col.field));
   const flexColumnsLookup: {
-    all: Record<
+    all: Map<
       GridColDef['field'],
       {
         flex: number;
@@ -63,12 +63,12 @@ export function computeFlexColumnsWidth({
     frozenFields: GridColDef['field'][];
     freeze: (field: GridColDef['field']) => void;
   } = {
-    all: {},
+    all: new Map(),
     frozenFields: [],
     freeze: (field: GridColDef['field']) => {
-      const value = flexColumnsLookup.all[field];
+      const value = flexColumnsLookup.all.get(field);
       if (value && value.frozen !== true) {
-        flexColumnsLookup.all[field].frozen = true;
+        value.frozen = true;
         flexColumnsLookup.frozenFields.push(field);
       }
     },
@@ -81,10 +81,10 @@ export function computeFlexColumnsWidth({
       return;
     }
 
-    const violationsLookup: {
-      min: Record<GridColDef['field'], boolean>;
-      max: Record<GridColDef['field'], boolean>;
-    } = { min: {}, max: {} };
+    const violations = {
+      min: new Set<GridColDef['field']>(),
+      max: new Set<GridColDef['field']>(),
+    };
 
     let remainingFreeSpace = initialFreeSpace;
     let flexUnits = totalFlexUnits;
@@ -92,16 +92,15 @@ export function computeFlexColumnsWidth({
 
     // 5b: Calculate the remaining free space
     flexColumnsLookup.frozenFields.forEach((field) => {
-      remainingFreeSpace -= flexColumnsLookup.all[field].computedWidth;
-      flexUnits -= flexColumnsLookup.all[field].flex!;
+      const value = flexColumnsLookup.all.get(field)!;
+      remainingFreeSpace -= value.computedWidth;
+      flexUnits -= value.flex;
     });
     for (let i = 0; i < flexColumns.length; i += 1) {
       const column = flexColumns[i];
 
-      if (
-        flexColumnsLookup.all[column.field] &&
-        flexColumnsLookup.all[column.field].frozen === true
-      ) {
+      const value = flexColumnsLookup.all.get(column.field);
+      if (value && value.frozen === true) {
         continue;
       }
 
@@ -114,29 +113,29 @@ export function computeFlexColumnsWidth({
       if (computedWidth < column.minWidth!) {
         totalViolation += column.minWidth! - computedWidth;
         computedWidth = column.minWidth!;
-        violationsLookup.min[column.field] = true;
+        violations.min.add(column.field);
       } else if (computedWidth > column.maxWidth!) {
         totalViolation += column.maxWidth! - computedWidth;
         computedWidth = column.maxWidth!;
-        violationsLookup.max[column.field] = true;
+        violations.max.add(column.field);
       }
 
-      flexColumnsLookup.all[column.field] = {
+      flexColumnsLookup.all.set(column.field, {
         frozen: false,
         computedWidth,
         flex: column.flex!,
-      };
+      });
     }
 
     // 5e: Freeze over-flexed items
     if (totalViolation < 0) {
       // Freeze all the items with max violations
-      Object.keys(violationsLookup.max).forEach((field) => {
+      violations.max.forEach((field) => {
         flexColumnsLookup.freeze(field);
       });
     } else if (totalViolation > 0) {
       // Freeze all the items with min violations
-      Object.keys(violationsLookup.min).forEach((field) => {
+      violations.min.forEach((field) => {
         flexColumnsLookup.freeze(field);
       });
     } else {
@@ -218,8 +217,8 @@ export const hydrateColumnsWidth = (
       flexColumns,
     });
 
-    Object.keys(computedColumnWidths).forEach((field) => {
-      columnsLookup[field].computedWidth = computedColumnWidths[field].computedWidth;
+    computedColumnWidths.forEach((value, field) => {
+      columnsLookup[field].computedWidth = value.computedWidth;
     });
   }
 
@@ -264,10 +263,9 @@ export const applyInitialState = (
   const newOrderedFields =
     cleanOrderedFields.length === 0
       ? columnsState.orderedFields
-      : [
-          ...cleanOrderedFields,
-          ...columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
-        ];
+      : cleanOrderedFields.concat(
+          columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
+        );
 
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
@@ -341,19 +339,18 @@ export const createColumnsState = ({
     };
   }
 
-  let columnsToKeep: Record<string, boolean> = {};
+  const columnsToDelete = new Set<string>();
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
-    columnsToKeep = Object.keys(columnsState.lookup).reduce(
-      (acc, key) => ({ ...acc, [key]: false }),
-      {},
-    );
+    for (const key in columnsState.lookup) {
+      if (columnsState.lookup.hasOwnProperty(key)) {
+        columnsToDelete.add(key);
+      }
+    }
   }
 
-  const columnsToUpsertLookup: Record<string, true> = {};
   columnsToUpsert.forEach((newColumn) => {
     const { field } = newColumn;
-    columnsToUpsertLookup[field] = true;
-    columnsToKeep[field] = true;
+    columnsToDelete.delete(field);
     let existingState = columnsState.lookup[field];
 
     if (existingState == null) {
@@ -394,10 +391,8 @@ export const createColumnsState = ({
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
-    Object.keys(columnsState.lookup).forEach((field) => {
-      if (!columnsToKeep[field]) {
-        delete columnsState.lookup[field];
-      }
+    columnsToDelete.forEach((field) => {
+      delete columnsState.lookup[field];
     });
   }
 

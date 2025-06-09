@@ -75,37 +75,35 @@ export const getColumnGroupsHeaderStructure = (
   const haveSameParents = (field1: string, field2: string, depth: number) =>
     isDeepEqual(getParents(field1).slice(0, depth + 1), getParents(field2).slice(0, depth + 1));
 
+  const pinnedFieldsLeft = new Set(pinnedFields?.left);
+  const pinnedFieldsRight = new Set(pinnedFields?.right);
+
   const haveDifferentContainers = (field1: string, field2: string) => {
-    if (
-      pinnedFields?.left &&
-      pinnedFields.left.includes(field1) &&
-      !pinnedFields.left.includes(field2)
-    ) {
+    if (pinnedFieldsLeft.has(field1) && !pinnedFieldsLeft.has(field2)) {
       return true;
     }
-    if (
-      pinnedFields?.right &&
-      !pinnedFields.right.includes(field1) &&
-      pinnedFields.right.includes(field2)
-    ) {
+    if (!pinnedFieldsRight.has(field1) && pinnedFieldsRight.has(field2)) {
       return true;
     }
     return false;
   };
 
   for (let depth = 0; depth < maxDepth; depth += 1) {
-    const depthStructure = orderedColumns.reduce((structure, newField) => {
+    const depthStructure: GridGroupingStructure[] = [];
+
+    for (let i = 0; i < orderedColumns.length; i += 1) {
+      const newField = orderedColumns[i];
       const groupId = getParents(newField)[depth] ?? null;
-      if (structure.length === 0) {
-        return [
-          {
-            columnFields: [newField],
-            groupId,
-          },
-        ];
+
+      if (depthStructure.length === 0) {
+        depthStructure.push({
+          columnFields: [newField],
+          groupId,
+        });
+        continue;
       }
 
-      const lastGroup = structure[structure.length - 1];
+      const lastGroup = depthStructure[depthStructure.length - 1];
       const prevField = lastGroup.columnFields[lastGroup.columnFields.length - 1];
       const prevGroupId = lastGroup.groupId;
 
@@ -116,24 +114,15 @@ export const getColumnGroupsHeaderStructure = (
         haveDifferentContainers(prevField, newField)
       ) {
         // It's a new group
-        return [
-          ...structure,
-          {
-            columnFields: [newField],
-            groupId,
-          },
-        ];
-      }
-
-      // It extends the previous group
-      return [
-        ...structure.slice(0, structure.length - 1),
-        {
-          columnFields: [...lastGroup.columnFields, newField],
+        depthStructure.push({
+          columnFields: [newField],
           groupId,
-        },
-      ];
-    }, [] as GridGroupingStructure[]);
+        });
+      } else {
+        // Extend the previous group
+        lastGroup.columnFields.push(newField);
+      }
+    }
     groupingHeaderStructure.push(depthStructure);
   }
 

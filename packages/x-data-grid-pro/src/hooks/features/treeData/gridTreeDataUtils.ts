@@ -120,9 +120,9 @@ export const filterRowTreeFromTreeData = (
     return filteredDescendantCount + 1;
   };
 
-  const nodes = Object.values(rowTree);
-  for (let i = 0; i < nodes.length; i += 1) {
-    const node = nodes[i];
+  // eslint-disable-next-line guard-for-in
+  for (const key in rowTree) {
+    const node = rowTree[key];
     if (node.depth === 0) {
       filterTreeNode(node, true, true);
     }
