@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "outDir": "build/esm",
+    "rootDir": "./src",
+    "types": ["../../mui-env.d.ts"]
+  },
+  "include": ["src/**/*.ts*"],
+  "exclude": [
+    "**/*.test.ts*",
+    "**/*.spec.ts*",
+    "**/__tests__/**",
+    "**/__screenshots__/**",
+    "**/mocks/**"
+  ]
+}
