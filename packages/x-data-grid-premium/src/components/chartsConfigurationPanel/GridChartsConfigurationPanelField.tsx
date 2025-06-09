@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass, GridMenu } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { vars } from '@mui/x-data-grid-pro/internals';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import type { FieldTransferObject, DropPosition } from './GridChartsConfigurationPanelBody';
 import { GridChartsConfigurationPanelFieldMenu } from './GridChartsConfigurationPanelFieldMenu';
+import { gridAggregationModelSelector } from '../../hooks/features/aggregation';
+import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
 
 type GridChartsConfigurationPanelFieldProps = {
   children: React.ReactNode;
@@ -104,6 +107,81 @@ const GridChartsConfigurationPanelFieldDragIcon = styled('div', {
   },
 });
 
+export function AggregationSelect({
+  aggFunc,
+  field,
+}: {
+  aggFunc: string;
+  field: FieldTransferObject['field'];
+}) {
+  const rootProps = useGridRootProps();
+  const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
+  const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
+  const aggregationMenuTriggerId = React.useId();
+  const aggregationMenuId = React.useId();
+
+  const apiRef = useGridApiContext();
+  const aggregationModel = gridAggregationModelSelector(apiRef);
+  const colDef = apiRef.current.getColumn(field);
+
+  const availableAggregationFunctions = React.useMemo(
+    () => [
+      'none',
+      ...getAvailableAggregationFunctions({
+        aggregationFunctions: rootProps.aggregationFunctions,
+        colDef,
+        isDataSource: false,
+      }),
+    ],
+    [colDef, rootProps.aggregationFunctions],
+  );
+
+  const handleClick = (func: string) => {
+    apiRef.current.setAggregationModel({ ...aggregationModel, [field]: func });
+    setAggregationMenuOpen(false);
+  };
+
+  return (
+    <React.Fragment>
+      <rootProps.slots.baseChip
+        label={rootProps.aggregationFunctions[aggFunc]?.label ?? aggFunc}
+        size="small"
+        variant="outlined"
+        ref={aggregationMenuTriggerRef}
+        id={aggregationMenuTriggerId}
+        aria-haspopup="true"
+        aria-controls={aggregationMenuOpen ? aggregationMenuId : undefined}
+        aria-expanded={aggregationMenuOpen ? 'true' : undefined}
+        onClick={() => setAggregationMenuOpen(!aggregationMenuOpen)}
+      />
+      <GridMenu
+        open={aggregationMenuOpen}
+        onClose={() => setAggregationMenuOpen(false)}
+        target={aggregationMenuTriggerRef.current}
+        position="bottom-start"
+      >
+        <rootProps.slots.baseMenuList
+          id={aggregationMenuId}
+          aria-labelledby={aggregationMenuTriggerId}
+          autoFocusItem
+          {...rootProps.slotProps?.baseMenuList}
+        >
+          {availableAggregationFunctions.map((func) => (
+            <rootProps.slots.baseMenuItem
+              key={func}
+              selected={aggFunc === func}
+              onClick={() => handleClick(func)}
+              {...rootProps.slotProps?.baseMenuItem}
+            >
+              {rootProps.aggregationFunctions[func]?.label ?? func}
+            </rootProps.slots.baseMenuItem>
+          ))}
+        </rootProps.slots.baseMenuList>
+      </GridMenu>
+    </React.Fragment>
+  );
+}
+
 function GridChartsConfigurationPanelField(props: GridChartsConfigurationPanelFieldProps) {
   const { children, field, onDragStart, onDragEnd } = props;
   const rootProps = useGridRootProps();
@@ -112,6 +190,7 @@ function GridChartsConfigurationPanelField(props: GridChartsConfigurationPanelFi
   const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
+  const aggregationModel = gridAggregationModelSelector(apiRef);
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
@@ -193,7 +272,9 @@ function GridChartsConfigurationPanelField(props: GridChartsConfigurationPanelFi
       <GridChartsConfigurationPanelFieldName ownerState={ownerState} className={classes.name}>
         {children}
       </GridChartsConfigurationPanelFieldName>
-
+      {section === 'series' && (
+        <AggregationSelect aggFunc={aggregationModel[field] ?? 'none'} field={field} />
+      )}
       <GridChartsConfigurationPanelFieldActionContainer
         ownerState={ownerState}
         className={classes.actionContainer}

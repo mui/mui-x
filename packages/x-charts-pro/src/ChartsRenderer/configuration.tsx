@@ -32,6 +32,7 @@ export const configurationOptions = {
         default: 'vertical',
         options: ['vertical', 'horizontal'],
       },
+      stacked: { label: 'Stacked', type: 'boolean', default: false },
       hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
     },
   },

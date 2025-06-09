@@ -4,7 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import useOnMount from '@mui/utils/useOnMount';
 import {
   gridRowsLoadingSelector,
-  gridFilteredSortedRowEntriesSelector,
+  gridFilteredSortedTopLevelRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
 import {
   GridStateInitializer,
@@ -12,6 +12,7 @@ import {
   useGridEvent,
   gridColumnLookupSelector,
   runIf,
+  getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -99,7 +100,7 @@ export const useGridChartsIntegration = (
 
   const handleDataUpdate = React.useCallback(() => {
     const columns = Object.values(gridColumnLookupSelector(apiRef));
-    const rows = Object.values(gridFilteredSortedRowEntriesSelector(apiRef)).map((r) => r.model);
+    const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
 
     const selectedSeries = gridChartsSeriesSelector(apiRef);
     const selectedCategories = gridChartsCategoriesSelector(apiRef);
@@ -118,7 +119,7 @@ export const useGridChartsIntegration = (
         id: cat.field,
         label: cat.headerName || cat.field,
         data: rows.map((r) => {
-          const value = r[cat.field];
+          const value = getRowValue(r.model, cat, apiRef);
           const currentCount = itemCount.get(value) || 0;
           itemCount.set(value, currentCount + 1);
           return currentCount ? `${value} (${currentCount})` : value;
@@ -129,7 +130,7 @@ export const useGridChartsIntegration = (
       series.map((ser) => ({
         id: ser.field,
         label: ser.headerName || ser.field,
-        data: rows.map((r) => r[ser.field]),
+        data: rows.map((r) => getRowValue(r.model, ser, apiRef)),
       })),
     );
   }, [apiRef, setCategories, setSeries]);

@@ -14,4 +14,10 @@ By combining these components, you can visualize grid data as charts and enable 
 
 The following example shows how to wrap a Data Grid and a chart in the same context provider. The grid provides categories and series to the chart, which renders the chosen chart type.
 
-{{"demo": "GridChartsIntegrationExample.js", "bg": "inline"}}
+{{"demo": "GridChartsIntegrationBasic.js", "bg": "inline"}}
+
+## With Row Grouping
+
+The following example shows chart integration with grouped and aggregated data
+
+{{"demo": "GridChartsIntegrationRowGrouping.js", "bg": "inline"}}
