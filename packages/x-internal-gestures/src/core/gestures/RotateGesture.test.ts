@@ -42,19 +42,19 @@ describe('Rotate Gesture', () => {
     gestureTarget.addEventListener('rotateStart', (event) => {
       const detail = event.detail;
       events.push(
-        `rotateStart: rotation: ${Math.round(detail.rotation)}° | delta: ${Math.round(detail.delta)}° | totalRotation: ${Math.round(detail.totalRotation)}°`,
+        `rotateStart: rotation: ${Math.floor(detail.rotation)}° | delta: ${Math.floor(detail.delta)}° | totalRotation: ${Math.floor(detail.totalRotation)}°`,
       );
     });
     gestureTarget.addEventListener('rotate', (event) => {
       const detail = event.detail;
       events.push(
-        `rotate: rotation: ${Math.round(detail.rotation)}° | delta: ${Math.round(detail.delta)}° | totalRotation: ${Math.round(detail.totalRotation)}°`,
+        `rotate: rotation: ${Math.floor(detail.rotation)}° | delta: ${Math.floor(detail.delta)}° | totalRotation: ${Math.floor(detail.totalRotation)}°`,
       );
     });
     gestureTarget.addEventListener('rotateEnd', (event) => {
       const detail = event.detail;
       events.push(
-        `rotateEnd: rotation: ${Math.round(detail.rotation)}° | delta: ${Math.round(detail.delta)}° | totalRotation: ${Math.round(detail.totalRotation)}°`,
+        `rotateEnd: rotation: ${Math.floor(detail.rotation)}° | delta: ${Math.floor(detail.delta)}° | totalRotation: ${Math.floor(detail.totalRotation)}°`,
       );
     });
   });
@@ -86,12 +86,12 @@ describe('Rotate Gesture', () => {
             'rotateEnd: rotation: 89° | delta: 22° | totalRotation: 89°',
           ]
         : [
-            'rotateStart: rotation: 23° | delta: 23° | totalRotation: 23°',
-            'rotate: rotation: 23° | delta: 23° | totalRotation: 23°',
-            'rotate: rotation: 45° | delta: 23° | totalRotation: 45°',
-            'rotate: rotation: 68° | delta: 23° | totalRotation: 68°',
-            'rotate: rotation: 90° | delta: 23° | totalRotation: 90°',
-            'rotateEnd: rotation: 90° | delta: 23° | totalRotation: 90°',
+            'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
+            'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
+            'rotate: rotation: 90° | delta: 22° | totalRotation: 90°',
+            'rotateEnd: rotation: 90° | delta: 22° | totalRotation: 90°',
           ],
     );
   });
@@ -116,12 +116,12 @@ describe('Rotate Gesture', () => {
             'rotateEnd: rotation: -90° | delta: -23° | totalRotation: -90°',
           ]
         : [
-            'rotateStart: rotation: -22° | delta: -22° | totalRotation: -22°',
-            'rotate: rotation: -22° | delta: -22° | totalRotation: -22°',
-            'rotate: rotation: -45° | delta: -22° | totalRotation: -45°',
-            'rotate: rotation: -67° | delta: -22° | totalRotation: -67°',
-            'rotate: rotation: -90° | delta: -22° | totalRotation: -90°',
-            'rotateEnd: rotation: -90° | delta: -22° | totalRotation: -90°',
+            'rotateStart: rotation: -23° | delta: -23° | totalRotation: -23°',
+            'rotate: rotation: -23° | delta: -23° | totalRotation: -23°',
+            'rotate: rotation: -45° | delta: -23° | totalRotation: -45°',
+            'rotate: rotation: -68° | delta: -23° | totalRotation: -68°',
+            'rotate: rotation: -90° | delta: -23° | totalRotation: -90°',
+            'rotateEnd: rotation: -90° | delta: -23° | totalRotation: -90°',
           ],
     );
   });
@@ -156,14 +156,14 @@ describe('Rotate Gesture', () => {
             'rotateEnd: rotation: 90° | delta: 23° | totalRotation: 90°',
           ]
         : [
-            'rotateStart: rotation: 23° | delta: 23° | totalRotation: 23°',
-            'rotate: rotation: 23° | delta: 23° | totalRotation: 23°',
-            'rotate: rotation: 45° | delta: 23° | totalRotation: 45°',
-            'rotateEnd: rotation: 45° | delta: 23° | totalRotation: 45°',
-            'rotateStart: rotation: 68° | delta: 23° | totalRotation: 68°',
-            'rotate: rotation: 68° | delta: 23° | totalRotation: 68°',
-            'rotate: rotation: 90° | delta: 23° | totalRotation: 90°',
-            'rotateEnd: rotation: 90° | delta: 23° | totalRotation: 90°',
+            'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
+            'rotateEnd: rotation: 45° | delta: 22° | totalRotation: 45°',
+            'rotateStart: rotation: 67° | delta: 22° | totalRotation: 67°',
+            'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
+            'rotate: rotation: 90° | delta: 22° | totalRotation: 90°',
+            'rotateEnd: rotation: 90° | delta: 22° | totalRotation: 90°',
           ],
     );
   });
