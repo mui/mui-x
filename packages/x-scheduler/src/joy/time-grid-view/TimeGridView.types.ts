@@ -1,13 +1,9 @@
 import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
-import { CalendarEvent } from '../models/events';
+import { BaseViewProps } from '../models/views';
 
-export interface TimeGridViewProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TimeGridViewProps extends BaseViewProps {
   /**
    * The days to render in the time grid view.
    */
   days: SchedulerValidDate[];
-  /**
-   * The events to render in the time grid view.
-   */
-  events: CalendarEvent[];
 }

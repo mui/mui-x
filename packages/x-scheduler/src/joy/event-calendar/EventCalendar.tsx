@@ -18,10 +18,14 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   const [view, setView] = React.useState<ViewType>('week');
 
+  const handleDayHeaderClick = React.useCallback(() => {
+    setView('day');
+  }, [setView]);
+
   let content: React.ReactNode;
   switch (view) {
     case 'week':
-      content = <WeekView events={events} />;
+      content = <WeekView events={events} onDayHeaderClick={handleDayHeaderClick} />;
       break;
     case 'day':
       content = <DayView events={events} />;

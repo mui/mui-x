@@ -13,7 +13,7 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
   props: TimeGridViewProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, days, className, ...other } = props;
+  const { events, days, className, onDayHeaderClick, ...other } = props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
@@ -45,6 +45,20 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
+  const handleHeaderClick = React.useCallback(() => {
+    onDayHeaderClick?.();
+  }, [onDayHeaderClick]);
+
+  const handleHeaderKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        onDayHeaderClick?.();
+      }
+    },
+    [onDayHeaderClick],
+  );
+
   return (
     <div ref={forwardedRef} className={clsx('TimeGridViewContainer', 'joy', className)} {...other}>
       <TimeGrid.Root className="TimeGridViewRoot">
@@ -54,6 +68,9 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
             {days.map((day) => (
               <div
                 key={day.day.toString()}
+                onClick={handleHeaderClick}
+                onKeyDown={handleHeaderKeyDown}
+                tabIndex={0}
                 className="TimeGridViewHeaderCell"
                 id={`TimeGridViewHeaderCell-${day.day.toString()}`}
                 role="columnheader"
