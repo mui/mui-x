@@ -6,15 +6,8 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
-    "rootDir": "./src",
-    "types": ["../../mui-env.d.ts"]
+    "rootDir": "./src"
   },
   "include": ["src/**/*.ts*"],
-  "exclude": [
-    "**/*.test.ts*",
-    "**/*.spec.ts*",
-    "**/__tests__/**",
-    "**/__screenshots__/**",
-    "**/mocks/**"
-  ]
+  "exclude": ["**/*.test.ts*", "**/*.spec.ts*", "**/__screenshots__/**", "**/mocks/**"]
 }
