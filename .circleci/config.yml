@@ -162,21 +162,31 @@ jobs:
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
+
       - when:
           condition:
             not:
               equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
-                command: pnpm test:unit:browser
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 name: Test Browser + Coverage
-                command: pnpm test:unit:browser --coverage
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
+
             - run:
                 name: Check coverage generated
                 command: |
