@@ -6,7 +6,6 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
-import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
