@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useDayList } from '@mui/x-scheduler/primitives/use-day-list';
+import { useDayList } from '../../primitives/use-day-list';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { WeekViewProps } from './WeekView.types';
 import { TimeGridView } from '../time-grid-view/TimeGridView';
