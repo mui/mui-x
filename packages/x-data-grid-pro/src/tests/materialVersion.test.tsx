@@ -2,4 +2,8 @@ import materialPackageJson from '@mui/material/package.json';
 import { checkMaterialVersion } from 'test/utils/checkMaterialVersion';
 import packageJson from '../../package.json';
 
-checkMaterialVersion({ packageJson, materialPackageJson });
+checkMaterialVersion({
+  packageJson,
+  materialPackageJson,
+  packageDirectory: 'packages/x-data-grid-pro',
+});

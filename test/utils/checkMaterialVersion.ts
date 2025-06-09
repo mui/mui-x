@@ -11,12 +11,24 @@ type PackageJson = {
 export function checkMaterialVersion({
   packageJson,
   materialPackageJson,
+  packageDirectory,
 }: {
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
+  packageDirectory: string;
 }) {
   testSkipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
-    const expectedVersion = packageJson.devDependencies['@mui/material'];
+    let expectedVersion = packageJson.devDependencies['@mui/material'];
+
+    if (expectedVersion === 'catalog:') {
+      const listedMuiMaterial = childProcess.execSync('pnpm list "@mui/material" --json', {
+        cwd: packageDirectory,
+      });
+      if (listedMuiMaterial) {
+        const jsonListedDependencies = JSON.parse(listedMuiMaterial.toString());
+        expectedVersion = jsonListedDependencies[0].devDependencies['@mui/material'].version;
+      }
+    }
 
     const versions = childProcess.execSync(
       `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
