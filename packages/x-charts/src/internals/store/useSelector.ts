@@ -1,4 +1,4 @@
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
 import { ChartAnyPluginSignature, ChartState } from '../plugins/models';
 import { ChartsSelector } from '../plugins/utils/selectors';
 import { ChartStore } from '../plugins/utils/ChartStore';

@@ -1,4 +1,4 @@
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
 import { TreeViewAnyPluginSignature, TreeViewState } from '../models';
 import { TreeViewStore } from '../utils/TreeViewStore';
 import { TreeViewSelector } from '../utils/selectors';
