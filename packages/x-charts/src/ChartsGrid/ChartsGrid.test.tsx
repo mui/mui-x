@@ -31,4 +31,18 @@ describe('<ChartsGrid />', () => {
       </ChartContainer>,
     );
   });
+
+  it('should render grid on band scale without error', () => {
+    render(
+      <ChartContainer
+        series={[]}
+        width={500}
+        height={500}
+        xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
+        yAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
+      >
+        <ChartsGrid vertical horizontal />
+      </ChartContainer>,
+    );
+  });
 });
