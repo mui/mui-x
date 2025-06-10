@@ -12,7 +12,8 @@ import { stockDashboardTheme } from './theme';
 
 function StockDashboard() {
   const [stocks, setStocks] = useState<StockData[]>([]);
-  const [selectedStock, setSelectedStock] = useState<StockData | null>(null);
+  const [selectedStockId, setSelectedStockId] = useState<number | null>(null);
+  const selectedStock = stocks.find((stock) => stock.id === selectedStockId);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -254,7 +255,7 @@ function StockDashboard() {
             rows={stocks}
             columns={columns}
             loading={loading}
-            onRowClick={(params) => setSelectedStock(params.row)}
+            onRowClick={(params) => setSelectedStockId(params.row.id)}
             label="Stock Market"
             showToolbar
             sx={{
@@ -316,7 +317,7 @@ function StockDashboard() {
               <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>
                 {selectedStock.symbol} - Price History
               </Typography>
-              <IconButton onClick={() => setSelectedStock(null)}>
+              <IconButton onClick={() => setSelectedStockId(null)}>
                 <CloseIcon fontSize="small" />
               </IconButton>
             </Box>
