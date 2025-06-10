@@ -15,5 +15,7 @@ const publishDirs = {
   '@mui/x-internals': './packages/x-internals/build',
 };
 
-// eslint-disable-next-line no-console
-console.log(Object.values(publishDirs).join(' '));
+
+```suggestion
+// console.log is supposedly adding a line break, which might not be something we want here.
+process.stdout.write(Object.values(publishDirs).join(' '));
