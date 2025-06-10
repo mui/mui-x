@@ -19,6 +19,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const [view, setView] = React.useState<ViewType>('week');
 
   const handleDayHeaderClick = React.useCallback(() => {
+    // TODO: Update the visible date once https://github.com/mui/mui-x/issues/17698 is implemented
     setView('day');
   }, [setView]);
 
