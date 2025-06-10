@@ -54,16 +54,6 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     [onDayHeaderClick, today],
   );
 
-  const handleHeaderKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        onDayHeaderClick?.(today, event);
-      }
-    },
-    [onDayHeaderClick, today],
-  );
-
   const renderHeaderContent = (day: SchedulerValidDate) => (
     <span className="TimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
@@ -90,7 +80,6 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                     type="button"
                     className="TimeGridHeaderButton"
                     onClick={handleHeaderClick}
-                    onKeyDown={handleHeaderKeyDown}
                     tabIndex={0}
                   >
                     {renderHeaderContent(day)}
