@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { DayViewProps } from './DayView.types';
-import { TimeGridView } from '../time-grid-view/TimeGridView';
+import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
 
 const adapter = getAdapter();
 
@@ -23,7 +23,7 @@ export const DayView = React.forwardRef(function DayView(
   );
 
   return (
-    <TimeGridView
+    <TimeGrid
       ref={forwardedRef}
       days={[day]}
       events={filteredEvents}

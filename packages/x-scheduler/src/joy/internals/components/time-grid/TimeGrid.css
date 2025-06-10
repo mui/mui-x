@@ -1,6 +1,6 @@
-@import '../styles/tokens.css';
+@import '../../../styles/tokens.css';
 
-.TimeGridViewContainer {
+.TimeGridContainer {
   --weekend-background: var(--mauve-1);
   --text-strong: var(--mauve-9);
   --text-soft: var(--mauve-5);
@@ -10,46 +10,46 @@
   --has-scroll: 1;
 }
 
-.mode-dark .TimeGridViewContainer {
+.mode-dark .TimeGridContainer {
   --weekend-background: var(--mauve-9);
   --text-strong: var(--mauve-5);
   --text-soft: var(--mauve-2);
 }
 
-.TimeGridViewContainer {
+.TimeGridContainer {
   display: flex;
   width: 100%;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
 }
 
-.TimeGridViewRoot {
+.TimeGridRoot {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.TimeGridViewHeader {
+.TimeGridHeader {
   display: flex;
   flex-direction: column;
 }
 
-.TimeGridViewGridRow {
+.TimeGridGridRow {
   display: grid;
   grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
   width: 100%;
 }
 
-.TimeGridViewHeaderRow {
+.TimeGridHeaderRow {
   border-bottom: 1px solid var(--border-color);
 }
 
-.TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewHeaderRow {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridHeaderRow {
   overflow-y: scroll;
   scrollbar-color: transparent transparent;
 }
 
-.TimeGridViewAllDayEventsRow {
+.TimeGridAllDayEventsRow {
   max-height: 84px;
 
   > *:not(:last-child) {
@@ -57,30 +57,30 @@
   }
 }
 
-.TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewAllDayEventsRow {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow {
   overflow-y: scroll;
   scrollbar-color: transparent transparent;
 }
 
-.TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewAllDayEventsRow[data-weekend] {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow[data-weekend] {
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 
 /* Webkit (Chrome, Safari, Edge) */
-.TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewHeaderRow::-webkit-scrollbar {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridHeaderRow::-webkit-scrollbar {
   background: transparent;
 }
 
-.TimeGridViewHeader[style*='--has-scroll: 1'] .TimeGridViewAllDayEventsRow::-webkit-scrollbar {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow::-webkit-scrollbar {
   background: transparent;
 }
 
-.TimeGridViewHeader[style*='--has-scroll: 1']
-  .TimeGridViewAllDayEventsRow[data-weekend]::-webkit-scrollbar {
+.TimeGridHeader[style*='--has-scroll: 1']
+  .TimeGridAllDayEventsRow[data-weekend]::-webkit-scrollbar {
   background: var(--weekend-background);
 }
 
-.TimeGridViewHeaderContent {
+.TimeGridHeaderContent {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,7 +88,7 @@
   padding: 10px;
 }
 
-.TimeGridViewHeaderButton {
+.TimeGridHeaderButton {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -96,13 +96,13 @@
   gap: var(--space-2);
 }
 
-.TimeGridViewHeaderButton:focus-visible {
+.TimeGridHeaderButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: -2px;
   border-radius: var(--radius-3);
 }
 
-.TimeGridViewAllDayEventsHeaderCell {
+.TimeGridAllDayEventsHeaderCell {
   font-size: var(--font-size-1);
   font-style: var(--em-font-style);
   padding: var(--space-2);
@@ -110,38 +110,38 @@
   color: var(--text-soft);
 }
 
-.TimeGridViewHeaderDayName {
+.TimeGridHeaderDayName {
   font-size: var(--font-size-2);
   color: var(--text-soft);
   line-height: 1;
 }
 
-.TimeGridViewHeaderDayNumber {
+.TimeGridHeaderDayNumber {
   font-size: var(--font-size-5);
   color: var(--text-strong);
   font-weight: var(--font-weight-3);
   line-height: 1;
 }
 
-.TimeGridViewBody {
+.TimeGridBody {
   flex: 1;
   border-top: 1px solid var(--border-color);
   overflow-y: auto;
 }
 
-.TimeGridViewScrollableContent {
+.TimeGridScrollableContent {
   display: flex;
   height: calc(var(--hour-height) * 24);
   position: relative;
 }
 
-.TimeGridViewTimeAxis {
+.TimeGridTimeAxis {
   display: flex;
   flex-direction: column;
   width: var(--fixed-cell-width);
 }
 
-.TimeGridViewTimeAxisCell {
+.TimeGridTimeAxisCell {
   height: calc(100% / 24);
   line-height: calc(100% / 24);
   border-right: 1px solid var(--border-color);
@@ -149,14 +149,14 @@
   text-align: end;
 }
 
-.TimeGridViewTimeAxisText:not(:empty) {
+.TimeGridTimeAxisText:not(:empty) {
   font-size: var(--font-size-1);
   line-height: calc(100% / 24);
   color: var(--text-soft);
   white-space: nowrap;
 }
 
-.TimeGridViewTimeAxisCell:not(:first-child)::after {
+.TimeGridTimeAxisCell:not(:first-child)::after {
   content: '';
   position: absolute;
   left: var(--fixed-cell-width);
@@ -166,7 +166,7 @@
   z-index: 1;
 }
 
-.TimeGridViewGrid {
+.TimeGridGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   width: 100%;
@@ -176,19 +176,19 @@
   }
 }
 
-.TimeGridViewColumn {
+.TimeGridColumn {
   display: flex;
   flex-direction: column;
   position: relative;
   flex: 1;
 }
 
-.TimeGridViewColumn[data-weekend],
-.TimeGridViewAllDayEventsCell[data-weekend] {
+.TimeGridColumn[data-weekend],
+.TimeGridAllDayEventsCell[data-weekend] {
   background: var(--weekend-background);
 }
 
-.TimeGridViewEvent {
+.TimeGridEvent {
   position: absolute;
   left: 2px;
   right: 2px;

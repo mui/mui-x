@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { WeekViewProps } from './WeekView.types';
-import { TimeGridView } from '../time-grid-view/TimeGridView';
+import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
 
 const adapter = getAdapter();
 
@@ -30,7 +30,7 @@ export const WeekView = React.forwardRef(function WeekView(
   );
 
   return (
-    <TimeGridView
+    <TimeGrid
       ref={forwardedRef}
       days={currentWeekDays}
       events={filteredEvents}

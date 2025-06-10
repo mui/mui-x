@@ -2,18 +2,18 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { TimeGrid } from '../../primitives/time-grid';
-import { TimeGridViewProps } from './TimeGridView.types';
-import { CalendarEvent } from '../models/events';
-import { isWeekend } from '../utils/date-utils';
-import { useTranslations } from '../utils/TranslationsContext';
-import './TimeGridView.css';
+import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
+import { TimeGridProps } from './TimeGrid.types';
+import { CalendarEvent } from '../../../models/events';
+import { isWeekend } from '../../../utils/date-utils';
+import { useTranslations } from '../../../utils/TranslationsContext';
+import './TimeGrid.css';
 
 const adapter = getAdapter();
 
-export const TimeGridView = React.forwardRef(function TimeGridView(
-  props: TimeGridViewProps,
+export const TimeGrid = React.forwardRef(function TimeGrid(
+  props: TimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { events, days, className, onDayHeaderClick, ...other } = props;
@@ -65,30 +65,30 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
   );
 
   const renderHeaderContent = (day: SchedulerValidDate) => (
-    <span className="TimeGridViewHeaderContent">
+    <span className="TimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
-      <span className="TimeGridViewHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
-      <span className="TimeGridViewHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
+      <span className="TimeGridHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
+      <span className="TimeGridHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
     </span>
   );
 
   return (
-    <div ref={forwardedRef} className={clsx('TimeGridViewContainer', 'joy', className)} {...other}>
-      <TimeGrid.Root className="TimeGridViewRoot">
-        <div ref={headerWrapperRef} className="TimeGridViewHeader">
-          <div className="TimeGridViewGridRow TimeGridViewHeaderRow" role="row">
-            <div className="TimeGridViewAllDayEventsCell" />
+    <div ref={forwardedRef} className={clsx('TimeGridContainer', 'joy', className)} {...other}>
+      <TimeGridPrimitive.Root className="TimeGridRoot">
+        <div ref={headerWrapperRef} className="TimeGridHeader">
+          <div className="TimeGridGridRow TimeGridHeaderRow" role="row">
+            <div className="TimeGridAllDayEventsCell" />
             {days.map((day) => (
               <div
                 key={day.day.toString()}
-                id={`TimeGridViewHeaderCell-${day.day.toString()}`}
+                id={`TimeGridHeaderCell-${day.day.toString()}`}
                 role="columnheader"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
               >
                 {onDayHeaderClick ? (
                   <button
                     type="button"
-                    className="TimeGridViewHeaderButton"
+                    className="TimeGridHeaderButton"
                     onClick={handleHeaderClick}
                     onKeyDown={handleHeaderKeyDown}
                     tabIndex={0}
@@ -102,12 +102,12 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
             ))}
           </div>
           <div
-            className={clsx('TimeGridViewGridRow', 'TimeGridViewAllDayEventsRow')}
+            className={clsx('TimeGridGridRow', 'TimeGridAllDayEventsRow')}
             role="row"
             data-weekend={lastIsWeekend ? '' : undefined}
           >
             <div
-              className="TimeGridViewAllDayEventsCell TimeGridViewAllDayEventsHeaderCell"
+              className="TimeGridAllDayEventsCell TimeGridAllDayEventsHeaderCell"
               role="columnheader"
             >
               {translations.allDay}
@@ -115,24 +115,24 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
             {days.map((day) => (
               <div
                 key={day.day.toString()}
-                className="TimeGridViewAllDayEventsCell"
-                aria-labelledby={`TimeGridViewHeaderCell-${day.day.toString()}`}
+                className="TimeGridAllDayEventsCell"
+                aria-labelledby={`TimeGridHeaderCell-${day.day.toString()}`}
                 role="gridcell"
                 data-weekend={isWeekend(adapter, day) ? '' : undefined}
               />
             ))}
           </div>
         </div>
-        <div ref={bodyRef} className="TimeGridViewBody">
-          <div className="TimeGridViewScrollableContent">
-            <div className="TimeGridViewTimeAxis" aria-hidden="true">
+        <div ref={bodyRef} className="TimeGridBody">
+          <div className="TimeGridScrollableContent">
+            <div className="TimeGridTimeAxis" aria-hidden="true">
               {Array.from({ length: 24 }, (_, hour) => (
                 <div
                   key={hour}
-                  className="TimeGridViewTimeAxisCell"
+                  className="TimeGridTimeAxisCell"
                   style={{ '--hour': hour } as React.CSSProperties}
                 >
-                  <time className="TimeGridViewTimeAxisText">
+                  <time className="TimeGridTimeAxisText">
                     {hour === 0
                       ? null
                       : adapter.formatByString(adapter.setHours(today, hour), 'h:mm a')}
@@ -140,24 +140,24 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
                 </div>
               ))}
             </div>
-            <div className="TimeGridViewGrid">
+            <div className="TimeGridGrid">
               {days.map((day) => {
                 const dayKey = adapter.format(day, 'keyboardDate');
                 const dayEvents = eventsByDay.get(dayKey) || [];
                 return (
-                  <TimeGrid.Column
+                  <TimeGridPrimitive.Column
                     key={day.day.toString()}
                     value={day}
-                    className="TimeGridViewColumn"
+                    className="TimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
                     {dayEvents.map((event: CalendarEvent) => (
-                      <TimeGrid.Event
+                      <TimeGridPrimitive.Event
                         key={event.id}
                         start={event.start}
                         end={event.end}
-                        className="TimeGridViewEvent"
-                        aria-labelledby={`TimeGridViewHeaderCell-${day.day.toString()}`}
+                        className="TimeGridEvent"
+                        aria-labelledby={`TimeGridHeaderCell-${day.day.toString()}`}
                       >
                         <time>
                           {adapter.formatByString(event.start, 'h:mma')} -{' '}
@@ -165,15 +165,15 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
                         </time>
                         <br />
                         <span>{event.title}</span>
-                      </TimeGrid.Event>
+                      </TimeGridPrimitive.Event>
                     ))}
-                  </TimeGrid.Column>
+                  </TimeGridPrimitive.Column>
                 );
               })}
             </div>
           </div>
         </div>
-      </TimeGrid.Root>
+      </TimeGridPrimitive.Root>
     </div>
   );
 });
