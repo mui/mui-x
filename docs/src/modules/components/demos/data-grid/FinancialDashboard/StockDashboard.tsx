@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Box, Typography, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { DataGridPro, GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
-import { LineChart } from '@mui/x-charts';
+import {
+  DataGridPro,
+  GridColDef,
+  GridColumnVisibilityModel,
+  GridRenderCellParams,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
+import { LineChart, SparkLineChart } from '@mui/x-charts';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import { format } from 'date-fns';
 import type { StockData } from './types/stocks';
 import { useStocksMockServer } from './hooks/useMockStockServer';
@@ -11,37 +19,36 @@ import { DemoThemeProvider } from '../DemoThemeProvider';
 import { stockDashboardTheme } from './theme';
 
 function StockDashboard() {
-  const [stocks, setStocks] = useState<StockData[]>([]);
-  const [selectedStockId, setSelectedStockId] = useState<number | null>(null);
+  const apiRef = useGridApiRef();
+  const [stocks, setStocks] = React.useState<StockData[]>([]);
+  const [selectedStockId, setSelectedStockId] = React.useState<number | null>(null);
   const selectedStock = stocks.find((stock) => stock.id === selectedStockId);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const { fetchRows, isReady } = useStocksMockServer();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetchRows('?page=0&pageSize=25');
-        if (!response.rows || response.rows.length === 0) {
-          setError('No data available');
-          setLoading(false);
-          return;
-        }
-
-        setStocks(response.rows as StockData[]);
-        setLoading(false);
-      } catch (error) {
-        setError('Failed to load data');
-        setLoading(false);
-      }
+  const getColumnVisibility = React.useCallback(() => {
+    return {
+      symbol: true,
+      name: isSmallScreen ? false : true,
+      trend: isSmallScreen ? false : true,
+      price: true,
+      change: true,
+      changePercent: true,
+      volume: true,
     };
-    if (isReady) {
-      loadData();
-    }
-  }, [isReady, fetchRows]);
+  }, [isSmallScreen]);
 
-  useEffect(() => {
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+    React.useState<GridColumnVisibilityModel>(getColumnVisibility());
+
+  React.useEffect(() => {
+    setColumnVisibilityModel(getColumnVisibility());
+  }, [isSmallScreen, getColumnVisibility]);
+
+  React.useEffect(() => {
     if (!isReady) return;
 
     const interval = setInterval(async () => {
@@ -49,14 +56,16 @@ function StockDashboard() {
         const response = await fetchRows('?page=0&pageSize=25');
         if (response.rows && response.rows.length > 0) {
           setStocks(response.rows as StockData[]);
+          apiRef.current?.updateRows(response.rows as StockData[]);
+          setLoading(false);
         }
       } catch (error) {
         setError('Failed to update stock data');
       }
-    }, 500);
+    }, 250);
 
     return () => clearInterval(interval);
-  }, [isReady, fetchRows]);
+  }, [isReady, fetchRows, apiRef]);
 
   const columns: GridColDef[] = React.useMemo(
     () => [
@@ -100,64 +109,20 @@ function StockDashboard() {
         maxWidth: 200,
         renderCell: (params: GridRenderCellParams<StockData>) => {
           const history = params.row.history;
-          const prediction = params.row.prediction || [];
-
           const historicalData = history.map((h: { price: number }) => h.price);
-          const predictionData = prediction.map((p: { price: number }) => p.price);
-
           const firstPrice = historicalData[0];
           const lastPrice = historicalData[historicalData.length - 1];
           const isTrendUp = lastPrice > firstPrice;
-
           const color = isTrendUp ? '#2e7d32' : '#d32f2f';
-          const predictionColor = isTrendUp ? '#ACDEC8' : '#FDBDBE'; // jade and ruby
-
           return (
             <Box sx={{ width: '100%', height: 40 }}>
-              <LineChart
-                series={[
-                  {
-                    type: 'line',
-                    data: historicalData,
-                    color: color,
-                    area: false,
-                    showMark: false,
-                  },
-                  {
-                    type: 'line',
-                    data: predictionData,
-                    color: predictionColor,
-                    area: false,
-                    showMark: false,
-                  },
-                ]}
-                height={60}
-                hideLegend={true}
-                margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                xAxis={[
-                  {
-                    scaleType: 'linear',
-                    data: Array.from(
-                      { length: Math.max(historicalData.length, predictionData.length) },
-                      (_, i) => i,
-                    ),
-                    disableTicks: true,
-                    disableLine: true,
-                    tickSize: 0,
-                    tickLabelStyle: { display: 'none' },
-                  },
-                ]}
-                yAxis={[
-                  {
-                    min: Math.min(...historicalData, ...predictionData) * 0.99,
-                    max: Math.max(...historicalData, ...predictionData) * 1.01,
-                    disableTicks: true,
-                    disableLine: true,
-                    tickSize: 0,
-                    tickLabelStyle: { display: 'none' },
-                  },
-                ]}
-                skipAnimation
+              <SparkLineChart
+                data={historicalData}
+                curve="natural"
+                showTooltip
+                showHighlight
+                height={40}
+                color={color}
               />
             </Box>
           );
@@ -252,38 +217,14 @@ function StockDashboard() {
 
         <Box sx={{ flex: 1, minHeight: 300 }}>
           <DataGridPro
-            rows={stocks}
+            apiRef={apiRef}
             columns={columns}
             loading={loading}
-            onRowClick={(params) => setSelectedStockId(params.row.id)}
             label="Stock Market"
+            onRowClick={(params) => setSelectedStockId(params.row.id)}
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={setColumnVisibilityModel}
             showToolbar
-            sx={{
-              '& .MuiDataGrid-cell': {
-                display: 'flex',
-                alignItems: 'center',
-                outline: 'none',
-                fontSize: '0.875rem',
-              },
-              '& .MuiDataGrid-cell:focus': {
-                outline: 'none',
-              },
-              '& .MuiDataGrid-columnHeader:focus': {
-                outline: 'none',
-              },
-              '& [data-field="name"]': {
-                display: { xs: 'none', sm: 'flex' },
-              },
-              '& [data-field="name"] .MuiDataGrid-columnHeader': {
-                display: { xs: 'none', sm: 'flex' },
-              },
-              '& [data-field="trend"]': {
-                display: { xs: 'none', sm: 'flex' },
-              },
-              '& [data-field="trend"] .MuiDataGrid-columnHeader': {
-                display: { xs: 'none', sm: 'flex' },
-              },
-            }}
           />
         </Box>
 
@@ -327,7 +268,11 @@ function StockDashboard() {
                   {
                     type: 'line',
                     data: selectedStock.history.map((h: { price: number }) => h.price),
-                    color: selectedStock.change >= 0 ? '#2e7d32' : '#d32f2f',
+                    color:
+                      selectedStock.history[selectedStock.history.length - 1].price >
+                      selectedStock.history[0].price
+                        ? '#2e7d32'
+                        : '#d32f2f',
                   },
                 ]}
                 xAxis={[

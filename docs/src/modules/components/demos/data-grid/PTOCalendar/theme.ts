@@ -222,10 +222,7 @@ export const ptoCalendarTheme = createTheme({
               backgroundColor: '#1e2933',
             }),
           },
-          '&:focus': {
-            outline: 'none',
-          },
-          '&:focus-within': {
+          '&:focus, &:focus-within': {
             outline: 'none',
           },
         }),
@@ -248,10 +245,7 @@ export const ptoCalendarTheme = createTheme({
           display: 'none',
         },
         columnHeader: {
-          '&:focus': {
-            outline: 'none',
-          },
-          '&:focus-within': {
+          '&:focus, &:focus-within': {
             outline: 'none',
           },
         },

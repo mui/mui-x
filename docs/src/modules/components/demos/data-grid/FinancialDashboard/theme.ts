@@ -22,6 +22,14 @@ export const stockDashboardTheme = createTheme({
   components: {
     MuiDataGrid: {
       styleOverrides: {
+        cell: {
+          display: 'flex',
+          alignItems: 'center',
+          fontSize: '0.875rem',
+          '&:focus, &:focus-within': {
+            outline: 'none',
+          },
+        },
         toolbar: ({ theme }) => ({
           backgroundColor: grey[50],
           ...theme.applyStyles('dark', {
