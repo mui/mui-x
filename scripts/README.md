@@ -8,7 +8,7 @@
 > Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
 > Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
 
-> Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
+> Tip: You can copy [raw markdown checklist below](#release-pr-checklist) to the release Pull Request and follow it step by step marking completed items.
 
 A typical release goes like this:
 
@@ -109,3 +109,35 @@ You can use the following script in your browser console on any GitHub page to a
 ### release:publish failed
 
 If you receive an error message like `There are no new packages that should be published`. Ensure you are publishing to the correct registry, not `verdaccio` or anything else. If you need to reset your configuration, you can run `npm config delete registry`.
+
+
+### Release PR checklist
+
+```markdown
+### Prepare the release of the packages
+
+The following steps must be proposed as a pull request.
+
+- [ ] Create changelog entry with `pnpm release:changelog`
+- [ ] Tidy up the generated changelog entry and add it to `./CHANGELOG.md`
+- [ ] Update the root `./package.json`'s version
+- [ ] Update the versions of the other `package.json` files with `pnpm release:version`
+- [ ] Open PR with changes and wait for review and green CI
+- [ ] Once CI is green and you have enough approvals, send a message on the `team-x` slack channel announcing a merge freeze.
+- [ ] Merge PR.
+
+### Release the packages
+
+- [ ] Checkout the last version of the working branch
+- [ ] `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages)
+- [ ] `pnpm release:publish` (release the versions on npm, you need your 2FA device)
+- [ ] `pnpm release:tag` (push the newly created tag)
+
+### Publish the documentation
+
+- [ ] Run `pnpm docs:deploy`
+
+### Publish GitHub release
+
+- [ ] After documentation is deployed, publish a new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
+```
