@@ -15,7 +15,7 @@ export interface UseChartProExportState {
 /**
  * The options to apply on the Print export.
  * @demos
- *   - [Print export](/x/react-charts/export/#print-export-as-pdf)
+ *   - [Print export](https://mui.com/x/react-charts/export/#print-export-as-pdf)
  */
 export interface ChartPrintExportOptions {
   /**
@@ -28,7 +28,7 @@ export interface ChartPrintExportOptions {
 /**
  * The options to apply on the image export.
  * @demos
- *   - [Image export](/x/react-charts/export/#export-as-image)
+ *   - [Image export](https://mui.com/x/react-charts/export/#export-as-image)
  */
 export interface ChartImageExportOptions {
   /**

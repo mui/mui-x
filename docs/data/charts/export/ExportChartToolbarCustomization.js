@@ -9,7 +9,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
-import { inflationData } from './inflationData';
 import {
   continents,
   populationGdpPerCapitaData,
@@ -117,7 +116,6 @@ export default function ExportChartToolbarCustomization() {
         xAxis={[
           {
             scaleType: 'log',
-            data: inflationData.map((p) => p.year),
             valueFormatter: (value) => populationFormatter.format(value),
             zoom: true,
             label: 'Population',
