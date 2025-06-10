@@ -62,7 +62,7 @@ export default function ExportChartToolbarCustomization() {
 
   return (
     <Stack width="100%">
-      <FormControl fullWidth>
+      <FormControl fullWidth sx={{ alignItems: 'center', mb: 1 }}>
         <FormLabel>Export Options</FormLabel>
         <FormGroup row>
           <FormControlLabel
