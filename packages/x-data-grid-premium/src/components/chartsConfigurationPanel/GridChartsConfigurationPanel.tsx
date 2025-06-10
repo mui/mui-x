@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
 import { GridChartTypeSelector } from './GridChartTypeSelector';
 import { GridChartsConfigurationPanelHeader } from './GridChartsConfigurationPanelHeader';
 import { GridChartsConfigurationPanelBody } from './GridChartsConfigurationPanelBody';
@@ -64,7 +65,7 @@ const TabPanel = styled('div', {
 }));
 
 export interface GridChartsConfigurationPanelProps {
-  schema?: Record<string, any>;
+  schema?: GridChartsConfigurationOptions;
 }
 
 function GridChartsConfigurationPanel() {
