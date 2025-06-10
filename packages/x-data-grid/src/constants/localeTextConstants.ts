@@ -1,8 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridInternationalization } from '../utils/getGridInternationalization';
 
-const internationalization = {
-  numberFormat: new Intl.NumberFormat("en-US"),
-}
+const internationalization = getGridInternationalization('en-US');
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
@@ -302,5 +301,5 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
     `${column} (${aggregation})`,
 
   // Internationalization
-  intlNumberFormat: (number: number) => internationalization.numberFormat.format(number),
+  ...internationalization,
 };

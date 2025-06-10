@@ -1,5 +1,8 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
+import {getGridInternationalization} from '../utils/getGridInternationalization';
+
+const internationalization = getGridInternationalization('hr-HR');
 
 const hrHRGrid: Partial<GridLocaleText> = {
   // Root
@@ -311,6 +314,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+
+  // Internationalization
+  ...internationalization,
 };
 
 export const hrHR = getGridLocalization(hrHRGrid);

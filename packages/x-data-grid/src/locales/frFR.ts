@@ -1,9 +1,8 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import {getGridInternationalization} from '../utils/getGridInternationalization';
 
-const internationalization = {
-  numberFormat: new Intl.NumberFormat("fr-FR"),
-}
+const internationalization = getGridInternationalization('en-US');
 
 const frFRGrid: Partial<GridLocaleText> = {
   // Root
@@ -303,7 +302,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 
   // Internationalization
-  intlNumberFormat: (number: number) => internationalization.numberFormat.format(number),
+  ...internationalization,
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid);

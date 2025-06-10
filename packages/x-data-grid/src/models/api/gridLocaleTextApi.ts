@@ -269,6 +269,8 @@ export interface GridLocaleText {
 
   // Internationalization
   intlNumberFormat: (number: number) => string;
+  intlDateFormat: (date: Date) => string;
+  intlDateTimeFormat: (date: Date) => string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

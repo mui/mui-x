@@ -1,5 +1,8 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import {getGridInternationalization} from '../utils/getGridInternationalization';
+
+const internationalization = getGridInternationalization('ko-KR');
 
 const koKRGrid: Partial<GridLocaleText> = {
   // Root
@@ -292,6 +295,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `(${count}) 개의 값`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+
+  // Internationalization
+  ...internationalization,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

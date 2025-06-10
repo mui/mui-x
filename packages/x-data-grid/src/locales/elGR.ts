@@ -1,5 +1,8 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import {getGridInternationalization} from '../utils/getGridInternationalization';
+
+const internationalization = getGridInternationalization('el-GR');
 
 const elGRGrid: Partial<GridLocaleText> = {
   // Root
@@ -298,6 +301,9 @@ const elGRGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+
+  // Internationalization
+  ...internationalization,
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid);
