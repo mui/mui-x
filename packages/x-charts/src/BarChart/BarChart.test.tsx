@@ -9,19 +9,6 @@ import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
 describe('<BarChart />', () => {
   const { render } = createRenderer();
 
-  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-  beforeEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
   describeConformance(
     <BarChart height={100} width={100} series={[{ data: [100, 200] }]} />,
     () => ({

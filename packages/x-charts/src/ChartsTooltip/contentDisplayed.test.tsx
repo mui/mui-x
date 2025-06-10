@@ -45,21 +45,6 @@ describeSkipIf(isJSDOM)('ChartsTooltip', () => {
     <div style={{ width: 400, height: 400 }}>{children}</div>
   );
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  beforeEach(() => {
-    // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
   describe('axis trigger', () => {
     it('should show right values with vertical layout on axis', async () => {
       const { user } = render(
