@@ -56,7 +56,6 @@ type VirtualizerParams = {
   enabledForColumns: boolean;
   pinnedRows: PinnedRows;
   pinnedColumns: PinnedColumns;
-  isRowSelected: (id: any) => boolean; // FIXME: refactor away
   refs: {
     main: RefObject<HTMLElement | null>;
     scroller: RefObject<HTMLElement | null>;
@@ -70,8 +69,6 @@ type VirtualizerParams = {
   minimalContentHeight: number | string;
   columnsTotalWidth: number;
   needsHorizontalScrollbar: boolean;
-  verticalScrollbarWidth: number;
-  hasFiller: boolean;
   autoHeight: boolean;
 
   onResize?: (lastSize: Size) => void;
@@ -133,7 +130,6 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     enabledForColumns,
     pinnedRows,
     pinnedColumns,
-    isRowSelected,
     refs,
     hasColSpan,
 
@@ -142,8 +138,6 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     minimalContentHeight,
     columnsTotalWidth,
     needsHorizontalScrollbar,
-    verticalScrollbarWidth,
-    hasFiller,
     autoHeight,
 
     onResize,
