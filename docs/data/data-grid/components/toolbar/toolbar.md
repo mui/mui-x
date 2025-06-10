@@ -49,6 +49,12 @@ The demo below shows how to display an appearance settings menu on the toolbar. 
 
 {{"demo": "GridToolbarSettingsMenu.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Custom trigger and panel
+
+The demo below shows how to add a custom trigger and panel to the toolbar.
+
+{{"demo": "GridToolbarCustomPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Filter bar
 
 The demo below shows how to display active filter chips on the toolbar.
