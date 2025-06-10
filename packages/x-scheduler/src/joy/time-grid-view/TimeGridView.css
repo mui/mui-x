@@ -88,7 +88,11 @@
   padding: 10px;
 }
 
-.TimeGridViewHeaderCell:focus-visible {
+.HeaderCellClickable {
+  cursor: pointer;
+}
+
+.HeaderCellClickable:focus-visible {
   outline: var(--outline-focus);
   outline-offset: -2px;
   border-radius: var(--radius-3);

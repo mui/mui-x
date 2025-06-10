@@ -69,10 +69,12 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
             {days.map((day) => (
               <div
                 key={day.day.toString()}
-                onClick={handleHeaderClick}
-                onKeyDown={handleHeaderKeyDown}
-                tabIndex={0}
-                className="TimeGridViewHeaderCell"
+                onClick={onDayHeaderClick ? handleHeaderClick : undefined}
+                onKeyDown={onDayHeaderClick ? handleHeaderKeyDown : undefined}
+                tabIndex={onDayHeaderClick ? 0 : undefined}
+                className={clsx('TimeGridViewHeaderCell', {
+                  HeaderCellClickable: onDayHeaderClick,
+                })}
                 id={`TimeGridViewHeaderCell-${day.day.toString()}`}
                 role="columnheader"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}

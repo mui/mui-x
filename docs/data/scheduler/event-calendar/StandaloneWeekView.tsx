@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { CalendarEvent } from '@mui/x-scheduler/joy';
-import { WeekView } from '@mui/x-scheduler/joy/week-view';
+import { CalendarEvent, WeekView } from '@mui/x-scheduler/joy';
 import classes from './StandaloneWeekView.module.css';
 
 const events: CalendarEvent[] = [
