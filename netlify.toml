@@ -8,6 +8,7 @@
 [build.environment]
   NODE_VERSION = "22"
   PNPM_FLAGS = "--frozen-lockfile"
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 [[plugins]]
   package = "./packages/netlify-plugin-cache-docs"
