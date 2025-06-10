@@ -9,6 +9,7 @@
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@mui/material": "catalog:",
+    "@mui/stylis-plugin-rtl": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
@@ -37,7 +38,6 @@
     "react-router": "catalog:",
     "react-transition-group": "catalog:",
     "semver": "^7.7.2",
-    "stylis": "catalog:",
-    "stylis-plugin-rtl": "catalog:"
+    "stylis": "catalog:"
   }
 }
