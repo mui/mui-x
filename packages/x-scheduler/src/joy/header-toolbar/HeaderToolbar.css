@@ -21,8 +21,7 @@
   font-weight: var(--font-weight-1);
 }
 
-.HeaderToolbarButton {
-  border: 0;
+.joy .HeaderToolbarButton {
   background: var(--toolbar-base-bg);
   user-select: none;
   padding: var(--space-3) var(--space-4);
