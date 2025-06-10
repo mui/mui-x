@@ -112,11 +112,9 @@ export class Pyramid implements CurveGenerator {
                 y: this.max.y,
               };
         const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-        const xGap = point.x;
-
         return {
-          x: xGap,
-          y: yGetter(xGap),
+          x: point.x,
+          y: yGetter(point.x),
         };
       }
 
@@ -132,10 +130,9 @@ export class Pyramid implements CurveGenerator {
             }
           : this.min;
       const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-      const yGap = point.y;
       return {
-        x: xGetter(yGap),
-        y: yGap,
+        x: xGetter(point.y),
+        y: point.y,
       };
     });
 
