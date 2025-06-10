@@ -11,8 +11,5 @@ export interface BaseViewProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Callback fired when a day header is clicked in the view.
    */
-  onDayHeaderClick?: (
-    day: SchedulerValidDate,
-    event: React.MouseEvent | React.KeyboardEvent,
-  ) => void;
+  onDayHeaderClick?: (day: SchedulerValidDate, event: React.MouseEvent) => void;
 }
