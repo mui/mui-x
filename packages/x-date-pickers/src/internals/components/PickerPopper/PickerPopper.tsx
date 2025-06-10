@@ -67,7 +67,7 @@ export interface PickerPopperSlotProps {
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
-  popper?: SlotComponentPropsFromProps<PopperProps, {}, PickerPopperOwnerState>;
+  popper?: SlotComponentPropsFromProps<PopperProps, {}, PickerOwnerState>;
 }
 
 export interface ExportedPickerPopperProps {
@@ -100,7 +100,7 @@ const useUtilityClasses = (classes: Partial<PickerPopperClasses> | undefined) =>
 const PickerPopperRoot = styled(MuiPopper, {
   name: 'MuiPickerPopper',
   slot: 'Root',
-})(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
@@ -114,8 +114,7 @@ const PickerPopperPaper = styled(MuiPaper, {
   transformOrigin: 'top center',
   variants: [
     {
-      props: ({ popperPlacement }: PickerPopperOwnerState) =>
-        ['top', 'top-start', 'top-end'].includes(popperPlacement),
+      props: ({ popperPlacement }) => new Set(['top', 'top-start', 'top-end']).has(popperPlacement),
       style: {
         transformOrigin: 'bottom center',
       },
@@ -369,10 +368,6 @@ export function PickerPopper(inProps: PickerPopperProps) {
 
   const classes = useUtilityClasses(classesProp);
   const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
-  const ownerState: PickerPopperOwnerState = {
-    ...pickerOwnerState,
-    popperPlacement: placement,
-  };
 
   const handleClickAway = useEventCallback(() => {
     if (viewContainerRole === 'tooltip') {
@@ -424,8 +419,13 @@ export function PickerPopper(inProps: PickerPopperProps) {
       onKeyDown: handleKeyDown,
     },
     className: classes.root,
-    ownerState,
+    ownerState: pickerOwnerState,
   });
+
+  const ownerState: PickerPopperOwnerState = React.useMemo(
+    () => ({ ...pickerOwnerState, popperPlacement: popperProps.placement }),
+    [pickerOwnerState, popperProps.placement],
+  );
 
   return (
     <Popper {...popperProps}>

@@ -14,19 +14,6 @@ const config = {
 describe('PieChart - click event', () => {
   const { render } = createRenderer();
 
-  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-  beforeEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
   describe('onItemClick', () => {
     it('should add cursor="pointer" to arc elements', () => {
       const { container } = render(

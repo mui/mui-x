@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Custom field
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 components: PickersSectionList, PickersTextField
 ---

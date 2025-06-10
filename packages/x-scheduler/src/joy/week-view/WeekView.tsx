@@ -7,6 +7,7 @@ import { TimeGrid } from '../../primitives/time-grid';
 import { WeekViewProps } from './WeekView.types';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
+import { useTranslations } from '../utils/TranslationsContext';
 import './WeekView.css';
 
 function getCurrentWeekDays(today: SchedulerValidDate) {
@@ -21,6 +22,7 @@ export const WeekView = React.forwardRef(function WeekView(
   const { events, className, ...other } = props;
 
   const adapter = useAdapter();
+  const translations = useTranslations();
   const today = adapter.date('2025-05-26');
   const currentWeekDays = getCurrentWeekDays(today);
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -50,7 +52,7 @@ export const WeekView = React.forwardRef(function WeekView(
   }, [events]);
 
   return (
-    <div ref={forwardedRef} className={clsx('WeekViewContainer', className)} {...other}>
+    <div ref={forwardedRef} className={clsx('WeekViewContainer', 'joy', className)} {...other}>
       <TimeGrid.Root className="WeekViewRoot">
         <div ref={headerWrapperRef} className="WeekViewHeader">
           <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
@@ -74,8 +76,7 @@ export const WeekView = React.forwardRef(function WeekView(
               className="WeekViewAllDayEventsCell WeekViewAllDayEventsHeaderCell"
               role="columnheader"
             >
-              {/* // TODO: Add localization */}
-              All day
+              {translations.allDay}
             </div>
             {currentWeekDays.map((day) => (
               <div
