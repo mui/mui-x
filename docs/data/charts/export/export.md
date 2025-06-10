@@ -56,8 +56,8 @@ yarn add rasterizehtml
 
 The following export options are available:
 
-- [Print](/x/react-charts/export/#print-options)
-- [Export as image](/x/react-charts/export/#image-export-options)
+- [Print](/x/api/charts/chart-print-export-options/)
+- [Image export](/x/api/charts/chart-image-export-options/)
 
 Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
 
@@ -68,11 +68,6 @@ Where relevant, the options are automatically shown in the toolbar. You can cust
 // Custom trigger:
 <ChartsToolbarImageExportTrigger options={imageExportOptions} />
 ```
-
-Each export option has its own API page:
-
-- [Print options](/x/api/charts/chart-print-export-options/)
-- [Image export options](/x/api/charts/chart-image-export-options/)
 
 ### Customization
 
