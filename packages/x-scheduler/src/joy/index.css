@@ -15,7 +15,7 @@ body {
   font-family: var(--default-font-family);
 }
 
-button {
+.joy button {
   background: none;
   border: none;
   padding: 0;
