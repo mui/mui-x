@@ -27,7 +27,7 @@ export const createProxy = <T extends UserGesture>(target: T): T => {
       return async (...args: unknown[]) => {
         const mode = Reflect.get(obj, 'pointerManager').mode;
         // @ts-expect-error, constructor is a function...
-        return new obj.constructor(mode)[prop].bind(obj)(...args);
+        return new obj.constructor(mode)[prop](...args);
       };
     },
   });
