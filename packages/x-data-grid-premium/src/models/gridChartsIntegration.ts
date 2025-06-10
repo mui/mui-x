@@ -16,7 +16,7 @@ export interface GridChartsConfigurationSection {
       label: string;
       description?: string;
       type: string;
-      options?: string[];
+      options?: { label: string; value: string }[];
       default:
         | boolean
         | string
@@ -25,6 +25,9 @@ export interface GridChartsConfigurationSection {
         | ConfigurationCallback<boolean | string | number | null>;
       isDisabled?: ConfigurationCallback<boolean>;
       isHidden?: ConfigurationCallback<boolean>;
+      htmlAttributes?: {
+        [key: string]: string;
+      };
     };
   };
 }
