@@ -52,7 +52,7 @@
     "pkg-pr-new:install": "pnpm install --no-frozen-lockfile",
     "pkg-pr-new:build": "pnpm run release:build",
     "pkg-pr-new:packages": "tsx ./scripts/printPkgPrNewPublishDirs.mts",
-    "pkg-pr-new:release": "pnpm dlx pkg-pr-new publish $(pnpm -s pkg-pr-new:packages) --pnpm --packageManager=\"pnpm\" --template './examples/*' --comment=off --peerDeps",
+    "pkg-pr-new:release": "pnpm dlx pkg-pr-new publish $(pnpm -s pkg-pr-new:packages) --pnpm --packageManager=pnpm --template './examples/*' --comment=off --peerDeps",
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
     "release:build": "lerna run --scope '@mui/*' build",
