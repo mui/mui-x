@@ -46,7 +46,7 @@
 
 .ViewSwitcherRadioItem {
   z-index: 3;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
   padding: var(--space-2) var(--space-3);
   font-size: inherit;
