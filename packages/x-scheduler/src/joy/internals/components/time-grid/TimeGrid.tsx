@@ -48,10 +48,10 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
   const handleHeaderClick = React.useCallback(
-    (event: React.MouseEvent) => {
-      onDayHeaderClick?.(today, event);
+    (day: SchedulerValidDate) => (event: React.MouseEvent) => {
+      onDayHeaderClick?.(day, event);
     },
-    [onDayHeaderClick, today],
+    [onDayHeaderClick],
   );
 
   const renderHeaderContent = (day: SchedulerValidDate) => (
@@ -79,7 +79,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                   <button
                     type="button"
                     className="TimeGridHeaderButton"
-                    onClick={handleHeaderClick}
+                    onClick={handleHeaderClick(day)}
                     tabIndex={0}
                   >
                     {renderHeaderContent(day)}

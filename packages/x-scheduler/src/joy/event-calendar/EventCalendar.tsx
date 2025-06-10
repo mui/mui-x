@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
 import { EventCalendarProps } from './EventCalendar.types';
 import { ViewType } from '../models/views';
 import { WeekView } from '../week-view/WeekView';
@@ -9,6 +10,9 @@ import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../utils/TranslationsContext';
 import '../index.css';
 import './EventCalendar.css';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+
+const adapter = getAdapter();
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -17,11 +21,15 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const { events, onEventsChange, translations, className, ...other } = props;
 
   const [view, setView] = React.useState<ViewType>('week');
+  const [selectedDay, setSelectedDay] = React.useState<SchedulerValidDate>(adapter.date());
 
-  const handleDayHeaderClick = React.useCallback(() => {
-    // TODO: Update the visible date once https://github.com/mui/mui-x/issues/17698 is implemented
-    setView('day');
-  }, [setView]);
+  const handleDayHeaderClick = React.useCallback(
+    (day: SchedulerValidDate) => {
+      setSelectedDay(day);
+      setView('day');
+    },
+    [setSelectedDay, setView],
+  );
 
   let content: React.ReactNode;
   switch (view) {
@@ -29,7 +37,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       content = <WeekView events={events} onDayHeaderClick={handleDayHeaderClick} />;
       break;
     case 'day':
-      content = <DayView events={events} />;
+      content = <DayView events={events} day={selectedDay} />;
       break;
     case 'month':
       content = <div>TODO: Month view</div>;

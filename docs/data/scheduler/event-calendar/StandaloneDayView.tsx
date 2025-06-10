@@ -19,5 +19,11 @@ const events: CalendarEvent[] = [
 ];
 
 export default function StandaloneDayView() {
-  return <DayView events={events} className={classes.Container} />;
+  return (
+    <DayView
+      events={events}
+      className={classes.Container}
+      day={DateTime.fromISO('2025-05-26')}
+    />
+  );
 }

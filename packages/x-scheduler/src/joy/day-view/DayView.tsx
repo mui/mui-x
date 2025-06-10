@@ -10,9 +10,7 @@ export const DayView = React.forwardRef(function DayView(
   props: DayViewProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, className, ...other } = props;
-
-  const day = adapter.date('2025-05-26');
+  const { events, day, className, ...other } = props;
 
   const dayStart = adapter.startOfDay(day);
   const dayEnd = adapter.endOfDay(day);
