@@ -4,6 +4,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { configurationOptions } from './configuration';
+import { getColorPallete } from './colors';
 
 export interface ChartsRendererProps {
   categories: { id: string; label: string; data: (string | number | null)[] }[];
@@ -13,10 +14,11 @@ export interface ChartsRendererProps {
 }
 
 function ChartsRenderer({ categories, series, chartType, configuration }: ChartsRendererProps) {
+  // TODO: support multiple categories
   const categoryData = categories[0]?.data || [];
   const sections = (configurationOptions as any)[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
-    sections.flatMap((section) =>
+    sections.flatMap((section: any) =>
       Object.entries(section.controls).map(([key, value]) => [key, (value as any).default]),
     ),
   );
@@ -31,10 +33,21 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
 
   if (chartType === 'bar') {
     const axis = chartConfiguration.layout === 'vertical' ? 'xAxis' : 'yAxis';
-    const axisProp = { [axis]: [{ data: categoryData }] };
+    const axisProp = {
+      [axis]: [
+        {
+          data: categoryData,
+          categoryGapRatio: chartConfiguration.categoryGapRatio,
+          barGapRatio: chartConfiguration.barGapRatio,
+          tickPlacement: chartConfiguration.tickPlacement,
+          tickLabelPlacement: chartConfiguration.tickLabelPlacement,
+        },
+      ],
+    };
     const seriesProp = chartConfiguration.stacked
       ? series.map((ser) => ({ ...ser, stack: 'stack' }))
       : series;
+
     return (
       <BarChart
         {...axisProp}
@@ -42,6 +55,14 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
         hideLegend={chartConfiguration.hideLegend}
         height={chartConfiguration.height}
         layout={chartConfiguration.layout}
+        borderRadius={chartConfiguration.borderRadius}
+        colors={getColorPallete(chartConfiguration.colors)}
+        grid={{
+          vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
+          horizontal:
+            chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
+        }}
+        skipAnimation={chartConfiguration.skipAnimation}
       />
     );
   }
@@ -53,6 +74,7 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
         yAxis={[{ min: 0 }]}
         series={series}
         {...chartConfiguration}
+        colors={getColorPallete(chartConfiguration.colors)}
       />
     );
   }
@@ -80,6 +102,7 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
           },
         }}
         {...chartConfiguration}
+        colors={getColorPallete(chartConfiguration.colors)}
       />
     );
   }

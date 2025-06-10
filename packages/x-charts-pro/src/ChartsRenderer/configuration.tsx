@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createSvgIcon } from '@mui/material/utils';
+import { GridChartsConfigurationOptions } from './types';
 
 export const GridBarChartIcon = createSvgIcon(
   <g>
@@ -20,29 +21,118 @@ export const GridPieChartIcon = createSvgIcon(
   'PieChart',
 );
 
-export const configurationOptions = {
+const colorOptions = {
+  label: 'Color palette',
+  type: 'select',
+  default: 'default',
+  options: [
+    { label: 'Default', value: 'default' },
+    { label: 'Blueberry Twilight', value: 'blueberryTwilightPalette' },
+    { label: 'Mango Fusion', value: 'mangoFusionPalette' },
+    { label: 'Cheerful Fiesta', value: 'cheerfulFiestaPalette' },
+    { label: 'Strawberry Sky', value: 'strawberrySkyPalette' },
+    { label: 'Rainbow Surge', value: 'rainbowSurgePalette' },
+    { label: 'Blue', value: 'bluePalette' },
+    { label: 'Green', value: 'greenPalette' },
+    { label: 'Purple', value: 'purplePalette' },
+    { label: 'Red', value: 'redPalette' },
+    { label: 'Orange', value: 'orangePalette' },
+    { label: 'Yellow', value: 'yellowPalette' },
+    { label: 'Cyan', value: 'cyanPalette' },
+    { label: 'Pink', value: 'pinkPalette' },
+  ],
+};
+
+export const configurationOptions: GridChartsConfigurationOptions = {
   bar: {
     label: 'Bar',
     icon: GridBarChartIcon,
     customization: [
       {
-        id: 'mainSection',
-        label: 'Main Section',
+        id: 'bars',
+        label: 'Bars',
         controls: {
-          height: { label: 'Height', type: 'number', default: 350 },
           layout: {
             label: 'Layout',
             type: 'select',
             default: 'vertical',
-            options: ['vertical', 'horizontal'],
+            options: [
+              { label: 'Vertical', value: 'vertical' },
+              { label: 'Horizontal', value: 'horizontal' },
+            ],
+          },
+          borderRadius: {
+            label: 'Border radius',
+            type: 'number',
+            default: 0,
+          },
+          colors: colorOptions,
+          categoryGapRatio: {
+            label: 'Category gap ratio',
+            type: 'number',
+            default: 0.2,
+            htmlAttributes: {
+              min: '0',
+              max: '1',
+              step: '0.1',
+            },
+          },
+          barGapRatio: {
+            label: 'Series gap ratio',
+            type: 'number',
+            default: 0.1,
+            htmlAttributes: {
+              min: '0',
+              max: '1',
+              step: '0.1',
+            },
           },
           stacked: {
             label: 'Stacked',
             type: 'boolean',
             default: false,
-            isDisabled: ({ series }) => series.length < 2,
+            isDisabled: ({ series }: { series: any[] }) => series.length < 2,
+          },
+        },
+      },
+      {
+        id: 'chart',
+        label: 'Chart',
+        controls: {
+          height: { label: 'Height', type: 'number', default: 350 },
+          grid: {
+            label: 'Grid',
+            type: 'select',
+            default: 'none',
+            options: [
+              { label: 'None', value: 'none' },
+              { label: 'Horizontal', value: 'horizontal' },
+              { label: 'Vertical', value: 'vertical' },
+              { label: 'Both', value: 'both' },
+            ],
+          },
+          tickPlacement: {
+            label: 'Tick placement',
+            type: 'select',
+            default: 'extremities',
+            options: [
+              { label: 'End', value: 'end' },
+              { label: 'Extremities', value: 'extremities' },
+              { label: 'Middle', value: 'middle' },
+              { label: 'Start', value: 'start' },
+            ],
+          },
+          tickLabelPlacement: {
+            label: 'Tick label placement',
+            type: 'select',
+            default: 'middle',
+            options: [
+              { label: 'Middle', value: 'middle' },
+              { label: 'Tick', value: 'tick' },
+            ],
           },
           hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
+          skipAnimation: { label: 'Skip Animation', type: 'boolean', default: false },
         },
       },
     ],
@@ -56,6 +146,7 @@ export const configurationOptions = {
         label: 'Main Section',
         controls: {
           height: { label: 'Height', type: 'number', default: 350 },
+          colors: colorOptions,
           hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
           skipAnimation: { label: 'Skip Animation', type: 'boolean', default: false },
         },
@@ -72,6 +163,7 @@ export const configurationOptions = {
         controls: {
           height: { label: 'Height', type: 'number', default: 350 },
           width: { label: 'Width', type: 'number', default: 350 },
+          colors: colorOptions,
           hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
           outerRadius: { label: 'Outer Radius', type: 'number', default: 120 },
         },
