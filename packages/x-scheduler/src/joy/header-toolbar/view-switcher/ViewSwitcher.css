@@ -27,8 +27,7 @@
   gap: var(--space-2);
 }
 
-.ViewSwitcherMainItem {
-  border: 0;
+.joy .ViewSwitcherMainItem {
   background: var(--toolbar-base-bg);
   user-select: none;
   display: flex;

@@ -17,7 +17,7 @@ body {
 
 .joy button {
   background: none;
-  border: none;
+  border: 0;
   color: inherit;
   font: inherit;
   outline: none;
