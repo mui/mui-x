@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  getRowGroupingFieldFromGroupingCriteria,
   GridChartsConfigurationPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
@@ -42,7 +41,7 @@ export default function GridChartsIntegrationRowGrouping() {
         configurationPanel: {
           open: true,
         },
-        categories: [getRowGroupingFieldFromGroupingCriteria(null)], // TODO: remove this and make the transformation in the integration hook
+        categories: ['commodity'],
         series: ['filledQuantity', 'feeRate'],
         chartType: 'bar',
       },
