@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: Date and Time Pickers - Customization playground
 packageName: '@mui/x-date-pickers'
 githubLabel: 'scope: pickers'
