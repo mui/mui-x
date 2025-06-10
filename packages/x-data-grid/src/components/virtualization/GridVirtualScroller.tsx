@@ -7,7 +7,6 @@ import {
   gridHasScrollXSelector,
   gridHasScrollYSelector,
 } from '../../hooks/features/dimensions/gridDimensionsSelectors';
-import { gridRenderContextSelector } from '../../hooks/features/virtualization/gridVirtualizationSelectors';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

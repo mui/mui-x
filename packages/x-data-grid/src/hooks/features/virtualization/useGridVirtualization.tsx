@@ -149,7 +149,6 @@ export function useGridVirtualization(
     enabledForColumns,
     pinnedRows,
     pinnedColumns,
-    isRowSelected,
     refs: {
       main: apiRef.current.mainElementRef,
       scroller: apiRef.current.virtualScrollerRef,
@@ -162,8 +161,6 @@ export function useGridVirtualization(
     minimalContentHeight,
     columnsTotalWidth,
     needsHorizontalScrollbar: needsHorizontalScrollbar && !listView,
-    verticalScrollbarWidth,
-    hasFiller,
     autoHeight,
 
     renderContext,
@@ -292,18 +289,6 @@ function needsHorizontalScrollbarSelector(apiRef: RefObject<GridApiCommunity>) {
     apiRef.current.state.dimensions.viewportOuterSize.width > 0 &&
     apiRef.current.state.dimensions.columnsTotalWidth >
       apiRef.current.state.dimensions.viewportOuterSize.width
-  );
-}
-
-function areRenderContextsEqual(context1: GridRenderContext, context2: GridRenderContext) {
-  if (context1 === context2) {
-    return true;
-  }
-  return (
-    context1.firstRowIndex === context2.firstRowIndex &&
-    context1.lastRowIndex === context2.lastRowIndex &&
-    context1.firstColumnIndex === context2.firstColumnIndex &&
-    context1.lastColumnIndex === context2.lastColumnIndex
   );
 }
 

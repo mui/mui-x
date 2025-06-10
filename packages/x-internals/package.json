@@ -52,6 +52,7 @@
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
     "@mui/system": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
