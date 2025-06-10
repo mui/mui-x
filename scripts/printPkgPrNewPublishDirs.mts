@@ -1,18 +1,20 @@
 const publishDirs = {
-  '@mui/x-license': './packages/x-license/build',
-  '@mui/x-telemetry': './packages/x-telemetry/build',
+  '@mui/x-charts': './packages/x-charts/build',
+  '@mui/x-charts-pro': './packages/x-charts-pro/build',
+  '@mui/x-charts-vendor': './packages/x-charts-vendor',
+  '@mui/x-codemod': './packages/x-codemod/build',
   '@mui/x-data-grid': './packages/x-data-grid/build',
-  '@mui/x-data-grid-pro': './packages/x-data-grid-pro/build',
-  '@mui/x-data-grid-premium': './packages/x-data-grid-premium/build',
   '@mui/x-data-grid-generator': './packages/x-data-grid-generator/build',
+  '@mui/x-data-grid-premium': './packages/x-data-grid-premium/build',
+  '@mui/x-data-grid-pro': './packages/x-data-grid-pro/build',
   '@mui/x-date-pickers': './packages/x-date-pickers/build',
   '@mui/x-date-pickers-pro': './packages/x-date-pickers-pro/build',
-  '@mui/x-charts': './packages/x-charts/build',
-  '@mui/x-charts-vendor': './packages/x-charts-vendor',
-  '@mui/x-charts-pro': './packages/x-charts-pro/build',
+  '@mui/x-internals': './packages/x-internals/build',
+  '@mui/x-license': './packages/x-license/build',
+  '@mui/x-scheduler': './packages/x-scheduler/build',
+  '@mui/x-telemetry': './packages/x-telemetry/build',
   '@mui/x-tree-view': './packages/x-tree-view/build',
   '@mui/x-tree-view-pro': './packages/x-tree-view-pro/build',
-  '@mui/x-internals': './packages/x-internals/build',
 };
 
 // console.log is supposedly adding a line break, which might not be something we want here.
