@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
 
 const config = {
   series: [{ data: [{ value: 200 }, { value: 100 }] }],
@@ -43,7 +44,7 @@ describe('FunnelChart', () => {
     expect(screen.getByText('No data to display')).toBeVisible();
   });
 
-  describe('gap', () => {
+  describeSkipIf(isJSDOM)('gap', () => {
     it('should properly distance sections based on gap', async () => {
       render(
         <div
