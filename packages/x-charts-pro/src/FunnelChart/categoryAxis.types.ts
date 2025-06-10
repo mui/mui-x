@@ -1,7 +1,7 @@
 import { AxisConfig, ScaleName } from '@mui/x-charts/models';
 import { MakeOptional } from '@mui/x-internals/types';
 
-export type FunnelScaleName = Exclude<ScaleName, 'log' | 'point'>;
+export type FunnelScaleName = Exclude<ScaleName, 'point'>;
 
 export type CategoryAxis<S extends FunnelScaleName = FunnelScaleName> = S extends FunnelScaleName
   ? {

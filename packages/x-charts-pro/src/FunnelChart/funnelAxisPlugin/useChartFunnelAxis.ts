@@ -41,11 +41,8 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   }
 
   const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const processedSeries = useSelector(store, selectorChartSeriesProcessed);
 
   const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
-  const { axis: xAxisWithScale, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxisWithScale, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -66,9 +63,6 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       },
     }));
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store, gap]);
-
-  const usedXAxis = xAxisIds[0];
-  const usedYAxis = yAxisIds[0];
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -116,17 +110,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       element.removeEventListener('pointercancel', handleOut);
       element.removeEventListener('pointerleave', handleOut);
     };
-  }, [
-    svgRef,
-    store,
-    xAxisWithScale,
-    usedXAxis,
-    yAxisWithScale,
-    usedYAxis,
-    instance,
-    params.disableAxisListener,
-    isInteractionEnabled,
-  ]);
+  }, [svgRef, instance, params.disableAxisListener, isInteractionEnabled]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -137,6 +121,13 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
 
     const handleMouseClick = (event: MouseEvent) => {
       event.preventDefault();
+
+      const { axis: xAxisWithScale, axisIds: xAxisIds } = selectorChartXAxis(store.value);
+      const { axis: yAxisWithScale, axisIds: yAxisIds } = selectorChartYAxis(store.value);
+      const processedSeries = selectorChartSeriesProcessed(store.value);
+
+      const usedXAxis = xAxisIds[0];
+      const usedYAxis = yAxisIds[0];
 
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
@@ -158,6 +149,20 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
 
       const seriesValues: Record<string, number | null | undefined> = {};
 
+      Object.keys(processedSeries).forEach((seriesType) => {
+        processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
+          const seriesItem = processedSeries[seriesType]!.series[seriesId];
+
+          const providedXAxisId = seriesItem.xAxisId;
+          const providedYAxisId = seriesItem.yAxisId;
+
+          const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
+          if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+            seriesValues[seriesId] = seriesItem.data[dataIndex].value;
+          }
+        });
+      });
+
       onAxisClick(event, { dataIndex, axisValue, seriesValues });
     };
 
@@ -165,17 +170,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     return () => {
       element.removeEventListener('click', handleMouseClick);
     };
-  }, [
-    params.onAxisClick,
-    processedSeries,
-    svgRef,
-    xAxisWithScale,
-    xAxisIds,
-    yAxisWithScale,
-    yAxisIds,
-    usedXAxis,
-    usedYAxis,
-  ]);
+  }, [params.onAxisClick, svgRef, store]);
 
   return {};
 };
