@@ -63,7 +63,7 @@ tapGesture.addEventListener('tap', (event) => console.log(event.detail));
 #### Tap Gesture Options
 
 | Option            | Type       | Required | Default    | Description                                                              |
-| ----------------- | ---------- | -------- | ---------- | ------------------------------------------------------------------------ |
+| :---------------- | :--------- | :------- | :--------- | :----------------------------------------------------------------------- |
 | `name`            | `string`   | ✓        | -          | Unique name for the gesture instance                                     |
 | `minPointers`     | `number`   |          | `1`        | Minimum number of pointers required                                      |
 | `maxPointers`     | `number`   |          | `Infinity` | Maximum number of pointers allowed                                       |
@@ -93,7 +93,7 @@ pressGesture.addEventListener('pressEnd', (event) => console.log(event.detail));
 #### Press Gesture Options
 
 | Option            | Type       | Required | Default | Description                                           |
-| ----------------- | ---------- | -------- | ------- | ----------------------------------------------------- |
+| :---------------- | :--------- | :------- | :------ | :---------------------------------------------------- |
 | `name`            | `string`   | ✓        | -       | Unique name for the gesture instance                  |
 | `minPointers`     | `number`   |          | `1`     | Minimum number of pointers required                   |
 | `maxPointers`     | `number`   |          | `1`     | Maximum number of pointers allowed                    |
@@ -123,7 +123,7 @@ moveGesture.addEventListener('moveEnd', (event) => console.log(event.detail));
 #### Move Gesture Options
 
 | Option            | Type       | Required | Default | Description                                           |
-| ----------------- | ---------- | -------- | ------- | ----------------------------------------------------- |
+| :---------------- | :--------- | :------- | :------ | :---------------------------------------------------- |
 | `name`            | `string`   | ✓        | -       | Unique name for the gesture instance                  |
 | `minPointers`     | `number`   |          | `1`     | Minimum number of pointers required                   |
 | `maxPointers`     | `number`   |          | `1`     | Maximum number of pointers allowed                    |
@@ -152,7 +152,7 @@ panGesture.addEventListener('panCancel', (event) => console.log(event.detail));
 #### Pan Gesture Options
 
 | Option            | Type       | Required | Default                           | Description                                           |
-| ----------------- | ---------- | -------- | --------------------------------- | ----------------------------------------------------- |
+| :---------------- | :--------- | :------- | :-------------------------------- | :---------------------------------------------------- |
 | `name`            | `string`   | ✓        | -                                 | Unique name for the gesture instance                  |
 | `minPointers`     | `number`   |          | `1`                               | Minimum number of pointers required                   |
 | `maxPointers`     | `number`   |          | `Infinity`                        | Maximum number of pointers allowed                    |
@@ -182,7 +182,7 @@ pinchGesture.addEventListener('pinchCancel', (event) => console.log(event.detail
 #### Pinch Gesture Options
 
 | Option            | Type       | Required | Default    | Description                                           |
-| ----------------- | ---------- | -------- | ---------- | ----------------------------------------------------- |
+| :---------------- | :--------- | :------- | :--------- | :---------------------------------------------------- |
 | `name`            | `string`   | ✓        | -          | Unique name for the gesture instance                  |
 | `minPointers`     | `number`   |          | `2`        | Minimum number of pointers required                   |
 | `maxPointers`     | `number`   |          | `Infinity` | Maximum number of pointers allowed                    |
@@ -211,7 +211,7 @@ rotateGesture.addEventListener('rotateCancel', (event) => console.log(event.deta
 #### Rotate Gesture Options
 
 | Option            | Type       | Required | Default    | Description                                           |
-| ----------------- | ---------- | -------- | ---------- | ----------------------------------------------------- |
+| :---------------- | :--------- | :------- | :--------- | :---------------------------------------------------- |
 | `name`            | `string`   | ✓        | -          | Unique name for the gesture instance                  |
 | `minPointers`     | `number`   |          | `2`        | Minimum number of pointers required                   |
 | `maxPointers`     | `number`   |          | `Infinity` | Maximum number of pointers allowed                    |
@@ -237,7 +237,7 @@ turnWheelGesture.addEventListener('turnWheel', (event) => console.log(event.deta
 #### Turn Wheel Gesture Options
 
 | Option            | Type       | Required | Default                   | Description                                    |
-| ----------------- | ---------- | -------- | ------------------------- | ---------------------------------------------- |
+| :---------------- | :--------- | :------- | :------------------------ | :--------------------------------------------- |
 | `name`            | `string`   | ✓        | -                         | Unique name for the gesture instance           |
 | `sensitivity`     | `number`   |          | `1`                       | Sensitivity multiplier for wheel events        |
 | `max`             | `number`   |          | `Number.MAX_SAFE_INTEGER` | Maximum value for accumulated deltas           |
