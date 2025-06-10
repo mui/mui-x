@@ -13,7 +13,7 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
 
   // Toolbar Export Menu
   // toolbarExportPrint: 'Print',
-  // toolbarExportImage: mimeType => `Export as ${imageMimeTypes[mimeType as keyof typeof imageMimeTypes] ?? mimeType}`,
+  // toolbarExportImage: mimeType => `Export as ${imageMimeTypes[mimeType] ?? mimeType}`,
 };
 
 export const frFR = getChartsLocalization(frFRLocalText);
