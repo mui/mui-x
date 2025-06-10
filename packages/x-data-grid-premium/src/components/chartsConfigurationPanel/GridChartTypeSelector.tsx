@@ -4,9 +4,10 @@ import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
+import { GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
 
 export interface GridChartTypeSelectorProps {
-  schema: Record<string, any>;
+  schema: GridChartsConfigurationOptions;
 }
 
 interface ChartTypeButtonProps {

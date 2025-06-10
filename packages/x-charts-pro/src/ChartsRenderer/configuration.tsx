@@ -24,35 +24,58 @@ export const configurationOptions = {
   bar: {
     label: 'Bar',
     icon: GridBarChartIcon,
-    customization: {
-      height: { label: 'Height', type: 'number', default: 350 },
-      layout: {
-        label: 'Layout',
-        type: 'select',
-        default: 'vertical',
-        options: ['vertical', 'horizontal'],
+    customization: [
+      {
+        id: 'mainSection',
+        label: 'Main Section',
+        controls: {
+          height: { label: 'Height', type: 'number', default: 350 },
+          layout: {
+            label: 'Layout',
+            type: 'select',
+            default: 'vertical',
+            options: ['vertical', 'horizontal'],
+          },
+          stacked: {
+            label: 'Stacked',
+            type: 'boolean',
+            default: false,
+            isDisabled: ({ series }) => series.length < 2,
+          },
+          hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
+        },
       },
-      stacked: { label: 'Stacked', type: 'boolean', default: false },
-      hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
-    },
+    ],
   },
   line: {
     label: 'Line',
     icon: GridLineChartIcon,
-    customization: {
-      height: { label: 'Height', type: 'number', default: 350 },
-      hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
-      skipAnimation: { label: 'Skip Animation', type: 'boolean', default: false },
-    },
+    customization: [
+      {
+        id: 'mainSection',
+        label: 'Main Section',
+        controls: {
+          height: { label: 'Height', type: 'number', default: 350 },
+          hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
+          skipAnimation: { label: 'Skip Animation', type: 'boolean', default: false },
+        },
+      },
+    ],
   },
   pie: {
     label: 'Pie',
     icon: GridPieChartIcon,
-    customization: {
-      height: { label: 'Height', type: 'number', default: 350 },
-      width: { label: 'Width', type: 'number', default: 350 },
-      hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
-      outerRadius: { label: 'Outer Radius', type: 'number', default: 120 },
-    },
+    customization: [
+      {
+        id: 'mainSection',
+        label: 'Main Section',
+        controls: {
+          height: { label: 'Height', type: 'number', default: 350 },
+          width: { label: 'Width', type: 'number', default: 350 },
+          hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
+          outerRadius: { label: 'Outer Radius', type: 'number', default: 120 },
+        },
+      },
+    ],
   },
 };

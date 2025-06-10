@@ -14,9 +14,11 @@ export interface ChartsRendererProps {
 
 function ChartsRenderer({ categories, series, chartType, configuration }: ChartsRendererProps) {
   const categoryData = categories[0]?.data || [];
-  const chartOptions = (configurationOptions as any)[chartType]?.customization || {};
+  const sections = (configurationOptions as any)[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
-    Object.entries(chartOptions).map(([key, value]) => [key, (value as any).default]),
+    sections.flatMap((section) =>
+      Object.entries(section.controls).map(([key, value]) => [key, (value as any).default]),
+    ),
   );
 
   // merge passed options with the defaults
