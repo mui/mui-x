@@ -39,6 +39,10 @@ const defaultAlias = {
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
   packages: resolveAliasPath('./packages'),
+
+  // This is a workaround for the use-sync-external-store package. Remove when we stop supporting React 17.
+  // More info: https://github.com/mui/mui-x/issues/18303#issuecomment-2958392341
+  'use-sync-external-store': 'use-sync-external-store/shim',
 };
 
 /** @type {babel.ConfigFunction} */
