@@ -20,7 +20,7 @@ Priority support is tailored for enterprise teams who rely on the MUI ecosystem 
 Priority support covers _all_ MUI products, including:
 
 - The entire MUI X suite: Data Grid, Date and Time Pickers, Tree View, and Charts
-- Material UI
+- Material UI
 - Base UI
 - MUI System
 - Pigment CSS
@@ -54,7 +54,7 @@ Community and Pro users must upgrade to a Premium license to purchase priority s
 
 ## How to use priority support
 
-MUI accept priority support requests through two main channels: the public repositories on GitHub (preferred), and our private support system on Zendesk.
+MUI accepts priority support requests through two main channels: the public repositories on GitHub (preferred), and our private support system on Zendesk.
 
 ### Public repositories
 
