@@ -11,7 +11,8 @@ const publishDirs = {
   '@mui/x-date-pickers-pro': 'packages/x-date-pickers-pro',
   '@mui/x-internals': 'packages/x-internals',
   '@mui/x-license': 'packages/x-license',
-  '@mui/x-scheduler': 'packages/x-scheduler',
+  // private packages can not be published
+  // '@mui/x-scheduler': 'packages/x-scheduler',
   '@mui/x-telemetry': 'packages/x-telemetry',
   '@mui/x-tree-view': 'packages/x-tree-view',
   '@mui/x-tree-view-pro': 'packages/x-tree-view-pro',
