@@ -1,3 +1,4 @@
+import { SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
 import { CalendarEvent } from './events';
 
 export type ViewType = 'week' | 'day' | 'month' | 'agenda';
@@ -10,5 +11,8 @@ export interface BaseViewProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Callback fired when a day header is clicked in the view.
    */
-  onDayHeaderClick?: () => void;
+  onDayHeaderClick?: (
+    day: SchedulerValidDate,
+    event: React.MouseEvent | React.KeyboardEvent,
+  ) => void;
 }

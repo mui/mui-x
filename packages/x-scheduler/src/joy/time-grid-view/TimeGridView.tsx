@@ -47,18 +47,21 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
-  const handleHeaderClick = React.useCallback(() => {
-    onDayHeaderClick?.();
-  }, [onDayHeaderClick]);
+  const handleHeaderClick = React.useCallback(
+    (event: React.MouseEvent) => {
+      onDayHeaderClick?.(today, event);
+    },
+    [onDayHeaderClick, today],
+  );
 
   const handleHeaderKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        onDayHeaderClick?.();
+        onDayHeaderClick?.(today, event);
       }
     },
-    [onDayHeaderClick],
+    [onDayHeaderClick, today],
   );
 
   const renderHeaderContent = (day: SchedulerValidDate) => (
