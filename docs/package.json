@@ -31,6 +31,7 @@
     "@mui/lab": "^7.0.0-beta.13",
     "@mui/material": "catalog:",
     "@mui/material-nextjs": "^7.1.1",
+    "@mui/stylis-plugin-rtl": "catalog:",
     "@mui/system": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-charts": "workspace:*",
@@ -94,7 +95,6 @@
     "rxjs": "^7.8.2",
     "styled-components": "^6.1.18",
     "stylis": "catalog:",
-    "stylis-plugin-rtl": "catalog:",
     "webpack-bundle-analyzer": "catalog:"
   },
   "devDependencies": {
