@@ -66,7 +66,7 @@ ChartsToolbarImageExportTrigger.propTypes = {
   /**
    * The options to apply on the image export.
    * @demos
-   *   - [Export as Image](/x/react-charts/export/#export-as-image)
+   *   - [Export as Image](https://mui.com/x/react-charts/export/#export-as-image)
    */
   options: PropTypes.shape({
     fileName: PropTypes.string,
