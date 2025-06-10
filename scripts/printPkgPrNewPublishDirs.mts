@@ -15,7 +15,5 @@ const publishDirs = {
   '@mui/x-internals': './packages/x-internals/build',
 };
 
-
-```suggestion
 // console.log is supposedly adding a line break, which might not be something we want here.
 process.stdout.write(Object.values(publishDirs).join(' '));
