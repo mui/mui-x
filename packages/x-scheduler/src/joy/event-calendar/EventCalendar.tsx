@@ -21,14 +21,14 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const { events, onEventsChange, translations, className, ...other } = props;
 
   const [view, setView] = React.useState<ViewType>('week');
-  const [selectedDay, setSelectedDay] = React.useState<SchedulerValidDate>(adapter.date());
+  const [visibleDate, setVisibleDate] = React.useState<SchedulerValidDate>(() => adapter.date());
 
   const handleDayHeaderClick = React.useCallback(
     (day: SchedulerValidDate) => {
-      setSelectedDay(day);
+      setVisibleDate(day);
       setView('day');
     },
-    [setSelectedDay, setView],
+    [setVisibleDate, setView],
   );
 
   let content: React.ReactNode;
@@ -37,7 +37,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       content = <WeekView events={events} onDayHeaderClick={handleDayHeaderClick} />;
       break;
     case 'day':
-      content = <DayView events={events} day={selectedDay} />;
+      content = <DayView events={events} day={visibleDate} />;
       break;
     case 'month':
       content = <div>TODO: Month view</div>;
