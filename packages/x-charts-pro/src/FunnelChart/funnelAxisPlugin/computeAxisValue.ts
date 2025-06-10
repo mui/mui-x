@@ -137,7 +137,7 @@ export function computeAxisValue({
         ...axis,
         data,
         scale: scaleBand(axis.data!, scaleRange)
-          .paddingInner(!gap ? 0 : (gap * axis.data!.length - 1) / rangeSpace)
+          .paddingInner((gap * (axis.data!.length - 1)) / rangeSpace)
           .paddingOuter(0),
         tickNumber: axis.data!.length,
         colorScale:
