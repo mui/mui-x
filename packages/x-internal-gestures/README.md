@@ -2,6 +2,14 @@
 
 A modern and robust multi-pointer gesture detection library for JavaScript and TypeScript applications. It is built on top of the Pointer Events API, and leverages the Event Target API to provide a flexible and extensible framework for detecting user gestures in across all modern browsers.
 
+## Entrypoints
+
+This library is structured into multiple entrypoints to allow for modular usage:
+
+- `@mui/x-internal-gestures/core`: The core gesture detection library
+- `@mui/x-internal-gestures/testing`: Utilities for simulating gestures in tests
+- `@mui/x-internal-gestures/matchers`: Vitest matchers for testing gestures
+
 ### [Core](./src/core/README.md)
 
 The core library for detecting and handling user gestures in web applications. It provides a flexible API for configuring and responding to various gesture interactions including tap, press, move, pan, pinch, rotate, and turn wheel.
