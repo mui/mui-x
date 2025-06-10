@@ -56,6 +56,7 @@
     "internmap": "^2.0.3",
     "rimraf": "catalog:"
   },
+  "private": false,
   "publishConfig": {
     "access": "public"
   },
