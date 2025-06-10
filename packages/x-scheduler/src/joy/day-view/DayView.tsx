@@ -17,8 +17,9 @@ export const DayView = React.forwardRef(function DayView(
   const dayStart = adapter.startOfDay(day);
   const dayEnd = adapter.endOfDay(day);
 
-  const filteredEvents = events.filter((event) =>
-    adapter.isWithinRange(event.start, [dayStart, dayEnd]),
+  const filteredEvents = React.useMemo(
+    () => events.filter((event) => adapter.isWithinRange(event.start, [dayStart, dayEnd])),
+    [events, dayStart, dayEnd],
   );
 
   return (
