@@ -16,4 +16,4 @@ const publishDirs = {
 };
 
 // eslint-disable-next-line no-console
-console.log(`'${Object.values(publishDirs).join("' '")}'`);
+console.log(Object.values(publishDirs).join(' '));
