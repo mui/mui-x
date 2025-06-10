@@ -219,7 +219,10 @@ export const hydrateColumnsWidth = (
     });
 
     Object.keys(computedColumnWidths).forEach((field) => {
-      columnsLookup[field].computedWidth = computedColumnWidths[field].computedWidth;
+      columnsLookup[field] = {
+        ...columnsLookup[field],
+        computedWidth: computedColumnWidths[field].computedWidth,
+      };
     });
   }
 

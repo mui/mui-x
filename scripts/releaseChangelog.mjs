@@ -50,17 +50,20 @@ function resolvePackagesByLabels(labels) {
   const resolvedPackages = [];
   labels.forEach((label) => {
     switch (label.name) {
-      case 'component: data grid':
+      case 'scope: data grid':
         resolvedPackages.push('DataGrid');
         break;
-      case 'component: pickers':
+      case 'scope: pickers':
         resolvedPackages.push('pickers');
         break;
-      case 'component: charts':
+      case 'scope: charts':
         resolvedPackages.push('charts');
         break;
-      case 'component: tree view':
+      case 'scope: tree view':
         resolvedPackages.push('TreeView');
+        break;
+      case 'scope: scheduler':
+        resolvedPackages.push('Scheduler');
         break;
       default:
         break;

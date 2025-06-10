@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 components: RichTreeView, TreeItem
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 packageName: '@mui/x-tree-view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'

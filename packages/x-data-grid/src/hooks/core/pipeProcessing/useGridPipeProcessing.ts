@@ -81,10 +81,8 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
       const oldProcessor = groupCache.processors.get(id);
       if (oldProcessor !== processor) {
         groupCache.processors.set(id, processor);
-        groupCache.processorsAsArray = Array.from(
-          cache.current[group]!.processors.values().filter(
-            (processorValue) => processorValue !== null,
-          ),
+        groupCache.processorsAsArray = Array.from(cache.current[group]!.processors.values()).filter(
+          (processorValue) => processorValue !== null,
         );
         runAppliers(groupCache);
       }
@@ -92,10 +90,8 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
       return () => {
         cache.current[group]!.processors.set(id, null);
         cache.current[group]!.processorsAsArray = Array.from(
-          cache.current[group]!.processors.values().filter(
-            (processorValue) => processorValue !== null,
-          ),
-        );
+          cache.current[group]!.processors.values(),
+        ).filter((processorValue) => processorValue !== null);
       };
     },
     [runAppliers],

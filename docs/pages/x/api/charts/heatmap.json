@@ -55,6 +55,7 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

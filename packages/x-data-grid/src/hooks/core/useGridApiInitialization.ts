@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { EventManager } from '@mui/x-internals/EventManager';
-import { Store } from '../../utils/Store';
+import { Store } from '@mui/x-internals/store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../../constants/signature';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';

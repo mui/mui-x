@@ -18,11 +18,19 @@ export default mergeConfig(sharedConfig, {
   test: {
     name: getTestName(import.meta.url),
     environment: 'browser',
+    setupFiles: [new URL('../../test/utils/setupPickers.js', import.meta.url).pathname],
     browser: {
       enabled: true,
       instances: [
         {
           browser: 'chromium',
+          ...(process.env.PLAYWRIGHT_SERVER_WS
+            ? {
+                connect: {
+                  wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
+                },
+              }
+            : {}),
         },
       ],
     },

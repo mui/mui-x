@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
-  GridFilterOperator,
   GridRowId,
   gridRowIdSelector,
   gridRowNodeSelector,
@@ -142,40 +141,6 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
 };
 
 /**
- * Skips the filtering for aggregated rows
- */
-const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
-  value: filterOperators,
-  apiRef,
-  getCellAggregationResult,
-}) =>
-  filterOperators!.map((operator) => {
-    const baseGetApplyFilterFn = operator.getApplyFilterFn;
-
-    const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] = (
-      filterItem,
-      colDef,
-    ) => {
-      const filterFn = baseGetApplyFilterFn(filterItem, colDef);
-      if (!filterFn) {
-        return null;
-      }
-      return (value, row, column, api) => {
-        const rowId = gridRowIdSelector(apiRef, row);
-        if (getCellAggregationResult(rowId, column.field) != null) {
-          return true;
-        }
-        return filterFn(value, row, column, api);
-      };
-    };
-
-    return {
-      ...operator,
-      getApplyFilterFn,
-    } as GridFilterOperator;
-  });
-
-/**
  * Add the aggregation method around the header name
  */
 const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
@@ -273,7 +238,6 @@ export const wrapColumnWithAggregationValue = (
   wrapColumnProperty('valueFormatter', getAggregationValueWrappedValueFormatter);
   wrapColumnProperty('renderCell', getAggregationValueWrappedRenderCell);
   wrapColumnProperty('renderHeader', getWrappedRenderHeader);
-  wrapColumnProperty('filterOperators', getWrappedFilterOperators);
 
   if (!didWrapSomeProperty) {
     return column;

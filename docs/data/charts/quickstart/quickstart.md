@@ -1,6 +1,6 @@
 ---
 productId: x-charts
-githubLabel: 'component: charts'
+githubLabel: 'scope: charts'
 packageName: '@mui/x-charts'
 ---
 

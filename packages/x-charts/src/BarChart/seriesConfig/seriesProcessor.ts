@@ -74,7 +74,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
                     ]);
                   }
                 }
-                return 0;
+                return null;
               }
               return value;
             })

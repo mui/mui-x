@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, TimeRangePicker, DesktopTimeRangePicker, MobileTimeRangePicker, DateTimeRangePicker, DesktopDateTimeRangePicker, MobileDateTimeRangePicker, DateCalendar
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 

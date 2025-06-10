@@ -7,10 +7,12 @@ import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsSlotsPro } from '../internals/material';
 
+export interface ChartsToolbarProProps extends ChartsToolbarProps {}
+
 /**
  * The chart toolbar component for the pro package.
  */
-export function ChartsToolbarPro(props: ChartsToolbarProps) {
+export function ChartsToolbarPro(props: ChartsToolbarProProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { store } = useChartContext();
   const { localeText } = useChartsLocalization();

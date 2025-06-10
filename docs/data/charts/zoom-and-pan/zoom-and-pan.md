@@ -78,6 +78,12 @@ You can configure the tooltip by setting the `zoom.slider.showTooltip` property 
 - `'hover'`: The tooltip is displayed on hover (default).
 - `false`: The tooltip is never displayed.
 
+#### Tooltip value formatting
+
+The value shown in the tooltip can also be customized by using the `valueFormatter` property of the respective axis.
+
+When formatting the zoom slider tooltip, the `valueFormatter` is called with `zoom-slider-tooltip` as its location.
+
 {{"demo": "ZoomSliderTooltip.js"}}
 
 ### Composition
