@@ -149,18 +149,16 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
 
       const seriesValues: Record<string, number | null | undefined> = {};
 
-      Object.keys(processedSeries).forEach((seriesType) => {
-        processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
-          const seriesItem = processedSeries[seriesType]!.series[seriesId];
+      processedSeries.funnel?.seriesOrder.forEach((seriesId) => {
+        const seriesItem = processedSeries.funnel!.series[seriesId];
 
-          const providedXAxisId = seriesItem.xAxisId;
-          const providedYAxisId = seriesItem.yAxisId;
+        const providedXAxisId = seriesItem.xAxisId;
+        const providedYAxisId = seriesItem.yAxisId;
 
-          const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
-          if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-            seriesValues[seriesId] = seriesItem.data[dataIndex].value;
-          }
-        });
+        const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
+        if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+          seriesValues[seriesId] = seriesItem.data[dataIndex].value;
+        }
       });
 
       onAxisClick(event, { dataIndex, axisValue, seriesValues });
