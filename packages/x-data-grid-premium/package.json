@@ -53,8 +53,7 @@
     "@types/format-util": "catalog:",
     "clsx": "catalog:",
     "exceljs": "catalog:",
-    "prop-types": "catalog:",
-    "reselect": "catalog:"
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

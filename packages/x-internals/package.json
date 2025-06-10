@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@mui/utils": "catalog:"
+    "@mui/utils": "catalog:",
+    "reselect": "catalog:"
   },
   "peerDependencies": {
     "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
