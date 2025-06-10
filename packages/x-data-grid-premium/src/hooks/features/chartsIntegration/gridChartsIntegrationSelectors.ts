@@ -1,5 +1,11 @@
-import { createRootSelector, createSelector } from '@mui/x-data-grid-pro/internals';
+import {
+  createRootSelector,
+  createSelector,
+  createSelectorMemoized,
+} from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
+import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
+import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 
 const gridChartsIntegrationStateSelector = createRootSelector(
   (state: GridStatePremium) => state.chartsIntegration,
@@ -10,12 +16,22 @@ export const gridChartsConfigurationPanelOpenSelector = createSelector(
   (chartsIntegration) => chartsIntegration.configurationPanel.open,
 );
 
-export const gridChartsCategoriesSelector = createSelector(
+export const gridChartsCategoriesSelector = createSelectorMemoized(
   gridChartsIntegrationStateSelector,
-  (chartsIntegration) => chartsIntegration.categories,
+  gridRowGroupingSanitizedModelSelector,
+  (chartsIntegration, rowGroupingModel) =>
+    chartsIntegration.categories.map((category) =>
+      rowGroupingModel.includes(category)
+        ? getRowGroupingFieldFromGroupingCriteria(null)
+        : category,
+    ),
 );
 
-export const gridChartsSeriesSelector = createSelector(
+export const gridChartsSeriesSelector = createSelectorMemoized(
   gridChartsIntegrationStateSelector,
-  (chartsIntegration) => chartsIntegration.series,
+  gridRowGroupingSanitizedModelSelector,
+  (chartsIntegration, rowGroupingModel) =>
+    chartsIntegration.series.map((serie) =>
+      rowGroupingModel.includes(serie) ? getRowGroupingFieldFromGroupingCriteria(null) : serie,
+    ),
 );
