@@ -104,10 +104,20 @@ export const useGridChartsIntegration = (
 
     const selectedSeries = gridChartsSeriesSelector(apiRef);
     const selectedCategories = gridChartsCategoriesSelector(apiRef);
-    const series = columns.filter((c) => selectedSeries.includes(c.field));
-    const category = columns.filter((c) => selectedCategories.includes(c.field));
 
-    if (!category || !series) {
+    const series = [];
+    const categories = [];
+
+    for (let i = 0; i < columns.length; i += 1) {
+      const column = columns[i];
+      if (selectedSeries.includes(column.field)) {
+        series.push(column);
+      } else if (selectedCategories.includes(column.field)) {
+        categories.push(column);
+      }
+    }
+
+    if (categories.length === 0 || series.length === 0) {
       setCategories([]);
       setSeries([]);
       return;
@@ -115,22 +125,22 @@ export const useGridChartsIntegration = (
 
     const itemCount = new Map<string, number>();
     setCategories(
-      category.map((cat) => ({
-        id: cat.field,
-        label: cat.headerName || cat.field,
+      categories.map((category) => ({
+        id: category.field,
+        label: category.headerName || category.field,
         data: rows.map((r) => {
-          const value = getRowValue(r.model, cat, apiRef);
-          const currentCount = itemCount.get(value) || 0;
+          const value = getRowValue(r.model, category, apiRef);
+          const currentCount = itemCount.get(value) || 1;
           itemCount.set(value, currentCount + 1);
-          return currentCount ? `${value} (${currentCount})` : value;
+          return currentCount > 1 ? `${value} (${currentCount})` : value;
         }),
       })),
     );
     setSeries(
-      series.map((ser) => ({
-        id: ser.field,
-        label: ser.headerName || ser.field,
-        data: rows.map((r) => getRowValue(r.model, ser, apiRef)),
+      series.map((serie) => ({
+        id: serie.field,
+        label: serie.headerName || serie.field,
+        data: rows.map((r) => getRowValue(r.model, serie, apiRef)),
       })),
     );
   }, [apiRef, setCategories, setSeries]);
