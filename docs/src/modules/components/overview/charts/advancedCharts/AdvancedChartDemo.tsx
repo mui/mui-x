@@ -5,34 +5,33 @@ import Typography from '@mui/material/Typography';
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import InfoCard from '../../InfoCard';
 import LineChartDemo from './LineChartDemo';
-import BarChartDemo from './BarChartDemo';
+import MultiAxesDemo from './MultiAxesDemo';
 import PieChartDemo from './PieChartDemo';
 import ScatterChartDemo from './ScatterChartDemo';
 
 const advancedFeatures = [
   {
-    title: 'Bar Chart',
-    description: 'Provides users with control over the presentation of their data.',
-    // iconLink: '/static/x/community.svg',
+    title: 'Multi axes and series',
+    description: 'Support multiple axes and chart types',
   },
   {
-    title: 'Line Chart',
+    title: 'Heatmap',
     description: 'Offers an intuitive and efficient way to reorganize the tree structure.',
-    // iconLink: '/static/x/pro.svg',
+    iconLink: '/static/x/pro.svg',
   },
   {
-    title: 'Pie Chart',
+    title: 'Funnel',
     description: 'Improves performance by loading children on demand, especially for large trees.',
-    // iconLink: '/static/x/pro.svg',
+    iconLink: '/static/x/pro.svg',
   },
   {
-    title: 'Scatter Chart',
+    title: 'Zoom',
     description: 'Improves performance by loading children on demand, especially for large trees.',
-    // iconLink: '/static/x/pro.svg',
+    iconLink: '/static/x/pro.svg',
   },
 ];
 
-export default function EssentialCharts() {
+export default function AdvancedCharts() {
   const [activeItem, setActiveItem] = React.useState(0);
 
   return (
@@ -83,7 +82,7 @@ export default function EssentialCharts() {
             maxWidth: { xs: '500px', md: '100%' },
           }}
         >
-          {activeItem === 0 && <BarChartDemo />}
+          {activeItem === 0 && <MultiAxesDemo />}
           {activeItem === 1 && <LineChartDemo />}
           {activeItem === 2 && <PieChartDemo />}
           {activeItem === 3 && <ScatterChartDemo />}

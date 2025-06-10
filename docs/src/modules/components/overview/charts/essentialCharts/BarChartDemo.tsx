@@ -135,7 +135,7 @@ export default function BareChartDemo() {
             overflow: 'auto',
             minWidth: 260,
             padding: 2,
-            width: 'fit-content',
+            width: '100%',
             alignSelf: 'center',
           }}
         >
