@@ -4,7 +4,7 @@ title: MUI X - Priority support
 
 # Priority support [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Learn more about the priority support services that MUI offers to Premium license holders.</p>
+<p class="description">Learn more about the priority support services that MUI offers as an add-on for Premium license holders.</p>
 
 ## What is priority support?
 
@@ -48,6 +48,9 @@ Support requests are prioritized based on the type of license the developer hold
 ## How to purchase priority support
 
 Priority support is available as an add-on for Premium users.
+
+<!-- update this link when the feature goes live in the MUI Store -->
+
 Please [contact our support team](mailto:support@mui.com) to purchase.
 
 Community and Pro users must upgrade to a Premium license to purchase priority support.
