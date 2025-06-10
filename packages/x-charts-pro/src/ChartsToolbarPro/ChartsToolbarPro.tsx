@@ -45,8 +45,7 @@ function ChartsToolbarPro({
   const exportMenuTriggerId = useId();
   const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
-  const showExportMenu =
-    printOptions?.disableToolbarButton !== true || imageExportOptionList.length > 0;
+  const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
 
   const children: Array<React.JSX.Element> = [];
 
@@ -57,14 +56,14 @@ function ChartsToolbarPro({
 
     children.push(
       <Tooltip key="zoom-in" {...slotProps.baseTooltip} title={localeText.zoomIn}>
-        <ChartsToolbarZoomInTrigger render={<ToolbarButton />}>
+        <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
           <ZoomInIcon fontSize="small" {...slotProps.zoomInIcon} />
         </ChartsToolbarZoomInTrigger>
       </Tooltip>,
     );
     children.push(
       <Tooltip key="zoom-out" {...slotProps.baseTooltip} title={localeText.zoomOut}>
-        <ChartsToolbarZoomOutTrigger render={<ToolbarButton />}>
+        <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
           <ZoomOutIcon fontSize="small" {...slotProps.zoomOutIcon} />
         </ChartsToolbarZoomOutTrigger>
       </Tooltip>,
@@ -103,6 +102,7 @@ function ChartsToolbarPro({
             aria-haspopup="true"
             aria-expanded={exportMenuOpen ? 'true' : undefined}
             onClick={() => setExportMenuOpen(!exportMenuOpen)}
+            size="small"
           >
             <ExportIcon fontSize="small" />
           </ToolbarButton>
@@ -112,7 +112,7 @@ function ChartsToolbarPro({
           target={exportMenuTriggerRef.current}
           open={exportMenuOpen}
           onClose={closeExportMenu}
-          position="bottom-end"
+          position="bottom-start"
         >
           <MenuList
             id={exportMenuId}
@@ -123,7 +123,7 @@ function ChartsToolbarPro({
           >
             {!printOptions?.disableToolbarButton && (
               <ChartsToolbarPrintExportTrigger
-                render={<MenuItem {...slotProps?.baseMenuItem} />}
+                render={<MenuItem dense {...slotProps?.baseMenuItem} />}
                 options={printOptions}
                 onClick={closeExportMenu}
               >
@@ -133,7 +133,7 @@ function ChartsToolbarPro({
             {imageExportOptionList.map((imageExportOptions) => (
               <ChartsToolbarImageExportTrigger
                 key={imageExportOptions.type}
-                render={<MenuItem {...slotProps?.baseMenuItem} />}
+                render={<MenuItem dense {...slotProps?.baseMenuItem} />}
                 options={imageExportOptions}
                 onClick={closeExportMenu}
               >

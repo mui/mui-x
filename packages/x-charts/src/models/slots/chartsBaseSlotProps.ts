@@ -24,4 +24,5 @@ export type ChartBaseIconButtonProps = ChartBaseCommonProps & {
   id?: string;
   disabled?: boolean;
   tabIndex?: number;
+  size?: 'small' | 'medium' | 'large';
 };

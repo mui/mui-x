@@ -14,8 +14,7 @@ export const ptBRLocaleText: Partial<ChartsLocaleText> = {
 
   // Toolbar Export Menu
   toolbarExportPrint: 'Imprimir',
-  toolbarExportImage: (mimeType) =>
-    `Exportar como ${imageMimeTypes[mimeType as keyof typeof imageMimeTypes] ?? mimeType}`,
+  toolbarExportImage: (mimeType) => `Exportar como ${imageMimeTypes[mimeType] ?? mimeType}`,
 };
 
 export const ptBR = getChartsLocalization(ptBRLocaleText);

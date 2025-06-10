@@ -60,6 +60,7 @@ export type ChartBaseMenuItemProps = ChartBaseCommonProps & {
   children?: React.ReactNode;
   /** For items that aren't interactive themselves (but may contain an interactive widget) */
   inert?: boolean;
+  dense?: boolean;
   disabled?: boolean;
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;

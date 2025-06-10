@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { inflationData } from './inflationData';
+import { inflationData } from '../dataset/inflationRates';
 
 const yAxisFormatter = new Intl.NumberFormat('en-US', {
   style: 'percent',
@@ -18,6 +17,18 @@ const percentageFormatter = new Intl.NumberFormat('en-US', {
 });
 const seriesValueFormatter = (value: number | null) =>
   percentageFormatter.format(value! / 100);
+
+const xAxis = [
+  {
+    data: inflationData.map((p) => p.year),
+    valueFormatter: (value: number) => `${value}`,
+    zoom: true,
+  },
+];
+
+const yAxis = [
+  { valueFormatter: (value: number) => yAxisFormatter.format(value / 100) },
+];
 
 const series = [
   {
@@ -40,30 +51,18 @@ const series = [
   },
 ];
 
-export default function ExportChartToolbar() {
-  const apiRef = React.useRef<ChartProApi>(undefined);
+const settings = {
+  height: 300,
+  xAxis,
+  yAxis,
+  series,
+  grid: { horizontal: true },
+};
 
+export default function ExportChartToolbar() {
   return (
     <Stack width="100%">
-      <LineChartPro
-        apiRef={apiRef}
-        height={300}
-        xAxis={[
-          {
-            data: inflationData.map((p) => p.year),
-            valueFormatter: (value: number) => `${value}`,
-            zoom: true,
-          },
-        ]}
-        series={series}
-        yAxis={[
-          {
-            valueFormatter: (value: number) => yAxisFormatter.format(value / 100),
-          },
-        ]}
-        showToolbar
-        grid={{ horizontal: true }}
-      />
+      <LineChartPro {...settings} showToolbar />
       <Typography variant="caption">Source: World Bank</Typography>
     </Stack>
   );

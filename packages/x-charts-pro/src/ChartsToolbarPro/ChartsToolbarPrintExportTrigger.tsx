@@ -23,7 +23,7 @@ export type ChartsToolbarPrintExportTriggerProps = ChartsSlotPropsPro['baseButto
   /**
    * The options to apply on the Print export.
    * @demos
-   *   - [Print/Export as PDF](/x/react-charts/export/#print-export-as-pdf)
+   *   - [Print/Export as PDF](https://mui.com/x/react-charts/export/#print-export-as-pdf)
    */
   options?: ChartPrintExportOptions;
 };
@@ -34,7 +34,7 @@ export type ChartsToolbarPrintExportTriggerProps = ChartsSlotPropsPro['baseButto
  *
  * Demos:
  *
- * - [Export](/x/react-charts/export/)
+ * - [Export](https://mui.com/x/react-charts/export/)
  */
 const ChartsToolbarPrintExportTrigger = forwardRef<
   HTMLButtonElement,

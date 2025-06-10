@@ -19,7 +19,7 @@ export type ChartsToolbarImageExportTriggerProps = ChartsSlotPropsPro['baseButto
   /**
    * The options to apply on the image export.
    * @demos
-   *   - [Export as Image](/x/react-charts/export/#export-as-image)
+   *   - [Export as Image](https://mui.com/x/react-charts/export/#export-as-image)
    */
   options?: ChartsToolbarImageExportOptions;
 };
@@ -30,7 +30,7 @@ export type ChartsToolbarImageExportTriggerProps = ChartsSlotPropsPro['baseButto
  *
  * Demos:
  *
- * - [Export](/x/react-charts/export/)
+ * - [Export](https://mui.com/x/react-charts/export/)
  */
 const ChartsToolbarImageExportTrigger = forwardRef<
   HTMLButtonElement,
