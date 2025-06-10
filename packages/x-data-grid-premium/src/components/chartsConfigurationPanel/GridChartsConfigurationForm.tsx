@@ -12,7 +12,17 @@ type OwnerState = DataGridPremiumProcessedProps;
 const GridChartsConfigSwitch = styled(NotRendered<GridSlotProps['baseSwitch']>, {
   name: 'MuiDataGrid',
   slot: 'ChartsConfigurationForm',
-})<{ ownerState: OwnerState }>({});
+})<{ ownerState: OwnerState }>({
+  overflow: 'visible',
+});
+
+const GirdChartsConfigurationForm = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 16,
+  padding: 16,
+  overflowY: 'auto',
+});
 
 export function GridChartsConfigurationForm() {
   const rootProps = useGridRootProps();
@@ -25,6 +35,7 @@ export function GridChartsConfigurationForm() {
   }, [rootProps.slotProps?.chartsConfigurationPanel?.schema, chartType]);
 
   const handleChange = (field: string, value: any) => {
+    // TODO: keep configuration per chart type but share color palette state
     setConfiguration({ ...configuration, [field]: value });
   };
 
@@ -33,7 +44,7 @@ export function GridChartsConfigurationForm() {
   }
 
   return (
-    <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }}>
+    <GirdChartsConfigurationForm>
       {sections.map((section) =>
         Object.entries(section.controls).map(([key, optRaw]) => {
           const opt = optRaw as any;
@@ -59,6 +70,7 @@ export function GridChartsConfigurationForm() {
                 size="small"
                 label={opt.label}
                 disabled={isDisabled}
+                {...rootProps.slotProps?.baseSwitch}
               />
             );
           }
@@ -73,11 +85,20 @@ export function GridChartsConfigurationForm() {
                   handleChange(key, event.target.value)
                 }
                 disabled={isDisabled}
+                slotProps={{
+                  htmlInput: {
+                    ...opt.htmlAttributes,
+                  },
+                }}
                 {...rootProps.slotProps?.baseSelect}
               >
-                {(opt.options || []).map((option: string) => (
-                  <rootProps.slots.baseSelectOption key={option} value={option} native={false}>
-                    {option}
+                {(opt.options || []).map((option: { label: string; value: string }) => (
+                  <rootProps.slots.baseSelectOption
+                    key={option.value}
+                    value={option.value}
+                    native={false}
+                  >
+                    {option.label}
                   </rootProps.slots.baseSelectOption>
                 ))}
               </rootProps.slots.baseSelect>
@@ -93,6 +114,11 @@ export function GridChartsConfigurationForm() {
               type={opt.type === 'number' ? 'number' : 'text'}
               fullWidth
               disabled={isDisabled}
+              slotProps={{
+                htmlInput: {
+                  ...opt.htmlAttributes,
+                },
+              }}
               {...rootProps.slotProps?.baseTextField}
               value={configuration[key] ?? opt.default}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -105,6 +131,6 @@ export function GridChartsConfigurationForm() {
           );
         }),
       )}
-    </form>
+    </GirdChartsConfigurationForm>
   );
 }
