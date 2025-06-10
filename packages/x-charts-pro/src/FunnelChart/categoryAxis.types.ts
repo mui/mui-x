@@ -1,7 +1,9 @@
 import { AxisConfig, ScaleName } from '@mui/x-charts/models';
 import { MakeOptional } from '@mui/x-internals/types';
 
-export type CategoryAxis<S extends ScaleName = ScaleName> = S extends ScaleName
+export type FunnelScaleName = Exclude<ScaleName, 'log' | 'point'>;
+
+export type CategoryAxis<S extends FunnelScaleName = FunnelScaleName> = S extends FunnelScaleName
   ? {
       /**
        * The categories to be displayed on the axis.
