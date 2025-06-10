@@ -14,3 +14,16 @@ body {
 .joy * {
   font-family: var(--default-font-family);
 }
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
+  cursor: pointer;
+}

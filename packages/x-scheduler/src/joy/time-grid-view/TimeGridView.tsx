@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../primitives/time-grid';
 import { TimeGridViewProps } from './TimeGridView.types';
@@ -60,6 +61,14 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
     [onDayHeaderClick],
   );
 
+  const renderHeaderContent = (day: SchedulerValidDate) => (
+    <span className="TimeGridViewHeaderContent">
+      {/* TODO: Add the 3 letter week day format to the adapter */}
+      <span className="TimeGridViewHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
+      <span className="TimeGridViewHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
+    </span>
+  );
+
   return (
     <div ref={forwardedRef} className={clsx('TimeGridViewContainer', 'joy', className)} {...other}>
       <TimeGrid.Root className="TimeGridViewRoot">
@@ -69,23 +78,23 @@ export const TimeGridView = React.forwardRef(function TimeGridView(
             {days.map((day) => (
               <div
                 key={day.day.toString()}
-                onClick={onDayHeaderClick ? handleHeaderClick : undefined}
-                onKeyDown={onDayHeaderClick ? handleHeaderKeyDown : undefined}
-                tabIndex={onDayHeaderClick ? 0 : undefined}
-                className={clsx('TimeGridViewHeaderCell', {
-                  HeaderCellClickable: onDayHeaderClick,
-                })}
                 id={`TimeGridViewHeaderCell-${day.day.toString()}`}
                 role="columnheader"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
               >
-                {/* TODO: Add the 3 letter week day format to the adapter */}
-                <span className="TimeGridViewHeaderDayName">
-                  {adapter.formatByString(day, 'ccc')}
-                </span>
-                <span className="TimeGridViewHeaderDayNumber">
-                  {adapter.format(day, 'dayOfMonth')}
-                </span>
+                {onDayHeaderClick ? (
+                  <button
+                    type="button"
+                    className="TimeGridViewHeaderButton"
+                    onClick={handleHeaderClick}
+                    onKeyDown={handleHeaderKeyDown}
+                    tabIndex={0}
+                  >
+                    {renderHeaderContent(day)}
+                  </button>
+                ) : (
+                  renderHeaderContent(day)
+                )}
               </div>
             ))}
           </div>

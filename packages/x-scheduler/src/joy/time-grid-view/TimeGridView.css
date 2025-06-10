@@ -80,7 +80,7 @@
   background: var(--weekend-background);
 }
 
-.TimeGridViewHeaderCell {
+.TimeGridViewHeaderContent {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,11 +88,15 @@
   padding: 10px;
 }
 
-.HeaderCellClickable {
-  cursor: pointer;
+.TimeGridViewHeaderButton {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-.HeaderCellClickable:focus-visible {
+.TimeGridViewHeaderButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: -2px;
   border-radius: var(--radius-3);
