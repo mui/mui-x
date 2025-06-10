@@ -1,1 +1,1 @@
-export * from './TimeGridView';
+export * from './TimeGrid';
