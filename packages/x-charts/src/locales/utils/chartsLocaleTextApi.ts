@@ -1,3 +1,5 @@
+import { ChartImageExportMimeType } from './imageMimeTypes';
+
 export interface ChartsLocaleText {
   /**
    * Title displayed in the overlay if `loading` is `true`.
@@ -30,7 +32,7 @@ export interface ChartsLocaleText {
    * @param {string} mimeType The MIME type of the image to export, e.g., 'image/png'.
    * @returns {string} The localized string for an export image button.
    */
-  toolbarExportImage: (mimeType: 'image/png' | string) => string;
+  toolbarExportImage: (mimeType: ChartImageExportMimeType | (string & {})) => string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;

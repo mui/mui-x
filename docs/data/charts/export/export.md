@@ -6,21 +6,33 @@ components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, Ra
 
 # Charts - Export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Charts can be printed and exported as PDF.</p>
+<p class="description">Charts can be printed and exported as a PDF or an image.</p>
 
 Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `PieChartPro />`, `<Heatmap />`, `<FunnelChart />` and `<RadarChartPro />`.
 
-## Overview
+## Enabling export
+
+### Default toolbar
 
 Charts can be exported using the browser's native print dialog or as an image.
 
 To enable this functionality, you need to enable the chart's toolbar by passing the `showToolbar` prop to the chart component.
 
-The toolbar will then display an "Export" button that opens a menu with the export options.
+The toolbar then renders a button that opens a menu with the export options.
 
 {{"demo": "ExportChartToolbar.js"}}
 
-### Image export
+:::warning
+Image export requires the `rasterizehtml` npm dependency to be installed in your project.
+
+Follow the installation instructions [here](#image-export-pre-requisites).
+:::
+
+### Custom toolbar
+
+See the [Toolbar composition](/x/react-charts/toolbar/#composition) section for more information on how to create a custom toolbar.
+
+## Image export pre-requisites
 
 For image export to work, you need to add the `rasterizehtml` npm dependency in your project.
 
@@ -40,15 +52,39 @@ yarn add rasterizehtml
 
 </codeblock>
 
+## Export options
+
+The following export options are available:
+
+- [Print](/x/react-charts/export/#print-options)
+- [Export as image](/x/react-charts/export/#image-export-options)
+
+Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
+
+```tsx
+// Default toolbar:
+<BarChartPro slotProps={{ toolbar: { imageExportOptions } }} />
+
+// Custom trigger:
+<ChartsToolbarImageExportTrigger options={imageExportOptions} />
+```
+
+Each export option has its own API page:
+
+- [Print options](/x/api/charts/chart-print-export-options/)
+- [Image export options](/x/api/charts/chart-image-export-options/)
+
 ### Customization
 
-You can customize the export options by passing export options to the chart's toolbar `slotProps`.
+In the example below, you can toggle which export formats are available to the user.
 
-For example, you can set the file name for the exported image, or add more image export formats (depending on browser support), and hide certain export options.
+Additionally, the name of the exported file has been customized to resemble the chart's title.
 
 {{"demo": "ExportChartToolbarCustomization.js"}}
 
+:::info
 Bear in mind that adding image formats that are not supported by the browser will result in the export defaulting to PNG.
+:::
 
 ## Composition
 
@@ -61,7 +97,7 @@ If you want to use a custom wrapper element, you need to use the `useChartRootRe
 
 {{"demo": "ExportCompositionNoSnap.js"}}
 
-## Imperative API
+## apiRef
 
 ### Print/Export as PDF
 
@@ -78,7 +114,7 @@ The `apiRef` prop also exposes a `exportAsImage()` method to export the chart as
 :::warning
 Image export requires the `rasterizehtml` npm dependency to be installed in your project.
 
-Follow the installation instructions [here](#image-export).
+Follow the installation instructions [here](#image-export-pre-requisites).
 :::
 
 #### Usage
