@@ -17,7 +17,6 @@ import {
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridChartsIntegrationContextValue } from '../../../models/gridChartsIntegration';
 import {
@@ -258,7 +257,6 @@ export const useGridChartsIntegration = (
         if (targetSection !== originSection) {
           method(currentItems.filter((item) => item !== field));
         }
-        // otherwise, continue to add the field at the tagetted position
       }
 
       if (targetSection) {
