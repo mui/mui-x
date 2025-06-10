@@ -22,12 +22,12 @@ export const createProxy = <T extends UserGesture>(target: T): T => {
       }
 
       // If we are trying to call a method on the proxy,
-      // we ensure that we clear the pointers after the method is called.
-      // This is useful for tests where we want to ensure no pointers are left hanging
+      // we ensure that we run the method on a new instance of the gesture.
+      // This is useful for tests where we want to ensure no pointers are left hanging in the pointer manager.
       return async (...args: unknown[]) => {
-        await value.bind(obj)(...args);
-        const pointerManager = Reflect.get(obj, 'pointerManager');
-        Reflect.get(pointerManager, 'clearPointers').bind(pointerManager)();
+        const mode = Reflect.get(obj, 'pointerManager').mode;
+        // @ts-expect-error, constructor is a function...
+        return new obj.constructor(mode)[prop].bind(obj)(...args);
       };
     },
   });
