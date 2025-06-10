@@ -13,6 +13,7 @@ import {
   gridColumnLookupSelector,
   runIf,
   getRowValue,
+  GridStateColDef,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -105,8 +106,8 @@ export const useGridChartsIntegration = (
     const selectedSeries = gridChartsSeriesSelector(apiRef);
     const selectedCategories = gridChartsCategoriesSelector(apiRef);
 
-    const series = [];
-    const categories = [];
+    const series: GridStateColDef[] = [];
+    const categories: GridStateColDef[] = [];
 
     for (let i = 0; i < columns.length; i += 1) {
       const column = columns[i];
