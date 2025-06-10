@@ -135,7 +135,7 @@ function Scatter(props: ScatterProps) {
   });
 
   return (
-    <g>
+    <g data-series={series.id}>
       {cleanData.map((dataPoint, i) => (
         <Marker
           key={dataPoint.id ?? dataPoint.dataIndex}
@@ -154,8 +154,6 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
-          data-series={series.id}
-          data-index={dataPoint.dataIndex}
           data-highlighted={dataPoint.isHighlighted || undefined}
           data-faded={dataPoint.isFaded || undefined}
           {...interactionItemProps[i]}
