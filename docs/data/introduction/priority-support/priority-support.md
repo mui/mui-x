@@ -49,7 +49,7 @@ Support requests are prioritized based on the type of license the developer hold
 
 Priority support is available as an add-on for Premium users.
 
-<!-- update this link when the feature goes live in the MUI Store -->
+<!-- update this link when it officially launches in the MUI Store -->
 
 Please [contact our support team](mailto:support@mui.com) to purchase.
 
