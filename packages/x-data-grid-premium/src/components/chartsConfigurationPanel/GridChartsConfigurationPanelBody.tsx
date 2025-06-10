@@ -18,6 +18,7 @@ import {
   gridChartsSeriesSelector,
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { gridRowGroupingSanitizedModelSelector } from '../../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -153,6 +154,7 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
   const series = useGridSelector(apiRef, gridChartsSeriesSelector);
   const classes = useUtilityClasses(rootProps);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
+  const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
   const getColumnName = React.useCallback(
     (field: string) => {
@@ -164,7 +166,8 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
 
   const availableFields = React.useMemo(() => {
     const notUsedFields = Object.keys(columns).filter(
-      (field) => !categories.includes(field) && !series.includes(field),
+      (field) =>
+        !categories.includes(field) && !series.includes(field) && !rowGroupingModel.includes(field),
     );
     if (searchValue) {
       return notUsedFields.filter((field) => {
@@ -173,7 +176,7 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
       });
     }
     return notUsedFields;
-  }, [searchValue, columns, categories, series, getColumnName]);
+  }, [searchValue, columns, rowGroupingModel, categories, series, getColumnName]);
 
   const [drag, setDrag] = React.useState<{
     active: boolean;
