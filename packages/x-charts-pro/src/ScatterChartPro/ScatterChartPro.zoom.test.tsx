@@ -76,21 +76,6 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     ),
   };
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  beforeEach(() => {
-    // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
   it('should zoom on wheel', async () => {
     const onZoomChange = sinon.spy();
     const { user } = render(
