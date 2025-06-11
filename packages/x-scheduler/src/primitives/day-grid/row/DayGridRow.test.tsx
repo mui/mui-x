@@ -5,7 +5,7 @@ import { createSchedulerRenderer, describeConformance } from 'test/utils/schedul
 describe('<DayGrid.Row />', () => {
   const { render } = createSchedulerRenderer();
 
-  describeConformance(<DayGrid.Row key="week-1" />, () => ({
+  describeConformance(<DayGrid.Row />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(<DayGrid.Root>{node}</DayGrid.Root>);

@@ -8,7 +8,7 @@ describe('<TimeGrid.Column />', () => {
 
   const day = DateTime.now();
 
-  describeConformance(<TimeGrid.Column key="day-1" value={day} />, () => ({
+  describeConformance(<TimeGrid.Column value={day} />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(<TimeGrid.Root>{node}</TimeGrid.Root>);

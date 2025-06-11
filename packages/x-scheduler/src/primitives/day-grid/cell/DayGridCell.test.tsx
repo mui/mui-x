@@ -5,12 +5,12 @@ import { createSchedulerRenderer, describeConformance } from 'test/utils/schedul
 describe('<DayGrid.Cell />', () => {
   const { render } = createSchedulerRenderer();
 
-  describeConformance(<DayGrid.Cell key="day-1" />, () => ({
+  describeConformance(<DayGrid.Cell />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
         <DayGrid.Root>
-          <DayGrid.Row key="week-1">{node}</DayGrid.Row>
+          <DayGrid.Row>{node}</DayGrid.Row>
         </DayGrid.Root>,
       );
     },
