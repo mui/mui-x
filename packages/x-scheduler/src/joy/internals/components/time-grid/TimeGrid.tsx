@@ -116,6 +116,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
         <div ref={bodyRef} className="TimeGridBody">
           <div className="TimeGridScrollableContent">
             <div className="TimeGridTimeAxis" aria-hidden="true">
+              {/* TODO: Handle DST days where there are not exactly 24 hours */}
               {Array.from({ length: 24 }, (_, hour) => (
                 <div
                   key={hour}
