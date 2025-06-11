@@ -106,7 +106,7 @@ export const useGridChartsIntegration = (
   });
 
   const handleDataUpdate = React.useCallback(() => {
-    const columns = Object.values(gridColumnLookupSelector(apiRef));
+    const columns = gridColumnLookupSelector(apiRef);
     const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
 
     const selectedSeries = gridChartsSeriesSelector(apiRef);
@@ -115,39 +115,71 @@ export const useGridChartsIntegration = (
     const series: GridStateColDef[] = [];
     const categories: GridStateColDef[] = [];
 
-    for (let i = 0; i < columns.length; i += 1) {
-      const column = columns[i];
-      if (selectedSeries.includes(column.field)) {
-        series.push(column);
-      } else if (selectedCategories.includes(column.field)) {
-        categories.push(column);
+    // Sanitize selectedSeries and selectedCategories while maintaining their order
+    for (let i = 0; i < selectedSeries.length; i += 1) {
+      const field = selectedSeries[i];
+      if (columns[field]) {
+        series.push(columns[field]);
       }
     }
 
-    if (categories.length === 0 || series.length === 0) {
+    // categories cannot contain fields that are already in series
+    for (let i = 0; i < selectedCategories.length; i += 1) {
+      const field = selectedCategories[i];
+      if (!selectedSeries.includes(field) && columns[field]) {
+        categories.push(columns[field]);
+      }
+    }
+
+    const categoriesLength = categories.length;
+    const seriesLength = series.length;
+    if (categoriesLength === 0 || seriesLength === 0) {
       setCategories([]);
       setSeries([]);
       return;
     }
 
     const itemCount = new Map<string, number>();
+
+    const data: Record<string, any[]> = {};
+    for (let i = 0; i < rows.length; i += 1) {
+      const row = rows[i];
+
+      for (let j = 0; j < categoriesLength; j += 1) {
+        const category = categories[j];
+        if (!data[category.field]) {
+          data[category.field] = [];
+        }
+
+        // category values must be unique
+        // for repeated values, add the count to the value
+        const value = getRowValue(row.model, category, apiRef);
+        const currentCount = itemCount.get(value) || 1;
+        itemCount.set(value, currentCount + 1);
+        data[category.field].push(currentCount > 1 ? `${value} (${currentCount})` : value);
+      }
+
+      for (let j = 0; j < seriesLength; j += 1) {
+        const seriesItem = series[j];
+        if (!data[seriesItem.field]) {
+          data[seriesItem.field] = [];
+        }
+        data[seriesItem.field].push(getRowValue(row.model, seriesItem, apiRef));
+      }
+    }
+
     setCategories(
       categories.map((category) => ({
         id: category.field,
         label: category.headerName || category.field,
-        data: rows.map((r) => {
-          const value = getRowValue(r.model, category, apiRef);
-          const currentCount = itemCount.get(value) || 1;
-          itemCount.set(value, currentCount + 1);
-          return currentCount > 1 ? `${value} (${currentCount})` : value;
-        }),
+        data: data[category.field] || [],
       })),
     );
     setSeries(
       series.map((seriesItem) => ({
         id: seriesItem.field,
         label: seriesItem.headerName || seriesItem.field,
-        data: rows.map((r) => getRowValue(r.model, seriesItem, apiRef)),
+        data: data[seriesItem.field] || [],
       })),
     );
   }, [apiRef, setCategories, setSeries]);
