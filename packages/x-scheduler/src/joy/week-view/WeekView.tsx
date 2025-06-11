@@ -21,13 +21,11 @@ export const WeekView = React.forwardRef(function WeekView(
     [getDayList, today],
   );
 
-  const weekStart = adapter.startOfDay(currentWeekDays[0]);
-  const weekEnd = adapter.endOfDay(currentWeekDays[6]);
-
-  const filteredEvents = React.useMemo(
-    () => events.filter((event) => adapter.isWithinRange(event.start, [weekStart, weekEnd])),
-    [events, weekStart, weekEnd],
-  );
+  const filteredEvents = React.useMemo(() => {
+    const weekStart = adapter.startOfDay(currentWeekDays[0]);
+    const weekEnd = adapter.endOfDay(currentWeekDays[6]);
+    return events.filter((event) => adapter.isWithinRange(event.start, [weekStart, weekEnd]));
+  }, [events, currentWeekDays]);
 
   return (
     <TimeGrid

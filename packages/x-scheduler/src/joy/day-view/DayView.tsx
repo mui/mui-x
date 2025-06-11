@@ -12,13 +12,11 @@ export const DayView = React.forwardRef(function DayView(
 ) {
   const { events, day, className, ...other } = props;
 
-  const dayStart = adapter.startOfDay(day);
-  const dayEnd = adapter.endOfDay(day);
-
-  const filteredEvents = React.useMemo(
-    () => events.filter((event) => adapter.isWithinRange(event.start, [dayStart, dayEnd])),
-    [events, dayStart, dayEnd],
-  );
+  const filteredEvents = React.useMemo(() => {
+    const dayStart = adapter.startOfDay(day);
+    const dayEnd = adapter.endOfDay(day);
+    return events.filter((event) => adapter.isWithinRange(event.start, [dayStart, dayEnd]));
+  }, [events, day]);
 
   return (
     <TimeGrid
