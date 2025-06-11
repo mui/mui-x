@@ -85,7 +85,6 @@ const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends 
 ) => React.JSX.Element;
 
 // @ts-ignore
-
 ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
