@@ -15,11 +15,7 @@ describe('<DayGrid.Event />', () => {
       return render(
         <DayGrid.Root>
           <DayGrid.Row key="week-1">
-            <DayGrid.Cell key="day-1">
-              <DayGrid.Event start={eventStart} end={eventEnd}>
-                {node}
-              </DayGrid.Event>
-            </DayGrid.Cell>
+            <DayGrid.Cell key="day-1">{node}</DayGrid.Cell>
           </DayGrid.Row>
         </DayGrid.Root>,
       );

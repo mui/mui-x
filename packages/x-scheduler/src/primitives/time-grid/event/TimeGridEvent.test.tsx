@@ -15,9 +15,7 @@ describe('<TimeGrid.Event />', () => {
       return render(
         <TimeGrid.Root>
           <TimeGrid.Column key="day-1" value={eventStart}>
-            <TimeGrid.Event key="event-1" start={eventStart} end={eventEnd}>
-              {node}
-            </TimeGrid.Event>
+            {node}
           </TimeGrid.Column>
         </TimeGrid.Root>,
       );
