@@ -59,7 +59,7 @@ describe('<StaticDateRangePicker />', () => {
     // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
     expect(
       document.querySelector(
-        '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+        '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="DateRangePickerDay"]',
       ),
     ).to.have.text('1');
   });
