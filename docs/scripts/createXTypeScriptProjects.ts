@@ -38,6 +38,7 @@ export type XProjectNames =
   | 'x-date-pickers-pro'
   | 'x-charts'
   | 'x-charts-pro'
+  | 'x-charts-premium'
   | 'x-tree-view'
   | 'x-tree-view-pro';
 
@@ -157,7 +158,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
   },
   {
     folder: 'charts',
-    packages: ['x-charts', 'x-charts-pro'],
+    packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
     documentedInterfaces: [
       'BarSeriesType',
       'LineSeriesType',
@@ -325,6 +326,24 @@ export const createXTypeScriptProjects = () => {
     createXTypeScriptProject({
       name: 'x-charts-pro',
       rootPath: path.join(workspaceRoot, 'packages/x-charts-pro'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'charts',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-charts-premium',
+    createXTypeScriptProject({
+      name: 'x-charts-premium',
+      rootPath: path.join(workspaceRoot, 'packages/x-charts-premium'),
       entryPointPath: 'src/index.ts',
       documentationFolderName: 'charts',
       getComponentsWithPropTypes: getComponentPaths({

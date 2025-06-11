@@ -697,6 +697,9 @@ importers:
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:*
+        version: link:../packages/x-charts-premium/build
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../packages/x-charts-pro/build
