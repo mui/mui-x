@@ -44,6 +44,7 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   getApplyQuickFilterFn: () => null,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   // @ts-ignore
   pastedValueParser: (value) => stringToBoolean(value),
 };

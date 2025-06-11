@@ -47,6 +47,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     filterable: false,
     groupable: false,
     aggregable: false,
+    chartable: false,
     disableExport: true,
   } as GridColDef<any, { color: string; name: string }>,
   {

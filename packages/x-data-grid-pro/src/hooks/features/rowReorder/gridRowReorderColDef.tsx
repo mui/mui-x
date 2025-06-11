@@ -16,6 +16,7 @@ export const GRID_REORDER_COL_DEF: GridColDef = {
   resizable: false,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   renderHeader: () => ' ',
   renderCell: renderRowReorderCell,
   rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
