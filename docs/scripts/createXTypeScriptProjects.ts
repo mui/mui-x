@@ -158,7 +158,12 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
   },
   {
     folder: 'charts',
-    packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
+    packages: [
+      'x-charts',
+      'x-charts-pro',
+      // TODO: CHARTS-PREMIUM: uncomment when premium is ready
+      // 'x-charts-premium'
+    ],
     documentedInterfaces: [
       'BarSeriesType',
       'LineSeriesType',
@@ -339,23 +344,24 @@ export const createXTypeScriptProjects = () => {
     }),
   );
 
-  projects.set(
-    'x-charts-premium',
-    createXTypeScriptProject({
-      name: 'x-charts-premium',
-      rootPath: path.join(workspaceRoot, 'packages/x-charts-premium'),
-      entryPointPath: 'src/index.ts',
-      documentationFolderName: 'charts',
-      getComponentsWithPropTypes: getComponentPaths({
-        folders: ['src'],
-        includeUnstableComponents: true,
-      }),
-      getComponentsWithApiDoc: getComponentPaths({
-        folders: ['src'],
-        includeUnstableComponents: true,
-      }),
-    }),
-  );
+  // TODO: CHARTS-PREMIUM: uncomment when premium is ready
+  // projects.set(
+  //   'x-charts-premium',
+  //   createXTypeScriptProject({
+  //     name: 'x-charts-premium',
+  //     rootPath: path.join(workspaceRoot, 'packages/x-charts-premium'),
+  //     entryPointPath: 'src/index.ts',
+  //     documentationFolderName: 'charts',
+  //     getComponentsWithPropTypes: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //     getComponentsWithApiDoc: getComponentPaths({
+  //       folders: ['src'],
+  //       includeUnstableComponents: true,
+  //     }),
+  //   }),
+  // );
 
   projects.set(
     'x-tree-view',
