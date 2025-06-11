@@ -50,6 +50,12 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
     };
   }
 
+  const columnsLookup = state.columns?.lookup ?? {};
+  const initialCategories = props.initialState?.chartsIntegration?.categories ?? [];
+  const initialSeries = (props.initialState?.chartsIntegration?.series ?? []).filter(
+    (serie) => !initialCategories.includes(serie) && columnsLookup[serie]?.type === 'number',
+  );
+
   return {
     ...state,
     chartsIntegration: {
@@ -59,8 +65,8 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           props.initialState?.chartsIntegration?.configurationPanel?.open ??
           false,
       },
-      categories: props.initialState?.chartsIntegration?.categories ?? [],
-      series: props.initialState?.chartsIntegration?.series ?? [],
+      categories: initialCategories,
+      series: initialSeries,
     } as GridChartsIntegrationState,
   };
 };
