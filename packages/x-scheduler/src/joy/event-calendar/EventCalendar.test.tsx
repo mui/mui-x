@@ -39,9 +39,7 @@ describe('EventCalendar', () => {
     expect(mondayEvent).to.have.attribute('aria-labelledby', 'WeekViewHeaderCell-26');
     expect(tuesdayEvent).to.have.attribute('aria-labelledby', 'WeekViewHeaderCell-27');
 
-    const mondayHeader = screen.getByRole('columnheader', { name: /Monday 26/i });
-    expect(mondayHeader).not.to.equal(null);
-    const tuesdayHeader = screen.getByRole('columnheader', { name: /Tuesday 27/i });
-    expect(tuesdayHeader).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
   });
 });
