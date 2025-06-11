@@ -1,60 +1,71 @@
-'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { CSSInterpolation } from '@mui/system';
+import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
-import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
-import { useUtils } from '../internals/hooks/useUtils';
-import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import {
-  PickersDayClasses,
-  PickersDayClassKey,
-  getPickersDayUtilityClass,
-  pickersDayClasses,
-} from './pickersDayClasses';
-import { PickerDayOwnerState, PickersDayProps } from './PickersDay.types';
-import { usePickerDayOwnerState } from './usePickerDayOwnerState';
+  pickerDay2Classes,
+  PickerDay2ClassKey,
+  getPickerDay2UtilityClass,
+  PickerDay2Classes,
+} from './pickerDay2Classes';
+import { useUtils } from '../internals/hooks/useUtils';
+import { PickerDay2OwnerState, PickerDay2Props } from './PickerDay2.types';
+import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
 const useUtilityClasses = (
-  classes: Partial<PickersDayClasses> | undefined,
-  ownerState: PickerDayOwnerState,
+  ownerState: PickerDay2OwnerState,
+  classes?: Partial<PickerDay2Classes>,
 ) => {
   const {
     isDaySelected,
-    isDayDisabled,
-    isDayCurrent,
-    isDayOutsideMonth,
-    disableMargin,
     disableHighlightToday,
-    showDaysOutsideCurrentMonth,
+    isDayCurrent,
+    isDayDisabled,
+    isDayOutsideMonth,
+    isDayFillerCell,
   } = ownerState;
 
-  const isHiddenDaySpacingFiller = isDayOutsideMonth && !showDaysOutsideCurrentMonth;
   const slots = {
     root: [
       'root',
-      isDaySelected && !isHiddenDaySpacingFiller && 'selected',
+      isDaySelected && !isDayFillerCell && 'selected',
       isDayDisabled && 'disabled',
-      !disableMargin && 'dayWithMargin',
-      !disableHighlightToday && isDayCurrent && 'today',
-      isDayOutsideMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
-      isHiddenDaySpacingFiller && 'hiddenDaySpacingFiller',
+      !disableHighlightToday && isDayCurrent && !isDaySelected && !isDayFillerCell && 'today',
+      isDayOutsideMonth && 'dayOutsideMonth',
+      isDayFillerCell && 'fillerCell',
     ],
-    hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
   };
 
-  return composeClasses(slots, getPickersDayUtilityClass, classes);
+  return composeClasses(slots, getPickerDay2UtilityClass, classes);
 };
 
-const styleArg = ({ theme }: { theme: Theme }) => ({
+const PickerDay2Root = styled(ButtonBase, {
+  name: 'MuiPickerDay2',
+  slot: 'Root',
+  overridesResolver: (
+    props: { ownerState: PickerDay2OwnerState },
+    styles: Record<PickerDay2ClassKey, CSSInterpolation>,
+  ) => {
+    const { ownerState } = props;
+    return [
+      styles.root,
+      !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
+      !ownerState.isDayOutsideMonth && styles.dayOutsideMonth,
+      ownerState.isDayFillerCell && styles.fillerCell,
+    ];
+  },
+})<{ ownerState: PickerDay2OwnerState }>(({ theme }) => ({
+  '--PickerDay-horizontalMargin': `${DAY_MARGIN}px`,
+  '--PickerDay-size': `${DAY_SIZE}px`,
   ...theme.typography.caption,
-  width: DAY_SIZE,
-  height: DAY_SIZE,
-  borderRadius: '50%',
+  width: 'var(--PickerDay-size)',
+  height: 'var(--PickerDay-size)',
+  borderRadius: 'calc(var(--PickerDay-size) / 2)',
   padding: 0,
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
@@ -73,99 +84,75 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
     backgroundColor: theme.vars
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-    [`&.${pickersDayClasses.selected}`]: {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
-    },
   },
-  [`&.${pickersDayClasses.selected}`]: {
-    color: (theme.vars || theme).palette.primary.contrastText,
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
-    '&:hover': {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
-    },
-  },
-  [`&.${pickersDayClasses.disabled}:not(.${pickersDayClasses.selected})`]: {
-    color: (theme.vars || theme).palette.text.disabled,
-  },
-  [`&.${pickersDayClasses.disabled}&.${pickersDayClasses.selected}`]: {
-    opacity: 0.6,
-  },
+  marginLeft: 'var(--PickerDay-horizontalMargin)',
+  marginRight: 'var(--PickerDay-horizontalMargin)',
   variants: [
     {
-      props: { disableMargin: false },
+      props: { isDaySelected: true },
       style: {
-        margin: `0 ${DAY_MARGIN}px`,
+        color: (theme.vars || theme).palette.primary.contrastText,
+        backgroundColor: (theme.vars || theme).palette.primary.main,
+        fontWeight: theme.typography.fontWeightMedium,
+        '&:focus, &:hover': {
+          willChange: 'background-color',
+          backgroundColor: (theme.vars || theme).palette.primary.dark,
+        },
+        [`&.${pickerDay2Classes.disabled}`]: {
+          opacity: 0.6,
+        },
       },
     },
     {
-      props: { isDayOutsideMonth: true, showDaysOutsideCurrentMonth: true },
+      props: { isDayDisabled: true },
+      style: {
+        color: (theme.vars || theme).palette.text.disabled,
+      },
+    },
+    {
+      props: { isDayFillerCell: true },
+      style: {
+        // visibility: 'hidden' does not work here as it hides the element from screen readers
+        // and results in unexpected relationships between week day and day columns.
+        opacity: 0,
+        pointerEvents: 'none',
+      },
+    },
+    {
+      props: { isDayOutsideMonth: true },
       style: {
         color: (theme.vars || theme).palette.text.secondary,
       },
     },
     {
-      props: { disableHighlightToday: false, isDayCurrent: true },
+      props: {
+        isDayCurrent: true,
+        isDaySelected: false,
+      },
       style: {
-        [`&:not(.${pickersDayClasses.selected})`]: {
-          border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
-        },
+        outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+        outlineOffset: -1,
       },
     },
   ],
-});
-
-const overridesResolver = (
-  props: { ownerState: PickerDayOwnerState },
-  styles: Record<PickersDayClassKey, CSSInterpolation>,
-) => {
-  const { ownerState } = props;
-  return [
-    styles.root,
-    !ownerState.disableMargin && styles.dayWithMargin,
-    !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
-    !ownerState.isDayOutsideMonth &&
-      ownerState.showDaysOutsideCurrentMonth &&
-      styles.dayOutsideMonth,
-    ownerState.isDayOutsideMonth &&
-      !ownerState.showDaysOutsideCurrentMonth &&
-      styles.hiddenDaySpacingFiller,
-  ];
-};
-
-const PickersDayRoot = styled(ButtonBase, {
-  name: 'MuiPickersDay',
-  slot: 'Root',
-  overridesResolver,
-})<{ ownerState: PickerDayOwnerState }>(styleArg);
-
-const PickersDayFiller = styled('div', {
-  name: 'MuiPickersDay',
-  slot: 'Root',
-  overridesResolver,
-})<{ ownerState: PickerDayOwnerState }>(({ theme }) => ({
-  ...styleArg({ theme }),
-  // visibility: 'hidden' does not work here as it hides the element from screen readers as well
-  opacity: 0,
-  pointerEvents: 'none',
 }));
+
+type PickerDay2Component = ((
+  props: PickerDay2Props & React.RefAttributes<HTMLButtonElement>,
+) => React.JSX.Element) & { propTypes?: any };
 
 const noop = () => {};
 
-type PickersDayComponent = ((
-  props: PickersDayProps & React.RefAttributes<HTMLButtonElement>,
-) => React.JSX.Element) & { propTypes?: any };
-
-const PickersDayRaw = React.forwardRef(function PickersDay(
-  inProps: PickersDayProps,
+const PickerDay2Raw = React.forwardRef(function PickerDay2(
+  inProps: PickerDay2Props,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
   const props = useThemeProps({
     props: inProps,
-    name: 'MuiPickersDay',
+    name: 'MuiPickerDay2',
   });
+
+  const utils = useUtils();
 
   const {
     autoFocus = false,
@@ -191,10 +178,11 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
     disableMargin,
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
+    isVisuallySelected,
     ...other
   } = props;
 
-  const ownerState = usePickerDayOwnerState({
+  const pickersDayOwnerState = usePickerDayOwnerState({
     day,
     selected,
     disabled,
@@ -205,9 +193,14 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
     showDaysOutsideCurrentMonth,
   });
 
-  const classes = useUtilityClasses(classesProp, ownerState);
+  const ownerState: PickerDay2OwnerState = {
+    ...pickersDayOwnerState,
+    // Properties specific to the MUI implementation (some might be removed in the next major)
+    isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
+  };
 
-  const utils = useUtils();
+  const classes = useUtilityClasses(ownerState, classesProp);
+
   const ref = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);
 
@@ -243,22 +236,12 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
     }
   };
 
-  if (outsideCurrentMonth && !showDaysOutsideCurrentMonth) {
-    return (
-      <PickersDayFiller
-        className={clsx(classes.root, classes.hiddenDaySpacingFiller, className)}
-        ownerState={ownerState}
-        role={other.role}
-      />
-    );
-  }
-
   return (
-    <PickersDayRoot
-      className={clsx(classes.root, className)}
+    <PickerDay2Root
       ref={handleRef}
       centerRipple
-      data-testid="day"
+      // compat with PickersDay for tests
+      data-testid={ownerState.isDayFillerCell ? undefined : 'day'}
       disabled={disabled}
       tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}
@@ -269,13 +252,15 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
       onMouseDown={handleMouseDown}
       {...other}
       ownerState={ownerState}
+      className={clsx(classes.root, className)}
     >
-      {children ?? utils.format(day, 'dayOfMonth')}
-    </PickersDayRoot>
+      {/* `ownerState.isDayFillerCell` is used for compat with `PickersDay` for tests */}
+      {children ?? (ownerState.isDayFillerCell ? null : utils.format(day, 'dayOfMonth'))}
+    </PickerDay2Root>
   );
 });
 
-PickersDayRaw.propTypes = {
+PickerDay2Raw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -361,6 +346,10 @@ PickersDayRaw.propTypes = {
    * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
    */
   isLastVisibleCell: PropTypes.bool.isRequired,
+  /**
+   * Indicates if the day should be visually selected.
+   */
+  isVisuallySelected: PropTypes.bool,
   onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
@@ -428,12 +417,4 @@ PickersDayRaw.propTypes = {
   ]),
 } as any;
 
-/**
- * Demos:
- *
- * - [DateCalendar](https://mui.com/x/react-date-pickers/date-calendar/)
- * API:
- *
- * - [PickersDay API](https://mui.com/x/api/date-pickers/pickers-day/)
- */
-export const PickersDay = React.memo(PickersDayRaw) as PickersDayComponent;
+export const PickerDay2 = React.memo(PickerDay2Raw) as PickerDay2Component;
