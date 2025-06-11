@@ -46,16 +46,7 @@ describe('FunnelChart', () => {
 
   describeSkipIf(isJSDOM)('gap', () => {
     it('should properly distance sections based on gap', async () => {
-      render(
-        <div
-          style={{
-            width: 400,
-            height: 400,
-          }}
-        >
-          <FunnelChart {...config} gap={13} />
-        </div>,
-      );
+      render(<FunnelChart {...config} gap={13} />);
       const paths = document.querySelectorAll<HTMLElement>('path.MuiFunnelSection-root');
 
       const firstBCR = paths[0].getBoundingClientRect();
