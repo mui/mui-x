@@ -60,8 +60,8 @@
     "onAxisInteraction": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(newAxisInteraction: Array<AxisItemIdentifier>) => void",
-        "describedArgs": ["newAxisInteraction"]
+        "type": "function(newAxisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["newAxisItems"]
       }
     },
     "onHighlightChange": {
