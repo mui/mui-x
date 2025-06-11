@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { SchedulerValidDate } from '@mui/x-scheduler/primitives/models';
+import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { ViewType } from '../models/views';
 import { WeekView } from '../week-view/WeekView';

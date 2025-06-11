@@ -1,4 +1,4 @@
-import { SchedulerValidDate } from '@mui/x-scheduler/primitives/models';
+import { SchedulerValidDate } from '../../models';
 
 type FieldSectionType =
   | 'year'

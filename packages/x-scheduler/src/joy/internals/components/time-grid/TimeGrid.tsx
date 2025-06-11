@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { SchedulerValidDate } from '@mui/x-scheduler/primitives/models';
+import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
 import { TimeGridProps } from './TimeGrid.types';
