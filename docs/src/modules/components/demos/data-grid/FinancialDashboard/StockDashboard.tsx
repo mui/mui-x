@@ -14,7 +14,6 @@ import { useTheme } from '@mui/material/styles';
 import { format } from 'date-fns';
 import type { StockData } from './types/stocks';
 import { useStocksMockServer } from './hooks/useMockStockServer';
-import { getLogoUrl } from './utils/stockUtils';
 import { DemoThemeProvider } from '../DemoThemeProvider';
 import { stockDashboardTheme } from './theme';
 
@@ -53,7 +52,7 @@ function StockDashboard() {
 
     const interval = setInterval(async () => {
       try {
-        const response = await fetchRows('?page=0&pageSize=25');
+        const response = await fetchRows('?page=0&pageSize=100');
         if (response.rows && response.rows.length > 0) {
           setStocks(response.rows as StockData[]);
           apiRef.current?.updateRows(response.rows as StockData[]);
@@ -62,7 +61,7 @@ function StockDashboard() {
       } catch (error) {
         setError('Failed to update stock data');
       }
-    }, 250);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [isReady, fetchRows, apiRef]);
@@ -78,12 +77,13 @@ function StockDashboard() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box
               component="img"
-              src={getLogoUrl(params.value)}
+              src={params.row.logoUrl}
               alt={`${params.row.name} logo`}
               sx={{
                 width: 24,
                 height: 24,
                 objectFit: 'contain',
+                borderRadius: 1,
               }}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -267,6 +267,7 @@ function StockDashboard() {
                 series={[
                   {
                     type: 'line',
+                    curve: 'natural',
                     data: selectedStock.history.map((h: { price: number }) => h.price),
                     color:
                       selectedStock.history[selectedStock.history.length - 1].price >

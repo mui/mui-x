@@ -1,11 +1,8 @@
-'use client';
-
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
 import { GridGetRowsResponse } from '@mui/x-data-grid-pro';
 import type { StockData } from '../types/stocks';
 import { COMPANY_NAMES } from '../data/stockConstants';
-import { logoNameMap, getLogoUrl } from '../utils/stockUtils';
 import { GridDemoData } from 'packages/x-data-grid-generator/src/services/real-data-service';
 
 const dataCache = new LRUCache<string, GridDemoData>({
@@ -57,7 +54,7 @@ const generatePredictionData = (lastPrice: number, days: number = 7) => {
 };
 
 const generateMockStockData = (): StockData[] => {
-  const data = Object.entries(logoNameMap).map(([symbol], index) => {
+  const data = Object.entries(COMPANY_NAMES).map(([symbol], index) => {
     const basePrice = 100 + Math.random() * 1000; // this is just going off the usual real range for prices, but we can change it to whatever
     const change = (Math.random() - 0.5) * 20;
     const changePercent = (change / basePrice) * 100;
@@ -71,7 +68,7 @@ const generateMockStockData = (): StockData[] => {
       id: index,
       symbol,
       name: COMPANY_NAMES[symbol],
-      logoUrl: getLogoUrl(symbol),
+      logoUrl: `/static/x/data-grid/company-logos/${symbol}.svg`,
       price: Number(basePrice.toFixed(2)),
       change: Number(change.toFixed(2)),
       changePercent: Number(changePercent.toFixed(2)),
