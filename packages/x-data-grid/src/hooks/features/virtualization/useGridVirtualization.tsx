@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { useVirtualizer, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
@@ -39,7 +39,6 @@ import { minimalContentHeight } from '../rows/gridRowsUtils';
 import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { gridRowSelectionManagerSelector } from '../rowSelection';
 
 type RootProps = DataGridProcessedProps;
@@ -211,40 +210,25 @@ export function useGridVirtualization(
       getRowHeight: (id) =>
         !apiRef.current.rowHasAutoHeight(id) ? apiRef.current.unstable_getRowHeight(id) : 'auto',
 
-      renderRow: ({
-        id,
-        model,
-        rowIndex,
-        offsetLeft,
-        columnsTotalWidth,
-        baseRowHeight,
-        columns,
-        firstColumnIndex,
-        lastColumnIndex,
-        focusedColumnIndex,
-        isFirstVisible,
-        isLastVisible,
-        isVirtualFocusRow,
-        showBottomBorder,
-      }) => (
+      renderRow: (params) => (
         <rootProps.slots.row
-          key={id}
-          row={model}
-          rowId={id}
-          index={rowIndex}
-          selected={isRowSelected(id)}
-          offsetLeft={offsetLeft}
+          key={params.id}
+          row={params.model}
+          rowId={params.id}
+          index={params.rowIndex}
+          selected={isRowSelected(params.id)}
+          offsetLeft={params.offsetLeft}
           columnsTotalWidth={columnsTotalWidth}
-          rowHeight={baseRowHeight}
+          rowHeight={params.baseRowHeight}
           pinnedColumns={pinnedColumns}
-          visibleColumns={columns}
-          firstColumnIndex={firstColumnIndex}
-          lastColumnIndex={lastColumnIndex}
-          focusedColumnIndex={focusedColumnIndex}
-          isFirstVisible={isFirstVisible}
-          isLastVisible={isLastVisible}
-          isNotVisible={isVirtualFocusRow}
-          showBottomBorder={showBottomBorder}
+          visibleColumns={params.columns}
+          firstColumnIndex={params.firstColumnIndex}
+          lastColumnIndex={params.lastColumnIndex}
+          focusedColumnIndex={params.focusedColumnIndex}
+          isFirstVisible={params.isFirstVisible}
+          isLastVisible={params.isLastVisible}
+          isNotVisible={params.isVirtualFocusRow}
+          showBottomBorder={params.showBottomBorder}
           scrollbarWidth={verticalScrollbarWidth}
           gridHasFiller={hasFiller}
           {...rootProps.slotProps?.row}
