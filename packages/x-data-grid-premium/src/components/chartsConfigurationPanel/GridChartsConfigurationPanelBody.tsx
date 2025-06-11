@@ -167,7 +167,10 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
   const availableFields = React.useMemo(() => {
     const notUsedFields = Object.keys(columns).filter(
       (field) =>
-        !categories.includes(field) && !series.includes(field) && !rowGroupingModel.includes(field),
+        columns[field].chartable &&
+        !categories.includes(field) &&
+        !series.includes(field) &&
+        !rowGroupingModel.includes(field),
     );
     if (searchValue) {
       return notUsedFields.filter((field) => {
