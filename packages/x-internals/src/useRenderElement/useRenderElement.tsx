@@ -1,6 +1,6 @@
 /* Copied from https://github.com/mui/base-ui/blob/c52a6ab0c5982263e10028756a8792234eeadf42/packages/react/src/utils/useRenderElement.tsx */
 import * as React from 'react';
-import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types';
+import type { MUIXUIComponentProps, ComponentRenderFn, HTMLProps } from './types';
 import { CustomStyleHookMapping, getStyleHookProps } from './getStyleHookProps';
 import { useForkRef, useForkRefN } from '../useForkRef';
 import { resolveClassName } from './resolveClassName';
@@ -13,7 +13,7 @@ const EMPTY_OBJECT = {};
 type IntrinsicTagName = keyof React.JSX.IntrinsicElements;
 
 /**
- * Renders a Base UI element.
+ * Renders a MUI X UI element.
  *
  * @param element The default HTML element to render. Can be overridden by the `render` prop.
  * @param componentProps An object containing the `render` and `className` props to be used for element customization. Other props are ignored.
@@ -107,7 +107,7 @@ function useRenderElementProps<
 
 function evaluateRenderProp<T extends React.ElementType, S>(
   element: IntrinsicTagName | undefined,
-  render: BaseUIComponentProps<T, S>['render'],
+  render: MUIXUIComponentProps<T, S>['render'],
   props: React.HTMLAttributes<any> & React.RefAttributes<any>,
   state: S,
 ): React.ReactElement<Record<string, unknown>> {
@@ -126,7 +126,7 @@ function evaluateRenderProp<T extends React.ElementType, S>(
   }
   // Unreachable, but the typings on `useRenderElement` need to be reworked
   // to annotate it correctly.
-  throw new Error('Base UI: Render element or function are not defined.');
+  throw new Error('MUI X: Render element or function are not defined.');
 }
 
 function renderTag(Tag: string, props: Record<string, any>) {
@@ -140,7 +140,7 @@ function renderTag(Tag: string, props: Record<string, any>) {
 }
 
 function getChildRef<ElementType extends React.ElementType, State>(
-  render: BaseUIComponentProps<ElementType, State>['render'],
+  render: MUIXUIComponentProps<ElementType, State>['render'],
 ): React.RefCallback<any> | null {
   if (render && typeof render !== 'function') {
     return reactMajor >= 19 ? render.props.ref : render.ref;

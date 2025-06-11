@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { mergeProps } from './mergeProps';
-import type { BaseUIEvent } from './types';
+import type { MUIXEvent } from './types';
 
 describe('mergeProps', () => {
   it('merges event handlers', () => {
@@ -123,7 +123,7 @@ describe('mergeProps', () => {
       },
       {
         onClick: function onClick1(event) {
-          event.preventBaseUIHandler();
+          event.preventMUIXHandler();
         },
       },
     );
@@ -144,8 +144,8 @@ describe('mergeProps', () => {
         },
       },
       {
-        onClick(event: BaseUIEvent<React.MouseEvent>) {
-          event.preventBaseUIHandler();
+        onClick(event: MUIXEvent<React.MouseEvent>) {
+          event.preventMUIXHandler();
           log.push('1');
         },
       },

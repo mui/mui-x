@@ -5,24 +5,24 @@ export type HTMLProps<T = any> = React.HTMLAttributes<T> & {
   ref?: React.Ref<T> | undefined;
 };
 
-export type BaseUIEvent<E extends React.SyntheticEvent<Element, Event>> = E & {
-  preventBaseUIHandler: () => void;
-  readonly baseUIHandlerPrevented?: boolean;
+export type MUIXEvent<E extends React.SyntheticEvent<Element, Event>> = E & {
+  preventMUIXHandler: () => void;
+  readonly muiXUIHandlerPrevented?: boolean;
 };
 
-type WithPreventBaseUIHandler<T> = T extends (event: infer E) => any
+type WithPreventMUIXUIHandler<T> = T extends (event: infer E) => any
   ? E extends React.SyntheticEvent<Element, Event>
-    ? (event: BaseUIEvent<E>) => ReturnType<T>
+    ? (event: MUIXEvent<E>) => ReturnType<T>
     : T
   : T extends undefined
     ? undefined
     : T;
 
 /**
- * Adds a `preventBaseUIHandler` method to all event handlers.
+ * Adds a `preventMUIXUIHandler` method to all event handlers.
  */
-export type WithBaseUIEvent<T> = {
-  [K in keyof T]: WithPreventBaseUIHandler<T[K]>;
+export type WithMUIXUIEvent<T> = {
+  [K in keyof T]: WithPreventMUIXUIHandler<T[K]>;
 };
 
 /**
@@ -40,15 +40,15 @@ export type ComponentRenderFn<Props, State> = (
 ) => React.ReactElement<unknown>;
 
 /**
- * Props shared by all Base UI components.
+ * Props shared by all MUI X UI components.
  * Contains `className` (string or callback taking the component's state as an argument) and `render` (function to customize rendering).
  */
-export type BaseUIComponentProps<
+export type MUIXUIComponentProps<
   ElementType extends React.ElementType,
   State,
   RenderFunctionProps = HTMLProps,
 > = Omit<
-  WithBaseUIEvent<React.ComponentPropsWithoutRef<ElementType>>,
+  WithMUIXUIEvent<React.ComponentPropsWithoutRef<ElementType>>,
   'className' | 'color' | 'defaultValue' | 'defaultChecked'
 > & {
   /**

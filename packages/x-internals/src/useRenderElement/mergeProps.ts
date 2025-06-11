@@ -1,10 +1,10 @@
 /* Adapted from https://github.com/mui/base-ui/blob/c52a6ab0c5982263e10028756a8792234eeadf42/packages/react/src/merge-props/mergeProps.ts */
 import * as React from 'react';
 import { mergeObjects } from './mergeObjects';
-import type { BaseUIEvent, WithBaseUIEvent } from './types';
+import type { MUIXEvent, WithMUIXUIEvent } from './types';
 
 type ElementType = React.ElementType;
-type PropsOf<T extends React.ElementType> = WithBaseUIEvent<React.ComponentPropsWithRef<T>>;
+type PropsOf<T extends React.ElementType> = WithMUIXUIEvent<React.ComponentPropsWithRef<T>>;
 type InputProps<T extends React.ElementType> =
   | PropsOf<T>
   | ((otherProps: PropsOf<T>) => PropsOf<T>)
@@ -17,7 +17,7 @@ const EMPTY_PROPS = {};
  * the conflicting ones from others. This doesn't apply to event handlers, `className` and `style` props.
  * Event handlers are merged such that they are called in sequence (the rightmost one being called first),
  * and allows the user to prevent the subsequent event handlers from being
- * executed by attaching a `preventBaseUIHandler` method.
+ * executed by attaching a `preventMUIXUIHandler` method.
  * It also merges the `className` and `style` props, whereby the classes are concatenated
  * and the rightmost styles overwrite the subsequent ones.
  *
@@ -26,8 +26,8 @@ const EMPTY_PROPS = {};
  * so in the case of `(obj1, obj2, fn, obj3)`, `fn` will receive the merged props of `obj1` and `obj2`.
  * The function is responsible for chaining event handlers if needed (i.e. we don't run the merge logic).
  *
- * Event handlers returned by the functions are not automatically prevented when `preventBaseUIHandler` is called.
- * They must check `event.baseUIHandlerPrevented` themselves and bail out if it's true.
+ * Event handlers returned by the functions are not automatically prevented when `preventMUIXUIHandler` is called.
+ * They must check `event.muiXUIHandlerPrevented` themselves and bail out if it's true.
  *
  * @important **`ref` is not merged.**
  * @param props props to merge.
@@ -181,14 +181,14 @@ function mergeEventHandlers(ourHandler: Function, theirHandler: Function) {
 
   return (event: unknown) => {
     if (isSyntheticEvent(event)) {
-      const baseUIEvent = event as BaseUIEvent<typeof event>;
+      const muiXUIEvent = event as MUIXEvent<typeof event>;
 
-      makeEventPreventable(baseUIEvent);
+      makeEventPreventable(muiXUIEvent);
 
-      const result = theirHandler(baseUIEvent);
+      const result = theirHandler(muiXUIEvent);
 
-      if (!baseUIEvent.baseUIHandlerPrevented) {
-        ourHandler?.(baseUIEvent);
+      if (!muiXUIEvent.muiXUIHandlerPrevented) {
+        ourHandler?.(muiXUIEvent);
       }
 
       return result;
@@ -200,9 +200,9 @@ function mergeEventHandlers(ourHandler: Function, theirHandler: Function) {
   };
 }
 
-export function makeEventPreventable<T extends React.SyntheticEvent>(event: BaseUIEvent<T>) {
-  event.preventBaseUIHandler = () => {
-    (event.baseUIHandlerPrevented as boolean) = true;
+export function makeEventPreventable<T extends React.SyntheticEvent>(event: MUIXEvent<T>) {
+  event.preventMUIXHandler = () => {
+    (event.muiXUIHandlerPrevented as boolean) = true;
   };
 
   return event;
