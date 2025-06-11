@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
-import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
 
@@ -48,7 +48,7 @@ const PromptFieldControl = forwardRef<HTMLInputElement, PromptFieldControlProps>
       onKeyDown?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseTextField,
       render,
       {

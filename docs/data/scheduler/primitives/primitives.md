@@ -2,7 +2,7 @@
 productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
-githubLabel: 'component: scheduler'
+githubLabel: 'scope: scheduler'
 ---
 
 # Scheduler - Overview
@@ -21,4 +21,4 @@ This package is not published yet.
 
 ## Day Grid
 
-TODO
+{{"demo": "DayGridPrimitives.js", "bg": "inline", "defaultCodeOpen": false}}
