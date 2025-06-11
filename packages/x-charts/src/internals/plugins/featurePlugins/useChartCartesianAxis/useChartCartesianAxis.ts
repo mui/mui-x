@@ -16,6 +16,7 @@ import { getAxisIndex } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
 import {
   selectorChartsInteractionIsInitialized,
+  selectorChartsInteractionPointer,
   UseChartInteractionSignature,
 } from '../useChartInteraction';
 import {
@@ -105,6 +106,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const usedYAxis = yAxisIds[0];
 
   React.useEffect(() => {
+    if (!onAxisInteraction) {
+      return undefined;
+    }
+
     const subscribeModifications = (
       newStoreState: ChartState<
         [UseChartCartesianAxisSignature<any>],
@@ -115,12 +120,26 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         [UseChartInteractionSignature]
       >,
     ) => {
-      if (!onAxisInteraction) {
+      const newXAxis = selectorChartXAxis(newStoreState);
+      const prevXAxis = selectorChartXAxis(prevStoreState);
+
+      const newYAxis = selectorChartYAxis(newStoreState);
+      const prevYAxis = selectorChartYAxis(prevStoreState);
+
+      const newPointer = selectorChartsInteractionPointer(newStoreState);
+      const prevPointer = selectorChartsInteractionPointer(prevStoreState);
+
+      if (
+        Object.is(newXAxis, prevXAxis) &&
+        !Object.is(newYAxis, prevYAxis) &&
+        !Object.is(newPointer, prevPointer)
+      ) {
+        // Early return if the update is not about axes or pointer.
         return;
       }
 
-      const newXAxisIds = selectorChartRawXAxis(newStoreState)?.map((axis) => axis.id) ?? [];
-      const newYAxisIds = selectorChartRawYAxis(newStoreState)?.map((axis) => axis.id) ?? [];
+      const newXAxisIds = newXAxis.axisIds;
+      const newYAxisIds = newYAxis.axisIds;
 
       const newAxisPointerInteraction: AxisItemIdentifier[] = [];
       let isSame = true;
@@ -182,7 +201,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     return () => {
       unsubscribe();
     };
-  }, [onAxisInteraction]);
+  }, [onAxisInteraction, store]);
 
   React.useEffect(() => {
     const element = svgRef.current;
