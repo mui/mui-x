@@ -51,9 +51,8 @@ describe('FunnelChart', () => {
 
       const firstBCR = paths[0].getBoundingClientRect();
       const secondBCR = paths[1].getBoundingClientRect();
-      expect(firstBCR.bottom).to.be.closeTo(
+      expect(firstBCR.bottom).to.equal(
         secondBCR.top - 13,
-        0.45,
         'The gap should be respected between sections',
       );
     });
