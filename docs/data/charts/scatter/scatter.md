@@ -107,13 +107,15 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### CSS
 
-You can target scatter elements with CSS selector by using the following data attributes:
+You can target scatter markers with the following CSS selectors:
 
-- `data-series-id='<series id>'`
-- `data-highlighted=true|false`
-- `data-faded=true|false`
+- `[data-series='<series id>']` Selects the group containing markers of the series with the given id.
+- `[data-highlighted=true]` Selects markers with highlighted state.
+- `[data-faded=true]` Selects markers with faded state.
 
-Here is an example the modify how highlight impact items.
+To select all marker groups, use the `scatterClasses.root` classe name.
+
+Here is an example that customizes the look of highlighted items depending on the series they belong to.
 
 {{"demo": "ScatterCSSSelectors.js"}}
 

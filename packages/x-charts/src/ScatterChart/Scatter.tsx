@@ -22,6 +22,7 @@ import { useChartContext } from '../context/ChartProvider';
 import { ScatterMarker } from './ScatterMarker';
 import { SeriesId } from '../models/seriesType/common';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
+import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -38,6 +39,7 @@ export interface ScatterProps {
     event: React.MouseEvent<SVGElement, MouseEvent>,
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
+  classes?: Partial<ScatterClasses>;
   slots?: ScatterSlots;
   slotProps?: ScatterSlotProps;
 }
@@ -57,7 +59,17 @@ export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
 function Scatter(props: ScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, onItemClick, slots, slotProps } = props;
+  const {
+    series,
+    xScale,
+    yScale,
+    color,
+    colorGetter,
+    onItemClick,
+    classes: inClasses,
+    slots,
+    slotProps,
+  } = props;
 
   const { instance } = useChartContext();
   const store = useStore<[UseChartVoronoiSignature]>();
@@ -134,8 +146,10 @@ function Scatter(props: ScatterProps) {
     ownerState: {},
   });
 
+  const classes = useUtilityClasses(inClasses);
+
   return (
-    <g data-series={series.id}>
+    <g data-series={series.id} className={classes.root}>
       {cleanData.map((dataPoint, i) => (
         <Marker
           key={dataPoint.id ?? dataPoint.dataIndex}
@@ -169,6 +183,7 @@ Scatter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  classes: PropTypes.object,
   color: PropTypes.string.isRequired,
   colorGetter: PropTypes.func,
   /**

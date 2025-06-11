@@ -24,12 +24,12 @@ export default function ScatterCSSSelectors() {
   return (
     <ScatterChart
       height={300}
+      voronoiMaxRadius={30}
       series={series}
       sx={{
-        '& [data-faded=true]': {
-          opacity: 0.2,
-        },
-        "& [data-series-id='series-1'][data-highlighted=true]": {
+        '& [data-faded=true]': { opacity: 0.4 },
+        "& [data-series='series-1'] [data-faded=true]": { fill: 'gray' },
+        "& [data-series='series-1'] [data-highlighted=true]": {
           stroke: 'blue',
           strokeWidth: 3,
           fill: 'none',
