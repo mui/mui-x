@@ -9,6 +9,7 @@ declare global {
   interface MUIEnv {
     JSDOM?: string;
     BROWSER?: string;
+    PLAYWRIGHT_SERVER_WS?: string;
     CI?: string;
   }
 }
@@ -16,7 +17,7 @@ declare global {
 // Checking the environment variables simplifies the scripts in the package.json
 // We use `cross-env BROWSER=true vitest` instead of `vitest --project "browser/*"`
 // Which allows us to run `pnpm test:browser --project "x-charts"` for example.
-const getWorkspaces = () => {
+const getProjects = () => {
   const getFill = () => {
     const isBrowser = process.env.BROWSER === 'true';
     // We delete the env to prevent it from being used in the tests
@@ -31,13 +32,19 @@ const getWorkspaces = () => {
 
   return [
     `packages/*/vitest.config.${fill}.mts`,
-    ...(fill.includes('jsdom') ? [`docs/vitest.config.${fill}.mts`] : []),
+    ...(fill === 'jsdom'
+      ? [
+          `docs/vitest.config.${fill}.mts`,
+          // We also run node tests when running in jsdom mode
+          `packages/*/vitest.config.node.mts`,
+        ]
+      : []),
   ];
 };
 
 export default defineConfig({
   test: {
-    workspace: getWorkspaces(),
+    projects: getProjects(),
     coverage: {
       provider: 'v8',
       reporter: process.env.CI ? ['lcovonly'] : ['text'],

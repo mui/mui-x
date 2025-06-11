@@ -293,7 +293,7 @@ export const useGridDetailPanel = (
 
       const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef);
 
-      initialValue.detail = heightCache[row.id].height ?? 0; // Fallback to zero because the cache might not be ready yet (for example page was changed)
+      initialValue.detail = heightCache[row.id]?.height ?? 0; // Fallback to zero because the cache might not be ready yet (for example page was changed)
       return initialValue;
     },
     [apiRef, updateCachesIfNeeded],

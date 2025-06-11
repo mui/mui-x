@@ -1,17 +1,39 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { EventCalendarProps } from './EventCalendar.types';
+import { ViewType } from '../models/views';
+import { WeekView } from '../week-view/WeekView';
+import { HeaderToolbar } from '../header-toolbar';
+import { TranslationsProvider } from '../utils/TranslationsContext';
 import '../index.css';
 import './EventCalendar.css';
-import { EventCalendarProps } from './EventCalendar.types';
-import { WeekView } from '../week-view/WeekView';
-import { TranslationsProvider } from '../utils/TranslationsContext';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { events, onEventsChange, translations, className, ...other } = props;
+
+  const [view, setView] = React.useState<ViewType>('week');
+
+  let content: React.ReactNode;
+  switch (view) {
+    case 'week':
+      content = <WeekView events={events} />;
+      break;
+    case 'day':
+      content = <div>TODO: Day view</div>;
+      break;
+    case 'month':
+      content = <div>TODO: Month view</div>;
+      break;
+    case 'agenda':
+      content = <div>TODO: Agenda view</div>;
+      break;
+    default:
+      content = null;
+  }
 
   return (
     <TranslationsProvider translations={translations}>
@@ -37,15 +59,13 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           </section>
         </aside>
         <div className="EventCalendarMainPanel">
-          <header className="EventCalendarToolbar">
-            <span>TODO: View switch</span>
-          </header>
+          <HeaderToolbar onTodayClick={() => {}} selectedView={view} setSelectedView={setView} />
           <section
             // TODO: Add localization
             className="EventCalendarContent"
             aria-label="Calendar content"
           >
-            <WeekView events={events} />
+            {content}
           </section>
         </div>
       </div>
