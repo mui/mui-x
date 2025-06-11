@@ -80,9 +80,6 @@ export function ChartAxisZoomSliderActiveTrack({
       return;
     }
 
-    /* min and max values of zoom to ensure the pointer anchor in the slider is maintained  */
-    let pointerZoomMin: number;
-    let pointerZoomMax: number;
     let prevPointerZoom = 0;
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
@@ -93,13 +90,11 @@ export function ChartAxisZoomSliderActiveTrack({
       }
 
       const point = getSVGPoint(element, event);
-      let pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+      const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
       if (pointerZoom === null) {
         return;
       }
-
-      pointerZoom = Math.max(pointerZoomMin, Math.min(pointerZoomMax, pointerZoom));
 
       const deltaZoom = pointerZoom - prevPointerZoom;
       prevPointerZoom = pointerZoom;
@@ -131,11 +126,7 @@ export function ChartAxisZoomSliderActiveTrack({
         return;
       }
 
-      const { maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
-
       prevPointerZoom = pointerDownZoom;
-      pointerZoomMin = pointerDownZoom - axisZoomData.start;
-      pointerZoomMax = maxEnd - (axisZoomData.end - pointerDownZoom);
 
       document.addEventListener('pointerup', onPointerUp);
       activePreviewRect.addEventListener('pointermove', onPointerMove);
