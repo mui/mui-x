@@ -1028,6 +1028,69 @@ importers:
         version: 6.0.1
     publishDirectory: build
 
+  packages/x-charts-premium:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.27.6
+      '@emotion/react':
+        specifier: ^11.9.0
+        version: 11.14.0(@types/react@19.0.12)(react@19.0.0)
+      '@emotion/styled':
+        specifier: ^11.8.1
+        version: 11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.1.1(@types/react@19.0.12)(react@19.0.0)
+      '@mui/x-charts':
+        specifier: workspace:*
+        version: link:../x-charts/build
+      '@mui/x-charts-pro':
+        specifier: workspace:*
+        version: link:../x-charts-pro/build
+      '@mui/x-charts-vendor':
+        specifier: workspace:*
+        version: link:../x-charts-vendor
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+      '@mui/x-license':
+        specifier: workspace:*
+        version: link:../x-license/build
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
+    devDependencies:
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 7.1.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mui/system':
+        specifier: 'catalog:'
+        version: 7.1.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.14
+      csstype:
+        specifier: 'catalog:'
+        version: 3.1.3
+      react:
+        specifier: 'catalog:'
+        version: 19.0.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.0.0(react@19.0.0)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.0.1
+    optionalDependencies:
+      rasterizehtml:
+        specifier: ^1.3.1
+        version: 1.3.1
+    publishDirectory: build
+
   packages/x-charts-pro:
     dependencies:
       '@babel/runtime':
@@ -1912,6 +1975,9 @@ importers:
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:*
+        version: link:../packages/x-charts-premium/build
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../packages/x-charts-pro/build
@@ -2002,6 +2068,9 @@ importers:
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../../packages/x-charts-pro/build
@@ -2042,6 +2111,9 @@ importers:
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../../packages/x-charts-pro/build
@@ -2126,6 +2198,9 @@ importers:
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../../packages/x-charts-pro/build
@@ -2171,6 +2246,9 @@ importers:
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../../packages/x-charts/build
+      '@mui/x-charts-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-charts-premium/build
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../../packages/x-charts-pro/build
