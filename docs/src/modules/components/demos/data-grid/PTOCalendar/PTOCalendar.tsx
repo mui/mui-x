@@ -662,7 +662,6 @@ function PTOCalendar() {
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            minHeight: 700,
             ...theme.applyStyles('dark', {
               backgroundColor: '#141A1F',
             }),
