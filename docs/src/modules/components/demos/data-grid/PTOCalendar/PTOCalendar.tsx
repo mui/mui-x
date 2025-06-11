@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -26,7 +26,7 @@ import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
 import { FILTER_COLORS } from './constants';
 import { ptoCalendarTheme } from './theme';
-import { DemoThemeProvider } from '../DemoThemeProvider';
+import { DemoContainer } from '../DemoContainer';
 
 interface RowData {
   id: number;
@@ -655,7 +655,7 @@ function PTOCalendar() {
   );
 
   return (
-    <DemoThemeProvider theme={ptoCalendarTheme}>
+    <DemoContainer theme={ptoCalendarTheme}>
       <CalendarContext.Provider value={calendarState}>
         <Box
           sx={{
@@ -691,7 +691,7 @@ function PTOCalendar() {
           />
         </Box>
       </CalendarContext.Provider>
-    </DemoThemeProvider>
+    </DemoContainer>
   );
 }
 

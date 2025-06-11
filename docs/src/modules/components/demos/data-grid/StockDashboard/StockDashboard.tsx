@@ -17,7 +17,7 @@ import { useTheme } from '@mui/material/styles';
 import { format } from 'date-fns';
 import type { StockData } from './types/stocks';
 import { useMockStockServer } from './hooks/useMockStockServer';
-import { DemoThemeProvider } from '../DemoThemeProvider';
+import { DemoContainer } from '../DemoContainer';
 import { stockDashboardTheme } from './theme';
 
 function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) {
@@ -275,7 +275,7 @@ function StockDashboard() {
   );
 
   return (
-    <DemoThemeProvider theme={stockDashboardTheme}>
+    <DemoContainer theme={stockDashboardTheme}>
       <Box
         sx={{
           display: 'flex',
@@ -306,7 +306,7 @@ function StockDashboard() {
 
         <StockDetailsPanel apiRef={apiRef as React.RefObject<GridApiPro>} />
       </Box>
-    </DemoThemeProvider>
+    </DemoContainer>
   );
 }
 

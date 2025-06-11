@@ -36,7 +36,14 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/quickstart' },
       { pathname: '/x/react-data-grid/features' },
-      { pathname: '/x/react-data-grid/demos' },
+      {
+        pathname: '/x/react-data-grid/demos-group',
+        title: 'Demos',
+        children: [
+          { pathname: '/x/react-data-grid/demos/real-time-data', title: 'Real-time data' },
+          { pathname: '/x/react-data-grid/demos/time-off-calendar', title: 'Time off calendar' },
+        ],
+      },
       {
         pathname: '/x/react-data-grid/main-features',
         subheader: 'Main features',
