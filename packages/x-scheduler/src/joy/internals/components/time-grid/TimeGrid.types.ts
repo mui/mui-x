@@ -1,4 +1,4 @@
-import { SchedulerValidDate } from '../../../../primitives/utils/adapter/types';
+import { SchedulerValidDate } from '../../../../primitives/models';
 import { BaseViewProps } from '../../../models/views';
 
 export interface TimeGridProps extends BaseViewProps {
