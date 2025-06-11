@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
 import { TimeGrid } from '../../primitives/time-grid';
+import { Event } from '../event/Event';
 import { WeekViewProps } from './WeekView.types';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
@@ -52,7 +53,7 @@ export const WeekView = React.forwardRef(function WeekView(
   }, [events]);
 
   return (
-    <div ref={forwardedRef} className={clsx('WeekViewContainer', className)} {...other}>
+    <div ref={forwardedRef} className={clsx('WeekViewContainer', 'joy', className)} {...other}>
       <TimeGrid.Root className="WeekViewRoot">
         <div ref={headerWrapperRef} className="WeekViewHeader">
           <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
@@ -118,20 +119,12 @@ export const WeekView = React.forwardRef(function WeekView(
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
                     {dayEvents.map((event: CalendarEvent) => (
-                      <TimeGrid.Event
+                      <Event
                         key={event.id}
-                        start={event.start}
-                        end={event.end}
-                        className="WeekViewEvent"
-                        aria-labelledby={`WeekViewHeaderCell-${day.day.toString()}`}
-                      >
-                        <time>
-                          {adapter.formatByString(event.start, 'h:mma')} -{' '}
-                          {adapter.formatByString(event.end, 'h:mma')}
-                        </time>
-                        <br />
-                        <span>{event.title}</span>
-                      </TimeGrid.Event>
+                        event={event}
+                        variant="regular"
+                        ariaLabelledBy={`WeekViewHeaderCell-${day.day.toString()}`}
+                      />
                     ))}
                   </TimeGrid.Column>
                 );

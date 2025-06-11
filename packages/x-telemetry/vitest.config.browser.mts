@@ -12,6 +12,13 @@ export default mergeConfig(sharedConfig, {
       instances: [
         {
           browser: 'chromium',
+          ...(process.env.PLAYWRIGHT_SERVER_WS
+            ? {
+                connect: {
+                  wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
+                },
+              }
+            : {}),
         },
       ],
     },

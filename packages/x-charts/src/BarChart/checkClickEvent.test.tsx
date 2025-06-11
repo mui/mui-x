@@ -28,19 +28,6 @@ const config = {
 describe('BarChart - click event', () => {
   const { render } = createRenderer();
 
-  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-  beforeEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
