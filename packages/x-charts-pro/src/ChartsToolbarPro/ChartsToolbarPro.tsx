@@ -112,7 +112,7 @@ function ChartsToolbarPro({
           target={exportMenuTriggerRef.current}
           open={exportMenuOpen}
           onClose={closeExportMenu}
-          position="bottom-start"
+          position="bottom-end"
         >
           <MenuList
             id={exportMenuId}
