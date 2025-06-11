@@ -43,7 +43,7 @@ export default function GridChartsIntegrationRowGrouping() {
         },
         categories: ['commodity'],
         series: ['filledQuantity', 'feeRate'],
-        chartType: 'bar',
+        chartType: 'column',
       },
     },
   });

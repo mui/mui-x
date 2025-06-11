@@ -41,7 +41,7 @@ export default function GridChartsIntegrationBasic() {
                 },
                 categories: ['name'],
                 series: ['salary'],
-                chartType: 'bar',
+                chartType: 'column',
               },
             }}
           />

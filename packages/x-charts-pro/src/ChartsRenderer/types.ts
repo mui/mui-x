@@ -10,7 +10,7 @@ type ConfigurationCallback<R> = (context: {
   series: Axis<number | null>;
 }) => R;
 
-interface GridChartsConfigurationSection {
+export interface GridChartsConfigurationSection {
   id: string;
   label: string;
   controls: {

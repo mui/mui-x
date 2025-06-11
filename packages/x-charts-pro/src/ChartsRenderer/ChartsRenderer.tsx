@@ -31,8 +31,9 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
     };
   }, [defaultOptions, configuration]);
 
-  if (chartType === 'bar') {
-    const axis = chartConfiguration.layout === 'vertical' ? 'xAxis' : 'yAxis';
+  if (chartType === 'bar' || chartType === 'column') {
+    const layout = chartType === 'bar' ? 'horizontal' : 'vertical';
+    const axis = layout === 'vertical' ? 'xAxis' : 'yAxis';
     const axisProp = {
       [axis]: [
         {
@@ -54,7 +55,7 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
         series={seriesProp}
         hideLegend={chartConfiguration.hideLegend}
         height={chartConfiguration.height}
-        layout={chartConfiguration.layout}
+        layout={layout}
         borderRadius={chartConfiguration.borderRadius}
         colors={getColorPallete(chartConfiguration.colors)}
         grid={{
@@ -67,42 +68,79 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
     );
   }
 
-  if (chartType === 'line') {
+  if (chartType === 'line' || chartType === 'area') {
+    const area = chartType === 'area';
+    const showMark = !area;
+    const seriesProp = series.map((ser) => ({
+      ...ser,
+      area,
+      showMark,
+      stack: chartConfiguration.stacked ? 'stack' : undefined,
+    }));
+
     return (
       <LineChart
         xAxis={[{ data: categoryData, scaleType: 'point' }]}
         yAxis={[{ min: 0 }]}
-        series={series}
-        {...chartConfiguration}
+        series={seriesProp}
+        hideLegend={chartConfiguration.hideLegend}
+        height={chartConfiguration.height}
         colors={getColorPallete(chartConfiguration.colors)}
+        skipAnimation={chartConfiguration.skipAnimation}
       />
     );
   }
 
   if (chartType === 'pie') {
+    // - `chartConfiguration.outerRadius - chartConfiguration.innerRadius` is available radius for the whole chart
+    // - to get the radius for each serie, we need to substract all the gaps
+    //   between the series from that number (`chartConfiguration.seriesGap * series.length - 1` - there is always
+    //   one gap less than the number of series)
+    // - then we divide the result by the number of series to get the radius for each serie
+    const radiusPerSerie =
+      (chartConfiguration.outerRadius -
+        chartConfiguration.innerRadius -
+        chartConfiguration.seriesGap * series.length -
+        1) /
+      series.length;
+
+    const seriesProp = series.map((serie, serieIndex) => ({
+      data: serie.data.map((item, itemIndex) => ({
+        id: `${serie.id}-${itemIndex}`,
+        value: item || 0,
+        label: String(categoryData[itemIndex]),
+      })),
+      // each serie starts from
+      // - inner radius of the chart
+      // - plus all the series before
+      // - plus the gap between the series
+      innerRadius:
+        chartConfiguration.innerRadius +
+        serieIndex * radiusPerSerie +
+        chartConfiguration.seriesGap * serieIndex,
+      // each serie ends at the radius that is the same as start plus the radius of one serie
+      outerRadius:
+        chartConfiguration.innerRadius +
+        (serieIndex + 1) * radiusPerSerie +
+        chartConfiguration.seriesGap * serieIndex,
+    }));
+
     return (
       <PieChart
-        series={[
-          {
-            data: series[0]?.data.map((item, index) => ({
-              id: index,
-              value: item || 0,
-              label: String(categories[0].data[index]),
-            })),
-            outerRadius: chartConfiguration.outerRadius,
-          },
-        ]}
+        series={seriesProp}
+        height={chartConfiguration.height}
+        width={chartConfiguration.width}
+        hideLegend={chartConfiguration.hideLegend}
+        colors={getColorPallete(chartConfiguration.colors)}
         slotProps={{
           legend: {
-            direction: 'horizontal',
-            position: {
-              vertical: 'bottom',
-              horizontal: 'center',
+            sx: {
+              overflowY: 'scroll',
+              flexWrap: 'nowrap',
+              height: chartConfiguration.height,
             },
           },
         }}
-        {...chartConfiguration}
-        colors={getColorPallete(chartConfiguration.colors)}
       />
     );
   }
