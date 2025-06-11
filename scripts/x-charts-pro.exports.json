@@ -194,6 +194,7 @@
   { "name": "FunnelLabelOptions", "kind": "TypeAlias" },
   { "name": "FunnelPlot", "kind": "Function" },
   { "name": "FunnelPlotProps", "kind": "Interface" },
+  { "name": "FunnelScaleName", "kind": "TypeAlias" },
   { "name": "FunnelSection", "kind": "Variable" },
   { "name": "funnelSectionClasses", "kind": "Variable" },
   { "name": "FunnelSectionClasses", "kind": "Interface" },
