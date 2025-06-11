@@ -25,7 +25,7 @@ const GridChartsConfigurationFormPanel = styled(CollapsiblePanel, {
   display: 'flex',
   flexDirection: 'column',
   padding: 16,
-  gap: 16,
+  gap: 24,
 });
 
 export function GridChartsConfigurationForm() {
@@ -80,6 +80,7 @@ export function GridChartsConfigurationForm() {
                   <rootProps.slots.baseSelect
                     key={key}
                     fullWidth
+                    size="small"
                     label={opt.label}
                     value={configuration[key] ?? opt.default}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -113,6 +114,7 @@ export function GridChartsConfigurationForm() {
                   placeholder={opt.label}
                   label={opt.label}
                   type={opt.type === 'number' ? 'number' : 'text'}
+                  size="small"
                   fullWidth
                   disabled={isDisabled}
                   slotProps={{
