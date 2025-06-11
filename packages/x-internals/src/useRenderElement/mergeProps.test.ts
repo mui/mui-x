@@ -1,3 +1,4 @@
+/* Adapted from https://github.com/mui/base-ui/blob/c52a6ab0c5982263e10028756a8792234eeadf42/packages/react/src/merge-props/mergeProps.test.ts */
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { mergeProps } from './mergeProps';

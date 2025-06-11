@@ -1,3 +1,4 @@
+/* Adapted from https://github.com/mui/base-ui/blob/c52a6ab0c5982263e10028756a8792234eeadf42/packages/react/src/utils/types.ts */
 import * as React from 'react';
 
 export type HTMLProps<T = any> = React.HTMLAttributes<T> & {
@@ -27,8 +28,9 @@ export type WithBaseUIEvent<T> = {
 /**
  * Shape of the render prop: a function that takes props to be spread on the element and component's state and returns a React element.
  *
- * @param props
- * @param state
+ * @param {Props} props Props
+ * @param {State} state state
+ * @returns {React.ReactElement} React element to be rendered.
  * @template Props Props to be spread on the rendered element.
  * @template State Component's internal state.
  */
@@ -51,11 +53,11 @@ export type BaseUIComponentProps<
 > & {
   /**
    * CSS class applied to the element, or a function that
-   * returns a class based on the component’s state.
+   * returns a class based on the component's state.
    */
   className?: string | ((state: State) => string);
   /**
-   * Allows you to replace the component’s HTML element
+   * Allows you to replace the component's HTML element
    * with a different tag, or compose it with another component.
    *
    * Accepts a `ReactElement` or a function that returns the element to render.
@@ -70,7 +72,3 @@ export type BaseUIComponentProps<
  * Taken from https://effectivetypescript.com/2022/02/25/gentips-4-display/
  */
 export type Simplify<T> = T extends Function ? T : { [K in keyof T]: T[K] };
-
-export type RequiredExcept<T, K extends keyof T> = Required<Omit<T, K>> & Pick<T, K>;
-
-export type Orientation = 'horizontal' | 'vertical';
