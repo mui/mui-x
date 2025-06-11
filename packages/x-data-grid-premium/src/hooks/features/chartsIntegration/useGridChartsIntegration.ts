@@ -53,7 +53,8 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   const columnsLookup = state.columns?.lookup ?? {};
   const initialCategories = props.initialState?.chartsIntegration?.categories ?? [];
   const initialSeries = (props.initialState?.chartsIntegration?.series ?? []).filter(
-    (serie) => columnsLookup[serie]?.type === 'number' && !initialCategories.includes(serie),
+    (seriesItem) =>
+      columnsLookup[seriesItem]?.type === 'number' && !initialCategories.includes(seriesItem),
   );
 
   return {
@@ -143,10 +144,10 @@ export const useGridChartsIntegration = (
       })),
     );
     setSeries(
-      series.map((serie) => ({
-        id: serie.field,
-        label: serie.headerName || serie.field,
-        data: rows.map((r) => getRowValue(r.model, serie, apiRef)),
+      series.map((seriesItem) => ({
+        id: seriesItem.field,
+        label: seriesItem.headerName || seriesItem.field,
+        data: rows.map((r) => getRowValue(r.model, seriesItem, apiRef)),
       })),
     );
   }, [apiRef, setCategories, setSeries]);
