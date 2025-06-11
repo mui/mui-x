@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { WeekView } from '@mui/x-scheduler/joy';
+
+import { WeekView } from '@mui/x-scheduler/joy/week-view';
 import classes from './StandaloneWeekView.module.css';
 
 const events = [
