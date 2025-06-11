@@ -7,10 +7,10 @@ import {
   GridColDef,
   GridColumnVisibilityModel,
   GridRenderCellParams,
+  gridRowSelectionIdsSelector,
   useGridApiRef,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import { gridRowSelector } from '@mui/x-data-grid/internals';
 import { LineChart, SparkLineChart } from '@mui/x-charts';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -20,17 +20,15 @@ import { useStocksMockServer } from './hooks/useMockStockServer';
 import { DemoThemeProvider } from '../DemoThemeProvider';
 import { stockDashboardTheme } from './theme';
 
-function StockDetailsPanel({
-  selectedStockId,
-  setSelectedStockId,
-  apiRef,
-}: {
-  selectedStockId: number;
-  setSelectedStockId: (id: number | null) => void;
-  apiRef: React.RefObject<GridApiPro>;
-}) {
-  const selectedStock = useGridSelector(apiRef, gridRowSelector, selectedStockId);
+function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) {
+  const selectedRow = useGridSelector(apiRef, gridRowSelectionIdsSelector);
+  const selectedStock = selectedRow.size > 0 ? Array.from(selectedRow.values())[0] : null;
+
   if (!selectedStock) return null;
+
+  const handleClose = () => {
+    apiRef.current?.setRowSelectionModel({ type: 'include', ids: new Set() });
+  };
 
   return (
     <Box
@@ -62,7 +60,7 @@ function StockDetailsPanel({
         <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>
           {selectedStock.symbol} - Price History
         </Typography>
-        <IconButton onClick={() => setSelectedStockId(null)}>
+        <IconButton onClick={handleClose}>
           <CloseIcon fontSize="small" />
         </IconButton>
       </Box>
@@ -103,7 +101,7 @@ function StockDetailsPanel({
 
 function StockDashboard() {
   const apiRef = useGridApiRef();
-  const [selectedStockId, setSelectedStockId] = React.useState<number | null>(null);
+  // const [selectedStockId, setSelectedStockId] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const { fetchRows, isReady } = useStocksMockServer();
@@ -302,7 +300,7 @@ function StockDashboard() {
             columns={columns}
             loading={loading}
             label="Stock Market"
-            onRowClick={(params) => setSelectedStockId(params.row.id)}
+            // onRowClick={(params) => setSelectedStockId(params.row.id)}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={setColumnVisibilityModel}
             disableMultipleRowSelection
@@ -310,13 +308,7 @@ function StockDashboard() {
           />
         </Box>
 
-        {selectedStockId && (
-          <StockDetailsPanel
-            selectedStockId={selectedStockId}
-            setSelectedStockId={setSelectedStockId}
-            apiRef={apiRef as React.RefObject<GridApiPro>}
-          />
-        )}
+        <StockDetailsPanel apiRef={apiRef as React.RefObject<GridApiPro>} />
       </Box>
     </DemoThemeProvider>
   );
