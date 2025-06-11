@@ -1,4 +1,4 @@
-import { SchedulerValidDate } from '@mui/x-scheduler/primitives/utils/adapter/types';
+import { SchedulerValidDate } from '@mui/x-scheduler/primitives/models';
 import { CalendarEvent } from './events';
 
 export type ViewType = 'week' | 'day' | 'month' | 'agenda';

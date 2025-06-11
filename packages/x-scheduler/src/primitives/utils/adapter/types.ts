@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { SchedulerValidDate } from '@mui/x-scheduler/primitives/models';
 
 type FieldSectionType =
   | 'year'
@@ -12,9 +12,6 @@ type FieldSectionType =
   | 'empty';
 
 type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
-
-// TODO: Add correct type if we support several date libraries
-export type SchedulerValidDate = DateTime;
 
 export type SchedulerTimezone = 'default' | 'system' | 'UTC' | string;
 
