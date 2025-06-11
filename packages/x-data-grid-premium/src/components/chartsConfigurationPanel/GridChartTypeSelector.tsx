@@ -14,14 +14,14 @@ interface ChartTypeButtonProps {
   isSelected?: boolean;
 }
 
-const ChartTypeButtonRow = styled('div')({
+const GridChartTypeSelectorRoot = styled('div')({
   display: 'flex',
   flexWrap: 'wrap',
   gap: 8,
   padding: 8,
 });
 
-const ChartTypeButton = styled('button', {
+const GridChartTypeButton = styled('button', {
   name: 'MuiDataGrid',
   slot: 'ChartTypeButton',
   shouldForwardProp: (prop) => prop !== 'isSelected',
@@ -30,8 +30,8 @@ const ChartTypeButton = styled('button', {
     backgroundColor: isSelected ? vars.colors.interactive.hover : vars.colors.background.base,
     color: isSelected ? vars.colors.interactive.selected : vars.colors.foreground.muted,
     cursor: 'pointer',
-    minWidth: 88,
-    minHeight: 88,
+    width: 89,
+    height: 89,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -55,21 +55,19 @@ function GridChartTypeSelector() {
   const chartConfig = rootProps.slotProps?.chartsConfigurationPanel?.schema || {};
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <ChartTypeButtonRow>
-        {Object.entries(chartConfig).map(([type, config]) => (
-          <ChartTypeButton
-            key={type}
-            isSelected={type === chartType}
-            onClick={() => setChartType(type)}
-            {...rootProps.slotProps?.baseButton}
-          >
-            <config.icon style={{ width: 48, height: 48 }} />
-            {config.label}
-          </ChartTypeButton>
-        ))}
-      </ChartTypeButtonRow>
-    </div>
+    <GridChartTypeSelectorRoot>
+      {Object.entries(chartConfig).map(([type, config]) => (
+        <GridChartTypeButton
+          key={type}
+          isSelected={type === chartType}
+          onClick={() => setChartType(type)}
+          {...rootProps.slotProps?.baseButton}
+        >
+          <config.icon style={{ width: 48, height: 48 }} />
+          {config.label}
+        </GridChartTypeButton>
+      ))}
+    </GridChartTypeSelectorRoot>
   );
 }
 
