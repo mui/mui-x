@@ -119,6 +119,11 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @default true
    */
   pivotable?: boolean;
+  /**
+   * If `false`, the column will not be available for charts integration.
+   * @default true
+   */
+  chartable?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
