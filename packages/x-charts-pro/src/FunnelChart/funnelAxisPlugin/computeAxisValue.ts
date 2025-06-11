@@ -128,6 +128,10 @@ export function computeAxisValue({
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
       const rangeSpace = Math.abs(range[1] - range[0]);
+
+      const N = axis.data!.length;
+      const bandWidth = (rangeSpace - gap * (N - 1)) / N;
+      const step = bandWidth + gap;
       completeAxis[axis.id] = {
         offset: 0,
         height: 0,
@@ -137,7 +141,7 @@ export function computeAxisValue({
         ...axis,
         data,
         scale: scaleBand(axis.data!, scaleRange)
-          .paddingInner((gap * axis.data!.length) / rangeSpace)
+          .paddingInner(gap / step)
           .paddingOuter(0),
         tickNumber: axis.data!.length,
         colorScale:
