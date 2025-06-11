@@ -82,4 +82,6 @@ describe('Zoom Utils', () => {
       expect(result).to.eq(15);
     });
   });
+
+  describe('calculateZoomFromPointImpl', () => {});
 });
