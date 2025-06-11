@@ -415,7 +415,7 @@ ${logChangelogSection(treeViewProCommits)}${treeViewProCommits.length > 0 ? '\n'
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
-${logChangelogSection(otherCommits, '')}
+${logChangelogSection(otherCommits, '### Miscellaneous')}
 
 `;
 

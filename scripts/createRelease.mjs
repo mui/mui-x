@@ -12,8 +12,10 @@
  *
  * Usage:
  * 1. Make the script executable: chmod +x scripts/createRelease.mjs
- * 2. Run the script: ./scripts/createRelease.mjs
- *    or: node scripts/createRelease.mjs
+ * 2. Run the script with options:
+ *    ./scripts/createRelease.mjs --version-type patch
+ *    ./scripts/createRelease.mjs --custom-version 8.5.2
+ *    ./scripts/createRelease.mjs --github-token <token>
  *
  * Requirements:
  * - Git access to the mui/mui-x repository
@@ -24,20 +26,8 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import readline from 'readline';
-
-// Create readline interface for user input
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-// Promisify readline question
-function question(query) {
-  return new Promise((resolve) => {
-    rl.question(query, resolve);
-  });
-}
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 // Execute shell command and return output
 function exec(command) {
@@ -64,7 +54,7 @@ function findMuiXRemote() {
 
   throw new Error(
     'Unable to find the upstream remote. It should be a remote pointing to "mui/mui-x". ' +
-    'Did you forget to add it via `git remote add upstream git@github.com:mui/mui-x.git`?'
+      'Did you forget to add it via `git remote add upstream git@github.com:mui/mui-x.git`?',
   );
 }
 
@@ -89,7 +79,7 @@ function updatePackageJson(version) {
 
   packageJson.version = version;
 
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+  fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
   console.log(`Updated package.json version to ${version}`);
 }
 
@@ -108,11 +98,9 @@ function insertChangelog(changelog) {
   const cleanChangelog = changelog.trim();
 
   // Insert the new changelog after the header
-  const newChangelog =
-    existingChangelog.substring(0, headerEndPos) +
-    cleanChangelog +
-    '\n\n' +
-    existingChangelog.substring(headerEndPos);
+  const newChangelog = `${
+    existingChangelog.substring(0, headerEndPos) + cleanChangelog
+  }\n\n${existingChangelog.substring(headerEndPos)}`;
 
   fs.writeFileSync(changelogPath, newChangelog);
   console.log('Inserted new changelog into CHANGELOG.md');
@@ -121,14 +109,49 @@ function insertChangelog(changelog) {
 // Main function
 async function main() {
   try {
+    // Parse command line arguments
+    const argv = yargs(hideBin(process.argv))
+      .usage('Usage: $0 [options]')
+      .option('version-type', {
+        describe: 'Type of version update',
+        type: 'string',
+        choices: ['patch', 'minor', 'major'],
+        conflicts: 'custom-version',
+      })
+      .option('custom-version', {
+        describe: 'Custom version number (e.g., 8.5.2)',
+        type: 'string',
+        conflicts: 'version-type',
+      })
+      .option('github-token', {
+        describe: 'GitHub token with "public_repo" permission',
+        type: 'string',
+      })
+      .option('skip-confirmation', {
+        describe: 'Skip confirmation prompts',
+        type: 'boolean',
+        default: false,
+      })
+      .example('$0 --version-type patch', 'Create a patch release')
+      .example('$0 --custom-version 8.5.2', 'Create a release with a specific version')
+      .example('$0 --github-token <token>', 'Use a specific GitHub token')
+      .help()
+      .alias('help', 'h')
+      .version(false)
+      .parse();
+
     console.log('=== MUI-X Release Script ===');
     console.log('This script will help you prepare a new release for MUI-X.');
-    console.log('It will create a new branch, update versions, generate a changelog, and prepare for a PR.');
+    console.log(
+      'It will create a new branch, update versions, generate a changelog, and prepare for a PR.',
+    );
     console.log('Make sure you have the latest master branch before running this script.\n');
 
     // Check if we're in the repository root
-    if (!fs.existsSync(path.join(process.cwd(), 'package.json')) ||
-        !fs.existsSync(path.join(process.cwd(), 'CHANGELOG.md'))) {
+    if (
+      !fs.existsSync(path.join(process.cwd(), 'package.json')) ||
+      !fs.existsSync(path.join(process.cwd(), 'CHANGELOG.md'))
+    ) {
       throw new Error('Please run this script from the repository root.');
     }
 
@@ -142,37 +165,40 @@ async function main() {
     // Check for uncommitted changes
     const status = exec('git status --porcelain');
     if (status.trim() !== '') {
-      throw new Error('You have uncommitted changes. Please commit or stash them before running this script.');
+      throw new Error(
+        'You have uncommitted changes. Please commit or stash them before running this script.',
+      );
     }
 
-    // 3. Ask for the new version
-    const versionType = await question(
-      'What type of version update do you want to make? (patch/minor/major/custom): '
-    );
-
+    // 3. Determine the new version
     let newVersion;
-    if (versionType === 'custom') {
-      newVersion = await question('Enter the custom version (e.g., 8.5.2): ');
-    } else {
-      // Get current version from package.json
-      const packageJsonPath = path.join(process.cwd(), 'package.json');
-      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-      const currentVersion = packageJson.version;
 
+    // Get current version from package.json
+    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    const currentVersion = packageJson.version;
+
+    if (argv.customVersion) {
+      newVersion = argv.customVersion;
+    } else if (argv.versionType) {
       // Calculate new version based on version type
       const [major, minor, patch] = currentVersion.split('.').map(Number);
 
-      if (versionType === 'patch') {
+      if (argv.versionType === 'patch') {
         newVersion = `${major}.${minor}.${patch + 1}`;
-      } else if (versionType === 'minor') {
+      } else if (argv.versionType === 'minor') {
         newVersion = `${major}.${minor + 1}.0`;
-      } else if (versionType === 'major') {
+      } else if (argv.versionType === 'major') {
         newVersion = `${major + 1}.0.0`;
-      } else {
-        console.error('Invalid version type. Please choose patch, minor, major, or custom.');
-        process.exit(1);
       }
+    } else {
+      // If no version options provided, show current version and exit
+      console.log(`Current version: ${currentVersion}`);
+      console.log('Please specify --version-type or --custom-version');
+      process.exit(1);
     }
+
+    console.log(`Creating new release with version: ${newVersion}`);
 
     // 4. Create a new branch with the new release version
     const branchName = `release/v${newVersion}`;
@@ -183,20 +209,17 @@ async function main() {
     updatePackageJson(newVersion);
 
     // 6. Run the release:version script
-    exec('pnpm release:version');
+    exec('lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private');
 
+    return;
     // 7. Generate a changelog
     console.log('\nGenerating changelog...');
     console.log('This may take a moment as it fetches data from GitHub...');
 
-    // Ask for GitHub token
-    const githubToken = await question(
-      'Enter your GitHub token (needs "public_repo" permission) or press Enter to use GITHUB_TOKEN env variable: '
-    );
-
+    // Use GitHub token from command line or environment variable
     let changelogCmd = `pnpm release:changelog --nextVersion ${newVersion}`;
-    if (githubToken.trim() !== '') {
-      changelogCmd += ` --githubToken ${githubToken}`;
+    if (argv.githubToken) {
+      changelogCmd += ` --githubToken ${argv.githubToken}`;
     }
 
     const changelog = exec(changelogCmd);
@@ -206,8 +229,16 @@ async function main() {
     console.log('Please review and edit the changelog to add highlights and clean up any issues.');
     insertChangelog(changelog);
 
-    // Pause to let the user review and edit the changelog
-    await question('\nPress Enter after reviewing and editing the changelog...');
+    // Pause to let the user review and edit the changelog if not skipping confirmation
+    if (!argv.skipConfirmation) {
+      console.log('\nPlease review the changelog in CHANGELOG.md and make any necessary edits.');
+      console.log('Press Ctrl+C to abort or Enter to continue...');
+      await new Promise((resolve) => {
+        process.stdin.once('data', () => {
+          resolve();
+        });
+      });
+    }
 
     // 9. Commit the changes
     exec('git add .');
@@ -217,11 +248,12 @@ async function main() {
     exec(`git push -u ${upstreamRemote} ${branchName}`);
 
     // 11. Prepare PR information
-    const prTitle = `Release v${newVersion}`;
+    const prTitle = `[release] v${newVersion}`;
     const prBody = getPRChecklist();
 
     // Try to open the PR automatically if gh CLI is installed
     let prUrl = '';
+    exec(`git push -u origin ${branchName}`);
     try {
       console.log('\nAttempting to create PR using GitHub CLI...');
       // Check if gh is installed
@@ -229,7 +261,7 @@ async function main() {
 
       // Create the PR
       const prOutput = exec(
-        `gh pr create --title "${prTitle}" --body "${prBody}" --repo mui/mui-x --base master --head ${branchName}`
+        `gh pr create --title "${prTitle}" --body "${prBody}" --repo mui/mui-x --base master --head ${branchName}`,
       );
 
       // Extract PR URL from output
@@ -239,7 +271,9 @@ async function main() {
         console.log(`PR created successfully: ${prUrl}`);
       }
     } catch (error) {
-      console.log('Could not create PR automatically. GitHub CLI may not be installed or configured.');
+      console.log(
+        'Could not create PR automatically. GitHub CLI may not be installed or configured.',
+      );
       prUrl = `https://github.com/mui/mui-x/compare/master...${branchName}`;
     }
 
@@ -257,12 +291,9 @@ async function main() {
       console.log('\nYou can create the PR at:');
       console.log(prUrl);
     }
-
   } catch (error) {
     console.error('Error:', error.message);
     process.exit(1);
-  } finally {
-    rl.close();
   }
 }
 
