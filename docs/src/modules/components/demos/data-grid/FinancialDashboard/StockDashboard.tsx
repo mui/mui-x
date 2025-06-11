@@ -101,7 +101,6 @@ function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) 
 
 function StockDashboard() {
   const apiRef = useGridApiRef();
-  // const [selectedStockId, setSelectedStockId] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const { fetchRows, isReady } = useMockStockServer();
@@ -217,9 +216,7 @@ function StockDashboard() {
             sx={{
               fontSize: '0.875rem',
               backgroundColor:
-                params.row.change >= 0
-                  ? 'rgba(46, 125, 50, 0.10)' // if upwards, green
-                  : 'rgba(211, 47, 47, 0.10)', // if downwards, red
+                params.row.change >= 0 ? 'rgba(46, 125, 50, 0.10)' : 'rgba(211, 47, 47, 0.10)',
               color: 'primary.secondary',
               px: 1,
               py: 0.5,
@@ -300,7 +297,6 @@ function StockDashboard() {
             columns={columns}
             loading={loading}
             label="Stock Market"
-            // onRowClick={(params) => setSelectedStockId(params.row.id)}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={setColumnVisibilityModel}
             disableMultipleRowSelection
