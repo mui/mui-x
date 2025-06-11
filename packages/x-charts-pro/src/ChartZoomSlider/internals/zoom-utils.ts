@@ -29,8 +29,8 @@ export function calculateZoomFromPoint(state: ChartState<any>, axisId: AxisId, p
 export function calculateZoomFromPointImpl(
   drawingArea: ChartDrawingArea,
   axis: Pick<DefaultedXAxis | DefaultedYAxis, 'position' | 'reverse'>,
-  zoomOptions: DefaultizedZoomOptions,
-  point: DOMPoint,
+  zoomOptions: Pick<DefaultizedZoomOptions, 'minStart' | 'maxEnd'>,
+  point: Pick<DOMPoint, 'x' | 'y'>,
 ) {
   const { left, top, height, width } = drawingArea;
   const { minStart, maxEnd } = zoomOptions;

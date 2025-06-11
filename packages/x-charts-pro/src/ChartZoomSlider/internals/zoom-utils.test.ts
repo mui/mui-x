@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { calculateZoomEnd, calculateZoomStart } from './zoom-utils';
+import { calculateZoomEnd, calculateZoomStart, calculateZoomFromPointImpl } from './zoom-utils';
 import { ZoomData } from '../../models';
 
 describe('Zoom Utils', () => {
@@ -83,5 +83,69 @@ describe('Zoom Utils', () => {
     });
   });
 
-  describe('calculateZoomFromPointImpl', () => {});
+  describe('calculateZoomFromPointImpl', () => {
+    const defaultDrawingArea = {
+      left: 100,
+      top: 100,
+      right: 300,
+      bottom: 200,
+      width: 200,
+      height: 100,
+    };
+
+    it('should calculate correct zoom value for x-axis (bottom position)', () => {
+      const result = calculateZoomFromPointImpl(
+        defaultDrawingArea,
+        { position: 'bottom', reverse: false },
+        { minStart: 0, maxEnd: 100 },
+        { x: 200, y: 0 },
+      );
+
+      expect(result).to.eq(50);
+    });
+
+    it('should calculate correct zoom value for y-axis (left position)', () => {
+      const result = calculateZoomFromPointImpl(
+        defaultDrawingArea,
+        { position: 'left', reverse: false },
+        { minStart: 0, maxEnd: 100 },
+        { x: 0, y: 100 },
+      );
+
+      expect(result).to.eq(100);
+    });
+
+    it('should handle reversed x-axis', () => {
+      const result = calculateZoomFromPointImpl(
+        defaultDrawingArea,
+        { position: 'bottom', reverse: true },
+        { minStart: 0, maxEnd: 100 },
+        { x: 300, y: 0 },
+      );
+
+      expect(result).to.eq(0); // Should be at the start due to reverse
+    });
+
+    it('should handle reversed y-axis', () => {
+      const result = calculateZoomFromPointImpl(
+        defaultDrawingArea,
+        { position: 'left', reverse: true },
+        { minStart: 0, maxEnd: 100 },
+        { x: 0, y: 180 },
+      );
+
+      expect(result).to.eq(80);
+    });
+
+    it('should handle custom min/max range', () => {
+      const result = calculateZoomFromPointImpl(
+        defaultDrawingArea,
+        { position: 'bottom', reverse: false },
+        { minStart: 20, maxEnd: 80 },
+        { x: 150, y: 0 },
+      );
+
+      expect(result).to.eq(35);
+    });
+  });
 });
