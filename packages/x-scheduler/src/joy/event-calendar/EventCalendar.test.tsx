@@ -33,7 +33,7 @@ describe('EventCalendar', () => {
     expect(mondayEvent).not.to.equal(null);
     expect(tuesDayEvent).not.to.equal(null);
 
-    expect(mondayEvent.textContent).to.equal('7:30AM - 8:15AMFooting');
-    expect(tuesDayEvent.textContent).to.equal('4:00PM - 5:00PMWeekly');
+    expect(mondayEvent.textContent).to.equal('Footing7:30 AM');
+    expect(tuesDayEvent.textContent).to.equal('Weekly4:00 PM - 5:00 PM');
   });
 });
