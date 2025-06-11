@@ -16,7 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { format } from 'date-fns';
 import type { StockData } from './types/stocks';
-import { useStocksMockServer } from './hooks/useMockStockServer';
+import { useMockStockServer } from './hooks/useMockStockServer';
 import { DemoThemeProvider } from '../DemoThemeProvider';
 import { stockDashboardTheme } from './theme';
 
@@ -104,7 +104,7 @@ function StockDashboard() {
   // const [selectedStockId, setSelectedStockId] = React.useState<number | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
-  const { fetchRows, isReady } = useStocksMockServer();
+  const { fetchRows, isReady } = useMockStockServer();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 

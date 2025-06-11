@@ -1,17 +1,7 @@
 import * as React from 'react';
-import { LRUCache } from 'lru-cache';
-import { GridGetRowsResponse } from '@mui/x-data-grid-pro';
+import { GridGetRowsResponse, GridRowModel } from '@mui/x-data-grid-pro';
 import type { StockData } from '../types/stocks';
 import { COMPANY_NAMES } from '../data/stockConstants';
-import { GridDemoData } from 'packages/x-data-grid-generator/src/services/real-data-service';
-
-const dataCache = new LRUCache<string, GridDemoData>({
-  max: 10,
-  ttl: 60 * 5 * 1e3,
-});
-
-// added some functions to simulate the dynamism, but the numbers are just completely random
-// if we want to add more tickers, add them to the logoNameMap + COMPANY_NAMES
 
 const generateHistoricalData = (basePrice: number, days: number = 30) => {
   const data = [];
@@ -80,28 +70,17 @@ const generateMockStockData = (): StockData[] => {
   return data;
 };
 
-export const useStocksMockServer = () => {
+export const useMockStockServer = () => {
   const [isDataReady, setDataReady] = React.useState(false);
-  const dataRef = React.useRef<GridDemoData | null>(null);
+  const dataRef = React.useRef<{
+    rows: GridRowModel[];
+  } | null>(null);
 
   React.useEffect(() => {
-    const cacheKey = 'stocks-initial';
-
-    if (dataCache.has(cacheKey)) {
-      const cachedData = dataCache.get(cacheKey);
-      if (cachedData) {
-        dataRef.current = cachedData;
-        setDataReady(true);
-      }
-      return;
-    }
-
     const rows = generateMockStockData();
-    const data: GridDemoData = {
+    const data: { rows: GridRowModel[] } = {
       rows,
-      columns: [],
     };
-    dataCache.set(cacheKey, data);
     dataRef.current = data;
     setDataReady(true);
   }, []);
