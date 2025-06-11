@@ -37,11 +37,11 @@ export const gridChartsSeriesSelector = createSelectorMemoized(
   gridColumnFieldsSelector,
   gridRowGroupingSanitizedModelSelector,
   (chartsIntegration, columns, rowGroupingModel) =>
-    chartsIntegration.series.map((serie) =>
-      rowGroupingModel.includes(serie)
+    chartsIntegration.series.map((seriesItem) =>
+      rowGroupingModel.includes(seriesItem)
         ? getRowGroupingFieldFromGroupingCriteria(
-            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : serie,
+            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : seriesItem,
           )
-        : serie,
+        : seriesItem,
     ),
 );
