@@ -6,7 +6,6 @@ import {
   invertScale,
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
-  selectorChartDrawingArea,
   useChartContext,
   useDrawingArea,
   useSelector,
@@ -132,9 +131,11 @@ export function ChartAxisZoomSliderActiveTrack({
         return;
       }
 
+      const { maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+
       prevPointerZoom = pointerDownZoom;
       pointerZoomMin = pointerDownZoom - axisZoomData.start;
-      pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
+      pointerZoomMax = maxEnd - (axisZoomData.end - pointerDownZoom);
 
       document.addEventListener('pointerup', onPointerUp);
       activePreviewRect.addEventListener('pointermove', onPointerMove);
@@ -190,21 +191,14 @@ export function ChartAxisZoomSliderActiveTrack({
     const point = getSVGPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
-      const { left, top, width, height } = selectorChartDrawingArea(store.getSnapshot());
       const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
       return prevZoomData.map((zoom) => {
         if (zoom.axisId === axisId) {
-          let newEnd: number;
+          const newEnd = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
-          if (axisDirection === 'x') {
-            newEnd = ((point.x - left) / width) * 100;
-          } else {
-            newEnd = ((top + height - point.y) / height) * 100;
-          }
-
-          if (reverse) {
-            newEnd = 100 - newEnd;
+          if (newEnd === null) {
+            return zoom;
           }
 
           return {
@@ -227,15 +221,18 @@ export function ChartAxisZoomSliderActiveTrack({
   let endThumbX: number;
   let endThumbY: number;
 
+  const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+  const range = maxEnd - minStart;
+
   if (axisDirection === 'x') {
-    previewX = (zoomData.start / 100) * drawingArea.width;
+    previewX = ((zoomData.start - minStart) / range) * drawingArea.width;
     previewY = 0;
-    previewWidth = (drawingArea.width * (zoomData.end - zoomData.start)) / 100;
+    previewWidth = (drawingArea.width * (zoomData.end - zoomData.start)) / range;
     previewHeight = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
 
-    startThumbX = (zoomData.start / 100) * drawingArea.width;
+    startThumbX = ((zoomData.start - minStart) / range) * drawingArea.width;
     startThumbY = 0;
-    endThumbX = (zoomData.end / 100) * drawingArea.width;
+    endThumbX = ((zoomData.end - minStart) / range) * drawingArea.width;
     endThumbY = 0;
 
     if (reverse) {
@@ -249,14 +246,14 @@ export function ChartAxisZoomSliderActiveTrack({
     endThumbX -= previewThumbWidth / 2;
   } else {
     previewX = 0;
-    previewY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
+    previewY = drawingArea.height - ((zoomData.end - minStart) / range) * drawingArea.height;
     previewWidth = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
-    previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / 100;
+    previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / range;
 
     startThumbX = 0;
-    startThumbY = drawingArea.height - (zoomData.start / 100) * drawingArea.height;
+    startThumbY = drawingArea.height - ((zoomData.start - minStart) / range) * drawingArea.height;
     endThumbX = 0;
-    endThumbY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
+    endThumbY = drawingArea.height - ((zoomData.end - minStart) / range) * drawingArea.height;
 
     if (reverse) {
       previewY = drawingArea.height - previewY - previewHeight;

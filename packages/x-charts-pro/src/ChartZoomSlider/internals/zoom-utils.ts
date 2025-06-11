@@ -2,6 +2,7 @@ import {
   AxisId,
   ChartState,
   DefaultizedZoomOptions,
+  selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   selectorChartRawAxis,
   ZoomData,
@@ -16,16 +17,20 @@ export function calculateZoomFromPoint(state: ChartState<any>, axisId: AxisId, p
   }
 
   const axisDirection = axis.position === 'right' || axis.position === 'left' ? 'y' : 'x';
+  const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(state, axisId);
+  const range = maxEnd - minStart;
 
   let pointerZoom: number;
   if (axisDirection === 'x') {
-    pointerZoom = ((point.x - left) / width) * 100;
+    pointerZoom = ((point.x - left) / width) * range;
   } else {
-    pointerZoom = ((top + height - point.y) / height) * 100;
+    pointerZoom = ((top + height - point.y) / height) * range;
   }
 
   if (axis.reverse) {
-    pointerZoom = 100 - pointerZoom;
+    pointerZoom = maxEnd - pointerZoom;
+  } else {
+    pointerZoom += minStart;
   }
 
   return pointerZoom;
