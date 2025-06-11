@@ -1,0 +1,1 @@
+export { expectType } from './expectType';
