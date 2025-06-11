@@ -76,6 +76,7 @@
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
+    "baseButton": "",
     "baseIconButton": "",
     "legend": "Custom rendering of the legend.",
     "line": "The component that renders the line.",

@@ -1,0 +1,10 @@
+<ThemeProvider theme={theme}>
+  <StaticDateRangePicker
+    slotProps={{
+      actionBar: {
+        actions: ['accept', 'cancel'],
+      },
+    }}
+    slots={{ day: DateRangePickerDay2 }}
+  />
+</ThemeProvider>

@@ -1,4 +1,5 @@
 import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
@@ -10,6 +11,7 @@ import {
   DefaultedXAxis,
   DefaultedYAxis,
   DefaultedAxis,
+  AxisValueFormatterContext,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -208,6 +210,19 @@ export function computeAxisValue<T extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      valueFormatter:
+        axis.valueFormatter ??
+        (createScalarFormatter(
+          tickNumber,
+          getScale(
+            scaleType,
+            range.map((v) => scale.invert(v)),
+            range,
+          ),
+        ) as <TScaleName extends ScaleName>(
+          value: any,
+          context: AxisValueFormatterContext<TScaleName>,
+        ) => string),
     };
   });
   return {

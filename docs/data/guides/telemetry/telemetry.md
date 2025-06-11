@@ -5,7 +5,7 @@ packageName: '@mui/x-telemetry'
 
 # MUI X Telemetry guide [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walk you through how to opt-in, opt-out, and configure telemetry.</p>
+<p class="description">MUI X Telemetry collects anonymous usage data to help improve the library. This guide walks you through how to opt-in and configure telemetry.</p>
 
 ## Why is Telemetry collected?
 
@@ -39,7 +39,9 @@ Telemetry collection is specifically associated with the usage of paid MUI X Pr
 
 ## Telemetry in development mode only
 
-[MUI X Telemetry](http://bundlephobia.com/package/@mui/x-telemetry) is designed to operate exclusively during development. In production builds of your application, telemetry is entirely removed, ensuring no runtime overhead or data collection in your live environment. This guarantees that your production application's performance and behavior remain unaffected.
+MUI X Telemetry is designed to operate exclusively during development.
+In production builds of your application, telemetry is entirely removed, ensuring no data collection in your live environment and almost no runtime overhead ([proof](https://bundlephobia.com/package/@mui/x-telemetry)).
+This guarantees that your production application's performance and behavior remain unaffected.
 
 :::info
 Currently, Telemetry is disabled by default and you have full control to opt-in as per your preference.

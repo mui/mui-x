@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
+import useId from '@mui/utils/useId';
+import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';

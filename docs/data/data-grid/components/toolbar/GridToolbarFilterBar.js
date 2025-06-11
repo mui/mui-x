@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
-import { unstable_capitalize as capitalize } from '@mui/utils';
+import capitalize from '@mui/utils/capitalize';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 
