@@ -10,6 +10,7 @@ export default mergeConfig(sharedConfig, {
     setupFiles: [new URL('./src/matchers/index.ts', import.meta.url).pathname],
     browser: {
       enabled: true,
+      isolate: true,
       instances: [
         {
           browser: 'chromium',
