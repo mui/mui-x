@@ -93,10 +93,10 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
 
   if (chartType === 'pie') {
     // - `chartConfiguration.outerRadius - chartConfiguration.innerRadius` is available radius for the whole chart
-    // - to get the radius for each serie, we need to substract all the gaps
+    // - to get the radius for each series, we need to substract all the gaps
     //   between the series from that number (`chartConfiguration.seriesGap * series.length - 1` - there is always
     //   one gap less than the number of series)
-    // - then we divide the result by the number of series to get the radius for each serie
+    // - then we divide the result by the number of series to get the radius for each series
     const radiusPerSerie =
       (chartConfiguration.outerRadius -
         chartConfiguration.innerRadius -
@@ -104,25 +104,25 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
         1) /
       series.length;
 
-    const seriesProp = series.map((serie, serieIndex) => ({
-      data: serie.data.map((item, itemIndex) => ({
-        id: `${serie.id}-${itemIndex}`,
+    const seriesProp = series.map((seriesItem, seriesIndex) => ({
+      data: seriesItem.data.map((item, itemIndex) => ({
+        id: `${seriesItem.id}-${itemIndex}`,
         value: item || 0,
         label: String(categoryData[itemIndex]),
       })),
-      // each serie starts from
+      // each series starts from
       // - inner radius of the chart
       // - plus all the series before
       // - plus the gap between the series
       innerRadius:
         chartConfiguration.innerRadius +
-        serieIndex * radiusPerSerie +
-        chartConfiguration.seriesGap * serieIndex,
-      // each serie ends at the radius that is the same as start plus the radius of one serie
+        seriesIndex * radiusPerSerie +
+        chartConfiguration.seriesGap * seriesIndex,
+      // each series ends at the radius that is the same as start plus the radius of one series
       outerRadius:
         chartConfiguration.innerRadius +
-        (serieIndex + 1) * radiusPerSerie +
-        chartConfiguration.seriesGap * serieIndex,
+        (seriesIndex + 1) * radiusPerSerie +
+        chartConfiguration.seriesGap * seriesIndex,
     }));
 
     return (
