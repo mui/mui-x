@@ -16,8 +16,8 @@ interface ChartTypeButtonProps {
 
 const ChartTypeButtonRow = styled('div')({
   display: 'flex',
-  gap: 12,
-  padding: 12,
+  gap: 8,
+  padding: 8,
 });
 
 const ChartTypeButton = styled('button', {
@@ -29,8 +29,8 @@ const ChartTypeButton = styled('button', {
     backgroundColor: isSelected ? vars.colors.interactive.hover : vars.colors.background.base,
     color: isSelected ? vars.colors.interactive.selected : vars.colors.foreground.muted,
     cursor: 'pointer',
-    width: 84,
-    height: 84,
+    width: 92,
+    height: 92,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
