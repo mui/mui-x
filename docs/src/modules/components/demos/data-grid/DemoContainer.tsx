@@ -17,7 +17,7 @@ function DemoContainer({ theme, children }: { theme: Theme; children: React.Reac
     <ThemeProvider theme={modifiedTheme}>
       <Box
         sx={{
-          height: 'calc(100vh - 280px)', // TODO: Find a way to fill height without magic number,
+          height: { xs: 'calc(100vh - 300px)', md: 'calc(100vh - 250px)' }, // TODO: Find a way to fill height without magic number,
         }}
       >
         {children}
