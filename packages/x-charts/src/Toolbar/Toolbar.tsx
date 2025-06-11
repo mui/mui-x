@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
-import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { ToolbarContextProvider } from '@mui/x-internals/ToolbarContext';
+import { useRenderElement, MUIXUIComponentProps } from '@mui/x-internals/useRenderElement';
 import { chartsToolbarClasses } from './chartToolbarClasses';
 
 const ToolbarRoot = styled('div', {
@@ -22,24 +21,20 @@ const ToolbarRoot = styled('div', {
   borderRadius: 4,
 }));
 
-export interface ToolbarProps extends React.ComponentProps<'div'> {
-  className?: string;
-  /**
-   * A function to customize rendering of the component.
-   */
-  render?: RenderProp<React.ComponentProps<typeof ToolbarRoot>>;
-}
+export interface ToolbarProps extends MUIXUIComponentProps<typeof ToolbarRoot, {}> {}
 
-export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
-  { className, render, ...other },
-  ref,
-) {
-  const element = useComponentRenderer(ToolbarRoot, render, {
-    role: 'toolbar',
-    'aria-orientation': 'horizontal',
-    className: clsx(chartsToolbarClasses.root, className),
-    ...other,
+export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props, ref) {
+  const { className, render, ...other } = props;
+  const element = useRenderElement(ToolbarRoot, props, {
     ref,
+    props: [
+      {
+        role: 'toolbar',
+        'aria-orientation': 'horizontal',
+        className: chartsToolbarClasses.root,
+      },
+      other,
+    ],
   });
 
   return <ToolbarContextProvider>{element}</ToolbarContextProvider>;

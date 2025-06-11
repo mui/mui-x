@@ -10,8 +10,6 @@ import reactMajor from '../reactMajor';
 
 const EMPTY_OBJECT = {};
 
-type IntrinsicTagName = keyof React.JSX.IntrinsicElements;
-
 /**
  * Renders a MUI X UI element.
  *
@@ -22,7 +20,7 @@ type IntrinsicTagName = keyof React.JSX.IntrinsicElements;
 export function useRenderElement<
   State extends Record<string, any>,
   RenderedElementType extends Element,
-  TagName extends IntrinsicTagName | undefined,
+  TagName extends React.ElementType | undefined,
   Enabled extends boolean | undefined = undefined,
 >(
   element: TagName,
@@ -47,7 +45,7 @@ export function useRenderElement<
 function useRenderElementProps<
   State extends Record<string, any>,
   RenderedElementType extends Element,
-  TagName extends IntrinsicTagName | undefined,
+  TagName extends React.ElementType | undefined,
   Enabled extends boolean | undefined,
 >(
   componentProps: useRenderElement.ComponentProps<State>,
@@ -106,11 +104,11 @@ function useRenderElementProps<
 }
 
 function evaluateRenderProp<T extends React.ElementType, S>(
-  element: IntrinsicTagName | undefined,
+  element: React.ElementType | undefined,
   render: MUIXUIComponentProps<T, S>['render'],
   props: React.HTMLAttributes<any> & React.RefAttributes<any>,
   state: S,
-): React.ReactElement<Record<string, unknown>> {
+): React.ReactElement<React.HTMLAttributes<any> & React.RefAttributes<any>> {
   if (render) {
     if (typeof render === 'function') {
       return render(props, state);
@@ -123,6 +121,8 @@ function evaluateRenderProp<T extends React.ElementType, S>(
     if (typeof element === 'string') {
       return renderTag(element, props);
     }
+
+    return React.createElement(element, props);
   }
   // Unreachable, but the typings on `useRenderElement` need to be reworked
   // to annotate it correctly.
