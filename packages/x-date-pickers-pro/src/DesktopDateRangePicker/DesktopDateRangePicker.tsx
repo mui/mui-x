@@ -9,7 +9,7 @@ import {
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -55,7 +55,8 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     ...defaultizedProps,
     closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
-    format: utils.formats.keyboardDate,
+    // TODO: Replace with resolveDateFormat() once we support month and year views
+    format: defaultizedProps.format ?? utils.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,

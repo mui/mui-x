@@ -4,11 +4,11 @@ import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { getAdapter } from '../../utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../models';
 
 const adapter = getAdapter();
 
-const TimeGridColumn = React.forwardRef(function CalendarCell(
+export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   componentProps: TimeGridColumn.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -52,5 +52,3 @@ export namespace TimeGridColumn {
     value: SchedulerValidDate;
   }
 }
-
-export { TimeGridColumn };

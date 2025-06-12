@@ -1,4 +1,6 @@
-import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
+import { SchedulerValidDate } from '../../primitives/models';
+
+export type EventVariant = 'regular' | 'compact' | 'allDay';
 
 export interface CalendarEvent {
   /**

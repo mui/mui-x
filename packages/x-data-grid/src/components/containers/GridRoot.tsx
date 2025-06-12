@@ -1,11 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_capitalize as capitalize,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import capitalize from '@mui/utils/capitalize';
+import composeClasses from '@mui/utils/composeClasses';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';

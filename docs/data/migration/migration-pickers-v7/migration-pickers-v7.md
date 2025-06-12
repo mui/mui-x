@@ -1920,7 +1920,7 @@ However, consider looking into your usage to see if you really need those types.
 - `UseClearableFieldSlotProps`
 
   ```ts
-  import { SlotComponentProps } from '@mui/utils';
+  import { SlotComponentProps } from '@mui/utils/types';
   import { FieldOwnerState } from '@mui/x-date-pickers/models';
   import { ClearIcon } from '@mui/x-date-pickers/icons';
   import IconButton from '@mui/material/IconButton';

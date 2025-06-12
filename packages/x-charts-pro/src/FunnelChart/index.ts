@@ -7,3 +7,5 @@ export * from './funnelSlots.types';
 export type { FunnelCurveType } from './curves';
 export { funnelSectionClasses } from './funnelSectionClasses';
 export type { FunnelSectionClasses } from './funnelSectionClasses';
+export { FunnelSection } from './FunnelSection';
+export { FunnelSectionLabel } from './FunnelSectionLabel';
