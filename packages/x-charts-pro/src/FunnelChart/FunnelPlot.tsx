@@ -197,12 +197,8 @@ const useAggregatedData = () => {
           label: sectionLabel !== false && {
             ...positionLabel({
               ...sectionLabel,
-              xPosition,
-              yPosition,
               isHorizontal,
-              values,
-              dataIndex,
-              baseScaleData: baseScaleConfig.data ?? [],
+              values: bandPoints,
             }),
             ...alignLabel(sectionLabel ?? {}),
             value: valueFormatter

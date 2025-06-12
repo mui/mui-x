@@ -1,6 +1,6 @@
 import { Position } from '@mui/x-charts/models';
-import { FunnelDataPoints, FunnelLabelOptions } from './funnel.types';
-import { PositionGetter } from './curves';
+import { FunnelLabelOptions } from './funnel.types';
+import { Point } from './curves';
 
 /**
  * It tries to keep the label inside the bounds of the section based on the position.
@@ -46,19 +46,11 @@ export const alignLabel = ({
 export const positionLabel = ({
   position,
   offset,
-  xPosition,
-  yPosition,
   isHorizontal,
   values,
-  dataIndex,
-  baseScaleData,
 }: Omit<FunnelLabelOptions, 'textAnchor' | 'dominantBaseline'> & {
-  xPosition: PositionGetter;
-  yPosition: PositionGetter;
   isHorizontal: boolean;
-  values: readonly FunnelDataPoints[];
-  dataIndex: number;
-  baseScaleData: readonly number[];
+  values: readonly Point[];
 }) => {
   const vertical: Position['vertical'] = position?.vertical ?? 'middle';
   const horizontal: Position['horizontal'] = position?.horizontal ?? 'center';
@@ -66,6 +58,13 @@ export const positionLabel = ({
   let x: number | undefined = 0;
   let y: number | undefined = 0;
 
+  // The min/max values are due to the sections possibly being sloped.
+  // Importance of values differs from the horizontal and vertical sections.
+  // Example (vertical):
+  // MaxL         MaxT         MaxR
+  //  \                          /
+  //   \                        /
+  //    MinL      MaxB      MinR
   let minTop: number = 0;
   let maxTop: number = 0;
   let minBottom: number = 0;
@@ -74,115 +73,57 @@ export const positionLabel = ({
   let maxLeft: number = 0;
   let minRight: number = 0;
   let maxRight: number = 0;
-  let center: number = 0;
-  let leftCenter: number = 0;
-  let rightCenter: number = 0;
   let middle: number = 0;
-  let topMiddle: number = 0;
-  let bottomMiddle: number = 0;
+  let center: number = 0;
 
   const mv = typeof offset === 'number' ? offset : (offset?.y ?? 0);
   const mh = typeof offset === 'number' ? offset : (offset?.x ?? 0);
 
-  const stackOffset = values[0].stackOffset;
+  // Min ... Max
+  const Ys = values.map((v) => v.y).toSorted((a, b) => a - b);
+  const Xs = values.map((v) => v.x).toSorted((a, b) => a - b);
 
+  // Visualization of the points in a hierarchical order:
+  //              MaxT
+  //              MinT
+  // MaxL MinL  Cent/Mid  MinR MaxR
+  //              MinB
+  //              MaxB
   if (isHorizontal) {
-    maxTop = yPosition(values[0].y, baseScaleData[dataIndex], stackOffset)! - mv;
-    minTop = yPosition(values[1].y, baseScaleData[dataIndex], stackOffset)! - mv;
-    minBottom = yPosition(values[2].y, baseScaleData[dataIndex], stackOffset)! + mv;
-    maxBottom = yPosition(values[3].y, baseScaleData[dataIndex], stackOffset)! + mv;
-    minRight = 0;
-    maxRight =
-      xPosition(
-        Math.min(...values.map((v) => v.x)),
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-        true,
-      )! + mh;
-    minLeft = 0;
-    maxLeft =
-      xPosition(
-        Math.max(...values.map((v) => v.x)),
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! + mh;
-    center = maxRight - (maxRight - maxLeft) / 2;
-    leftCenter = 0;
-    rightCenter = 0;
-    middle = yPosition(0, dataIndex, baseScaleData[dataIndex], stackOffset)! - mv;
-    topMiddle =
-      yPosition(
-        values[0].y - (values[0].y - values[1].y) / 2,
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! - mv;
-    bottomMiddle =
-      yPosition(
-        values[3].y - (values[3].y - values[2].y) / 2,
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! + mv;
+    maxTop = Ys.at(0)! - mv;
+    minTop = Ys.at(1)! - mv;
+    minBottom = Ys.at(2)! + mv;
+    maxBottom = (Ys.at(3) ?? Ys.at(2))! + mv;
+
+    maxRight = (Xs.at(3) ?? Xs.at(2))! + mh;
+    // We don't need (minRight/minLeft) for horizontal
+    maxLeft = Xs.at(0)! + mh;
+
+    center = (maxRight + maxLeft) / 2;
+    middle = (maxBottom + maxTop) / 2;
   } else {
-    minTop = 0;
-    maxTop =
-      yPosition(
-        Math.max(...values.map((v) => v.y)),
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! - mv;
-    minBottom = 0;
-    maxBottom =
-      yPosition(
-        Math.min(...values.map((v) => v.y)),
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-        true,
-      )! - mv;
-    maxRight = xPosition(values[0].x, dataIndex, baseScaleData[dataIndex], stackOffset)! + mh;
-    minRight = xPosition(values[1].x, dataIndex, baseScaleData[dataIndex], stackOffset)! + mh;
-    minLeft = xPosition(values[2].x, dataIndex, baseScaleData[dataIndex], stackOffset)! - mh;
-    maxLeft = xPosition(values[3].x, dataIndex, baseScaleData[dataIndex], stackOffset)! - mh;
-    center = xPosition(0, dataIndex, baseScaleData[dataIndex], stackOffset)! - mh;
-    rightCenter =
-      xPosition(
-        values[0].x - (values[0].x - values[1].x) / 2,
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! + mh;
-    leftCenter =
-      xPosition(
-        values[3].x - (values[3].x - values[2].x) / 2,
-        dataIndex,
-        baseScaleData[dataIndex],
-        stackOffset,
-      )! - mh;
-    middle = yPosition(
-      values[0].y - (values[0].y - values[1].y) / 2,
-      dataIndex,
-      baseScaleData[dataIndex],
-      stackOffset,
-    )!;
-    middle = maxTop - (maxTop - maxBottom) / 2;
-    topMiddle = 0;
-    bottomMiddle = 0;
+    maxTop = Ys.at(0)! - mv;
+    // We don't need (minTop/minBottom) for vertical
+    maxBottom = (Ys.at(3) ?? Ys.at(2))! - mv;
+
+    maxRight = (Xs.at(3) ?? Xs.at(2))! + mh;
+    minRight = Xs.at(2)! + mh;
+    minLeft = Xs.at(1)! - mh;
+    maxLeft = Xs.at(0)! - mh;
+
+    center = (maxRight + maxLeft) / 2;
+    middle = (maxBottom + maxTop) / 2;
   }
 
   if (isHorizontal) {
     if (horizontal === 'center') {
       x = center;
       if (vertical === 'top') {
-        y = topMiddle;
+        y = (maxTop + minTop) / 2;
       } else if (vertical === 'middle') {
         y = middle;
       } else if (vertical === 'bottom') {
-        y = bottomMiddle;
+        y = (maxBottom + minBottom) / 2;
       }
     } else if (horizontal === 'start') {
       x = maxLeft;
@@ -209,11 +150,11 @@ export const positionLabel = ({
     if (vertical === 'middle') {
       y = middle;
       if (horizontal === 'start') {
-        x = leftCenter;
+        x = (maxLeft + minLeft) / 2;
       } else if (horizontal === 'center') {
         x = center;
       } else if (horizontal === 'end') {
-        x = rightCenter;
+        x = (maxRight + minRight) / 2;
       }
     } else if (vertical === 'top') {
       y = maxTop;
