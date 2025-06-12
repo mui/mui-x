@@ -36,6 +36,8 @@ export const alias = [
 ];
 
 export default defineConfig({
+  // If enabling babel plugins, ensure the tests in CI are stable
+  // https://github.com/mui/mui-x/pull/18341
   plugins: [react()],
   // We seem to need both this and the `env` property below to make it work.
   define: {
