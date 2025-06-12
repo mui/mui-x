@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
+import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { GridChartsConfigurationSection } from '../../models/gridChartsIntegration';
@@ -28,6 +29,14 @@ const GridChartsConfigurationFormPanel = styled(CollapsiblePanel, {
   gap: 24,
 });
 
+const GridChartsConfigurationFormPanelTitle = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ChartsConfigurationFormPanelTitle',
+})<{ ownerState: OwnerState }>({
+  font: vars.typography.font.body,
+  fontWeight: vars.typography.fontWeight.medium,
+});
+
 export function GridChartsConfigurationForm() {
   const rootProps = useGridRootProps();
   const { chartType, configuration, categories, series, setConfiguration } =
@@ -50,7 +59,11 @@ export function GridChartsConfigurationForm() {
     <GridChartsConfigurationFormRoot>
       {sections.map((section, index) => (
         <Collapsible key={section.id} initiallyOpen={index === 0}>
-          <CollapsibleTrigger>{section.label}</CollapsibleTrigger>
+          <CollapsibleTrigger>
+            <GridChartsConfigurationFormPanelTitle ownerState={rootProps}>
+              {section.label}
+            </GridChartsConfigurationFormPanelTitle>
+          </CollapsibleTrigger>
           <GridChartsConfigurationFormPanel ownerState={rootProps}>
             {Object.entries(section.controls).map(([key, optRaw]) => {
               const opt = optRaw as any;
