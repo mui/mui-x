@@ -26,8 +26,6 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
     return currentCount > 1 ? `${item} (${currentCount})` : item;
   });
 
-  console.log(categoryDataRaw, categoryData);
-
   const sections = (configurationOptions as any)[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
     sections.flatMap((section: any) =>
