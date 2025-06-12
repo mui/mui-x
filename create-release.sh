@@ -237,6 +237,39 @@ git commit -m "[release] v$NEW_VERSION"
 
 echo "Changes committed to branch $BRANCH_NAME"
 
+# Create PR body with checklist
+PR_BODY="Release version $NEW_VERSION
+
+### Prepare the release of the packages
+
+- [x] Compare the last tag with the branch upon which you want to release
+- [x] Clean the generated changelog
+- [x] Update the root package.json's version
+- [x] Update the versions of the other package.json files
+- [x] Open PR with changes and wait for review and green CI
+- [ ] Once CI is green and you have enough approvals, send a message on the team-x slack channel announcing a merge freeze
+- [ ] Merge PR
+
+### Release the packages
+
+- [ ] Checkout the last version of the working branch
+- [ ] Run \`pnpm i && pnpm release:build\`
+- [ ] Run \`pnpm release:publish\`
+- [ ] Run \`pnpm release:tag\`
+
+### Publish the documentation
+
+- [ ] Run \`pnpm docs:deploy\`
+
+### Publish GitHub release
+
+- [ ] Create a new release on GitHub releases page
+
+### Announce
+
+- [ ] Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447ebdbf86b13164272d
+"
+
 # Open a PR
 echo "Opening a PR..."
 # Check if gh CLI is installed
@@ -244,8 +277,10 @@ if ! command -v gh &> /dev/null; then
     echo "GitHub CLI (gh) is not installed. Please install it to automatically create a PR."
     echo "You can manually create a PR with title: [release] v$NEW_VERSION and label: release"
     echo "Branch: $BRANCH_NAME"
+    echo "Use the following checklist in the PR body:"
+    echo "$PR_BODY"
 else
-    gh pr create --title "[release] v$NEW_VERSION" --body "Release version $NEW_VERSION" --label "release" --repo "mui/mui-x"
+    gh pr create --title "[release] v$NEW_VERSION" --body "$PR_BODY" --label "release" --repo "mui/mui-x"
     echo "PR created successfully!"
 fi
 
