@@ -101,8 +101,10 @@ const getGroupAggregatedValue = (
         value = valueGetter(row);
       }
 
-      aggregatedValues[j].values.push(value);
-      rootAggregatedValues[j].values.push(value);
+      if (value !== undefined) {
+        aggregatedValues[j].values.push(value);
+        rootAggregatedValues[j].values.push(value);
+      }
     }
   }
 
