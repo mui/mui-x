@@ -53,7 +53,7 @@ export interface GridAggregationFunction<V = any, AV = V> {
    * @param {GridAggregationParams<V>} params The params of the current aggregated cell.
    * @returns {AV} The aggregated value.
    */
-  apply: (params: GridAggregationParams<V>) => AV | null | undefined;
+  apply: (params: GridAggregationParams<V>, api: GridApiPremium) => AV | null | undefined;
   /**
    * Label of the aggregation function.
    * Used for adding a label to the footer of the grouping column when this aggregation function is the only one being used.
@@ -104,7 +104,6 @@ export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
   groupId: GridRowId;
   field: GridColDef['field'];
-  api: GridApiPremium;
 }
 
 export type GridAggregationModel = {
