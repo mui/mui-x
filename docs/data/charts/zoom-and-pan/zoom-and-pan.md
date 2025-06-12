@@ -90,7 +90,7 @@ When formatting the zoom slider tooltip, the `valueFormatter` is called with `zo
 
 The zoom slider uses the same limits as the zooming options. You can set the `minStart`, `maxEnd`, `minSpan`, and `maxSpan` properties on the axis config to restrict the zoom slider range.
 
-Values outside the `minStart` and `maxEnd` range will not be displayed in the zoom slider.
+The zoom slider does not display values outside the range delimited by `minStart` and `maxEnd`.
 
 ### Composition
 
