@@ -21,6 +21,13 @@ import {
 import { getAggregationRules } from './gridAggregationUtils';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
+export const shouldApplySorting = (
+  aggregationRules: GridAggregationRules,
+  aggregatedFields: string[],
+) => {
+  return aggregatedFields.some((field) => aggregationRules[field].aggregationFunction.applySorting);
+};
+
 const getGroupAggregatedValue = (
   groupId: GridRowId,
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -32,7 +39,8 @@ const getGroupAggregatedValue = (
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
   const aggregatedValues: { aggregatedField: string; values: any[] }[] = [];
 
-  const rowIds = apiRef.current.getRowGroupChildren({ groupId });
+  const applySorting = shouldApplySorting(aggregationRules, aggregatedFields);
+  const rowIds = apiRef.current.getRowGroupChildren({ groupId, applySorting });
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
   rowIds.forEach((rowId) => {

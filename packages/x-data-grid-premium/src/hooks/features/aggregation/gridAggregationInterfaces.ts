@@ -79,6 +79,12 @@ export interface GridAggregationFunction<V = any, AV = V> {
    * @returns {V} The value of the cell that will be passed to the aggregation `apply` function
    */
   getCellValue?: (params: GridAggregationGetCellValueParams) => V;
+  /**
+   * Indicates if the aggregation function depends on rows being in a sorted order.
+   * If `true`, the values provided to `apply` will be sorted.
+   * @default false
+   */
+  applySorting?: boolean;
 }
 
 /**

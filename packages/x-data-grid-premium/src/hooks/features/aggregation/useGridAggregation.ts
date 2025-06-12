@@ -151,6 +151,7 @@ export const useGridAggregation = (
   useGridEvent(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridEvent(apiRef, 'columnsChange', checkAggregationRulesDiff);
   useGridEvent(apiRef, 'filteredRowsSet', applyAggregation);
+  useGridEvent(apiRef, 'sortedRowsSet', applyAggregation);
 
   /**
    * EFFECTS
