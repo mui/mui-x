@@ -2,9 +2,6 @@
 #
 # MUI-X Release Preparation Script
 #
-
-# Color variables have been removed
-#
 # This script automates the release preparation process for MUI-X:
 # 1. Asking for the major version to update (v7.x, v6.x, etc.)
 # 2. Updating the git upstream branch
