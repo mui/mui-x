@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "8.5.1",
+  "version": "8.5.2",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Tree View components.",
   "main": "src/index.ts",

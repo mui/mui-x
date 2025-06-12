@@ -1,5 +1,5 @@
 {
-  "version": "8.5.1",
+  "version": "8.5.2",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -194,7 +194,9 @@
     "webpack-cli": "^6.0.1",
     "yargs": "catalog:"
   },
-  "resolutions": {},
+  "resolutions": {
+    "ast-types": "^0.14.2"
+  },
   "packageManager": "pnpm@10.12.1",
   "engines": {
     "pnpm": "10.12.1"
