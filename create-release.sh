@@ -22,10 +22,8 @@
 #   bash create-release.sh --custom 8.5.2
 #   bash create-release.sh (interactive mode with selection menu)
 #
-# Note: If the script is made executable (chmod +x create-release.sh),
-# you can also run it directly:
-#   ./create-release.sh --patch
-#   ./create-release.sh (interactive mode)
+# Usage with pnpm is also possible
+#   pnpm create-release --patch
 #
 # Requirements:
 #   - Must be run from the repository root
