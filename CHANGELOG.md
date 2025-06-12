@@ -23,7 +23,7 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.5.2`
 
-- [DataGrid] Performance: selectors (#18234) @romgrk
+- [DataGrid] Improve selectors performance (#18234) @romgrk
 - [DataGrid] Fix data grid palette when using CSS vars (#18310) @KenanYusuf
 - [DataGrid] Ignore data source request if the grid got unmounted (#18268) @arminmeh
 
