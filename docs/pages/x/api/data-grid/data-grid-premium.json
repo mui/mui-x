@@ -1488,9 +1488,63 @@
       "class": "MuiDataGridPremium-promptChangesToggleIcon"
     },
     {
-      "name": "chartsConfigurationIcon",
+      "name": "chartsIcon",
       "description": "Icon used for the charts configuration button",
       "default": "GridChartsIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSearchIcon",
+      "description": "Icon used for the search icon in the sidebar search field in the charts configuration panel",
+      "default": "GridSearchIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSearchClearIcon",
+      "description": "Icon used for the clear button in the sidebar search field in the charts configuration panel",
+      "default": "GridClearIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveUpIcon",
+      "description": "Icon used for the move up button in the charts configuration panel menu",
+      "default": "GridExpandLessIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveDownIcon",
+      "description": "Icon used for the move down button in the charts configuration panel menu",
+      "default": "GridExpandMoreIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveToTopIcon",
+      "description": "Icon used for the move to top button in the charts configuration panel menu",
+      "default": "GridMoveToTopIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveToBottomIcon",
+      "description": "Icon used for the move to bottom button in the charts configuration panel menu",
+      "default": "GridMoveToBottomIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuAddIcon",
+      "description": "Icon used for the add button in the charts configuration panel menu",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuRemoveIcon",
+      "description": "Icon used for the remove button in the charts configuration panel menu",
+      "default": "GridDeleteIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuCheckIcon",
+      "description": "Icon used for the check sign in the charts configuration panel menu",
+      "default": "GridCheckIcon",
       "class": null
     }
   ],

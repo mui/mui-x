@@ -54,6 +54,8 @@ function GridChartTypeSelector() {
   const rootProps = useGridRootProps();
   const chartConfig = rootProps.slotProps?.chartsConfigurationPanel?.schema || {};
 
+  // TODO: render a placeholder if there are no charts available - use the locale text `chartsConfigurationNoCharts`
+
   return (
     <GridChartTypeSelectorRoot>
       {Object.entries(chartConfig).map(([type, config]) => (

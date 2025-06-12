@@ -21,14 +21,18 @@ function GridChartsConfigurationPanel() {
   return (
     <Tabs initialTab="chartType">
       <TabList>
-        <Tab value="chartType">Chart</Tab>
-        <Tab value="fields">Fields</Tab>
-        <Tab value="configuration">Config</Tab>
+        <Tab value="chartType">
+          {apiRef.current.getLocaleText('chartsConfigurationTabChartType')}
+        </Tab>
+        <Tab value="fields">{apiRef.current.getLocaleText('chartsConfigurationTabFields')}</Tab>
+        <Tab value="configuration">
+          {apiRef.current.getLocaleText('chartsConfigurationTabConfig')}
+        </Tab>
         <rootProps.slots.baseIconButton
           onClick={() => {
             apiRef.current.setChartsConfigurationPanelOpen(false);
           }}
-          aria-label={apiRef.current.getLocaleText('pivotCloseButton')}
+          aria-label={apiRef.current.getLocaleText('chartsConfigurationCloseButton')}
           {...rootProps.slotProps?.baseIconButton}
         >
           <rootProps.slots.sidebarCloseIcon fontSize="small" />

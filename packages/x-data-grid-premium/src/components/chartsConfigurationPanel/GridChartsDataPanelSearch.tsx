@@ -20,7 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    container: ['ChartsDataPanelSearchContainer'],
+    container: ['chartsDataPanelSearchContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -49,23 +49,26 @@ function GridChartsDataPanelSearch(props: GridChartsDataPanelSearchProps) {
     <GridChartsDataPanelSearchContainer ownerState={rootProps} className={classes.container}>
       <rootProps.slots.baseTextField
         size="small"
-        aria-label={apiRef.current.getLocaleText('pivotSearchControlLabel')}
-        placeholder={apiRef.current.getLocaleText('pivotSearchControlPlaceholder')}
+        aria-label={apiRef.current.getLocaleText('chartsConfigurationSearchLabel')}
+        placeholder={apiRef.current.getLocaleText('chartsConfigurationSearchPlaceholder')}
         onKeyDown={handleKeyDown}
         fullWidth
         slotProps={{
           input: {
-            startAdornment: <rootProps.slots.pivotSearchIcon fontSize="small" />,
+            startAdornment: <rootProps.slots.chartsSearchIcon fontSize="small" />,
             endAdornment: value ? (
               <rootProps.slots.baseIconButton
                 edge="end"
                 size="small"
                 onClick={onClear}
-                aria-label={apiRef.current.getLocaleText('pivotSearchControlClear')}
+                aria-label={apiRef.current.getLocaleText('chartsConfigurationSearchClear')}
               >
-                <rootProps.slots.pivotSearchClearIcon fontSize="small" />
+                <rootProps.slots.chartsSearchClearIcon fontSize="small" />
               </rootProps.slots.baseIconButton>
             ) : null,
+          },
+          htmlInput: {
+            role: 'searchbox',
           },
         }}
         {...rootProps.slotProps?.baseTextField}
