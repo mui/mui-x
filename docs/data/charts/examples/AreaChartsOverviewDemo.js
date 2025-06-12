@@ -61,60 +61,64 @@ export const featuresSet = [
 function ChartBox({ title, children, linkToCode }) {
   return (
     <Box
-    sx={{
-      p: 2,
-      bgcolor: 'background.paper',
-      borderRadius: 2,
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      border: 1,
-      borderColor: 'divider',
-      overflow: 'hidden',
-    }}
-  >
-    <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-      {title}
-    </Typography>
-    <Box
       sx={{
-        flexGrow: 1,
-        minHeight: 300,
-        width: '100%',
-        '& > div': {
-          width: '100% !important',
-          height: '100% !important',
-        },
-        '& svg': {
-          width: '100%',
-          height: '100%',
-        },
+        p: 1,
+        borderRadius: 2,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        border: 1,
+        borderColor: 'divider',
+        overflow: 'hidden',
       }}
     >
-      {children}
-    </Box>
-    {linkToCode ? (
-      <Link
-        href={`/x/react-charts${linkToCode}`}
-        target="_blank"
-        color="primary"
-        variant="body2"
+      <Typography variant="h6" sx={{ mt: 1, mb: 1, ml: 2, fontWeight: 'bold' }}>
+        {title}
+      </Typography>
+      <Box
         sx={{
-          mt: 1.5,
-          fontWeight: 'bold',
-          fontFamily: 'IBM Plex Sans',
-          display: 'inline-flex',
-          alignItems: 'center',
-          '& > svg': { transition: '0.2s' },
-          '&:hover > svg': { transform: 'translateX(2px)' },
+          flexGrow: 1,
+          minHeight: 300,
+          width: '100%',
+          '& > div': {
+            width: '100% !important',
+            height: '100% !important',
+          },
+          '& svg': {
+            width: '100%',
+            height: '100%',
+          },
         }}
       >
-        View the demo source
-        <KeyboardArrowRightRounded fontSize="small" sx={{ mt: '1px', ml: '2px' }} />
-      </Link>
-    ) : null}
-  </Box>
-);
+        {children}
+      </Box>
+      {linkToCode ? (
+        <Link
+          href={`/x/react-charts${linkToCode}`}
+          target="_blank"
+          color="primary"
+          variant="body2"
+          sx={{
+            mt: 1,
+            ml: 2,
+            mb: 1,
+            fontWeight: 'bold',
+            fontFamily: 'IBM Plex Sans',
+            display: 'inline-flex',
+            alignItems: 'center',
+            '& > svg': { transition: '0.2s' },
+            '&:hover > svg': { transform: 'translateX(2px)' },
+          }}
+        >
+          View the demo source
+          <KeyboardArrowRightRounded
+            fontSize="small"
+            sx={{ mt: '1px', ml: '1px' }}
+          />
+        </Link>
+      ) : null}
+    </Box>
+  );
 }
 
 export default function AreaChartsOverviewDemo() {
