@@ -4,28 +4,29 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import InfoCard from '../../InfoCard';
-import HeatmapDemo from './HeatmapDemo';
-import RadarDemo from './RadarDemo';
-import FunnelDemo from './FunnelDemo';
+import MultiAxesDemo from './MultiAxesDemo';
+import ZoomAndPanDemo from './ZoomAndPanDemo';
+import ExportDemo from './ExportDemo';
 
-const advancedCharts = [
+const advancedFeatures = [
   {
-    title: 'Radar',
-    description: 'Compare elements on multiple metrics',
+    title: 'Multi axes and series',
+    description:
+      'Support multiple axes and chart types to pick the visualization the matches your need.',
   },
   {
-    title: 'Heatmap',
-    description: 'Offers an intuitive and efficient way to reorganize the tree structure.',
+    title: 'Zoom & Pan',
+    description: 'BUilt-in zoom features to explore the details of your chart.',
     iconLink: '/static/x/pro.svg',
   },
   {
-    title: 'Funnel',
-    description: 'Improves performance by loading children on demand, especially for large trees.',
+    title: 'Export',
+    description: 'Save your charts in PDF, PNG, or JPEG format to share them outside of the web.',
     iconLink: '/static/x/pro.svg',
   },
 ];
 
-export default function AdvancedCharts() {
+export default function AdvancedFeatures() {
   const [activeItem, setActiveItem] = React.useState(0);
 
   return (
@@ -43,11 +44,11 @@ export default function AdvancedCharts() {
             overline="Essential charts"
             title={
               <Typography variant="h2" fontSize="1.625rem">
-                {advancedCharts[activeItem].title}
+                {advancedFeatures[activeItem].title}
               </Typography>
             }
           />
-          {advancedCharts.map(({ title, description, iconLink }, index) => (
+          {advancedFeatures.map(({ title, description, iconLink }, index) => (
             <InfoCard
               title={title}
               description={description}
@@ -67,9 +68,9 @@ export default function AdvancedCharts() {
             maxWidth: { xs: '500px', md: '100%' },
           }}
         >
-          {activeItem === 0 && <RadarDemo />}
-          {activeItem === 1 && <HeatmapDemo />}
-          {activeItem === 2 && <FunnelDemo />}
+          {activeItem === 0 && <MultiAxesDemo />}
+          {activeItem === 1 && <ZoomAndPanDemo />}
+          {activeItem === 2 && <ExportDemo />}
         </Stack>
       </Stack>
     </React.Fragment>

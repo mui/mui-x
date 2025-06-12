@@ -17,6 +17,7 @@ packageName: '@mui/x-charts'
 
 {{"component": "modules/components/overview/charts/essentialCharts/EssentialCharts"}}
 {{"component": "modules/components/overview/charts/advancedCharts/AdvancedChartDemo"}}
+{{"component": "modules/components/overview/charts/advancedFeatures/AdvancedFeatures"}}
 
 ## All MUI X Charts
 

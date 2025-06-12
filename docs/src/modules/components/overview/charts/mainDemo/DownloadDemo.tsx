@@ -53,14 +53,21 @@ const packages = {
   ),
 } as const;
 
+const IntlAbsolute = new Intl.NumberFormat('en-US');
 const valueFormatter = (value: number | null) => {
   if (value !== null) {
-    return value.toLocaleString();
+    return IntlAbsolute.format(value);
   }
   return value;
 };
 
-const IntlPercent = new Intl.NumberFormat(undefined, { style: 'percent' });
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+}).format;
+
+const IntlPercent = new Intl.NumberFormat('en-US', { style: 'percent' });
 const percentValueFormatter = (value: number | null) => {
   if (value !== null) {
     return IntlPercent.format(value / 100);
@@ -120,6 +127,10 @@ export default function DownloadDemo() {
               disableTicks: true,
               domainLimit: 'strict',
               zoom: true,
+              valueFormatter: (value, context) =>
+                context.location === 'tick'
+                  ? context.scale.tickFormat()(value)
+                  : dateFormatter(value),
             },
           ]}
           yAxis={[

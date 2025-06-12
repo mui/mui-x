@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -96,7 +97,7 @@ export default function FeaturesHighlight() {
               </Box>
 
               <Box flexBasis="70%" p={1}>
-                <ZoomAndPan />
+                <BarChartToggle />
               </Box>
             </Stack>
           </Stack>
@@ -133,7 +134,7 @@ export default function FeaturesHighlight() {
               />
             </Stack>
             <Box p={1} flexBasis={{ xs: '65%', sm: '50%', md: '65%' }}>
-              <BarChartToggle />
+              <ZoomAndPan />
             </Box>
           </Stack>
         </Stack>

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { RadarChart } from '@mui/x-charts/RadarChart';
+import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -74,7 +76,7 @@ export function LineAndBar() {
 // And https://gs.statcounter.com/platform-market-share/desktop-mobile-tablet/worldwide/2023
 // For the month of December 2023
 
-export const desktopOS = [
+const desktopOS = [
   {
     label: 'Windows',
     value: 72.72,
@@ -97,7 +99,7 @@ export const desktopOS = [
   },
 ];
 
-export const valueFormatter = (item: { value: number }) => `${item.value}%`;
+const pieValueFormatter = (item: { value: number }) => `${item.value}%`;
 
 export function Pie() {
   return (
@@ -112,7 +114,7 @@ export function Pie() {
       series={[
         {
           data: desktopOS,
-          valueFormatter,
+          valueFormatter: pieValueFormatter,
         },
       ]}
       slotProps={{ tooltip: { disablePortal: true } }}
@@ -121,6 +123,83 @@ export function Pie() {
           fontWeight: 'bold',
         },
       }}
+    />
+  );
+}
+
+// Data from https://ourworldindata.org/emissions-by-fuel
+
+function radarValueFormatter(v: number | null) {
+  if (v === null) {
+    return 'NaN';
+  }
+  return `${v.toLocaleString()}t CO2eq/pers`;
+}
+
+export function Radar() {
+  return (
+    <RadarChart
+      colors={[
+        'var(--palette-color-0)',
+        'var(--palette-color-1)',
+        'var(--palette-color-2)',
+        'var(--palette-color-3)',
+        'var(--palette-color-4)',
+      ]}
+      series={[
+        {
+          hideMark: true,
+          label: 'USA',
+          data: [6.65, 2.76, 5.15, 0.19, 0.07, 0.12],
+          valueFormatter: radarValueFormatter,
+        },
+        {
+          hideMark: true,
+          label: 'Australia',
+          data: [5.52, 5.5, 3.19, 0.51, 0.15, 0.11],
+          valueFormatter: radarValueFormatter,
+        },
+        {
+          hideMark: true,
+          label: 'United Kingdom',
+          data: [2.26, 0.29, 2.03, 0.05, 0.04, 0.06],
+          valueFormatter: radarValueFormatter,
+        },
+      ]}
+      radar={{
+        metrics: ['Oil', 'Coal', 'Gas', 'Flaring', 'Other\nindustry', 'Cement'],
+      }}
+      slotProps={{ tooltip: { disablePortal: true } }}
+    />
+  );
+}
+
+export function Funnel() {
+  return (
+    <FunnelChart
+      colors={[
+        'var(--palette-color-0)',
+        'var(--palette-color-1)',
+        'var(--palette-color-2)',
+        'var(--palette-color-3)',
+        'var(--palette-color-4)',
+      ]}
+      series={[
+        {
+          curve: 'linear',
+          variant: 'outlined',
+          borderRadius: 2,
+          valueFormatter: ({ value }) => `${value}%`,
+          data: [
+            { value: 100, label: 'Visitors' },
+            { value: 68, label: 'Pick item' },
+            { value: 21, label: 'Start payment' },
+            { value: 5, label: 'Paid' },
+          ],
+        },
+      ]}
+      gap={6}
+      slotProps={{ tooltip: { disablePortal: true } }}
     />
   );
 }

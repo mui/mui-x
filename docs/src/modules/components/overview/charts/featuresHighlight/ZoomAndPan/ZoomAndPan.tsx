@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { sxColors } from '../colors';
-import dataset from './data.json';
+import dataset from '../../data/Goolge-Meta-stoks.json';
 
 const base = {
   google: dataset[0].google!,
@@ -16,6 +16,12 @@ const formattedDataset = dataset.map((item) => ({
   google: item.google ? (100 * item.google) / base.google : null,
   meta: item.meta ? (100 * item.meta) / base.meta : null,
 }));
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+}).format;
 
 export default function ZoomAndPan() {
   return (
@@ -39,7 +45,20 @@ export default function ZoomAndPan() {
           xAxis={[
             { id: 'x-axis', scaleType: 'time', dataKey: 'date', zoom: true, domainLimit: 'strict' },
           ]}
-          yAxis={[{ id: 'y-axis', zoom: true, width: 40, tickNumber: 4, min: 80, max: 200 }]}
+          yAxis={[
+            {
+              id: 'y-axis',
+              zoom: true,
+              width: 40,
+              tickNumber: 4,
+              min: 80,
+              max: 200,
+              valueFormatter: (value, context) =>
+                context.location === 'tick'
+                  ? context.scale.tickFormat()(value)
+                  : dateFormatter(value),
+            },
+          ]}
           initialZoom={[
             { axisId: 'x-axis', start: 40, end: 80 },
             { axisId: 'y-axis', start: 20, end: 89 },

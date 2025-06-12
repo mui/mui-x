@@ -3,14 +3,18 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { blackAndWhite, colorFull } from '../colors';
 import SelectChart from './SelectChart';
-import { LineAndBar, Pie } from './Charts';
+import { Funnel, Radar, LineAndBar, Pie } from './Charts';
 
 export default function EveryDataType() {
   const [selected, setSelected] = React.useState(1);
 
+  React.useEffect(() => {
+    const interval = setInterval(() => setSelected((p) => (p + 1) % 4), 5000);
+
+    return () => clearInterval(interval);
+  }, [selected]);
   return (
     <Stack
       spacing={1}
@@ -39,11 +43,13 @@ export default function EveryDataType() {
           flexGrow: 1,
           mb: 2,
           width: '100%',
-          height: 200,
+          height: 250,
         }}
       >
         {selected === 0 && <LineAndBar />}
         {selected === 1 && <Pie />}
+        {selected === 2 && <Radar />}
+        {selected === 3 && <Funnel />}
       </Box>
       <SelectChart selected={selected} setSelected={setSelected} />
       <Typography variant="subtitle2">A chart for every data type</Typography>
