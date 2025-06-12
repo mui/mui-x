@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { EventCalendarProps } from './EventCalendar.types';
 import { ViewType } from '../models/views';
 import { WeekView } from '../week-view/WeekView';
+import { AgendaView } from '../agenda-view';
 import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../utils/TranslationsContext';
 import '../index.css';
@@ -29,7 +30,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       content = <div>TODO: Month view</div>;
       break;
     case 'agenda':
-      content = <div>TODO: Agenda view</div>;
+      content = <AgendaView events={events} />;
       break;
     default:
       content = null;

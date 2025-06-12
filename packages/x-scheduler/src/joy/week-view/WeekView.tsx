@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
 import { TimeGrid } from '../../primitives/time-grid';
-import { Event } from '../event/Event';
+import { TimeGridEvent } from '../event/TimeGridEvent';
 import { WeekViewProps } from './WeekView.types';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
@@ -119,7 +119,7 @@ export const WeekView = React.forwardRef(function WeekView(
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
                     {dayEvents.map((event: CalendarEvent) => (
-                      <Event
+                      <TimeGridEvent
                         key={event.id}
                         event={event}
                         variant="regular"

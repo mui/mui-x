@@ -1,1 +1,1 @@
-export * from './Event';
+export * from './TimeGridEvent';

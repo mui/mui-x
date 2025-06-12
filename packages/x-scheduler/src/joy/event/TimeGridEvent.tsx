@@ -4,11 +4,11 @@ import clsx from 'clsx';
 import { TimeGrid } from '../../primitives/time-grid';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { EventProps } from './Event.types';
-import './Event.css';
+import './TimeGridEvent.css';
 
 const adapter = getAdapter();
 
-export const Event = React.forwardRef(function Event(
+export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: EventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
