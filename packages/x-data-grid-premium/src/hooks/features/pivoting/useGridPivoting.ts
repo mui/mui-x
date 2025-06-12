@@ -118,14 +118,6 @@ export const useGridPivoting = (
   });
 
   apiRef.current.registerControlState({
-    stateId: 'pivotMode',
-    propModel: props.pivotActive,
-    propOnChange: props.onPivotActiveChange,
-    stateSelector: gridPivotActiveSelector,
-    changeEvent: 'pivotModeChange',
-  });
-
-  apiRef.current.registerControlState({
     stateId: 'pivotPanelOpen',
     propModel: props.pivotPanelOpen,
     propOnChange: props.onPivotPanelOpenChange,
@@ -323,7 +315,6 @@ export const useGridPivoting = (
       if (!isPivotingAvailable) {
         return;
       }
-      apiRef.current.selectRows([], false, true);
       apiRef.current.setState((state) => {
         const newPivotMode =
           typeof callback === 'function' ? callback(state.pivoting?.active) : callback;
@@ -349,8 +340,10 @@ export const useGridPivoting = (
           ...state,
           pivoting: newPivotingState,
         };
+        console.log('newState', newState.pivoting.active, newPivotMode, newPivotingState);
         return newState;
       });
+      apiRef.current.selectRows([], false, true);
     },
     [apiRef, computePivotingState, getInitialData, isPivotingAvailable],
   );
