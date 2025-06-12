@@ -63,7 +63,16 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   promptAggregationIcon: GridFunctionsIcon,
   promptGroupIcon: GridGroupWorkIcon,
   promptChangesToggleIcon: GridExpandMoreIcon,
-  chartsConfigurationIcon: GridChartsIcon,
+  chartsIcon: GridChartsIcon,
+  chartsSearchIcon: GridSearchIcon,
+  chartsSearchClearIcon: GridClearIcon,
+  chartsMenuMoveUpIcon: GridExpandLessIcon,
+  chartsMenuMoveDownIcon: GridExpandMoreIcon,
+  chartsMenuMoveToTopIcon: GridMoveToTopIcon,
+  chartsMenuMoveToBottomIcon: GridMoveToBottomIcon,
+  chartsMenuAddIcon: GridAddIcon,
+  chartsMenuRemoveIcon: GridDeleteIcon,
+  chartsMenuCheckIcon: GridCheckIcon,
 };
 
 const materialSlots = {
