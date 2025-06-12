@@ -13,6 +13,7 @@ export const defaultZoomOptions = {
   filterMode: 'keep',
   slider: {
     enabled: false,
+    preview: false,
     size: DEFAULT_ZOOM_SLIDER_SIZE,
     showTooltip: DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   },
