@@ -557,7 +557,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       const customMax: GridAggregationFunction = {
         ...GRID_AGGREGATION_FUNCTIONS.max,
-        apply: (params) => `Agg: ${GRID_AGGREGATION_FUNCTIONS.max.apply(params) as number}`,
+        apply: (params) =>
+          `Agg: ${GRID_AGGREGATION_FUNCTIONS.max.apply(params, apiRef.current!) as number}`,
       };
       setProps({ aggregationFunctions: { min: GRID_AGGREGATION_FUNCTIONS.min, max: customMax } });
       // 'max' is in props.aggregationFunctions but has changed
