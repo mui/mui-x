@@ -24,7 +24,7 @@ export default function ZoomSliderPreview() {
             filterMode: 'discard',
             minSpan: 10,
             panning: true,
-            slider: { enabled: true },
+            slider: { enabled: true, preview: true },
           },
           valueFormatter: (v) => v.toLocaleString('en-US'),
         },
