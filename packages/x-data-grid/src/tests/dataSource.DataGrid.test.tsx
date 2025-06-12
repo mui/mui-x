@@ -304,6 +304,37 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         expect(onDataSourceError.callCount).to.equal(1);
       });
     });
+
+    it('should not call `onDataSourceError` after unmount', async () => {
+      const onDataSourceError = spy();
+      const { promise, reject } = Promise.withResolvers<GridGetRowsResponse>();
+      const getRows = spy(() => promise);
+      const dataSource: GridDataSource = {
+        getRows,
+      };
+      const { unmount } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'id' }]}
+            dataSource={dataSource}
+            onDataSourceError={onDataSourceError}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+            }}
+            pagination
+            pageSizeOptions={pageSizeOptions}
+            disableVirtualization
+          />
+        </div>,
+      );
+      await waitFor(() => {
+        expect(getRows.called).to.equal(true);
+      });
+      unmount();
+      reject();
+      await promise.catch(() => 'rejected');
+      expect(onDataSourceError.notCalled).to.equal(true);
+    });
   });
 
   describe('Editing', () => {

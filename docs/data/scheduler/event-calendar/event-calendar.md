@@ -2,7 +2,7 @@
 productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
-githubLabel: 'component: scheduler'
+githubLabel: 'scope: scheduler'
 ---
 
 # Scheduler - Overview
@@ -25,11 +25,11 @@ All the views of the Event Calendar can be used as standalone components:
 
 ### Day
 
-TODO: Add a demo of a standalone `<DayView />` when available.
+{{"demo": "StandaloneDayView.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Week
 
-TODO: Add a demo of a standalone `<WeekView />` when available.
+{{"demo": "StandaloneWeekView.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Month
 

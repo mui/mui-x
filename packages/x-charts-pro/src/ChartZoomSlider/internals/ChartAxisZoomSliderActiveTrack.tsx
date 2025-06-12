@@ -330,7 +330,7 @@ export function ChartAxisZoomSliderActiveTrack({
 function getZoomSliderTooltipsText(axis: ComputedAxis, drawingArea: ChartDrawingArea) {
   const formatValue = (value: Date | number | null) => {
     if (axis.valueFormatter) {
-      return axis.valueFormatter(value, { location: 'zoom-slider-tooltip' });
+      return axis.valueFormatter(value, { location: 'zoom-slider-tooltip', scale: axis.scale });
     }
 
     return `${value}`;

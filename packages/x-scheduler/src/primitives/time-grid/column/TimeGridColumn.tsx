@@ -4,7 +4,7 @@ import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { getAdapter } from '../../utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../models';
 
 const adapter = getAdapter();
 
