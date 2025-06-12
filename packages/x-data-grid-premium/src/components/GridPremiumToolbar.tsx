@@ -32,7 +32,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
           render={(triggerProps) => (
             <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarCharts')}>
               <ToolbarButton {...triggerProps} color="default">
-                <rootProps.slots.chartsConfigurationIcon fontSize="small" />
+                <rootProps.slots.chartsIcon fontSize="small" />
               </ToolbarButton>
             </rootProps.slots.baseTooltip>
           )}
