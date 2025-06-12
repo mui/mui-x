@@ -148,7 +148,11 @@ export class Pyramid implements FunnelCurveGenerator {
 
   point(xIn: number, yIn: number): void {
     this.points.push({ x: xIn, y: yIn });
-    if (this.points.length < 4) {
+    const isLastSection = this.position === this.sections - 1;
+    const isFirstSection = this.position === 0;
+    const isSharpPoint =
+      (isLastSection && !this.isIncreasing) || (isFirstSection && this.isIncreasing);
+    if (this.points.length < (isSharpPoint ? 3 : 4)) {
       return;
     }
 

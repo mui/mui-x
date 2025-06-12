@@ -159,7 +159,7 @@ export class Linear implements FunnelCurveGenerator {
       }
       // Is smallest section and shaped like a triangle
       if (this.position === this.sections - 1 && this.pointShape === 'sharp') {
-        return [this.borderRadius];
+        return [0, 0, this.borderRadius];
       }
 
       // Is smallest section
@@ -173,7 +173,12 @@ export class Linear implements FunnelCurveGenerator {
 
   point(xIn: number, yIn: number): void {
     this.points.push({ x: xIn, y: yIn });
-    if (this.points.length < 4) {
+    const isLastSection = this.position === this.sections - 1;
+    const isFirstSection = this.position === 0;
+    const isSharpPoint =
+      this.pointShape === 'sharp' &&
+      ((isLastSection && !this.isIncreasing) || (isFirstSection && this.isIncreasing));
+    if (this.points.length < (isSharpPoint ? 3 : 4)) {
       return;
     }
 

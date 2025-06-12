@@ -1,6 +1,6 @@
 import { Position } from '@mui/x-charts/models';
 import { FunnelDataPoints, FunnelLabelOptions } from './funnel.types';
-import { PositionGetter } from './positionGetter';
+import { PositionGetter } from './curves';
 
 /**
  * It tries to keep the label inside the bounds of the section based on the position.

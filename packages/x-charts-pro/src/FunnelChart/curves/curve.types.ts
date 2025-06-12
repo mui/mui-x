@@ -66,5 +66,12 @@ export interface FunnelCurveGenerator extends CurveGenerator {
    * @param options The options for the curve.
    * @returns The processed points.
    */
-  processPoints(points: Point[]): Point[];
+  processPoints(points: Point[], xPosition: PositionGetter, yPosition: PositionGetter): Point[];
 }
+export type PositionGetter = (
+  value: number,
+  bandIndex: number,
+  bandIdentifier: string | number,
+  stackOffset?: number,
+  useBand?: boolean,
+) => number;
