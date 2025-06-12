@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { GridChartsConfigurationSection } from '../../models/gridChartsIntegration';
@@ -38,6 +39,7 @@ const GridChartsConfigurationFormPanelTitle = styled('div', {
 });
 
 export function GridChartsConfigurationForm() {
+  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const { chartType, configuration, categories, series, setConfiguration } =
     useGridChartsIntegrationContext();
@@ -52,7 +54,8 @@ export function GridChartsConfigurationForm() {
   };
 
   if (chartType === '') {
-    return <div style={{ padding: 16 }}>Select a chart type to configure options.</div>;
+    // TODO: make it prettier
+    return apiRef.current.getLocaleText('chartsConfigurationChartNotSelected');
   }
 
   return (
