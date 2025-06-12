@@ -4,8 +4,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
 import { GridChartTypeSelector } from './GridChartTypeSelector';
-import { GridChartsConfigurationPanelHeader } from './GridChartsConfigurationPanelHeader';
-import { GridChartsConfigurationPanelBody } from './GridChartsConfigurationPanelBody';
+import { GridChartsDataPanelHeader } from './GridChartsDataPanelHeader';
+import { GridChartsDataPanelBody } from './GridChartsDataPanelBody';
 import { GridChartsConfigurationForm } from './GridChartsConfigurationForm';
 import { Tab, TabList, TabPanel, Tabs } from '../tabs';
 
@@ -38,11 +38,8 @@ function GridChartsConfigurationPanel() {
         <GridChartTypeSelector />
       </TabPanel>
       <TabPanel value="data">
-        <GridChartsConfigurationPanelHeader
-          searchValue={searchValue}
-          onSearchValueChange={setSearchValue}
-        />
-        <GridChartsConfigurationPanelBody searchValue={searchValue} />
+        <GridChartsDataPanelHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
+        <GridChartsDataPanelBody searchValue={searchValue} />
       </TabPanel>
       <TabPanel value="configuration">
         <GridChartsConfigurationForm />
