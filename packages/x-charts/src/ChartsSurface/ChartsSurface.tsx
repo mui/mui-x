@@ -18,6 +18,7 @@ export interface ChartsSurfaceProps {
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
+  tabIndex?: number;
 }
 
 const ChartsSurfaceStyles = styled('svg', {
