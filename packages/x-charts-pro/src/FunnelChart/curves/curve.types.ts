@@ -1,3 +1,5 @@
+import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+
 export type CurveOptions = {
   /**
    * The gap between each segment.
@@ -54,3 +56,15 @@ export type Point = {
   x: number;
   y: number;
 };
+
+export interface FunnelCurveGenerator extends CurveGenerator {
+  /**
+   * Processes the points to create a curve based on the provided options.
+   * This does not draw the curve but prepares the points for rendering.
+   *
+   * @param points The points to process.
+   * @param options The options for the curve.
+   * @returns The processed points.
+   */
+  processPoints(points: Point[]): Point[];
+}

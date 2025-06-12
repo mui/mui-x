@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions, Point } from './curve.types';
+import { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { lerpX, lerpY } from './utils';
 
@@ -9,7 +8,7 @@ import { lerpX, lerpY } from './utils';
  * It creates a step pyramid, which is a step-like shape with static lengths.
  * It has the option to add a gap between sections while also properly handling the border radius.
  */
-export class StepPyramid implements CurveGenerator {
+export class StepPyramid implements FunnelCurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private position: number = 0;
@@ -52,6 +51,33 @@ export class StepPyramid implements CurveGenerator {
   lineStart(): void {}
 
   lineEnd(): void {}
+
+  processPoints(points: Point[]): Point[] {
+    // Replace funnel points by pyramids ones.
+    const processedPoints = points.map((point, index) => {
+      const slopeStart = this.slopeStart(index);
+      const slopeEnd = this.slopeEnd(index);
+
+      if (this.isHorizontal) {
+        const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+        const xInitial = this.initialX(index, points);
+
+        return {
+          x: point.x,
+          y: yGetter(xInitial),
+        };
+      }
+
+      const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+      const yInitial = this.initialY(index, points);
+      return {
+        x: xGetter(yInitial),
+        y: point.y,
+      };
+    });
+
+    return processedPoints;
+  }
 
   protected getBorderRadius(): number | number[] {
     if (this.gap > 0) {
@@ -141,20 +167,20 @@ export class StepPyramid implements CurveGenerator {
     };
   }
 
-  initialX(index: number): number {
+  initialX(index: number, points: Point[]): number {
     if (this.isIncreasing) {
-      return index === 0 || index === 1 ? this.points.at(1)!.x : this.points.at(2)!.x;
+      return index === 0 || index === 1 ? points.at(1)!.x : points.at(2)!.x;
     }
 
-    return index === 0 || index === 1 ? this.points.at(0)!.x : this.points.at(3)!.x;
+    return index === 0 || index === 1 ? points.at(0)!.x : points.at(3)!.x;
   }
 
-  initialY(index: number): number {
+  initialY(index: number, points: Point[]): number {
     if (this.isIncreasing) {
-      return index === 0 || index === 1 ? this.points.at(1)!.y : this.points.at(2)!.y;
+      return index === 0 || index === 1 ? points.at(1)!.y : points.at(2)!.y;
     }
 
-    return index === 0 || index === 1 ? this.points.at(0)!.y : this.points.at(3)!.y;
+    return index === 0 || index === 1 ? points.at(0)!.y : points.at(3)!.y;
   }
 
   point(xIn: number, yIn: number): void {
@@ -162,29 +188,6 @@ export class StepPyramid implements CurveGenerator {
     if (this.points.length < 4) {
       return;
     }
-
-    // Replace funnel points by pyramids ones.
-    this.points = this.points.map((point, index) => {
-      const slopeStart = this.slopeStart(index);
-      const slopeEnd = this.slopeEnd(index);
-
-      if (this.isHorizontal) {
-        const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-        const xInitial = this.initialX(index);
-
-        return {
-          x: point.x,
-          y: yGetter(xInitial),
-        };
-      }
-
-      const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-      const yInitial = this.initialY(index);
-      return {
-        x: xGetter(yInitial),
-        y: point.y,
-      };
-    });
 
     borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
