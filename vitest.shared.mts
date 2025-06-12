@@ -36,24 +36,7 @@ export const alias = [
 ];
 
 export default defineConfig({
-  plugins: [
-    react({
-      babel: {
-        plugins: [
-          [
-            '@mui/internal-babel-plugin-display-name',
-            {
-              allowedCallees: {
-                '@mui/x-internals/forwardRef': ['forwardRef'],
-              },
-            },
-          ],
-        ],
-        babelrc: false,
-        configFile: false,
-      },
-    }),
-  ],
+  plugins: [react()],
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
