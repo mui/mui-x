@@ -1,13 +1,19 @@
 #!/bin/bash
 #
-# MUI-X Version Update Script
+# MUI-X Release Preparation Script
 #
-# This script handles the first part of the release process for MUI-X:
+# This script automates the release preparation process for MUI-X:
 # 1. Updating the git upstream/master branch
 # 2. Determining the new version (patch/minor/major or custom)
 # 3. Creating a new branch with the new version
 # 4. Updating the root package.json with the new version
 # 5. Running the lerna version script to update all package versions
+# 6. Generating the changelog with actual package versions
+# 7. Adding the new changelog entry to the CHANGELOG.md file
+# 8. Waiting for user confirmation to review changes
+# 9. Committing the changes to the branch
+# 10. Opening a PR with a title "[release] v<NEW_VERSION>" and label "release"
+#     with a checklist of all release steps
 #
 # Usage:
 #   bash create-release.sh --patch
