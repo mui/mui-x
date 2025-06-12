@@ -12,6 +12,7 @@ export type {
   YAxis,
   RadiusAxis,
   RotationAxis,
+  AxisValueFormatterContext,
 } from './axis';
 
 // Utils shared across the X packages

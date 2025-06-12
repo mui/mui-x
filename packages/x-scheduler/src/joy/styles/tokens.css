@@ -5,6 +5,10 @@
 
   --gray-1: var(--mauve-1);
   --gray-2: var(--mauve-2);
+  --gray-2-rgba-30: rgba(var(--mauve-2-rgb), 0.3);
+  --gray-2-rgba-40: rgba(var(--mauve-2-rgb), 0.4);
+  --gray-2-rgba-50: rgba(var(--mauve-2-rgb), 0.5);
+  --gray-2-rgba-80: rgba(var(--mauve-2-rgb), 0.8);
   --gray-3: var(--mauve-3);
   --gray-4: var(--mauve-4);
   --gray-5: var(--mauve-5);
@@ -21,6 +25,8 @@
   --primary-2: var(--violet-2);
   --primary-3: var(--violet-3);
   --primary-4: var(--violet-4);
+  --primary-4-rgba-70: rgba(var(--violet-4-rgb), 0.7);
+  --primary-4-rgba-80: rgba(var(--violet-4-rgb), 0.8);
   --primary-5: var(--violet-5);
   --primary-6: var(--violet-6);
   --primary-7: var(--violet-7);
@@ -73,6 +79,7 @@
 
   --mauve-1: #fafafa;
   --mauve-2: #e9e9ec;
+  --mauve-2-rgb: 233, 233, 236;
   --mauve-3: #b5b2bc;
   --mauve-4: #7c7a85;
   --mauve-5: #6f6d78;
@@ -89,6 +96,7 @@
   --violet-2: #faf8ff;
   --violet-3: #f4f0fe;
   --violet-4: #ebe4ff;
+  --violet-4-rgb: 235, 228, 255;
   --violet-5: #e1d9ff;
   --violet-6: #d4cafe;
   --violet-7: #c2b5f5;
@@ -235,6 +243,26 @@
 
   --cursor-button: default;
   --cursor-disabled: not-allowed;
+
+  /* Outline */
+  --outline-focus: 2px solid var(--violet-4);
+  --outline-focus-offset: 2px;
+
+  /* Interactive states */
+  --interactive-hover-bg: var(--gray-2-rgba-50);
+  --interactive-active-bg:
+    linear-gradient(to bottom, var(--primary-4-rgba-70), var(--primary-4-rgba-70)),
+    linear-gradient(to bottom, var(--gray-2-rgba-30), var(--gray-2-rgba-30));
+  --interactive-selected-bg: var(--primary-3);
+  --interactive-selected-text: var(--primary-13);
+  --interactive-selected-hover-bg: var(--primary-4);
+  --interactive-focused-bg: var(--gray-2-rgba-50);
+  --interactive-focused-hover-bg: var(--gray-2-rgba-80);
+  --interactive-active-focused-bg:
+    linear-gradient(to bottom, var(--primary-4-rgba-80), var(--primary-4-rgba-80)),
+    linear-gradient(to bottom, var(--gray-2-rgba-40), var(--gray-2-rgba-40));
+  --interactive-selected-focused-bg: var(--primary-4);
+  --interactive-selected-hover-focused-bg: var(--primary-5);
 
   /* Font */
 

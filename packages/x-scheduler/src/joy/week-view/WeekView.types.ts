@@ -1,8 +1,3 @@
-import { CalendarEvent } from '../models/events';
+import { BaseViewProps } from '../models/views';
 
-export interface WeekViewProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * The events to render in the week view.
-   */
-  events: CalendarEvent[];
-}
+export interface WeekViewProps extends BaseViewProps {}

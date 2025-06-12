@@ -37,7 +37,7 @@ export class Step implements CurveGenerator {
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
-    this.gap = (gap ?? 0) / 2;
+    this.gap = gap ?? 0;
     this.position = position ?? 0;
     this.sections = sections ?? 1;
     this.borderRadius = borderRadius ?? 0;
@@ -91,20 +91,6 @@ export class Step implements CurveGenerator {
       return {
         x: index <= 1 ? min(allX) : max(allX),
         y: index === 1 || index === 2 ? max(allY) : min(allY),
-      };
-    });
-
-    // Add gaps where they are needed.
-    this.points = this.points.map((point, index) => {
-      if (this.isHorizontal) {
-        return {
-          x: point.x + (index === 0 || index === 3 ? this.gap : -this.gap),
-          y: point.y,
-        };
-      }
-      return {
-        x: point.x,
-        y: point.y + (index === 0 || index === 3 ? this.gap : -this.gap),
       };
     });
 
