@@ -17,7 +17,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { vi } from 'vitest';
+import { onTestFinished, vi } from 'vitest';
 
 describe('<DataGridPro /> - Cell editing', () => {
   const { render } = createRenderer();
@@ -540,21 +540,21 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should stay in edit mode if processRowUpdate throws an error', async () => {
-        vi.spyOn(console, 'error').mockImplementation(() => {});
+        const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        onTestFinished(() => {
+          consoleMock.mockRestore();
+        });
 
-        const processRowUpdate = vi.fn(() => {
+        const processRowUpdate = () => {
           throw new Error('Something went wrong');
-        });
+        };
         render(<TestCase processRowUpdate={processRowUpdate} />);
+        await act(async () => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
 
-        await act(async () => {
-          apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' });
-        });
-        await act(async () => {
-          apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' });
-        });
-
-        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(consoleMock.mock.lastCall?.[0]).to.include([
+          'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+        ]);
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
