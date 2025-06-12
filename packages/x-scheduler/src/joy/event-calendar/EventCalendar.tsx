@@ -1,13 +1,18 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { ViewType } from '../models/views';
 import { WeekView } from '../week-view/WeekView';
+import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../utils/TranslationsContext';
 import '../index.css';
 import './EventCalendar.css';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+
+const adapter = getAdapter();
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -16,14 +21,23 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const { events, onEventsChange, translations, className, ...other } = props;
 
   const [view, setView] = React.useState<ViewType>('week');
+  const [visibleDate, setVisibleDate] = React.useState<SchedulerValidDate>(() => adapter.date());
+
+  const handleDayHeaderClick = React.useCallback(
+    (day: SchedulerValidDate) => {
+      setVisibleDate(day);
+      setView('day');
+    },
+    [setVisibleDate, setView],
+  );
 
   let content: React.ReactNode;
   switch (view) {
     case 'week':
-      content = <WeekView events={events} />;
+      content = <WeekView events={events} onDayHeaderClick={handleDayHeaderClick} />;
       break;
     case 'day':
-      content = <div>TODO: Day view</div>;
+      content = <DayView events={events} day={visibleDate} />;
       break;
     case 'month':
       content = <div>TODO: Month view</div>;

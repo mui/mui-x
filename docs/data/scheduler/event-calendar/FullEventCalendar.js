@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
 
+import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
 import classes from './FullEventCalendar.module.css';
 
 const events = [
@@ -36,13 +36,19 @@ const events = [
     title: 'Scheduler deep dive',
   },
   {
-    id: '1',
+    id: '6',
     start: DateTime.fromISO('2025-05-29T07:30:00'),
     end: DateTime.fromISO('2025-05-29T08:15:00'),
     title: 'Footing',
   },
   {
-    id: '1',
+    id: '7',
+    start: DateTime.fromISO('2025-05-29T08:15:00'),
+    end: DateTime.fromISO('2025-05-29T08:30:00'),
+    title: 'Standup',
+  },
+  {
+    id: '8',
     start: DateTime.fromISO('2025-05-30T15:00:00'),
     end: DateTime.fromISO('2025-05-30T15:45:00'),
     title: 'Retrospective',
