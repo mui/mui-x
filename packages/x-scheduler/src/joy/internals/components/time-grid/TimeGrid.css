@@ -46,6 +46,7 @@
 
 .TimeGridHeader[style*='--has-scroll: 1'] .TimeGridHeaderRow {
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-color: transparent transparent;
 }
 
@@ -59,6 +60,7 @@
 
 .TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow {
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-color: transparent transparent;
 }
 
@@ -138,6 +140,7 @@
 .TimeGridTimeAxis {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   width: var(--fixed-cell-width);
 }
 

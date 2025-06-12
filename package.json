@@ -1,5 +1,5 @@
 {
-  "version": "8.5.1",
+  "version": "8.5.2",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -102,7 +102,6 @@
     "@types/chai": "catalog:",
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
-    "@types/karma": "catalog:",
     "@types/lodash": "catalog:",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.15.30",
@@ -163,17 +162,10 @@
     "jss": "^10.10.0",
     "jss-plugin-template": "^10.10.0",
     "jss-rtl": "^0.3.0",
-    "karma": "^6.4.4",
-    "karma-chrome-launcher": "^3.2.0",
-    "karma-mocha": "^2.0.1",
-    "karma-parallel": "^0.3.1",
-    "karma-sourcemap-loader": "^0.4.0",
-    "karma-webpack": "^5.0.1",
     "lerna": "^8.2.2",
     "lodash": "catalog:",
     "magic-string": "^0.30.17",
     "markdownlint-cli2": "^0.18.1",
-    "mocha": "^11.5.0",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "null-loader": "^4.0.1",
@@ -202,22 +194,11 @@
     "webpack-cli": "^6.0.1",
     "yargs": "catalog:"
   },
-  "resolutions": {},
+  "resolutions": {
+    "ast-types": "^0.14.2"
+  },
   "packageManager": "pnpm@10.12.1",
   "engines": {
     "pnpm": "10.12.1"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch"
-    },
-    "onlyBuiltDependencies": [
-      "@swc/core",
-      "@vvago/vale",
-      "core-js",
-      "esbuild",
-      "nx",
-      "sharp"
-    ]
   }
 }
