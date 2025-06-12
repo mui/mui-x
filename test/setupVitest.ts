@@ -9,7 +9,7 @@ import sinon from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
-// import failOnConsole from 'vitest-fail-on-console';
+import failOnConsole from 'vitest-fail-on-console';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { isJSDOM } from './utils/skipIf';
 
@@ -48,7 +48,7 @@ configure({
   computedStyleSupportsPseudoElements: !isJSDOM,
 });
 
-// failOnConsole();
+failOnConsole();
 
 if (!globalThis.before) {
   (globalThis as any).before = beforeAll;
