@@ -52,33 +52,6 @@ export class StepPyramid implements FunnelCurveGenerator {
 
   lineEnd(): void {}
 
-  processPoints(points: Point[]): Point[] {
-    // Replace funnel points by pyramids ones.
-    const processedPoints = points.map((point, index) => {
-      const slopeStart = this.slopeStart(index);
-      const slopeEnd = this.slopeEnd(index);
-
-      if (this.isHorizontal) {
-        const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-        const xInitial = this.initialX(index, points);
-
-        return {
-          x: point.x,
-          y: yGetter(xInitial),
-        };
-      }
-
-      const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-      const yInitial = this.initialY(index, points);
-      return {
-        x: xGetter(yInitial),
-        y: point.y,
-      };
-    });
-
-    return processedPoints;
-  }
-
   protected getBorderRadius(): number | number[] {
     if (this.gap > 0) {
       return this.borderRadius;
@@ -181,6 +154,33 @@ export class StepPyramid implements FunnelCurveGenerator {
     }
 
     return index === 0 || index === 1 ? points.at(0)!.y : points.at(3)!.y;
+  }
+
+  processPoints(points: Point[]): Point[] {
+    // Replace funnel points by pyramids ones.
+    const processedPoints = points.map((point, index) => {
+      const slopeStart = this.slopeStart(index);
+      const slopeEnd = this.slopeEnd(index);
+
+      if (this.isHorizontal) {
+        const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+        const xInitial = this.initialX(index, points);
+
+        return {
+          x: point.x,
+          y: yGetter(xInitial),
+        };
+      }
+
+      const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
+      const yInitial = this.initialY(index, points);
+      return {
+        x: xGetter(yInitial),
+        y: point.y,
+      };
+    });
+
+    return processedPoints;
   }
 
   point(xIn: number, yIn: number): void {

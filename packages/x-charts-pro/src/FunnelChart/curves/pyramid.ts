@@ -60,6 +60,36 @@ export class Pyramid implements FunnelCurveGenerator {
 
   lineEnd(): void {}
 
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
+    }
+
+    if (this.isIncreasing) {
+      // Is largest section
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius];
+      }
+    }
+
+    if (!this.isIncreasing) {
+      // Is largest section
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius];
+      }
+    }
+
+    return 0;
+  }
+
   processPoints(points: Point[]): Point[] {
     // Replace funnel points by pyramids ones.
     const processedPoints = points.map((point, index) => {
@@ -114,36 +144,6 @@ export class Pyramid implements FunnelCurveGenerator {
     }
 
     return processedPoints;
-  }
-
-  protected getBorderRadius(): number | number[] {
-    if (this.gap > 0) {
-      return this.borderRadius;
-    }
-
-    if (this.isIncreasing) {
-      // Is largest section
-      if (this.position === this.sections - 1) {
-        return [this.borderRadius, this.borderRadius];
-      }
-      // Is smallest section and shaped like a triangle
-      if (this.position === 0) {
-        return [0, 0, this.borderRadius];
-      }
-    }
-
-    if (!this.isIncreasing) {
-      // Is largest section
-      if (this.position === 0) {
-        return [0, 0, this.borderRadius, this.borderRadius];
-      }
-      // Is smallest section and shaped like a triangle
-      if (this.position === this.sections - 1) {
-        return [this.borderRadius];
-      }
-    }
-
-    return 0;
   }
 
   point(xIn: number, yIn: number): void {

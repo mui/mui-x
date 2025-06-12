@@ -75,6 +75,45 @@ export class Linear implements FunnelCurveGenerator {
 
   lineEnd(): void {}
 
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
+    }
+
+    if (this.isIncreasing) {
+      // Is largest section
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === 0 && this.pointShape === 'sharp') {
+        return [0, 0, this.borderRadius];
+      }
+      // Is smallest section
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius, this.borderRadius];
+      }
+    }
+
+    if (!this.isIncreasing) {
+      // Is largest section
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === this.sections - 1 && this.pointShape === 'sharp') {
+        return [0, 0, this.borderRadius];
+      }
+
+      // Is smallest section
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius, this.borderRadius];
+      }
+    }
+
+    return 0;
+  }
+
   processPoints(points: Point[]): Point[] {
     // Add gaps where they are needed.
     const processedPoints = points.map((point, index) => {
@@ -130,45 +169,6 @@ export class Linear implements FunnelCurveGenerator {
       }
     }
     return processedPoints;
-  }
-
-  protected getBorderRadius(): number | number[] {
-    if (this.gap > 0) {
-      return this.borderRadius;
-    }
-
-    if (this.isIncreasing) {
-      // Is largest section
-      if (this.position === this.sections - 1) {
-        return [this.borderRadius, this.borderRadius];
-      }
-      // Is smallest section and shaped like a triangle
-      if (this.position === 0 && this.pointShape === 'sharp') {
-        return [0, 0, this.borderRadius];
-      }
-      // Is smallest section
-      if (this.position === 0) {
-        return [0, 0, this.borderRadius, this.borderRadius];
-      }
-    }
-
-    if (!this.isIncreasing) {
-      // Is largest section
-      if (this.position === 0) {
-        return [0, 0, this.borderRadius, this.borderRadius];
-      }
-      // Is smallest section and shaped like a triangle
-      if (this.position === this.sections - 1 && this.pointShape === 'sharp') {
-        return [0, 0, this.borderRadius];
-      }
-
-      // Is smallest section
-      if (this.position === this.sections - 1) {
-        return [this.borderRadius, this.borderRadius];
-      }
-    }
-
-    return 0;
   }
 
   point(xIn: number, yIn: number): void {
