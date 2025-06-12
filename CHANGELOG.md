@@ -57,7 +57,7 @@ Same changes as in `@mui/x-date-pickers@8.5.2`.
 - [charts] Add margin-bottom to charts toolbar (#18326) @bernardobelchior
 - [charts] Fix grid with band scale (#18295) @alexfauquette
 - [charts] Remove unnecessary style changes in tests (#18317) @JCQuintas
-- [charts] Remove sx prop merging from `useComponentRenderer` (#18235) @bernardobelchior
+- [charts] Remove `sx` prop merging from `useComponentRenderer` (#18235) @bernardobelchior
 - [charts] Fix `useSyncExternalStore` import error in React 17 (#18314) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -65,14 +65,14 @@ Same changes as in `@mui/x-date-pickers@8.5.2`.
 Same changes as in `@mui/x-charts@8.5.2`, plus:
 
 - [charts-pro] Document zoom slider tooltip value formatting (#18261) @bernardobelchior
-- [charts-pro] Funnel gap keep boundary (#18233) @JCQuintas
-- [charts-pro] Use ChartsToolbarPro types in pro charts (#18243) @bernardobelchior
+- [charts-pro] Funnel `gap` prop does not impact the drawing area (#18233) @JCQuintas
+- [charts-pro] Use `ChartsToolbarPro` types in pro charts (#18243) @bernardobelchior
 
 ### Tree View
 
 #### `@mui/x-tree-view@8.5.2`
 
-Internal changes.
+- [tree-view] Fix `useSyncExternalStore` import error in React 17 (#18314) @bernardobelchior
 
 #### `@mui/x-tree-view-pro@8.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
