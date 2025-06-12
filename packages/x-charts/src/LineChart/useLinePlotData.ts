@@ -10,8 +10,8 @@ import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } fr
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 
 export function useLinePlotData(
-  xAxis: ComputedAxisConfig<ChartsXAxisProps>,
-  yAxis: ComputedAxisConfig<ChartsYAxisProps>,
+  xAxes: ComputedAxisConfig<ChartsXAxisProps>,
+  yAxes: ComputedAxisConfig<ChartsYAxisProps>,
 ) {
   const seriesData = useLineSeriesContext();
   const defaultXAxisId = useXAxes().xAxisIds[0];
@@ -42,18 +42,18 @@ export function useLinePlotData(
           strictStepCurve,
         } = series[seriesId];
 
-        if (!(xAxisId in xAxis) || !(yAxisId in yAxis)) {
+        if (!(xAxisId in xAxes) || !(yAxisId in yAxes)) {
           continue;
         }
 
-        const xScale = xAxis[xAxisId].scale;
+        const xScale = xAxes[xAxisId].scale;
         const xPosition = getValueToPositionMapper(xScale);
-        const yScale = yAxis[yAxisId].scale;
-        const xData = xAxis[xAxisId].data;
+        const yScale = yAxes[yAxisId].scale;
+        const xData = xAxes[xAxisId].data;
 
         const gradientId: string | undefined =
-          (yAxis[yAxisId].colorScale && getGradientId(yAxisId)) ||
-          (xAxis[xAxisId].colorScale && getGradientId(xAxisId)) ||
+          (yAxes[yAxisId].colorScale && getGradientId(yAxisId)) ||
+          (xAxes[xAxisId].colorScale && getGradientId(xAxisId)) ||
           undefined;
 
         if (process.env.NODE_ENV !== 'production') {
@@ -130,7 +130,7 @@ export function useLinePlotData(
     }
 
     return linePlotData;
-  }, [seriesData, defaultXAxisId, defaultYAxisId, xAxis, yAxis, getGradientId]);
+  }, [seriesData, defaultXAxisId, defaultYAxisId, xAxes, yAxes, getGradientId]);
 
   return allData;
 }

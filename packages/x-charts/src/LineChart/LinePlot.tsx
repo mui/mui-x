@@ -43,10 +43,10 @@ const LinePlotRoot = styled('g', {
 });
 
 const useAggregatedData = () => {
-  const { xAxis } = useXAxes();
-  const { yAxis } = useYAxes();
+  const { xAxis: xAxes } = useXAxes();
+  const { yAxis: yAxes } = useYAxes();
 
-  return useLinePlotData(xAxis, yAxis);
+  return useLinePlotData(xAxes, yAxes);
 };
 
 /**
