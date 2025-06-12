@@ -15,7 +15,19 @@ export interface ChartsRendererProps {
 
 function ChartsRenderer({ categories, series, chartType, configuration }: ChartsRendererProps) {
   // TODO: support multiple categories
-  const categoryData = categories[0]?.data || [];
+  const categoryDataRaw = categories[0]?.data || [];
+
+  // make sure that the category items are unique
+  // for repeated values add the count to the value
+  const itemCount = new Map<string, number>();
+  const categoryData = categoryDataRaw.map((item) => {
+    const currentCount = itemCount.get(String(item)) || 1;
+    itemCount.set(String(item), currentCount + 1);
+    return currentCount > 1 ? `${item} (${currentCount})` : item;
+  });
+
+  console.log(categoryDataRaw, categoryData);
+
   const sections = (configurationOptions as any)[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
     sections.flatMap((section: any) =>
