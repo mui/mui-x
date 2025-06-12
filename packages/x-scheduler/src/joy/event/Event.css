@@ -1,27 +1,40 @@
 @import '../styles/tokens.css';
 
 .EventContainer {
+  --event-color-1: var(--primary-1);
+  --event-color-2: var(--primary-2);
+  --event-color-3: var(--primary-3);
+  --event-color-4: var(--primary-4);
+  --event-color-5: var(--primary-5);
+  --event-color-6: var(--primary-6);
+  --event-color-7: var(--primary-7);
+  --event-color-8: var(--primary-8);
+  --event-color-9: var(--primary-9);
+  --event-color-10: var(--primary-10);
+  --event-color-11: var(--primary-11);
+  --event-color-12: var(--primary-12);
+
   /* Regular */
-  --regular-accepted-bg: var(--primary-3);
-  --regular-line-bg: var(--primary-12);
-  --regular-accepted-primary-text: var(--primary-12);
-  --regular-accepted-secondary-text: var(--primary-11);
+  --regular-accepted-bg: var(--event-color-3);
+  --regular-line-bg: var(--event-color-12);
+  --regular-accepted-primary-text: var(--event-color-12);
+  --regular-accepted-secondary-text: var(--event-color-11);
 
   /* Compact */
   --compact-accepted-bg: var(--surface);
-  --compact-square-bg: var(--primary-12);
-  --compact-accepted-primary-text: var(--primary-12);
-  --compact-accepted-secondary-text: var(--primary-12);
+  --compact-square-bg: var(--event-color-12);
+  --compact-accepted-primary-text: var(--event-color-12);
+  --compact-accepted-secondary-text: var(--event-color-12);
 
   /* All Day */
-  --allDay-accepted-bg: var(--primary-5);
-  --allDay-accepted-primary-text: var(--primary-13);
+  --allDay-accepted-bg: var(--event-color-5);
+  --allDay-accepted-primary-text: var(--event-color-13);
 }
 
 .mode-dark .EventContainer {
-  --regular-accepted-bg: var(--primary-3);
+  --regular-accepted-bg: var(--event-color-3);
   --compact-accepted-bg: var(--surface);
-  --allDay-accepted-bg: var(--primary-5);
+  --allDay-accepted-bg: var(--event-color-5);
 }
 
 .EventCard {

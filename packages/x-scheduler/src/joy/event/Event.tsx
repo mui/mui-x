@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { TimeGrid } from '../../primitives/time-grid';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { EventProps } from './Event.types';
+import { getEventColorCSSVars } from '../internals/utils/color-utils';
 import './Event.css';
 
 const adapter = getAdapter();
@@ -12,7 +13,22 @@ export const Event = React.forwardRef(function Event(
   props: EventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { event, ariaLabelledBy, variant, className, style, ...other } = props;
+  const {
+    event,
+    eventResource,
+    ariaLabelledBy,
+    variant,
+    className,
+    style: styleProp,
+    ...other
+  } = props;
+
+  const style = React.useMemo(
+    () => ({ ...getEventColorCSSVars({ resource: eventResource }), ...styleProp }),
+    [styleProp, eventResource],
+  );
+
+  console.log(eventResource);
 
   const durationMs =
     adapter.toJsDate(event.end).getTime() - adapter.toJsDate(event.start).getTime();
@@ -93,7 +109,7 @@ export const Event = React.forwardRef(function Event(
   ]);
 
   return (
-    <div ref={forwardedRef} className={clsx('EventContainer', className)} {...other}>
+    <div ref={forwardedRef} className={clsx('EventContainer', className)} style={style} {...other}>
       <TimeGrid.Event
         className={clsx(
           'EventCard',

@@ -1,4 +1,5 @@
 import { SchedulerValidDate } from '../../primitives/models';
+import { CalendarResourceId } from './resource';
 
 export type EventVariant = 'regular' | 'compact' | 'allDay';
 
@@ -19,4 +20,10 @@ export interface CalendarEvent {
    * The end date and time of the event.
    */
   end: SchedulerValidDate;
+  /**
+   * The id of the resource this event is associated with.
+   */
+  resource?: CalendarResourceId;
 }
+
+export type CalendarEventColor = 'mauve' | 'violet' | 'cyan' | 'jade' | 'red';
