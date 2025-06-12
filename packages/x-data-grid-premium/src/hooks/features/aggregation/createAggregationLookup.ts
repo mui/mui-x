@@ -19,6 +19,7 @@ import {
 } from './gridAggregationInterfaces';
 import { getAggregationRules } from './gridAggregationUtils';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
+import { getVisibleRows } from '@mui/x-data-grid/internals';
 
 type AggregatedValues = { aggregatedField: string; values: any[] }[];
 
@@ -198,9 +199,14 @@ export const createAggregationLookup = ({
     aggregatedField: aggregatedFields[index],
     values: [],
   }));
+  const { rowIdToIndexMap } = getVisibleRows(apiRef);
   const createGroupAggregationLookup = (groupNode: GridGroupNode) => {
-    for (let i = 0; i < groupNode.children.length; i += 1) {
-      const childId = groupNode.children[i];
+    let children = groupNode.children;
+    if (applySorting) {
+      children = children.toSorted((a, b) => rowIdToIndexMap.get(a)! - rowIdToIndexMap.get(b)!);
+    }
+    for (let i = 0; i < children.length; i += 1) {
+      const childId = children[i];
       const childNode = rowTree[childId] as GridGroupNode | GridLeafNode;
 
       if (childNode.type === 'group') {
