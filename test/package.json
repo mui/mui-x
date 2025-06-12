@@ -22,7 +22,6 @@
     "@playwright/test": "catalog:",
     "@react-spring/web": "catalog:",
     "@types/chai": "catalog:",
-    "@types/karma": "catalog:",
     "@types/moment-jalaali": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/react": "catalog:",
