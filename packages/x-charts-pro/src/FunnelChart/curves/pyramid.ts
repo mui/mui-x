@@ -97,7 +97,7 @@ export class Pyramid implements CurveGenerator {
       return;
     }
 
-    // Add gaps where they are needed.
+    // Replace funnel points by pyramids ones.
     this.points = this.points.map((point, index) => {
       if (this.isHorizontal) {
         const slopeEnd = {
@@ -112,11 +112,9 @@ export class Pyramid implements CurveGenerator {
                 y: this.max.y,
               };
         const yGetter = lerpY(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-        const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
-
         return {
-          x: xGap,
-          y: yGetter(xGap),
+          x: point.x,
+          y: yGetter(point.x),
         };
       }
 
@@ -132,10 +130,9 @@ export class Pyramid implements CurveGenerator {
             }
           : this.min;
       const xGetter = lerpX(slopeStart.x, slopeStart.y, slopeEnd.x, slopeEnd.y);
-      const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
       return {
-        x: xGetter(yGap),
-        y: yGap,
+        x: xGetter(point.y),
+        y: point.y,
       };
     });
 
@@ -144,14 +141,12 @@ export class Pyramid implements CurveGenerator {
     const isLastSection = this.position === this.sections - 1;
     const isFirstSection = this.position === 0;
 
-    if (this.gap <= 0) {
-      if (isFirstSection && this.isIncreasing) {
-        this.points = [this.points[0], this.points[1], this.points[2]];
-      }
+    if (isFirstSection && this.isIncreasing) {
+      this.points = [this.points[0], this.points[1], this.points[2]];
+    }
 
-      if (isLastSection && !this.isIncreasing) {
-        this.points = [this.points[0], this.points[1], this.points[3]];
-      }
+    if (isLastSection && !this.isIncreasing) {
+      this.points = [this.points[0], this.points[1], this.points[3]];
     }
 
     borderRadiusPolygon(this.context, this.points, this.getBorderRadius());

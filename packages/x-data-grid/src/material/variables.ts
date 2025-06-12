@@ -15,7 +15,7 @@ export function useMaterialCSSVariables() {
 
 function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
-  const dataGridPalette = (t.palette as any).DataGrid; // FIXME: docs typecheck error
+  const dataGridPalette = (t.vars || t).palette.DataGrid;
 
   const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;

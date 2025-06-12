@@ -14,8 +14,8 @@ createSelector(
 );
 
 createSelector(
-  // @ts-expect-error Missing combiner function
   (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.columns.orderedFields,
+  // @ts-expect-error Missing combiner function
   (apiRef: RefObject<GridApiCommunity>) => apiRef.current.state.columns.lookup,
 );
 

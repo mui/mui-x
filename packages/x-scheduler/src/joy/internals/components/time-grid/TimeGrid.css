@@ -1,6 +1,6 @@
-@import '../styles/tokens.css';
+@import '../../../styles/tokens.css';
 
-.WeekViewContainer {
+.TimeGridContainer {
   --weekend-background: var(--mauve-1);
   --text-strong: var(--mauve-9);
   --text-soft: var(--mauve-5);
@@ -10,46 +10,46 @@
   --has-scroll: 1;
 }
 
-.mode-dark .WeekViewContainer {
+.mode-dark .TimeGridContainer {
   --weekend-background: var(--mauve-9);
   --text-strong: var(--mauve-5);
   --text-soft: var(--mauve-2);
 }
 
-.WeekViewContainer {
+.TimeGridContainer {
   display: flex;
   width: 100%;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
 }
 
-.WeekViewRoot {
+.TimeGridRoot {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.WeekViewHeader {
+.TimeGridHeader {
   display: flex;
   flex-direction: column;
 }
 
-.WeekViewGridRow {
+.TimeGridGridRow {
   display: grid;
   grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
   width: 100%;
 }
 
-.WeekViewHeaderRow {
+.TimeGridHeaderRow {
   border-bottom: 1px solid var(--border-color);
 }
 
-.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewHeaderRow {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridHeaderRow {
   overflow-y: scroll;
   scrollbar-color: transparent transparent;
 }
 
-.WeekViewAllDayEventsRow {
+.TimeGridAllDayEventsRow {
   max-height: 84px;
 
   > *:not(:last-child) {
@@ -57,21 +57,30 @@
   }
 }
 
-.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewAllDayEventsRow {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow {
   overflow-y: scroll;
+  scrollbar-color: transparent transparent;
+}
+
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow[data-weekend] {
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 
 /* Webkit (Chrome, Safari, Edge) */
-.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewHeaderRow::-webkit-scrollbar {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridHeaderRow::-webkit-scrollbar {
   background: transparent;
 }
 
-.WeekViewHeader[style*='--has-scroll: 1'] .WeekViewAllDayEventsRow::-webkit-scrollbar {
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow::-webkit-scrollbar {
+  background: transparent;
+}
+
+.TimeGridHeader[style*='--has-scroll: 1']
+  .TimeGridAllDayEventsRow[data-weekend]::-webkit-scrollbar {
   background: var(--weekend-background);
 }
 
-.WeekViewHeaderCell {
+.TimeGridHeaderContent {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,7 +88,21 @@
   padding: 10px;
 }
 
-.WeekViewAllDayEventsHeaderCell {
+.TimeGridHeaderButton {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.TimeGridHeaderButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: -2px;
+  border-radius: var(--radius-3);
+}
+
+.TimeGridAllDayEventsHeaderCell {
   font-size: var(--font-size-1);
   font-style: var(--em-font-style);
   padding: var(--space-2);
@@ -87,38 +110,38 @@
   color: var(--text-soft);
 }
 
-.WeekViewHeaderDayName {
+.TimeGridHeaderDayName {
   font-size: var(--font-size-2);
   color: var(--text-soft);
   line-height: 1;
 }
 
-.WeekViewHeaderDayNumber {
+.TimeGridHeaderDayNumber {
   font-size: var(--font-size-5);
   color: var(--text-strong);
   font-weight: var(--font-weight-3);
   line-height: 1;
 }
 
-.WeekViewBody {
+.TimeGridBody {
   flex: 1;
   border-top: 1px solid var(--border-color);
   overflow-y: auto;
 }
 
-.WeekViewScrollableContent {
+.TimeGridScrollableContent {
   display: flex;
   height: calc(var(--hour-height) * 24);
   position: relative;
 }
 
-.WeekViewTimeAxis {
+.TimeGridTimeAxis {
   display: flex;
   flex-direction: column;
   width: var(--fixed-cell-width);
 }
 
-.WeekViewTimeAxisCell {
+.TimeGridTimeAxisCell {
   height: calc(100% / 24);
   line-height: calc(100% / 24);
   border-right: 1px solid var(--border-color);
@@ -126,14 +149,14 @@
   text-align: end;
 }
 
-.WeekViewTimeAxisText:not(:empty) {
+.TimeGridTimeAxisText:not(:empty) {
   font-size: var(--font-size-1);
   line-height: calc(100% / 24);
   color: var(--text-soft);
   white-space: nowrap;
 }
 
-.WeekViewTimeAxisCell:not(:first-child)::after {
+.TimeGridTimeAxisCell:not(:first-child)::after {
   content: '';
   position: absolute;
   left: var(--fixed-cell-width);
@@ -143,7 +166,7 @@
   z-index: 1;
 }
 
-.WeekViewGrid {
+.TimeGridGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   width: 100%;
@@ -153,28 +176,14 @@
   }
 }
 
-.WeekViewColumn {
+.TimeGridColumn {
   display: flex;
   flex-direction: column;
   position: relative;
   flex: 1;
 }
 
-.WeekViewColumn[data-weekend],
-.WeekViewAllDayEventsCell[data-weekend] {
+.TimeGridColumn[data-weekend],
+.TimeGridAllDayEventsCell[data-weekend] {
   background: var(--weekend-background);
-}
-
-.WeekViewEvent {
-  position: absolute;
-  left: 2px;
-  right: 2px;
-  top: var(--y-position);
-  bottom: calc(100% - var(--y-position) - var(--height));
-  z-index: 2;
-  border-radius: var(--radius-4);
-  padding: var(--space-1);
-  font-size: 10px;
-  background-color: var(--primary-3);
-  color: #34317c;
 }
