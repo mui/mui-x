@@ -207,3 +207,46 @@ npx lerna version --exact --no-changelog --no-push --no-git-tag-version --no-pri
 
 echo "Version update completed successfully!"
 echo "New version: $NEW_VERSION"
+
+# Generate the changelog
+echo "Generating changelog..."
+CHANGELOG_CONTENT=$(node scripts/releaseChangelog.mjs --githubToken=$GITHUB_TOKEN --nextVersion=$NEW_VERSION --returnEntry)
+
+# Add the new changelog entry to the CHANGELOG.md file
+echo "Adding changelog entry to CHANGELOG.md..."
+# Find the position of the first version entry (currently ## 8.5.1)
+FIRST_VERSION_LINE=$(grep -n "^## [0-9]" CHANGELOG.md | head -1 | cut -d: -f1)
+
+# Create a temporary file with the new content
+head -n 7 CHANGELOG.md > temp_changelog.md  # Keep the header (first 7 lines)
+echo "$CHANGELOG_CONTENT" >> temp_changelog.md
+tail -n +$FIRST_VERSION_LINE CHANGELOG.md >> temp_changelog.md
+
+# Replace the original file
+mv temp_changelog.md CHANGELOG.md
+
+echo "Changelog updated. Please review the changes."
+
+# Wait for user confirmation
+read -p "Press Enter to continue after reviewing the changes, or Ctrl+C to abort..."
+
+# Commit the changes
+echo "Committing changes..."
+git add package.json CHANGELOG.md packages/*/package.json
+git commit -m "[release] v$NEW_VERSION"
+
+echo "Changes committed to branch $BRANCH_NAME"
+
+# Open a PR
+echo "Opening a PR..."
+# Check if gh CLI is installed
+if ! command -v gh &> /dev/null; then
+    echo "GitHub CLI (gh) is not installed. Please install it to automatically create a PR."
+    echo "You can manually create a PR with title: [release] v$NEW_VERSION and label: release"
+    echo "Branch: $BRANCH_NAME"
+else
+    gh pr create --title "[release] v$NEW_VERSION" --body "Release version $NEW_VERSION" --label "release" --repo "mui/mui-x"
+    echo "PR created successfully!"
+fi
+
+echo "Release preparation completed!"
