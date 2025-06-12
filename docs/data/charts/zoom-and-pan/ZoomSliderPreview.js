@@ -26,7 +26,7 @@ export default function ZoomSliderPreview() {
             panning: true,
             slider: { enabled: true, preview: true },
           },
-          valueFormatter: (v: number) => v.toLocaleString('en-US'),
+          valueFormatter: (v) => v.toLocaleString('en-US'),
         },
         {
           id: 'x2',

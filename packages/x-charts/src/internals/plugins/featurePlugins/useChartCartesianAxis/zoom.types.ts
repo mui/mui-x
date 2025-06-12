@@ -99,6 +99,10 @@ export interface ZoomSliderOptions {
    * @default 'hover'
    */
   showTooltip?: ZoomSliderShowTooltip;
+  /**
+   * If `true`, a preview of the chart will be shown in the slider.
+   */
+  preview?: boolean;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
