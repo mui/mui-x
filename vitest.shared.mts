@@ -79,7 +79,6 @@ export default defineConfig({
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
-      connectTimeout: 120000,
       orchestratorScripts: [
         {
           id: 'vitest-reload-on-error',
