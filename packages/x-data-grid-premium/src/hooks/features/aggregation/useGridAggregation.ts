@@ -5,7 +5,6 @@ import {
   useGridEvent,
   useGridApiMethod,
   useRunOncePerLoop,
-  useGridLogger,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
