@@ -27,7 +27,6 @@
     "@mui/x-tree-view-pro": "workspace:*",
     "@playwright/test": "catalog:",
     "@types/chai": "catalog:",
-    "@types/karma": "catalog:",
     "@types/moment-jalaali": "catalog:",
     "@types/react": "catalog:",
     "@types/react-router": "catalog:",
