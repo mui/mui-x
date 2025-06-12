@@ -1,6 +1,6 @@
-# MUI X Pro
+# MUI X Premium
 
-This package is the Pro plan edition of the chart components.
+This package is the Premium plan edition of the chart components.
 It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
 ## Installation
