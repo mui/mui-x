@@ -3,9 +3,8 @@ import * as React from 'react';
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { FieldTransferObject } from './GridChartsDataPanelBody';
+import type { FieldTransferObject, DropPosition } from './GridChartsDataPanelBody';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import {
   gridChartsCategoriesSelector,
   gridChartsSeriesSelector,
@@ -56,45 +55,45 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
     return [
       {
         key: 'up',
-        label: apiRef.current.getLocaleText('pivotMenuMoveUp'),
-        icon: <rootProps.slots.pivotMenuMoveUpIcon />,
+        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveUp'),
+        icon: <rootProps.slots.chartsMenuMoveUpIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'down',
-        label: apiRef.current.getLocaleText('pivotMenuMoveDown'),
-        icon: <rootProps.slots.pivotMenuMoveDownIcon />,
+        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveDown'),
+        icon: <rootProps.slots.chartsMenuMoveDownIcon />,
         disabled: !canMoveDown,
       },
       { divider: true },
       {
         key: 'top',
-        label: apiRef.current.getLocaleText('pivotMenuMoveToTop'),
-        icon: <rootProps.slots.pivotMenuMoveToTopIcon />,
+        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveToTop'),
+        icon: <rootProps.slots.chartsMenuMoveToTopIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'bottom',
-        label: apiRef.current.getLocaleText('pivotMenuMoveToBottom'),
-        icon: <rootProps.slots.pivotMenuMoveToBottomIcon />,
+        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveToBottom'),
+        icon: <rootProps.slots.chartsMenuMoveToBottomIcon />,
         disabled: !canMoveDown,
       },
       { divider: true },
       {
         key: 'categories',
         label: 'Add to categories',
-        icon: zone === 'categories' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />,
+        icon: zone === 'categories' ? <rootProps.slots.chartsMenuCheckIcon /> : <span />,
       },
       {
         key: 'series',
         label: 'Add to series',
-        icon: zone === 'series' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />,
+        icon: zone === 'series' ? <rootProps.slots.chartsMenuCheckIcon /> : <span />,
       },
       { divider: true },
       {
         key: null,
-        label: apiRef.current.getLocaleText('pivotMenuRemove'),
-        icon: <rootProps.slots.pivotMenuRemoveIcon />,
+        label: apiRef.current.getLocaleText('chartsConfigurationMenuRemove'),
+        icon: <rootProps.slots.chartsMenuRemoveIcon />,
       },
     ];
   }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, zone]);
@@ -165,12 +164,12 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
         aria-haspopup="true"
         aria-controls={open ? menuId : undefined}
         aria-expanded={open ? 'true' : undefined}
-        aria-label={apiRef.current.getLocaleText('pivotMenuOptions')}
+        aria-label={apiRef.current.getLocaleText('chartsConfigurationMenuOptions')}
         onClick={handleClick}
         ref={triggerRef}
       >
         {isAvailableField ? (
-          <rootProps.slots.pivotMenuAddIcon fontSize="small" />
+          <rootProps.slots.chartsMenuAddIcon fontSize="small" />
         ) : (
           <rootProps.slots.columnMenuIcon fontSize="small" />
         )}

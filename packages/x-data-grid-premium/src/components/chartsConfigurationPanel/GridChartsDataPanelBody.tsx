@@ -256,7 +256,7 @@ function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
       >
         {availableFields.length === 0 && (
           <GridChartsDataPanelPlaceholder ownerState={rootProps} className={classes.placeholder}>
-            {apiRef.current.getLocaleText('pivotNoFields')}
+            {apiRef.current.getLocaleText('chartsConfigurationNoFields')}
           </GridChartsDataPanelPlaceholder>
         )}
         {availableFields.length > 0 && (
@@ -291,12 +291,14 @@ function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
             data-section="categories"
             data-drag-over={drag.dropZone === 'categories'}
           >
-            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotRows')}>
+            <CollapsibleTrigger
+              aria-label={apiRef.current.getLocaleText('chartsConfigurationCategories')}
+            >
               <GridChartsDataPanelSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
-                Categories
+                {apiRef.current.getLocaleText('chartsConfigurationCategories')}
                 {categories.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={categories.length} />
                 )}
@@ -338,12 +340,14 @@ function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
             data-section="series"
             data-drag-over={drag.dropZone === 'series'}
           >
-            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotColumns')}>
+            <CollapsibleTrigger
+              aria-label={apiRef.current.getLocaleText('chartsConfigurationSeries')}
+            >
               <GridChartsDataPanelSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
-                Series
+                {apiRef.current.getLocaleText('chartsConfigurationSeries')}
                 {series.length > 0 && <rootProps.slots.baseBadge badgeContent={series.length} />}
               </GridChartsDataPanelSectionTitle>
             </CollapsibleTrigger>
