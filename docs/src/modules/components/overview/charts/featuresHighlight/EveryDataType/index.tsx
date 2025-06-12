@@ -9,12 +9,16 @@ import { Funnel, Radar, LineAndBar, Pie } from './Charts';
 
 export default function EveryDataType() {
   const [selected, setSelected] = React.useState(1);
+  const [active, setActive] = React.useState(false);
 
   React.useEffect(() => {
-    const interval = setInterval(() => setSelected((p) => (p + 1) % 4), 5000);
+    if (active) {
+      return undefined;
+    }
+    const timeout = setTimeout(() => setSelected((p) => (p + 1) % 4), 5000);
 
-    return () => clearInterval(interval);
-  }, [selected]);
+    return () => clearTimeout(timeout);
+  }, [selected, active]);
   return (
     <Stack
       spacing={1}
@@ -37,6 +41,8 @@ export default function EveryDataType() {
           '--palette-color-6': colorFull[6],
         },
       }}
+      onPointerEnter={() => setActive(true)}
+      onPointerLeave={() => setActive(false)}
     >
       <Box
         sx={{
