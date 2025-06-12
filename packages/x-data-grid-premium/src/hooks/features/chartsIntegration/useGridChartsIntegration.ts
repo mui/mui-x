@@ -131,40 +131,26 @@ export const useGridChartsIntegration = (
       }
     }
 
-    const categoriesLength = categories.length;
-    const seriesLength = series.length;
-    if (categoriesLength === 0 || seriesLength === 0) {
+    if (categories.length === 0 || series.length === 0) {
       setCategories([]);
       setSeries([]);
       return;
     }
 
-    const itemCount = new Map<string, number>();
-
-    const data: Record<string, any[]> = {};
+    const dataColumns = [...categories, ...series];
+    const data: Record<string, (string | number | null)[]> = Object.fromEntries(
+      dataColumns.map((column) => [column.field, []]),
+    );
     for (let i = 0; i < rows.length; i += 1) {
-      const row = rows[i];
-
-      for (let j = 0; j < categoriesLength; j += 1) {
-        const category = categories[j];
-        if (!data[category.field]) {
-          data[category.field] = [];
-        }
-
-        // category values must be unique
-        // for repeated values, add the count to the value
-        const value = getRowValue(row.model, category, apiRef);
-        const currentCount = itemCount.get(value) || 1;
-        itemCount.set(value, currentCount + 1);
-        data[category.field].push(currentCount > 1 ? `${value} (${currentCount})` : value);
-      }
-
-      for (let j = 0; j < seriesLength; j += 1) {
-        const seriesItem = series[j];
-        if (!data[seriesItem.field]) {
-          data[seriesItem.field] = [];
-        }
-        data[seriesItem.field].push(getRowValue(row.model, seriesItem, apiRef));
+      for (let j = 0; j < dataColumns.length; j += 1) {
+        const value: string | { label: string } = getRowValue(
+          rows[i].model,
+          dataColumns[j],
+          apiRef,
+        );
+        data[dataColumns[j].field].push(
+          typeof value === 'object' && 'label' in value ? value.label : value,
+        );
       }
     }
 
@@ -179,7 +165,7 @@ export const useGridChartsIntegration = (
       series.map((seriesItem) => ({
         id: seriesItem.field,
         label: seriesItem.headerName || seriesItem.field,
-        data: data[seriesItem.field] || [],
+        data: (data[seriesItem.field] || []) as (number | null)[],
       })),
     );
   }, [apiRef, setCategories, setSeries]);
