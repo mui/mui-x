@@ -96,6 +96,7 @@ ChartsSurface.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  tabIndex: PropTypes.number,
   title: PropTypes.string,
 } as any;
 
