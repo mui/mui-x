@@ -316,6 +316,7 @@ const applyAggregation = (
       values,
       field,
       groupId,
+      api: null as any, // we can't use apiRef here, and as long as we don't use advanced aggregation functions that depend on it, we're clear
     });
   });
   return aggregateValues;

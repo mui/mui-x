@@ -1,3 +1,4 @@
+import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridRowId, GridRowModel, GridColDef, GridValueFormatter } from '@mui/x-data-grid-pro';
 
 export interface GridAggregationState {
@@ -34,6 +35,10 @@ export interface GridAggregationGetCellValueParams {
    * The row model of the row that the current cell belongs to.
    */
   row: GridRowModel;
+  /**
+   * The field of the cell that the aggregation function is applied to.
+   */
+  field: GridColDef['field'];
 }
 
 /**
@@ -99,6 +104,7 @@ export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
   groupId: GridRowId;
   field: GridColDef['field'];
+  api: GridApiPremium;
 }
 
 export type GridAggregationModel = {

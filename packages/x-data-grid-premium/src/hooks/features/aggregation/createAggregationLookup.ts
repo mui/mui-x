@@ -42,6 +42,7 @@ const getGroupAggregatedValue = (
   const applySorting = shouldApplySorting(aggregationRules, aggregatedFields);
   const rowIds = apiRef.current.getRowGroupChildren({ groupId, applySorting });
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+  const publicApi = apiRef.current.getPublicApi();
 
   rowIds.forEach((rowId) => {
     if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
@@ -78,7 +79,7 @@ const getGroupAggregatedValue = (
       }
 
       if (typeof aggregationFunction.getCellValue === 'function') {
-        aggregatedValues[j].values.push(aggregationFunction.getCellValue({ row }));
+        aggregatedValues[j].values.push(aggregationFunction.getCellValue({ field, row }));
       } else {
         const colDef = apiRef.current.getColumn(field);
         aggregatedValues[j].values.push(apiRef.current.getRowValue(row, colDef));
@@ -94,6 +95,7 @@ const getGroupAggregatedValue = (
       values,
       groupId,
       field: aggregatedField, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
+      api: publicApi,
     });
 
     groupAggregationLookup[aggregatedField] = {
