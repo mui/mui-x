@@ -5,7 +5,7 @@
 # This script automates the release preparation process for MUI-X:
 # 1. Updating the git upstream/master branch
 # 2. Determining the new version (patch/minor/major or custom)
-# 3. Creating a new branch with the new version
+# 3. Creating a new branch from upstream/master and setting up tracking with origin/release/vX
 # 4. Updating the root package.json with the new version
 # 5. Running the lerna version script to update all package versions
 # 6. Generating the changelog with actual package versions
@@ -185,15 +185,25 @@ echo "Updating the upstream master branch..."
 git fetch $UPSTREAM_REMOTE master
 
 # Check for uncommitted changes
-if [ -n "$(git status --porcelain)" ]; then
-  echo "Error: You have uncommitted changes. Please commit or stash them before running this script."
-  exit 1
-fi
+while [ -n "$(git status --porcelain)" ]; do
+  echo "Warning: You have uncommitted changes."
+  echo "Please commit or stash your changes before continuing."
+  echo "You can run:"
+  echo "  git add . && git commit -m 'Your commit message'"
+  echo "  or"
+  echo "  git stash"
+  echo "in another terminal window."
+  read -p "Press Enter to check again, or Ctrl+C to abort..."
+done
 
 # Create a new branch with the new version
 BRANCH_NAME="release/v$NEW_VERSION"
 echo "Creating new branch: $BRANCH_NAME"
-git checkout -b $BRANCH_NAME $UPSTREAM_REMOTE/master
+# Create branch from upstream/master but don't track it
+git checkout -b $BRANCH_NAME --no-track $UPSTREAM_REMOTE/master
+# Push to origin and set up tracking with origin/release/vX
+echo "Pushing branch to origin and setting up tracking..."
+git push -u origin $BRANCH_NAME
 
 # Update package.json
 echo "Updating package.json..."
