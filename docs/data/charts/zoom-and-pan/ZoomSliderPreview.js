@@ -19,7 +19,13 @@ const xAxis = {
   data: usUnemploymentRate.map((d) => d.date),
   valueFormatter: (v, context) =>
     v.toLocaleDateString(undefined, {
-      month: context.location === 'tick' ? undefined : 'short',
+      month:
+        // eslint-disable-next-line no-nested-ternary
+        context.location === 'tick'
+          ? undefined
+          : context.location === 'tooltip'
+            ? 'long'
+            : 'short',
       year: 'numeric',
     }),
   zoom: {
