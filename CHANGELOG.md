@@ -11,7 +11,8 @@ _Jun 12, 2025_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 📊 Improve Data Grid selectors performance
+- 🐞 Fix `useSyncExternalStore` import error in React 17
 
 Special thanks go out to the community members for their valuable contributions:
 @alisasanib, @noobyogi0010.
