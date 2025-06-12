@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.6.0
+## 8.5.2
 
 _Jun 12, 2025_
 
@@ -19,56 +19,50 @@ Special thanks go out to the community members for their valuable contributions:
 The following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @KenanYusuf, @LukasTy, @mapache-salvaje, @michelengelen, @noraleonte, @oliviertassinari, @prakhargupta1, @romgrk.
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
 ### Data Grid
 
-#### `@mui/x-data-grid@8.6.0`
+#### `@mui/x-data-grid@8.5.2`
 
-- [data grid] Performance: selectors (#18234) @romgrk
-- [data grid][docs] Revise the Master Detail doc (#17927) @mapache-salvaje
-- [data grid][docs] Revise the list view doc (#17928) @mapache-salvaje
-- [docs][data grid] Audit and revise the Pro column docs (#17844) @mapache-salvaje
+- [DataGrid] Performance: selectors (#18234) @romgrk
 - [DataGrid] Fix data grid palette when using CSS vars (#18310) @KenanYusuf
 - [DataGrid] Ignore data source request if the grid got unmounted (#18268) @arminmeh
 
-#### `@mui/x-data-grid-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.6.0`, plus:
+Same changes as in `@mui/x-data-grid@8.5.2`, plus:
 
 - [DataGridPro] Fix flex column width if it is a pinned column (#18293) @alisasanib
 - [DataGridPro] Fix inconsistent filtering results with aggregation (#17954) @cherniavskii
 
-#### `@mui/x-data-grid-premium@8.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.5.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.6.0`.
+Same changes as in `@mui/x-data-grid-pro@8.5.2`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.6.0`
+#### `@mui/x-date-pickers@8.5.2`
 
 - [pickers] Add `PickerDay2` and `DateRangePickerDay2` components (#15921) @noraleonte
 - [pickers] Fix `hiddenLabel` prop propagation (#18195) @noobyogi0010
 
-#### `@mui/x-date-pickers-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.6.0`.
+Same changes as in `@mui/x-date-pickers@8.5.2`.
 
 ### Charts
 
-#### `@mui/x-charts@8.6.0`
+#### `@mui/x-charts@8.5.2`
 
 - [charts] Add a default value formatter for continuous scales (#18178) @bernardobelchior
 - [charts] Add margin-bottom to charts toolbar (#18326) @bernardobelchior
 - [charts] Fix grid with band scale (#18295) @alexfauquette
 - [charts] Remove unnecessary style changes in tests (#18317) @JCQuintas
-- [DataGrid][charts] Remove sx prop merging from `useComponentRenderer` (#18235) @bernardobelchior
-- [charts][docs] Add some more context on Heatmap (#18256) @oliviertassinari
-- [charts][tree view] Fix `useSyncExternalStore` import error in React 17 (#18314) @bernardobelchior
+- [charts] Remove sx prop merging from `useComponentRenderer` (#18235) @bernardobelchior
+- [charts] Fix `useSyncExternalStore` import error in React 17 (#18314) @bernardobelchior
 
-#### `@mui/x-charts-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.6.0`, plus:
+Same changes as in `@mui/x-charts@8.5.2`, plus:
 
 - [charts-pro] Document zoom slider tooltip value formatting (#18261) @bernardobelchior
 - [charts-pro] Funnel gap keep boundary (#18233) @JCQuintas
@@ -76,26 +70,30 @@ Same changes as in `@mui/x-charts@8.6.0`, plus:
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.6.0`
+#### `@mui/x-tree-view@8.5.2`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.5.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.6.0`.
+Same changes as in `@mui/x-tree-view@8.5.2`.
 
 ### Docs
 
 - [docs] Add toolbar custom trigger and panel recipe (#18297) @KenanYusuf
 - [docs] Copyedit the Priority support page (#18311) @mapache-salvaje
 - [docs] Remove confusing opt-out mention in telemetry docs (#18257) @prakhargupta1
-- [x-telemetry][docs] Reduce Telemetry overhead (#18292) @oliviertassinari
+- [docs] Revise the Master Detail doc (#17927) @mapache-salvaje
+- [docs] Revise the list view doc (#17928) @mapache-salvaje
+- [docs] Audit and revise the Pro column docs (#17844) @mapache-salvaje
+- [docs] Add some more context on Heatmap (#18256) @oliviertassinari
+- [x-telemetry] Reduce Telemetry overhead (#18292) @oliviertassinari
 - [code-infra] Align Node version used in CI to v22 (#18319) @LukasTy
 - [code-infra] Fix pkg.pr.new publishing (#18316) @bernardobelchior
 - [code-infra] Revert `React` to `19.0.0` (#18265) @LukasTy
 - [code-infra] Use `catalog` for reused dependencies (#18302) @LukasTy
 - [infra] Remove unused karma/mocha deps and files (#18340) @JCQuintas
-- [infra] Update github label references to use 'scope' instead of 'component'  (#18260) @michelengelen
+- [infra] Update github label references to use 'scope' instead of 'component' (#18260) @michelengelen
 - [infra] Use a single browser server in CI (#18230) @JCQuintas
 
 ## 8.5.1

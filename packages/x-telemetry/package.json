@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.6.0",
+  "version": "8.5.2",
   "author": "MUI Team",
   "description": "MUI X Telemetry.",
   "main": "src/index.ts",
