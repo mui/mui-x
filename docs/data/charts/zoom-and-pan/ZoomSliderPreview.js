@@ -59,18 +59,11 @@ export default function ZoomSliderPreview() {
   return (
     <Stack width="100%">
       <Typography variant="h6" sx={{ alignSelf: 'center' }}>
-        United States Unemployment Rate (%)
+        Unemployment Rate in United States (1948-2025)
       </Typography>
       <LineChartPro
         {...settings}
-        xAxis={[
-          {
-            ...xAxis,
-            zoom: {
-              slider: { enabled: true, preview: true },
-            },
-          },
-        ]}
+        xAxis={[{ ...xAxis, zoom: { slider: { enabled: true, preview: true } } }]}
       />
       <Typography variant="caption">
         Source: Federal Reserve Bank of St. Louis. Updated: Jun 6, 2025 7:46 AM CDT.

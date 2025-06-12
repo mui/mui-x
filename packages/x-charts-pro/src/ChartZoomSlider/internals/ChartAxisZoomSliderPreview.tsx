@@ -33,7 +33,7 @@ export function ChartAxisZoomSliderPreview({
     <g {...props}>
       <PreviewRectangles {...props} axisId={axisId} />
       <rect {...props} fill="transparent" rx={4} ry={4} />
-      <ChartAxisZoomSliderChartPreview {...props} />
+      <ChartAxisZoomSliderChartPreview axisId={axisId} {...props} />
     </g>
   );
 }

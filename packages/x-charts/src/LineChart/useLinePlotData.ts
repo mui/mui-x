@@ -1,80 +1,21 @@
-import {
-  ChartDrawingArea,
-  DEFAULT_X_AXIS_KEY,
-  getValueToPositionMapper,
-  LineElement,
-  useLineSeriesContext,
-} from '@mui/x-charts';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { useChartGradientIdBuilder } from '@mui/x-charts/hooks/useChartGradientId';
 import { warnOnce } from '@mui/x-internals/warning';
-import { isBandScale } from '@mui/x-charts/internals/isBandScale';
-import { line as d3Line } from 'd3-shape';
-import {
-  getCurveFactory,
-  selectorChartComputedXAxes,
-  selectorChartComputedYAxes,
-  useSelector,
-  useStore,
-} from '@mui/x-charts/internals';
+import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
+import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
+import { isBandScale } from '../internals/isBandScale';
+import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { getCurveFactory } from '../internals/getCurve';
+import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
+import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 
-const LinePlotRoot = styled('g', {
-  name: 'MuiAreaPlot',
-  slot: 'Root',
-})();
-
-export function LinePreview({
-  x,
-  y,
-  height,
-  width,
-}: {
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-}) {
-  const drawingArea: ChartDrawingArea = {
-    left: x,
-    top: y,
-    width,
-    height,
-    right: x + width,
-    bottom: y + height,
-  };
-
-  const completedData = useAggregatedData(drawingArea);
-  return (
-    <LinePlotRoot>
-      {completedData.map(({ d, seriesId, color, gradientId }) => {
-        return (
-          <LineElement
-            key={seriesId}
-            id={seriesId}
-            d={d}
-            color={color}
-            gradientId={gradientId}
-            skipAnimation
-          />
-        );
-      })}
-    </LinePlotRoot>
-  );
-}
-
-function useAggregatedData(drawingArea: ChartDrawingArea) {
-  const store = useStore();
+export function useLinePlotData(
+  xAxis: ComputedAxisConfig<ChartsXAxisProps>,
+  yAxis: ComputedAxisConfig<ChartsYAxisProps>,
+) {
   const seriesData = useLineSeriesContext();
-
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartComputedXAxes, {
-    drawingArea,
-    zoomMap: undefined,
-  });
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartComputedYAxes, {
-    drawingArea,
-    zoomMap: undefined,
-  });
+  const defaultXAxisId = useXAxes().xAxisIds[0];
+  const defaultYAxisId = useYAxes().yAxisIds[0];
   const getGradientId = useChartGradientIdBuilder();
 
   // This memo prevents odd line chart behavior when hydrating.
@@ -84,11 +25,13 @@ function useAggregatedData(drawingArea: ChartDrawingArea) {
     }
 
     const { series, stackingGroups } = seriesData;
-    const defaultXAxisId = xAxisIds[0];
-    const defaultYAxisId = yAxisIds[0];
 
-    return stackingGroups.flatMap(({ ids: groupIds }) => {
-      return groupIds.flatMap((seriesId) => {
+    const linePlotData = [];
+
+    for (const stackingGroup of stackingGroups) {
+      const groupIds = stackingGroup.ids;
+
+      for (const seriesId of groupIds) {
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
@@ -98,6 +41,10 @@ function useAggregatedData(drawingArea: ChartDrawingArea) {
           curve,
           strictStepCurve,
         } = series[seriesId];
+
+        if (!(xAxisId in xAxis) || !(yAxisId in yAxis)) {
+          continue;
+        }
 
         const xScale = xAxis[xAxisId].scale;
         const xPosition = getValueToPositionMapper(xScale);
@@ -173,15 +120,17 @@ function useAggregatedData(drawingArea: ChartDrawingArea) {
           .y((d) => yScale(d.y[1])!);
 
         const d = linePath.curve(getCurveFactory(curve))(d3Data) || '';
-        return {
+        linePlotData.push({
           ...series[seriesId],
           gradientId,
           d,
           seriesId,
-        };
-      });
-    });
-  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis, getGradientId]);
+        });
+      }
+    }
+
+    return linePlotData;
+  }, [seriesData, defaultXAxisId, defaultYAxisId, xAxis, yAxis, getGradientId]);
 
   return allData;
 }

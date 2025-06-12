@@ -9,6 +9,7 @@ export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
+export { useLinePlotData } from '../LineChart/useLinePlotData';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
