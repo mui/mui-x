@@ -36,6 +36,7 @@ import {
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
+import { useRunOncePerLoop } from '../../utils/useRunOncePerLoop';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -127,6 +128,7 @@ export const useGridFilter = (
     });
     apiRef.current.publishEvent('filteredRowsSet');
   }, [apiRef]);
+  const updateFilteredRowsDeferred = useRunOncePerLoop(updateFilteredRows);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
@@ -522,7 +524,7 @@ export const useGridFilter = (
     });
   }, [apiRef]);
 
-  useGridEvent(apiRef, 'rowsSet', updateFilteredRows);
+  useGridEvent(apiRef, 'rowsSet', updateFilteredRowsDeferred);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
   useGridEvent(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
@@ -530,7 +532,7 @@ export const useGridFilter = (
     const filterModel = gridFilterModelSelector(apiRef);
     if (filterModel.quickFilterValues && shouldQuickFilterExcludeHiddenColumns(filterModel)) {
       // re-apply filters because the quick filter results may have changed
-      apiRef.current.unstable_applyFilters();
+      updateFilteredRowsDeferred();
     }
   });
 
@@ -538,7 +540,7 @@ export const useGridFilter = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    apiRef.current.unstable_applyFilters();
+    updateFilteredRows();
   });
 
   /**

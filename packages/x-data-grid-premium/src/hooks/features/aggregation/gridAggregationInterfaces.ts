@@ -51,6 +51,7 @@ export interface GridAggregationFunction<V = any, AV = V> {
    * Function that takes the current cell values and generates the aggregated value.
    * @template V, AV
    * @param {GridAggregationParams<V>} params The params of the current aggregated cell.
+   * @param {GridApiPremium} api The grid API.
    * @returns {AV} The aggregated value.
    */
   apply: (params: GridAggregationParams<V>, api: GridApiPremium) => AV | null | undefined;

@@ -446,11 +446,11 @@ export function useGridColumns(
       return;
     }
 
-    logger.info(`GridColumns have changed, new length ${props.columns.length}`);
-
     if (previousColumnsProp.current === props.columns) {
       return;
     }
+
+    logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
     const columnsState = createColumnsState({
       apiRef,
