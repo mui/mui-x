@@ -1,10 +1,71 @@
 /* eslint-disable no-restricted-syntax */
+/**
+ * This script generates a changelog for MUI X packages.
+ *
+ * Features:
+ * - Fetches commits between two Git references (tags/branches)
+ * - Categorizes commits based on tags in commit messages and PR labels
+ * - Generates a changelog with sections for different packages
+ * - Uses actual versions from package.json files
+ * - Can return the changelog as a string when --returnEntry is passed
+ */
 import { Octokit } from '@octokit/rest';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import fs from 'fs';
+import path from 'path';
 
 const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
+
+const nowFormatted = new Date().toLocaleDateString('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
+
+/**
+ * Get the version of a package from its package.json file
+ * @param {string} packageName - The name of the package (e.g. 'x-data-grid')
+ * @returns {string} The version of the package
+ */
+function getPackageVersion(packageName) {
+  try {
+    // Construct the path to the package.json file
+    const packageJsonPath = path.join(process.cwd(), 'packages', packageName, 'package.json');
+
+    // Check if the file exists
+    if (!fs.existsSync(packageJsonPath)) {
+      console.warn(`Package.json not found for ${packageName} at ${packageJsonPath}`);
+      return '__VERSION__'; // Fallback to placeholder
+    }
+
+    // Read and parse the package.json file
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+
+    // Check if the version field exists
+    if (!packageJson.version) {
+      console.warn(`No version field found in package.json for ${packageName}`);
+      return '__VERSION__'; // Fallback to placeholder
+    }
+
+    return packageJson.version;
+  } catch (error) {
+    console.error(`Error reading package.json for ${packageName}:`, error);
+    return '__VERSION__'; // Fallback to placeholder
+  }
+}
+
+/**
+ * Removes duplicate empty lines from a string.
+ * @param text
+ * @returns {string}
+ */
+function removeDuplicateEmptyLines(text) {
+  return text
+    .replace(/\n\s*\n\s*\n/g, '\n\n') // Replace multiple empty lines with double line break
+    .trim(); // Remove leading/trailing whitespace
+}
 
 /**
  * @param {string} commitMessage
@@ -73,7 +134,7 @@ function resolvePackagesByLabels(labels) {
 }
 
 async function main(argv) {
-  const { githubToken, lastRelease: lastReleaseInput, release, nextVersion } = argv;
+  const { githubToken, lastRelease: lastReleaseInput, release, nextVersion, returnEntry } = argv;
 
   if (!githubToken) {
     throw new TypeError(
@@ -117,7 +178,6 @@ async function main(argv) {
   }
 
   // Fetch all the pull Request and check if there is a section named changelog
-
   const changeLogMessages = {};
   const prsLabelsMap = {};
   const community = {
@@ -186,15 +246,6 @@ async function main(argv) {
     }),
   );
 
-  // Get all the authors of the release
-  const authors = Array.from(
-    new Set(
-      commitsItems.map((commitsItem) => {
-        return commitsItem.author.login;
-      }),
-    ),
-  );
-
   // Dispatch commits in different sections
   const dataGridCommits = [];
   const dataGridProCommits = [];
@@ -205,6 +256,8 @@ async function main(argv) {
   const chartsProCommits = [];
   const treeViewCommits = [];
   const treeViewProCommits = [];
+  const schedulerCommits = [];
+  const schedulerProCommits = [];
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -253,6 +306,12 @@ async function main(argv) {
       case 'tree view pro':
         treeViewProCommits.push(commitItem);
         break;
+      case 'scheduler':
+        schedulerCommits.push(commitItem);
+        break;
+      case 'scheduler-pro':
+        schedulerProCommits.push(commitItem);
+        break;
       case 'docs':
         docsCommits.push(commitItem);
         break;
@@ -275,6 +334,9 @@ async function main(argv) {
               case 'pickers':
                 pickersCommits.push(commitItem);
                 break;
+              case 'Scheduler':
+                schedulerCommits.push(commitItem);
+                break;
               default:
                 coreCommits.push(commitItem);
                 break;
@@ -292,7 +354,7 @@ async function main(argv) {
   });
 
   // Helper to print a list of commits in a section of the changelog
-  const logChangelogSection = (commitsList, header) => {
+  const logCommitEntries = (commitsList) => {
     if (commitsList.length === 0) {
       return '';
     }
@@ -305,122 +367,221 @@ async function main(argv) {
       }
       return aTags.localeCompare(bTags);
     });
-    return `${header ? `\n${header}\n\n` : ''}${sortedCommits
-      .sort()
-      .map(
-        (commitItem) => `- ${commitItem.commit.message.split('\n')[0]} @${commitItem.author.login}`,
-      )
-      .join('\n')}`;
+
+    return sortedCommits
+      .map((commit) => `- ${commit.commit.message.split('\n')[0]} @${commit.author.login}`)
+      .join('\n');
   };
 
-  const logChangelogMessages = (product) => {
-    if (!changeLogMessages[product]?.length) {
+  const proIcon =
+    '[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")';
+  const premiumIcon =
+    '[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")';
+
+  /**
+   * Generates a changelog section for a product
+   * @param {Object} options - The options for generating the product section
+   * @param {string} options.productName - The display name of the product (e.g., 'Data Grid', 'Charts')
+   * @param {string} options.packageName - The base package name (e.g., 'x-data-grid', 'x-charts')
+   * @param {Array} options.baseCommits - The commits for the base package
+   * @param {Array} [options.proCommits] - The commits for the Pro package (if applicable)
+   * @param {Array} [options.premiumCommits] - The commits for the Premium package (if applicable)
+   * @param {string} [options.changelogKey] - The key to use for changelog messages (e.g., 'DataGrid', 'charts')
+   * @returns {string} The formatted changelog section for the product
+   */
+  const logProductSection = ({
+    productName,
+    packageName,
+    baseCommits,
+    proCommits = null,
+    premiumCommits = null,
+    changelogKey,
+  }) => {
+    const hasProVersion = proCommits !== null;
+    const hasPremiumVersion = premiumCommits !== null;
+    const packageVersion = getPackageVersion(packageName);
+
+    const lines = [`### ${productName}`];
+
+    // Add changelog messages if available
+    if (changeLogMessages[changelogKey]?.length > 0) {
+      lines.push(...changeLogMessages[changelogKey]);
+    }
+
+    // Base package
+    lines.push(`#### \`@mui/${packageName}@${packageVersion}\``);
+    lines.push(`${logCommitEntries(baseCommits) || 'Internal changes.'}`);
+
+    // Pro package (if applicable)
+    if (hasProVersion) {
+      lines.push(`#### \`@mui/${packageName}-pro@${packageVersion}\` ${proIcon}`);
+
+      if (proCommits?.length > 0) {
+        lines.push(`Same changes as in \`@mui/${packageName}@${packageVersion}\`, plus:`);
+        lines.push(logCommitEntries(proCommits));
+      } else {
+        lines.push(`Same changes as in \`@mui/${packageName}@${packageVersion}\`.`);
+      }
+    }
+
+    // Premium package (if applicable)
+    if (hasPremiumVersion) {
+      lines.push(`#### \`@mui/${packageName}-premium@${packageVersion}\` ${premiumIcon}`);
+
+      if (premiumCommits?.length > 0) {
+        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`, plus:`);
+        lines.push(logCommitEntries(premiumCommits));
+      } else {
+        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`.`);
+      }
+    }
+
+    return lines.join('\n\n');
+  };
+
+  /**
+   * Generates a changelog section for a product
+   * @param {Object} options - The options for generating the product section
+   * @param {string} options.sectionName - The name of the section (e.g., 'Docs', 'Core', 'Miscellaneous')
+   * @param {Array} options.commits - The commits to log for the section
+   * @returns {string} The formatted changelog section for the product
+   */
+  const logOtherSection = (options) => {
+    const { sectionName, commits } = options;
+
+    if (commits.length === 0) {
       return '';
     }
-    return `${changeLogMessages[product].length > 0 ? '\n' : ''}${changeLogMessages[product].join('\n\n')}`;
+
+    const lines = [`### ${sectionName}`];
+
+    // Add changelog messages if available
+    if (changeLogMessages[sectionName]?.length > 0) {
+      lines.push(...changeLogMessages[sectionName]);
+    }
+
+    lines.push(logCommitEntries(commits) || 'Internal changes.');
+
+    return lines.join('\n\n');
   };
 
-  const nowFormatted = new Date().toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  // Log the general section of the changelog
+  const logGeneralSection = () => {
+    const authorsCount =
+      community.contributors.size + community.firstTimers.size + community.team.size;
+    const lines = [
+      `We'd like to extend a big thank you to the ${authorsCount} contributors who made this release possible. Here are some highlights ✨:`,
+      'TODO INSERT HIGHLIGHTS',
+    ];
 
-  const logCommunitySection = () => {
+    if (changeLogMessages.general?.length) {
+      lines.push(...changeLogMessages.general);
+    }
+
     // TODO: separate first timers and regular contributors
     const contributors = [
       ...Array.from(community.contributors),
       ...Array.from(community.firstTimers),
     ].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-    if (contributors.length === 0) {
-      return '';
+
+    if (contributors.length > 0) {
+      lines.push(
+        `Special thanks go out to the community members for their valuable contributions:`,
+        contributors.join(', '),
+      );
     }
 
-    return `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}.`;
+    if (community.team.size > 0) {
+      lines.push(
+        `The following are all team members who have contributed to this release:`,
+        Array.from(community.team)
+          .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+          .join(', '),
+      );
+    }
+
+    return lines.join('\n\n');
   };
 
-  const logTeamSection = () => {
-    return `The following are all team members who have contributed to this release:\n${Array.from(
-      community.team,
-    )
-      .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-      .join(', ')}.`;
-  };
-
-  const changelog = `
-## __VERSION__
+  const changelog = removeDuplicateEmptyLines(`
+## ${nextVersion || '__VERSION__'}
 <!-- generated comparing ${lastRelease}..${release} -->
 _${nowFormatted}_
 
-We'd like to extend a big thank you to the ${
-    authors.length
-  } contributors who made this release possible. Here are some highlights ✨:
+${logGeneralSection()}
 
-TODO INSERT HIGHLIGHTS
-${logChangelogMessages('general')}
-${logCommunitySection()}
-${logTeamSection()}
+${logProductSection({
+  productName: 'Data Grid',
+  packageName: 'x-data-grid',
+  baseCommits: dataGridCommits,
+  proCommits: dataGridProCommits,
+  premiumCommits: dataGridPremiumCommits,
+  changelogKey: 'DataGrid',
+})}
 
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+${logProductSection({
+  productName: 'Date and Time Pickers',
+  packageName: 'x-date-pickers',
+  baseCommits: pickersCommits,
+  proCommits: pickersProCommits,
+  changelogKey: 'pickers',
+})}
 
-### Data Grid
-${logChangelogMessages('DataGrid')}
-#### \`@mui/x-data-grid@__VERSION__\`
+${logProductSection({
+  productName: 'Charts',
+  packageName: 'x-charts',
+  baseCommits: chartsCommits,
+  proCommits: chartsProCommits,
+  changelogKey: 'charts',
+})}
 
-${logChangelogSection(dataGridCommits) || 'Internal changes.'}
+${logProductSection({
+  productName: 'Tree View',
+  packageName: 'x-tree-view',
+  baseCommits: treeViewCommits,
+  proCommits: treeViewProCommits,
+  changelogKey: 'TreeView',
+})}
 
-#### \`@mui/x-data-grid-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+${logProductSection({
+  productName: 'Codemod',
+  packageName: 'x-codemod',
+  baseCommits: codemodCommits,
+  changelogKey: 'codemod',
+})}
 
-Same changes as in \`@mui/x-data-grid@__VERSION__\`${
-    dataGridProCommits.length > 0 ? ', plus:\n' : '.'
+${logOtherSection({
+  sectionName: 'Docs',
+  commits: docsCommits,
+})}
+
+${logOtherSection({
+  sectionName: 'Core',
+  commits: coreCommits,
+})}
+
+${logOtherSection({
+  sectionName: 'Miscellaneous',
+  commits: otherCommits,
+})}
+`);
+
+  try {
+    if (returnEntry) {
+      // Return the string if returnEntry is true
+      return changelog;
+    }
+    // Otherwise log it to the console
+    // eslint-disable-next-line no-console -- output of this script
+    console.log(changelog);
+    return null;
+  } catch (error) {
+    console.error('Error generating changelog:', error);
+    if (returnEntry) {
+      throw error; // Re-throw the error when in returnEntry mode
+    }
+    return null;
   }
-${logChangelogSection(dataGridProCommits)}${dataGridProCommits.length > 0 ? '\n' : ''}
-#### \`@mui/x-data-grid-premium@__VERSION__\` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
-    dataGridPremiumCommits.length > 0 ? ', plus:\n' : '.'
-  }
-${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 0 ? '\n' : ''}
-### Date and Time Pickers
-${logChangelogMessages('pickers')}
-#### \`@mui/x-date-pickers@__VERSION__\`
-
-${logChangelogSection(pickersCommits) || 'Internal changes.'}
-
-#### \`@mui/x-date-pickers-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
-    pickersProCommits.length > 0 ? ', plus:\n' : '.'
-  }
-${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' : ''}
-### Charts
-${logChangelogMessages('charts')}
-#### \`@mui/x-charts@__VERSION__\`
-
-${logChangelogSection(chartsCommits) || 'Internal changes.'}
-
-#### \`@mui/x-charts-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
-${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
-### Tree View
-${logChangelogMessages('TreeView')}
-#### \`@mui/x-tree-view@__VERSION__\`
-${logChangelogSection(treeViewCommits) || 'Internal changes.'}
-
-#### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in \`@mui/x-tree-view@__VERSION__\`${treeViewProCommits.length > 0 ? ', plus:\n' : '.'}
-${logChangelogSection(treeViewProCommits)}${treeViewProCommits.length > 0 ? '\n' : ''}
-${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
-${logChangelogSection(docsCommits, '### Docs')}
-${logChangelogSection(coreCommits, '### Core')}
-${logChangelogSection(otherCommits, '### Miscellaneous')}
-
-`;
-
-  // eslint-disable-next-line no-console -- output of this script
-  console.log(nextVersion ? changelog.replace(/__VERSION__/g, nextVersion) : changelog);
 }
 
 yargs(hideBin(process.argv))
@@ -451,6 +612,11 @@ yargs(hideBin(process.argv))
           describe:
             'The version expected to be released e.g. `5.2.0`. Replaces `__VERSION__` placeholder in the changelog.',
           type: 'string',
+        })
+        .option('returnEntry', {
+          describe: 'Return the changelog string instead of logging it to the console.',
+          type: 'boolean',
+          default: false,
         });
     },
     handler: main,
