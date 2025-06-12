@@ -1,9 +1,15 @@
 import * as React from 'react';
-import { selectorChartSeriesProcessed, useSelector, useStore } from '@mui/x-charts/internals';
+import {
+  AxisId,
+  selectorChartSeriesProcessed,
+  useSelector,
+  useStore,
+} from '@mui/x-charts/internals';
 import { ScatterPreview } from './previews/ScatterPreview';
-import { LinePreview } from './previews/LinePreview';
+import { LinePreviewPlot } from './previews/LinePreviewPlot';
 
 export function ChartAxisZoomSliderChartPreview(props: {
+  axisId: AxisId;
   x: number;
   y: number;
   height: number;
@@ -13,7 +19,7 @@ export function ChartAxisZoomSliderChartPreview(props: {
   const processedSeries = useSelector(store, selectorChartSeriesProcessed);
 
   if ((processedSeries.line?.seriesOrder?.length ?? 0) > 0) {
-    return <LinePreview {...props} />;
+    return <LinePreviewPlot {...props} />;
   }
 
   if ((processedSeries.scatter?.seriesOrder?.length ?? 0) > 0) {
