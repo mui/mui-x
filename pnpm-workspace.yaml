@@ -65,7 +65,7 @@ catalog:
   dayjs: ^1.11.13
   exceljs: ^4.4.0
   fast-glob: ^3.3.3
-  jscodeshift: 17.1.2
+  jscodeshift: 17.3.0
   lodash: ^4.17.21
   luxon: ^3.6.1
   moment: ^2.30.1
