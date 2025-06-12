@@ -28,8 +28,6 @@ export const Event = React.forwardRef(function Event(
     [styleProp, eventResource],
   );
 
-  console.log(eventResource);
-
   const durationMs =
     adapter.toJsDate(event.end).getTime() - adapter.toJsDate(event.start).getTime();
   const durationMinutes = durationMs / 60000;
