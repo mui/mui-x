@@ -9,5 +9,14 @@ packageName: '@mui/x-charts'
 
 <p class="description">A collection of MUI X chart demos.</p>
 
+## Bar Charts
 
-{{"demo": "ChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+{{"demo": "BarChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+
+## Line Charts
+
+{{"demo": "LineChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+
+## Area Charts
+
+{{"demo": "AreaChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
