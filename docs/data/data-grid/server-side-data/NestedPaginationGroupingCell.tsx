@@ -1,76 +1,43 @@
 import * as React from 'react';
-import composeClasses from '@mui/utils/composeClasses';
 import Box from '@mui/material/Box';
 import {
-  getDataGridUtilityClass,
   GridRenderCellParams,
   GridDataSourceGroupNode,
   useGridSelector,
   useGridRootProps,
-  GridPrivateApiPro,
-  gridDataSourceLoadingIdSelector,
-  gridDataSourceErrorSelector,
   useGridApiContext,
   GridValidRowModel,
   gridRowsLookupSelector,
   type GridRowId,
-  type GridClasses,
 } from '@mui/x-data-grid-pro';
-import {
-  useGridPrivateApiContext,
-  createSelector,
-} from '@mui/x-data-grid-pro/internals';
+import { createSelector } from '@mui/x-data-grid-pro/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
-import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 
 const gridRowSelector = createSelector(
   gridRowsLookupSelector,
   (lookup, id: GridRowId) => lookup[id],
 );
 
-type OwnerState = { classes?: Partial<GridClasses> };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['treeDataGroupingCell'],
-    toggle: ['treeDataGroupingCellToggle'],
-    loadingContainer: ['treeDataGroupingCellLoadingContainer'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
-interface GridTreeDataGroupingCellProps
+interface NestedPaginationGroupingCellProps
   extends GridRenderCellParams<any, any, any, GridDataSourceGroupNode> {
-  hideDescendantCount?: boolean;
-  /**
-   * The cell offset multiplier used for calculating cell offset (`rowNode.depth * offsetMultiplier` px).
-   * @default 2
-   */
-  offsetMultiplier?: number;
+  setExpandedRows: React.Dispatch<React.SetStateAction<GridValidRowModel[]>>;
+  nestedLevelRef: React.RefObject<number>;
 }
 
-interface GridTreeDataGroupingCellIconProps
-  extends Pick<GridTreeDataGroupingCellProps, 'id' | 'field' | 'rowNode' | 'row'> {
+interface GroupingIconProps
+  extends Pick<
+    NestedPaginationGroupingCellProps,
+    'id' | 'field' | 'rowNode' | 'row' | 'setExpandedRows' | 'nestedLevelRef'
+  > {
   descendantCount: number;
 }
 
-function GridTreeDataGroupingCellIcon(
-  props: GridTreeDataGroupingCellIconProps & {
-    setExpandedRows: React.Dispatch<React.SetStateAction<GridValidRowModel[]>>;
-    nestedLevelRef: React.RefObject<number>;
-  },
-) {
-  const apiRef = useGridApiContext() as React.MutableRefObject<GridPrivateApiPro>;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootProps.classes });
+function GroupingIcon(props: GroupingIconProps) {
+  const apiRef = useGridApiContext();
   const { rowNode, id, field, descendantCount, row, nestedLevelRef } = props;
-
-  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
-  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
-
   const expanded = rowNode.childrenExpanded || row.expanded;
 
   const handleClick = useEventCallback(
@@ -99,59 +66,29 @@ function GridTreeDataGroupingCellIcon(
     },
   );
 
-  const Icon = expanded
-    ? rootProps.slots.treeDataCollapseIcon
-    : rootProps.slots.treeDataExpandIcon;
+  const Icon = expanded ? ExpandMore : ChevronRight;
 
-  if (isDataLoading) {
-    return (
-      <div className={classes.loadingContainer}>
-        <CircularProgress size="1rem" color="inherit" />
-      </div>
-    );
-  }
   return descendantCount > 0 ? (
-    <rootProps.slots.baseIconButton
+    <IconButton
       size="small"
       onClick={handleClick}
       tabIndex={-1}
-      aria-label={
-        rowNode.childrenExpanded
-          ? apiRef.current.getLocaleText('treeDataCollapse')
-          : apiRef.current.getLocaleText('treeDataExpand')
-      }
-      {...rootProps?.slotProps?.baseIconButton}
+      aria-label={`${rowNode.childrenExpanded ? 'Hide' : 'Show'} children`}
     >
-      <rootProps.slots.baseTooltip title={error?.message ?? null}>
-        <rootProps.slots.baseBadge variant="dot" color="error" invisible={!error}>
-          <Icon fontSize="inherit" />
-        </rootProps.slots.baseBadge>
-      </rootProps.slots.baseTooltip>
-    </rootProps.slots.baseIconButton>
+      <Icon fontSize="inherit" />
+    </IconButton>
   ) : null;
 }
 
 export default function NestedPaginationGroupingCell(
-  props: GridTreeDataGroupingCellProps & {
-    setExpandedRows: React.Dispatch<React.SetStateAction<GridValidRowModel[]>>;
-    nestedLevelRef: React.RefObject<number>;
-  },
+  props: NestedPaginationGroupingCellProps,
 ) {
-  const {
-    id,
-    field,
-    formattedValue,
-    rowNode,
-    hideDescendantCount,
-    offsetMultiplier = 2,
-    setExpandedRows,
-    nestedLevelRef,
-  } = props;
+  const { id, field, formattedValue, rowNode, setExpandedRows, nestedLevelRef } =
+    props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridPrivateApiContext();
+  const apiRef = useGridApiContext();
   const row = useGridSelector(apiRef, gridRowSelector, id);
-  const classes = useUtilityClasses(rootProps);
 
   let descendantCount = 0;
   if (row) {
@@ -167,9 +104,22 @@ export default function NestedPaginationGroupingCell(
   }
 
   return (
-    <Box className={classes.root} sx={{ ml: depth * offsetMultiplier }}>
-      <div className={classes.toggle}>
-        <GridTreeDataGroupingCellIcon
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        ml: depth * 2,
+      }}
+    >
+      <div
+        style={{
+          flex: '0 0 28px',
+          alignSelf: 'stretch',
+          marginRight: '8px',
+        }}
+      >
+        <GroupingIcon
           id={id}
           field={field}
           rowNode={rowNode}
@@ -183,7 +133,7 @@ export default function NestedPaginationGroupingCell(
         {formattedValue === undefined
           ? (rowNode.groupingKey ?? row.groupingKey)
           : formattedValue}
-        {!hideDescendantCount && descendantCount > 0 ? ` (${descendantCount})` : ''}
+        {descendantCount > 0 ? ` (${descendantCount})` : ''}
       </span>
     </Box>
   );
