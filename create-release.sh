@@ -44,7 +44,7 @@ find_mui_x_remote() {
   local upstream_remote=""
 
   while IFS= read -r line; do
-    if [[ "$line" =~ mui/mui-x(\.git)?[[:space:]]+\(push\) ]]; then
+    if [[ "$line" =~ :mui/mui-x(\.git)?[[:space:]]+\(push\) ]]; then
       upstream_remote=$(echo "$line" | awk '{print $1}')
       break
     fi
@@ -195,7 +195,7 @@ while [ -n "$(git status --porcelain)" ]; do
 done
 
 # Create a new branch with the new version
-BRANCH_NAME="release/v$NEW_VERSION"
+BRANCH_NAME="release/v$NEW_VERSION-$(date '+%Y%m%d%H%M%S')"
 echo "Creating new branch: $BRANCH_NAME"
 # Create branch from upstream/master but don't track it
 git checkout -b $BRANCH_NAME --no-track $UPSTREAM_REMOTE/master
@@ -204,7 +204,7 @@ echo "Pushing branch to origin and setting up tracking..."
 git push -u origin $BRANCH_NAME
 
 # Update package.json
-echo "Updating package.json..."
+echo "Updating root package.json..."
 # Use node to update the package.json file
 node -e "
 const fs = require('fs');
@@ -232,7 +232,7 @@ echo "Adding changelog entry to CHANGELOG.md..."
 FIRST_VERSION_LINE=$(grep -n "^## [0-9]" CHANGELOG.md | head -1 | cut -d: -f1)
 
 # Create a temporary file with the new content
-head -n 7 CHANGELOG.md > temp_changelog.md  # Keep the header (first 7 lines)
+head -n $(($FIRST_VERSION_LINE-1)) CHANGELOG.md > temp_changelog.md
 echo "$CHANGELOG_CONTENT" >> temp_changelog.md
 tail -n +$FIRST_VERSION_LINE CHANGELOG.md >> temp_changelog.md
 
