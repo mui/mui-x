@@ -363,11 +363,11 @@ Heatmap.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
-   * The function called when the pointer position correspond to a new axis data item.
-   * This update can either be cause by a pointer movement, or an update of axes.
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
    * In case of multiple axes, the function get called if at least ones axis is updated.
-   * And the parameter contains the identifier for all axis with a `data` property.
-   * @param {AxisItemIdentifier[]} newAxisItems The array of axis item identifiers.
+   * And the parameter contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} newAxisItems The array of axes item identifiers.
    */
   onAxisInteraction: PropTypes.func,
   /**

@@ -47,8 +47,8 @@
       }
     },
     "onAxisInteraction": {
-      "description": "The function called when the pointer position correspond to a new axis data item. This update can either be cause by a pointer movement, or an update of axes. In case of multiple axes, the function get called if at least ones axis is updated. And the parameter contains the identifier for all axis with a <code>data</code> property.",
-      "typeDescriptions": { "newAxisItems": "The array of axis item identifiers." }
+      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function get called if at least ones axis is updated. And the parameter contains the identifier for all axes with a <code>data</code> property.",
+      "typeDescriptions": { "newAxisItems": "The array of axes item identifiers." }
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
