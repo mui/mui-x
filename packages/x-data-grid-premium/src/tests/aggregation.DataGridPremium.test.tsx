@@ -878,6 +878,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             values: [0, 10, 12, 23],
             field: 'value',
             groupId: 0,
+            api: apiRef.current!,
           }),
         ).to.equal(45);
       });
@@ -888,6 +889,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
             field: 'value',
             groupId: 0,
+            api: apiRef.current!,
           }),
         ).to.equal(45);
       });
@@ -900,6 +902,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             values: [0, 10, 12, 23],
             field: 'value',
             groupId: 0,
+            api: apiRef.current!,
           }),
         ).to.equal(11.25);
       });
@@ -910,6 +913,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
             field: 'value',
             groupId: 0,
+            api: apiRef.current!,
           }),
         ).to.equal(11.25);
       });
@@ -922,6 +926,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             values: [23, '', 'a', NaN, {}, false, true],
             field: 'value',
             groupId: 0,
+            api: apiRef.current!,
           }),
         ).to.equal(7);
       });
@@ -932,6 +937,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             values: [23, '', 'a', NaN, {}, false, true, undefined],
             field: 'value',
             groupId: 0,
+            api: apiRef.current!,
           }),
         ).to.equal(7);
       });

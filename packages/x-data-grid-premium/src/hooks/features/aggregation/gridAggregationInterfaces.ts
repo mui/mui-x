@@ -1,5 +1,5 @@
-import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridRowId, GridRowModel, GridColDef, GridValueFormatter } from '@mui/x-data-grid-pro';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface GridAggregationState {
   model: GridAggregationModel;
