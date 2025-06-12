@@ -1,15 +1,14 @@
 import { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
-  gridFilteredRowsLookupSelector,
   GridRowId,
   GridGroupNode,
   GridLeafNode,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
-  gridRowNodeSelector,
+  gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   GridAggregationFunction,
@@ -20,6 +19,8 @@ import {
 } from './gridAggregationInterfaces';
 import { getAggregationRules } from './gridAggregationUtils';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
+
+type AggregatedValues = { aggregatedField: string; values: any[] }[];
 
 export const shouldApplySorting = (
   aggregationRules: GridAggregationRules,
@@ -35,19 +36,37 @@ const getGroupAggregatedValue = (
   aggregatedFields: string[],
   aggregationRules: GridAggregationRules,
   position: GridAggregationPosition,
+  applySorting: boolean,
+  valueGetters: Record<string, (row: any) => any>,
+  publicApi: GridApiPremium,
+  rootAggregatedValues: AggregatedValues,
 ) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
-  const aggregatedValues: { aggregatedField: string; values: any[] }[] = [];
+  const aggregatedValues: AggregatedValues = [];
+  for (let i = 0; i < aggregatedFields.length; i += 1) {
+    aggregatedValues[i] = {
+      aggregatedField: aggregatedFields[i],
+      values: [],
+    };
+  }
 
-  const applySorting = shouldApplySorting(aggregationRules, aggregatedFields);
-  const rowIds = apiRef.current.getRowGroupChildren({ groupId, applySorting });
-  const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
-  const publicApi = apiRef.current.getPublicApi();
+  const rowTree = gridRowTreeSelector(apiRef);
+  const rowLookup = gridRowsLookupSelector(apiRef);
+  const isPivotActive = apiRef.current.state.pivoting.active;
 
-  rowIds.forEach((rowId) => {
-    if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
-      return;
-    }
+  const rowIds =
+    // If the pivot is active, we only have group children for the root group, hence we can skip a recursion
+    isPivotActive && groupId === GRID_ROOT_GROUP_ID
+      ? []
+      : apiRef.current.getRowGroupChildren({
+          groupId,
+          applySorting,
+          directChildrenOnly: groupId === GRID_ROOT_GROUP_ID,
+          applyFiltering: aggregationRowsScope === 'filtered',
+        });
+
+  for (let i = 0; i < rowIds.length; i += 1) {
+    const rowId = rowIds[i];
 
     // If the row is a group, we want to aggregate based on its children
     // For instance in the following tree, we want the aggregated values of A to be based on A.A, A.B.A and A.B.B but not A.B
@@ -56,12 +75,12 @@ const getGroupAggregatedValue = (
     //   A.B
     //     A.B.A
     //     A.B.B
-    const rowNode = gridRowNodeSelector(apiRef, rowId);
-    if (rowNode.type === 'group') {
-      return;
-    }
 
-    const row = apiRef.current.getRow(rowId);
+    const rowNode = rowTree[rowId];
+    if (rowNode.type === 'group') {
+      continue;
+    }
+    const row = rowLookup[rowId];
 
     for (let j = 0; j < aggregatedFields.length; j += 1) {
       const aggregatedField = aggregatedFields[j];
@@ -71,24 +90,25 @@ const getGroupAggregatedValue = (
         columnAggregationRules.aggregationFunction as GridAggregationFunction;
       const field = aggregatedField;
 
-      if (aggregatedValues[j] === undefined) {
-        aggregatedValues[j] = {
-          aggregatedField,
-          values: [],
-        };
-      }
-
+      let value;
       if (typeof aggregationFunction.getCellValue === 'function') {
-        aggregatedValues[j].values.push(aggregationFunction.getCellValue({ field, row }));
+        value = aggregationFunction.getCellValue({ field, row });
+      } else if (isPivotActive) {
+        // Since we know that pivoted fields are flat, we can use the row directly, and save lots of processing time
+        value = row[field];
       } else {
-        const colDef = apiRef.current.getColumn(field);
-        aggregatedValues[j].values.push(apiRef.current.getRowValue(row, colDef));
+        const valueGetter = valueGetters[aggregatedField]!;
+        value = valueGetter(row);
       }
-    }
-  });
 
-  for (let i = 0; i < aggregatedValues.length; i += 1) {
-    const { aggregatedField, values } = aggregatedValues[i];
+      aggregatedValues[j].values.push(value);
+      rootAggregatedValues[j].values.push(value);
+    }
+  }
+
+  const groupValues = groupId === GRID_ROOT_GROUP_ID ? rootAggregatedValues : aggregatedValues;
+  for (let i = 0; i < groupValues.length; i += 1) {
+    const { aggregatedField, values } = groupValues[i];
     const aggregationFunction = aggregationRules[aggregatedField]
       .aggregationFunction as GridAggregationFunction;
     const value = aggregationFunction.apply(
@@ -156,9 +176,26 @@ export const createAggregationLookup = ({
     return {};
   }
 
+  const columnsLookup = gridColumnLookupSelector(apiRef);
+  const valueGetters = {} as Record<string, (row: any) => any>;
+  for (let i = 0; i < aggregatedFields.length; i += 1) {
+    const field = aggregatedFields[i];
+    const column = columnsLookup[field];
+    const valueGetter = (row: any) => apiRef.current.getRowValue(row, column);
+    valueGetters[field] = valueGetter;
+  }
+
+  const applySorting = shouldApplySorting(aggregationRules, aggregatedFields);
+
   const aggregationLookup: GridAggregationLookup = {};
   const rowTree = gridRowTreeSelector(apiRef);
 
+  const rootAggregatedValues: AggregatedValues = Array.from({
+    length: aggregatedFields.length,
+  }).map((_, index) => ({
+    aggregatedField: aggregatedFields[index],
+    values: [],
+  }));
   const createGroupAggregationLookup = (groupNode: GridGroupNode) => {
     for (let i = 0; i < groupNode.children.length; i += 1) {
       const childId = groupNode.children[i];
@@ -187,6 +224,10 @@ export const createAggregationLookup = ({
           aggregatedFields,
           aggregationRules,
           position,
+          applySorting,
+          valueGetters,
+          apiRef.current,
+          rootAggregatedValues,
         );
       }
     }

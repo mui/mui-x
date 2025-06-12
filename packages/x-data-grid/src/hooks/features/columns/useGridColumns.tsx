@@ -421,6 +421,10 @@ export function useGridColumns(
    * APPLIERS
    */
   const hydrateColumns = React.useCallback(() => {
+    const isPivotActive = gridPivotActiveSelector(apiRef);
+    if (isPivotActive) {
+      return;
+    }
     logger.info(`Columns pipe processing have changed, regenerating the columns`);
 
     const columnsState = createColumnsState({
