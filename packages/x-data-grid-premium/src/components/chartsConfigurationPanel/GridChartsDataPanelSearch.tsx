@@ -7,7 +7,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
-export type GridChartsConfigurationPanelSearchProps = Pick<
+export type GridChartsDataPanelSearchProps = Pick<
   GridSlotProps['baseTextField'],
   'value' | 'onChange'
 > & {
@@ -20,20 +20,20 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    container: ['ChartsConfigurationPanelSearchContainer'],
+    container: ['ChartsDataPanelSearchContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridChartsConfigurationPanelSearchContainer = styled('div', {
+const GridChartsDataPanelSearchContainer = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelSearchContainer',
+  slot: 'ChartsDataPanelSearchContainer',
 })<{ ownerState: OwnerState }>({
   padding: vars.spacing(1),
 });
 
-function GridChartsConfigurationPanelSearch(props: GridChartsConfigurationPanelSearchProps) {
+function GridChartsDataPanelSearch(props: GridChartsDataPanelSearchProps) {
   const { onClear, value, onChange } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -46,10 +46,7 @@ function GridChartsConfigurationPanelSearch(props: GridChartsConfigurationPanelS
   };
 
   return (
-    <GridChartsConfigurationPanelSearchContainer
-      ownerState={rootProps}
-      className={classes.container}
-    >
+    <GridChartsDataPanelSearchContainer ownerState={rootProps} className={classes.container}>
       <rootProps.slots.baseTextField
         size="small"
         aria-label={apiRef.current.getLocaleText('pivotSearchControlLabel')}
@@ -75,8 +72,8 @@ function GridChartsConfigurationPanelSearch(props: GridChartsConfigurationPanelS
         value={value}
         onChange={onChange}
       />
-    </GridChartsConfigurationPanelSearchContainer>
+    </GridChartsDataPanelSearchContainer>
   );
 }
 
-export { GridChartsConfigurationPanelSearch };
+export { GridChartsDataPanelSearch };

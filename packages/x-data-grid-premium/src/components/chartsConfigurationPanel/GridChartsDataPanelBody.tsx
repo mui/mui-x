@@ -12,7 +12,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../collapsible';
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { GridChartsConfigurationPanelField } from './GridChartsConfigurationPanelField';
+import { GridChartsDataPanelField } from './GridChartsDataPanelField';
 import {
   gridChartsCategoriesSelector,
   gridChartsSeriesSelector,
@@ -26,22 +26,22 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['chartsConfigurationPanelBody'],
-    availableFields: ['chartsConfigurationPanelAvailableFields'],
-    sections: ['chartsConfigurationPanelSections'],
-    scrollArea: ['chartsConfigurationPanelScrollArea'],
-    section: ['chartsConfigurationPanelSection'],
-    sectionTitle: ['chartsConfigurationPanelSectionTitle'],
-    fieldList: ['chartsConfigurationPanelFieldList'],
-    placeholder: ['chartsConfigurationPanelPlaceholder'],
+    root: ['chartsDataPanelBody'],
+    availableFields: ['chartsDataPanelAvailableFields'],
+    sections: ['chartsDataPanelSections'],
+    scrollArea: ['chartsDataPanelScrollArea'],
+    section: ['chartsDataPanelSection'],
+    sectionTitle: ['chartsDataPanelSectionTitle'],
+    fieldList: ['chartsDataPanelFieldList'],
+    placeholder: ['chartsDataPanelPlaceholder'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridChartsConfigurationPanelBodyRoot = styled('div', {
+const GridChartsDataPanelBodyRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelBody',
+  slot: 'ChartsDataPanelBody',
 })<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
@@ -49,9 +49,9 @@ const GridChartsConfigurationPanelBodyRoot = styled('div', {
   overflow: 'hidden',
 });
 
-const GridChartsConfigurationPanelAvailableFields = styled(GridShadowScrollArea, {
+const GridChartsDataPanelAvailableFields = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelAvailableFields',
+  slot: 'ChartsDataPanelAvailableFields',
 })<{ ownerState: OwnerState }>({
   flex: 1,
   minHeight: 84,
@@ -64,9 +64,9 @@ const GridChartsConfigurationPanelAvailableFields = styled(GridShadowScrollArea,
   },
 });
 
-const GridChartsConfigurationPanelSections = styled(ResizablePanel, {
+const GridChartsDataPanelSections = styled(ResizablePanel, {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelSections',
+  slot: 'ChartsDataPanelSections',
 })<{ ownerState: OwnerState }>({
   position: 'relative',
   minHeight: 158,
@@ -75,16 +75,16 @@ const GridChartsConfigurationPanelSections = styled(ResizablePanel, {
   flexDirection: 'column',
 });
 
-const GridChartsConfigurationPanelScrollArea = styled(GridShadowScrollArea, {
+const GridChartsDataPanelScrollArea = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelScrollArea',
+  slot: 'ChartsDataPanelScrollArea',
 })<{ ownerState: OwnerState }>({
   height: '100%',
 });
 
-const GridChartsConfigurationPanelSection = styled(Collapsible, {
+const GridChartsDataPanelSection = styled(Collapsible, {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelSection',
+  slot: 'ChartsDataPanelSection',
 })<{ ownerState: OwnerState }>({
   margin: vars.spacing(0.5, 1),
   transition: vars.transition(['border-color', 'background-color'], {
@@ -97,9 +97,9 @@ const GridChartsConfigurationPanelSection = styled(Collapsible, {
   },
 });
 
-const GridChartsConfigurationPanelSectionTitle = styled('div', {
+const GridChartsDataPanelSectionTitle = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelSectionTitle',
+  slot: 'ChartsDataPanelSectionTitle',
 })<{ ownerState: OwnerState }>({
   flex: 1,
   marginRight: vars.spacing(1.75),
@@ -111,9 +111,9 @@ const GridChartsConfigurationPanelSectionTitle = styled('div', {
   fontWeight: vars.typography.fontWeight.medium,
 });
 
-const GridChartsConfigurationPanelFieldList = styled('div', {
+const GridChartsDataPanelFieldList = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelFieldList',
+  slot: 'ChartsDataPanelFieldList',
 })<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
@@ -121,9 +121,9 @@ const GridChartsConfigurationPanelFieldList = styled('div', {
   padding: vars.spacing(0.5, 0),
 });
 
-const GridChartsConfigurationPanelPlaceholder = styled('div', {
+const GridChartsDataPanelPlaceholder = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelPlaceholder',
+  slot: 'ChartsDataPanelPlaceholder',
 })<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
@@ -147,7 +147,7 @@ export interface FieldTransferObject {
 
 export type DropPosition = 'top' | 'bottom' | null;
 
-function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string }) {
+function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector);
@@ -239,13 +239,13 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
   }, []);
 
   return (
-    <GridChartsConfigurationPanelBodyRoot
+    <GridChartsDataPanelBodyRoot
       ownerState={rootProps}
       className={classes.root}
       data-dragging={drag.active}
       onDragLeave={handleDragLeave}
     >
-      <GridChartsConfigurationPanelAvailableFields
+      <GridChartsDataPanelAvailableFields
         ownerState={rootProps}
         className={classes.availableFields}
         onDrop={handleDrop}
@@ -255,20 +255,14 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
         data-drag-over={drag.active && drag.dropZone === null}
       >
         {availableFields.length === 0 && (
-          <GridChartsConfigurationPanelPlaceholder
-            ownerState={rootProps}
-            className={classes.placeholder}
-          >
+          <GridChartsDataPanelPlaceholder ownerState={rootProps} className={classes.placeholder}>
             {apiRef.current.getLocaleText('pivotNoFields')}
-          </GridChartsConfigurationPanelPlaceholder>
+          </GridChartsDataPanelPlaceholder>
         )}
         {availableFields.length > 0 && (
-          <GridChartsConfigurationPanelFieldList
-            ownerState={rootProps}
-            className={classes.fieldList}
-          >
+          <GridChartsDataPanelFieldList ownerState={rootProps} className={classes.fieldList}>
             {availableFields.map((field) => (
-              <GridChartsConfigurationPanelField
+              <GridChartsDataPanelField
                 key={field}
                 field={field}
                 zone={null}
@@ -276,22 +270,19 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
                 onDragEnd={handleDragEnd}
               >
                 {getColumnName(field)}
-              </GridChartsConfigurationPanelField>
+              </GridChartsDataPanelField>
             ))}
-          </GridChartsConfigurationPanelFieldList>
+          </GridChartsDataPanelFieldList>
         )}
-      </GridChartsConfigurationPanelAvailableFields>
-      <GridChartsConfigurationPanelSections
+      </GridChartsDataPanelAvailableFields>
+      <GridChartsDataPanelSections
         ownerState={rootProps}
         className={classes.sections}
         direction="vertical"
       >
         <ResizablePanelHandle />
-        <GridChartsConfigurationPanelScrollArea
-          ownerState={rootProps}
-          className={classes.scrollArea}
-        >
-          <GridChartsConfigurationPanelSection
+        <GridChartsDataPanelScrollArea ownerState={rootProps} className={classes.scrollArea}>
+          <GridChartsDataPanelSection
             ownerState={rootProps}
             className={classes.section}
             onDrop={handleDrop}
@@ -301,7 +292,7 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
             data-drag-over={drag.dropZone === 'categories'}
           >
             <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotRows')}>
-              <GridChartsConfigurationPanelSectionTitle
+              <GridChartsDataPanelSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
@@ -309,24 +300,21 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
                 {categories.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={categories.length} />
                 )}
-              </GridChartsConfigurationPanelSectionTitle>
+              </GridChartsDataPanelSectionTitle>
             </CollapsibleTrigger>
             <CollapsiblePanel>
               {categories.length === 0 && (
-                <GridChartsConfigurationPanelPlaceholder
+                <GridChartsDataPanelPlaceholder
                   ownerState={rootProps}
                   className={classes.placeholder}
                 >
                   Drag to use column as category
-                </GridChartsConfigurationPanelPlaceholder>
+                </GridChartsDataPanelPlaceholder>
               )}
               {categories.length > 0 && (
-                <GridChartsConfigurationPanelFieldList
-                  ownerState={rootProps}
-                  className={classes.fieldList}
-                >
+                <GridChartsDataPanelFieldList ownerState={rootProps} className={classes.fieldList}>
                   {categories.map((field) => (
-                    <GridChartsConfigurationPanelField
+                    <GridChartsDataPanelField
                       key={field}
                       field={field}
                       zone="categories"
@@ -334,14 +322,14 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
                       onDragEnd={handleDragEnd}
                     >
                       {getColumnName(field)}
-                    </GridChartsConfigurationPanelField>
+                    </GridChartsDataPanelField>
                   ))}
-                </GridChartsConfigurationPanelFieldList>
+                </GridChartsDataPanelFieldList>
               )}
             </CollapsiblePanel>
-          </GridChartsConfigurationPanelSection>
+          </GridChartsDataPanelSection>
 
-          <GridChartsConfigurationPanelSection
+          <GridChartsDataPanelSection
             ownerState={rootProps}
             className={classes.section}
             onDrop={handleDrop}
@@ -351,30 +339,27 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
             data-drag-over={drag.dropZone === 'series'}
           >
             <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotColumns')}>
-              <GridChartsConfigurationPanelSectionTitle
+              <GridChartsDataPanelSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
                 Series
                 {series.length > 0 && <rootProps.slots.baseBadge badgeContent={series.length} />}
-              </GridChartsConfigurationPanelSectionTitle>
+              </GridChartsDataPanelSectionTitle>
             </CollapsibleTrigger>
             <CollapsiblePanel>
               {series.length === 0 && (
-                <GridChartsConfigurationPanelPlaceholder
+                <GridChartsDataPanelPlaceholder
                   ownerState={rootProps}
                   className={classes.placeholder}
                 >
                   Drag to use column as series
-                </GridChartsConfigurationPanelPlaceholder>
+                </GridChartsDataPanelPlaceholder>
               )}
               {series.length > 0 && (
-                <GridChartsConfigurationPanelFieldList
-                  ownerState={rootProps}
-                  className={classes.fieldList}
-                >
+                <GridChartsDataPanelFieldList ownerState={rootProps} className={classes.fieldList}>
                   {series.map((field) => (
-                    <GridChartsConfigurationPanelField
+                    <GridChartsDataPanelField
                       key={field}
                       field={field}
                       zone="series"
@@ -382,16 +367,16 @@ function GridChartsConfigurationPanelBody({ searchValue }: { searchValue: string
                       onDragEnd={handleDragEnd}
                     >
                       {getColumnName(field)}
-                    </GridChartsConfigurationPanelField>
+                    </GridChartsDataPanelField>
                   ))}
-                </GridChartsConfigurationPanelFieldList>
+                </GridChartsDataPanelFieldList>
               )}
             </CollapsiblePanel>
-          </GridChartsConfigurationPanelSection>
-        </GridChartsConfigurationPanelScrollArea>
-      </GridChartsConfigurationPanelSections>
-    </GridChartsConfigurationPanelBodyRoot>
+          </GridChartsDataPanelSection>
+        </GridChartsDataPanelScrollArea>
+      </GridChartsDataPanelSections>
+    </GridChartsDataPanelBodyRoot>
   );
 }
 
-export { GridChartsConfigurationPanelBody };
+export { GridChartsDataPanelBody };

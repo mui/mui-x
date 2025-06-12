@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { SidebarHeader } from '../sidebar';
-import { GridChartsConfigurationPanelSearch } from './GridChartsConfigurationPanelSearch';
+import { GridChartsDataPanelSearch } from './GridChartsDataPanelSearch';
 
-export interface GridChartsConfigurationPanelHeaderProps {
+export interface GridChartsDataPanelHeaderProps {
   searchValue: string;
   onSearchValueChange: (value: string) => void;
 }
 
-function GridChartsConfigurationPanelHeader(props: GridChartsConfigurationPanelHeaderProps) {
+function GridChartsDataPanelHeader(props: GridChartsDataPanelHeaderProps) {
   const { searchValue, onSearchValueChange } = props;
 
   return (
     <SidebarHeader>
-      <GridChartsConfigurationPanelSearch
+      <GridChartsDataPanelSearch
         value={searchValue}
         onClear={() => onSearchValueChange('')}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -23,4 +23,4 @@ function GridChartsConfigurationPanelHeader(props: GridChartsConfigurationPanelH
   );
 }
 
-export { GridChartsConfigurationPanelHeader };
+export { GridChartsDataPanelHeader };

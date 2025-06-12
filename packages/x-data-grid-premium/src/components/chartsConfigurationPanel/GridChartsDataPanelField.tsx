@@ -7,12 +7,12 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import type { FieldTransferObject, DropPosition } from './GridChartsConfigurationPanelBody';
-import { GridChartsConfigurationPanelFieldMenu } from './GridChartsConfigurationPanelFieldMenu';
+import type { FieldTransferObject, DropPosition } from './GridChartsDataPanelBody';
+import { GridChartsDataPanelFieldMenu } from './GridChartsDataPanelFieldMenu';
 import { gridAggregationModelSelector } from '../../hooks/features/aggregation';
 import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
 
-type GridChartsConfigurationPanelFieldProps = {
+type GridChartsDataPanelFieldProps = {
   children: React.ReactNode;
   field: string;
   zone: 'categories' | 'series' | null;
@@ -20,7 +20,7 @@ type GridChartsConfigurationPanelFieldProps = {
   onDragEnd: () => void;
 };
 
-type OwnerState = GridChartsConfigurationPanelFieldProps &
+type OwnerState = GridChartsDataPanelFieldProps &
   Pick<DataGridPremiumProcessedProps, 'classes'> & {
     dropPosition: DropPosition;
     zone: 'categories' | 'series' | null;
@@ -29,19 +29,19 @@ type OwnerState = GridChartsConfigurationPanelFieldProps &
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
   const slots = {
-    root: ['chartsConfigurationPanelField'],
-    name: ['chartsConfigurationPanelFieldName'],
-    actionContainer: ['chartsConfigurationPanelFieldActionContainer'],
-    dragIcon: ['chartsConfigurationPanelFieldDragIcon'],
-    checkbox: ['chartsConfigurationPanelFieldCheckbox'],
+    root: ['chartsDataPanelField'],
+    name: ['chartsDataPanelFieldName'],
+    actionContainer: ['chartsDataPanelFieldActionContainer'],
+    dragIcon: ['chartsDataPanelFieldDragIcon'],
+    checkbox: ['chartsDataPanelFieldCheckbox'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridChartsConfigurationPanelFieldRoot = styled('div', {
+const GridChartsDataPanelFieldRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelField',
+  slot: 'ChartsDataPanelField',
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
   position: 'relative',
@@ -73,9 +73,9 @@ const GridChartsConfigurationPanelFieldRoot = styled('div', {
   },
 });
 
-const GridChartsConfigurationPanelFieldName = styled('span', {
+const GridChartsDataPanelFieldName = styled('span', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelFieldName',
+  slot: 'ChartsDataPanelFieldName',
 })<{ ownerState: OwnerState }>({
   flex: 1,
   overflow: 'hidden',
@@ -83,17 +83,17 @@ const GridChartsConfigurationPanelFieldName = styled('span', {
   whiteSpace: 'nowrap',
 });
 
-const GridChartsConfigurationPanelFieldActionContainer = styled('div', {
+const GridChartsDataPanelFieldActionContainer = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelFieldActionContainer',
+  slot: 'ChartsDataPanelFieldActionContainer',
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
 });
 
-const GridChartsConfigurationPanelFieldDragIcon = styled('div', {
+const GridChartsDataPanelFieldDragIcon = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelFieldDragIcon',
+  slot: 'ChartsDataPanelFieldDragIcon',
 })<{ ownerState: OwnerState }>({
   position: 'absolute',
   left: -1,
@@ -182,7 +182,7 @@ export function AggregationSelect({
   );
 }
 
-function GridChartsConfigurationPanelField(props: GridChartsConfigurationPanelFieldProps) {
+function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
   const { children, field, onDragStart, onDragEnd } = props;
   const rootProps = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
@@ -252,7 +252,7 @@ function GridChartsConfigurationPanelField(props: GridChartsConfigurationPanelFi
   );
 
   return (
-    <GridChartsConfigurationPanelFieldRoot
+    <GridChartsDataPanelFieldRoot
       ownerState={ownerState}
       className={classes.root}
       onDragOver={handleDragOver}
@@ -262,27 +262,24 @@ function GridChartsConfigurationPanelField(props: GridChartsConfigurationPanelFi
       onDragEnd={onDragEnd}
       draggable="true"
     >
-      <GridChartsConfigurationPanelFieldDragIcon
-        ownerState={ownerState}
-        className={classes.dragIcon}
-      >
+      <GridChartsDataPanelFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
         <rootProps.slots.columnReorderIcon fontSize="small" />
-      </GridChartsConfigurationPanelFieldDragIcon>
+      </GridChartsDataPanelFieldDragIcon>
 
-      <GridChartsConfigurationPanelFieldName ownerState={ownerState} className={classes.name}>
+      <GridChartsDataPanelFieldName ownerState={ownerState} className={classes.name}>
         {children}
-      </GridChartsConfigurationPanelFieldName>
+      </GridChartsDataPanelFieldName>
       {section === 'series' && (
         <AggregationSelect aggFunc={aggregationModel[field] ?? 'none'} field={field} />
       )}
-      <GridChartsConfigurationPanelFieldActionContainer
+      <GridChartsDataPanelFieldActionContainer
         ownerState={ownerState}
         className={classes.actionContainer}
       >
-        <GridChartsConfigurationPanelFieldMenu field={field} zone={section} />
-      </GridChartsConfigurationPanelFieldActionContainer>
-    </GridChartsConfigurationPanelFieldRoot>
+        <GridChartsDataPanelFieldMenu field={field} zone={section} />
+      </GridChartsDataPanelFieldActionContainer>
+    </GridChartsDataPanelFieldRoot>
   );
 }
 
-export { GridChartsConfigurationPanelField };
+export { GridChartsDataPanelField };
