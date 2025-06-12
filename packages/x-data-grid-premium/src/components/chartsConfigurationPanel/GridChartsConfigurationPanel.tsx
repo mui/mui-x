@@ -22,7 +22,7 @@ function GridChartsConfigurationPanel() {
     <Tabs initialTab="chartType">
       <TabList>
         <Tab value="chartType">Chart</Tab>
-        <Tab value="data">Data</Tab>
+        <Tab value="fields">Fields</Tab>
         <Tab value="configuration">Config</Tab>
         <rootProps.slots.baseIconButton
           onClick={() => {
@@ -37,7 +37,7 @@ function GridChartsConfigurationPanel() {
       <TabPanel value="chartType">
         <GridChartTypeSelector />
       </TabPanel>
-      <TabPanel value="data">
+      <TabPanel value="fields">
         <GridChartsDataPanelHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
         <GridChartsDataPanelBody searchValue={searchValue} />
       </TabPanel>
