@@ -13,44 +13,54 @@ import AreaChartConnectNulls from '../areas-demo/AreaChartConnectNulls';
 export const featuresSet = [
   {
     id: 1,
+    name: 'Simple Area Chart',
+    // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
+    // plan: 'Premium',
+    // detailPage: '/export/#excel-export',
+    demo: <SimpleAreaChart />,
+    linkToCode: '/areas-demo/#system-SimpleAreaChart.tsx',
+  },
+  {
+    id: 2,
     name: 'Stacked Area Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <StackedAreaChart />,
-    linkToCode: '/areas-demo/StackedAreaChart.tsx',
+    linkToCode: '/areas-demo/#system-StackedAreaChart.tsx',
   },
   {
-    id: 2,
+    id: 3,
     name: 'Tiny Area Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <TinyAreaChart />,
-    linkToCode: '/areas-demo/TinyAreaChart.tsx',
+    linkToCode: '/areas-demo/#system-TinyAreaChart.tsx',
   },
   {
-    id: 3,
+    id: 4,
     name: 'Percent Area Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <PercentAreaChart />,
-    linkToCode: '/areas-demo/PercentAreaChart.tsx',
+    linkToCode: '/areas-demo/#system-PercentAreaChart.tsx',
   },
   {
-    id: 4,
+    id: 5,
     name: 'Area Chart Connect Nulls',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <AreaChartConnectNulls />,
-    linkToCode: '/areas-demo/AreaChartConnectNulls.tsx',
+    linkToCode: '/areas-demo/#system-AreaChartConnectNulls.tsx',
   },
 ];
 
-const ChartBox = ({ title, children, linkToCode }) => (
-  <Box
+function ChartBox({ title, children, linkToCode }) {
+  return (
+    <Box
     sx={{
       p: 2,
       bgcolor: 'background.paper',
@@ -105,6 +115,7 @@ const ChartBox = ({ title, children, linkToCode }) => (
     ) : null}
   </Box>
 );
+}
 
 export default function AreaChartsOverviewDemo() {
   return (

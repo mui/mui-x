@@ -19,7 +19,7 @@ export const featuresSet = [
     // plan: 'Pro',
     // detailPage: '/master-detail/',
     demo: <SimpleBarChart />,
-    linkToCode: '/bar-demo/SimpleBarChart.tsx',
+    linkToCode: '/bar-demo/#system-SimpleBarChart.tsx',
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ export const featuresSet = [
     // plan: 'Community',
     // detailPage: '/editing/',
     demo: <StackedBarChart />,
-    linkToCode: '/bar-demo/StackedBarChart.tsx',
+    linkToCode: '/bar-demo/#system-StackedBarChart.tsx',
   },
   {
     id: 3,
@@ -37,7 +37,7 @@ export const featuresSet = [
     // plan: 'Community',
     // detailPage: '/column-groups/',
     demo: <MixedBarChart />,
-    linkToCode: '/bar-demo/MixedBarChart.tsx',
+    linkToCode: '/bar-demo/#system-MixedBarChart.tsx',
   },
   {
     id: 4,
@@ -46,7 +46,7 @@ export const featuresSet = [
     // plan: 'Pro',
     // detailPage: '/row-updates/#lazy-loading',
     demo: <PositiveAndNegativeBarChart />,
-    linkToCode: '/bar-demo/PositiveAndNegativeBarChart.tsx',
+    linkToCode: '/bar-demo/#system-PositiveAndNegativeBarChart.tsx',
   },
   {
     id: 5,
@@ -56,7 +56,7 @@ export const featuresSet = [
     // plan: 'Community',
     // detailPage: '/state/#save-and-restore-the-state',
     demo: <BarChartStackedBySign />,
-    linkToCode: '/bar-demo/BarChartStackedBySign.tsx',
+    linkToCode: '/bar-demo/#system-BarChartStackedBySign.tsx',
   },
   {
     id: 6,
@@ -65,7 +65,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/row-grouping/',
     demo: <BiaxialBarChart />,
-    linkToCode: '/bar-demo/BiaxialBarChart.tsx',
+    linkToCode: '/bar-demo/#system-BiaxialBarChart.tsx',
   },
   {
     id: 7,
@@ -74,12 +74,13 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <PopulationPyramidBarChart />,
-    linkToCode: '/bar-demo/PopulationPyramidBarChart.tsx',
+    linkToCode: '/bar-demo/#system-PopulationPyramidBarChart.tsx',
   },
 ];
 
-const ChartBox = ({ title, children, linkToCode }) => (
-  <Box
+function ChartBox({ title, children, linkToCode }) {
+  return (
+    <Box
     sx={{
       p: 2,
       bgcolor: 'background.paper',
@@ -134,6 +135,7 @@ const ChartBox = ({ title, children, linkToCode }) => (
     ) : null}
   </Box>
 );
+}
 
 export default function BarChartsOverviewDemo() {
   return (

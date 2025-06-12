@@ -22,7 +22,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <SimpleLineChart />,
-    linkToCode: '/line-demo/SimpleLineChart.tsx',
+    linkToCode: '/line-demo/#system-SimpleLineChart.tsx',
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <TinyLineChart />,
-    linkToCode: '/line-demo/TinyLineChart.tsx',
+    linkToCode: '/line-demo/#system-TinyLineChart.tsx',
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <DashedLineChart />,
-    linkToCode: '/line-demo/DashedLineChart.tsx',
+    linkToCode: '/line-demo/#system-DashedLineChart.tsx',
   },
   {
     id: 4,
@@ -49,7 +49,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <BiaxialLineChart />,
-    linkToCode: '/line-demo/BiaxialLineChart.tsx',
+    linkToCode: '/line-demo/#system-BiaxialLineChart.tsx',
   },
   {
     id: 5,
@@ -58,7 +58,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <LineChartWithReferenceLines />,
-    linkToCode: '/line-demo/LineChartWithReferenceLines.tsx',
+    linkToCode: '/line-demo/#system-LineChartWithReferenceLines.tsx',
   },
   {
     id: 6,
@@ -67,7 +67,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <LineChartConnectNulls />,
-    linkToCode: '/line-demo/LineChartConnectNulls.tsx',
+    linkToCode: '/line-demo/#system-LineChartConnectNulls.tsx',
   },
   {
     id: 7,
@@ -76,7 +76,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <LiveLineChartNoSnap />,
-    linkToCode: '/line-demo/LiveLineChartNoSnap.tsx',
+    linkToCode: '/line-demo/#system-LiveLineChartNoSnap.tsx',
   },
   {
     id: 8,
@@ -85,7 +85,7 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <LineWithUncertaintyArea />,
-    linkToCode: '/line-demo/LineWithUncertaintyArea.tsx',
+    linkToCode: '/line-demo/#system-LineWithUncertaintyArea.tsx',
   },
   {
     id: 9,
@@ -94,12 +94,13 @@ export const featuresSet = [
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
     demo: <CustomLineMarks />,
-    linkToCode: '/line-demo/CustomLineMarks.tsx',
+    linkToCode: '/line-demo/#system-CustomLineMarks.tsx',
   },
 ];
 
-const ChartBox = ({ title, children, linkToCode }) => (
-  <Box
+function ChartBox({ title, children, linkToCode }) {
+  return (
+    <Box
     sx={{
       p: 2,
       bgcolor: 'background.paper',
@@ -154,6 +155,7 @@ const ChartBox = ({ title, children, linkToCode }) => (
     ) : null}
   </Box>
 );
+}
 
 export default function LineChartsOverviewDemo() {
   return (
