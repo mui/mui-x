@@ -60,21 +60,21 @@ export function LinePreviewPlot({
 function useLinePreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  let xAxis = useSelector(store, selectorChartComputedXAxes, {
+  let xAxes = useSelector(store, selectorChartComputedXAxes, {
     drawingArea,
     zoomMap: undefined,
   }).axis;
-  let yAxis = useSelector(store, selectorChartComputedYAxes, {
+  let yAxes = useSelector(store, selectorChartComputedYAxes, {
     drawingArea,
     zoomMap: undefined,
   }).axis;
 
   /* We only want to show the data represented in this axis. */
-  if (axisId in xAxis) {
-    xAxis = { [axisId]: xAxis[axisId] };
-  } else if (axisId in yAxis) {
-    yAxis = { [axisId]: yAxis[axisId] };
+  if (axisId in xAxes) {
+    xAxes = { [axisId]: xAxes[axisId] };
+  } else if (axisId in yAxes) {
+    yAxes = { [axisId]: yAxes[axisId] };
   }
 
-  return useLinePlotData(xAxis, yAxis);
+  return useLinePlotData(xAxes, yAxes);
 }
