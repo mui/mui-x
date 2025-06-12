@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { LineChartPro, LineChartProProps } from '@mui/x-charts-pro/LineChartPro';
 import { XAxis } from '@mui/x-charts/models';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -53,7 +53,7 @@ const settings = {
     },
   ],
   height: 400,
-} as const;
+} satisfies Partial<LineChartProProps>;
 
 export default function ZoomSliderPreview() {
   return (
