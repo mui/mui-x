@@ -1,20 +1,11 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
-import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
-import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
-import { TimeGrid } from '../../primitives/time-grid';
-import { TimeGridEvent } from '../event/TimeGridEvent';
+import { useDayList } from '../../primitives/use-day-list/useDayList';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { WeekViewProps } from './WeekView.types';
-import { CalendarEvent } from '../models/events';
-import { isWeekend } from '../utils/date-utils';
-import { useTranslations } from '../utils/TranslationsContext';
-import './WeekView.css';
+import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
 
-function getCurrentWeekDays(today: SchedulerValidDate) {
-  const startOfWeek = today.startOf('week');
-  return Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
-}
+const adapter = getAdapter();
 
 export const WeekView = React.forwardRef(function WeekView(
   props: WeekViewProps,
@@ -22,117 +13,27 @@ export const WeekView = React.forwardRef(function WeekView(
 ) {
   const { events, className, ...other } = props;
 
-  const adapter = useAdapter();
-  const translations = useTranslations();
   const today = adapter.date('2025-05-26');
-  const currentWeekDays = getCurrentWeekDays(today);
-  const bodyRef = React.useRef<HTMLDivElement>(null);
-  const headerWrapperRef = React.useRef<HTMLDivElement>(null);
+  const getDayList = useDayList();
 
-  const eventsByDay = React.useMemo(() => {
-    const map = new Map();
-    for (const event of events) {
-      const dayKey = adapter.format(event.start, 'keyboardDate');
-      if (!map.has(dayKey)) {
-        map.set(dayKey, []);
-      }
-      map.get(dayKey).push(event);
-    }
-    return map;
-  }, [adapter, events]);
+  const currentWeekDays = React.useMemo(
+    () => getDayList({ date: today.startOf('week'), amount: 7 }),
+    [getDayList, today],
+  );
 
-  React.useLayoutEffect(() => {
-    const body = bodyRef.current;
-    const header = headerWrapperRef.current;
-    if (!body || !header) {
-      return;
-    }
-
-    const hasScroll = body.scrollHeight > body.clientHeight;
-    header.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
-  }, [events]);
+  const filteredEvents = React.useMemo(() => {
+    const weekStart = adapter.startOfDay(currentWeekDays[0]);
+    const weekEnd = adapter.endOfDay(currentWeekDays[6]);
+    return events.filter((event) => adapter.isWithinRange(event.start, [weekStart, weekEnd]));
+  }, [events, currentWeekDays]);
 
   return (
-    <div ref={forwardedRef} className={clsx('WeekViewContainer', 'joy', className)} {...other}>
-      <TimeGrid.Root className="WeekViewRoot">
-        <div ref={headerWrapperRef} className="WeekViewHeader">
-          <div className="WeekViewGridRow WeekViewHeaderRow" role="row">
-            <div className="WeekViewAllDayEventsCell" />
-            {currentWeekDays.map((day) => (
-              <div
-                key={day.day.toString()}
-                className="WeekViewHeaderCell"
-                id={`WeekViewHeaderCell-${day.day.toString()}`}
-                role="columnheader"
-                aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
-              >
-                {/* TODO: Add the 3 letter week day format to the adapter */}
-                <span className="WeekViewHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
-                <span className="WeekViewHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
-              </div>
-            ))}
-          </div>
-          <div className="WeekViewGridRow WeekViewAllDayEventsRow" role="row">
-            <div
-              className="WeekViewAllDayEventsCell WeekViewAllDayEventsHeaderCell"
-              role="columnheader"
-            >
-              {translations.allDay}
-            </div>
-            {currentWeekDays.map((day) => (
-              <div
-                key={day.day.toString()}
-                className="WeekViewAllDayEventsCell"
-                aria-labelledby={`WeekViewHeaderCell-${day.day.toString()}`}
-                role="gridcell"
-                data-weekend={isWeekend(adapter, day) ? '' : undefined}
-              />
-            ))}
-          </div>
-        </div>
-        <div ref={bodyRef} className="WeekViewBody">
-          <div className="WeekViewScrollableContent">
-            <div className="WeekViewTimeAxis" aria-hidden="true">
-              {Array.from({ length: 24 }, (_, hour) => (
-                <div
-                  key={hour}
-                  className="WeekViewTimeAxisCell"
-                  style={{ '--hour': hour } as React.CSSProperties}
-                >
-                  <time className="WeekViewTimeAxisText">
-                    {hour === 0
-                      ? null
-                      : adapter.formatByString(adapter.setHours(today, hour), 'h:mm a')}
-                  </time>
-                </div>
-              ))}
-            </div>
-            <div className="WeekViewGrid">
-              {currentWeekDays.map((day) => {
-                const dayKey = adapter.format(day, 'keyboardDate');
-                const dayEvents = eventsByDay.get(dayKey) || [];
-                return (
-                  <TimeGrid.Column
-                    key={day.day.toString()}
-                    value={day}
-                    className="WeekViewColumn"
-                    data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                  >
-                    {dayEvents.map((event: CalendarEvent) => (
-                      <TimeGridEvent
-                        key={event.id}
-                        event={event}
-                        variant="regular"
-                        ariaLabelledBy={`WeekViewHeaderCell-${day.day.toString()}`}
-                      />
-                    ))}
-                  </TimeGrid.Column>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </TimeGrid.Root>
-    </div>
+    <TimeGrid
+      ref={forwardedRef}
+      days={currentWeekDays}
+      events={filteredEvents}
+      className={className}
+      {...other}
+    />
   );
 });
