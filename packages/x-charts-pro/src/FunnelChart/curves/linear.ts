@@ -7,7 +7,7 @@ import { lerpX, lerpY } from './utils';
 /**
  * This is a custom "linear" curve generator.
  * It draws straight lines for the 4 provided points,
- * with the option to add a gap between sections while also properly handling the border radius.
+ * with the option to properly handling the border radius.
  *
  * The implementation is based on the d3-shape linear curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/linear.js
@@ -51,7 +51,7 @@ export class Linear implements CurveGenerator {
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
-    this.gap = (gap ?? 0) / 2;
+    this.gap = gap ?? 0;
     this.position = position ?? 0;
     this.sections = sections ?? 1;
     this.borderRadius = borderRadius ?? 0;
@@ -123,33 +123,23 @@ export class Linear implements CurveGenerator {
 
     // Add gaps where they are needed.
     this.points = this.points.map((point, index) => {
-      const slopeStart = this.points.at(index <= 1 ? 0 : 2)!;
-      const slopeEnd = this.points.at(index <= 1 ? 1 : 3)!;
+      const slopeStart = this.points.at(index <= 1 ? 0 : 3)!;
+      const slopeEnd = this.points.at(index <= 1 ? 1 : 2)!;
+
       if (this.isHorizontal) {
-        const yGetter = lerpY(
-          slopeStart.x - this.gap,
-          slopeStart.y,
-          slopeEnd.x - this.gap,
-          slopeEnd.y,
-        );
-        const xGap = point.x + (index === 0 || index === 3 ? this.gap : -this.gap);
+        const yGetter = lerpY(slopeStart.x - this.gap, slopeStart.y, slopeEnd.x, slopeEnd.y);
 
         return {
-          x: xGap,
-          y: yGetter(xGap),
+          x: point.x,
+          y: yGetter(point.x),
         };
       }
 
-      const xGetter = lerpX(
-        slopeStart.x,
-        slopeStart.y - this.gap,
-        slopeEnd.x,
-        slopeEnd.y - this.gap,
-      );
-      const yGap = point.y + (index === 0 || index === 3 ? this.gap : -this.gap);
+      const xGetter = lerpX(slopeStart.x, slopeStart.y - this.gap, slopeEnd.x, slopeEnd.y);
+
       return {
-        x: xGetter(yGap),
-        y: yGap,
+        x: xGetter(point.y),
+        y: point.y,
       };
     });
 
@@ -159,23 +149,28 @@ export class Linear implements CurveGenerator {
       const isLastSection = this.position === this.sections - 1;
       const isFirstSection = this.position === 0;
 
+      let firstPoint: Point | null = null;
+      let secondPoint: Point | null = null;
+
       if (isFirstSection && this.isIncreasing) {
-        this.points = [
-          this.isHorizontal
-            ? { x: this.max.x + this.gap, y: (this.max.y + this.min.y) / 2 }
-            : { x: (this.max.x + this.min.x) / 2, y: this.max.y + this.gap },
-          this.points[1],
-          this.points[2],
-        ];
+        firstPoint = this.points[1];
+        secondPoint = this.points[2];
       }
 
       if (isLastSection && !this.isIncreasing) {
+        firstPoint = this.points[3];
+        secondPoint = this.points[0];
+      }
+
+      if (firstPoint && secondPoint) {
         this.points = [
-          this.points[0],
+          // Sharp point at the start
           this.isHorizontal
-            ? { x: this.max.x - this.gap, y: (this.max.y + this.min.y) / 2 }
-            : { x: (this.max.x + this.min.x) / 2, y: this.max.y - this.gap },
-          this.points[3],
+            ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+          // Then other points
+          firstPoint,
+          secondPoint,
         ];
       }
     }
