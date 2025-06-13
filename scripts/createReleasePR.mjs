@@ -1,0 +1,849 @@
+#!/usr/bin/env node
+/* eslint-disable no-console,consistent-return */
+/**
+ * MUI-X Release Preparation Script
+ *
+ * This script automates the release preparation process for MUI-X:
+ * 1. Asking for the major version to update (v7.x, v6.x, etc.)
+ * 2. Updating the git upstream branch
+ * 3. Determining the new version (patch/minor/major or custom)
+ * 4. Creating a new branch from upstream/vX.x and setting up tracking with origin/release/vX
+ * 5. Updating the root package.json with the new version
+ * 6. Running the lerna version script to update all package versions
+ * 7. Generating the changelog with actual package versions
+ * 8. Adding the new changelog entry to the CHANGELOG.md file
+ * 9. Waiting for user confirmation to review changes
+ * 10. Committing the changes to the branch
+ * 11. Opening a PR with a title "[release] v<NEW_VERSION>" and label "release"
+ *     with a checklist of all release steps
+ *
+ * Usage:
+ *   node createReleasePR.mjs --patch
+ *   node createReleasePR.mjs --minor
+ *   node createReleasePR.mjs --major
+ *   node createReleasePR.mjs --custom 8.5.2
+ *   node createReleasePR.mjs (interactive mode with selection menu)
+ *
+ * Requirements:
+ *   - Must be run from the repository root
+ *   - Node.js installed
+ *   - Lerna installed
+ */
+
+import { execa } from 'execa';
+import { Octokit } from '@octokit/rest';
+import { retry } from '@octokit/plugin-retry';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+import fs from 'fs/promises';
+import path from 'path';
+import inquirer from 'inquirer';
+
+// Create a custom Octokit class with retry functionality
+const MyOctokit = Octokit.plugin(retry);
+
+// Parse command line arguments
+const argv = yargs(hideBin(process.argv))
+  .option('patch', {
+    type: 'boolean',
+    description: 'Create a patch release',
+  })
+  .option('minor', {
+    type: 'boolean',
+    description: 'Create a minor release',
+  })
+  .option('major', {
+    type: 'boolean',
+    description: 'Create a major release',
+  })
+  .option('custom', {
+    type: 'string',
+    description: 'Create a release with a custom version number',
+  })
+  .help()
+  .alias('help', 'h')
+  .parseSync();
+
+/**
+ * Find the remote pointing to mui/mui-x
+ * @returns {Promise<string>} The name of the remote
+ */
+async function findMuiXRemote() {
+  try {
+    const { stdout } = await execa('git', ['remote', '-v']);
+    const remotes = stdout.split('\n');
+
+    let upstreamRemote = '';
+    for (const line of remotes) {
+      if (line.match(/:mui\/mui-x(\.git)?[[:space:]]+\(push\)/)) {
+        upstreamRemote = line.split(/\s+/)[0];
+        break;
+      }
+    }
+
+    if (!upstreamRemote) {
+      console.error(
+        "Error: Unable to find the upstream remote. It should be a remote pointing to 'mui/mui-x'.",
+      );
+      console.error(
+        "Did you forget to add it via 'git remote add upstream git@github.com:mui/mui-x.git'?",
+      );
+      process.exit(1);
+      return '';
+    }
+
+    return upstreamRemote;
+  } catch (error) {
+    console.error('Error finding MUI-X remote:', error);
+    process.exit(1);
+    return '';
+  }
+}
+
+/**
+ * Get the current version from package.json
+ * @returns {Promise<string>} The current version
+ */
+async function getCurrentVersion() {
+  try {
+    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    const packageJsonContent = await fs.readFile(packageJsonPath, 'utf8');
+    const packageJson = JSON.parse(packageJsonContent);
+    return packageJson.version;
+  } catch (error) {
+    console.error('Error reading package.json:', error);
+    process.exit(1);
+  }
+}
+
+/**
+ * Select the major version to update
+ * @param {string} currentVersion - The current version from package.json
+ * @returns {Promise<string>} The selected major version
+ */
+async function selectMajorVersion(currentVersion) {
+  const currentMajorVersion = currentVersion.split('.')[0];
+  console.log(`Current major version: ${currentVersion}`);
+
+  const selection = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'majorVersion',
+      message: 'Please select the major version you are trying to update:',
+      default: currentMajorVersion,
+      validate: (input) => {
+        if (!/^\d+$/.test(input)) {
+          return 'Major version must be a number';
+        }
+
+        if (parseInt(input, 10) > parseInt(currentMajorVersion, 10)) {
+          return `Cannot select a major version (${input}) higher than the current major version (${currentMajorVersion})`;
+        }
+
+        return true;
+      },
+    },
+  ]);
+
+  console.log(`Selected major version: ${selection.majorVersion}`);
+  return selection.majorVersion;
+}
+
+/**
+ * Calculate versions from git tags
+ * @param {string} majorVersion - The selected major version
+ * @returns {Promise<{success: boolean, nextPatch?: string, nextMinor?: string, nextMajor?: string}>}
+ */
+async function calculateVersionsFromTags(majorVersion) {
+  try {
+    // Get all tags matching the selected major version
+    const { stdout: tagsOutput } = await execa('git', ['tag', '-l', `v${majorVersion}.*`]);
+    const tags = tagsOutput
+      .split('\n')
+      .filter(Boolean)
+      .sort((a, b) => {
+        // Sort versions using semver logic
+        const aParts = a.substring(1).split('.').map(Number);
+        const bParts = b.substring(1).split('.').map(Number);
+
+        for (let i = 0; i < 3; i += 1) {
+          if (aParts[i] !== bParts[i]) {
+            return aParts[i] - bParts[i];
+          }
+        }
+
+        return 0;
+      });
+
+    const latestTag = tags[tags.length - 1];
+
+    if (!latestTag) {
+      console.warn(`Warning: No tags found for major version ${majorVersion}`);
+      console.warn('Will calculate versions from package.json instead');
+      return { success: false };
+    }
+
+    console.log(`Latest tag: ${latestTag}`);
+
+    // Remove the 'v' prefix
+    const versionWithoutV = latestTag.substring(1);
+
+    // Split the version into components
+    const [tagMajor, tagMinor, tagPatch] = versionWithoutV.split('.').map(Number);
+
+    // Calculate next versions
+    const nextPatchVersion = `${tagMajor}.${tagMinor}.${tagPatch + 1}`;
+    const nextMinorVersion = `${tagMajor}.${tagMinor + 1}.0`;
+    const nextMajorVersion = `${tagMajor + 1}.0.0`;
+
+    return {
+      success: true,
+      nextPatch: nextPatchVersion,
+      nextMinor: nextMinorVersion,
+      nextMajor: nextMajorVersion,
+    };
+  } catch (error) {
+    console.error('Error calculating versions from tags:', error);
+    return { success: false };
+  }
+}
+
+/**
+ * Select the version type (patch, minor, major, or custom)
+ * @param {string} majorVersion - The selected major version
+ * @param {string} currentVersion - The current version from package.json
+ * @returns {Promise<{versionType: string, calculatedVersion?: string, customVersion?: string}>}
+ */
+async function selectVersionType(majorVersion, currentVersion) {
+  console.log(`Fetching latest tag for major version ${majorVersion}...`);
+
+  const { success, nextPatch, nextMinor, nextMajor } =
+    await calculateVersionsFromTags(majorVersion);
+
+  let nextPatchDisplay = nextPatch;
+  let nextMinorDisplay = nextMinor;
+  let nextMajorDisplay = nextMajor;
+
+  if (!success) {
+    // Use generic placeholders if no tags found
+    nextPatchDisplay = 'x.x.X';
+    nextMinorDisplay = 'x.X.0';
+    nextMajorDisplay = 'X.0.0';
+  }
+
+  // First prompt for version type
+  const { versionChoice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'versionChoice',
+      message: 'Please select the version type:',
+      default: 'patch',
+      choices: [
+        { name: `Patch (${nextPatchDisplay})`, value: 'patch' },
+        { name: `Minor (${nextMinorDisplay})`, value: 'minor' },
+        { name: `Major (${nextMajorDisplay})`, value: 'major' },
+        { name: 'Custom version', value: 'custom' },
+      ],
+    },
+  ]);
+
+  // Handle the selected version type
+  switch (versionChoice) {
+    case 'patch': {
+      console.log(`Selected: Patch (${nextPatchDisplay})`);
+      return {
+        versionType: 'patch',
+        calculatedVersion: nextPatch,
+      };
+    }
+    case 'minor': {
+      console.log(`Selected: Minor (${nextMinorDisplay})`);
+      return {
+        versionType: 'minor',
+        calculatedVersion: nextMinor,
+      };
+    }
+    case 'major': {
+      console.log(`Selected: Major (${nextMajorDisplay})`);
+      return {
+        versionType: 'major',
+        calculatedVersion: nextMajor,
+      };
+    }
+    case 'custom': {
+      let defaultCustomVersion;
+
+      if (success && nextPatch) {
+        // Use the calculated next patch version from tags
+        defaultCustomVersion = nextPatch;
+      } else {
+        // If no tags were found, fall back to calculating from package.json
+        const [defaultMajor, defaultMinor, defaultPatch] = currentVersion.split('.').map(Number);
+        defaultCustomVersion = `${defaultMajor}.${defaultMinor}.${defaultPatch + 1}`;
+      }
+
+      const { customVersion } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'customVersion',
+          message: 'Enter custom version:',
+          default: defaultCustomVersion,
+          validate: (input) => {
+            if (!/^\d+\.\d+\.\d+$/.test(input)) {
+              return 'Please enter a valid version number (e.g., 8.5.2)';
+            }
+            return true;
+          },
+        },
+      ]);
+
+      console.log(`Selected: Custom version ${customVersion}`);
+      return {
+        versionType: 'custom',
+        customVersion,
+      };
+    }
+    default:
+      // This shouldn't happen with inquirer's list type
+      throw new Error(`Unexpected version choice: ${versionChoice}`);
+  }
+}
+
+/**
+ * Calculate the new version based on the selected version type
+ * @param {string} versionType - The selected version type (patch, minor, major, or custom)
+ * @param {string} currentVersion - The current version from package.json
+ * @param {string} calculatedVersion - The calculated version from git tags
+ * @param {string} customVersion - The custom version entered by the user
+ * @returns {string} The new version
+ */
+function calculateNewVersion(versionType, currentVersion, calculatedVersion, customVersion) {
+  if (customVersion) {
+    return customVersion;
+  }
+
+  if (calculatedVersion) {
+    return calculatedVersion;
+  }
+
+  // Fall back to calculating from package.json if no calculated version is available
+  const [major, minor, patch] = currentVersion.split('.').map(Number);
+
+  if (versionType === 'patch') {
+    return `${major}.${minor}.${patch + 1}`;
+  }
+
+  if (versionType === 'minor') {
+    return `${major}.${minor + 1}.0`;
+  }
+
+  if (versionType === 'major') {
+    return `${major + 1}.0.0`;
+  }
+
+  return currentVersion;
+}
+
+/**
+ * Check for uncommitted changes
+ * @returns {Promise<void>}
+ */
+async function checkUncommittedChanges() {
+  try {
+    await execa('git', ['status', '--porcelain']);
+
+    console.warn('Warning: You have uncommitted changes.');
+    console.warn('Please commit or stash your changes before continuing.');
+    console.warn('You can run:');
+    console.warn('  git add . && git commit -m "Your commit message"');
+    console.warn('  or');
+    console.warn('  git stash');
+    console.warn('in another terminal window.');
+
+    await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'continue',
+        message: 'Press Enter to check again, or Ctrl+C to abort...',
+        default: true,
+      },
+    ]);
+
+    await execa('git', ['status', '--porcelain']);
+  } catch (error) {
+    console.error('Error checking for uncommitted changes:', error);
+    process.exit(1);
+  }
+}
+
+/**
+ * Update the root package.json with the new version
+ * @param {string} newVersion - The new version
+ * @returns {Promise<void>}
+ */
+async function updatePackageJson(newVersion) {
+  try {
+    console.log('Updating root package.json...');
+
+    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    const packageJsonContent = await fs.readFile(packageJsonPath, 'utf8');
+    const packageJson = JSON.parse(packageJsonContent);
+
+    packageJson.version = newVersion;
+
+    await fs.writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
+
+    console.log(`Updated package.json version to ${newVersion}`);
+  } catch (error) {
+    console.error('Error updating package.json:', error);
+    process.exit(1);
+  }
+}
+
+/**
+ * Generate the changelog
+ * @param {string} newVersion - The new version
+ * @returns {Promise<string>} The changelog content
+ */
+async function generateChangelog(newVersion) {
+  try {
+    console.log('Generating changelog...');
+
+    const { stdout } = await execa('node', [
+      'scripts/releaseChangelog.mjs',
+      `--githubToken=${process.env.GITHUB_TOKEN}`,
+      `--nextVersion=${newVersion}`,
+      '--returnEntry',
+    ]);
+
+    return stdout;
+  } catch (error) {
+    console.error('Error generating changelog:', error);
+    process.exit(1);
+    return '';
+  }
+}
+
+/**
+ * Add the new changelog entry to the CHANGELOG.md file
+ * @param {string} changelogContent - The changelog content
+ * @returns {Promise<void>}
+ */
+async function updateChangelog(changelogContent) {
+  try {
+    console.log('Adding changelog entry to CHANGELOG.md...');
+
+    const changelogPath = path.join(process.cwd(), 'CHANGELOG.md');
+    const changelogContent2 = await fs.readFile(changelogPath, 'utf8');
+
+    // Find the position of the first version entry (currently ## 8.5.1)
+    const lines = changelogContent2.split('\n');
+    const firstVersionLineIndex = lines.findIndex((line) => /^## [0-9]/.test(line));
+
+    if (firstVersionLineIndex === -1) {
+      throw new Error('Could not find the first version entry in CHANGELOG.md');
+    }
+
+    // Create a new changelog with the new content
+    const newChangelog = [
+      ...lines.slice(0, firstVersionLineIndex),
+      changelogContent,
+      ...lines.slice(firstVersionLineIndex),
+    ].join('\n');
+
+    await fs.writeFile(changelogPath, newChangelog);
+
+    console.log('Changelog updated. Please review the changes.');
+  } catch (error) {
+    console.error('Error updating changelog:', error);
+    process.exit(1);
+  }
+}
+
+/**
+ * Create the PR body with checklist
+ * @param {string} newVersion - The new version
+ * @returns {string} The PR body
+ */
+function createPrBody(newVersion) {
+  return `Release version ${newVersion}
+
+### Prepare the release of the packages
+
+- [x] Compare the last tag with the branch upon which you want to release
+- [x] Clean the generated changelog
+- [x] Update the root package.json's version
+- [x] Update the versions of the other package.json files
+- [x] Open PR with changes and wait for review and green CI
+- [ ] Once CI is green and you have enough approvals, send a message on the team-x slack channel announcing a merge freeze
+- [ ] Merge PR
+
+### Release the packages
+
+- [ ] Checkout the last version of the working branch
+- [ ] Run \`pnpm i && pnpm release:build\`
+- [ ] Run \`pnpm release:publish\`
+- [ ] Run \`pnpm release:tag\`
+
+### Publish the documentation
+
+- [ ] Run \`pnpm docs:deploy\`
+
+### Publish GitHub release
+
+- [ ] Create a new release on GitHub releases page
+
+### Announce
+
+- [ ] Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447ebdbf86b13164272d
+`;
+}
+
+/**
+ * Get all members of the mui/x team from GitHub
+ * @returns {Promise<string[]>} Array of GitHub usernames
+ */
+async function getTeamMembers() {
+  try {
+    console.log('Fetching members of the mui/x team...');
+
+    // Initialize Octokit with authentication
+    const octokit = new MyOctokit({
+      auth: process.env.GITHUB_TOKEN,
+    });
+
+    if (!process.env.GITHUB_TOKEN) {
+      console.warn('Warning: GITHUB_TOKEN environment variable is not set.');
+      console.warn('You may encounter rate limiting issues or be unable to fetch team members.');
+    }
+
+    // Get team members
+    const { data: teams } = await octokit.rest.teams.list({
+      org: 'mui',
+    });
+
+    // Find the x team
+    const xTeam = teams.find((team) => team.name.toLowerCase() === 'x');
+
+    if (!xTeam) {
+      console.warn('Warning: Could not find the mui/x team.');
+      return [];
+    }
+
+    // Get team members
+    const { data: members } = await octokit.rest.teams.listMembersInOrg({
+      org: 'mui',
+      team_slug: xTeam.slug,
+    });
+
+    const usernames = members.map((member) => member.login);
+    console.log(`Found ${usernames.length} members in the mui/x team.`);
+
+    return usernames;
+  } catch (error) {
+    console.error('Error fetching team members:', error.message);
+    if (error.response) {
+      console.error(`Status: ${error.response.status}`);
+      console.error('Response data:', error.response.data);
+    }
+    return [];
+  }
+}
+
+/**
+ * Assign reviewers to a pull request
+ * @param {number} prNumber - The PR number
+ * @param {string[]} reviewers - Array of GitHub usernames to assign as reviewers
+ * @returns {Promise<boolean>} Whether the operation was successful
+ */
+async function assignReviewers(prNumber, reviewers) {
+  try {
+    console.log(`Assigning ${reviewers.length} reviewers to PR #${prNumber}...`);
+
+    // Initialize Octokit with authentication
+    const octokit = new MyOctokit({
+      auth: process.env.GITHUB_TOKEN,
+    });
+
+    // Assign reviewers
+    await octokit.rest.pulls.requestReviewers({
+      owner: 'mui',
+      repo: 'mui-x',
+      pull_number: prNumber,
+      reviewers,
+    });
+
+    console.log('Reviewers assigned successfully.');
+    return true;
+  } catch (error) {
+    console.error('Error assigning reviewers:', error.message);
+    if (error.response) {
+      console.error(`Status: ${error.response.status}`);
+      console.error('Response data:', error.response.data);
+    }
+    return false;
+  }
+}
+
+/**
+ * Create a pull request using Octokit
+ * @param {string} title - The PR title
+ * @param {string} body - The PR body
+ * @param {string} head - The branch name
+ * @param {string} base - The base branch
+ * @param {string[]} labels - The labels to apply to the PR
+ * @returns {Promise<{url: string, number: number}>} The URL and number of the created PR
+ */
+async function createPullRequest(title, body, head, base, labels) {
+  try {
+    console.log('Creating PR using Octokit...');
+
+    // Initialize Octokit with authentication
+    const octokit = new MyOctokit({
+      auth: process.env.GITHUB_TOKEN,
+    });
+
+    if (!process.env.GITHUB_TOKEN) {
+      console.warn('Warning: GITHUB_TOKEN environment variable is not set.');
+      console.warn('You may encounter rate limiting issues or be unable to create the PR.');
+    }
+
+    // Create the PR
+    const { data } = await octokit.rest.pulls.create({
+      owner: 'mui',
+      repo: 'mui-x',
+      title,
+      body,
+      head,
+      base,
+      labels,
+    });
+
+    console.log(`PR created successfully: ${data.html_url}`);
+    return { url: data.html_url, number: data.number };
+  } catch (error) {
+    console.error('Error creating PR with Octokit:', error.message);
+    if (error.response) {
+      console.error(`Status: ${error.response.status}`);
+      console.error('Response data:', error.response.data);
+    }
+    throw error;
+  }
+}
+
+/**
+ * Main function
+ */
+async function main() {
+  try {
+    // Check if we're in the repository root
+    try {
+      await Promise.all([
+        fs.access(path.join(process.cwd(), 'package.json')),
+        fs.access(path.join(process.cwd(), 'CHANGELOG.md')),
+      ]);
+    } catch (error) {
+      console.error('Error: Please run this script from the repository root.');
+      process.exit(1);
+    }
+
+    // Initialize variables
+    let versionType = '';
+    let customVersion = '';
+    let calculatedVersion = '';
+
+    // Parse command line arguments
+    if (argv.patch) {
+      versionType = 'patch';
+    } else if (argv.minor) {
+      versionType = 'minor';
+    } else if (argv.major) {
+      versionType = 'major';
+    } else if (argv.custom) {
+      customVersion = argv.custom;
+    }
+
+    // Get current version from package.json
+    const currentVersion = await getCurrentVersion();
+    console.log(`Current version: ${currentVersion}`);
+
+    // Always prompt for major version first
+    const majorVersion = await selectMajorVersion(currentVersion);
+
+    // If no arguments provided, use interactive menu
+    if (!versionType && !customVersion) {
+      const result = await selectVersionType(majorVersion, currentVersion);
+      versionType = result.versionType;
+      calculatedVersion = result.calculatedVersion;
+      customVersion = result.customVersion;
+    } else {
+      // Command-line arguments provided, calculate versions from tags
+      const { success, nextPatch, nextMinor, nextMajor } =
+        await calculateVersionsFromTags(majorVersion);
+
+      // If a version type was specified, set the calculated version
+      if (versionType && success) {
+        if (versionType === 'patch' && nextPatch) {
+          calculatedVersion = nextPatch;
+          console.log(`Using calculated patch version: ${calculatedVersion}`);
+        } else if (versionType === 'minor' && nextMinor) {
+          calculatedVersion = nextMinor;
+          console.log(`Using calculated minor version: ${calculatedVersion}`);
+        } else if (versionType === 'major' && nextMajor) {
+          calculatedVersion = nextMajor;
+          console.log(`Using calculated major version: ${calculatedVersion}`);
+        }
+      }
+    }
+
+    // Calculate new version
+    const newVersion = calculateNewVersion(
+      versionType,
+      currentVersion,
+      calculatedVersion,
+      customVersion,
+    );
+    console.log(`New version: ${newVersion}`);
+
+    // Find the upstream remote
+    const upstreamRemote = await findMuiXRemote();
+    console.log(`Found upstream remote: ${upstreamRemote}`);
+
+    // Determine which branch to update based on the selected major version
+    const currentMajorVersion = currentVersion.split('.')[0];
+    if (majorVersion === currentMajorVersion) {
+      console.log('Updating the upstream master branch for current major version...');
+      await execa('git', ['fetch', upstreamRemote, 'master']);
+    } else {
+      console.log(`Updating the upstream v${majorVersion}.x branch...`);
+      await execa('git', ['fetch', upstreamRemote, `v${majorVersion}.x`]);
+    }
+
+    // Check for uncommitted changes
+    await checkUncommittedChanges();
+
+    // Create a new branch with the new version
+    const branchName = `release/v${newVersion}-${new Date().toISOString().replace(/[:.]/g, '').replace('T', '')}`;
+    console.log(`Creating new branch: ${branchName}`);
+
+    // Determine the source branch based on the selected major version
+    let branchSource;
+    if (majorVersion === currentMajorVersion) {
+      branchSource = `${upstreamRemote}/master`;
+      console.log(`Creating branch from master for current major version: ${branchSource}`);
+    } else {
+      branchSource = `${upstreamRemote}/v${majorVersion}.x`;
+      console.log(`Creating branch from version branch: ${branchSource}`);
+    }
+
+    await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
+
+    // Push to origin and set up tracking
+    console.log('Pushing branch to origin and setting up tracking...');
+    await execa('git', ['push', '-u', 'origin', branchName]);
+
+    // Update package.json
+    await updatePackageJson(newVersion);
+
+    // Run lerna version script
+    console.log('Running lerna version script...');
+    await execa('npx', [
+      'lerna',
+      'version',
+      '--exact',
+      '--no-changelog',
+      '--no-push',
+      '--no-git-tag-version',
+      '--no-private',
+    ]);
+
+    console.log('Version update completed successfully!');
+    console.log(`New version: ${newVersion}`);
+
+    // Generate the changelog
+    const changelogContent = await generateChangelog(newVersion);
+
+    // Add the new changelog entry to the CHANGELOG.md file
+    await updateChangelog(changelogContent);
+
+    // Wait for user confirmation
+    await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'continue',
+        message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
+        default: true,
+      },
+    ]);
+
+    // Commit the changes
+    console.log('Committing changes...');
+    await execa('git', ['add', 'package.json', 'CHANGELOG.md', 'packages/*/package.json']);
+    await execa('git', ['commit', '-m', `[release] v${newVersion}`]);
+
+    console.log(`Changes committed to branch ${branchName}`);
+
+    // Create PR body with checklist
+    const prBody = createPrBody(newVersion);
+
+    // Open a PR
+    console.log('Opening a PR...');
+    try {
+      // Determine the base branch based on the selected major version
+      const baseBranch = majorVersion === currentMajorVersion ? 'master' : `v${majorVersion}.x`;
+
+      // Create the PR using Octokit
+      const { url: prUrl, number: prNumber } = await createPullRequest(
+        `[release] v${newVersion}`,
+        prBody,
+        branchName,
+        baseBranch,
+        ['release'],
+      );
+
+      console.log(`PR created successfully: ${prUrl}`);
+
+      // Step 1: Apply the 'release' label to the PR
+      // Note: This is already done in the createPullRequest function by passing ['release'] as the labels parameter
+
+      // Step 2: Get all members of the 'mui/x' team from GitHub
+      const teamMembers = await getTeamMembers();
+
+      if (teamMembers.length > 0) {
+        // Randomly select up to 15 team members as reviewers
+        const shuffledMembers = [...teamMembers].sort(() => 0.5 - Math.random());
+        const selectedReviewers = shuffledMembers.slice(0, Math.min(15, shuffledMembers.length));
+
+        console.log(`Randomly selected ${selectedReviewers.length} team members as reviewers.`);
+
+        // Assign the selected reviewers to the PR
+        await assignReviewers(prNumber, selectedReviewers);
+      } else {
+        console.warn('No team members found. Skipping reviewer assignment.');
+      }
+    } catch (error) {
+      console.error('Failed to create PR with Octokit or assign reviewers.');
+      console.error(
+        `You can manually create a PR with title: [release] v${newVersion} and label: release`,
+      );
+      console.error(`Branch: ${branchName}`);
+      console.error('Use the following checklist in the PR body:');
+      console.error(prBody);
+    }
+
+    console.log('Release preparation completed!');
+  } catch (error) {
+    console.error('Error:', error);
+    process.exit(1);
+  }
+}
+
+// Run the main function
+main()
+  .then(() => {
+    console.log('Script completed successfully.');
+  })
+  .catch((err) => {
+    console.error('Script failed:', err);
+    process.exit(1);
+  });

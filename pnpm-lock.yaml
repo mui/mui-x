@@ -485,6 +485,9 @@ importers:
       eslint-plugin-testing-library:
         specifier: ^7.4.0
         version: 7.4.0(eslint@9.28.0)(typescript@5.8.3)
+      execa:
+        specifier: ^8.0.1
+        version: 8.0.1
       fast-glob:
         specifier: 'catalog:'
         version: 3.3.3
@@ -503,6 +506,9 @@ importers:
       html-webpack-plugin:
         specifier: ^5.6.3
         version: 5.6.3(webpack@5.99.9)
+      inquirer:
+        specifier: ^9.2.15
+        version: 9.3.7
       jsdom:
         specifier: 26.1.0
         version: 26.1.0
@@ -8454,6 +8460,10 @@ packages:
     resolution: {integrity: sha512-M1WuAmb7pn9zdFRtQYk26ZBoY043Sse0wVDdk4Bppr+JOXyQYybdtvK+l9wUibhtjdjvtoiNy8tk+EgsYIUqKg==}
     engines: {node: '>=12.0.0'}
 
+  inquirer@9.3.7:
+    resolution: {integrity: sha512-LJKFHCSeIRq9hanN14IlOtPSTe3lNES7TYDTE2xxdAy1LS5rYphajK1qtwvj3YmQXvvk0U2Vbmcni8P9EIQW9w==}
+    engines: {node: '>=18'}
+
   internal-slot@1.1.0:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
@@ -10905,6 +10915,10 @@ packages:
 
   run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
+    engines: {node: '>=0.12.0'}
+
+  run-async@3.0.0:
+    resolution: {integrity: sha512-540WwVDOMxA6dN6We19EcT9sc3hkXPw5mzRNGM3FkdN/vtE9NFvj5lFAPNwUDmJjXidm3v7TC1cTE7t17Ulm1Q==}
     engines: {node: '>=0.12.0'}
 
   run-parallel@1.2.0:
@@ -14473,8 +14487,7 @@ snapshots:
       '@types/node': 22.15.30
     optional: true
 
-  '@inquirer/figures@1.0.12':
-    optional: true
+  '@inquirer/figures@1.0.12': {}
 
   '@inquirer/type@3.0.7(@types/node@22.15.30)':
     optionalDependencies:
@@ -17748,8 +17761,7 @@ snapshots:
 
   cli-width@3.0.0: {}
 
-  cli-width@4.1.0:
-    optional: true
+  cli-width@4.1.0: {}
 
   client-only@0.0.1: {}
 
@@ -20003,6 +20015,21 @@ snapshots:
       strip-ansi: 6.0.1
       through: 2.3.8
       wrap-ansi: 6.2.0
+
+  inquirer@9.3.7:
+    dependencies:
+      '@inquirer/figures': 1.0.12
+      ansi-escapes: 4.3.2
+      cli-width: 4.1.0
+      external-editor: 3.1.0
+      mute-stream: 1.0.0
+      ora: 5.4.1
+      run-async: 3.0.0
+      rxjs: 7.8.2
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wrap-ansi: 6.2.0
+      yoctocolors-cjs: 2.1.2
 
   internal-slot@1.1.0:
     dependencies:
@@ -22852,6 +22879,8 @@ snapshots:
 
   run-async@2.4.1: {}
 
+  run-async@3.0.0: {}
+
   run-parallel@1.2.0:
     dependencies:
       queue-microtask: 1.2.3
@@ -24394,8 +24423,7 @@ snapshots:
 
   yocto-queue@1.2.0: {}
 
-  yoctocolors-cjs@2.1.2:
-    optional: true
+  yoctocolors-cjs@2.1.2: {}
 
   yoctocolors@2.1.1: {}
 
