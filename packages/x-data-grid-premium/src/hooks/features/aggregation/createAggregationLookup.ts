@@ -13,13 +13,10 @@ import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPr
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   GridAggregationFunction,
-  GridAggregationFunctionDataSource,
   GridAggregationLookup,
   GridAggregationPosition,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
-import { getAggregationRules } from './gridAggregationUtils';
-import { gridAggregationModelSelector } from './gridAggregationSelectors';
 
 type AggregatedValues = { aggregatedField: string; values: any[] }[];
 
@@ -151,27 +148,21 @@ const getGroupAggregatedValueDataSource = (
 
 export const createAggregationLookup = ({
   apiRef,
-  aggregationFunctions,
+  aggregationRules,
+  aggregatedFields,
   aggregationRowsScope,
   getAggregationPosition,
   isDataSource,
+  applySorting = false,
 }: {
   apiRef: RefObject<GridPrivateApiPremium>;
-  aggregationFunctions:
-    | Record<string, GridAggregationFunction>
-    | Record<string, GridAggregationFunctionDataSource>;
+  aggregationRules: GridAggregationRules;
+  aggregatedFields: string[];
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
   isDataSource: boolean;
+  applySorting: boolean;
 }): GridAggregationLookup => {
-  const aggregationRules = getAggregationRules(
-    gridColumnLookupSelector(apiRef),
-    gridAggregationModelSelector(apiRef),
-    aggregationFunctions,
-    isDataSource,
-  );
-
-  const aggregatedFields = Object.keys(aggregationRules);
   if (aggregatedFields.length === 0) {
     return {};
   }
@@ -184,8 +175,6 @@ export const createAggregationLookup = ({
     const valueGetter = (row: any) => apiRef.current.getRowValue(row, column);
     valueGetters[field] = valueGetter;
   }
-
-  const applySorting = shouldApplySorting(aggregationRules, aggregatedFields);
 
   const aggregationLookup: GridAggregationLookup = {};
   const rowTree = gridRowTreeSelector(apiRef);

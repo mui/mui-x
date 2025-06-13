@@ -1,32 +1,38 @@
 import * as React from 'react';
 
-export function useRunOncePerLoop(callback: () => void, nextFrame: boolean = false) {
+export function useRunOncePerLoop<T extends (...args: any[]) => void>(
+  callback: T,
+  nextFrame: boolean = false,
+) {
   const scheduledRef = React.useRef(false);
 
-  const schedule = React.useCallback(() => {
-    if (scheduledRef.current) {
-      return;
-    }
-    scheduledRef.current = true;
-
-    const runner = () => {
-      scheduledRef.current = false;
-      callback();
-    };
-
-    if (nextFrame) {
-      if (typeof requestAnimationFrame === 'function') {
-        requestAnimationFrame(runner);
+  const schedule = React.useCallback(
+    (...args: Parameters<T>) => {
+      if (scheduledRef.current) {
+        return;
       }
-      return;
-    }
+      scheduledRef.current = true;
 
-    if (typeof queueMicrotask === 'function') {
-      queueMicrotask(runner);
-    } else {
-      Promise.resolve().then(runner);
-    }
-  }, [callback, nextFrame]);
+      const runner = () => {
+        scheduledRef.current = false;
+        callback(...args);
+      };
+
+      if (nextFrame) {
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(runner);
+        }
+        return;
+      }
+
+      if (typeof queueMicrotask === 'function') {
+        queueMicrotask(runner);
+      } else {
+        Promise.resolve().then(runner);
+      }
+    },
+    [callback, nextFrame],
+  );
 
   return schedule;
 }
