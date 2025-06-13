@@ -59,17 +59,17 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const state = useEvent({ start, end });
+  const { state, props: eventProps } = useEvent({ start, end });
 
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef],
-    props: [props, elementProps, getButtonProps],
+    props: [props, eventProps, elementProps, getButtonProps],
   });
 });
 
 export namespace TimeGridEvent {
-  export interface State extends useEvent.ReturnValue {}
+  export interface State extends useEvent.State {}
 
   export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {}
 }
