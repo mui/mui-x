@@ -1,4 +1,3 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   GridColumnGroupingModel,
   GridColumnNode,
@@ -66,74 +65,57 @@ export const getColumnGroupsHeaderStructure = (
   orderedColumns: string[],
   unwrappedGroupingModel: UnwrappedGroupingModel,
   pinnedFields: { right?: string[]; left?: string[] },
-) => {
+): GridGroupingStructure[][] => {
   const getParents = (field: string) => unwrappedGroupingModel[field] ?? [];
 
   const groupingHeaderStructure: GridGroupingStructure[][] = [];
-  const maxDepth = Math.max(...orderedColumns.map((field) => getParents(field).length));
+  const maxDepth = Math.max(0, ...orderedColumns.map((field) => getParents(field).length));
 
-  const haveSameParents = (field1: string, field2: string, depth: number) =>
-    isDeepEqual(getParents(field1).slice(0, depth + 1), getParents(field2).slice(0, depth + 1));
-
-  const haveDifferentContainers = (field1: string, field2: string) => {
-    if (
-      pinnedFields?.left &&
-      pinnedFields.left.includes(field1) &&
-      !pinnedFields.left.includes(field2)
-    ) {
-      return true;
+  const haveSameParents = (field1: string, field2: string, depth: number): boolean => {
+    const a = getParents(field1);
+    const b = getParents(field2);
+    for (let i = 0; i <= depth; i++) {
+      if (a[i] !== b[i]) return false;
     }
-    if (
-      pinnedFields?.right &&
-      !pinnedFields.right.includes(field1) &&
-      pinnedFields.right.includes(field2)
-    ) {
-      return true;
-    }
-    return false;
+    return true;
   };
 
-  for (let depth = 0; depth < maxDepth; depth += 1) {
-    const depthStructure = orderedColumns.reduce((structure, newField) => {
-      const groupId = getParents(newField)[depth] ?? null;
-      if (structure.length === 0) {
-        return [
-          {
-            columnFields: [newField],
-            groupId,
-          },
-        ];
+  const haveDifferentContainers = (field1: string, field2: string): boolean => {
+    const left = pinnedFields?.left;
+    const right = pinnedFields?.right;
+    const inLeft1 = !!left?.includes(field1);
+    const inLeft2 = !!left?.includes(field2);
+    const inRight1 = !!right?.includes(field1);
+    const inRight2 = !!right?.includes(field2);
+    return inLeft1 !== inLeft2 || inRight1 !== inRight2;
+  };
+
+  for (let depth = 0; depth < maxDepth; depth++) {
+    const depthStructure: GridGroupingStructure[] = [];
+
+    for (let i = 0; i < orderedColumns.length; i++) {
+      const field = orderedColumns[i];
+      const groupId = getParents(field)[depth] ?? null;
+
+      if (depthStructure.length === 0) {
+        depthStructure.push({ columnFields: [field], groupId });
+        continue;
       }
 
-      const lastGroup = structure[structure.length - 1];
+      const lastGroup = depthStructure[depthStructure.length - 1];
       const prevField = lastGroup.columnFields[lastGroup.columnFields.length - 1];
-      const prevGroupId = lastGroup.groupId;
 
       if (
-        prevGroupId !== groupId ||
-        !haveSameParents(prevField, newField, depth) ||
-        // Fix for https://github.com/mui/mui-x/issues/7041
-        haveDifferentContainers(prevField, newField)
+        lastGroup.groupId !== groupId ||
+        !haveSameParents(prevField, field, depth) ||
+        haveDifferentContainers(prevField, field)
       ) {
-        // It's a new group
-        return [
-          ...structure,
-          {
-            columnFields: [newField],
-            groupId,
-          },
-        ];
+        depthStructure.push({ columnFields: [field], groupId });
+      } else {
+        lastGroup.columnFields.push(field);
       }
+    }
 
-      // It extends the previous group
-      return [
-        ...structure.slice(0, structure.length - 1),
-        {
-          columnFields: [...lastGroup.columnFields, newField],
-          groupId,
-        },
-      ];
-    }, [] as GridGroupingStructure[]);
     groupingHeaderStructure.push(depthStructure);
   }
 

@@ -21,34 +21,39 @@ import { GridEventListener } from '../../../models/events';
 import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../columns';
 
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
-  let groupLookup: GridColumnGroupLookup = {};
+  const groupLookup: GridColumnGroupLookup = {};
 
-  columnGroupingModel.forEach((node) => {
-    if (isLeaf(node)) {
-      return;
-    }
+  for (let i = 0; i < columnGroupingModel.length; i++) {
+    const node = columnGroupingModel[i];
+
+    if (isLeaf(node)) continue;
+
     const { groupId, children, ...other } = node;
+
     if (!groupId) {
       throw new Error(
         'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
       );
     }
-    if (process.env.NODE_ENV !== 'production') {
-      if (!children) {
-        console.warn(`MUI X: group groupId=${groupId} has no children.`);
-      }
+
+    if (process.env.NODE_ENV !== 'production' && !children) {
+      console.warn(`MUI X: group groupId=${groupId} has no children.`);
     }
+
     const groupParam = { ...other, groupId };
     const subTreeLookup = createGroupLookup(children);
+
     if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
       throw new Error(
         `MUI X: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
       );
     }
-    groupLookup = { ...groupLookup, ...subTreeLookup, [groupId]: groupParam };
-  });
 
-  return { ...groupLookup };
+    Object.assign(groupLookup, subTreeLookup);
+    groupLookup[groupId] = groupParam;
+  }
+
+  return groupLookup;
 };
 
 export const columnGroupsStateInitializer: GridStateInitializer<
