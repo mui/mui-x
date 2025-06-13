@@ -135,7 +135,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
-        expect(getColumnValues(1)).to.deep.equal(['0', '1', '2', '3', '4', '5', '' /* Agg */]);
+        expect(getColumnValues(1)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
       });
 
       it('should ignore aggregation rules with invalid aggregation functions', () => {
