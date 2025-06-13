@@ -27,7 +27,6 @@ import {
   areAggregationRulesEqual,
 } from './gridAggregationUtils';
 import { createAggregationLookup, shouldApplySorting } from './createAggregationLookup';
-import { isJSDOM } from '@mui/x-data-grid/utils/isJSDOM';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
@@ -164,12 +163,7 @@ export const useGridAggregation = (
         }));
 
         chunkIndex += 1;
-        if (isJSDOM) {
-          // to-do painful changes needed to support this in JSDOM
-          processChunk();
-        } else {
-          setTimeout(processChunk, 0);
-        }
+        setTimeout(processChunk, 0);
       };
 
       processChunk();
