@@ -72,7 +72,9 @@ const getGroupAggregatedValue = (
       const childGroupValues = groupAggregatedValuesLookup.get(rowId);
       if (childGroupValues) {
         for (let j = 0; j < aggregatedFields.length; j += 1) {
-          aggregatedValues[j].values.concat(childGroupValues[j].values);
+          aggregatedValues[j].values = aggregatedValues[j].values.concat(
+            childGroupValues[j].values,
+          );
         }
       }
       continue;
