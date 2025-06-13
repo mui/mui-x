@@ -40,7 +40,6 @@ import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridPivotActiveSelector } from '../pivoting';
-import { isPivotingAvailable } from '@mui/x-data-grid-premium/hooks/features/pivoting/utils';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
