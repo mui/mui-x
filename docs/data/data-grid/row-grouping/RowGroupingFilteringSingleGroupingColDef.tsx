@@ -30,13 +30,13 @@ export default function RowGroupingFilteringSingleGroupingColDef() {
   });
 
   const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> =
-  React.useMemo(
-    () => ({
-      mainGroupingCriteria:
-        mainGroupingCriteria === 'undefined' ? undefined : mainGroupingCriteria,
-    }),
-    [mainGroupingCriteria],
-  );
+    React.useMemo(
+      () => ({
+        mainGroupingCriteria:
+          mainGroupingCriteria === 'undefined' ? undefined : mainGroupingCriteria,
+      }),
+      [mainGroupingCriteria],
+    );
 
   return (
     <Box sx={{ width: '100%' }}>
