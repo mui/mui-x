@@ -41,6 +41,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
@@ -244,6 +245,26 @@ const trTRGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsConfigurationNoCharts: 'There are no charts available',
+  // chartsConfigurationChartNotSelected: 'Select a chart type to configure its options',
+  // chartsConfigurationTabChartType: 'Chart',
+  // chartsConfigurationTabFields: 'Fields',
+  // chartsConfigurationTabConfig: 'Config',
+  // chartsConfigurationCloseButton: 'Close charts configuration',
+  // chartsConfigurationSearchPlaceholder: 'Search fields',
+  // chartsConfigurationSearchLabel: 'Search fields',
+  // chartsConfigurationSearchClear: 'Clear search',
+  // chartsConfigurationNoFields: 'No fields',
+  // chartsConfigurationCategories: 'Categories',
+  // chartsConfigurationSeries: 'Series',
+  // chartsConfigurationMenuMoveUp: 'Move up',
+  // chartsConfigurationMenuMoveDown: 'Move down',
+  // chartsConfigurationMenuMoveToTop: 'Move to top',
+  // chartsConfigurationMenuMoveToBottom: 'Move to bottom',
+  // chartsConfigurationMenuOptions: 'Field options',
+  // chartsConfigurationMenuRemove: 'Remove',
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',

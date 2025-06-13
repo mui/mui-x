@@ -48,3 +48,4 @@ export * from './FunnelChart';
 export * from './RadarChartPro';
 export * from './ChartZoomSlider';
 export * from './ChartsToolbarPro';
+export * from './ChartsRenderer';
