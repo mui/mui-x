@@ -149,9 +149,6 @@ export const useGridColumnGrouping = (
 
   const updateColumnGroupingState = React.useCallback(
     (columnGroupingModel: GridColumnGroupingModel | undefined) => {
-      if (columnGroupingModel === apiRef.current.caches.columnGrouping.lastColumnGroupingModel) {
-        return;
-      }
       apiRef.current.caches.columnGrouping.lastColumnGroupingModel = columnGroupingModel;
       // @ts-expect-error Move this logic to `Pro` package
       const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
@@ -198,6 +195,11 @@ export const useGridColumnGrouping = (
    * EFFECTS
    */
   React.useEffect(() => {
+    if (
+      props.columnGroupingModel === apiRef.current.caches.columnGrouping.lastColumnGroupingModel
+    ) {
+      return;
+    }
     updateColumnGroupingState(props.columnGroupingModel);
   }, [updateColumnGroupingState, props.columnGroupingModel]);
 };
