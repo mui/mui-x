@@ -96,7 +96,7 @@ export const useGridAggregation = (
     props.dataSource,
   ]);
 
-  const deferredApplyAggregation = useRunOncePerLoop(applyAggregation);
+  const deferredApplyAggregation = useRunOncePerLoop(applyAggregation, true);
 
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,
