@@ -210,16 +210,16 @@ export const useGridPivoting = (
 
   useEnhancedEffect(() => {
     if (!isPivotingAvailable || !isPivotActive) {
-      if (exportedStateRef.current) {
-        apiRef.current.restoreState(exportedStateRef.current);
-        exportedStateRef.current = null;
-      }
       if (nonPivotDataRef.current) {
         // Prevent rows from being resynced from the original rows prop
         apiRef.current.caches.rows.rowsBeforePartialUpdates =
           nonPivotDataRef.current.originalRowsProp;
-        apiRef.current.setRows(nonPivotDataRef.current.rows);
+        apiRef.current.setRows(nonPivotDataRef.current!.rows);
         nonPivotDataRef.current = undefined;
+      }
+      if (exportedStateRef.current) {
+        apiRef.current.restoreState(exportedStateRef.current);
+        exportedStateRef.current = null;
       }
     }
   }, [isPivotActive, apiRef, isPivotingAvailable]);
@@ -348,7 +348,7 @@ export const useGridPivoting = (
           ...state,
           pivoting: newPivotingState,
         };
-        console.log('newState', newState.pivoting.active, newPivotMode, newPivotingState);
+
         return newState;
       });
       apiRef.current.selectRows([], false, true);
