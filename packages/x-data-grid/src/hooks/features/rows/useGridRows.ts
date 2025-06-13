@@ -308,7 +308,6 @@ export const useGridRows = (
       directChildrenOnly = false,
     }) => {
       const tree = gridRowTreeSelector(apiRef);
-      const { rowIdToIndexMap } = getVisibleRows(apiRef);
 
       let children: GridRowId[];
       if (applySorting) {
@@ -320,7 +319,7 @@ export const useGridRows = (
         const sortedRowIds = gridSortedRowIdsSelector(apiRef);
         children = [];
 
-        const startIndex = rowIdToIndexMap.get(groupId)! + 1;
+        const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
         for (
           let index = startIndex;
           index < sortedRowIds.length &&
