@@ -186,9 +186,7 @@ export const useGridColumnGrouping = (
 
   useGridEvent(apiRef, 'columnIndexChange', handleColumnIndexChange);
   useGridEvent(apiRef, 'columnsChange', () => {
-    console.time('test');
     updateColumnGroupingState(props.columnGroupingModel);
-    console.timeEnd('test');
   });
   useGridEvent(apiRef, 'columnVisibilityModelChange', () => {
     updateColumnGroupingState(props.columnGroupingModel);
