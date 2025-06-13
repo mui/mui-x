@@ -15,7 +15,9 @@ export function useRunOncePerLoop(callback: () => void, nextFrame: boolean = fal
     };
 
     if (nextFrame) {
-      requestAnimationFrame(runner);
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(runner);
+      }
       return;
     }
 
