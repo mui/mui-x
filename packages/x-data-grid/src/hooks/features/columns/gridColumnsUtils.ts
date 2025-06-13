@@ -346,10 +346,11 @@ export const createColumnsState = ({
 
   let columnsToKeep: Record<string, boolean> = {};
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
-    columnsToKeep = Object.keys(columnsState.lookup).reduce(
-      (acc, key) => ({ ...acc, [key]: false }),
-      {},
-    );
+    for (const key in columnsState.lookup) {
+      if (Object.prototype.hasOwnProperty.call(columnsState.lookup, key)) {
+        columnsToKeep[key] = false;
+      }
+    }
   }
 
   const columnsToUpsertLookup: Record<string, true> = {};
