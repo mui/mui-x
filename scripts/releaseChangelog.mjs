@@ -133,9 +133,23 @@ function resolvePackagesByLabels(labels) {
   return resolvedPackages;
 }
 
-async function main(argv) {
-  const { githubToken, lastRelease: lastReleaseInput, release, nextVersion, returnEntry } = argv;
-
+/**
+ * Generates a changelog for MUI X packages
+ * @param {Object} options - The options for generating the changelog
+ * @param {string} options.githubToken - The GitHub token for authentication
+ * @param {string} [options.lastRelease] - The release to compare against
+ * @param {string} options.release - The release to generate the changelog for
+ * @param {string} [options.nextVersion] - The version expected to be released
+ * @param {boolean} [options.returnEntry] - Whether to return the changelog as a string
+ * @returns {Promise<string|null>} The changelog string or null
+ */
+export async function generateChangelog({
+  githubToken,
+  lastRelease: lastReleaseInput,
+  release,
+  nextVersion,
+  returnEntry,
+}) {
   if (!githubToken) {
     throw new TypeError(
       'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
@@ -582,6 +596,15 @@ ${logOtherSection({
     }
     return null;
   }
+}
+
+/**
+ * Main function for the CLI
+ * @param {Object} argv - The command line arguments
+ * @returns {Promise<string|null>} The changelog string or null
+ */
+async function main(argv) {
+  return generateChangelog(argv);
 }
 
 yargs(hideBin(process.argv))

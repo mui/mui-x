@@ -31,6 +31,7 @@ import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
 import inquirer from 'inquirer';
+import { generateChangelog as generateChangelogFromModule } from './releaseChangelog.mjs';
 
 // Create a custom Octokit class with retry functionality
 const MyOctokit = Octokit.plugin(retry);
@@ -518,14 +519,12 @@ async function generateChangelog(newVersion) {
   try {
     console.log('Generating changelog...');
 
-    const { stdout } = await execa('node', [
-      'scripts/releaseChangelog.mjs',
-      `--githubToken=${process.env.GITHUB_TOKEN}`,
-      `--nextVersion=${newVersion}`,
-      '--returnEntry',
-    ]);
-
-    return stdout;
+    return await generateChangelogFromModule({
+      githubToken: process.env.GITHUB_TOKEN,
+      nextVersion: newVersion,
+      release: 'master', // Default value from releaseChangelog.mjs
+      returnEntry: true,
+    });
   } catch (error) {
     console.error('Error generating changelog:', error);
     process.exit(1);
