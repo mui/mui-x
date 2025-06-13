@@ -56,6 +56,7 @@ export interface PiecewiseColorLegendProps
   classes?: Partial<PiecewiseColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  tabIndex?: number;
 }
 
 const RootElement = styled('ul', {

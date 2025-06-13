@@ -18,6 +18,7 @@ export interface ChartsSurfaceProps {
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
+  tabIndex?: number;
 }
 
 const ChartsSurfaceStyles = styled('svg', {
@@ -95,6 +96,7 @@ ChartsSurface.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  tabIndex: PropTypes.number,
   title: PropTypes.string,
 } as any;
 
