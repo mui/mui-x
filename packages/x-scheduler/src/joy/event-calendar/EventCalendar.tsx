@@ -8,9 +8,9 @@ import { WeekView } from '../week-view/WeekView';
 import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../utils/TranslationsContext';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import '../index.css';
 import './EventCalendar.css';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
 const adapter = getAdapter();
 
@@ -34,10 +34,16 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   let content: React.ReactNode;
   switch (view) {
     case 'week':
-      content = <WeekView events={events} onDayHeaderClick={handleDayHeaderClick} />;
+      content = (
+        <WeekView
+          events={events}
+          onDayHeaderClick={handleDayHeaderClick}
+          onEventsChange={onEventsChange}
+        />
+      );
       break;
     case 'day':
-      content = <DayView events={events} day={visibleDate} />;
+      content = <DayView events={events} day={visibleDate} onEventsChange={onEventsChange} />;
       break;
     case 'month':
       content = <div>TODO: Month view</div>;

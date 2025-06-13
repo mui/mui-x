@@ -2,6 +2,8 @@ import { SchedulerValidDate } from '../../primitives/models';
 
 export type EventVariant = 'regular' | 'compact' | 'allDay';
 
+export type EventAction = 'edit' | 'delete';
+
 export interface CalendarEvent {
   /**
    * The unique identifier of the event.
@@ -11,6 +13,10 @@ export interface CalendarEvent {
    * The title of the event.
    */
   title: string;
+  /**
+   * The description of the event.
+   */
+  description?: string;
   /**
    * The start date and time of the event.
    */

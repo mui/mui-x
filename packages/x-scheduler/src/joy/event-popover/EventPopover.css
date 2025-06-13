@@ -10,3 +10,9 @@
 .PopoverPopup {
   padding: 12px;
 }
+
+.EventPopoverForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

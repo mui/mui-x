@@ -4,7 +4,7 @@ import { CalendarEvent } from '@mui/x-scheduler/joy';
 import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
 import classes from './FullEventCalendar.module.css';
 
-const events: CalendarEvent[] = [
+const eventsList: CalendarEvent[] = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
@@ -56,5 +56,13 @@ const events: CalendarEvent[] = [
 ];
 
 export default function FullEventCalendar() {
-  return <EventCalendar events={events} className={classes.Container} />;
+  const [events, setEvents] = React.useState<CalendarEvent[]>(eventsList);
+
+  return (
+    <EventCalendar
+      events={events}
+      onEventsChange={setEvents}
+      className={classes.Container}
+    />
+  );
 }

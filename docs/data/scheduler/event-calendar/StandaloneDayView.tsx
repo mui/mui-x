@@ -4,7 +4,7 @@ import { CalendarEvent } from '@mui/x-scheduler/joy';
 import { DayView } from '@mui/x-scheduler/joy/day-view';
 import classes from './StandaloneWeekView.module.css';
 
-const events: CalendarEvent[] = [
+const eventsList: CalendarEvent[] = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
@@ -20,9 +20,12 @@ const events: CalendarEvent[] = [
 ];
 
 export default function StandaloneDayView() {
+  const [events, setEvents] = React.useState<CalendarEvent[]>(eventsList);
+
   return (
     <DayView
       events={events}
+      onEventsChange={setEvents}
       className={classes.Container}
       day={DateTime.fromISO('2025-05-26')}
     />

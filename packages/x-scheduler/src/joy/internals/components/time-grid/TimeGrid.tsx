@@ -12,6 +12,7 @@ import { CalendarEvent } from '../../../models/events';
 import { Event } from '../../../event/Event';
 import { isWeekend } from '../../../utils/date-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
+import { useEventPopover } from '../../../utils/useEventPopover';
 import './TimeGrid.css';
 
 const adapter = getAdapter();
@@ -20,12 +21,17 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   props: TimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, days, className, onDayHeaderClick, ...other } = props;
+  const { events, days, className, onDayHeaderClick, onEventAction, ...other } = props;
 
   const translations = useTranslations();
   const today = adapter.date('2025-05-26');
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const headerWrapperRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLElement | null>(null);
+  const handleRef = useForkRef(forwardedRef, containerRef);
+
+  const { isPopoverOpen, anchor, selectedEvent, handleEventClick, handlePopoverClose } =
+    useEventPopover();
 
   const eventsByDay = React.useMemo(() => {
     const map = new Map();
@@ -66,33 +72,9 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     </span>
   );
 
-  const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useForkRef(forwardedRef, containerRef);
-
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-  const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
-
-  const handleEventClick = React.useCallback(
-    (calendarEvent: CalendarEvent, event: React.MouseEvent) => {
-      setAnchor(event.currentTarget as HTMLElement);
-      setSelectedEvent(calendarEvent);
-      setIsPopoverOpen(true);
-    },
-    [],
-  );
-
-  const handlePopoverOpenChange = React.useCallback((open: boolean) => {
-    setIsPopoverOpen(open);
-    if (!open) {
-      setSelectedEvent(null);
-      setAnchor(null);
-    }
-  }, []);
-
   return (
     <div ref={handleRef} className={clsx('TimeGridContainer', 'joy', className)} {...other}>
-      <Popover.Root open={isPopoverOpen} onOpenChange={handlePopoverOpenChange}>
+      <Popover.Root open={isPopoverOpen} onOpenChange={handlePopoverClose}>
         <TimeGridPrimitive.Root className="TimeGridRoot">
           <div ref={headerWrapperRef} className="TimeGridHeader">
             <div className="TimeGridGridRow TimeGridHeaderRow" role="row">
@@ -175,7 +157,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                           key={event.id}
                           event={event}
                           variant="regular"
-                          ariaLabelledBy={`WeekViewHeaderCell-${day.day.toString()}`}
+                          ariaLabelledBy={`TimeGridHeaderCell-${day.day.toString()}`}
                           onEventClick={handleEventClick}
                         />
                       ))}
@@ -186,11 +168,13 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
             </div>
           </div>
         </TimeGridPrimitive.Root>
-        {anchor && (
+        {anchor && selectedEvent && (
           <EventPopover
             anchor={anchor}
             calendarEvent={selectedEvent}
             container={containerRef.current}
+            onEventAction={onEventAction}
+            onClose={handlePopoverClose}
           />
         )}
       </Popover.Root>
