@@ -1,39 +1,36 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { spy } from 'sinon';
+import { vi } from 'vitest';
 
 describe('<DateCalendar />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date('2019-01-02'),
-  });
+  const { render } = createPickerRenderer();
 
-  it('switches between views uncontrolled', () => {
+  it('switches between views uncontrolled', async () => {
     const handleViewChange = spy();
-    render(
+    const { user } = render(
       <DateCalendar
         defaultValue={adapterToUse.date('2019-01-01')}
         onViewChange={handleViewChange}
       />,
     );
 
-    fireEvent.click(screen.getByLabelText(/switch to year view/i));
+    await user.click(screen.getByLabelText(/switch to year view/i));
 
     expect(handleViewChange.callCount).to.equal(1);
     expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
     expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  it('should allow month and view changing, but not selection when readOnly prop is passed', () => {
+  it('should allow month and view changing, but not selection when readOnly prop is passed', async () => {
     const onChangeMock = spy();
     const onMonthChangeMock = spy();
-    render(
+    const { user } = render(
       <DateCalendar
         value={adapterToUse.date('2019-01-01')}
         onChange={onChangeMock}
@@ -42,25 +39,25 @@ describe('<DateCalendar />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByTitle('Previous month'));
+    await user.click(screen.getByTitle('Previous month'));
     expect(onMonthChangeMock.callCount).to.equal(1);
 
-    fireEvent.click(screen.getByTitle('Next month'));
+    await user.click(screen.getByTitle('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(2);
 
-    clock.runToLast();
+    await waitFor(() => expect(screen.getAllByRole('rowgroup').length).to.equal(1));
 
-    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
+    await user.click(screen.getByRole('gridcell', { name: '5' }));
     expect(onChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByText('January 2019'));
+    await user.click(screen.getByText('January 2019'));
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  it('should not allow interaction when disabled prop is passed', () => {
+  it('should not allow interaction when disabled prop is passed', async () => {
     const onChangeMock = spy();
     const onMonthChangeMock = spy();
-    render(
+    const { user } = render(
       <DateCalendar
         value={adapterToUse.date('2019-01-01')}
         onChange={onChangeMock}
@@ -69,17 +66,17 @@ describe('<DateCalendar />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByText('January 2019'));
+    await user.click(screen.getByText('January 2019'));
     expect(screen.queryByText('January 2019')).toBeVisible();
     expect(screen.queryByLabelText('year view is open, switch to calendar view')).to.equal(null);
 
-    fireEvent.click(screen.getByTitle('Previous month'));
+    await user.setup({ pointerEventsCheck: 0 }).click(screen.getByTitle('Previous month'));
     expect(onMonthChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByTitle('Next month'));
+    await user.setup({ pointerEventsCheck: 0 }).click(screen.getByTitle('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
+    await user.setup({ pointerEventsCheck: 0 }).click(screen.getByRole('gridcell', { name: '5' }));
     expect(onChangeMock.callCount).to.equal(0);
   });
 
@@ -98,7 +95,8 @@ describe('<DateCalendar />', () => {
     // days are disabled
     const cells = screen.getAllByRole('gridcell');
     const disabledDays = cells.filter(
-      (cell) => cell.getAttribute('disabled') !== null && cell.tagName === 'BUTTON',
+      (cell) =>
+        cell.getAttribute('disabled') !== null && cell.getAttribute('data-testid') === 'day',
     );
 
     expect(cells.length).to.equal(35);
@@ -131,27 +129,35 @@ describe('<DateCalendar />', () => {
   });
 
   describe('with fake timers', () => {
-    clock.withFakeTimers();
+    beforeEach(() => {
+      vi.setSystemTime(new Date(2019, 0, 2));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
 
     // test: https://github.com/mui/mui-x/issues/12373
-    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
+    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
       const onChange = spy();
       const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
-      render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
+      const { user } = render(
+        <DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />,
+      );
 
-      fireEvent.click(
+      await user.click(
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
       );
-      fireEvent.click(screen.getByRole('radio', { name: '2020' }));
-      // Finish the transition to the day view
-      clock.runToLast();
+      await user.click(screen.getByRole('radio', { name: '2020' }));
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
-      fireEvent.click(
+      await screen.findByRole('gridcell', { name: '1' });
+
+      await user.click(screen.getByRole('gridcell', { name: '1' }));
+      await user.click(
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
       );
       // select the current year with a date in the past to trigger "findClosestEnabledDate"
-      fireEvent.click(screen.getByRole('radio', { name: '2019' }));
+      await user.click(screen.getByRole('radio', { name: '2019' }));
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
     });
@@ -179,15 +185,15 @@ describe('<DateCalendar />', () => {
       // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
-          '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+          '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="day"]',
         ),
       ).to.have.text('1');
     });
 
-    it('should use `referenceDate` when no value defined', () => {
+    it('should use `referenceDate` when no value defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           referenceDate={adapterToUse.date('2022-04-17T12:30:00')}
@@ -198,15 +204,15 @@ describe('<DateCalendar />', () => {
       // should make the reference day firstly focusable
       expect(screen.getByRole('gridcell', { name: '17' })).to.have.attribute('tabindex', '0');
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
     });
 
-    it('should not use `referenceDate` when a value is defined', () => {
+    it('should not use `referenceDate` when a value is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           value={adapterToUse.date('2019-01-01T12:20:00')}
@@ -215,15 +221,15 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', () => {
+    it('should not use `referenceDate` when a defaultValue is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
@@ -232,15 +238,15 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
 
-    it('should keep the time of the currently provided date', () => {
+    it('should keep the time of the currently provided date', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2018-01-03T11:11:11.111')}
           onChange={onChange}
@@ -248,7 +254,7 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(
         adapterToUse.date('2018-01-02T11:11:11.111'),
@@ -292,10 +298,10 @@ describe('<DateCalendar />', () => {
   });
 
   describe('view: month', () => {
-    it('should select the closest enabled date in the month if the current date is disabled', () => {
+    it('should select the closest enabled date in the month if the current date is disabled', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-01-01')}
           onChange={onChange}
@@ -308,16 +314,16 @@ describe('<DateCalendar />', () => {
       );
 
       const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 6));
     });
 
-    it('should respect minDate when selecting closest enabled date', () => {
+    it('should respect minDate when selecting closest enabled date', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-06-01')}
           minDate={adapterToUse.date('2019-04-07')}
@@ -328,16 +334,16 @@ describe('<DateCalendar />', () => {
       );
 
       const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 7));
     });
 
-    it('should respect maxDate when selecting closest enabled date', () => {
+    it('should respect maxDate when selecting closest enabled date', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-01-29')}
           maxDate={adapterToUse.date('2019-04-22')}
@@ -348,16 +354,16 @@ describe('<DateCalendar />', () => {
       );
 
       const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 22));
     });
 
-    it('should go to next view without changing the date when no date of the new month is enabled', () => {
+    it('should go to next view without changing the date when no date of the new month is enabled', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-01-29')}
           onChange={onChange}
@@ -368,17 +374,16 @@ describe('<DateCalendar />', () => {
       );
 
       const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
-      clock.runToLast();
+      await user.click(april);
 
       expect(onChange.callCount).to.equal(0);
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('April 2019');
     });
 
-    it('should use `referenceDate` when no value defined', () => {
+    it('should use `referenceDate` when no value defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           referenceDate={adapterToUse.date('2018-01-01T12:30:00')}
@@ -388,16 +393,16 @@ describe('<DateCalendar />', () => {
       );
 
       const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 3, 1, 12, 30));
     });
 
-    it('should not use `referenceDate` when a value is defined', () => {
+    it('should not use `referenceDate` when a value is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           value={adapterToUse.date('2019-01-01T12:20:00')}
@@ -408,16 +413,16 @@ describe('<DateCalendar />', () => {
       );
 
       const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', () => {
+    it('should not use `referenceDate` when a defaultValue is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
@@ -428,7 +433,7 @@ describe('<DateCalendar />', () => {
       );
 
       const april = screen.getByText('Apr', { selector: 'button' });
-      fireEvent.click(april);
+      await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
@@ -442,10 +447,10 @@ describe('<DateCalendar />', () => {
       expect(screen.getAllByRole('radio')).to.have.length(200);
     });
 
-    it('should select the closest enabled date in the month if the current date is disabled', () => {
+    it('should select the closest enabled date in the month if the current date is disabled', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-04-29')}
           onChange={onChange}
@@ -458,16 +463,16 @@ describe('<DateCalendar />', () => {
       );
 
       const year2022 = screen.getByText('2022', { selector: 'button' });
-      fireEvent.click(year2022);
+      await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 4, 1));
     });
 
-    it('should respect minDate when selecting closest enabled date', () => {
+    it('should respect minDate when selecting closest enabled date', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-04-29')}
           minDate={adapterToUse.date('2017-05-12')}
@@ -478,16 +483,16 @@ describe('<DateCalendar />', () => {
       );
 
       const year2017 = screen.getByText('2017', { selector: 'button' });
-      fireEvent.click(year2017);
+      await user.click(year2017);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2017, 4, 12));
     });
 
-    it('should respect maxDate when selecting closest enabled date', () => {
+    it('should respect maxDate when selecting closest enabled date', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-04-29')}
           maxDate={adapterToUse.date('2022-03-31')}
@@ -498,16 +503,16 @@ describe('<DateCalendar />', () => {
       );
 
       const year2022 = screen.getByText('2022', { selector: 'button' });
-      fireEvent.click(year2022);
+      await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 2, 31));
     });
 
-    it('should go to next view without changing the date when no date of the new year is enabled', () => {
+    it('should go to next view without changing the date when no date of the new year is enabled', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           value={adapterToUse.date('2019-04-29')}
           onChange={onChange}
@@ -518,17 +523,14 @@ describe('<DateCalendar />', () => {
       );
 
       const year2022 = screen.getByText('2022', { selector: 'button' });
-      fireEvent.click(year2022);
-      clock.runToLast();
+      await user.click(year2022);
 
       expect(onChange.callCount).to.equal(0);
       expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
-    it('should scroll to show the selected year', function test() {
-      if (isJSDOM) {
-        this.skip(); // Needs layout
-      }
+    // Needs layout
+    testSkipIf(isJSDOM)('should scroll to show the selected year', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}
@@ -550,10 +552,10 @@ describe('<DateCalendar />', () => {
       expect(parentBoundingBox.bottom).not.to.lessThan(buttonBoundingBox.bottom);
     });
 
-    it('should use `referenceDate` when no value defined', () => {
+    it('should use `referenceDate` when no value defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           referenceDate={adapterToUse.date('2018-01-01T12:30:00')}
@@ -563,16 +565,16 @@ describe('<DateCalendar />', () => {
       );
 
       const year2022 = screen.getByText('2022', { selector: 'button' });
-      fireEvent.click(year2022);
+      await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 30));
     });
 
-    it('should not use `referenceDate` when a value is defined', () => {
+    it('should not use `referenceDate` when a value is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           value={adapterToUse.date('2019-01-01T12:20:00')}
@@ -583,16 +585,16 @@ describe('<DateCalendar />', () => {
       );
 
       const year2022 = screen.getByText('2022', { selector: 'button' });
-      fireEvent.click(year2022);
+      await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', () => {
+    it('should not use `referenceDate` when a defaultValue is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateCalendar
           onChange={onChange}
           defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
@@ -603,7 +605,7 @@ describe('<DateCalendar />', () => {
       );
 
       const year2022 = screen.getByText('2022', { selector: 'button' });
-      fireEvent.click(year2022);
+      await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
@@ -616,6 +618,7 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
+          referenceDate={adapterToUse.date('2019-01-02')}
           slots={{
             day: React.memo(RenderCount),
           }}
@@ -640,8 +643,11 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
+      // TODO: Use userEvent.click instead.
+      fireEvent.focus(screen.getByRole('gridcell', { name: '2' }));
       fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
+      // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(8);
     });
   });
 });

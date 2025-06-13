@@ -1,10 +1,16 @@
 import * as React from 'react';
-import {
+import type {
   ChartAnyPluginSignature,
   ChartInstance,
   ChartPublicAPI,
+  ConvertSignaturesIntoPlugins,
+  MergeSignaturesProperty,
 } from '../../internals/plugins/models';
-import { ChartStore } from '../../internals/plugins/utils/ChartStore';
+import type { ChartStore } from '../../internals/plugins/utils/ChartStore';
+import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import type { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
+import type { ChartSeriesType } from '../../models/seriesType/config';
 
 export type ChartContextValue<
   TSignatures extends readonly ChartAnyPluginSignature[],
@@ -25,11 +31,29 @@ export type ChartContextValue<
   /**
    * The ref to the <svg />.
    */
-  svgRef: React.RefObject<SVGSVGElement>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
+  /**
+   * The ref to the chart root element.
+   */
+  chartRootRef: React.RefObject<HTMLDivElement | null>;
 };
 
-// export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[]> {
-export interface ChartProviderProps {
-  // value: ChartContextValue<TSignatures>;
-  children: React.ReactNode;
+export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
+  UseChartBaseProps<TSignatures> &
+    MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+
+export interface ChartProviderProps<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = [],
+> {
+  /**
+   * Array of plugins used to add features to the chart.
+   */
+  plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
+  pluginParams?: ChartPluginParams<TSignatures>;
+  /**
+   * The configuration helpers used to compute attributes according to the series type.
+   * @ignore Unstable props for internal usage.
+   */
+  seriesConfig?: ChartSeriesConfig<TSeries>;
 }

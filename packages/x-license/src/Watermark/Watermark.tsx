@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
@@ -28,7 +29,7 @@ interface WatermarkProps {
   releaseInfo: string;
 }
 
-export function Watermark(props: WatermarkProps) {
+function Watermark(props: WatermarkProps) {
   const { packageName, releaseInfo } = props;
   const licenseStatus = useLicenseVerifier(packageName, releaseInfo);
 
@@ -55,3 +56,6 @@ export function Watermark(props: WatermarkProps) {
     </div>
   );
 }
+
+const MemoizedWatermark = fastMemo(Watermark);
+export { MemoizedWatermark as Watermark };

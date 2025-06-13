@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 import { isInfinity } from '../internals/isInfinity';
@@ -46,24 +47,6 @@ export interface TickParams {
   tickLabelPlacement?: 'middle' | 'tick';
 }
 
-export function getTickNumber(
-  params: TickParams & {
-    range: number[];
-    domain: any[];
-  },
-) {
-  const { tickMaxStep, tickMinStep, tickNumber, range, domain } = params;
-
-  const maxTicks =
-    tickMinStep === undefined ? 999 : Math.floor(Math.abs(domain[1] - domain[0]) / tickMinStep);
-  const minTicks =
-    tickMaxStep === undefined ? 2 : Math.ceil(Math.abs(domain[1] - domain[0]) / tickMaxStep);
-
-  const defaultizedTickNumber = tickNumber ?? Math.floor(Math.abs(range[1] - range[0]) / 50);
-
-  return Math.min(maxTicks, Math.max(minTicks, defaultizedTickNumber));
-}
-
 const offsetRatio = {
   start: 0,
   extremities: 0,
@@ -85,6 +68,7 @@ export function useTicks(
   options: {
     scale: D3Scale;
     valueFormatter?: AxisConfig['valueFormatter'];
+    direction: 'x' | 'y';
   } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): TickItemType[] {
   const {
@@ -93,13 +77,17 @@ export function useTicks(
     valueFormatter,
     tickInterval,
     tickPlacement = 'extremities',
-    tickLabelPlacement = 'middle',
+    tickLabelPlacement: tickLabelPlacementProp,
+    direction,
   } = options;
+  const { instance } = useChartContext();
 
   return React.useMemo(() => {
     // band scale
     if (isBandScale(scale)) {
       const domain = scale.domain();
+
+      const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
 
       if (scale.bandwidth() > 0) {
         // scale type = 'band'
@@ -110,7 +98,7 @@ export function useTicks(
         return [
           ...filteredDomain.map((value) => ({
             value,
-            formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
+            formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
             offset:
               scale(value)! -
               (scale.step() - scale.bandwidth()) / 2 +
@@ -141,7 +129,7 @@ export function useTicks(
 
       return filteredDomain.map((value) => ({
         value,
-        formattedValue: valueFormatter?.(value, { location: 'tick' }) ?? `${value}`,
+        formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
         offset: scale(value)!,
         labelOffset: 0,
       }));
@@ -153,14 +141,43 @@ export function useTicks(
     if (domain.some(isInfinity)) {
       return [];
     }
-
+    const tickLabelPlacement = tickLabelPlacementProp;
     const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
-    return ticks.map((value: any) => ({
-      value,
-      formattedValue:
-        valueFormatter?.(value, { location: 'tick' }) ?? scale.tickFormat(tickNumber)(value),
-      offset: scale(value),
-      labelOffset: 0,
-    }));
-  }, [scale, tickInterval, tickNumber, valueFormatter, tickPlacement, tickLabelPlacement]);
+
+    // Ticks inside the drawing area
+    const visibleTicks: TickItemType[] = [];
+
+    for (let i = 0; i < ticks.length; i += 1) {
+      const value = ticks[i];
+      const offset = scale(value);
+      const isInside = direction === 'x' ? instance.isXInside(offset) : instance.isYInside(offset);
+
+      if (isInside) {
+        visibleTicks.push({
+          value,
+          formattedValue:
+            valueFormatter?.(value, { location: 'tick', scale }) ??
+            scale.tickFormat(tickNumber)(value),
+          offset,
+          // Allowing the label to be placed in the middle of a continuous scale is weird.
+          // But it is useful in some cases, like funnel categories with a linear scale.
+          labelOffset:
+            tickLabelPlacement === 'middle'
+              ? scale(ticks[i - 1] ?? 0) - (offset + scale(ticks[i - 1] ?? 0)) / 2
+              : 0,
+        });
+      }
+    }
+
+    return visibleTicks;
+  }, [
+    scale,
+    tickLabelPlacementProp,
+    tickInterval,
+    tickNumber,
+    tickPlacement,
+    valueFormatter,
+    direction,
+    instance,
+  ]);
 }

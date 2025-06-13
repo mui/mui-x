@@ -42,7 +42,7 @@ export default function TrackItemExpansionToggle() {
   } | null>(null);
 
   const handleItemExpansionToggle = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemId: string,
     isExpanded: boolean,
   ) => {

@@ -10,7 +10,6 @@
     "fill": { "description": "The fill color of the axis text." },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
-    "position": { "description": "Position of the axis." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "stroke": { "description": "The stroke color of the axis line." },
@@ -42,6 +41,10 @@
     "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
     "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
     "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
+    "id": {
+      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the axis ID: <code>.${axisClasses.id}-${axisId}</code>.",
+      "nodeName": "the root element for the axis with the given ID"
+    },
     "label": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the group containing the axis label"
@@ -58,7 +61,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "group including the tick and its label"
     },
-    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
+    "tickLabel": {
+      "description": "Styles applied to {{nodeName}}.<br>⚠️ For performance reasons, only the inline styles get considered for bounding box computation. Modifying text size by adding properties like <code>font-size</code> or <code>letter-spacing</code> to this class might cause labels to overlap.",
+      "nodeName": "ticks label"
+    },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
   }
 }

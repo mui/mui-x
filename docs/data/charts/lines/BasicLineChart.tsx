@@ -10,7 +10,6 @@ export default function BasicLineChart() {
           data: [2, 5.5, 2, 8.5, 1.5, 5],
         },
       ]}
-      width={500}
       height={300}
     />
   );

@@ -10,10 +10,11 @@ export default function BasicDateTimeRangeField() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={[
-          'MultiInputDateTimeRangeField',
           'SingleInputDateTimeRangeField',
+          'MultiInputDateTimeRangeField',
         ]}
       >
+        <SingleInputDateTimeRangeField label="Check-in - Check-out" />
         <MultiInputDateTimeRangeField
           slotProps={{
             textField: ({ position }) => ({
@@ -21,7 +22,6 @@ export default function BasicDateTimeRangeField() {
             }),
           }}
         />
-        <SingleInputDateTimeRangeField label="Check-in - Check-out" />
       </DemoContainer>
     </LocalizationProvider>
   );

@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-license",
-  "version": "8.0.0-alpha.5",
-  "description": "MUI X License verification",
+  "version": "8.5.2",
   "author": "MUI Team",
+  "description": "MUI X License verification.",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
@@ -10,9 +10,7 @@
   },
   "homepage": "https://mui.com/x/introduction/licensing/",
   "sideEffects": [
-    "./utils/licenseInfo.js",
-    "./modern/utils/licenseInfo.js",
-    "./node/utils/licenseInfo.js"
+    "./utils/licenseInfo.js"
   ],
   "publishConfig": {
     "access": "public",
@@ -20,12 +18,11 @@
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -34,15 +31,19 @@
     "directory": "packages/x-license"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.0",
-    "@mui/utils": "^5.16.6 || ^6.0.0"
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-internals": "workspace:*",
+    "@mui/x-telemetry": "workspace:*"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.23",
-    "rimraf": "^6.0.1"
+    "@mui/internal-test-utils": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

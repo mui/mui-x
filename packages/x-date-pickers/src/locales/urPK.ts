@@ -35,12 +35,14 @@ const urPKPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'کلئیر',
   okButtonLabel: 'اوکے',
   todayButtonLabel: 'آج',
+  nextStepButtonLabel: 'مہینہ',
 
   // Toolbar titles
   datePickerToolbarTitle: 'تاریخ منتخب کریں',
   dateTimePickerToolbarTitle: 'تاریخ اور وقت منتخب کریں',
   timePickerToolbarTitle: 'وقت منتخب کریں',
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +60,12 @@ const urPKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `ہفتہ ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate}` : 'تاریخ منتخب کریں',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${formattedTime}` : 'وقت منتخب کریں',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   // fieldClearLabel: 'Clear',
 
   // Table labels

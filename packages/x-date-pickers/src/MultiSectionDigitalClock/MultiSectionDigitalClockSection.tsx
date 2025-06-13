@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
@@ -5,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -42,7 +44,7 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   role?: string;
 }
 
-interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
   /**
    * `true` if this is not the initial render of the digital clock.
    */
@@ -61,12 +63,12 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
   width: 56,
   padding: 0,
   overflow: 'hidden',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },
@@ -102,7 +104,6 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
-  overridesResolver: (_, styles) => styles.item,
 })(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',
@@ -177,7 +178,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
 
-    React.useEffect(() => {
+    useEnhancedEffect(() => {
       if (containerRef.current === null) {
         return;
       }

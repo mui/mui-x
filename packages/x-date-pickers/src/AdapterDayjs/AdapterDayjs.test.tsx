@@ -100,7 +100,6 @@ describe('<AdapterDayjs />', () => {
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
-      expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
     });
@@ -135,15 +134,13 @@ describe('<AdapterDayjs />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'dayjs',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

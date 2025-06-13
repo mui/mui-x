@@ -14,13 +14,16 @@ export default function TickLabelPosition() {
             scaleType: 'point',
             tickInterval: (time) => [0, 12].includes(time.getHours()),
             tickLabelInterval: (time) => time.getHours() === 0,
+            position: 'bottom',
           },
           {
             ...xAxisCommon,
             id: 'topAxis',
             scaleType: 'point',
+            position: 'top',
           },
         ]}
+        yAxis={[{ position: 'none' }]}
         {...config}
       />
     </Box>
@@ -86,9 +89,6 @@ const config = {
     { data: y2, showMark },
   ],
   height: 300,
-  topAxis: 'topAxis',
-  bottomAxis: 'bottomAxis',
-  leftAxis: null,
 };
 const xAxisCommon = {
   data: timeData,

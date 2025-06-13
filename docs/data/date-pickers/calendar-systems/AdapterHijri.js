@@ -1,7 +1,7 @@
 import * as React from 'react';
 import moment from 'moment-hijri';
 import { prefixer } from 'stylis';
-import rtlPlugin from 'stylis-plugin-rtl';
+import rtlPlugin from '@mui/stylis-plugin-rtl';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import Button from '@mui/material/Button';
@@ -24,39 +24,32 @@ const cacheRtl = createCache({
 
 function ButtonDateTimeField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { value, timezone, format } = internalProps;
-  const {
-    InputProps,
-    slotProps,
-    slots,
-    ownerState,
-    label,
-    focused,
-    name,
-    ...other
-  } = forwardedProps;
 
   const pickerContext = usePickerContext();
-
-  const parsedFormat = useParsedFormat(internalProps);
+  const parsedFormat = useParsedFormat();
   const { hasValidationError } = useValidation({
     validator: validateDate,
-    value,
-    timezone,
+    value: pickerContext.value,
+    timezone: pickerContext.timezone,
     props: internalProps,
   });
 
-  const valueStr = value == null ? parsedFormat : value.format(format);
+  const valueStr =
+    pickerContext.value == null
+      ? parsedFormat
+      : pickerContext.value.format(pickerContext.fieldFormat);
 
   return (
     <Button
-      {...other}
+      {...forwardedProps}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
+      className={pickerContext.rootClassName}
+      sx={pickerContext.rootSx}
+      ref={pickerContext.triggerRef}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {pickerContext.label ? `${pickerContext.label}: ${valueStr}` : valueStr}
     </Button>
   );
 }

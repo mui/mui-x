@@ -8,7 +8,7 @@ export default function BasicDateTimeRangePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateTimeRangePicker']}>
-        <DateTimeRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />
+        <DateTimeRangePicker />
       </DemoContainer>
     </LocalizationProvider>
   );

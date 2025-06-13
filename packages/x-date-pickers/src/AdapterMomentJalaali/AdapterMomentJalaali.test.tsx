@@ -42,7 +42,6 @@ describe('<AdapterMomentJalaali />', () => {
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
-      expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
       expectDate('keyboardDateTime24h', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
     });
@@ -69,15 +68,13 @@ describe('<AdapterMomentJalaali />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-jalaali',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

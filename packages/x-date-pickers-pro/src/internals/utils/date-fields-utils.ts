@@ -22,3 +22,10 @@ export const removeLastSeparator = (dateSections: FieldRangeSection[]) =>
 
     return section;
   });
+
+export function getRangeFieldType(
+  field: React.ElementType & { fieldType?: 'single-input' | 'multi-input' },
+) {
+  const fieldType = field.fieldType ?? 'multi-input';
+  return fieldType;
+}

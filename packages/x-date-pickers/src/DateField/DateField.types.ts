@@ -1,16 +1,13 @@
-import * as React from 'react';
-import type { TextFieldProps } from '@mui/material/TextField';
-import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '../hooks/useClearableField';
-import { DateValidationError, BuiltInFieldTextFieldProps, FieldOwnerState } from '../models';
+import { MakeOptional } from '@mui/x-internals/types';
+import { DateValidationError, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { ExportedValidateDateProps } from '../validation/validateDate';
-import { PickersTextFieldProps } from '../PickersTextField';
 import { PickerValue } from '../internals/models';
+import {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlotProps,
+  PickerFieldUISlots,
+} from '../internals/components/PickerFieldUI';
 
 export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -18,7 +15,7 @@ export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends bo
       'format'
     >,
     ExportedValidateDateProps,
-    ExportedUseClearableFieldProps {}
+    ExportedPickerFieldUIProps {}
 
 export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   // The hook props
@@ -43,18 +40,6 @@ export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
 export type DateFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
   DateFieldProps<TEnableAccessibleFieldDOMStructure>;
 
-export interface DateFieldSlots extends UseClearableFieldSlots {
-  /**
-   * Form control with an input to render the value.
-   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
-   */
-  textField?: React.ElementType;
-}
+export interface DateFieldSlots extends PickerFieldUISlots {}
 
-export interface DateFieldSlotProps extends UseClearableFieldSlotProps {
-  textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
-    {},
-    FieldOwnerState
-  >;
-}
+export interface DateFieldSlotProps extends PickerFieldUISlotProps {}

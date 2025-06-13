@@ -1,22 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import { warnOnce } from '@mui/x-internals/warning';
-import { animated, useSpring } from '@react-spring/web';
+import { styled, useTheme } from '@mui/material/styles';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../context';
-import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { useSelector } from '../internals/store/useSelector';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { useStore } from '../internals/store/useStore';
+import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
-    /**
-     * The shape of the marker.
-     */
-    shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -26,7 +17,25 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    /**
+     * If `true`, the marker is faded.
+     * @default false
+     */
+    isFaded?: boolean;
+    /**
+     * If `true`, the marker is highlighted.
+     * @default false
+     */
+    isHighlighted?: boolean;
   };
+
+const Circle = styled('circle')({
+  [`&.${markElementClasses.animate}`]: {
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionProperty: 'cx, cy',
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
+  },
+});
 
 /**
  * The line mark element that only render circle for performance improvement.
@@ -50,43 +59,29 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
-    shape,
+    isFaded = false,
+    isHighlighted = false,
     ...other
   } = props;
 
-  if (shape !== 'circle') {
-    warnOnce(
-      [
-        `MUI X: The mark element of your line chart have shape "${shape}" which is not supported when using \`experimentalRendering=true\`.`,
-        'Only "circle" are supported with `experimentalRendering`.',
-      ].join('\n'),
-      'error',
-    );
-  }
   const theme = useTheme();
-  const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
 
-  const store = useStore();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
-
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
+    isHighlighted,
     isFaded,
     color,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <animated.circle
+    <Circle
       {...other}
-      cx={position.x}
-      cy={position.y}
+      cx={x}
+      cy={y}
       r={5}
       fill={(theme.vars || theme).palette.background.paper}
       stroke={color}
@@ -94,7 +89,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }

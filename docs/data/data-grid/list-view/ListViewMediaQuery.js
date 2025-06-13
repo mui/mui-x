@@ -30,7 +30,7 @@ function ListViewCell(params) {
   );
 }
 
-const listColDef = {
+const listViewColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
@@ -55,15 +55,15 @@ export default function ListViewMediaQuery() {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        maxHeight: 400,
+        height: 400,
       }}
     >
       <DataGridPro
         {...data}
         loading={loading}
         rowHeight={rowHeight}
-        unstable_listView={isListView}
-        unstable_listColumn={listColDef}
+        listView={isListView}
+        listViewColumn={listViewColDef}
       />
     </div>
   );

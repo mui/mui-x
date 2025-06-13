@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { addLabels, balanceSheet } from './netflixsBalanceSheet';
 
 export default function StackBars() {
@@ -15,10 +15,15 @@ export default function StackBars() {
         { dataKey: 'retEarn', stack: 'equity' },
         { dataKey: 'treas', stack: 'equity' },
       ])}
-      xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
-      hideLegend
-      width={600}
-      height={350}
+      xAxis={[{ dataKey: 'year' }]}
+      yAxis={[{ width: 80 }]}
+      {...config}
     />
   );
 }
+
+const config: Partial<BarChartProps> = {
+  height: 350,
+  margin: { left: 40 },
+  hideLegend: true,
+};

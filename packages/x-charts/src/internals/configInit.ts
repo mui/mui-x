@@ -1,18 +1,38 @@
-import { ChartSeriesType } from '../models/seriesType/config';
+import { CartesianChartSeriesType, PolarChartSeriesType } from '../models/seriesType/config';
 
-let instance: undefined | Set<ChartSeriesType>;
+let cartesianInstance: undefined | Set<CartesianChartSeriesType>;
+let polarInstance: undefined | Set<PolarChartSeriesType>;
 
 class CartesianSeriesTypes {
-  types: Set<ChartSeriesType> = new Set();
+  types: Set<CartesianChartSeriesType> = new Set();
 
   constructor() {
-    if (instance) {
+    if (cartesianInstance) {
       throw new Error('You can only create one instance!');
     }
-    instance = this.types;
+    cartesianInstance = this.types;
   }
 
-  addType(value: ChartSeriesType) {
+  addType(value: CartesianChartSeriesType) {
+    this.types.add(value);
+  }
+
+  getTypes() {
+    return this.types;
+  }
+}
+
+class PolarSeriesTypes {
+  types: Set<PolarChartSeriesType> = new Set();
+
+  constructor() {
+    if (polarInstance) {
+      throw new Error('You can only create one instance!');
+    }
+    polarInstance = this.types;
+  }
+
+  addType(value: PolarChartSeriesType) {
     this.types.add(value);
   }
 
@@ -26,3 +46,7 @@ export const cartesianSeriesTypes = new CartesianSeriesTypes();
 cartesianSeriesTypes.addType('bar');
 cartesianSeriesTypes.addType('line');
 cartesianSeriesTypes.addType('scatter');
+
+export const polarSeriesTypes = new PolarSeriesTypes();
+
+polarSeriesTypes.addType('radar');

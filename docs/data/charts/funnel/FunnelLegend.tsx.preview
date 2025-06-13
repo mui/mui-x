@@ -1,0 +1,15 @@
+<Controls hideLegend={hideLegend} setHideLegend={setHideLegend} />
+<FunnelChart
+  series={[
+    {
+      data: [
+        { value: 200, label: 'A' },
+        { value: 180, label: 'B' },
+        { value: 90, label: 'C' },
+        { value: 50, label: 'D' },
+      ],
+    },
+  ]}
+  hideLegend={hideLegend}
+  {...funnelProps}
+/>

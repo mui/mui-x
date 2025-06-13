@@ -11,9 +11,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -22,7 +23,7 @@ describe('BarChart - checkScaleErrors', () => {
           },
         );
       }).throws(
-        'MUI X: The first `xAxis` should be of type "band" to display the bar series of id "seriesId".',
+        'MUI X Charts: The first `xAxis` should be of type "band" to display the bar series of id "seriesId".',
       );
     });
 
@@ -33,9 +34,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band' },
           },
           yKey,
@@ -43,7 +45,35 @@ describe('BarChart - checkScaleErrors', () => {
             [yKey]: { id: yKey, scaleType: 'linear' },
           },
         );
-      }).throws('MUI X: The first `xAxis` should have data property.');
+      }).throws('MUI X Charts: The first `xAxis` should have data property.');
+    });
+
+    it('should throw an error when the x-axis data property is smaller than the series data.', () => {
+      expect(() => {
+        const xKey = DEFAULT_X_AXIS_KEY;
+        const yKey = DEFAULT_Y_AXIS_KEY;
+        checkScaleErrors(
+          true,
+          'seriesId',
+          // @ts-expect-error
+          {
+            stackedData: [
+              [0, 1],
+              [0, 1],
+            ],
+          },
+          xKey,
+          {
+            [xKey]: { id: xKey, scaleType: 'band', data: [1] },
+          },
+          yKey,
+          {
+            [yKey]: { id: yKey, scaleType: 'linear' },
+          },
+        );
+      }).toErrorDev(
+        'MUI X Charts: The first `xAxis` has less data (1 values) than the bar series of id "seriesId" (2 values)',
+      );
     });
 
     it('should throw an error when the y-axis is not a continuous scale', () => {
@@ -53,9 +83,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band', data: [] },
           },
           yKey,
@@ -64,7 +95,7 @@ describe('BarChart - checkScaleErrors', () => {
           },
         );
       }).throws(
-        'MUI X: The first `yAxis` should be a continuous type to display the bar series of id "seriesId".',
+        'MUI X Charts: The first `yAxis` should be a continuous type to display the bar series of id "seriesId".',
       );
     });
 
@@ -75,9 +106,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band', data: [] },
           },
           yKey,
@@ -97,9 +129,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -108,7 +141,7 @@ describe('BarChart - checkScaleErrors', () => {
           },
         );
       }).throws(
-        'MUI X: The first `yAxis` should be of type "band" to display the bar series of id "seriesId".',
+        'MUI X Charts: The first `yAxis` should be of type "band" to display the bar series of id "seriesId".',
       );
     });
 
@@ -119,9 +152,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -129,7 +163,7 @@ describe('BarChart - checkScaleErrors', () => {
             [yKey]: { id: yKey, scaleType: 'band' },
           },
         );
-      }).throws('MUI X: The first `yAxis` should have data property.');
+      }).throws('MUI X Charts: The first `yAxis` should have data property.');
     });
 
     it('should throw an error when the x-axis is not a continuous scale', () => {
@@ -139,9 +173,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band' },
           },
           yKey,
@@ -150,7 +185,7 @@ describe('BarChart - checkScaleErrors', () => {
           },
         );
       }).throws(
-        'MUI X: The first `xAxis` should be a continuous type to display the bar series of id "seriesId".',
+        'MUI X Charts: The first `xAxis` should be a continuous type to display the bar series of id "seriesId".',
       );
     });
 
@@ -161,9 +196,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -182,9 +218,10 @@ describe('BarChart - checkScaleErrors', () => {
       checkScaleErrors(
         true,
         'seriesId',
+        // @ts-expect-error
+        { stackedData: [[0, 1]] },
         xKey,
         {
-          // @ts-expect-error
           [xKey]: { id: xKey, scaleType: 'linear' },
         },
         yKey,
@@ -193,7 +230,7 @@ describe('BarChart - checkScaleErrors', () => {
         },
       );
     }).throws(
-      'MUI X: The x-axis with id "x-test" should be of type "band" to display the bar series of id "seriesId".',
+      'MUI X Charts: The x-axis with id "x-test" should be of type "band" to display the bar series of id "seriesId".',
     );
   });
 
@@ -204,9 +241,10 @@ describe('BarChart - checkScaleErrors', () => {
       checkScaleErrors(
         false,
         'seriesId',
+        // @ts-expect-error
+        { stackedData: [[0, 1]] },
         xKey,
         {
-          // @ts-expect-error
           [xKey]: { id: xKey, scaleType: 'band' },
         },
         yKey,
@@ -215,7 +253,7 @@ describe('BarChart - checkScaleErrors', () => {
         },
       );
     }).throws(
-      'MUI X: The y-axis with id "y-test" should be of type "band" to display the bar series of id "seriesId".',
+      'MUI X Charts: The y-axis with id "y-test" should be of type "band" to display the bar series of id "seriesId".',
     );
   });
 });

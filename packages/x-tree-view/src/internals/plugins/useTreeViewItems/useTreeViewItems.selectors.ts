@@ -2,10 +2,29 @@ import { TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
-import { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
+import { isItemDisabled, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 
 const selectorTreeViewItemsState: TreeViewRootSelector<UseTreeViewItemsSignature> = (state) =>
   state.items;
+
+/**
+ * Get the loading state for the Tree View.
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @returns {boolean} The loading state for the Tree View.
+ */
+export const selectorIsTreeViewLoading = createSelector(
+  selectorTreeViewItemsState,
+  (items) => items.loading,
+);
+/**
+ * Get the error state for the Tree View.
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @returns {boolean} The error state for the Tree View.
+ */
+export const selectorGetTreeViewError = createSelector(
+  selectorTreeViewItemsState,
+  (items) => items.error,
+);
 
 /**
  * Get the meta-information of all items.
@@ -39,10 +58,7 @@ export const selectorItemOrderedChildrenIds = createSelector(
  */
 export const selectorItemModel = createSelector(
   [selectorTreeViewItemsState, (_, itemId: string) => itemId],
-  (itemsState, itemId) => {
-    const a = itemsState.itemModelLookup[itemId];
-    return a;
-  },
+  (itemsState, itemId) => itemsState.itemModelLookup[itemId],
 );
 
 /**
@@ -66,31 +82,7 @@ export const selectorItemMeta = createSelector(
  */
 export const selectorIsItemDisabled = createSelector(
   [selectorItemMetaLookup, (_, itemId: string) => itemId],
-  (itemMetaLookup, itemId) => {
-    if (itemId == null) {
-      return false;
-    }
-
-    let itemMeta = itemMetaLookup[itemId];
-
-    // This can be called before the item has been added to the item map.
-    if (!itemMeta) {
-      return false;
-    }
-
-    if (itemMeta.disabled) {
-      return true;
-    }
-
-    while (itemMeta.parentId != null) {
-      itemMeta = itemMetaLookup[itemMeta.parentId];
-      if (itemMeta.disabled) {
-        return true;
-      }
-    }
-
-    return false;
-  },
+  isItemDisabled,
 );
 
 /**
@@ -134,13 +126,23 @@ export const selectorItemDepth = createSelector(
   (itemMeta) => itemMeta?.depth ?? 0,
 );
 
+/**
+ * Check if the disabled items are focusable.
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @returns {boolean} Whether the disabled items are focusable.
+ */
+export const selectorDisabledItemFocusable = createSelector(
+  [selectorTreeViewItemsState],
+  (itemsState) => itemsState.disabledItemsFocusable,
+);
+
 export const selectorCanItemBeFocused = createSelector(
-  [selectorTreeViewItemsState, selectorIsItemDisabled],
-  (itemsState, isItemDisabled) => {
-    if (itemsState.disabledItemsFocusable) {
+  [selectorDisabledItemFocusable, selectorIsItemDisabled],
+  (disabledItemsFocusable, isDisabled) => {
+    if (disabledItemsFocusable) {
       return true;
     }
 
-    return !isItemDisabled;
+    return !isDisabled;
   },
 );

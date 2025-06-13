@@ -39,6 +39,7 @@ export default function UseGridApiContext() {
             },
           },
         }}
+        showToolbar
       />
     </Box>
   );

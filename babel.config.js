@@ -22,11 +22,13 @@ const defaultAlias = {
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/x-data-grid-pro/src'),
   '@mui/x-data-grid-premium': resolveAliasPath('./packages/x-data-grid-premium/src'),
   '@mui/x-license': resolveAliasPath('./packages/x-license/src'),
+  '@mui/x-telemetry': resolveAliasPath('./packages/x-telemetry/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
   '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
+  '@mui/x-scheduler': resolveAliasPath('./packages/x-scheduler'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
@@ -41,17 +43,16 @@ const defaultAlias = {
 
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['modern', 'stable', 'rollup']);
+  const useESModules = api.env(['stable', 'rollup']);
 
   const presets = [
     [
       '@babel/preset-env',
       {
         bugfixes: true,
-        browserslistEnv: process.env.BABEL_ENV || process.env.NODE_ENV,
+        browserslistEnv: api.env() || process.env.NODE_ENV,
         debug: process.env.MUI_BUILD_VERBOSE === 'true',
         modules: useESModules ? false : 'commonjs',
-        shippedProposals: api.env('modern'),
       },
     ],
     [
@@ -63,14 +64,9 @@ module.exports = function getBabelConfig(api) {
     '@babel/preset-typescript',
   ];
 
-  const usesAliases =
-    // in this config:
-    api.env(['coverage', 'development', 'test', 'benchmark']) ||
-    process.env.NODE_ENV === 'test' ||
-    // in webpack config:
-    api.env(['regressions']);
-
-  const outFileExtension = '.js';
+  // Essentially only replace in production builds.
+  // When aliasing we want to keep the original extension
+  const outFileExtension = process.env.MUI_OUT_FILE_EXTENSION || null;
 
   /** @type {babel.PluginItem[]} */
   const plugins = [
@@ -85,8 +81,8 @@ module.exports = function getBabelConfig(api) {
       '@babel/plugin-transform-runtime',
       {
         useESModules,
-        // any package needs to declare 7.25.0 as a runtime dependency. default is ^7.0.0
-        version: process.env.MUI_BABEL_RUNTIME_VERSION || '^7.25.0',
+        // any package needs to declare 7.27.0 as a runtime dependency. default is ^7.0.0
+        version: process.env.MUI_BABEL_RUNTIME_VERSION || '^7.27.0',
       },
     ],
     [
@@ -96,36 +92,30 @@ module.exports = function getBabelConfig(api) {
         ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
       },
     ],
+    [
+      '@mui/internal-babel-plugin-display-name',
+      {
+        allowedCallees: {
+          '@mui/x-internals/forwardRef': ['forwardRef'],
+        },
+      },
+    ],
+    [
+      'transform-inline-environment-variables',
+      {
+        include: [
+          'MUI_VERSION',
+          'MUI_MAJOR_VERSION',
+          'MUI_MINOR_VERSION',
+          'MUI_PATCH_VERSION',
+          'MUI_PRERELEASE',
+        ],
+      },
+    ],
   ];
 
-  if (process.env.NODE_ENV === 'test') {
-    plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v4` version installed as `date-fns-v4` for tests.
-    // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
-    // TODO: remove when we upgrade to date-fns v4 by default.
-    plugins.push([
-      'babel-plugin-replace-imports',
-      {
-        test: /date-fns/i,
-        replacer: 'date-fns-v4',
-        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsV3/',
-      },
-    ]);
-    plugins.push([
-      'babel-plugin-replace-imports',
-      {
-        test: /date-fns-jalali/i,
-        replacer: 'date-fns-jalali-v3',
-        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsJalaliV3/',
-      },
-      'replace-date-fns-jalali-imports',
-    ]);
-  }
-
   if (process.env.NODE_ENV === 'production') {
-    if (!process.env.E2E_BUILD) {
+    if (!process.env.TEST_BUILD) {
       plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
     }
 
@@ -144,13 +134,20 @@ module.exports = function getBabelConfig(api) {
     }
   }
 
+  if (process.env.BABEL_ENV || process.env.NODE_ENV === 'test') {
+    plugins.push([
+      'transform-replace-expressions',
+      {
+        replace: [['LICENSE_DISABLE_CHECK', 'false']],
+      },
+    ]);
+  }
+
   if (useESModules) {
     plugins.push([
       '@mui/internal-babel-plugin-resolve-imports',
       {
-        // Don't replace the extension when we're using aliases.
-        // Essentially only replace in production builds.
-        outExtension: usesAliases ? null : outFileExtension,
+        outExtension: outFileExtension,
       },
     ]);
   }
@@ -173,18 +170,6 @@ module.exports = function getBabelConfig(api) {
       /prettier/,
     ],
     env: {
-      coverage: {
-        plugins: [
-          'babel-plugin-istanbul',
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
-            },
-          ],
-        ],
-      },
       development: {
         plugins: [
           [
@@ -192,18 +177,6 @@ module.exports = function getBabelConfig(api) {
             {
               alias: defaultAlias,
               root: ['./'],
-            },
-          ],
-        ],
-      },
-      test: {
-        sourceMaps: 'both',
-        plugins: [
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
             },
           ],
         ],

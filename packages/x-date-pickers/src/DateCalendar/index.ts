@@ -4,13 +4,15 @@ export type {
   DateCalendarSlots,
   DateCalendarSlotProps,
 } from './DateCalendar.types';
-export type { PickerDayOwnerState } from './DayCalendar';
 
 export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendarClasses';
 export type { DateCalendarClassKey, DateCalendarClasses } from './dateCalendarClasses';
 export { dayCalendarClasses } from './dayCalendarClasses';
 export type { DayCalendarClassKey, DayCalendarClasses } from './dayCalendarClasses';
-export type { PickersFadeTransitionGroupProps } from './PickersFadeTransitionGroup';
+export type {
+  PickersFadeTransitionGroupProps,
+  ExportedPickersFadeTransitionGroupProps,
+} from './PickersFadeTransitionGroup';
 export { pickersFadeTransitionGroupClasses } from './pickersFadeTransitionGroupClasses';
 export type {
   PickersFadeTransitionGroupClassKey,

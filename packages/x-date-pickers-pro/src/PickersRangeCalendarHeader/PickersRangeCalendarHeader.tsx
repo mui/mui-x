@@ -65,9 +65,9 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
     return <PickersCalendarHeader {...other} labelId={labelId} ref={ref} />;
   }
 
-  const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1), 'left');
+  const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1));
 
-  const selectPreviousMonth = () => onMonthChange(utils.addMonths(currentMonth, -1), 'right');
+  const selectPreviousMonth = () => onMonthChange(utils.addMonths(currentMonth, -1));
 
   return (
     <PickersRangeCalendarHeaderContentMultipleCalendars

@@ -8,6 +8,12 @@
   ],
   "classes": [
     {
+      "key": "animate",
+      "className": "MuiPieArcLabel-animate",
+      "description": "Styles applied to the root element when animation is not skipped.",
+      "isGlobal": false
+    },
+    {
       "key": "faded",
       "className": "MuiPieArcLabel-faded",
       "description": "Styles applied to the root element when faded.",
@@ -23,6 +29,12 @@
       "key": "root",
       "className": "MuiPieArcLabel-root",
       "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiPieArcLabel-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${pieArcLabelClasses.series}-${seriesId}`.",
       "isGlobal": false
     }
   ],

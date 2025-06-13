@@ -1,57 +1,131 @@
 import * as React from 'react';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
+import { DateRangePicker, DateRangePickerProps } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { screen } from '@mui/internal-test-utils/createRenderer';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   buildFieldInteractions,
   createPickerRenderer,
-  getFieldInputRoot,
+  openPicker,
   stubMatchMedia,
 } from 'test/utils/pickers';
+import { pickerPopperClasses } from '@mui/x-date-pickers/internals';
+import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 
 describe('<DateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   const { renderWithProps } = buildFieldInteractions({
     render,
-    clock,
     Component: DateRangePicker,
   });
 
-  it('should not open mobile picker dialog when clicked on input', () => {
+  it('should not use the mobile picker by default', () => {
+    stubMatchMedia(true);
     // Test with accessible DOM structure
     const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
-    fireEvent.click(getFieldInputRoot());
-    clock.runToLast();
-
-    expect(screen.queryByRole('tooltip')).not.to.equal(null);
-    expect(screen.queryByRole('dialog')).to.equal(null);
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
 
     unmount();
 
     // Test with non-accessible DOM structure
     renderWithProps({ enableAccessibleFieldDOMStructure: false });
-    fireEvent.click(screen.getAllByRole('textbox')[0]);
-    clock.runToLast();
-
-    expect(screen.queryByRole('tooltip')).not.to.equal(null);
-    expect(screen.queryByRole('dialog')).to.equal(null);
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
   });
 
-  it('should open mobile picker dialog when clicked on input when `useMediaQuery` returns `false`', () => {
-    const originalMatchMedia = window.matchMedia;
-    window.matchMedia = stubMatchMedia(false);
+  it('should use the mobile picker when `useMediaQuery` returns `false`', () => {
+    stubMatchMedia(false);
+    // Test with accessible DOM structure
+    const { unmount } = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
 
-    render(<DateRangePicker />);
-    fireEvent.click(getFieldInputRoot());
-    clock.runToLast();
+    unmount();
 
-    expect(screen.getByRole('dialog')).not.to.equal(null);
-    expect(screen.queryByRole('tooltip')).to.equal(null);
+    // Test with non-accessible DOM structure
+    renderWithProps({ enableAccessibleFieldDOMStructure: false });
+    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
+  });
 
-    window.matchMedia = originalMatchMedia;
+  describe('form behavior', () => {
+    function TestComponent({
+      onSubmit,
+      ...other
+    }: DateRangePickerProps & { onSubmit: (data: FormData) => void }) {
+      return (
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmit(new window.FormData(event.target as any));
+          }}
+        >
+          <DateRangePicker
+            name="testDate"
+            defaultValue={[new Date('2022-04-17'), new Date('2022-04-21')]}
+            {...other}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      );
+    }
+
+    it('should submit the form when "Enter" is pressed on the input', async () => {
+      const handleSubmit = spy();
+      const { user } = render(<TestComponent onSubmit={handleSubmit} />);
+
+      // focus the input
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Enter}');
+
+      expect(handleSubmit.callCount).to.equal(1);
+      expect([...handleSubmit.lastCall.args[0]][0]).to.deep.equal([
+        'testDate',
+        '04/17/2022 – 04/21/2022',
+      ]);
+    });
+
+    it('should not submit the form when "Enter" is pressed on the multi input field', async () => {
+      const handleSubmit = spy();
+      const { user } = render(
+        <TestComponent
+          onSubmit={handleSubmit}
+          slots={{ field: MultiInputDateRangeField }}
+          name={undefined}
+        />,
+      );
+
+      // focus the input
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Enter}');
+
+      expect(handleSubmit.callCount).to.equal(0);
+    });
+
+    it('should not submit the form when "Enter" is pressed on the input with "defaultMuiPrevented" set to "true"', async () => {
+      const handleSubmit = spy();
+      const { user } = render(
+        <TestComponent
+          onSubmit={handleSubmit}
+          slotProps={{
+            textField: {
+              onKeyDown: (event) => {
+                if (event.key === 'Enter') {
+                  event.defaultMuiPrevented = true;
+                }
+              },
+            },
+          }}
+        />,
+      );
+
+      // focus the input
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Enter}');
+
+      expect(handleSubmit.callCount).to.equal(0);
+    });
   });
 });

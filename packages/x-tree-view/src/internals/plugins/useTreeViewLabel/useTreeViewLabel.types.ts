@@ -11,16 +11,15 @@ export interface UseTreeViewLabelPublicAPI {
    * @param {string} newLabel The new label of the item.
    */
   updateItemLabel: (itemId: TreeViewItemId, newLabel: string) => void;
+  /**
+   * Set which item is currently being edited.
+   * You can pass `null` to exit editing mode.
+   * @param {TreeViewItemId | null} itemId The id of the item to edit, or `null` to exit editing mode.
+   */
+  setEditedItem: (itemId: TreeViewItemId | null) => void;
 }
 
-export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
-  /**
-   * Updates which item is currently being edited.
-   * @param {TreeViewItemId} itemId The id of the item that is currently being edited.
-   * @returns {void}.
-   */
-  setEditedItemId: (itemId: TreeViewItemId | null) => void;
-}
+export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {}
 
 export interface UseTreeViewLabelParameters<R extends {}> {
   /**
@@ -30,46 +29,45 @@ export interface UseTreeViewLabelParameters<R extends {}> {
    */
   onItemLabelChange?: (itemId: TreeViewItemId, newLabel: string) => void;
   /**
-   * Determines if a given item is editable or not.
-   * Make sure to also enable the `labelEditing` experimental feature:
-   * `<RichTreeViewPro experimentalFeatures={{ labelEditing: true }}  />`.
-   * By default, the items are not editable.
+   * Determine if a given item can be edited.
    * @template R
    * @param {R} item The item to check.
-   * @returns {boolean} `true` if the item is editable.
+   * @returns {boolean} `true` if the item can be edited.
+   * @default () => false
    */
   isItemEditable?: boolean | ((item: R) => boolean);
 }
 
-export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedProps<
+export type UseTreeViewLabelParametersWithDefaults<R extends {}> = DefaultizedProps<
   UseTreeViewLabelParameters<R>,
   'isItemEditable'
 >;
 
 export interface UseTreeViewLabelState {
   label: {
+    isItemEditable: ((item: any) => boolean) | boolean;
     editedItemId: string | null;
   };
 }
 
-export interface UseTreeViewLabelContextValue {
-  label: Pick<UseTreeViewLabelDefaultizedParameters<any>, 'isItemEditable'>;
-}
-
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   params: UseTreeViewLabelParameters<any>;
-  defaultizedParams: UseTreeViewLabelDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewLabelParametersWithDefaults<any>;
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
-  contextValue: UseTreeViewLabelContextValue;
-  experimentalFeatures: 'labelEditing';
   dependencies: [UseTreeViewItemsSignature];
 }>;
 
 export interface UseTreeItemLabelInputSlotPropsFromLabelEditing extends TreeItemLabelInputProps {}
 
+export interface UseTreeItemLabelSlotPropsFromLabelEditing {
+  editable?: boolean;
+}
+
 declare module '@mui/x-tree-view/useTreeItem' {
   interface UseTreeItemLabelInputSlotOwnProps
     extends UseTreeItemLabelInputSlotPropsFromLabelEditing {}
+
+  interface UseTreeItemLabelSlotOwnProps extends UseTreeItemLabelSlotPropsFromLabelEditing {}
 }

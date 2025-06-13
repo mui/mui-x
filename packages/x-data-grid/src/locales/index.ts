@@ -2,6 +2,7 @@
 export * from './arSD';
 export * from './beBY';
 export * from './bgBG';
+export * from './bnBD';
 export * from './csCZ';
 export * from './daDK';
 export * from './deDE';
@@ -13,6 +14,7 @@ export * from './fiFI';
 export * from './frFR';
 export * from './heIL';
 export * from './huHU';
+export * from './hyAM';
 export * from './itIT';
 export * from './jaJP';
 export * from './koKR';

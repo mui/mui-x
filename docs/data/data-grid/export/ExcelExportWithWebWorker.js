@@ -4,25 +4,8 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
 import CircularProgress from '@mui/material/CircularProgress';
-import {
-  DataGridPremium,
-  GridToolbarExport,
-  GridToolbarContainer,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport
-        excelOptions={{
-          worker: () =>
-            new Worker(new URL('./excelExportWorker.ts', import.meta.url)),
-        }}
-      />
-    </GridToolbarContainer>
-  );
-}
 
 function SlideTransition(props) {
   return <Slide {...props} direction="up" />;
@@ -33,7 +16,7 @@ export default function ExcelExportWithWebWorker() {
 
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 10000,
+    rowLength: 50_000,
     editable: true,
   });
 
@@ -49,10 +32,18 @@ export default function ExcelExportWithWebWorker() {
         loading={loading}
         rowHeight={38}
         checkboxSelection
-        slots={{ toolbar: CustomToolbar }}
+        showToolbar
         onExcelExportStateChange={(newState) =>
           setInProgress(newState === 'pending')
         }
+        slotProps={{
+          toolbar: {
+            excelOptions: {
+              worker: () =>
+                new Worker(new URL('./excelExportWorker.ts', import.meta.url)),
+            },
+          },
+        }}
       />
     </Box>
   );

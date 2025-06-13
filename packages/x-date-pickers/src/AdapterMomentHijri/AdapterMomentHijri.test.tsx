@@ -1,4 +1,4 @@
-import moment, { Moment } from 'moment';
+import moment, { Moment } from 'moment-hijri';
 import { expect } from 'chai';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
@@ -9,12 +9,28 @@ import {
   describeHijriAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import 'moment/locale/ar';
+import 'moment/locale/ar-sa';
+import { beforeAll } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<AdapterMomentHijri />', () => {
+  beforeAll(() => {
+    if (!isJSDOM) {
+      // Vitest browser mode does not correctly load the locale
+      // This is the minimal amount of locale data needed to run the tests
+      moment.updateLocale('ar-sa', {
+        weekdays: 'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
+        weekdaysShort: 'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت'.split('_'),
+        meridiem: (hour) => (hour < 12 ? 'ص' : 'م'),
+        postformat: (input) =>
+          input.replace(/\d/g, (match) => '٠١٢٣٤٥٦٧٨٩'[match]).replace(/,/g, '،'),
+      });
+    }
+  });
+
   describeHijriAdapter(AdapterMomentHijri, {
     before: () => {
-      moment.locale('ar-SA');
+      moment.locale('ar-sa');
     },
     after: () => {
       moment.locale('en');
@@ -62,15 +78,13 @@ describe('<AdapterMomentHijri />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-hijri',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

@@ -43,10 +43,6 @@ export default function ColorScale() {
         height={300}
         grid={{ horizontal: true }}
         series={series}
-        margin={{
-          top: 10,
-          bottom: 20,
-        }}
         yAxis={[
           {
             colorMap:
@@ -66,7 +62,6 @@ export default function ColorScale() {
         ]}
         xAxis={[
           {
-            scaleType: 'band',
             data: [
               new Date(2019, 1, 1),
               new Date(2020, 1, 1),

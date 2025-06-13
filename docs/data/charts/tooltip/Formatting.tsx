@@ -72,8 +72,9 @@ const lineChartsParams = {
       showMark: false,
     },
   ],
-  width: 600,
-  height: 400,
+  height: 300,
+  margin: { left: 0 },
+  yAxis: [{ width: 50 }],
 };
 
 const yearFormatter = (date: Date) => date.getFullYear().toString();

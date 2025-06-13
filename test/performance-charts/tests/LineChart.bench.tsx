@@ -1,16 +1,12 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { afterEach, bench, describe } from 'vitest';
+import { bench, describe } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { options } from '../utils/options';
 
 describe('LineChart', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
-  const dataLength = 600;
+  const dataLength = 200;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -32,11 +28,12 @@ describe('LineChart', () => {
           ]}
           width={500}
           height={300}
-          experimentalMarkRendering
         />,
       );
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+
+      cleanup();
     },
     options,
   );

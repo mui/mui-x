@@ -1,31 +1,64 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "align": { "description": "The alignment of the texts with the gradient bar." },
     "axisDirection": {
       "description": "The axis direction containing the color configuration to represent."
     },
     "axisId": {
       "description": "The id of the axis item with the color configuration to represent."
     },
-    "direction": {
-      "description": "The direction of the legend layout. The default depends on the chart."
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "direction": { "description": "The direction of the legend layout." },
+    "gradientId": {
+      "description": "The id for the gradient to use. If not provided, it will use the generated gradient from the axis configuration. The <code>gradientId</code> will be used as <code>fill=&quot;url(#gradientId)&quot;</code>."
     },
-    "id": { "description": "A unique identifier for the gradient." },
-    "labelStyle": { "description": "The style applied to labels." },
-    "length": {
-      "description": "The length of the gradient bar. Can be a number (in px) or a string with a percentage such as &#39;50%&#39;. The &#39;100%&#39; is the length of the svg."
-    },
+    "labelPosition": { "description": "Where to position the labels relative to the gradient." },
     "maxLabel": {
       "description": "The label to display at the maximum side of the gradient. Can either be a string, or a function. If not defined, the formatted maximal value is display."
     },
     "minLabel": {
       "description": "The label to display at the minimum side of the gradient. Can either be a string, or a function."
     },
-    "position": { "description": "The position of the legend." },
-    "scaleType": { "description": "The scale used to display gradient colors." },
-    "spacing": { "description": "The space between the gradient bar and the labels." },
-    "thickness": { "description": "The thickness of the gradient bar." }
+    "reverse": { "description": "If <code>true</code>, the gradient and labels will be reversed." },
+    "rotateGradient": {
+      "description": "If provided, the gradient will be rotated by 90deg. Useful for linear gradients that are not in the correct orientation."
+    },
+    "thickness": { "description": "The thickness of the gradient" }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "end": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels after the gradient"
+    },
+    "extremes": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels on the extremes of the gradient"
+    },
+    "gradient": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item with the gradient"
+    },
+    "horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend in row layout"
+    },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
+    "maxLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item that renders the <code>maxLabel</code>"
+    },
+    "minLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item that renders the <code>minLabel</code>"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "start": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels before the gradient"
+    },
+    "vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend in column layout"
+    }
+  }
 }

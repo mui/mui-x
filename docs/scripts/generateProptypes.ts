@@ -10,7 +10,11 @@ import {
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
-const COMPONENTS_WITHOUT_PROPTYPES = ['AnimatedBarElement'];
+const COMPONENTS_WITHOUT_PROPTYPES = [
+  'AnimatedBarElement',
+  /* RadarDataProvider is disabled because many `any` were being generated. More info: https://github.com/mui/mui-x/pull/17968 */
+  'RadarDataProvider',
+];
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isDateObject = (name: string) => {
@@ -42,6 +46,12 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     filePath: sourceFile,
     project,
     checkDeclarations: true,
+    shouldInclude: (type: any) => {
+      if (type.name === 'material') {
+        return false;
+      }
+      return true;
+    },
     shouldResolveObject: ({ name }) => {
       const propsToNotResolve = [
         'classes',
@@ -70,11 +80,9 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'unstableEndFieldRef',
         'series',
         'axis',
-        'bottomAxis',
-        'topAxis',
-        'leftAxis',
-        'rightAxis',
         'plugins',
+        'seriesConfig',
+        'manager',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
@@ -115,6 +123,9 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       },
       shouldInclude: ({ component, prop }) => {
         if (['children', 'state'].includes(prop.name) && component.name.startsWith('DataGrid')) {
+          return false;
+        }
+        if (['plugins', 'seriesConfig'].includes(prop.name) && component.name.includes('Chart')) {
           return false;
         }
         let shouldExclude = false;

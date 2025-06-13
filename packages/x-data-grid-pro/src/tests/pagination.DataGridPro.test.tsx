@@ -1,17 +1,18 @@
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { GridApiPro } from '../models/gridApiPro';
 
 describe('<DataGridPro /> - Pagination', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   describe('setPage', () => {
     it('should apply valid value', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
 
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
@@ -34,13 +35,13 @@ describe('<DataGridPro /> - Pagination', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0']);
       act(() => {
-        apiRef.current.setPage(1);
+        apiRef.current?.setPage(1);
       });
       expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should apply last page if trying to go to a non-existing page', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
+      let apiRef: RefObject<GridApi | null>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
@@ -62,7 +63,7 @@ describe('<DataGridPro /> - Pagination', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0']);
       act(() => {
-        apiRef.current.setPage(50);
+        apiRef.current?.setPage(50);
       });
       expect(getColumnValues(0)).to.deep.equal(['19']);
     });
@@ -70,7 +71,7 @@ describe('<DataGridPro /> - Pagination', () => {
 
   describe('setPageSize', () => {
     it('should apply value', () => {
-      let apiRef: React.MutableRefObject<GridApiPro>;
+      let apiRef: RefObject<GridApiPro | null>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
@@ -90,11 +91,10 @@ describe('<DataGridPro /> - Pagination', () => {
       }
 
       render(<GridTest />);
-      clock.runToLast();
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
       act(() => {
-        apiRef.current.setPageSize(2);
+        apiRef.current?.setPageSize(2);
       });
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);

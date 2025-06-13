@@ -37,4 +37,9 @@ export interface DesktopDateRangePickerProps<
    * @default {}
    */
   slotProps?: DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
+   */
+  closeOnSelect?: boolean;
 }

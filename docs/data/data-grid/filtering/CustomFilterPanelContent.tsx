@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridLogicOperator, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridLogicOperator } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import type { Theme } from '@mui/material/styles';
 
@@ -17,11 +17,13 @@ export default function CustomFilterPanelContent() {
       <DataGridPro
         {...data}
         loading={loading}
-        slots={{
-          toolbar: GridToolbar,
-          // Use custom FilterPanel only for deep modification
-          // FilterPanel: MyCustomFilterPanel,
-        }}
+        showToolbar
+        slots={
+          {
+            // Use custom FilterPanel only for deep modification
+            // FilterPanel: MyCustomFilterPanel,
+          }
+        }
         slotProps={{
           filterPanel: {
             // Force usage of "And" operator

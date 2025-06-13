@@ -9,7 +9,6 @@ export default function GridDemo() {
       xAxis={[{ dataKey: 'x' }]}
       series={[{ dataKey: 'y' }]}
       height={300}
-      margin={{ left: 30, right: 30, top: 30, bottom: 30 }}
       grid={{ vertical: true, horizontal: true }}
     />
   );

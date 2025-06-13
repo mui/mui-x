@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_debounce as debounce } from '@mui/utils';
+import debounce from '@mui/utils/debounce';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { createFakeServer, loadServerRows } from '@mui/x-data-grid-generator';
 
@@ -74,7 +74,7 @@ export default function LazyLoadingGrid() {
     async (params) => {
       const { slice, total } = await fetchRow(params);
 
-      apiRef.current.unstable_replaceRows(params.firstRowToRender, slice);
+      apiRef.current?.unstable_replaceRows(params.firstRowToRender, slice);
       setRowCount(total);
     },
     [apiRef, fetchRow],

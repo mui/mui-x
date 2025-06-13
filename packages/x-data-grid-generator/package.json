@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "8.0.0-alpha.5",
-  "description": "Generate fake data for demo purposes only.",
+  "version": "8.5.2",
   "author": "MUI Team",
+  "description": "Generate fake data for demo purposes only.",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "bugs": {
@@ -19,12 +19,11 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -33,23 +32,28 @@
     "directory": "packages/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.0",
+    "@babel/runtime": "catalog:",
+    "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-premium": "workspace:*",
-    "chance": "^1.1.12",
-    "clsx": "^2.1.1",
-    "lru-cache": "^11.0.2"
+    "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-internals": "workspace:*",
+    "chance": "catalog:",
+    "clsx": "catalog:",
+    "lru-cache": "^11.1.0"
   },
   "devDependencies": {
-    "@mui/icons-material": "^5.16.11",
-    "@mui/material": "^5.16.11",
-    "@types/chance": "^1.1.6",
-    "rimraf": "^6.0.1"
+    "@mui/icons-material": "catalog:",
+    "@mui/material": "catalog:",
+    "@types/chance": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.4.1 || ^6.0.0",
-    "@mui/material": "^5.15.14 || ^6.0.0",
+    "@mui/icons-material": "^5.4.1 || ^6.0.0 || ^7.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
@@ -58,6 +62,11 @@
     },
     "@emotion/styled": {
       "optional": true
+    }
+  },
+  "exports": {
+    "./services/static-data": {
+      "mui-src": "./src/services/static-data.ts"
     }
   },
   "engines": {

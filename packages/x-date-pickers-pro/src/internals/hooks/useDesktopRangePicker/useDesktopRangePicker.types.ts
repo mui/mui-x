@@ -1,25 +1,48 @@
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickerFieldSlotProps, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
-  PickersPopperSlots,
-  PickersPopperSlotProps,
-  UsePickerViewsProps,
+  PickerPopperSlots,
+  PickerPopperSlotProps,
+  UsePickerProps,
   DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
+  PickerFieldUISlotsFromContext,
+  PickerFieldUISlotPropsFromContext,
 } from '@mui/x-date-pickers/internals';
 import {
-  RangeOnlyPickerProps,
-  RangePickerAdditionalViewProps,
-  UseRangePickerParams,
+  ExportedPickersLayoutSlotProps,
+  ExportedPickersLayoutSlots,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
+  NonStaticRangePickerProps,
+  NonStaticRangePickerHookParameters,
   UseRangePickerProps,
-  UseRangePickerSlotProps,
-  UseRangePickerSlots,
-} from '../models/useRangePicker';
+} from '../../models';
 
-export interface UseDesktopRangePickerSlots extends UseRangePickerSlots, PickersPopperSlots {}
+export interface UseDesktopRangePickerSlots
+  extends PickerPopperSlots,
+    ExportedPickersLayoutSlots<PickerRangeValue>,
+    PickerFieldUISlotsFromContext {
+  /**
+   * Component used to enter the date with the keyboard.
+   */
+  field: React.ElementType;
+}
 
 export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    PickersPopperSlotProps {}
+  extends PickerPopperSlotProps,
+    ExportedPickersLayoutSlotProps<PickerRangeValue>,
+    PickerFieldUISlotPropsFromContext {
+  field?: SlotComponentPropsFromProps<
+    PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> & {
+      dateSeparator?: string;
+    },
+    {},
+    PickerOwnerState
+  >;
+}
 
-export interface DesktopRangeOnlyPickerProps extends RangeOnlyPickerProps {
+export interface DesktopRangeOnlyPickerProps extends NonStaticRangePickerProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -30,13 +53,8 @@ export interface UseDesktopRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-> extends UseRangePickerProps<
-    TView,
-    TError,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  > {
+  TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
+> extends UseRangePickerProps<TView, TError, TExternalProps> {
   /**
    * Overridable component slots.
    * @default {}
@@ -49,8 +67,6 @@ export interface UseDesktopRangePickerProps<
   slotProps?: UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
-export interface DesktopRangePickerAdditionalViewProps extends RangePickerAdditionalViewProps {}
-
 export interface UseDesktopRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -60,4 +76,4 @@ export interface UseDesktopRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps, DesktopRangePickerAdditionalViewProps> {}
+> extends NonStaticRangePickerHookParameters<TView, TExternalProps> {}

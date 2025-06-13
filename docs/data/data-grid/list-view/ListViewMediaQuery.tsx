@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   GridRenderCellParams,
-  GridListColDef,
+  GridListViewColDef,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
@@ -34,7 +34,7 @@ function ListViewCell(params: GridRenderCellParams) {
   );
 }
 
-const listColDef: GridListColDef = {
+const listViewColDef: GridListViewColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
@@ -59,15 +59,15 @@ export default function ListViewMediaQuery() {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        maxHeight: 400,
+        height: 400,
       }}
     >
       <DataGridPro
         {...data}
         loading={loading}
         rowHeight={rowHeight}
-        unstable_listView={isListView}
-        unstable_listColumn={listColDef}
+        listView={isListView}
+        listViewColumn={listViewColDef}
       />
     </div>
   );

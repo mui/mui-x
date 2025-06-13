@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import { OnErrorProps, PickersTimezone } from '../models';
-import type { PickerValueManager } from '../internals/hooks/usePicker';
+import type { PickerValueManager } from '../internals/models';
 import { PickerValidValue } from '../internals/models';
 
 export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
@@ -41,7 +41,7 @@ interface UseValidationOptions<TValue extends PickerValidValue, TError, TValidat
   props: TValidationProps;
 }
 
-interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
+export interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
   /**
    * The validation error associated to the value passed to the `useValidation` hook.
    */

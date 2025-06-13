@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import { GridPipeProcessorGroup } from './gridPipeProcessingApi';
@@ -7,11 +8,11 @@ export const useGridRegisterPipeApplier = <
   PrivateApi extends GridPrivateApiCommon,
   G extends GridPipeProcessorGroup,
 >(
-  apiRef: React.MutableRefObject<PrivateApi>,
+  apiRef: RefObject<PrivateApi>,
   group: G,
   callback: () => void,
 ) => {
-  const cleanup = React.useRef<(() => void) | null>();
+  const cleanup = React.useRef<(() => void) | null>(null);
   const id = React.useRef(`mui-${Math.round(Math.random() * 1e9)}`);
 
   const registerPreProcessor = React.useCallback(() => {

@@ -1,12 +1,11 @@
-import * as React from 'react';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { BasePickerProps } from '../../models/props/basePickerProps';
-import { UsePickerParams } from '../usePicker';
-import { UsePickerViewsProps } from '../usePicker/usePickerViews';
+import { UsePickerParameters, UsePickerProps } from '../usePicker';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseStaticPickerSlots extends ExportedPickersLayoutSlots<PickerValue> {}
 
@@ -34,8 +33,8 @@ export interface StaticOnlyPickerProps {
 export interface UseStaticPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any, any>,
-> extends BasePickerProps<PickerValue, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
+> extends BasePickerProps<PickerValue, TView, TError, TExternalProps>,
     StaticOnlyPickerProps {
   /**
    * Overridable component slots.
@@ -53,12 +52,14 @@ export interface UseStaticPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerValue, TView, TExternalProps, {}>,
-    'valueManager' | 'valueType' | 'validator'
+    UsePickerParameters<PickerValue, TView, TExternalProps>,
+    'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
   /**
-   * Ref to pass to the root element
+   * Steps available for the picker.
+   * This will be used to define the behavior of navigation actions.
+   * If null, the picker will not have any step navigation.
    */
-  ref?: React.Ref<HTMLDivElement>;
+  steps: PickerStep[] | null;
 }

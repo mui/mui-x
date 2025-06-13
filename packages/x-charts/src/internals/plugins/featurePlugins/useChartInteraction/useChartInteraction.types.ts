@@ -1,6 +1,8 @@
 import { ChartPluginSignature } from '../../models';
 import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
+export type Coordinate = { x: number; y: number };
+
 export interface UseChartInteractionInstance {
   /**
    * Remove all interaction.
@@ -12,32 +14,16 @@ export interface UseChartInteractionInstance {
    */
   setItemInteraction: (newItem: ChartItemIdentifier<ChartSeriesType>) => void;
   /**
-   * Set the new axis the user is interacting with.
-   * @param {Partial<AxisInteractionData>} newAxis The new axis identifier.
+   * Remove item interaction if the current if the provided item is still the one interacting.
+   * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
    */
-  setAxisInteraction: (newAxis: Partial<AxisInteractionData>) => void;
+  removeItemInteraction: (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => void;
   /**
-   * Enable the voronoi computation.
+   * Set the new pointer coordinate.
+   * @param {Coordinate | null} newCoordinate The new pointer coordinate.
    */
-  enableVoronoid: () => void;
-  /**
-   * Disable the voronoi computation.
-   */
-  disableVoronoid: () => void;
+  setPointerCoordinate: (newCoordinate: Coordinate | null) => void;
 }
-
-export type AxisInteractionData = {
-  x: null | {
-    value: number | Date | string;
-    // Set to -1 if no index.
-    index: number;
-  };
-  y: null | {
-    value: number | Date | string;
-    // Set to -1 if no index.
-    index: number;
-  };
-};
 
 export interface UseChartInteractionState {
   interaction: {
@@ -46,14 +32,9 @@ export interface UseChartInteractionState {
      */
     item: null | ChartItemIdentifier<ChartSeriesType>;
     /**
-     * The x- and y-axes currently interacting.
+     * The x/y SVG coordinate of the "main" pointer
      */
-    axis: AxisInteractionData;
-    /**
-     * Set to `true` when `VoronoiHandler` is active.
-     * Used to prevent collision with mouseEnter events.
-     */
-    isVoronoiEnabled?: boolean;
+    pointer: Coordinate | null;
   };
 }
 

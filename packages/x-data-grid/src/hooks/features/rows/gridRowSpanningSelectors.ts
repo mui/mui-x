@@ -1,7 +1,9 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-const gridRowSpanningStateSelector = (state: GridStateCommunity) => state.rowSpanning;
+const gridRowSpanningStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.rowSpanning,
+);
 
 export const gridRowSpanningHiddenCellsSelector = createSelector(
   gridRowSpanningStateSelector,

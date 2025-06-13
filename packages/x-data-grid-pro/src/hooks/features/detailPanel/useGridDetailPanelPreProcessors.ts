@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { gridClasses } from '@mui/x-data-grid';
+import { RefObject } from '@mui/x-internals/types';
+import { gridClasses, GridColDef } from '@mui/x-data-grid';
 import { useGridRegisterPipeProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
@@ -10,37 +11,49 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 
 export const useGridDetailPanelPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const addToggleColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (props.getDetailPanelContent == null) {
-        // Remove the toggle column, when it exists
-        if (columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD]) {
-          delete columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD];
-          columnsState.orderedFields = columnsState.orderedFields.filter(
-            (field) => field !== GRID_DETAIL_PANEL_TOGGLE_FIELD,
-          );
-        }
-        return columnsState;
-      }
-
-      // Don't add the toggle column if there's already one
-      // The user might have manually added it to have it in a custom position
-      if (columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD]) {
-        return columnsState;
-      }
-
-      // Otherwise, add the toggle column at the beginning
-      columnsState.orderedFields = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.orderedFields];
-      columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
+      const detailPanelToggleColumn: GridColDef = {
         ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
         headerName: privateApiRef.current.getLocaleText('detailPanelToggle'),
       };
+
+      const shouldHaveToggleColumn = !!props.getDetailPanelContent;
+      const hasToggleColumn = columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] != null;
+
+      if (shouldHaveToggleColumn && !hasToggleColumn) {
+        columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = detailPanelToggleColumn;
+        columnsState.orderedFields = [
+          GRID_DETAIL_PANEL_TOGGLE_FIELD,
+          ...columnsState.orderedFields,
+        ];
+      } else if (!shouldHaveToggleColumn && hasToggleColumn) {
+        delete columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD];
+        columnsState.orderedFields = columnsState.orderedFields.filter(
+          (field) => field !== GRID_DETAIL_PANEL_TOGGLE_FIELD,
+        );
+      } else if (shouldHaveToggleColumn && hasToggleColumn) {
+        columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
+          ...detailPanelToggleColumn,
+          ...columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD],
+        };
+        // If the column is not in the columns array (not a custom detail panel toggle column), move it to the beginning of the column order
+        if (!props.columns.some((col) => col.field === GRID_DETAIL_PANEL_TOGGLE_FIELD)) {
+          columnsState.orderedFields = [
+            GRID_DETAIL_PANEL_TOGGLE_FIELD,
+            ...columnsState.orderedFields.filter(
+              (field) => field !== GRID_DETAIL_PANEL_TOGGLE_FIELD,
+            ),
+          ];
+        }
+      }
+
       return columnsState;
     },
-    [privateApiRef, props.getDetailPanelContent],
+    [privateApiRef, props.columns, props.getDetailPanelContent],
   );
 
   const addExpandedClassToRow = React.useCallback<GridPipeProcessor<'rowClassName'>>(
@@ -49,7 +62,7 @@ export const useGridDetailPanelPreProcessors = (
         return classes;
       }
 
-      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(privateApiRef.current.state);
+      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(privateApiRef);
       if (!expandedRowIds.has(id)) {
         return classes;
       }

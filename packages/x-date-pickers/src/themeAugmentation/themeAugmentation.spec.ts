@@ -15,7 +15,7 @@ import {
 import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
 import { pickersArrowSwitcherClasses } from '../internals/components/PickersArrowSwitcher';
-import { pickersPopperClasses } from '../internals/components/pickersPopperClasses';
+import { pickerPopperClasses } from '../internals/components/PickerPopper';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
 import { digitalClockClasses } from '../DigitalClock';
@@ -23,6 +23,8 @@ import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
+import { pickersInputBaseClasses } from '../PickersTextField';
+import { pickerDay2Classes } from '../PickerDay2';
 
 createTheme({
   components: {
@@ -354,20 +356,39 @@ createTheme({
         },
       },
     },
-    MuiPickersPopper: {
+    MuiPickerDay2: {
       defaultProps: {
-        placement: 'bottom',
-        // @ts-expect-error invalid MuiPickersPopper prop
+        disabled: true,
+        // @ts-expect-error invalid MuiPickerDay2 prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${pickersPopperClasses.paper}`]: {
+          [`.${pickerDay2Classes.today}`]: {
             backgroundColor: 'green',
           },
         },
-        // @ts-expect-error invalid MuiPickersPopper class key
+        // @ts-expect-error invalid MuiPickerDay2 class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiPickerPopper: {
+      defaultProps: {
+        placement: 'bottom',
+        // @ts-expect-error invalid MuiPickerPopper prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${pickerPopperClasses.paper}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiPickerPopper class key
         content: {
           backgroundColor: 'blue',
         },
@@ -635,9 +656,12 @@ createTheme({
         someRandomProp: true,
       },
       styleOverrides: {
-        root: {
+        root: ({ ownerState }) => ({
           backgroundColor: 'red',
-        },
+          [`.${pickersInputBaseClasses.activeBar}`]: {
+            backgroundColor: ownerState.isPickerReadOnly ? 'green' : 'blue',
+          },
+        }),
         // @ts-expect-error invalid MuiPickersInputBase class key
         content: {
           backgroundColor: 'blue',

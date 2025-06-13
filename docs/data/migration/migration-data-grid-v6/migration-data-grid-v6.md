@@ -59,8 +59,6 @@ You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/p
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-<!-- #default-branch-switch -->
-
 ```bash
 # Data Grid specific
 npx @mui/x-codemod@latest v7.0.0/data-grid/preset-safe <path>
@@ -278,7 +276,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
 
   ```diff
-  -valueFormatter: ({ value }) => value,
+  -valueFormatter: ({ value, row, column, apiRef }) => value,
   +valueFormatter: (value, row, column, apiRef) => value,
   ```
 
@@ -496,7 +494,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Editing
 
-- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in its place.
+- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) prop can be used in its place.
 
 ### Other exports
 

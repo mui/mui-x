@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
+import { vi } from 'vitest';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
-interface CreatePickerRendererOptions extends CreateRendererOptions {
+interface CreatePickerRendererOptions
+  extends Omit<CreateRendererOptions, 'clock' | 'clockOptions'> {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
-  locale?: Locale;
+  locale?: { code: string } | any;
   adapterName?: AdapterName;
   instance?: any;
 }
@@ -14,9 +16,22 @@ export function createPickerRenderer({
   locale,
   adapterName,
   instance,
+  clockConfig,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
-  const { clock, render: clientRender } = createRenderer(createRendererOptions);
+  const { render: clientRender } = createRenderer({
+    ...createRendererOptions,
+  });
+  beforeEach(() => {
+    if (clockConfig) {
+      vi.setSystemTime(clockConfig);
+    }
+  });
+  afterEach(() => {
+    if (clockConfig) {
+      vi.useRealTimers();
+    }
+  });
 
   let adapterLocale = [
     'date-fns',
@@ -45,8 +60,7 @@ export function createPickerRenderer({
   }
 
   return {
-    clock,
-    render(node: React.ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
+    render(node: React.ReactElement<any>, options?: Omit<RenderOptions, 'wrapper'>) {
       return clientRender(node, { ...options, wrapper: Wrapper });
     },
     adapter,

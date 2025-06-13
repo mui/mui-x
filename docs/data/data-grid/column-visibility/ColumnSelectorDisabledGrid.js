@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const UserType = {
@@ -57,9 +57,7 @@ export default function ColumnSelectorDisabledGrid() {
           {...data}
           disableColumnSelector
           columnVisibilityModel={columnVisibilityModel}
-          slots={{
-            toolbar: GridToolbar,
-          }}
+          showToolbar
         />
       </div>
     </Stack>

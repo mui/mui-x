@@ -1,3 +1,5 @@
+import { Theme } from '@mui/material/styles';
+import { SxProps, SystemStyleObject } from '@mui/system';
 import * as React from 'react';
 
 /* Use it instead of .includes method for IE support */
@@ -59,3 +61,19 @@ export const getFocusedListItemIndex = (listElement: HTMLUListElement): number =
 };
 
 export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';
+
+export function mergeSx(
+  ...sxProps: (SxProps<Theme> | undefined)[]
+): ReadonlyArray<
+  boolean | SystemStyleObject<Theme> | ((theme: Theme) => SystemStyleObject<Theme>)
+> {
+  return sxProps.reduce((acc, sxProp) => {
+    if (Array.isArray(sxProp)) {
+      acc.push(...sxProp);
+    } else if (sxProp != null) {
+      acc.push(sxProp);
+    }
+
+    return acc;
+  }, [] as any);
+}

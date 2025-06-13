@@ -1,7 +1,6 @@
-import * as React from 'react';
 import {
   BasePickerProps,
-  UsePickerParams,
+  UsePickerParameters,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
   DateOrTimeViewWithMeridiem,
@@ -12,6 +11,7 @@ import {
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import { UseRangePositionProps } from '../useRangePosition';
+import { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
 
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 
@@ -26,7 +26,7 @@ export interface UseStaticRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
-> extends BasePickerProps<PickerRangeValue, TView, TError, TExternalProps, {}>,
+> extends BasePickerProps<PickerRangeValue, TView, TError, TExternalProps>,
     StaticRangeOnlyPickerProps {
   /**
    * Overridable components.
@@ -44,12 +44,14 @@ export interface UseStaticRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<PickerRangeValue, TView, TExternalProps, {}>,
-    'valueManager' | 'valueType' | 'validator'
+    UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
+    'valueManager' | 'valueType' | 'validator' | 'ref'
   > {
   props: TExternalProps;
   /**
-   * Ref to pass to the root element
+   * Steps available for the picker.
+   * This will be used to define the behavior of navigation actions.
+   * If null, the picker will not have any step navigation.
    */
-  ref: React.Ref<HTMLDivElement> | undefined;
+  steps: PickerRangeStep[] | null;
 }

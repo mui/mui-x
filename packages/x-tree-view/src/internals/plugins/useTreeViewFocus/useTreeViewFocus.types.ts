@@ -32,18 +32,17 @@ export interface UseTreeViewFocusParameters {
   onItemFocus?: (event: React.SyntheticEvent | null, itemId: string) => void;
 }
 
-export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
+export type UseTreeViewFocusParametersWithDefaults = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
   focus: {
     focusedItemId: string | null;
-    defaultFocusableItemId: string | null;
   };
 }
 
 export type UseTreeViewFocusSignature = TreeViewPluginSignature<{
   params: UseTreeViewFocusParameters;
-  defaultizedParams: UseTreeViewFocusDefaultizedParameters;
+  paramsWithDefaults: UseTreeViewFocusParametersWithDefaults;
   instance: UseTreeViewFocusInstance;
   publicAPI: UseTreeViewFocusPublicAPI;
   state: UseTreeViewFocusState;

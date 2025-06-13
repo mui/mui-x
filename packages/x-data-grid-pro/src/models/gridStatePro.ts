@@ -9,7 +9,7 @@ import type {
   GridDetailPanelInitialState,
   GridColumnReorderState,
 } from '../hooks';
-import type { GridDataSourceState } from '../hooks/features/dataSource/interfaces';
+import type { GridDataSourceState } from '../hooks/features/dataSource/models';
 
 /**
  * The state of Data Grid Pro.

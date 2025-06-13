@@ -30,7 +30,6 @@ const useUtilityClasses = (
 export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerLayoutOwnerState }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
@@ -79,9 +78,8 @@ export const PickersLayoutRoot = styled('div', {
 export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'ContentWrapper',
-  overridesResolver: (props, styles) => styles.contentWrapper,
 })<{ ownerState: PickerLayoutOwnerState }>({
-  gridColumn: 2,
+  gridColumn: '2 / 4',
   gridRow: 2,
   display: 'flex',
   flexDirection: 'column',
@@ -150,9 +148,6 @@ PickersLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  isValid: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onSelectShortcut: PropTypes.func.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
@@ -171,7 +166,6 @@ PickersLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
 } as any;
 
 export { PickersLayout };

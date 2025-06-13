@@ -66,7 +66,6 @@ describe('<AdapterLuxon />', () => {
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
       expectDate('keyboardDate', '2/1/2020', '01.02.2020');
-      expectDate('keyboardDateTime', '2/1/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '2/1/2020 11:44 PM', '01.02.2020 11:44 PM');
       expectDate('keyboardDateTime24h', '2/1/2020 23:44', '01.02.2020 23:44');
     });
@@ -94,15 +93,13 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'luxon',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
@@ -150,15 +147,13 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, adapter, clock } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'luxon',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

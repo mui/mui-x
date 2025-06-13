@@ -5,15 +5,23 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { usePickerActionsContext } from '../hooks';
+import { usePickerContext } from '../hooks';
 
-export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
+export type PickersActionBarAction =
+  | 'clear'
+  | 'cancel'
+  | 'accept'
+  | 'today'
+  | 'next'
+  | 'nextOrAccept';
 
 export interface PickersActionBarProps extends DialogActionsProps {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
   actions?: PickersActionBarAction[];
 }
@@ -21,7 +29,6 @@ export interface PickersActionBarProps extends DialogActionsProps {
 const PickersActionBarRoot = styled(DialogActions, {
   name: 'MuiPickersLayout',
   slot: 'ActionBar',
-  overridesResolver: (_, styles) => styles.actionBar,
 })({});
 
 /**
@@ -34,12 +41,18 @@ const PickersActionBarRoot = styled(DialogActions, {
  *
  * - [PickersActionBar API](https://mui.com/x/api/date-pickers/pickers-action-bar/)
  */
-function PickersActionBar(props: PickersActionBarProps) {
+function PickersActionBarComponent(props: PickersActionBarProps) {
   const { actions, ...other } = props;
 
   const translations = usePickerTranslations();
-  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
-    usePickerActionsContext();
+  const {
+    clearValue,
+    setValueToToday,
+    acceptValueChanges,
+    cancelValueChanges,
+    goToNextStep,
+    hasNextStep,
+  } = usePickerContext();
 
   if (actions == null || actions.length === 0) {
     return null;
@@ -75,6 +88,27 @@ function PickersActionBar(props: PickersActionBarProps) {
           </Button>
         );
 
+      case 'next':
+        return (
+          <Button onClick={goToNextStep} key={actionType}>
+            {translations.nextStepButtonLabel}
+          </Button>
+        );
+
+      case 'nextOrAccept':
+        if (hasNextStep) {
+          return (
+            <Button onClick={goToNextStep} key={actionType}>
+              {translations.nextStepButtonLabel}
+            </Button>
+          );
+        }
+        return (
+          <Button onClick={acceptValueChanges} key={actionType}>
+            {translations.okButtonLabel}
+          </Button>
+        );
+
       default:
         return null;
     }
@@ -83,7 +117,7 @@ function PickersActionBar(props: PickersActionBarProps) {
   return <PickersActionBarRoot {...other}>{buttons}</PickersActionBarRoot>;
 }
 
-PickersActionBar.propTypes = {
+PickersActionBarComponent.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -91,9 +125,13 @@ PickersActionBar.propTypes = {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
+   * @default
+   * - `[]` for Desktop Date Picker and Desktop Date Range Picker
+   * - `['cancel', 'accept']` for all other Pickers
    */
-  actions: PropTypes.arrayOf(PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']).isRequired),
+  actions: PropTypes.arrayOf(
+    PropTypes.oneOf(['accept', 'cancel', 'clear', 'next', 'nextOrAccept', 'today']).isRequired,
+  ),
   /**
    * If `true`, the actions do not have additional margin.
    * @default false
@@ -108,5 +146,7 @@ PickersActionBar.propTypes = {
     PropTypes.object,
   ]),
 } as any;
+
+const PickersActionBar = React.memo(PickersActionBarComponent);
 
 export { PickersActionBar };

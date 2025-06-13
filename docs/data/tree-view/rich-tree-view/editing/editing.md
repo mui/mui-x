@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 components: RichTreeView, TreeItem
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 packageName: '@mui/x-tree-view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
@@ -85,15 +85,53 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Change the label of an item
 
-Use the `setItemExpansion` API method to change the expansion of an item.
+Use the `updateItemLabel()` API method to imperatively update the label of an item.
 
 ```ts
 apiRef.current.updateItemLabel(
-  // The id of the item to to update
+  // The id of the item to update
   itemId,
-  // The new label of the item.
+  // The new label of the item
   newLabel,
 );
 ```
 
 {{"demo": "ApiMethodUpdateItemLabel.js"}}
+
+### Change edition mode of an item
+
+Use the `setEditedItem()` API method to set which item is being edited.
+
+```ts
+apiRef.current.setEditedItem(
+  // The id of the item to edit, or `null` to exit editing mode
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodSetEditedItem.js"}}
+
+## Editing lazy loaded children
+
+To store the updated item labels on your server use the `onItemLabelChange` callback function.
+
+Changes to the label are not automatically updated in the `dataSourceCache` and will need to be updated manually.
+
+```tsx
+const handleItemLabelChange = (itemId: TreeViewItemId, newLabel: string) => {
+  // update your cache here
+};
+
+<RichTreeViewPro
+  items={[]}
+  onItemLabelChange={handleItemLabelChange}
+  isItemEditable
+  dataSource={{
+    getChildrenCount: (item) => item?.childrenCount as number,
+    getTreeItems: fetchData,
+  }}
+  {...otherProps}
+/>;
+```
+
+Visit the dedicated page for [lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading/#lazy-loading-and-label-editing) to read more.

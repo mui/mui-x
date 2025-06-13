@@ -36,12 +36,14 @@ const jaJPPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'クリア',
   okButtonLabel: '確定',
   todayButtonLabel: '今日',
+  nextStepButtonLabel: '来',
 
   // Toolbar titles
   datePickerToolbarTitle: '日付を選択',
   dateTimePickerToolbarTitle: '日時を選択',
   timePickerToolbarTitle: '時間を選択',
   dateRangePickerToolbarTitle: '日付の範囲を選択',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,7 +61,7 @@ const jaJPPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}週目`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
       ? `日付を選択してください。選択した日付は ${formattedDate} です`
@@ -68,6 +70,7 @@ const jaJPPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `時間を選択してください。選択した時間は ${formattedTime} です`
       : '時間を選択してください',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'クリア',
 
   // Table labels

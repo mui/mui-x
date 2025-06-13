@@ -10,11 +10,15 @@
     "component": { "type": { "name": "elementType" } },
     "components": {
       "type": { "name": "shape", "description": "{ Root?: elementType }" },
-      "default": "{}"
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "use the <code>slots</code> prop instead. This prop will be removed in a future major release. <a href=\"/material-ui/migration/migrating-from-deprecated-apis/\">How to migrate</a>."
     },
     "componentsProps": {
       "type": { "name": "shape", "description": "{ root?: func<br>&#124;&nbsp;object }" },
-      "default": "{}"
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "use the <code>slotProps</code> prop instead. This prop will be removed in a future major release. <a href=\"/material-ui/migration/migrating-from-deprecated-apis/\">How to migrate</a>."
     },
     "container": {
       "type": {
@@ -64,7 +68,11 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "transition": { "type": { "name": "bool" }, "default": "false" }
+    "transition": { "type": { "name": "bool" }, "default": "false" },
+    "trigger": {
+      "type": { "name": "enum", "description": "'item'<br>&#124;&nbsp;'none'" },
+      "default": "'item'"
+    }
   },
   "name": "HeatmapTooltip",
   "imports": [
@@ -97,9 +105,9 @@
       "isGlobal": false
     },
     {
-      "key": "markCell",
-      "className": "MuiHeatmapTooltip-markCell",
-      "description": "Styles applied to the markCell element.",
+      "key": "markContainer",
+      "className": "MuiHeatmapTooltip-markContainer",
+      "description": "Styles applied to the markContainer element.",
       "isGlobal": false
     },
     {
@@ -134,7 +142,7 @@
     }
   ],
   "muiName": "MuiHeatmapTooltip",
-  "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapTooltip.tsx",
+  "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapTooltip/HeatmapTooltip.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false

@@ -1,10 +1,9 @@
 'use client';
-import { AxisDefaultized } from '../models/axis';
-import { useCartesianContext } from '../context/CartesianProvider/useCartesianContext';
-
+import { ComputedAxis } from '../models/axis';
 import { ZAxisDefaultized } from '../models/z-axis';
-import { ColorLegendSelector } from './legend.types';
-import { useZAxis } from '../hooks/useZAxis';
+import { useZAxes } from '../hooks/useZAxis';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
+import { ColorLegendSelector } from './colorLegend.types';
 
 /**
  * Helper to select an axis definition according to its direction and id.
@@ -12,9 +11,10 @@ import { useZAxis } from '../hooks/useZAxis';
 export function useAxis({
   axisDirection,
   axisId,
-}: ColorLegendSelector): ZAxisDefaultized | AxisDefaultized {
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
-  const { zAxis, zAxisIds } = useZAxis();
+}: ColorLegendSelector): ZAxisDefaultized | ComputedAxis {
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+  const { zAxis, zAxisIds } = useZAxes();
 
   switch (axisDirection) {
     case 'x': {

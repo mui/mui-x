@@ -5,6 +5,7 @@ import {
   useGridSelector,
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
+  ToolbarButton,
 } from '@mui/x-data-grid-premium';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -14,7 +15,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { ToolbarButton } from './ToolbarButton';
 import { Drawer, DrawerHeader } from './Drawer';
 
 export function ToolbarColumnsItem(props) {

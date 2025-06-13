@@ -1,8 +1,10 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridFocusState, GridTabIndexState } from './gridFocusState';
 
-export const gridFocusStateSelector = (state: GridStateCommunity) => state.focus;
+export const gridFocusStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.focus,
+);
 
 export const gridFocusCellSelector = createSelector(
   gridFocusStateSelector,
@@ -24,7 +26,9 @@ export const gridFocusColumnGroupHeaderSelector = createSelector(
   (focusState: GridFocusState) => focusState.columnGroupHeader,
 );
 
-export const gridTabIndexStateSelector = (state: GridStateCommunity) => state.tabIndex;
+export const gridTabIndexStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.tabIndex,
+);
 
 export const gridTabIndexCellSelector = createSelector(
   gridTabIndexStateSelector,

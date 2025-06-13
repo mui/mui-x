@@ -5,6 +5,6 @@
   columns={columns}
   groupingColDef={groupingColDef}
   defaultGroupingExpansionDepth={-1}
-  slots={{ toolbar: GridToolbar }}
+  showToolbar
   slotProps={{ toolbar: { excelOptions } }}
 />

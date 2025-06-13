@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { getThemeProps } from '@mui/system';
 import {
   GRID_DEFAULT_LOCALE_TEXT,
   DATA_GRID_PROPS_DEFAULT_VALUES,
@@ -23,7 +24,7 @@ type GetDataGridProForcedProps = (
 
 const getDataGridProForcedProps: GetDataGridProForcedProps = (themedProps) => ({
   signature: 'DataGridPro',
-  ...(themedProps.unstable_dataSource
+  ...(themedProps.dataSource
     ? {
         filterMode: 'server',
         sortingMode: 'server',
@@ -51,20 +52,20 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowsLoadingMode: 'client',
   scrollEndThreshold: 80,
   treeData: false,
-  unstable_listView: false,
-  unstable_lazyLoading: false,
-  unstable_lazyLoadingRequestThrottleMs: 500,
+  lazyLoading: false,
+  lazyLoadingRequestThrottleMs: 500,
+  listView: false,
+  multipleColumnsSortingMode: 'withModifierKey',
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const themedProps =
-    // eslint-disable-next-line material-ui/mui-name-matches-component-name
-    useThemeProps({
-      props: inProps,
-      name: 'MuiDataGrid',
-    });
+  const theme = useTheme();
+  const themedProps = React.useMemo(
+    () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
+    [theme, inProps],
+  );
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),

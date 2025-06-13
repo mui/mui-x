@@ -45,6 +45,7 @@ export default function ControlledSelectedSectionsSingleInputRangeField() {
             size="small"
             variant="outlined"
             onClick={() => setSelectedSectionType(sectionName, position)}
+            key={sectionName}
           >
             {sectionName}
           </Button>

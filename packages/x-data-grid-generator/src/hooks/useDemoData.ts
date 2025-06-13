@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
 import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
@@ -98,9 +99,7 @@ export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenera
     options.dataSet === 'Commodity' ? getCommodityColumns(options.editable) : getEmployeeColumns();
 
   if (options.visibleFields) {
-    columns = columns.map((col) =>
-      options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
-    );
+    columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
   if (options.maxColumns) {
     columns = columns.slice(0, options.maxColumns);

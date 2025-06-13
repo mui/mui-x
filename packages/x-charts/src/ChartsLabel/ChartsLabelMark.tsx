@@ -6,12 +6,18 @@ import clsx from 'clsx';
 import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 
+export interface ChartsLabelCustomMarkProps {
+  className?: string;
+  /** Color of the series this mark refers to. */
+  color?: string;
+}
+
 export interface ChartsLabelMarkProps {
   /**
    * The type of the mark.
    * @default 'square'
    */
-  type?: 'square' | 'circle' | 'line';
+  type?: 'square' | 'circle' | 'line' | React.ComponentType<ChartsLabelCustomMarkProps>;
   /**
    * The color of the mark.
    */
@@ -27,16 +33,14 @@ export interface ChartsLabelMarkProps {
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLabelMarkProps }>(() => {
   return {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
+    width: 14,
+    height: 14,
     [`&.${labelMarkClasses.line}`]: {
       width: 16,
-      display: 'flex',
+      height: 'unset',
       alignItems: 'center',
       [`.${labelMarkClasses.mask}`]: {
         height: 4,
@@ -54,11 +58,15 @@ const Root = styled('div', {
     [`&.${labelMarkClasses.circle}`]: {
       height: 15,
       width: 15,
-      borderRadius: '50%',
-      overflow: 'hidden',
     },
     svg: {
       display: 'block',
+    },
+    [`& .${labelMarkClasses.mask} > *`]: {
+      height: '100%',
+      width: '100%',
+    },
+    [`& .${labelMarkClasses.mask}`]: {
       height: '100%',
       width: '100%',
     },
@@ -66,17 +74,18 @@ const Root = styled('div', {
 });
 
 /**
- * @ignore - internal component.
- *
  * Generates the label mark for the tooltip and legend.
+ * @ignore - internal component.
  */
 const ChartsLabelMark = consumeThemeProps(
   'MuiChartsLabelMark',
   {
+    defaultProps: { type: 'square' },
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelMark(props: ChartsLabelMarkProps, ref: React.Ref<HTMLDivElement>) {
     const { type, color, className, classes, ...other } = props;
+    const Component = type;
 
     return (
       <Root
@@ -87,9 +96,17 @@ const ChartsLabelMark = consumeThemeProps(
         {...other}
       >
         <div className={classes?.mask}>
-          <svg viewBox="0 0 24 24" preserveAspectRatio={type === 'line' ? 'none' : undefined}>
-            <rect width="24" height="24" fill={color} />
-          </svg>
+          {typeof Component === 'function' ? (
+            <Component className={classes?.fill} color={color} />
+          ) : (
+            <svg viewBox="0 0 24 24" preserveAspectRatio={type === 'line' ? 'none' : undefined}>
+              {type === 'circle' ? (
+                <circle className={classes?.fill} r="12" cx="12" cy="12" fill={color} />
+              ) : (
+                <rect className={classes?.fill} width="24" height="24" fill={color} />
+              )}
+            </svg>
+          )}
         </div>
       </Root>
     );

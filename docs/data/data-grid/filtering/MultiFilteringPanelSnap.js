@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, GridLogicOperator, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
@@ -16,7 +16,7 @@ export default function MultiFilteringPanelSnap() {
   const apiRef = useGridApiRef();
 
   useEnhancedEffect(() => {
-    apiRef.current.showFilterPanel();
+    apiRef.current?.showFilterPanel();
   }, [apiRef]);
 
   return (

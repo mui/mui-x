@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function SimpleHeaderFilteringDataGridPro() {
@@ -27,6 +27,7 @@ export default function SimpleHeaderFilteringDataGridPro() {
         slots={{
           headerFilterMenu: null,
         }}
+        sx={{ [`.${gridClasses['columnHeader--filter']}`]: { px: 1 } }}
       />
     </div>
   );

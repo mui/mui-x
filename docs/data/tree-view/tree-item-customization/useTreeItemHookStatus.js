@@ -7,6 +7,8 @@ import AdjustIcon from '@mui/icons-material/Adjust';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import ExpandCircleDownRoundedIcon from '@mui/icons-material/ExpandCircleDownRounded';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import HourglassBottomOutlinedIcon from '@mui/icons-material/HourglassBottomOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DrawOutlinedIcon from '@mui/icons-material/DrawOutlined';
@@ -68,6 +70,14 @@ function StatusLegend() {
           {STATUS_ICONS.editing}
           <Typography variant="body2">editing</Typography>
         </Stack>
+        <Stack direction="row" spacing={1} alignItems="center">
+          {STATUS_ICONS.loading}
+          <Typography variant="body2">loading</Typography>
+        </Stack>
+        <Stack direction="row" spacing={1} alignItems="center">
+          {STATUS_ICONS.error}
+          <Typography variant="body2">error</Typography>
+        </Stack>
       </Stack>
     </Paper>
   );
@@ -81,6 +91,8 @@ const STATUS_ICONS = {
   disabled: <CancelOutlinedIcon color="action" fontSize="small" />,
   editable: <EditOutlinedIcon color="warning" fontSize="small" />,
   editing: <DrawOutlinedIcon color="info" fontSize="small" />,
+  loading: <HourglassBottomOutlinedIcon color="info" fontSize="small" />,
+  error: <ErrorOutlineOutlinedIcon color="info" fontSize="small" />,
 };
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -142,9 +154,6 @@ export default function useTreeItemHookStatus() {
           slots={{ item: CustomTreeItem }}
           isItemDisabled={(item) => Boolean(item?.disabled)}
           isItemEditable={(item) => Boolean(item?.editable)}
-          experimentalFeatures={{
-            labelEditing: true,
-          }}
         />
       </Box>
       <StatusLegend />

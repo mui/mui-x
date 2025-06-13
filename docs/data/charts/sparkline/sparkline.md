@@ -6,7 +6,7 @@ components: SparkLineChart
 
 # Charts - Sparkline
 
-<p class="description">Sparkline charts can provide an overview of data trends.</p>
+<p class="description">Sparkline chart can provide an overview of data trends.</p>
 
 ## Basics
 
@@ -66,3 +66,27 @@ The demo below shows different ways to set the y-axis range.
 They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
 
 {{"demo": "CustomDomainYAxis.js"}}
+
+## Color customization
+
+You can customize the color of the sparkline by providing a color to the `color` prop.
+
+{{"demo": "ColorCustomization.js"}}
+
+The `color` prop also accepts a function that is called with the mode (`'light'` or `'dark'`), so you can adapt the color to user preferences.
+
+The following example shows a white line if this page is in dark mode, or a black one if it is in light mode.
+
+{{"demo": "ColorCustomizationMode.js"}}
+
+## Line Width
+
+Lines in Sparkline have a stroke width of 2px by default.
+When clipping is enabled and the line is drawn on the edge of the chart, it might be partially clipped.
+
+By default, the sparkline has clipping enabled, but the `clipAreaOffset` prop defaults to 1 to prevent clipping.
+You can disable clipping by setting `disableClipping` to `true`.
+
+The example below shows how the line's stroke width, `disableClipping` and `clipAreaOffset` affect the sparkline rendering.
+
+{{"demo": "SparklineLineWidth.js"}}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import {
   BuildFieldInteractionsResponse,
@@ -14,13 +14,11 @@ interface DescribeValueBaseOptions<
   C extends PickerComponentFamily,
 > {
   componentFamily: C;
-  render: (node: React.ReactElement) => MuiRenderResult;
+  render: (node: React.ReactElement<any>) => MuiRenderResult;
   assertRenderedValue: (expectedValue: TValue) => void;
   values: [InferNonNullablePickerValue<TValue>, InferNonNullablePickerValue<TValue>];
   emptyValue: TValue;
   defaultProps?: object;
-  // TODO: Export `Clock` from monorepo
-  clock: ReturnType<typeof createRenderer>['clock'];
 }
 
 export type DescribeValueOptions<
@@ -29,6 +27,7 @@ export type DescribeValueOptions<
 > = DescribeValueBaseOptions<TValue, C> &
   (C extends 'picker'
     ? OpenPickerParams & {
+        variant: 'desktop' | 'mobile';
         setNewValue: (
           value: InferNonNullablePickerValue<TValue>,
           options: {
@@ -37,6 +36,7 @@ export type DescribeValueOptions<
             isOpened?: boolean;
             applySameValue?: boolean;
             setEndDate?: boolean;
+            closeMobilePicker?: boolean;
           },
         ) => InferNonNullablePickerValue<TValue>;
       }

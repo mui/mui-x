@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+/* v8 ignore next */
 import defaultHMoment, { Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
 import {
@@ -62,12 +63,10 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'iYYYY, iMMMM Do',
-  keyboardDateTime: 'iYYYY/iMM/iDD LT',
   shortDate: 'iD iMMM',
   normalDate: 'dddd, iD iMMM',
   normalDateWithWeekday: 'DD iMMMM',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
@@ -146,10 +145,12 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return this.moment(value).locale('ar-SA') as unknown as R;
   };
 
+  /* v8 ignore next 3 */
   public getTimezone = (): string => {
     return 'default';
   };
 
+  /* v8 ignore next 3 */
   public setTimezone = (value: Moment): Moment => {
     return value;
   };

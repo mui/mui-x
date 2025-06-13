@@ -109,7 +109,6 @@ export default function Validation() {
         items={MUI_X_PRODUCTS}
         slots={{ item: CustomTreeItem }}
         isItemEditable
-        experimentalFeatures={{ labelEditing: true }}
         defaultExpandedItems={['grid', 'pickers']}
       />
     </Box>

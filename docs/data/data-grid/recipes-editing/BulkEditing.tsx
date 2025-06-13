@@ -60,7 +60,7 @@ export default function BulkEditing() {
               label="Discard changes"
               disabled={unsavedChangesRef.current.unsavedRows[id] === undefined}
               onClick={() => {
-                apiRef.current.updateRows([
+                apiRef.current?.updateRows([
                   unsavedChangesRef.current.rowsBeforeChange[id],
                 ]);
                 delete unsavedChangesRef.current.rowsBeforeChange[id];
@@ -82,7 +82,7 @@ export default function BulkEditing() {
                   unsavedChangesRef.current.rowsBeforeChange[id] = row;
                 }
                 setHasUnsavedRows(true);
-                apiRef.current.updateRows([row]); // to trigger row render
+                apiRef.current?.updateRows([row]); // to trigger row render
               }}
             />,
           ];
@@ -108,7 +108,7 @@ export default function BulkEditing() {
   const discardChanges = React.useCallback(() => {
     setHasUnsavedRows(false);
     Object.values(unsavedChangesRef.current.rowsBeforeChange).forEach((row) => {
-      apiRef.current.updateRows([row]);
+      apiRef.current?.updateRows([row]);
     });
     unsavedChangesRef.current = {
       unsavedRows: {},
@@ -130,7 +130,7 @@ export default function BulkEditing() {
       ).filter((row) => row._action === 'delete');
       if (rowsToDelete.length > 0) {
         rowsToDelete.forEach((row) => {
-          apiRef.current.updateRows([row]);
+          apiRef.current?.updateRows([row]);
         });
       }
 

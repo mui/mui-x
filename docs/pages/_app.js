@@ -8,7 +8,7 @@ import NextHead from 'next/head';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
-import { ponyfillGlobal } from '@mui/utils';
+import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { CodeCopyProvider } from '@mui/docs/CodeCopy';
@@ -22,27 +22,29 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
 import { mapTranslations } from '@mui/docs/i18n';
-import config from '../config';
+import * as config from '../config';
 
+// Enable telemetry for internal purposes
+muiXTelemetrySettings.enableTelemetry();
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    // #default-branch-switch
+    // #npm-tag-reference
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
-    return 'next';
+    return 'latest';
   }
-  const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
+  return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
 
-ponyfillGlobal.muiDocConfig = {
+globalThis.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    // #default-branch-switch
+    // #npm-tag-reference
+    // TODO: Do we really need this? The condition does not make that much sense tbh!
     // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
     newDeps['@mui/material'] =
       versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
@@ -222,8 +224,7 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdSubpathMap[id]}/`,
           };
         }
-        if (version === 'v7') {
-          // #default-branch-switch
+        if (version === 'v8') {
           return {
             text: version,
             href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,

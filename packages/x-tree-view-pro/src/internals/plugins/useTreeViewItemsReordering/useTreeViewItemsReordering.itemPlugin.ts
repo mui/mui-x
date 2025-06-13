@@ -6,6 +6,7 @@ import {
   UseTreeViewItemsSignature,
   isTargetInDescendants,
   useSelector,
+  UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
 import {
   UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
@@ -15,25 +16,25 @@ import {
   UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 import {
-  selectorItemsReorderingDraggedItemProperties,
-  selectorItemsReorderingIsValidTarget,
+  selectorCanItemBeReordered,
+  selectorDraggedItemProperties,
+  selectorIsItemValidReorderingTarget,
 } from './useTreeViewItemsReordering.selectors';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
-  const { instance, store, itemsReordering } =
-    useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
+  const { instance, store } = useTreeViewContext<
+    [UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature],
+    [UseTreeViewLabelSignature]
+  >();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
 
-  const draggedItemProperties = useSelector(
-    store,
-    selectorItemsReorderingDraggedItemProperties,
-    itemId,
-  );
-  const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
+  const draggedItemProperties = useSelector(store, selectorDraggedItemProperties, itemId);
+  const canItemBeReordered = useSelector(store, selectorCanItemBeReordered, itemId);
+  const isValidTarget = useSelector(store, selectorIsItemValidReorderingTarget, itemId);
 
   return {
     propsEnhancers: {
@@ -42,10 +43,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItemRootSlotPropsFromItemsReordering => {
-        if (
-          !itemsReordering.enabled ||
-          (itemsReordering.isItemReorderable && !itemsReordering.isItemReorderable(itemId))
-        ) {
+        if (!canItemBeReordered) {
           return {};
         }
 
@@ -92,7 +90,13 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
             return;
           }
 
-          instance.stopDraggingItem(itemId);
+          // Check if the drag-and-drop was cancelled, possibly by pressing Escape
+          if (event.dataTransfer.dropEffect === 'none') {
+            instance.cancelDraggingItem();
+            return;
+          }
+
+          instance.completeDraggingItem(itemId);
         };
 
         return {

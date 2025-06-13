@@ -74,12 +74,12 @@ export interface AdapterFormats {
   /**
    * A keyboard input friendly date format.
    * Used in the date fields.
-   * @example "02/13/2020
+   * @example "02/13/2020"
    */
   keyboardDate: string;
   /**
    * The abbreviated month name and the day of the month.
-   * Used in the `DateRangePicker` toolbar.
+   * Used in the `DateTimePicker` and `DateRangePicker` toolbars.
    * @example "Jan 1"
    */
   shortDate: string;
@@ -98,12 +98,6 @@ export interface AdapterFormats {
 
   // Time formats
   /**
-   * The hours and the minutes.
-   * Used for the aria-label of the opening button of the `TimePicker`.
-   * @example "11:44 PM" for locales with meridiem, "23:44" for locales without meridiem.
-   */
-  fullTime: string;
-  /**
    * The hours with the meridiem and minutes.
    * @example "11:44 PM"
    */
@@ -115,12 +109,6 @@ export interface AdapterFormats {
   fullTime24h: string;
 
   // Date & Time formats
-  /**
-   * A keyboard input friendly time format.
-   * Used in the date-time fields.
-   * @example "02/13/2020 11:44 PM" for locales with meridiem, "02/13/2020 23:44" for locales without meridiem.
-   */
-  keyboardDateTime: string;
   /**
    * A keyboard input friendly time format for 12-hour clock.
    * Used in the date-time fields.
@@ -193,6 +181,7 @@ export interface MuiPickersAdapter<TLocale = any> {
   ): DateBuilderReturnType<T>;
   /**
    * Creates an invalid date in the date library format.
+   * @deprecated This method will be removed in the next major release (v9.0.0).
    * @returns {PickerValidDate} The invalid date.
    */
   getInvalidDate(): PickerValidDate;
@@ -243,7 +232,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    * @param {PickerValidDate | null} value The value to test.
    * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: PickerValidDate | null): boolean;
+  isValid(value: PickerValidDate | null): value is PickerValidDate;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
    * @param {PickerValidDate} value The date to format.

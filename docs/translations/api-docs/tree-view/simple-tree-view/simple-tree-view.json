@@ -25,9 +25,6 @@
     "expansionTrigger": {
       "description": "The slot that triggers the item&#39;s expansion when clicked."
     },
-    "experimentalFeatures": {
-      "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect."
-    },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
@@ -40,7 +37,7 @@
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
         "itemIds": "The ids of the expanded items."
       }
     },
@@ -54,7 +51,7 @@
     "onItemExpansionToggle": {
       "description": "Callback fired when a Tree Item is expanded or collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
         "itemId": "The itemId of the modified item.",
         "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
       }
@@ -69,7 +66,7 @@
     "onItemSelectionToggle": {
       "description": "Callback fired when a Tree Item is selected or deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
         "itemId": "The itemId of the modified item.",
         "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
       }
@@ -77,7 +74,7 @@
     "onSelectedItemsChange": {
       "description": "Callback fired when Tree Items are selected/deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
+        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
         "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
       }
     },
@@ -93,7 +90,32 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "item": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s root element"
+    },
+    "itemCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s checkbox element"
+    },
+    "itemContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s content element"
+    },
+    "itemGroupTransition": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s transition element"
+    },
+    "itemIconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s icon container element icon"
+    },
+    "itemLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item&#39;s label element"
+    }
+  },
   "slotDescriptions": {
     "collapseIcon": "The default icon used to collapse the item.",
     "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",

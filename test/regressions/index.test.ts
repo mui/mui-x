@@ -2,43 +2,31 @@ import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { chromium } from '@playwright/test';
-import materialPackageJson from '@mui/material/package.json';
+import { type Browser, chromium } from '@playwright/test';
+import { major } from '@mui/material/version';
 
-function sleep(timeoutMS: number | undefined) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timeoutMS);
-  });
-}
-
-const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
+const isMaterialUIv6 = major === 6;
+const isMaterialUIv7 = major === 7;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
   'DataGridOverlays',
+  'GridToolbarFilterBar',
+  'ColumnSpanningDerived',
   'PopularFeaturesDemo',
+  'ServerSideRowGroupingGroupExpansion',
+  'RowSpanningClassSchedule',
+  'ListView',
+  'RowSpanningCalendar',
 ];
 
-const isConsoleWarningIgnored = (msg?: string) => {
-  const isMuiV6Error =
-    isMaterialUIv6 &&
-    msg?.startsWith(
-      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    );
-
-  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
-
-  if (isMuiV6Error || isReactRouterFlagsError) {
-    return true;
-  }
-  return false;
-};
+await main();
 
 async function main() {
   const baseUrl = 'http://localhost:5001';
-  const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
+  const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
     args: [
@@ -48,21 +36,8 @@ async function main() {
     ],
     headless: false,
   });
-  // reuse viewport from `vrtest`
-  // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
 
-  // Block images since they slow down tests (need download).
-  // They're also most likely decorative for documentation demos
-  await page.route(/./, async (route, request) => {
-    const type = await request.resourceType();
-    // Block all images except the flags
-    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
-      route.abort();
-    } else {
-      route.continue();
-    }
-  });
+  let page = await newTestPage(browser);
 
   let errorConsole: string | undefined;
 
@@ -75,10 +50,10 @@ async function main() {
 
   // Wait for all requests to finish.
   // This should load shared resources such as fonts.
-  await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
-  // See `useIsLandscape`.
+  // See `usePickerOrientation`.
   await page.evaluate(() => {
     Object.defineProperty(window.screen.orientation, 'angle', {
       get() {
@@ -87,27 +62,28 @@ async function main() {
     });
   });
 
-  const routes = await page.$$eval('#tests a', (links) => {
+  let routes = await page.$$eval('#tests a', (links) => {
     return links.map((link) => {
       return (link as HTMLAnchorElement).href;
     });
   });
+  routes = routes.map((route) => route.replace(baseUrl, ''));
 
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
 
-  function navigateToTest(testIndex: number) {
+  async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
-    // Could become an issue with test isolation.
-    // If tests are flaky due to global pollution switch to page.goto(route);
-    // puppeteers built-in click() times out
-    return page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
-      (link as HTMLAnchorElement).click();
-    });
+    await page.waitForFunction(() => window.muiFixture.isReady());
+    return page.evaluate((_route) => {
+      window.muiFixture.navigate(`${_route}#no-dev`);
+    }, route);
   }
 
   describe('visual regressions', () => {
-    after(async () => {
+    // TODO: remove once mocha types are removed
+    // @ts-expect-error, will be set by the test
+    afterAll(async () => {
       await browser.close();
     });
 
@@ -120,72 +96,90 @@ async function main() {
       expect(msg).to.equal(undefined);
     });
 
-    routes.forEach((route, index) => {
-      const pathURL = route.replace(baseUrl, '');
+    const getTimeout = (route: string) => {
+      // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
+      if (process.env.PWDEBUG) {
+        return 0;
+      }
 
-      it(`creates screenshots of ${pathURL}`, async function test() {
-        // Move cursor offscreen to not trigger unwanted hover effects.
-        // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
-        await page.mouse.move(0, 0);
+      // Some routes are more complex and take longer to render.
+      if (route.includes('DataGridProDemo')) {
+        return 6000;
+      }
 
-        // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
-        if (process.env.PWDEBUG) {
-          this.timeout(0);
-        }
+      return undefined;
+    };
 
-        if (pathURL === '/docs-components-data-grid-overview/DataGridProDemo') {
-          this.timeout(6000);
-        }
+    routes.forEach((route) => {
+      it(
+        `creates screenshots of ${route}`,
+        {
+          timeout: getTimeout(route),
+        },
+        // @ts-expect-error, mocha types are still used
+        async () => {
+          if (/^\/docs-charts-tooltip.*/.test(route)) {
+            // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
+            return;
+          }
 
-        try {
-          await navigateToTest(index + 1);
-        } catch (error) {
-          // When one demo crashes, the page becomes empty and there are no links to demos,
-          // so navigation to the next demo throws an error.
-          // Reloading the page fixes this.
-          await page.reload();
-          await navigateToTest(index + 1);
-        }
+          // Move cursor offscreen to not trigger unwanted hover effects.
+          // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
+          await page.mouse.move(0, 0);
 
-        const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
+          // Skip animations
+          await page.emulateMedia({ reducedMotion: 'reduce' });
 
-        const testcase = await page.waitForSelector(
-          '[data-testid="testcase"]:not([aria-busy="true"])',
-        );
+          try {
+            await navigateToTest(route);
+          } catch (error) {
+            // When one demo crashes, the page becomes empty and there are no links to demos,
+            // so navigation to the next demo throws an error.
+            // Reloading the page fixes this.
+            await page.reload();
+            await navigateToTest(route);
+          }
 
-        // Wait for the flags to load
-        await page.waitForFunction(
-          () => {
-            const images = Array.from(document.querySelectorAll('img'));
-            return images.every((img) => {
-              if (!img.complete && img.loading === 'lazy') {
-                // Force lazy-loaded images to load
-                img.setAttribute('loading', 'eager');
-              }
-              return img.complete;
+          const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
+          await fse.ensureDir(path.dirname(screenshotPath));
+
+          const testcase = await page.waitForSelector(
+            `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+          );
+
+          const images = await page.evaluate(() => document.querySelectorAll('img'));
+          if (images.length > 0) {
+            await page.evaluate(() => {
+              images.forEach((img) => {
+                if (!img.complete && img.loading === 'lazy') {
+                  // Force lazy-loaded images to load
+                  img.setAttribute('loading', 'eager');
+                }
+              });
             });
-          },
-          undefined,
-          { timeout: 1000 },
-        );
+            // Wait for the flags to load
+            await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
+              timeout: 2000,
+            });
+          }
 
-        if (/^\docs-charts-.*/.test(pathURL)) {
-          // Run one tick of the clock to get the final animation state
-          await sleep(10);
-        }
+          if (/^\/docs-charts-.*/.test(route)) {
+            // Run one tick of the clock to get the final animation state
+            await sleep(10);
+          }
 
-        if (timeSensitiveSuites.some((suite) => pathURL.includes(suite))) {
-          await sleep(100);
-        }
+          if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
+            await sleep(100);
+          }
 
-        // Wait for the page to settle after taking the screenshot.
-        await page.waitForLoadState();
+          // Wait for the page to settle after taking the screenshot.
+          await page.waitForLoadState();
 
-        await testcase.screenshot({ path: screenshotPath, type: 'png' });
-      });
+          await testcase.screenshot({ path: screenshotPath, type: 'png' });
+        },
+      );
 
-      it(`should have no errors rendering ${pathURL}`, () => {
+      it(`should have no errors rendering ${route}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
         if (isConsoleWarningIgnored(msg)) {
@@ -196,20 +190,14 @@ async function main() {
     });
 
     it('should position the headers matching the columns', async () => {
-      const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
-      const screenshotPath = path.resolve(
-        screenshotDir,
-        `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,
-      );
+      const route = '/docs-data-grid-virtualization/ColumnVirtualizationGrid';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}ScrollLeft400px.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      const testcaseIndex = routes.indexOf(route);
-      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-        (link as HTMLAnchorElement).click();
-      });
+      await navigateToTest(route);
 
       const testcase = await page.waitForSelector(
-        '[data-testid="testcase"]:not([aria-busy="true"])',
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
       await page.evaluate(() => {
@@ -226,45 +214,114 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should take a screenshot of the print preview', async function test() {
-      this.timeout(20000);
+    it('should position charts axis tooltip 8px away from the pointer', async () => {
+      const route = '/docs-charts-tooltip/Interaction';
+      const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
+      const itemScreenshotPath = path.resolve(screenshotDir, `.${route}ItemTooltip.png`);
+      await fse.ensureDir(path.dirname(axisScreenshotPath));
+      await fse.ensureDir(path.dirname(itemScreenshotPath));
 
-      const route = `${baseUrl}/docs-data-grid-export/ExportDefaultToolbar`;
-      const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
+      await navigateToTest(route);
+
+      // Skip animations
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+
+      // Make sure demo got loaded
+      await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      const charts = await page.locator('svg').all();
+
+      await charts[0].click();
+      // Should also trigger the item in charts[1]. But did not succeed to trigger the react `onPointerEnter`
+
+      // Need to screenshot the body because the tooltip is outside of the testcase div
+      const body = await page.waitForSelector(`body`);
+      await body.screenshot({ path: axisScreenshotPath, type: 'png' });
+    });
+
+    it('should export a chart as PNG', async () => {
+      const route = '/docs-charts-export/ExportChartAsImage';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      const testcaseIndex = routes.indexOf(route);
-      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-        (link as HTMLAnchorElement).click();
+      await navigateToTest(route);
+
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: 'Export Image' }).click();
+
+      const download = await downloadPromise;
+
+      await download.saveAs(screenshotPath);
+    });
+
+    describe('print preview', () => {
+      /* These tests do not properly clean up after themselves, so moving them to their own describe block to close the
+       * page after every test. */
+
+      beforeEach(async () => {
+        page = await newTestPage(browser);
+
+        // Wait for all requests to finish.
+        // This should load shared resources such as fonts.
+        await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
       });
 
-      // Click the export button in the toolbar.
-      await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
-        (exportButton as HTMLAnchorElement).click();
+      afterEach(async () => {
+        await page.close();
       });
 
-      // Click the print export option from the export menu in the toolbar.
-      await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
+      it('should take a screenshot of the data grid print preview', async () => {
+        const route = '/docs-data-grid-export/ExportDefaultToolbar';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
+
+        await navigateToTest(route);
+
+        // Click the export button in the toolbar.
+        await page.getByRole('button', { name: 'Export' }).click();
+
+        const printButton = page.getByRole('menuitem', { name: 'Print' });
+        // Click the print export option from the export menu in the toolbar.
         // Trigger the action async because window.print() is blocking the main thread
         // like window.alert() is.
         setTimeout(() => {
-          (printButton as HTMLAnchorElement).click();
+          printButton.click();
+        });
+
+        await sleep(4000);
+
+        await screenshotPrintDialogPreview(screenshotPath, {
+          x: 72,
+          y: 99,
+          width: 520,
+          height: 400,
         });
       });
 
-      await sleep(4000);
+      it('should take a screenshot of the charts print preview', async () => {
+        const route = '/docs-charts-export/PrintChart';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
 
-      return new Promise((resolve, reject) => {
-        // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
-        const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+        await navigateToTest(route);
 
-        ffmpeg.on('close', (code) => {
-          if (code === 0) {
-            resolve();
-          } else {
-            reject(code);
-          }
+        const printButton = page.getByRole('button', { name: 'Print' });
+
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
+        });
+
+        await sleep(4000);
+
+        await screenshotPrintDialogPreview(screenshotPath, {
+          x: 94,
+          y: 107,
+          width: 490,
+          height: 200,
         });
       });
     });
@@ -292,13 +349,83 @@ async function main() {
     //   });
     // });
   });
-
-  run();
 }
 
-main().catch((error) => {
-  // error during setup.
-  // Throwing lets mocha hang.
-  console.error(error);
-  process.exit(1);
-});
+function isConsoleWarningIgnored(msg?: string) {
+  const isMuiV6Error =
+    isMaterialUIv6 &&
+    msg?.startsWith(
+      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    );
+
+  const isMuiLoadingButtonWarning =
+    (isMaterialUIv6 || isMaterialUIv7) &&
+    msg?.includes(
+      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
+    );
+
+  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
+
+  const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
+
+  // We use the Tailwind CDN in iframed docs demos to isolate the library and avoid having to bundle it.
+  const isTailwindCdnWarning = msg?.includes(
+    'The browser build of Tailwind CSS should not be used in production.',
+  );
+
+  if (
+    isMuiV6Error ||
+    isReactRouterFlagsError ||
+    isNoDevRoute ||
+    isTailwindCdnWarning ||
+    isMuiLoadingButtonWarning
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function sleep(timeoutMS: number | undefined) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeoutMS);
+  });
+}
+
+function screenshotPrintDialogPreview(
+  screenshotPath: string,
+  { x, y, width, height }: { x: number; y: number; width: number; height: number },
+) {
+  return new Promise<void>((resolve, reject) => {
+    // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+    const args = `-y -f x11grab -framerate 1 -video_size ${width}x${height} -i :99.0+${x},${y} -vframes 1 ${screenshotPath}`;
+    const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+    ffmpeg.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`ffmpeg exited with code ${code}`));
+      }
+    });
+  });
+}
+
+async function newTestPage(browser: Browser) {
+  // reuse viewport from `vrtest`
+  // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
+  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+
+  // Block images since they slow down tests (need download).
+  // They're also most likely decorative for documentation demos
+  await page.route(/./, async (route, request) => {
+    const type = request.resourceType();
+    // Block all images except the flags
+    if (type === 'image' && !request.url().startsWith('https://flagcdn.com')) {
+      route.abort();
+    } else {
+      route.continue();
+    }
+  });
+
+  return page;
+}

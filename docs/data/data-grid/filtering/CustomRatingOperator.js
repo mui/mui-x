@@ -1,16 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function Toolbar() {
-  return (
-    <div>
-      <GridToolbarFilterButton />
-    </div>
-  );
-}
 
 function RatingInputValue(props) {
   const { item, applyValue, focusElementRef } = props;
@@ -62,7 +54,6 @@ const ratingOnlyOperators = [
       };
     },
     InputComponent: RatingInputValue,
-    InputComponentProps: { type: 'number' },
     getValueAsString: (value) => `${value} Stars`,
   },
 ];
@@ -95,9 +86,7 @@ export default function CustomRatingOperator() {
         {...data}
         loading={loading}
         columns={columns}
-        slots={{
-          toolbar: Toolbar,
-        }}
+        showToolbar
         initialState={{
           ...data.initialState,
           filter: {

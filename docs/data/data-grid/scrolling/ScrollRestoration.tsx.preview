@@ -1,0 +1,13 @@
+<Box sx={{ height: 400 }}>
+  <DataGridPro
+    apiRef={apiRef}
+    onCellClick={handleCellClick}
+    hideFooter
+    loading={loading}
+    {...data}
+    initialState={{
+      ...data.initialState,
+      scroll: { top: 1000, left: 1000 },
+    }}
+  />
+</Box>

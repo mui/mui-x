@@ -2,11 +2,11 @@
   xAxis={[{ data: xData, scaleType: 'point' }]}
   series={[{ data }]}
   height={200}
-  margin={{ top: 10, bottom: 20 }}
+  margin={margin}
 />
 <LineChart
   xAxis={[{ data: xData, scaleType: 'point' }]}
   series={[{ data, connectNulls: true }]}
   height={200}
-  margin={{ top: 10, bottom: 20 }}
+  margin={margin}
 />

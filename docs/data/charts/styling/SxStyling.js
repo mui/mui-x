@@ -12,7 +12,7 @@ export default function SxStyling() {
     <BarChart
       sx={(theme) => ({
         [`.${barElementClasses.root}`]: {
-          fill: theme.palette.background.paper,
+          fill: (theme.vars || theme).palette.background.paper,
           strokeWidth: 2,
         },
         [`.MuiBarElement-series-l_id`]: {
@@ -41,13 +41,12 @@ export default function SxStyling() {
             'linear-gradient(rgba(255,255,255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255, 0.1) 1px, transparent 1px)',
         }),
       })}
-      xAxis={[{ scaleType: 'band', data: labels }]}
+      xAxis={[{ data: labels }]}
       series={[
         { data: lData, label: 'l', id: 'l_id' },
         { data: rData, label: 'r', id: 'r_id' },
       ]}
       colors={colors}
-      width={500}
       height={300}
     />
   );

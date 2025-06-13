@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
@@ -11,6 +11,7 @@ import {
   GridSortModel,
   GridSortCellParams,
 } from '../../../models/gridSortModel';
+import { gridRowNodeSelector } from '../rows/gridRowsSelector';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -54,12 +55,12 @@ const isDesc = (direction: GridSortDirection) => direction === 'desc';
 /**
  * Transform an item of the sorting model into a method comparing two rows.
  * @param {GridSortItem} sortItem The sort item we want to apply.
- * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
+ * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridParsedSortItem | null} The parsed sort item. Returns `null` is the sort item is not valid.
  */
 const parseSortItem = (
   sortItem: GridSortItem,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ): GridParsedSortItem | null => {
   const column = apiRef.current.getColumn(sortItem.field);
   if (!column || sortItem.sort === null) {
@@ -82,7 +83,7 @@ const parseSortItem = (
   const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
     id,
     field: column.field,
-    rowNode: apiRef.current.getRowNode(id)!,
+    rowNode: gridRowNodeSelector(apiRef, id),
     value: apiRef.current.getCellValue(id, column.field),
     api: apiRef.current,
   });
@@ -129,12 +130,12 @@ const compareRows = (
 /**
  * Generates a method to easily sort a list of rows according to the current sort model.
  * @param {GridSortModel} sortModel The model with which we want to sort the rows.
- * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
+ * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridSortingModelApplier | null} A method that generates a list of sorted row ids from a list of rows according to the current sort model. If `null`, we consider that the rows should remain in the order there were provided.
  */
 export const buildAggregatedSortingApplier = (
   sortModel: GridSortModel,
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: RefObject<GridApiCommunity>,
 ): GridSortingModelApplier | null => {
   const comparatorList = sortModel
     .map((item) => parseSortItem(item, apiRef))

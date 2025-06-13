@@ -5,13 +5,15 @@ import { SxProps } from '@mui/system/styleFunctionSx';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import {
   SimpleTreeViewPluginParameters,
-  SimpleTreeViewPluginSlotProps,
-  SimpleTreeViewPluginSlots,
   SimpleTreeViewPluginSignatures,
 } from './SimpleTreeView.plugins';
-import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
+import { TreeViewPublicAPI } from '../internals/models';
+import {
+  TreeViewSlotProps,
+  TreeViewSlots,
+} from '../internals/TreeViewProvider/TreeViewStyleContext';
 
-export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
+export interface SimpleTreeViewSlots extends TreeViewSlots {
   /**
    * Element rendered at the root.
    * @default SimpleTreeViewRoot
@@ -19,11 +21,11 @@ export interface SimpleTreeViewSlots extends SimpleTreeViewPluginSlots {
   root?: React.ElementType;
 }
 
-export interface SimpleTreeViewSlotProps extends SimpleTreeViewPluginSlotProps {
+export interface SimpleTreeViewSlotProps extends TreeViewSlotProps {
   root?: SlotComponentProps<'ul', {}, {}>;
 }
 
-export type SimpleTreeViewApiRef = React.MutableRefObject<
+export type SimpleTreeViewApiRef = React.RefObject<
   TreeViewPublicAPI<SimpleTreeViewPluginSignatures> | undefined
 >;
 
@@ -55,10 +57,4 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
    */
   apiRef?: SimpleTreeViewApiRef;
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures?: TreeViewExperimentalFeatures<SimpleTreeViewPluginSignatures>;
 }

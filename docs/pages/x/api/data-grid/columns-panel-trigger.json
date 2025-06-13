@@ -1,0 +1,20 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ColumnsPanelTrigger",
+  "imports": [
+    "import { ColumnsPanelTrigger } from '@mui/x-data-grid/components';",
+    "import { ColumnsPanelTrigger } from '@mui/x-data-grid';",
+    "import { ColumnsPanelTrigger } from '@mui/x-data-grid-pro';",
+    "import { ColumnsPanelTrigger } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiColumnsPanelTrigger",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/columnsPanel/ColumnsPanelTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/columns-panel\">Data Grid - Columns Panel component 🚧</a></li></ul>",
+  "cssComponent": false
+}

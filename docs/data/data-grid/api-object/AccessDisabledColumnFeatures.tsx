@@ -38,13 +38,13 @@ export default function AccessDisabledColumnFeatures() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current.sortColumn('firstName', 'asc')}>
+      <Button onClick={() => apiRef.current?.sortColumn('firstName', 'asc')}>
         Sort by ASC
       </Button>
-      <Button onClick={() => apiRef.current.sortColumn('firstName', 'desc')}>
+      <Button onClick={() => apiRef.current?.sortColumn('firstName', 'desc')}>
         Sort by DESC
       </Button>
-      <Button onClick={() => apiRef.current.sortColumn('firstName', null)}>
+      <Button onClick={() => apiRef.current?.sortColumn('firstName', null)}>
         Remove sort
       </Button>
       <Box sx={{ height: 400 }}>

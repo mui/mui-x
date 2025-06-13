@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "8.0.0-alpha.5",
-  "description": "The Pro plan edition of the Charts components (MUI X).",
+  "version": "8.5.2",
   "author": "MUI Team",
+  "description": "The Pro plan edition of the MUI X Charts components.",
   "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
@@ -25,12 +25,11 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -39,22 +38,20 @@
     "directory": "packages/x-charts-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.0",
-    "@mui/utils": "^5.16.6 || ^6.0.0",
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@react-spring/rafz": "^9.7.5",
-    "@react-spring/web": "^9.7.5",
-    "clsx": "^2.1.1",
-    "prop-types": "^15.8.1"
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -66,14 +63,18 @@
       "optional": true
     }
   },
+  "optionalDependencies": {
+    "rasterizehtml": "^1.3.1"
+  },
   "devDependencies": {
-    "@mui/material": "^5.16.11",
-    "@mui/system": "^5.16.8",
-    "@react-spring/core": "^9.7.5",
-    "@react-spring/shared": "^9.7.5",
-    "@types/prop-types": "^15.7.14",
-    "csstype": "^3.1.3",
-    "rimraf": "^6.0.1"
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@types/prop-types": "catalog:",
+    "csstype": "catalog:",
+    "rasterizehtml": "^1.3.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

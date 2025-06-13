@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
@@ -6,7 +7,6 @@ import {
   GridRenderCellParams,
   GridGroupNode,
   GridRowId,
-  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -37,7 +37,7 @@ import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
 export const useGridTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'
@@ -47,16 +47,16 @@ export const useGridTreeDataPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.RowTree,
       TreeDataStrategy.Default,
-      props.treeData && !props.unstable_dataSource ? () => true : () => false,
+      props.treeData && !props.dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData, props.unstable_dataSource]);
+  }, [privateApiRef, props.treeData, props.dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -95,7 +95,7 @@ export const useGridTreeDataPreProcessors = (
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (props.unstable_dataSource) {
+      if (props.dataSource) {
         return columnsState;
       }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
@@ -111,12 +111,7 @@ export const useGridTreeDataPreProcessors = (
         }
         columnsState.lookup[groupingColDefField] = newGroupingColumn;
         if (prevGroupingColumn == null) {
-          const index = columnsState.orderedFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-          columnsState.orderedFields = [
-            ...columnsState.orderedFields.slice(0, index),
-            groupingColDefField,
-            ...columnsState.orderedFields.slice(index),
-          ];
+          columnsState.orderedFields = [groupingColDefField, ...columnsState.orderedFields];
         }
       } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
         delete columnsState.lookup[groupingColDefField];
@@ -127,7 +122,7 @@ export const useGridTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, props.unstable_dataSource, getGroupingColDef],
+    [props.treeData, props.dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(

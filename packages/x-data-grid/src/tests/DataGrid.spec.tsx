@@ -11,25 +11,8 @@ function PropTest() {
       <DataGrid pagination={false} />
       {/* @ts-expect-error Type 'GridApiRef' is not assignable to type 'undefined' */}
       <DataGrid apiRef={apiRef} />
-      <DataGrid
-        rows={[]}
-        columns={[]}
-        localeText={{
-          MuiTablePagination: {
-            labelRowsPerPage: 'ofo',
-          },
-        }}
-      />
-      <DataGrid
-        rows={[]}
-        columns={[]}
-        localeText={{
-          MuiTablePagination: {
-            /* @ts-expect-error Object literal may only specify known properties, but 'labelRowsPerPagee' does not exist in type */
-            labelRowsPerPagee: 'foo',
-          },
-        }}
-      />
+      <DataGrid rows={[]} columns={[]} localeText={{}} />
+      <DataGrid rows={[]} columns={[]} />
     </div>
   );
 }
@@ -261,7 +244,7 @@ function ApiRefPrivateMethods() {
 function ApiRefPublicMethods() {
   const apiRef = useGridApiRef();
 
-  apiRef.current.unstable_applyPipeProcessors('exportMenu', [], {});
+  apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
 function ApiRefProMethods() {
@@ -276,4 +259,11 @@ function ApiRefProMethods() {
   });
 
   return null;
+}
+
+function ImmutableProps() {
+  const rows = [] as const;
+  const columns = [] as const;
+  const initialState = { sorting: { sortModel: [{ field: 'id', sort: 'asc' }] } } as const;
+  return <DataGrid rows={rows} columns={columns} initialState={initialState} />;
 }

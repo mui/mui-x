@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { Theme } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
@@ -9,7 +9,7 @@ import {
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
-import { PickerDayOwnerState } from '@mui/x-date-pickers/DateCalendar';
+import { PickerDayOwnerState } from '@mui/x-date-pickers/PickersDay';
 import {
   BaseDateValidationProps,
   ExportedDayCalendarProps,

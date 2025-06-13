@@ -1,11 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { getDataGridUtilityClass, useGridSelector, GridRenderCellParams } from '@mui/x-data-grid';
+import {
+  getDataGridUtilityClass,
+  useGridSelector,
+  GridRenderCellParams,
+  GridRowId,
+} from '@mui/x-data-grid';
+import { createSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { gridDetailPanelExpandedRowsContentCacheSelector } from '../hooks/features/detailPanel/gridDetailPanelSelector';
+import {
+  gridDetailPanelExpandedRowIdsSelector,
+  gridDetailPanelExpandedRowsContentCacheSelector,
+} from '../hooks/features/detailPanel/gridDetailPanelSelector';
+import { GridApiPro } from '../models';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
 
@@ -19,8 +29,17 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const isExpandedSelector = createSelector(
+  gridDetailPanelExpandedRowIdsSelector,
+  (expandedRowIds, rowId: GridRowId) => {
+    return expandedRowIds.has(rowId);
+  },
+);
+
 function GridDetailPanelToggleCell(props: GridRenderCellParams) {
-  const { id, value: isExpanded } = props;
+  const { id, row, api } = props;
+  const rowId = api.getRowId(row);
+  const isExpanded = useGridSelector({ current: api as GridApiPro }, isExpandedSelector, rowId);
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -40,6 +59,7 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
       tabIndex={-1}
       disabled={!hasContent}
       className={classes.root}
+      aria-expanded={isExpanded}
       aria-label={
         isExpanded
           ? apiRef.current.getLocaleText('collapseDetailPanel')

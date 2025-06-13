@@ -9,6 +9,7 @@ import {
   UseTreeViewKeyboardNavigationSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
+import { testSkipIf } from 'test/utils/skipIf';
 
 describeTreeView<
   [
@@ -136,6 +137,56 @@ describeTreeView<
         });
         fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
         expect(view.getFocusedItemId()).to.equal('1.1');
+      });
+
+      it('should move the focus to the last visible and enabled descendant of the previous sibling', () => {
+        const view = render({
+          items: [
+            {
+              id: '1',
+              children: [
+                { id: '1-1' },
+                {
+                  id: '1-2',
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3' }],
+                },
+              ],
+            },
+            { id: '2' },
+          ],
+          defaultExpandedItems: ['1', '1-2'],
+        });
+
+        act(() => {
+          view.getItemRoot('2').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
+        expect(view.getFocusedItemId()).to.equal('1-2-3');
+      });
+
+      it('should move the focus to the last visible descendant of the previous sibling, skipping disabled items', () => {
+        const view = render({
+          items: [
+            {
+              id: '1',
+              children: [
+                { id: '1-1' },
+                {
+                  id: '1-2',
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3', disabled: true }],
+                },
+              ],
+            },
+            { id: '2' },
+          ],
+          defaultExpandedItems: ['1', '1-2'],
+        });
+
+        act(() => {
+          view.getItemRoot('2').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
+        expect(view.getFocusedItemId()).to.equal('1-2-2');
       });
 
       it('should skip disabled items', () => {
@@ -496,7 +547,7 @@ describeTreeView<
           expect(view.isItemSelected('1')).to.equal(true);
         });
 
-        it('should not un-select the focused item when Space is pressed', () => {
+        it('should un-select the focused item when Space is pressed', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: ['1'],
@@ -506,7 +557,7 @@ describeTreeView<
             view.getItemRoot('1').focus();
           });
           fireEvent.keyDown(view.getItemRoot('1'), { key: ' ' });
-          expect(view.isItemSelected('1')).to.equal(true);
+          expect(view.isItemSelected('1')).to.equal(false);
         });
 
         it('should not select the focused item when Space is pressed and disableSelection={true}', () => {
@@ -913,7 +964,7 @@ describeTreeView<
       });
 
       describe('key: Home', () => {
-        it('should select select the focused item and all the items above when Home is pressed while holding Shift + Ctrl', () => {
+        it('should select the focused item and all the items above when Home is pressed while holding Shift + Ctrl', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }, { id: '4' }],
             multiSelect: true,
@@ -974,7 +1025,7 @@ describeTreeView<
       });
 
       describe('key: End', () => {
-        it('should select select the focused item and all the items below when End is pressed while holding Shift + Ctrl', () => {
+        it('should select the focused item and all the items below when End is pressed while holding Shift + Ctrl', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }, { id: '4' }],
             multiSelect: true,
@@ -1169,35 +1220,34 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('1');
     });
 
-    it('should work with ReactElement label', function test() {
-      // Only the SimpleTreeView can have React Element labels.
-      if (treeViewComponentName !== 'SimpleTreeView') {
-        this.skip();
-      }
+    // Only the SimpleTreeView can have React Element labels.
+    testSkipIf(treeViewComponentName !== 'SimpleTreeView')(
+      'should work with ReactElement label',
+      () => {
+        const view = render({
+          items: [
+            { id: '1', label: <span>one</span> },
+            { id: '2', label: <span>two</span> },
+            { id: '3', label: <span>three</span> },
+            { id: '4', label: <span>four</span> },
+          ],
+        });
 
-      const view = render({
-        items: [
-          { id: '1', label: <span>one</span> },
-          { id: '2', label: <span>two</span> },
-          { id: '3', label: <span>three</span> },
-          { id: '4', label: <span>four</span> },
-        ],
-      });
+        act(() => {
+          view.getItemRoot('1').focus();
+        });
+        expect(view.getFocusedItemId()).to.equal('1');
 
-      act(() => {
-        view.getItemRoot('1').focus();
-      });
-      expect(view.getFocusedItemId()).to.equal('1');
+        fireEvent.keyDown(view.getItemRoot('1'), { key: 't' });
+        expect(view.getFocusedItemId()).to.equal('2');
 
-      fireEvent.keyDown(view.getItemRoot('1'), { key: 't' });
-      expect(view.getFocusedItemId()).to.equal('2');
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'f' });
+        expect(view.getFocusedItemId()).to.equal('4');
 
-      fireEvent.keyDown(view.getItemRoot('2'), { key: 'f' });
-      expect(view.getFocusedItemId()).to.equal('4');
-
-      fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
-      expect(view.getFocusedItemId()).to.equal('1');
-    });
+        fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
+        expect(view.getFocusedItemId()).to.equal('1');
+      },
+    );
 
     it('should work after adding / removing items', () => {
       const view = render({

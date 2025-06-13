@@ -24,22 +24,24 @@ export default function ChartsContinuousGradient(props: ChartsContinuousGradient
   const { gradientUnits, isReversed, gradientId, size, direction, scale, colorScale, colorMap } =
     props;
 
-  const extremValues = [colorMap.min ?? 0, colorMap.max ?? 100] as [number, number] | [Date, Date];
-  const extremPositions = extremValues.map(scale).filter((p): p is number => p !== undefined);
+  const extremumValues = [colorMap.min ?? 0, colorMap.max ?? 100] as
+    | [number, number]
+    | [Date, Date];
+  const extremumPositions = extremumValues.map(scale).filter((p): p is number => p !== undefined);
 
-  if (extremPositions.length !== 2) {
+  if (extremumPositions.length !== 2) {
     return null;
   }
 
   const interpolator =
-    typeof extremValues[0] === 'number'
-      ? interpolateNumber(extremValues[0], extremValues[1])
-      : interpolateDate(extremValues[0], extremValues[1] as Date);
+    typeof extremumValues[0] === 'number'
+      ? interpolateNumber(extremumValues[0], extremumValues[1])
+      : interpolateDate(extremumValues[0], extremumValues[1] as Date);
   const numberOfPoints = Math.round(
-    (Math.max(...extremPositions) - Math.min(...extremPositions)) / PX_PRECISION,
+    (Math.max(...extremumPositions) - Math.min(...extremumPositions)) / PX_PRECISION,
   );
 
-  const keyPrefix = `${extremValues[0]}-${extremValues[1]}-`;
+  const keyPrefix = `${extremumValues[0]}-${extremumValues[1]}-`;
   return (
     <linearGradient
       id={gradientId}

@@ -12,7 +12,7 @@ To help provide an easy path to folks still using CommonJS in their Node.js appl
 
 ## Main difference with victory-vendor
 
-Victory is using the `d3-voronoid` which is an archived project.
+Victory is using the `d3-voronoi` which is an archived project.
 Our chart library relies on the `d3-delaunay` which is also ESM only and reuse `robust-predicates` which is also ESM only
 
 ## Packages

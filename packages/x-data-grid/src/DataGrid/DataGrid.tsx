@@ -1,56 +1,45 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-import { DataGridProcessedProps, DataGridProps } from '../models/props/DataGridProps';
+import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
-import {
-  PropValidator,
-  propValidatorsDataGrid,
-  validateProps,
-} from '../internals/utils/propValidation';
+import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
+import { useMaterialCSSVariables } from '../material/variables';
+import type { GridConfiguration } from '../models/configuration/gridConfiguration';
+import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useCellAggregationResult: () => null,
   },
 };
-let propValidators: PropValidator<DataGridProcessedProps>[];
 
-if (process.env.NODE_ENV !== 'production') {
-  propValidators = [
-    ...propValidatorsDataGrid,
-    // Only validate in MIT version
-    (props) =>
-      (props.columns &&
-        props.columns.some((column) => column.resizable) &&
-        [
-          `MUI X: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version.',
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n')) ||
-      undefined,
-  ];
-}
-
-const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
+const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const privateApiRef = useDataGridComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiCommunity, GridApiCommunity>(
+    props.apiRef,
+    props,
+  );
+  useDataGridComponent(privateApiRef, props);
 
   if (process.env.NODE_ENV !== 'production') {
-    validateProps(props, propValidators);
+    validateProps(props, propValidatorsDataGrid);
   }
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -58,16 +47,12 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         className={props.className}
         style={props.style}
         sx={props.sx}
-        ref={ref}
         {...props.slotProps?.root}
-      >
-        <GridHeader />
-        <GridBody />
-        <GridFooterPlaceholder />
-      </GridRoot>
+        ref={ref}
+      />
     </GridContextProvider>
   );
-});
+};
 
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
@@ -77,13 +62,13 @@ interface DataGridComponent {
 }
 
 /**
- * Demos:
- * - [DataGrid](https://mui.com/x/react-data-grid/demo/)
+ * Features:
+ * - [DataGrid](https://mui.com/x/react-data-grid/features/)
  *
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
  */
-export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
+export const DataGrid = React.memo(forwardRef(DataGridRaw)) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -94,14 +79,14 @@ DataGridRaw.propTypes = {
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.object,
   }),
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
@@ -148,6 +133,7 @@ DataGridRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The character used to separate cell values when copying to the clipboard.
    * @default '\t'
@@ -178,6 +164,21 @@ DataGridRaw.propTypes = {
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
+  /**
+   * The data source object.
+   */
+  dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * Set the density of the Data Grid.
    * @default "standard"
@@ -319,6 +320,8 @@ DataGridRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -385,6 +388,12 @@ DataGridRaw.propTypes = {
    * @default false
    */
   keepNonExistentRowsSelected: PropTypes.bool,
+  /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label: PropTypes.string,
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -533,6 +542,11 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError: PropTypes.func,
   /**
    * Callback fired when the density changes.
    * @param {GridDensity} density New density value.
@@ -735,11 +749,10 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    ids: PropTypes.instanceOf(Set).isRequired,
+    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+  }),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -764,6 +777,11 @@ DataGridRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * Overridable components props dynamically passed to the component at rendering.
    */
@@ -793,6 +811,7 @@ DataGridRaw.propTypes = {
       sort: PropTypes.oneOf(['asc', 'desc']),
     }),
   ),
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -1,12 +1,5 @@
 {
   "props": {
-    "align": {
-      "type": {
-        "name": "enum",
-        "description": "'end'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
-      },
-      "default": "'middle'"
-    },
     "axisDirection": {
       "type": { "name": "enum", "description": "'x'<br>&#124;&nbsp;'y'<br>&#124;&nbsp;'z'" },
       "default": "'z'"
@@ -15,36 +8,30 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "The first axis item."
     },
-    "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
-    "id": { "type": { "name": "string" }, "default": "auto-generated id" },
-    "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
-    "length": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
-      "default": "'50%'"
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "direction": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
+      "default": "'horizontal'"
+    },
+    "gradientId": { "type": { "name": "string" }, "default": "auto-generated id" },
+    "labelPosition": {
+      "type": {
+        "name": "enum",
+        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'"
+      },
+      "default": "'end'"
     },
     "maxLabel": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
-      "default": "({ formattedValue }) => formattedValue"
+      "default": "formattedValue"
     },
     "minLabel": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" },
-      "default": "({ formattedValue }) => formattedValue"
+      "default": "formattedValue"
     },
-    "position": {
-      "type": {
-        "name": "shape",
-        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
-      }
-    },
-    "scaleType": {
-      "type": {
-        "name": "enum",
-        "description": "'linear'<br>&#124;&nbsp;'log'<br>&#124;&nbsp;'pow'<br>&#124;&nbsp;'sqrt'<br>&#124;&nbsp;'time'<br>&#124;&nbsp;'utc'"
-      },
-      "default": "'linear'"
-    },
-    "spacing": { "type": { "name": "number" }, "default": "4" },
-    "thickness": { "type": { "name": "number" }, "default": "5" }
+    "reverse": { "type": { "name": "bool" }, "default": "false" },
+    "rotateGradient": { "type": { "name": "bool" } },
+    "thickness": { "type": { "name": "number" }, "default": "12" }
   },
   "name": "ContinuousColorLegend",
   "imports": [
@@ -52,8 +39,72 @@
     "import { ContinuousColorLegend } from '@mui/x-charts';",
     "import { ContinuousColorLegend } from '@mui/x-charts-pro';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "end",
+      "className": "MuiContinuousColorLegend-end",
+      "description": "Styles applied to the legend with the labels after the gradient.",
+      "isGlobal": false
+    },
+    {
+      "key": "extremes",
+      "className": "MuiContinuousColorLegend-extremes",
+      "description": "Styles applied to the legend with the labels on the extremes of the gradient.",
+      "isGlobal": false
+    },
+    {
+      "key": "gradient",
+      "className": "MuiContinuousColorLegend-gradient",
+      "description": "Styles applied to the list item with the gradient.",
+      "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiContinuousColorLegend-horizontal",
+      "description": "Styles applied to the legend in row layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiContinuousColorLegend-label",
+      "description": "Styles applied to the series label.",
+      "isGlobal": false
+    },
+    {
+      "key": "maxLabel",
+      "className": "MuiContinuousColorLegend-maxLabel",
+      "description": "Styles applied to the list item that renders the `maxLabel`.",
+      "isGlobal": false
+    },
+    {
+      "key": "minLabel",
+      "className": "MuiContinuousColorLegend-minLabel",
+      "description": "Styles applied to the list item that renders the `minLabel`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiContinuousColorLegend-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "start",
+      "className": "MuiContinuousColorLegend-start",
+      "description": "Styles applied to the legend with the labels before the gradient.",
+      "isGlobal": false
+    },
+    {
+      "key": "vertical",
+      "className": "MuiContinuousColorLegend-vertical",
+      "description": "Styles applied to the legend in column layout.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiContinuousColorLegend",
+  "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-charts/src/ChartsLegend/ContinuousColorLegend.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",

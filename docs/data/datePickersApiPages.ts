@@ -33,6 +33,11 @@ const datePickersApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/date-pickers/date-range-picker-day-2',
+    title: 'DateRangePickerDay2',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/date-range-picker-toolbar',
     title: 'DateRangePickerToolbar',
     plan: 'pro',
@@ -95,6 +100,11 @@ const datePickersApiPages: MuiPage[] = [
     title: 'DesktopTimePicker',
   },
   {
+    pathname: '/x/api/date-pickers/desktop-time-range-picker',
+    title: 'DesktopTimeRangePicker',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/digital-clock',
     title: 'DigitalClock',
   },
@@ -125,6 +135,11 @@ const datePickersApiPages: MuiPage[] = [
     title: 'MobileTimePicker',
   },
   {
+    pathname: '/x/api/date-pickers/mobile-time-range-picker',
+    title: 'MobileTimeRangePicker',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/month-calendar',
     title: 'MonthCalendar',
   },
@@ -146,6 +161,10 @@ const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/multi-section-digital-clock',
     title: 'MultiSectionDigitalClock',
+  },
+  {
+    pathname: '/x/api/date-pickers/picker-day-2',
+    title: 'PickerDay2',
   },
   {
     pathname: '/x/api/date-pickers/pickers-action-bar',
@@ -227,6 +246,21 @@ const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/time-picker-toolbar',
     title: 'TimePickerToolbar',
+  },
+  {
+    pathname: '/x/api/date-pickers/time-range-picker',
+    title: 'TimeRangePicker',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/time-range-picker-tabs',
+    title: 'TimeRangePickerTabs',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/date-pickers/time-range-picker-toolbar',
+    title: 'TimeRangePickerToolbar',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/date-pickers/year-calendar',

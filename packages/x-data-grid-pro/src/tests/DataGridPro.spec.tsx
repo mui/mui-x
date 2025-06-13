@@ -116,7 +116,7 @@ function ApiRefPrivateMethods() {
 function ApiRefPublicMethods() {
   const apiRef = useGridApiRef();
 
-  apiRef.current.unstable_applyPipeProcessors('exportMenu', [], {});
+  apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
 function ApiRefProMethods() {
@@ -124,12 +124,12 @@ function ApiRefProMethods() {
 
   React.useEffect(() => {
     // available in Pro and Premium
-    apiRef.current.selectRows([]);
-    apiRef.current.selectRowRange({ startId: 0, endId: 1 });
-    apiRef.current.setColumnIndex;
-    apiRef.current.setRowIndex;
-    apiRef.current.setRowChildrenExpansion;
-    apiRef.current.getRowGroupChildren;
+    apiRef.current!.selectRows([]);
+    apiRef.current!.selectRowRange({ startId: 0, endId: 1 });
+    apiRef.current!.setColumnIndex;
+    apiRef.current!.setRowIndex;
+    apiRef.current!.setRowChildrenExpansion;
+    apiRef.current!.getRowGroupChildren;
   });
 
   return null;

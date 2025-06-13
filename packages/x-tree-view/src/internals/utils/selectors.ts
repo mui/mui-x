@@ -14,11 +14,35 @@ const cache = new WeakMap<
   Map<Parameters<typeof reselectCreateSelector>, any>
 >();
 
-export type TreeViewRootSelector<TSignature extends TreeViewAnyPluginSignature> = <
-  TSignatures extends [TSignature],
+/**
+ * Type of a selector that take the whole tree view state as input and returns a value based on a required plugin.
+ * @param {TreeViewState} state The state of the Tree View.
+ * @returns {any | undefined} The value of the plugin state.
+ */
+export type TreeViewRootSelector<
+  TSignature extends TreeViewAnyPluginSignature,
+  TIsOptional extends boolean = false,
+> = <
+  TSignatures extends TIsOptional extends true ? [] : [TSignature],
+  TOptionalSignatures extends TIsOptional extends true ? [TSignature] : [],
 >(
-  state: TreeViewState<TSignatures>,
-) => TSignature['state'][keyof TSignature['state']];
+  state: TreeViewState<TSignatures, TOptionalSignatures>,
+) => TIsOptional extends true
+  ? TSignature['state'][keyof TSignature['state']] | undefined
+  : TSignature['state'][keyof TSignature['state']];
+
+/**
+ * Type of a selector that take the whole tree view state as input and returns a value based on an optional plugin.
+ *
+ * @param {TreeViewState} state The state of the Tree View.
+ * @returns {any | undefined} The value of the plugin state or undefined if the plugin is not registered.
+ */
+export type TreeViewRootSelectorForOptionalPlugin<TSignature extends TreeViewAnyPluginSignature> = <
+  TSignatures extends [],
+  TOptionalSignatures extends [TSignature],
+>(
+  state: TreeViewState<TSignatures, TOptionalSignatures>,
+) => TSignature['state'][keyof TSignature['state']] | undefined;
 
 export type TreeViewSelector<TState, TArgs, TResult> = (state: TState, args: TArgs) => TResult;
 

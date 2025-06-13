@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   GridEditingApi,
@@ -22,15 +23,18 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 });
 
 export const useGridEditing = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode' | 'processRowUpdate'>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  props: Pick<
+    DataGridProcessedProps,
+    'isCellEditable' | 'editMode' | 'processRowUpdate' | 'dataSource' | 'onDataSourceError'
+  >,
 ) => {
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
 
-  const debounceMap = React.useRef<Record<GridRowId, Record<string, [NodeJS.Timeout, () => void]>>>(
-    {},
-  );
+  const debounceMap = React.useRef<
+    Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => void]>>
+  >({});
 
   const { isCellEditable: isCellEditableProp } = props;
 
@@ -156,7 +160,7 @@ export const useGridEditing = (
 
   const getEditCellMeta = React.useCallback<GridEditingSharedApi['unstable_getEditCellMeta']>(
     (id, field) => {
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+      const editingState = gridEditRowsStateSelector(apiRef);
       return editingState[id]?.[field] ?? null;
     },
     [apiRef],

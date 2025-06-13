@@ -8,8 +8,10 @@
       "dayjs/plugin/timezone.d.ts",
       "dayjs/plugin/utc.d.ts",
       "mocha",
-      "moment-timezone"
-    ]
+      "moment-timezone",
+      "vite/client"
+    ],
+    "skipLibCheck": true
   },
   "include": ["e2e/**/*", "e2e-website/**/*", "regressions/**/*"],
   "exclude": ["regressions/build/**/*", "regressions/screenshots/**/*"]

@@ -19,16 +19,14 @@ import {
 } from './timePickerToolbarClasses';
 import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
-import { PickerValidDate } from '../models';
+import { AdapterFormats } from '../models';
 import { usePickerContext } from '../hooks';
 import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
 
-export interface TimePickerToolbarProps
-  extends BaseToolbarProps<PickerValue>,
-    ExportedTimePickerToolbarProps {
+export interface TimePickerToolbarProps extends BaseToolbarProps, ExportedTimePickerToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
 }
@@ -64,7 +62,6 @@ const useUtilityClasses = (
 const TimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiTimePickerToolbar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: PickerToolbarOwnerState;
 }>({});
@@ -72,7 +69,6 @@ const TimePickerToolbarRoot = styled(PickersToolbar, {
 const TimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiTimePickerToolbar',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
 })({
   outline: 0,
   margin: '0 4px 0 2px',
@@ -154,28 +150,28 @@ const TimePickerToolbarAmPmSelection = styled('div', {
  */
 function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
-  const {
-    ampm,
-    ampmInClock,
-    value,
-    isLandscape,
-    onChange,
-    className,
-    classes: classesProp,
-    ...other
-  } = props;
+  const { ampm, ampmInClock, className, classes: classesProp, ...other } = props;
   const utils = useUtils();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const { disabled, readOnly, view, onViewChange, views } =
-    usePickerContext<TimeViewWithMeridiem>();
+  const { value, setValue, disabled, readOnly, view, setView, views } = usePickerContext<
+    PickerValue,
+    TimeViewWithMeridiem
+  >();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
+    setValue(newValue, { changeImportance: 'set' }),
+  );
 
-  const formatHours = (time: PickerValidDate) =>
-    ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
+  const formatSection = (format: keyof AdapterFormats) => {
+    if (!utils.isValid(value)) {
+      return '--';
+    }
+
+    return utils.format(value, format);
+  };
 
   const separator = (
     <TimePickerToolbarSeparator
@@ -191,7 +187,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     <TimePickerToolbarRoot
       landscapeDirection="row"
       toolbarTitle={translations.timePickerToolbarTitle}
-      isLandscape={isLandscape}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
       {...other}
@@ -202,9 +197,9 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             data-testid="hours"
             tabIndex={-1}
             variant="h3"
-            onClick={() => onViewChange('hours')}
+            onClick={() => setView('hours')}
             selected={view === 'hours'}
-            value={value ? formatHours(value) : '--'}
+            value={formatSection(ampm ? 'hours12h' : 'hours24h')}
           />
         )}
 
@@ -214,9 +209,9 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             data-testid="minutes"
             tabIndex={-1}
             variant="h3"
-            onClick={() => onViewChange('minutes')}
+            onClick={() => setView('minutes')}
             selected={view === 'minutes'}
-            value={value ? utils.format(value, 'minutes') : '--'}
+            value={formatSection('minutes')}
           />
         )}
 
@@ -225,9 +220,9 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
           <PickersToolbarButton
             data-testid="seconds"
             variant="h3"
-            onClick={() => onViewChange('seconds')}
+            onClick={() => setView('seconds')}
             selected={view === 'seconds'}
-            value={value ? utils.format(value, 'seconds') : '--'}
+            value={formatSection('seconds')}
           />
         )}
       </TimePickerToolbarHourMinuteLabel>
@@ -276,8 +271,6 @@ TimePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -296,7 +289,6 @@ TimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.object,
 } as any;
 
 export { TimePickerToolbar };

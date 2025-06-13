@@ -5,6 +5,7 @@ export * from './MultiSectionDigitalClock';
 
 export * from './LocalizationProvider';
 export * from './PickersDay';
+export * from './PickerDay2';
 export * from './locales/utils/pickersLocaleTextApi';
 
 // Fields
@@ -56,3 +57,4 @@ export * from './models';
 export * from './icons';
 export * from './hooks';
 export * from './validation';
+export * from './managers';

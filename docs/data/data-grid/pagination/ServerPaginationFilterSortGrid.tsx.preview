@@ -1,0 +1,16 @@
+<DataGrid
+  rows={rows}
+  {...data}
+  rowCount={rowCount}
+  loading={isLoading}
+  pageSizeOptions={[5]}
+  paginationModel={paginationModel}
+  sortModel={sortModel}
+  filterModel={filterModel}
+  paginationMode="server"
+  sortingMode="server"
+  filterMode="server"
+  onPaginationModelChange={setPaginationModel}
+  onSortModelChange={setSortModel}
+  onFilterModelChange={setFilterModel}
+/>

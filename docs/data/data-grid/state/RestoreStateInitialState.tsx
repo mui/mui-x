@@ -67,6 +67,7 @@ export default function RestoreStateInitialState() {
           loading={loading}
           slots={{ toolbar: GridCustomToolbar }}
           slotProps={{ toolbar: { syncState } }}
+          showToolbar
         />
       </Box>
       <Box sx={{ height: 300 }}>

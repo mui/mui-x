@@ -29,7 +29,7 @@ export default function CellSelectionFormulaField() {
     const updates = [];
 
     Object.entries(cellSelectionModel).forEach(([id, fields]) => {
-      const updatedRow = { ...apiRef.current.getRow(id) };
+      const updatedRow = { ...apiRef.current?.getRow(id) };
 
       Object.entries(fields).forEach(([field, isSelected]) => {
         if (isSelected) {
@@ -40,10 +40,14 @@ export default function CellSelectionFormulaField() {
       updates.push(updatedRow);
     });
 
-    apiRef.current.updateRows(updates);
+    apiRef.current?.updateRows(updates);
   }, [apiRef, cellSelectionModel, value]);
 
   React.useEffect(() => {
+    if (apiRef.current === null) {
+      return;
+    }
+
     const selectedCells = apiRef.current.getSelectedCellsAsArray();
     setNumberOfSelectedCells(selectedCells.length);
 

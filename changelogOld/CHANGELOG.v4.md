@@ -1769,7 +1769,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 ### Docs
 
-- [docs] Enable codesandbox preview in PRs (#613) @oliviertassinari
+- [docs] Enable CodeSandbox preview in PRs (#613) @oliviertassinari
 
 ### Core
 

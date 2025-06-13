@@ -1,31 +1,14 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "direction": { "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" } },
-    "hidden": { "type": { "name": "bool" }, "default": "false" },
-    "itemGap": { "type": { "name": "number" }, "default": "10" },
-    "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },
-    "itemMarkWidth": { "type": { "name": "number" }, "default": "20" },
-    "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
-    "markGap": { "type": { "name": "number" }, "default": "5" },
+    "direction": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" }
+    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGRectElement, MouseEvent>, legendItem: SeriesLegendItemContext, index: number) => void",
+        "type": "function(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, legendItem: SeriesLegendItemContext, index: number) => void",
         "describedArgs": ["event", "legendItem", "index"]
-      }
-    },
-    "padding": {
-      "type": {
-        "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
-      },
-      "default": "10"
-    },
-    "position": {
-      "type": {
-        "name": "shape",
-        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
       }
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -45,21 +28,15 @@
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
-      "default": "DefaultChartsLegend",
+      "default": "ChartsLegend",
       "class": null
     }
   ],
   "classes": [
     {
-      "key": "column",
-      "className": "MuiChartsLegend-column",
-      "description": "Styles applied to the legend with column layout.",
-      "isGlobal": false
-    },
-    {
-      "key": "itemBackground",
-      "className": "MuiChartsLegend-itemBackground",
-      "description": "Styles applied to the item background.",
+      "key": "horizontal",
+      "className": "MuiChartsLegend-horizontal",
+      "description": "Styles applied to the legend in row layout.",
       "isGlobal": false
     },
     {
@@ -81,19 +58,22 @@
       "isGlobal": false
     },
     {
-      "key": "row",
-      "className": "MuiChartsLegend-row",
-      "description": "Styles applied to the legend with row layout.",
-      "isGlobal": false
-    },
-    {
       "key": "series",
       "className": "MuiChartsLegend-series",
       "description": "Styles applied to a series element.",
       "isGlobal": false
+    },
+    {
+      "key": "vertical",
+      "className": "MuiChartsLegend-vertical",
+      "description": "Styles applied to the legend in column layout.",
+      "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiChartsLegend",
+  "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-charts/src/ChartsLegend/ChartsLegend.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",

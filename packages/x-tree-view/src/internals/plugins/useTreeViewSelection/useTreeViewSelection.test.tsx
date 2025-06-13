@@ -6,6 +6,7 @@ import {
   UseTreeViewExpansionSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 
 /**
  * All tests related to keyboard navigation (e.g.: selection using "Space")
@@ -15,6 +16,10 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
   'useTreeViewSelection plugin',
   ({ render }) => {
     describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
+      beforeEach(() => {
+        clearWarningsCache();
+      });
+
       it('should not select items when no default state and no control state are defined', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
@@ -148,7 +153,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
         expect(() => {
           view.setProps({ selectedItems: undefined });
         }).toErrorDev(
-          'MUI X: A component is changing the controlled selectedItems state of TreeView to be uncontrolled.',
+          'MUI X: A component is changing the controlled selectedItems state of Tree View to be uncontrolled.',
         );
       });
 
@@ -162,7 +167,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           view.setProps({ defaultSelectedItems: ['2'] });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
         }).toErrorDev(
-          'MUI X: A component is changing the default selectedItems state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
+          'MUI X: A component is changing the default selectedItems state of an uncontrolled Tree View after being initialized. To suppress this warning opt to use a controlled Tree View.',
         );
       });
     });
@@ -943,7 +948,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
     });
 
-    describe('selectItem api method', () => {
+    describe('setItemSelection() api method', () => {
       describe('single selection', () => {
         it('should select un-selected item when shouldBeSelected is not defined', () => {
           const view = render({
@@ -951,7 +956,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(true);
@@ -964,7 +969,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
@@ -977,7 +982,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
@@ -991,7 +996,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(true);
@@ -1007,7 +1012,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
@@ -1021,7 +1026,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({
+            view.apiRef.current.setItemSelection({
               itemId: '1',
               event: {} as any,
               keepExistingSelection: true,
@@ -1043,7 +1048,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event });
+            view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
           expect(onItemSelectionToggle.callCount).to.equal(1);
@@ -1063,7 +1068,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event });
+            view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
           expect(onItemSelectionToggle.callCount).to.equal(1);

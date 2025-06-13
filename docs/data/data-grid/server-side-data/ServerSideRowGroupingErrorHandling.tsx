@@ -4,6 +4,8 @@ import {
   GridDataSource,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
+  GridGetRowsResponse,
+  GridGetRowsError,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';
@@ -18,7 +20,7 @@ export default function ServerSideRowGroupingErrorHandling() {
   const [childrenError, setChildrenError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { fetchRows, columns } = useMockServer(
+  const { fetchRows, columns } = useMockServer<GridGetRowsResponse>(
     {
       rowGrouping: true,
     },
@@ -64,7 +66,7 @@ export default function ServerSideRowGroupingErrorHandling() {
         <Button
           onClick={() => {
             setRootError('');
-            apiRef.current.unstable_dataSource.fetchRows();
+            apiRef.current?.dataSource.fetchRows();
           }}
         >
           Refetch rows
@@ -82,17 +84,19 @@ export default function ServerSideRowGroupingErrorHandling() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
-          unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(error, params) => {
-            if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(error.message);
-            } else {
-              setChildrenError(
-                `${error.message} (Requested level: ${params.groupKeys.join(' > ')})`,
-              );
+          dataSource={dataSource}
+          onDataSourceError={(error) => {
+            if (error instanceof GridGetRowsError) {
+              if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
+                setRootError(error.message);
+              } else {
+                setChildrenError(
+                  `${error.message} (Requested level: ${error.params.groupKeys.join(' > ')})`,
+                );
+              }
             }
           }}
-          unstable_dataSourceCache={null}
+          dataSourceCache={null}
           apiRef={apiRef}
           initialState={initialState}
         />

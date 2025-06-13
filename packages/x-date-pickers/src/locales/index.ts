@@ -1,5 +1,6 @@
 export * from './beBY';
 export * from './bgBG';
+export * from './bnBD';
 export * from './caES';
 export * from './csCZ';
 export * from './daDK';
@@ -36,4 +37,5 @@ export * from './urPK';
 export * from './viVN';
 export * from './zhCN';
 export * from './zhHK';
+export * from './zhTW';
 export * from './utils/pickersLocaleTextApi';

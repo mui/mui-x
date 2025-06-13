@@ -3,23 +3,23 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import { animated, to, useSpring } from '@react-spring/web';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useItemHighlighted } from '../context';
-import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 
-const MarkElementPath = styled(animated.path, {
+const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
+  [`&.${markElementClasses.animate}`]: {
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionProperty: 'transform, transform-origin',
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
+  },
 }));
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
@@ -37,6 +37,16 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    /**
+     * If `true`, the marker is faded.
+     * @default false
+     */
+    isFaded?: boolean;
+    /**
+     * If `true`, the marker is highlighted.
+     * @default false
+     */
+    isHighlighted?: boolean;
   };
 
 /**
@@ -60,24 +70,20 @@ function MarkElement(props: MarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
+    isFaded = false,
+    isHighlighted = false,
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
 
-  const store = useStore();
-  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
-
-  const position = useSpring({ to: { x, y }, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
+    isHighlighted,
     isFaded,
     color,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -85,15 +91,15 @@ function MarkElement(props: MarkElementProps) {
     <MarkElementPath
       {...other}
       style={{
-        transform: to([position.x, position.y], (pX, pY) => `translate(${pX}px, ${pY}px)`),
-        transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
+        transform: `translate(${x}px, ${y}px)`,
+        transformOrigin: `${x}px ${y}px`,
       }}
       ownerState={ownerState}
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
     />
   );
 }
@@ -110,13 +116,22 @@ MarkElement.propTypes = {
   dataIndex: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
+   * If `true`, the marker is faded.
+   * @default false
+   */
+  isFaded: PropTypes.bool,
+  /**
+   * If `true`, the marker is highlighted.
+   * @default false
+   */
+  isHighlighted: PropTypes.bool,
+  /**
    * The shape of the marker.
    */
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
    */
   skipAnimation: PropTypes.bool,
 } as any;

@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Components lifecycle
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -20,10 +20,9 @@ The field components have an internal state controlling the visible value.
 
 It will only call the `onChange` callback when:
 
-- the user fills one section of an empty field. The value equals `Invalid date`.
 - the user completes all sections of a field. The value reflects the field.
-- the user cleans one section of a completed field. The value equals `Invalid date`.
-- the user cleans all sections of a field. The value equals `null`.
+  - when the date is not parseable, the `onChange` prop receives an `Invalid Date` (for example, if the [year is less than "100"](https://github.com/iamkun/dayjs/issues/1237) in case of `dayjs`).
+- the user cleans at least one or all sections of a completed field. The value equals `null`.
 
 The example below shows the last value received by `onChange`.
 
@@ -51,9 +50,12 @@ In all the below scenarios, the picker closes when `onClose` is called, except i
 #### When the last view is completed
 
 When a selection in the last view is made, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
-By default, it is set to `true` on desktop and `false` on mobile.
+The default value of `closeOnSelect` depends on the component:
 
-Here are a few examples:
+- Date Picker and Date Range Picker: `true` on desktop and `false` on mobile variants;
+- Time Picker, Date Time Picker, and Date Time Range Picker: `false` on desktop and mobile variants.
+
+  Here are a few examples:
 
 :::info
 The examples below are using the desktop and mobile variants of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
@@ -75,7 +77,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Explicit `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting a day. The user will have to click on the _OK_ action to close it.
+  **Behavior:** The picker will not close when selecting a day. The user will have to click on the _OK_ action to close it.
 
   :::success
   If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
@@ -96,7 +98,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting a day. The user will have to click on the _OK_ action to close it.
+  **Behavior:** The picker will not close when selecting a day. The user will have to click on the _OK_ action to close it.
 
 - ```tsx
   <DesktopDatePicker views={['day', 'month', 'year']} />
@@ -112,9 +114,9 @@ The examples below are using the desktop and mobile variants of the pickers, but
   ```
 
   - Default `views` prop: `['hours', 'minutes']` (plus a `meridiem` view if the locale is in 12-hours format)
-  - Default `closeOnSelect` prop: `true`
+  - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker will close when selecting the minutes or meridiem (if a 12-hour clock is used).
+  **Behavior:** The picker will not close when selecting the minutes or meridiem (if a 12-hour clock is used).
 
 :::info
 You don't have to fill all the views for the picker to close automatically.
@@ -172,7 +174,7 @@ Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#lifecycl
 
 #### When the user interacts with the view
 
-If the component is controlled (i.e: if it has a `value` prop),
+If the component is controlled (if it has a `value` prop that isn't undefined),
 clicking on a value will call `onChange` if the value to publish is different from the current value
 (for example clicking on the already selected day in the `day` view will not call `onChange`).
 
@@ -185,7 +187,7 @@ The `onChange` is only fired once when the dragging (touching) of the clock hand
 
 #### When a value is selected using the action bar
 
-If the component is controlled (i.e: if it has a `value` prop),
+If the component is controlled (if it has a `value` prop that isn't undefined),
 clicking on any built-in actions will call `onChange` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onChange` if no value has ever been published, even if the current value equals the value to publish.
@@ -225,7 +227,10 @@ You can use the second argument passed to the `onAccept` callback to get the val
 #### When the last view is completed
 
 When a selection in the last view is made, `onAccept` will be called only if the `closeOnSelect` prop is equal to `true` and the value has been modified since the last time `onAccept` was called.
-By default, `closeOnSelect`, is set to `true` on desktop and `false` on mobile.
+The default value of `closeOnSelect` depends on the component used:
+
+- Date Picker and Date Range Picker: `true` on desktop and `false` on mobile variants;
+- Time Picker, Date Time Picker, and Date Time Range Picker: `false` on desktop and mobile variants.
 
 Here are a few examples:
 
@@ -249,7 +254,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Explicit `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't call `onAccept` when selecting a value.
+  **Behavior:** The picker will not call `onAccept` when selecting a value.
 
   :::success
   If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
@@ -290,7 +295,7 @@ When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker
 
 #### When a value is selected using the action bar
 
-If the component is controlled (i.e: if it has a `value` prop),
+If the component is controlled (if it has a `value` prop that isn't undefined),
 clicking on any built-in actions will call `onAccept` if the value to publish is different from the current value.
 
 If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onAccept` if no value has ever been published, even if the current value equals the value to publish.

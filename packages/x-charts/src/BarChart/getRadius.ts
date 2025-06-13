@@ -1,4 +1,4 @@
-type GetRadiusData = {
+export type GetRadiusData = {
   hasNegative: boolean;
   hasPositive: boolean;
   borderRadius?: number;

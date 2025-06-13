@@ -103,6 +103,14 @@ By default, the pagination is handled on the client.
 This means you have to give the rows of all pages to the Data Grid.
 If your dataset is too big, and you want to fetch the pages on demand, you can use server-side pagination.
 
+:::warning
+If you enable server-side pagination with no other server-side features, then the Data Grid will only be provided with partial data for filtering and sorting.
+To be able to work with the entire dataset, you must also implement [server-side filtering](/x/react-data-grid/filtering/server-side/) and [server-side sorting](/x/react-data-grid/sorting/#server-side-sorting).
+The demo below does exactly that.
+:::
+
+{{"demo": "ServerPaginationFilterSortGrid.js", "bg": "inline"}}
+
 In general, the server-side pagination could be categorized into two types:
 
 - Index-based pagination
@@ -269,10 +277,12 @@ You can customize the rendering of the pagination in the footer following [the c
 
 ## apiRef
 
-The Data Grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the pagination feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the Data Grid.
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}

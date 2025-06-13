@@ -1,24 +1,20 @@
-import { GridRowId } from '@mui/x-data-grid';
-import { GridPrivateApiPro, GridGetRowsParams, GridGetRowsResponse } from '../../../models';
+import { RefObject } from '@mui/x-internals/types';
+import {
+  GRID_ROOT_GROUP_ID,
+  GridGroupNode,
+  GridKeyValue,
+  GridRowId,
+  GridRowTreeConfig,
+} from '@mui/x-data-grid';
+import { GridPrivateApiPro } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
-
-export const runIf = (condition: boolean, fn: Function) => (params: unknown) => {
-  if (condition) {
-    fn(params);
-  }
-};
 
 export enum RequestStatus {
   QUEUED,
   PENDING,
   SETTLED,
   UNKNOWN,
-}
-
-export enum DataSourceRowsUpdateStrategy {
-  Default = 'set-new-rows',
-  LazyLoading = 'replace-row-range',
 }
 
 /**
@@ -38,7 +34,7 @@ export class NestedDataManager {
   private maxConcurrentRequests: number;
 
   constructor(
-    privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+    privateApiRef: RefObject<GridPrivateApiPro>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.api = privateApiRef.current;
@@ -97,7 +93,7 @@ export class NestedDataManager {
   };
 
   public clearPendingRequest = (id: GridRowId) => {
-    this.api.unstable_dataSource.setChildrenLoading(id, false);
+    this.api.dataSource.setChildrenLoading(id, false);
     this.pendingRequests.delete(id);
     this.processQueue();
   };
@@ -118,82 +114,14 @@ export class NestedDataManager {
   public getActiveRequestsCount = () => this.pendingRequests.size + this.queuedRequests.size;
 }
 
-/**
- * Provides better cache hit rate by:
- * 1. Splitting the data into smaller chunks to be stored in the cache (cache `set`)
- * 2. Merging multiple cache entries into a single response to get the required chunk (cache `get`)
- */
-export class CacheChunkManager {
-  private chunkSize: number;
-
-  /**
-   * @param chunkSize The number of rows to store in each cache entry.
-   * If not set, the whole array will be stored in a single cache entry.
-   * Setting this value to smallest page size will result in better cache hit rate.
-   * Has no effect if cursor pagination is used.
-   */
-  constructor(chunkSize: number) {
-    this.chunkSize = chunkSize;
+export const getGroupKeys = (tree: GridRowTreeConfig, rowId: GridRowId) => {
+  const rowNode = tree[rowId];
+  let currentNodeId = rowNode.parent;
+  const groupKeys: GridKeyValue[] = [];
+  while (currentNodeId && currentNodeId !== GRID_ROOT_GROUP_ID) {
+    const currentNode = tree[currentNodeId] as GridGroupNode;
+    groupKeys.push(currentNode.groupingKey ?? '');
+    currentNodeId = currentNode.parent;
   }
-
-  public getCacheKeys = (key: GridGetRowsParams) => {
-    if (this.chunkSize < 1 || typeof key.start !== 'number') {
-      return [key];
-    }
-
-    // split the range into chunks
-    const chunkedKeys: GridGetRowsParams[] = [];
-    for (let i = key.start; i < key.end; i += this.chunkSize) {
-      const end = Math.min(i + this.chunkSize - 1, key.end);
-      chunkedKeys.push({ ...key, start: i, end });
-    }
-
-    return chunkedKeys;
-  };
-
-  public splitResponse = (key: GridGetRowsParams, response: GridGetRowsResponse) => {
-    const cacheKeys = this.getCacheKeys(key);
-    const responses = new Map<GridGetRowsParams, GridGetRowsResponse>();
-    cacheKeys.forEach((chunkKey) => {
-      const isLastChunk = chunkKey.end === key.end;
-      const responseSlice: GridGetRowsResponse = {
-        ...response,
-        pageInfo: {
-          ...response.pageInfo,
-          // If the original response had page info, update that information for all but last chunk and keep the original value for the last chunk
-          hasNextPage:
-            response.pageInfo?.hasNextPage !== undefined && !isLastChunk
-              ? true
-              : response.pageInfo?.hasNextPage,
-          nextCursor:
-            response.pageInfo?.nextCursor !== undefined && !isLastChunk
-              ? response.rows[chunkKey.end + 1].id
-              : response.pageInfo?.nextCursor,
-        },
-        rows:
-          typeof chunkKey.start !== 'number' || typeof key.start !== 'number'
-            ? response.rows
-            : response.rows.slice(chunkKey.start - key.start, chunkKey.end - key.start + 1),
-      };
-
-      responses.set(chunkKey, responseSlice);
-    });
-
-    return responses;
-  };
-
-  static mergeResponses = (responses: GridGetRowsResponse[]): GridGetRowsResponse => {
-    if (responses.length === 1) {
-      return responses[0];
-    }
-
-    return responses.reduce(
-      (acc, response) => ({
-        rows: [...acc.rows, ...response.rows],
-        rowCount: response.rowCount,
-        pageInfo: response.pageInfo,
-      }),
-      { rows: [], rowCount: 0, pageInfo: {} },
-    );
-  };
-}
+  return groupKeys.reverse();
+};

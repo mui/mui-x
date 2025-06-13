@@ -34,7 +34,10 @@ function filterCommit(commitsItem) {
   // TODO: Use labels
 
   // Filter dependency updates
-  return !commitsItem.commit.message.startsWith('Bump');
+  return (
+    !commitsItem.commit.message.startsWith('Bump') &&
+    !commitsItem.commit.message.includes('[scheduler]')
+  );
 }
 
 async function findLatestTaggedVersion(octokit) {
@@ -47,17 +50,20 @@ function resolvePackagesByLabels(labels) {
   const resolvedPackages = [];
   labels.forEach((label) => {
     switch (label.name) {
-      case 'component: data grid':
+      case 'scope: data grid':
         resolvedPackages.push('DataGrid');
         break;
-      case 'component: pickers':
+      case 'scope: pickers':
         resolvedPackages.push('pickers');
         break;
-      case 'component: charts':
+      case 'scope: charts':
         resolvedPackages.push('charts');
         break;
-      case 'component: tree view':
+      case 'scope: tree view':
         resolvedPackages.push('TreeView');
+        break;
+      case 'scope: scheduler':
+        resolvedPackages.push('Scheduler');
         break;
       default:
         break;
@@ -84,7 +90,7 @@ async function main(argv) {
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
-      `Creating changelog for ${latestTaggedVersion}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
+      `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
 
@@ -228,6 +234,7 @@ async function main(argv) {
         break;
       case 'DateRangePicker':
       case 'DateTimeRangePicker':
+      case 'TimeRangePicker':
         pickersProCommits.push(commitItem);
         break;
       case 'charts-pro':
@@ -273,6 +280,8 @@ async function main(argv) {
                 break;
             }
           });
+        } else {
+          otherCommits.push(commitItem);
         }
         break;
       }
@@ -327,11 +336,11 @@ async function main(argv) {
       return '';
     }
 
-    return `Special thanks go out to the community contributors who have helped make this release possible:\n${contributors.join(', ')}.`;
+    return `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}.`;
   };
 
   const logTeamSection = () => {
-    return `Following are all team members who have contributed to this release:\n${Array.from(
+    return `The following are all team members who have contributed to this release:\n${Array.from(
       community.team,
     )
       .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
@@ -343,7 +352,7 @@ async function main(argv) {
 <!-- generated comparing ${lastRelease}..${release} -->
 _${nowFormatted}_
 
-We'd like to offer a big thanks to the ${
+We'd like to extend a big thank you to the ${
     authors.length
   } contributors who made this release possible. Here are some highlights ✨:
 
@@ -358,7 +367,7 @@ ${logTeamSection()}
 ${logChangelogMessages('DataGrid')}
 #### \`@mui/x-data-grid@__VERSION__\`
 
-${logChangelogSection(dataGridCommits) || `No changes since \`@mui/x-data-grid@${lastRelease}\`.`}
+${logChangelogSection(dataGridCommits) || 'Internal changes.'}
 
 #### \`@mui/x-data-grid-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -376,7 +385,7 @@ ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 
 ${logChangelogMessages('pickers')}
 #### \`@mui/x-date-pickers@__VERSION__\`
 
-${logChangelogSection(pickersCommits) || `No changes since \`@mui/x-date-pickers@${lastRelease}\`.`}
+${logChangelogSection(pickersCommits) || 'Internal changes.'}
 
 #### \`@mui/x-date-pickers-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -388,7 +397,7 @@ ${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' :
 ${logChangelogMessages('charts')}
 #### \`@mui/x-charts@__VERSION__\`
 
-${logChangelogSection(chartsCommits) || `No changes since \`@mui/x-charts@${lastRelease}\`.`}
+${logChangelogSection(chartsCommits) || 'Internal changes.'}
 
 #### \`@mui/x-charts-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -396,8 +405,8 @@ Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? 
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
 ### Tree View
 ${logChangelogMessages('TreeView')}
-#### \`@mui/x-tree-view@__VERSION__\` 
-${logChangelogSection(treeViewProCommits) || `No changes since \`@mui/x-tree-view-pro@${lastRelease}\`.`}
+#### \`@mui/x-tree-view@__VERSION__\`
+${logChangelogSection(treeViewCommits) || 'Internal changes.'}
 
 #### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -432,14 +441,15 @@ yargs(hideBin(process.argv))
           type: 'string',
         })
         .option('release', {
-          // #default-branch-switch
+          // #target-branch-reference
+          // to be done when we branch off for a new major (e.g. v9)
           default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         })
         .option('nextVersion', {
           describe:
-            'The version expected to be released e.g. `5.2.0`. Replaces `_VERSION__` placeholder in the changelog.',
+            'The version expected to be released e.g. `5.2.0`. Replaces `__VERSION__` placeholder in the changelog.',
           type: 'string',
         });
     },

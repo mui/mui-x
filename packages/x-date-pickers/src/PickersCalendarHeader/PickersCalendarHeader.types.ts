@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { SxProps, Theme } from '@mui/material/styles';
@@ -10,7 +10,6 @@ import {
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
 import { PickerValidDate, DateView, PickerOwnerState } from '../models';
-import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
 export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
@@ -59,7 +58,7 @@ export interface PickersCalendarHeaderProps
   currentMonth: PickerValidDate;
   disabled?: boolean;
   views: readonly DateView[];
-  onMonthChange: (date: PickerValidDate, slideDirection: SlideDirection) => void;
+  onMonthChange: (date: PickerValidDate) => void;
   view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;

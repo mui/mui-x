@@ -15,7 +15,7 @@ import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateCont
 
 export type SlideDirection = 'right' | 'left';
 
-interface PickerSlideTransitionOwnerState extends PickerOwnerState {
+export interface PickerSlideTransitionOwnerState extends PickerOwnerState {
   slideDirection: SlideDirection;
 }
 
@@ -28,7 +28,7 @@ export interface ExportedSlideTransitionProps {
 export interface SlideTransitionProps
   extends Omit<CSSTransitionProps, 'timeout'>,
     ExportedSlideTransitionProps {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   className?: string;
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
@@ -70,7 +70,7 @@ const PickersSlideTransitionRoot = styled(TransitionGroup, {
         styles['slideExitActiveLeft-right'],
     },
   ],
-})<TransitionGroupProps>(({ theme }) => {
+})<TransitionGroupProps & { ownerState?: PickerSlideTransitionOwnerState }>(({ theme }) => {
   const slideTransition = theme.transitions.create('transform', {
     duration: theme.transitions.duration.complex,
     easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
@@ -150,12 +150,13 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
   return (
     <PickersSlideTransitionRoot
       className={clsx(classes.root, className)}
-      childFactory={(element: React.ReactElement) =>
+      childFactory={(element: React.ReactElement<any>) =>
         React.cloneElement(element, {
           classNames: transitionClasses,
         })
       }
       role="presentation"
+      ownerState={ownerState}
     >
       <CSSTransition
         mountOnEnter

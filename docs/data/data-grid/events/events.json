@@ -7,6 +7,20 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "aiAssistantActiveConversationIndexChange",
+    "description": "Fired when the AI Assistant active conversation index changes.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "aiAssistantConversationsChange",
+    "description": "Fired when the AI Assistant conversation state changes.",
+    "params": "Conversation[]",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
@@ -277,6 +291,27 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotModeChange",
+    "description": "",
+    "params": "boolean",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotModelChange",
+    "description": "Fired when the pivot model changes.",
+    "params": "GridPivotModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "pivotPanelOpenChange",
+    "description": "",
+    "params": "boolean",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "preferencePanelClose",
     "description": "Fired when the preference panel is closed.",
@@ -304,6 +339,13 @@
     "name": "resize",
     "description": "Fired when the grid is resized.",
     "params": "ElementSize",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rootMount",
+    "description": "Fired when rootElementRef.current becomes available.",
+    "params": "HTMLElement",
     "event": "MuiEvent<{}>"
   },
   {

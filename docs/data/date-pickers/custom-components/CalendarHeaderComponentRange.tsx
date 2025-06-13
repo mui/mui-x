@@ -20,10 +20,9 @@ const CustomCalendarHeaderRoot = styled('div')({
 function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps) {
   const { currentMonth, onMonthChange, month, calendars, monthIndex } = props;
 
-  const selectNextMonth = () =>
-    onMonthChange(currentMonth.add(calendars, 'month'), 'left');
+  const selectNextMonth = () => onMonthChange(currentMonth.add(calendars, 'month'));
   const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(calendars, 'month'), 'right');
+    onMonthChange(currentMonth.subtract(calendars, 'month'));
 
   return (
     <CustomCalendarHeaderRoot>

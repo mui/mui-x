@@ -25,7 +25,7 @@ import {
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
 import { PickerOwnerState, PickerValidDate, TimeStepOptions } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { formatMeridiem } from '../internals/utils/date-utils';
@@ -42,9 +42,7 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
-  display: 'flex',
   flexDirection: 'row',
   width: '100%',
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -112,7 +110,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useControlledValueWithTimezone({
+  } = useControlledValue({
     name: 'MultiSectionDigitalClock',
     timezone: timezoneProp,
     value: valueProp,
@@ -458,7 +456,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           items={viewTimeOptions[timeView].items}
           onChange={viewTimeOptions[timeView].onChange}
           active={view === timeView}
-          autoFocus={autoFocus ?? focusedView === timeView}
+          autoFocus={autoFocus || focusedView === timeView}
           disabled={disabled}
           readOnly={readOnly}
           slots={slots}

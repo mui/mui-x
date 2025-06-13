@@ -65,9 +65,6 @@ export default function useTreeItemHookProperties() {
         slots={{ item: CustomTreeItem }}
         checkboxSelection
         isItemEditable
-        experimentalFeatures={{
-          labelEditing: true,
-        }}
       />
     </Box>
   );

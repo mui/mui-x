@@ -15,10 +15,15 @@ export default function StackBars() {
         { dataKey: 'retEarn', stack: 'equity' },
         { dataKey: 'treas', stack: 'equity' },
       ])}
-      xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
-      hideLegend
-      width={600}
-      height={350}
+      xAxis={[{ dataKey: 'year' }]}
+      yAxis={[{ width: 80 }]}
+      {...config}
     />
   );
 }
+
+const config = {
+  height: 350,
+  margin: { left: 40 },
+  hideLegend: true,
+};

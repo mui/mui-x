@@ -10,4 +10,5 @@
   slotProps={{
     toolbar: { setRows, setRowModesModel },
   }}
+  showToolbar
 />

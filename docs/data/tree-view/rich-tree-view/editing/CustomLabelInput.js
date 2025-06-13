@@ -11,14 +11,14 @@ import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
   borderRadius: theme.shape.borderRadius,
   border: 'none',
   padding: '0 2px',
   boxSizing: 'border-box',
   width: 100,
   '&:focus': {
-    outline: `1px solid ${theme.palette.primary.main}`,
+    outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
   },
 }));
 
@@ -176,7 +176,6 @@ export default function CustomLabelInput() {
       <RichTreeView
         items={ITEMS}
         slots={{ item: CustomTreeItem }}
-        experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['1', '2']}
         getItemLabel={(item) => `${item.firstName} ${item.lastName}`}

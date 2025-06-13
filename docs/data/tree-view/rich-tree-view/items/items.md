@@ -2,7 +2,7 @@
 productId: x-tree-view
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -95,6 +95,45 @@ It could be achieved by either defining the prop outside the component scope or 
 
 :::warning
 Unlike the Simple Tree View component, the Rich Tree View component only supports string labels, you cannot pass React nodes to it.
+:::
+
+## Item children
+
+Each item can contain children, which are rendered as nested nodes in the tree.
+
+By default, the Rich Tree View component looks for a property named `children` in the data set to get the children:
+
+```tsx
+const ITEMS = [
+  { children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }] },
+];
+
+<RichTreeView items={ITEMS} />;
+```
+
+If the item's children are not called `children`, then you need to use the `getItemChildren` prop to tell the Rich Tree View component where they're located:
+
+The following demo shows how to use `getItemChildren` to grab the children from a property named `nodes`:
+
+```tsx
+const ITEMS = [
+  { nodes: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }] },
+];
+
+function getItemChildren(item) {
+  return item.nodes;
+}
+
+<RichTreeView items={ITEMS} getItemChildren={getItemChildren} />;
+```
+
+{{"demo": "GetItemChildren.js", "defaultCodeOpen": false}}
+
+:::warning
+Just like the `items` prop, the `getItemChildren` function should keep the same JavaScript reference between two renders.
+Otherwise, the Tree View will re-generate its entire structure.
+
+It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
 ## Disabled items
@@ -216,3 +255,30 @@ const childrenIds = apiRef.current.getItemOrderedChildrenIds(
 ```
 
 {{"demo": "ApiMethodGetItemOrderedChildrenIds.js", "defaultCodeOpen": false}}
+
+### Get an item's parent id
+
+Use the `getParentId()` API method to get the id of the item's parent.
+
+```ts
+publicAPI.getParentId(itemId);
+```
+
+{{"demo": "GetParentIdPublicAPI.js", "defaultCodeOpen": false}}
+
+### Imperatively disable an item
+
+Use the `setIsItemDisabled` API method to imperatively toggle the items's disabled state.
+
+```ts
+publicAPI.setIsItemDisabled({
+  // The id of the item to disable or enable
+  itemId,
+  // If `true` the item will be disabled
+  // If `false` the item will be enabled
+  // If not defined, the item's new disable status will be the opposite of its current one
+  shouldBeDisabled: true,
+});
+```
+
+{{"demo": "DisableTreeItemPublicAPI.js", "defaultCodeOpen": false}}

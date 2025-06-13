@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { RefObject } from '@mui/x-internals/types';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -7,7 +8,7 @@ import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridGroupNode } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
@@ -52,7 +53,7 @@ export const sortingStateInitializer: GridStateInitializer<
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -62,6 +63,7 @@ export const useGridSorting = (
     | 'sortingMode'
     | 'disableColumnSorting'
     | 'disableMultipleColumnsSorting'
+    | 'multipleColumnsSortingMode'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
@@ -154,7 +156,7 @@ export const useGridSorting = (
         };
       }
 
-      const sortModel = gridSortModelSelector(state, undefined, apiRef.current.instanceId);
+      const sortModel = gridSortModelSelector(apiRef);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
       const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
         sortRowList,
@@ -167,7 +169,6 @@ export const useGridSorting = (
     });
 
     apiRef.current.publishEvent('sortedRowsSet');
-    apiRef.current.forceUpdate();
   }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
@@ -178,7 +179,6 @@ export const useGridSorting = (
         apiRef.current.setState(
           mergeStateWithSortModel(model, props.disableMultipleColumnsSorting),
         );
-        apiRef.current.forceUpdate();
         apiRef.current.applySorting();
       }
     },
@@ -189,7 +189,7 @@ export const useGridSorting = (
     (field, direction, allowMultipleSorting) => {
       const column = apiRef.current.getColumn(field);
       const sortItem = createSortItem(column, direction);
-      let sortModel: GridSortItem[];
+      let sortModel: GridSortModel;
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
         sortModel = sortItem?.sort == null ? [] : [sortItem];
       } else {
@@ -309,10 +309,14 @@ export const useGridSorting = (
       if (!colDef.sortable || props.disableColumnSorting) {
         return;
       }
-      const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
+      const allowMultipleSorting =
+        props.multipleColumnsSortingMode === 'always' ||
+        event.shiftKey ||
+        event.metaKey ||
+        event.ctrlKey;
       sortColumn(field, undefined, allowMultipleSorting);
     },
-    [sortColumn, props.disableColumnSorting],
+    [sortColumn, props.disableColumnSorting, props.multipleColumnsSortingMode],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
@@ -322,10 +326,14 @@ export const useGridSorting = (
       }
       // Ctrl + Enter opens the column menu
       if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey) {
-        sortColumn(field, undefined, event.shiftKey);
+        sortColumn(
+          field,
+          undefined,
+          props.multipleColumnsSortingMode === 'always' || event.shiftKey,
+        );
       }
     },
-    [sortColumn, props.disableColumnSorting],
+    [sortColumn, props.disableColumnSorting, props.multipleColumnsSortingMode],
   );
 
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
@@ -355,11 +363,11 @@ export const useGridSorting = (
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
 
-  useGridApiEventHandler(apiRef, 'columnHeaderClick', handleColumnHeaderClick);
-  useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, 'rowsSet', apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
-  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridEvent(apiRef, 'columnHeaderClick', handleColumnHeaderClick);
+  useGridEvent(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  useGridEvent(apiRef, 'rowsSet', apiRef.current.applySorting);
+  useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
+  useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
 
   /**
    * 1ST RENDER

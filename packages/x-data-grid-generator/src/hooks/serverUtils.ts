@@ -8,12 +8,32 @@ import {
   GridRowId,
   GridPaginationModel,
   GridValidRowModel,
-} from '@mui/x-data-grid-pro';
+  GRID_AGGREGATION_FUNCTIONS,
+  GridAggregationModel,
+  GridAggregationFunction,
+} from '@mui/x-data-grid-premium';
 import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';
 
+const getAvailableAggregationFunctions = (columnType: GridColDef['type']) => {
+  const availableAggregationFunctions = new Map<string, GridAggregationFunction>();
+  Object.keys(GRID_AGGREGATION_FUNCTIONS).forEach((functionName) => {
+    const columnTypes =
+      GRID_AGGREGATION_FUNCTIONS[functionName as keyof typeof GRID_AGGREGATION_FUNCTIONS]
+        .columnTypes;
+    if (!columnTypes || columnTypes.includes(columnType ?? 'string')) {
+      availableAggregationFunctions.set(
+        functionName,
+        GRID_AGGREGATION_FUNCTIONS[functionName as keyof typeof GRID_AGGREGATION_FUNCTIONS],
+      );
+    }
+  });
+  return availableAggregationFunctions;
+};
+
 export interface FakeServerResponse {
   returnedRows: GridRowModel[];
+  aggregateRow?: GridValidRowModel;
   nextCursor?: string;
   hasNextPage?: boolean;
   totalRowCount: number;
@@ -39,6 +59,7 @@ export interface QueryOptions {
   page?: number;
   pageSize?: number;
   filterModel?: GridFilterModel;
+  aggregationModel?: GridAggregationModel;
   sortModel?: GridSortModel;
   start?: number;
   end?: number;
@@ -50,6 +71,7 @@ export interface ServerSideQueryOptions {
   groupKeys?: string[];
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
+  aggregationModel?: GridAggregationModel;
   start?: number;
   end?: number;
   groupFields?: string[];
@@ -72,6 +94,7 @@ const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridR
 
 const getRowComparator = (
   sortModel: GridSortModel | undefined,
+  aggregationModel: GridAggregationModel | undefined,
   columnsWithDefaultColDef: GridColDef[],
 ) => {
   if (!sortModel) {
@@ -79,8 +102,10 @@ const getRowComparator = (
     return comparator;
   }
   const sortOperators = sortModel.map((sortItem) => {
-    const columnField = sortItem.field;
-    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
+    const columnField = aggregationModel?.[sortItem.field]
+      ? `${sortItem.field}Aggregate`
+      : sortItem.field;
+    const colDef = columnsWithDefaultColDef.find(({ field }) => field === sortItem.field) as any;
     return {
       ...sortItem,
       valueGetter: simplifiedValueGetter(columnField, colDef),
@@ -261,6 +286,41 @@ const getFilteredRows = (
   );
 };
 
+const applyAggregation = (
+  aggregationModel: GridAggregationModel,
+  colDefs: GridColDef[],
+  rows: GridRowModel[],
+  groupId: string = 'root',
+) => {
+  const columnsToAggregate = Object.keys(aggregationModel);
+  if (columnsToAggregate.length === 0) {
+    return {};
+  }
+
+  const aggregateValues: GridValidRowModel = {};
+  columnsToAggregate.forEach((field) => {
+    const type = colDefs.find(({ field: f }) => f === field)?.type;
+    if (!type) {
+      return;
+    }
+    const availableAggregationFunctions = getAvailableAggregationFunctions(type);
+    if (!availableAggregationFunctions.has(aggregationModel[field])) {
+      return;
+    }
+    const aggregationFunction = availableAggregationFunctions.get(aggregationModel[field]);
+    if (!aggregationFunction) {
+      return;
+    }
+    const values = rows.map((row) => row[field]);
+    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply({
+      values,
+      field,
+      groupId,
+    });
+  });
+  return aggregateValues;
+};
+
 /**
  * Simulates server data loading
  */
@@ -285,8 +345,21 @@ export const loadServerRows = (
 
   let filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
 
-  const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+  const rowComparator = getRowComparator(
+    queryOptions.sortModel,
+    queryOptions.aggregationModel,
+    columnsWithDefaultColDef,
+  );
   filteredRows = [...filteredRows].sort(rowComparator);
+
+  let aggregateRow = {};
+  if (queryOptions.aggregationModel) {
+    aggregateRow = applyAggregation(
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+      filteredRows,
+    );
+  }
 
   const totalRowCount = filteredRows.length;
   if (start !== undefined && end !== undefined) {
@@ -311,6 +384,7 @@ export const loadServerRows = (
     hasNextPage,
     nextCursor,
     totalRowCount,
+    ...(queryOptions.aggregationModel ? { aggregateRow } : {}),
   };
 
   return new Promise<FakeServerResponse>((resolve) => {
@@ -323,6 +397,7 @@ export const loadServerRows = (
 interface NestedDataRowsResponse {
   rows: GridRowModel[];
   rootRowCount: number;
+  aggregateRow?: GridRowModel;
 }
 
 const findTreeDataRowChildren = (
@@ -464,13 +539,39 @@ export const processTreeDataRows = (
   let childRowsWithDescendantCounts = childRows.map((row) => {
     const descendants = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, -1);
     const descendantCount = descendants.length;
+    if (descendantCount > 0 && queryOptions.aggregationModel) {
+      // Parent row, compute aggregation
+      return {
+        ...row,
+        descendantCount,
+        ...applyAggregation(
+          queryOptions.aggregationModel,
+          columnsWithDefaultColDef,
+          descendants,
+          row.id,
+        ),
+      };
+    }
     return { ...row, descendantCount } as GridRowModel;
   });
 
   if (queryOptions.sortModel) {
     // apply sorting
-    const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+    const rowComparator = getRowComparator(
+      queryOptions.sortModel,
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+    );
     childRowsWithDescendantCounts = [...childRowsWithDescendantCounts].sort(rowComparator);
+  }
+
+  let aggregateRow: GridRowModel | undefined;
+  if (queryOptions.aggregationModel) {
+    aggregateRow = applyAggregation(
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+      filteredRows,
+    );
   }
 
   if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
@@ -486,7 +587,7 @@ export const processTreeDataRows = (
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ rows: childRowsWithDescendantCounts, rootRowCount });
+      resolve({ rows: childRowsWithDescendantCounts, rootRowCount, aggregateRow });
     }, delay); // simulate network latency
   });
 };
@@ -523,9 +624,16 @@ export const processRowGroupingRows = (
 
   // add paths and generate parent rows based on `groupFields`
   const groupFields = queryOptions.groupFields;
+
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = groupFields.map((field) => String(row[field]));
+      const partialPath = groupFields.map((field) => {
+        const colDef = columnsWithDefaultColDef.find(({ field: f }) => f === field);
+        if (colDef?.groupingValueGetter) {
+          return colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef);
+        }
+        return String(row[field]);
+      });
       for (let index = 0; index < partialPath.length; index += 1) {
         const value = partialPath[index];
         if (value === undefined) {
@@ -584,14 +692,40 @@ export const processRowGroupingRows = (
       ({ id }) => typeof id !== 'string' || !id.startsWith('auto-generated-parent-'),
     );
     const descendantCount = descendants.length;
+    if (descendantCount > 0 && queryOptions.aggregationModel) {
+      // Parent row, compute aggregation
+      return {
+        ...row,
+        descendantCount,
+        ...applyAggregation(
+          queryOptions.aggregationModel,
+          columnsWithDefaultColDef,
+          descendants,
+          row.id,
+        ),
+      };
+    }
     return { ...row, descendantCount } as GridRowModel;
   });
 
   if (queryOptions.sortModel) {
-    const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+    const rowComparator = getRowComparator(
+      queryOptions.sortModel,
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+    );
     const sortedMissingGroups = [...filteredRowsWithMissingGroups].sort(rowComparator);
     const sortedChildRows = [...childRowsWithDescendantCounts].sort(rowComparator);
     childRowsWithDescendantCounts = [...sortedMissingGroups, ...sortedChildRows];
+  }
+
+  let aggregateRow: GridRowModel | undefined;
+  if (queryOptions.aggregationModel) {
+    aggregateRow = applyAggregation(
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+      filteredRows,
+    );
   }
 
   if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
@@ -607,7 +741,7 @@ export const processRowGroupingRows = (
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ rows: childRowsWithDescendantCounts, rootRowCount });
+      resolve({ rows: childRowsWithDescendantCounts, rootRowCount, aggregateRow });
     }, delay); // simulate network latency
   });
 };

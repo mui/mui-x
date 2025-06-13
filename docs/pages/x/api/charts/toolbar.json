@@ -1,0 +1,19 @@
+{
+  "props": {
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "Toolbar",
+  "imports": [
+    "import { Toolbar } from '@mui/x-charts/Toolbar';",
+    "import { Toolbar } from '@mui/x-charts';",
+    "import { Toolbar } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiToolbar",
+  "filename": "/packages/x-charts/src/Toolbar/Toolbar.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar 🧪</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   useGridSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
   gridRenderContextSelector,
-  useGridApiOptionHandler,
+  useGridEventPriority,
   GridEventListener,
 } from '@mui/x-data-grid';
 import { getVisibleRows } from '@mui/x-data-grid/internals';
@@ -21,10 +22,10 @@ import { findSkeletonRowsSection } from './utils';
  * @requires useGridScroll (method
  */
 export const useGridLazyLoader = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'
+    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode'
   >,
 ): void => {
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
@@ -131,12 +132,8 @@ export const useGridLazyLoader = (
     [privateApiRef, isDisabled, sortModel],
   );
 
-  useGridApiEventHandler(
-    privateApiRef,
-    'renderedRowsIntervalChange',
-    handleRenderedRowsIntervalChange,
-  );
-  useGridApiEventHandler(privateApiRef, 'sortModelChange', handleGridSortModelChange);
-  useGridApiEventHandler(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
-  useGridApiOptionHandler(privateApiRef, 'fetchRows', props.onFetchRows);
+  useGridEvent(privateApiRef, 'renderedRowsIntervalChange', handleRenderedRowsIntervalChange);
+  useGridEvent(privateApiRef, 'sortModelChange', handleGridSortModelChange);
+  useGridEvent(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
+  useGridEventPriority(privateApiRef, 'fetchRows', props.onFetchRows);
 };

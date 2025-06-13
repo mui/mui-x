@@ -1,0 +1,19 @@
+{
+  "name": "GridAggregationFunctionDataSource",
+  "imports": ["import { GridAggregationFunctionDataSource } from '@mui/x-data-grid-premium'"],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/server-side-data/aggregation/\">Server-side aggregation</a></li></ul>",
+  "properties": {
+    "columnTypes": { "type": { "description": "string[]" }, "isPremiumPlan": true },
+    "hasCellUnit": {
+      "type": { "description": "boolean" },
+      "default": "true",
+      "isPremiumPlan": true
+    },
+    "label": {
+      "type": { "description": "string" },
+      "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
+      "isPremiumPlan": true
+    },
+    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "isPremiumPlan": true }
+  }
+}

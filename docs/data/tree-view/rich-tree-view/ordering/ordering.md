@@ -3,22 +3,13 @@ productId: x-tree-view
 title: Rich Tree View - Ordering
 components: TreeItem, RichTreeViewPro, TreeItemDragAndDropOverlay
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
 # Rich Tree View - Ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Drag and drop your items to reorder them.</p>
-
-:::success
-To be able to reorder items, you first have to enable the `itemsReordering` experimental feature:
-
-```tsx
-<RichTreeViewPro items={ITEMS} experimentalFeatures={{ itemsReordering: true }} />
-```
-
-:::
 
 ## Enable drag & drop re-ordering
 

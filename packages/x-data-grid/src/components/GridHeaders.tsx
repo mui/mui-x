@@ -30,7 +30,11 @@ function GridHeaders() {
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-  const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
+  const hasNoCellTabIndexState = useGridSelector(
+    apiRef,
+    () => gridTabIndexCellSelector(apiRef) === null,
+  );
+
   const columnGroupHeaderTabIndexState = useGridSelector(
     apiRef,
     gridTabIndexColumnGroupHeaderSelector,
@@ -51,7 +55,7 @@ function GridHeaders() {
   const hasOtherElementInTabSequence = !(
     columnGroupHeaderTabIndexState === null &&
     columnHeaderTabIndexState === null &&
-    cellTabIndexState === null
+    hasNoCellTabIndexState
   );
 
   const columnsContainerRef = apiRef.current.columnHeadersContainerRef;

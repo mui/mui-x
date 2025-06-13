@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
@@ -20,7 +21,7 @@ export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> 
   classes?: Partial<ClockPointerClasses>;
 }
 
-interface ClockPointerOwnerState extends PickerOwnerState {
+export interface ClockPointerOwnerState extends PickerOwnerState {
   /**
    * `true` if the clock pointer should animate.
    */
@@ -45,7 +46,6 @@ const useUtilityClasses = (classes: Partial<ClockPointerClasses> | undefined) =>
 const ClockPointerRoot = styled('div', {
   name: 'MuiClockPointer',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: ClockPointerOwnerState;
 }>(({ theme }) => ({
@@ -68,7 +68,6 @@ const ClockPointerRoot = styled('div', {
 const ClockPointerThumb = styled('div', {
   name: 'MuiClockPointer',
   slot: 'Thumb',
-  overridesResolver: (_, styles) => styles.thumb,
 })<{
   ownerState: ClockPointerOwnerState;
 }>(({ theme }) => ({
@@ -83,7 +82,7 @@ const ClockPointerThumb = styled('div', {
   boxSizing: 'content-box',
   variants: [
     {
-      props: { isBetweenTwoClockValues: false },
+      props: { isClockPointerBetweenTwoValues: false },
       style: {
         backgroundColor: (theme.vars || theme).palette.primary.main,
       },

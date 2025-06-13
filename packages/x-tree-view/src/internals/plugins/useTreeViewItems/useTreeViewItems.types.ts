@@ -7,6 +7,13 @@ import {
   TreeViewItemId,
 } from '../../../models';
 
+export type AddItemsParameters<R> = {
+  items: readonly R[];
+  parentId?: TreeViewItemId;
+  depth: number;
+  getChildrenCount?: (item: R) => number;
+};
+
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
@@ -34,6 +41,18 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {TreeViewBaseItem[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
+  /**
+   * Toggle the disabled state of the item with the given id.
+   * @param {object} parameters The params of the method.
+   * @param {TreeViewItemId } parameters.itemId The id of the item to get the children of.
+   * @param {boolean } parameters.shouldBeDisabled true if the item should be disabled.
+   */
+  setIsItemDisabled: (parameters: { itemId: TreeViewItemId; shouldBeDisabled?: boolean }) => void;
+  /** * Get the id of the parent item.
+   * @param {string} itemId The id of the item to whose parentId we want to retrieve.
+   * @returns {TreeViewItemId | null} The id of the parent item.
+   */
+  getParentId: (itemId: TreeViewItemId) => TreeViewItemId | null;
 }
 
 export interface UseTreeViewItemsInstance<R extends {}>
@@ -49,6 +68,32 @@ export interface UseTreeViewItemsInstance<R extends {}>
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
+  /**
+   * Add an array of items to the tree.
+   * @param {AddItemsParameters<R>} args The items to add to the tree and information about their ancestors.
+   */
+  addItems: (args: AddItemsParameters<R>) => void;
+  /**
+   * Remove the children of an item.
+   * @param {TreeViewItemId} parentId The id of the item to remove the children of.
+   */
+  removeChildren: (parentId?: TreeViewItemId) => void;
+  /**
+   * Set the loading state of the tree.
+   * @param {boolean} loading True if the tree view is loading.
+   */
+  setTreeViewLoading: (loading: boolean) => void;
+  /**
+   * Set the error state of the tree.
+   * @param {Error | null} error The error on the tree view.
+   */
+  setTreeViewError: (error: Error | null) => void;
+  /**
+   * Event handler to fire when the `content` slot of a given Tree Item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item being clicked.
+   */
+  handleItemClick: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
@@ -75,6 +120,15 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    */
   getItemLabel?: (item: R) => string;
   /**
+   * Used to determine the children of a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {R[]} The children of the item.
+   * @default (item) => item.children
+   */
+  getItemChildren?: (item: R) => R[] | undefined;
+  /**
    * Used to determine the id of a given item.
    *
    * @template R
@@ -97,7 +151,7 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   itemChildrenIndentation?: string | number;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
+export type UseTreeViewItemsParametersWithDefaults<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
@@ -135,21 +189,22 @@ export interface UseTreeViewItemsState<R extends {}> {
      * Index of each child in the ordered children ids of its parent.
      */
     itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
-  };
-}
-
-interface UseTreeViewItemsContextValue {
-  items: {
-    onItemClick: (event: React.MouseEvent, itemId: string) => void;
+    /**
+     * The loading state of the tree.
+     */
+    loading: boolean;
+    /**
+     * The error state of the tree.
+     */
+    error: Error | null;
   };
 }
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters<any>;
-  defaultizedParams: UseTreeViewItemsDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewItemsParametersWithDefaults<any>;
   instance: UseTreeViewItemsInstance<any>;
   publicAPI: UseTreeViewItemsPublicAPI<any>;
   events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
-  contextValue: UseTreeViewItemsContextValue;
 }>;

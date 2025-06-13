@@ -1,6 +1,16 @@
 const warnedOnceCache = new Set();
 
-// TODO move to @base_ui/internals. Base UI, etc. need this helper.
+/**
+ * Logs a message to the console on development mode. The warning will only be logged once.
+ *
+ * The message is the log's cache key. Two identical messages will only be logged once.
+ *
+ * This function is a no-op in production.
+ *
+ * @param message the message to log
+ * @param gravity the gravity of the warning. Defaults to `'warning'`.
+ * @returns
+ */
 export function warnOnce(message: string | string[], gravity: 'warning' | 'error' = 'warning') {
   if (process.env.NODE_ENV === 'production') {
     return;

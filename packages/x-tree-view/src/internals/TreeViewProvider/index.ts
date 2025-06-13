@@ -1,5 +1,5 @@
 export { TreeViewProvider } from './TreeViewProvider';
-export { useTreeViewContext } from './useTreeViewContext';
+export { useTreeViewContext } from './TreeViewContext';
 export type {
   TreeViewProviderProps,
   TreeViewContextValue,

@@ -39,6 +39,12 @@ If you want to track the opening of the picker, you should use the `onOpen` / `o
 
 :::
 
+## Render the opening button at the start of the input
+
+You can use the `openPickerButtonPosition` on the `field` slot to position the opening button at the start or the end of the input:
+
+{{"demo": "StartEdgeOpeningButton.js"}}
+
 ## Add an icon next to the opening button
 
 If you want to add an icon next to the opening button, you can use the `inputAdornment` slot.
@@ -46,7 +52,7 @@ In the example below, the warning icon will be visible anytime the current value
 
 {{"demo": "AddWarningIconWhenInvalid.js"}}
 
-To add the same behavior to a picker that do not have an input adornment (for example Date Range Picker),
+To add the same behavior to a picker that does not have an input adornment (for example, a Date Range Picker when used with a multi input field),
 you need to use the `textField` slot to add one:
 
 {{"demo": "AddWarningIconWhenInvalidRange.js"}}

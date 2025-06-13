@@ -1,34 +1,23 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
-  GridPinnedColumnFields,
   GridPipeProcessor,
-  gridPinnedColumnsSelector,
   useGridRegisterPipeProcessor,
-  eslintUseValue,
-  gridVisiblePinnedColumnDefinitionsSelector,
+  gridExistingPinnedColumnSelector,
 } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const useGridColumnPinningPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const { disableColumnPinning } = props;
-
-  let pinnedColumns: GridPinnedColumnFields | null;
-  if (apiRef.current.state.columns) {
-    pinnedColumns = gridPinnedColumnsSelector(apiRef.current.state);
-  } else {
-    pinnedColumns = null;
-  }
 
   const prevAllPinnedColumns = React.useRef<string[]>([]);
 
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      eslintUseValue(pinnedColumns);
-
       if (columnsState.orderedFields.length === 0 || disableColumnPinning) {
         return columnsState;
       }
@@ -41,13 +30,13 @@ export const useGridColumnPinningPreProcessors = (
       const savedState = apiRef.current.state;
       apiRef.current.state = { ...savedState, columns: columnsState as unknown as any };
 
-      const visibleColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+      const pinnedColumns = gridExistingPinnedColumnSelector(apiRef);
 
       apiRef.current.state = savedState;
       // HACK: Ends here //
 
-      const leftPinnedColumns = visibleColumns.left.map((c) => c.field);
-      const rightPinnedColumns = visibleColumns.right.map((c) => c.field);
+      const leftPinnedColumns = pinnedColumns.left;
+      const rightPinnedColumns = pinnedColumns.right;
 
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
@@ -131,7 +120,7 @@ export const useGridColumnPinningPreProcessors = (
         orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
-    [apiRef, disableColumnPinning, pinnedColumns],
+    [apiRef, disableColumnPinning],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', reorderPinnedColumns);

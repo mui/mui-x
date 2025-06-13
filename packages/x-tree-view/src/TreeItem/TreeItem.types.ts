@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { TransitionProps } from '@mui/material/transitions';
 import { SlotComponentProps } from '@mui/utils/types';
@@ -50,6 +52,18 @@ export interface TreeItemSlots extends TreeItemIconSlots {
    * @default TreeItemDragAndDropOverlay
    */
   dragAndDropOverlay?: React.ElementType;
+  /**
+   * The component that is rendered when the item is in an error state.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
+   * @default TreeItemErrorContainer
+   */
+  errorIcon?: React.ElementType;
+  /**
+   * The component that is rendered when the item is in an loading state.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.
+   * @default TreeItemLoadingContainer
+   */
+  loadingIcon?: React.ElementType;
 }
 
 export interface TreeItemSlotProps extends TreeItemIconSlotProps {
@@ -61,12 +75,18 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
   label?: SlotComponentProps<'div', {}, {}>;
   labelInput?: SlotComponentProps<'input', {}, {}>;
   dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
+  errorIcon?: SlotComponentProps<'div', {}, {}>;
+  loadingIcon?: SlotComponentProps<'div', {}, {}>;
 }
 
 export interface TreeItemProps
   extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * Override or extend the styles applied to the component.
    */

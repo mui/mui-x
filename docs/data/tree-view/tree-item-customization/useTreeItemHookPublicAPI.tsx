@@ -53,7 +53,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         event.stopPropagation();
         const children = publicAPI.getItemOrderedChildrenIds(props.itemId);
         if (children.length > 0) {
-          publicAPI.selectItem({
+          publicAPI.setItemSelection({
             event,
             itemId: children[0],
             shouldBeSelected: true,

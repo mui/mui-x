@@ -40,9 +40,6 @@ export default function OnlyReorderInSameParent() {
         items={MUI_X_PRODUCTS}
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
-        experimentalFeatures={{
-          itemsReordering: true,
-        }}
         canMoveItemToNewPosition={(params) =>
           params.oldPosition.parentId === params.newPosition.parentId
         }

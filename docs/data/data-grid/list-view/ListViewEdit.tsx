@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   GridRenderCellParams,
-  GridListColDef,
+  GridListViewColDef,
   GridColDef,
   GridRowParams,
   GridRowsProp,
@@ -208,7 +208,7 @@ function ListViewCell(props: GridRenderCellParams) {
   );
 }
 
-const listColDef: GridListColDef = {
+const listViewColDef: GridListViewColDef = {
   field: 'listColumn',
   renderCell: (params) => <ListViewCell {...params} />,
 };
@@ -220,15 +220,15 @@ export default function ListViewEdit() {
         display: 'flex',
         flexDirection: 'column',
         maxWidth: 360,
-        maxHeight: 400,
+        height: 400,
       }}
     >
       <DataGridPro
         rows={rows}
         columns={columns}
         rowHeight={64}
-        unstable_listView
-        unstable_listColumn={listColDef}
+        listView
+        listViewColumn={listViewColDef}
         sx={{ backgroundColor: 'background.paper' }}
       />
     </div>

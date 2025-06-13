@@ -1,39 +1,14 @@
 'use client';
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
+import { useTimeManager } from '../managers';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../validation';
-import { useSplitFieldProps } from '../hooks';
-import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
-import { PickerValue } from '../internals/models';
 
 export const useTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TProps,
 ) => {
-  const props = useDefaultizedTimeField<
-    UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
-
-  return useField<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
-    forwardedProps,
-    internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateTime,
-    valueType: 'time',
-  });
+  const manager = useTimeManager(props);
+  return useField({ manager, props });
 };

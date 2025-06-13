@@ -40,11 +40,19 @@ export default function ApiMethodSetItemExpansion() {
   const apiRef = useTreeViewApiRef();
 
   const handleExpandClick = (event: React.MouseEvent) => {
-    apiRef.current!.setItemExpansion(event, 'grid', true);
+    apiRef.current!.setItemExpansion({
+      event,
+      itemId: 'grid',
+      shouldBeExpanded: true,
+    });
   };
 
   const handleCollapseClick = (event: React.MouseEvent) => {
-    apiRef.current!.setItemExpansion(event, 'grid', false);
+    apiRef.current!.setItemExpansion({
+      event,
+      itemId: 'grid',
+      shouldBeExpanded: false,
+    });
   };
 
   return (

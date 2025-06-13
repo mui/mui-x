@@ -7,10 +7,7 @@ import { createPickerRenderer, adapterToUse, describeRangeValidation } from 'tes
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticDateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
+  const { render } = createPickerRenderer();
 
   describeConformance(<StaticDateRangePicker />, () => ({
     classes: {} as any,
@@ -30,10 +27,10 @@ describe('<StaticDateRangePicker />', () => {
 
   describeRangeValidation(StaticDateRangePicker, () => ({
     render,
-    clock,
     componentFamily: 'static-picker',
     views: ['day'],
     variant: 'mobile',
+    fieldType: 'no-input',
   }));
 
   it('allows disabling dates', () => {
@@ -62,7 +59,7 @@ describe('<StaticDateRangePicker />', () => {
     // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
     expect(
       document.querySelector(
-        '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+        '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="DateRangePickerDay"]',
       ),
     ).to.have.text('1');
   });

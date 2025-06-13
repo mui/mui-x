@@ -35,12 +35,14 @@ const esESPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Limpiar',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoy',
+  nextStepButtonLabel: 'Siguiente',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Seleccionar fecha',
   dateTimePickerToolbarTitle: 'Seleccionar fecha y hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,11 +60,12 @@ const esESPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Elige fecha, la fecha elegida es ${formattedDate}` : 'Elige fecha',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Elige hora, la hora elegida es ${formattedTime}` : 'Elige hora',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Limpiar valor',
 
   // Table labels

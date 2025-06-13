@@ -28,12 +28,13 @@ const useUtilityClasses = (props: GaugeProps) => {
 };
 
 const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<SVGSVGElement>) {
-  const { text, children, classes: propsClasses, className, ...other } = props;
+  const { text, children, classes: propsClasses, className, skipAnimation, ...other } = props;
   const classes = useUtilityClasses(props);
+
   return (
     <GaugeContainer {...other} className={clsx(classes.root, className)} ref={ref}>
       <GaugeReferenceArc className={classes.referenceArc} />
-      <GaugeValueArc className={classes.valueArc} />
+      <GaugeValueArc className={classes.valueArc} skipAnimation={skipAnimation} />
       <GaugeValueText className={classes.valueText} text={text} />
       {children}
     </GaugeContainer>
@@ -68,12 +69,6 @@ Gauge.propTypes = {
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   desc: PropTypes.string,
   /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
-  /**
    * The end angle (deg).
    * @default 360
    */
@@ -82,6 +77,11 @@ Gauge.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
   /**
    * The radius between circle center and the beginning of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
@@ -92,15 +92,18 @@ Gauge.propTypes = {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
   /**
    * The radius between circle center and the end of the arc.
    * Can be a number (in px) or a string with a percentage such as '50%'.
@@ -108,6 +111,11 @@ Gauge.propTypes = {
    * @default '100%'
    */
   outerRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The start angle (deg).
    * @default 0
