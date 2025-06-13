@@ -77,6 +77,8 @@ export function getComponentImports(name: string, filename: string) {
 
   if (rootImportPath === '@mui/x-charts') {
     reExportPackage.push('@mui/x-charts-pro');
+    // TODO: CHARTS-PREMIUM: Uncomment when ready
+    // reExportPackage.push('@mui/x-charts-premium');
   }
 
   return [

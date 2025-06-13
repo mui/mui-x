@@ -1,7 +1,7 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
-const CHARTS_PACKAGES = ['x-charts', 'x-charts-pro'];
+const CHARTS_PACKAGES = ['x-charts', 'x-charts-pro', 'x-charts-premium'];
 const GRID_PACKAGES = [
   'x-data-grid',
   'x-data-grid-pro',
@@ -48,6 +48,7 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/utils',
   '@mui/x-charts',
   '@mui/x-charts-pro',
+  '@mui/x-charts-premium',
   '@mui/x-codemod',
   '@mui/x-date-pickers',
   '@mui/x-date-pickers-pro',
@@ -322,6 +323,7 @@ module.exports = {
     },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
+    ...buildPackageRestrictedImports('@mui/x-charts-premium', 'x-charts-premium', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
     ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
     ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),

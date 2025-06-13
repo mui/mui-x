@@ -13,6 +13,7 @@
     "@babel/runtime": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
+    "@mui/x-charts-premium": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-generator": "workspace:^",
