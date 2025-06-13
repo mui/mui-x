@@ -3,7 +3,7 @@ title: Data Grid - Pivot Panel component
 productId: x-data-grid
 components: PivotPanelTrigger
 packageName: '@mui/x-data-grid-premium'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
 # Data Grid - Pivot Panel component [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧

@@ -3,7 +3,7 @@ title: Data Grid - AI Assistant Panel component
 productId: x-data-grid
 components: AiAssistantPanelTrigger
 packageName: '@mui/x-data-grid-premium'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
 # Data Grid - AI Assistant Panel component [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧

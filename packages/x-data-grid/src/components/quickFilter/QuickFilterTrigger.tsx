@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import useForkRef from '@mui/utils/useForkRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
 import { QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
 
@@ -43,7 +43,7 @@ const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps
       onClick?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseButton,
       render,
       {

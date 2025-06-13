@@ -28,7 +28,6 @@ import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { BarChartPluginsSignatures } from './BarChart.plugins';
-import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -133,12 +132,12 @@ const BarChart = React.forwardRef(function BarChart(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
+  const Toolbar = props.slots?.toolbar;
 
   return (
     <ChartDataProvider<'bar', BarChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {props.showToolbar ? <Toolbar /> : null}
+        {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />

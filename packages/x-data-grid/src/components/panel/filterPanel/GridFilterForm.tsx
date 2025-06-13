@@ -1,11 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useId as useId,
-  unstable_capitalize as capitalize,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
+import capitalize from '@mui/utils/capitalize';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../../constants/cssVariables';

@@ -1,1 +1,29 @@
 @import './styles/index.css';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.joy,
+.joy * {
+  font-family: var(--default-font-family);
+}
+
+.joy button {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
+  cursor: pointer;
+}
