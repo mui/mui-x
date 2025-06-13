@@ -104,7 +104,12 @@ export const useGridPivoting = (
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const nonPivotDataRef = React.useRef<
-    { rows: GridRowModel[]; columns: Map<string, GridColDef> } | undefined
+    | {
+        rows: GridRowModel[];
+        columns: Map<string, GridColDef>;
+        originalRowsProp: readonly GridRowModel[];
+      }
+    | undefined
   >(undefined);
 
   const isPivotingAvailable = isPivotingAvailableFn(props);
@@ -140,8 +145,8 @@ export const useGridPivoting = (
       apiRef.current.getLocaleText,
     );
 
-    return { rows, columns: initialColumns };
-  }, [apiRef, props.getPivotDerivedColumns, originalColumnsProp]);
+    return { rows, columns: initialColumns, originalRowsProp };
+  }, [apiRef, props.getPivotDerivedColumns, originalColumnsProp, originalRowsProp]);
 
   const computePivotingState = React.useCallback(
     ({ active, model: pivotModel }: Pick<GridPivotingState, 'active' | 'model'>) => {
@@ -210,6 +215,9 @@ export const useGridPivoting = (
         exportedStateRef.current = null;
       }
       if (nonPivotDataRef.current) {
+        // Prevent rows from being resynced from the original rows prop
+        apiRef.current.caches.rows.rowsBeforePartialUpdates =
+          nonPivotDataRef.current.originalRowsProp;
         apiRef.current.setRows(nonPivotDataRef.current.rows);
         nonPivotDataRef.current = undefined;
       }
@@ -439,6 +447,8 @@ export const useGridPivoting = (
         nonPivotDataRef.current.rows = rows as GridRowModel[];
       }
 
+      nonPivotDataRef.current.originalRowsProp = originalRowsProp;
+
       apiRef.current.setState((state) => {
         return {
           ...state,
@@ -449,7 +459,7 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState],
+    [apiRef, computePivotingState, originalRowsProp],
   );
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
