@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isJSDOM } from '../../utils/isJSDOM';
 
 export function useRunOncePerLoop<T extends (...args: any[]) => void>(
   callback: T,
@@ -25,7 +26,9 @@ export function useRunOncePerLoop<T extends (...args: any[]) => void>(
         return;
       }
 
-      if (typeof queueMicrotask === 'function') {
+      if (isJSDOM) {
+        runner();
+      } else if (typeof queueMicrotask === 'function') {
         queueMicrotask(runner);
       } else {
         Promise.resolve().then(runner);
