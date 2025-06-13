@@ -447,8 +447,6 @@ export const useGridPivoting = (
         nonPivotDataRef.current.rows = rows as GridRowModel[];
       }
 
-      nonPivotDataRef.current.originalRowsProp = originalRowsProp;
-
       apiRef.current.setState((state) => {
         return {
           ...state,
@@ -459,7 +457,7 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState, originalRowsProp],
+    [apiRef, computePivotingState],
   );
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
@@ -475,6 +473,9 @@ export const useGridPivoting = (
 
   useEnhancedEffect(() => {
     apiRef.current.updateNonPivotRows(originalRowsProp, false);
+    if (nonPivotDataRef.current) {
+      nonPivotDataRef.current.originalRowsProp = originalRowsProp;
+    }
   }, [originalRowsProp, apiRef]);
 
   useEnhancedEffect(() => {
