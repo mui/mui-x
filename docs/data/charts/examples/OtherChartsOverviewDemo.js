@@ -4,47 +4,57 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
-import SimpleAreaChart from '../areas-demo/SimpleAreaChart';
-import StackedAreaChart from '../areas-demo/StackedAreaChart';
-import PercentAreaChart from '../areas-demo/PercentAreaChart';
-import AreaChartConnectNulls from '../areas-demo/AreaChartConnectNulls';
+import ColorCustomization from '../sparkline/ColorCustomization';
+import ArcDesign from '../gauge/ArcDesign';
+import CompositionExample from '../gauge/CompositionExample';
+import MultiSeriesRadar from '../radar/MultiSeriesRadar';
+import CompositionExample2 from '../radar/CompositionExample';
 
 export const featuresSet = [
   {
     id: 1,
-    name: 'Simple Area Chart',
+    name: 'Color Customization',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <SimpleAreaChart />,
-    linkToCode: '/areas-demo/#system-SimpleAreaChart.tsx',
+    demo: <ColorCustomization />,
+    linkToCode: '/sparkline/#system-ColorCustomization.tsx',
   },
   {
     id: 2,
-    name: 'Stacked Area Chart',
+    name: 'Arc Design',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <StackedAreaChart />,
-    linkToCode: '/areas-demo/#system-StackedAreaChart.tsx',
+    demo: <ArcDesign />,
+    linkToCode: '/gauge/#system-ArcDesign.tsx',
   },
   {
     id: 3,
-    name: 'Percent Area Chart',
+    name: 'Customized gauge with pointer',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <PercentAreaChart />,
-    linkToCode: '/areas-demo/#system-PercentAreaChart.tsx',
+    demo: <CompositionExample />,
+    linkToCode: '/gauge/#system-CompositionExample.tsx',
   },
   {
     id: 4,
-    name: 'Area Chart Connect Nulls',
+    name: 'Multi-series radar',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <AreaChartConnectNulls />,
-    linkToCode: '/areas-demo/#system-AreaChartConnectNulls.tsx',
+    demo: <MultiSeriesRadar />,
+    linkToCode: '/radar/#system-MultiSeriesRadar.tsx',
+  },
+  {
+    id: 5,
+    name: 'Radar with composition',
+    // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
+    // plan: 'Premium',
+    // detailPage: '/export/#excel-export',
+    demo: <CompositionExample2 />,
+    linkToCode: '/radar/#system-CompositionExample.tsx',
   },
 ];
 
@@ -111,7 +121,7 @@ function ChartBox({ title, children, linkToCode }) {
   );
 }
 
-export default function AreaChartsOverviewDemo() {
+export default function OtherChartsOverviewDemo() {
   return (
     <Box sx={{ width: '100%' }}>
       <Grid container spacing={4}>

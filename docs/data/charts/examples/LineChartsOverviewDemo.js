@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
 import SimpleLineChart from '../line-demo/SimpleLineChart';
-import TinyLineChart from '../line-demo/TinyLineChart';
 import DashedLineChart from '../line-demo/DashedLineChart';
 import BiaxialLineChart from '../line-demo/BiaxialLineChart';
 import LineChartWithReferenceLines from '../line-demo/LineChartWithReferenceLines';
@@ -26,15 +25,6 @@ export const featuresSet = [
   },
   {
     id: 2,
-    name: 'Tiny Line Chart',
-    // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
-    // plan: 'Premium',
-    // detailPage: '/export/#excel-export',
-    demo: <TinyLineChart />,
-    linkToCode: '/line-demo/#system-TinyLineChart.tsx',
-  },
-  {
-    id: 3,
     name: 'Dashed Line Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
@@ -43,7 +33,7 @@ export const featuresSet = [
     linkToCode: '/line-demo/#system-DashedLineChart.tsx',
   },
   {
-    id: 4,
+    id: 3,
     name: 'Biaxial Line Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
@@ -52,7 +42,7 @@ export const featuresSet = [
     linkToCode: '/line-demo/#system-BiaxialLineChart.tsx',
   },
   {
-    id: 5,
+    id: 4,
     name: 'Line Chart With Reference Lines',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
@@ -61,7 +51,7 @@ export const featuresSet = [
     linkToCode: '/line-demo/#system-LineChartWithReferenceLines.tsx',
   },
   {
-    id: 6,
+    id: 5,
     name: 'Line Chart Connect Nulls',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
@@ -70,7 +60,7 @@ export const featuresSet = [
     linkToCode: '/line-demo/#system-LineChartConnectNulls.tsx',
   },
   {
-    id: 7,
+    id: 6,
     name: 'Live Line Chart No Snap',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
@@ -79,7 +69,7 @@ export const featuresSet = [
     linkToCode: '/line-demo/#system-LiveLineChartNoSnap.tsx',
   },
   {
-    id: 8,
+    id: 7,
     name: 'Line With Uncertainty Area',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
@@ -88,7 +78,7 @@ export const featuresSet = [
     linkToCode: '/line-demo/#system-LineWithUncertaintyArea.tsx',
   },
   {
-    id: 9,
+    id: 8,
     name: 'Custom Line Marks',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',

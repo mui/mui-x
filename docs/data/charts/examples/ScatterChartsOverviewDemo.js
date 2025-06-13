@@ -4,47 +4,27 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
-import SimpleAreaChart from '../areas-demo/SimpleAreaChart';
-import StackedAreaChart from '../areas-demo/StackedAreaChart';
-import PercentAreaChart from '../areas-demo/PercentAreaChart';
-import AreaChartConnectNulls from '../areas-demo/AreaChartConnectNulls';
+import SimpleScatterChart from '../scatter-demo/SimpleScatterChart';
+import MultipleYAxesScatterChart from '../scatter-demo/MultipleYAxesScatterChart';
 
 export const featuresSet = [
   {
     id: 1,
-    name: 'Simple Area Chart',
+    name: 'Simple Scatter Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <SimpleAreaChart />,
-    linkToCode: '/areas-demo/#system-SimpleAreaChart.tsx',
+    demo: <SimpleScatterChart />,
+    linkToCode: '/scatter-demo/#system-SimpleScatterChart.tsx',
   },
   {
     id: 2,
-    name: 'Stacked Area Chart',
+    name: 'Multiple Y Axes Scatter Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <StackedAreaChart />,
-    linkToCode: '/areas-demo/#system-StackedAreaChart.tsx',
-  },
-  {
-    id: 3,
-    name: 'Percent Area Chart',
-    // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
-    // plan: 'Premium',
-    // detailPage: '/export/#excel-export',
-    demo: <PercentAreaChart />,
-    linkToCode: '/areas-demo/#system-PercentAreaChart.tsx',
-  },
-  {
-    id: 4,
-    name: 'Area Chart Connect Nulls',
-    // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
-    // plan: 'Premium',
-    // detailPage: '/export/#excel-export',
-    demo: <AreaChartConnectNulls />,
-    linkToCode: '/areas-demo/#system-AreaChartConnectNulls.tsx',
+    demo: <MultipleYAxesScatterChart />,
+    linkToCode: '/scatter-demo/#system-MultipleYAxesScatterChart.tsx',
   },
 ];
 
@@ -111,7 +91,7 @@ function ChartBox({ title, children, linkToCode }) {
   );
 }
 
-export default function AreaChartsOverviewDemo() {
+export default function ScatterChartsOverviewDemo() {
   return (
     <Box sx={{ width: '100%' }}>
       <Grid container spacing={4}>

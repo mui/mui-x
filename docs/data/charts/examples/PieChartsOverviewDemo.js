@@ -4,47 +4,67 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import KeyboardArrowRightRounded from '@mui/icons-material/KeyboardArrowRightRounded';
-import SimpleAreaChart from '../areas-demo/SimpleAreaChart';
-import StackedAreaChart from '../areas-demo/StackedAreaChart';
-import PercentAreaChart from '../areas-demo/PercentAreaChart';
-import AreaChartConnectNulls from '../areas-demo/AreaChartConnectNulls';
+import TwoLevelPieChart from '../pie-demo/TwoLevelPieChart';
+import StraightAnglePieChart from '../pie-demo/StraightAnglePieChart';
+import PieChartWithCustomizedLabel from '../pie-demo/PieChartWithCustomizedLabel';
+import PieChartWithPaddingAngle from '../pie-demo/PieChartWithPaddingAngle';
+import PieChartWithCenterLabel from '../pie-demo/PieChartWithCenterLabel';
+import PieChartWithCustomLegendAndTooltip from '../pie-demo/PieChartWithCustomLegendAndTooltip';
 
 export const featuresSet = [
   {
     id: 1,
-    name: 'Simple Area Chart',
+    name: 'Two Level Pie Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <SimpleAreaChart />,
-    linkToCode: '/areas-demo/#system-SimpleAreaChart.tsx',
+    demo: <TwoLevelPieChart />,
+    linkToCode: '/pie-demo/#system-TwoLevelPieChart.tsx',
   },
   {
     id: 2,
-    name: 'Stacked Area Chart',
+    name: 'Straight Angle Pie Chart',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <StackedAreaChart />,
-    linkToCode: '/areas-demo/#system-StackedAreaChart.tsx',
+    demo: <StraightAnglePieChart />,
+    linkToCode: '/pie-demo/#system-StraightAnglePieChart.tsx',
   },
   {
     id: 3,
-    name: 'Percent Area Chart',
+    name: 'Pie Chart With Customized Label',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <PercentAreaChart />,
-    linkToCode: '/areas-demo/#system-PercentAreaChart.tsx',
+    demo: <PieChartWithCustomizedLabel />,
+    linkToCode: '/pie-demo/#system-PieChartWithCustomizedLabel.tsx',
   },
   {
     id: 4,
-    name: 'Area Chart Connect Nulls',
+    name: 'Pie Chart With Center Label',
     // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
     // plan: 'Premium',
     // detailPage: '/export/#excel-export',
-    demo: <AreaChartConnectNulls />,
-    linkToCode: '/areas-demo/#system-AreaChartConnectNulls.tsx',
+    demo: <PieChartWithCenterLabel />,
+    linkToCode: '/pie-demo/#system-PieChartWithCenterLabel.tsx',
+  },
+  {
+    id: 5,
+    name: 'Pie Chart With Padding Angle',
+    // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
+    // plan: 'Premium',
+    // detailPage: '/export/#excel-export',
+    demo: <PieChartWithPaddingAngle />,
+    linkToCode: '/pie-demo/#system-PieChartWithPaddingAngle.tsx',
+  },
+  {
+    id: 6,
+    name: 'Pie Chart With Custom Legend And Tooltip',
+    // description: 'Export rows in various file formats such as CSV, PDF or Excel.',
+    // plan: 'Premium',
+    // detailPage: '/export/#excel-export',
+    demo: <PieChartWithCustomLegendAndTooltip />,
+    linkToCode: '/pie-demo/#system-PieChartWithCustomLegendAndTooltip.tsx',
   },
 ];
 
@@ -75,8 +95,8 @@ function ChartBox({ title, children, linkToCode }) {
             height: '100% !important',
           },
           '& svg': {
-            width: '100%',
-            height: '100%',
+            width: '80%',
+            height: '80%',
           },
         }}
       >
@@ -111,7 +131,7 @@ function ChartBox({ title, children, linkToCode }) {
   );
 }
 
-export default function AreaChartsOverviewDemo() {
+export default function PieChartsOverviewDemo() {
   return (
     <Box sx={{ width: '100%' }}>
       <Grid container spacing={4}>
