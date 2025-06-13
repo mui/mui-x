@@ -3,12 +3,7 @@ import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tsconfigPaths({
-      skip: (dir) => dir.includes('x-charts-vendor'),
-    }),
-  ],
+  plugins: [react(), tsconfigPaths()],
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
