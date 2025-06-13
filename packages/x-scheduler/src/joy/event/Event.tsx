@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { Popover } from '@base-ui-components/react/popover';
 import { TimeGrid } from '../../primitives/time-grid';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { EventProps } from './Event.types';
@@ -12,10 +13,18 @@ export const Event = React.forwardRef(function Event(
   props: EventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { event, ariaLabelledBy, variant, className, style, ...other } = props;
+  const {
+    event: calendarEvent,
+    ariaLabelledBy,
+    variant,
+    className,
+    style,
+    onEventClick,
+    ...other
+  } = props;
 
   const durationMs =
-    adapter.toJsDate(event.end).getTime() - adapter.toJsDate(event.start).getTime();
+    adapter.toJsDate(calendarEvent.end).getTime() - adapter.toJsDate(calendarEvent.start).getTime();
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
@@ -28,13 +37,13 @@ export const Event = React.forwardRef(function Event(
         return (
           <React.Fragment>
             <time className={clsx('EventTime')}>
-              {adapter.formatByString(event.start, 'h:mm a')}
+              {adapter.formatByString(calendarEvent.start, 'h:mm a')}
             </time>
             <p
               className={clsx('EventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {event.title}
+              {calendarEvent.title}
             </p>
           </React.Fragment>
         );
@@ -44,7 +53,7 @@ export const Event = React.forwardRef(function Event(
             className={clsx('EventTitle', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
           >
-            {event.title}
+            {calendarEvent.title}
           </p>
         );
       case 'regular':
@@ -59,8 +68,10 @@ export const Event = React.forwardRef(function Event(
               )}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              <span className="EventTitle">{event.title}</span>
-              <time className="EventTime">{adapter.formatByString(event.start, 'h:mm a')}</time>
+              <span className="EventTitle">{calendarEvent.title}</span>
+              <time className="EventTime">
+                {adapter.formatByString(calendarEvent.start, 'h:mm a')}
+              </time>
             </p>
           );
         }
@@ -70,23 +81,23 @@ export const Event = React.forwardRef(function Event(
               className={clsx('EventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': titleLineCountRegularVariant } as React.CSSProperties}
             >
-              {event.title}
+              {calendarEvent.title}
             </p>
             <time
               className={clsx('EventTime', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {adapter.formatByString(event.start, 'h:mm a')} -{' '}
-              {adapter.formatByString(event.end, 'h:mm a')}
+              {adapter.formatByString(calendarEvent.start, 'h:mm a')} -{' '}
+              {adapter.formatByString(calendarEvent.end, 'h:mm a')}
             </time>
           </React.Fragment>
         );
     }
   }, [
     variant,
-    event.start,
-    event.title,
-    event.end,
+    calendarEvent.start,
+    calendarEvent.title,
+    calendarEvent.end,
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,
@@ -94,18 +105,27 @@ export const Event = React.forwardRef(function Event(
 
   return (
     <div ref={forwardedRef} className={clsx('EventContainer', className)} {...other}>
-      <TimeGrid.Event
-        className={clsx(
-          'EventCard',
-          `EventCard--${variant}`,
-          (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+      <Popover.Trigger
+        render={({ ...triggerProps }) => (
+          <TimeGrid.Event
+            {...triggerProps}
+            className={clsx(
+              'EventCard',
+              `EventCard--${variant}`,
+              (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+            )}
+            start={calendarEvent.start}
+            end={calendarEvent.end}
+            aria-labelledby={ariaLabelledBy}
+            onClick={(event) => {
+              triggerProps.onClick?.(event);
+              onEventClick?.(calendarEvent, event);
+            }}
+          >
+            {renderContent}
+          </TimeGrid.Event>
         )}
-        start={event.start}
-        end={event.end}
-        aria-labelledby={ariaLabelledBy}
-      >
-        {renderContent}
-      </TimeGrid.Event>
+      />
     </div>
   );
 });

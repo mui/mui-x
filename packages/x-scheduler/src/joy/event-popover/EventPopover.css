@@ -1,0 +1,12 @@
+@import '../styles/tokens.css';
+
+.PopoverPositioner {
+  background-color: var(--surface);
+  border: 1px solid var(--gray-2);
+  z-index: 5;
+  border-radius: 4px;
+}
+
+.PopoverPopup {
+  padding: 12px;
+}
