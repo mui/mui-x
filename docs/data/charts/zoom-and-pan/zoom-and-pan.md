@@ -86,6 +86,12 @@ When formatting the zoom slider tooltip, the `valueFormatter` is called with `zo
 
 {{"demo": "ZoomSliderTooltip.js"}}
 
+### Preview
+
+When the zoom slider is enabled, you can preview the zoomed area by enabling the `zoom.slider.preview` property on the axis config.
+
+{{"demo": "ZoomSliderPreview.js"}}
+
 ### Composition
 
 When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.

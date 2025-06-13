@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   AxisId,
   DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
+  selectorChartAxisZoomOptionsLookup,
   useDrawingArea,
   useSelector,
   useStore,
@@ -10,7 +11,13 @@ import {
   ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { ZOOM_SLIDER_SIZE, ZOOM_SLIDER_TRACK_SIZE } from './constants';
+import { ChartAxisZoomSliderPreview } from './ChartAxisZoomSliderPreview';
+import {
+  ZOOM_SLIDER_ACTIVE_TRACK_SIZE,
+  ZOOM_SLIDER_PREVIEW_SIZE,
+  ZOOM_SLIDER_SIZE,
+  ZOOM_SLIDER_TRACK_SIZE,
+} from './constants';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderTrack } from './ChartAxisZoomSliderTrack';
 import { ChartAxisZoomSliderActiveTrack } from './ChartAxisZoomSliderActiveTrack';
@@ -34,9 +41,11 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   const store = useStore();
   const drawingArea = useDrawingArea();
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, axisId);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
+  const showPreview = zoomOptions.slider.preview;
 
   if (!zoomData) {
     return null;
@@ -86,21 +95,37 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
 
   const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_TRACK_SIZE) / 2;
 
+  const ZoomSliderTrack = ChartAxisZoomSliderTrack;
+
+  const track = showPreview ? (
+    <ChartAxisZoomSliderPreview
+      axisId={axisId}
+      axisDirection={axisDirection}
+      reverse={reverse}
+      x={0}
+      y={0}
+      height={axisDirection === 'x' ? ZOOM_SLIDER_PREVIEW_SIZE : drawingArea.height}
+      width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_TRACK_SIZE}
+    />
+  ) : (
+    <ZoomSliderTrack
+      x={axisDirection === 'x' ? 0 : backgroundRectOffset}
+      y={axisDirection === 'x' ? backgroundRectOffset : 0}
+      height={axisDirection === 'x' ? ZOOM_SLIDER_TRACK_SIZE : drawingArea.height}
+      width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_TRACK_SIZE}
+      rx={ZOOM_SLIDER_TRACK_SIZE / 2}
+      ry={ZOOM_SLIDER_TRACK_SIZE / 2}
+      axisId={axisId}
+      axisDirection={axisDirection}
+      reverse={reverse}
+      onSelectStart={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
+      onSelectEnd={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
+    />
+  );
+
   return (
     <g transform={`translate(${x} ${y})`}>
-      <ChartAxisZoomSliderTrack
-        x={axisDirection === 'x' ? 0 : backgroundRectOffset}
-        y={axisDirection === 'x' ? backgroundRectOffset : 0}
-        height={axisDirection === 'x' ? ZOOM_SLIDER_TRACK_SIZE : drawingArea.height}
-        width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_TRACK_SIZE}
-        rx={ZOOM_SLIDER_TRACK_SIZE / 2}
-        ry={ZOOM_SLIDER_TRACK_SIZE / 2}
-        axisId={axisId}
-        axisDirection={axisDirection}
-        reverse={reverse}
-        onSelectStart={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
-        onSelectEnd={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
-      />
+      {track}
       <ChartAxisZoomSliderActiveTrack
         zoomData={zoomData}
         axisId={axisId}
@@ -110,6 +135,8 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
         showTooltip={
           (showTooltip && tooltipConditions !== 'never') || tooltipConditions === 'always'
         }
+        size={showPreview ? ZOOM_SLIDER_PREVIEW_SIZE : ZOOM_SLIDER_ACTIVE_TRACK_SIZE}
+        preview={showPreview}
         onPointerEnter={tooltipConditions === 'hover' ? () => setShowTooltip(true) : undefined}
         onPointerLeave={tooltipConditions === 'hover' ? () => setShowTooltip(false) : undefined}
       />
