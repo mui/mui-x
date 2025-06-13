@@ -26,7 +26,7 @@ export function useRunOncePerLoop(callback: () => void, nextFrame: boolean = fal
     } else {
       Promise.resolve().then(runner);
     }
-  }, [callback]);
+  }, [callback, nextFrame]);
 
   return schedule;
 }

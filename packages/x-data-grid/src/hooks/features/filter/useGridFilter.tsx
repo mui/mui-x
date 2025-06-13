@@ -36,7 +36,6 @@ import {
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
-import { useRunOncePerLoop } from '../../utils/useRunOncePerLoop';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>

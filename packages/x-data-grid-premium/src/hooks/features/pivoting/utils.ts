@@ -16,6 +16,7 @@ import type { GridAggregationModel } from '../aggregation';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
+import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
 
 const columnGroupIdSeparator = '>->';
 
@@ -311,7 +312,7 @@ export const getPivotedData = ({
     columns: pivotColumns,
     rowGroupingModel: visibleRows.map((row) => row.field),
     aggregationModel,
-    getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
+    getAggregationPosition: defaultGetAggregationPosition,
     columnVisibilityModel,
     columnGroupingModel,
     groupingColDef: {

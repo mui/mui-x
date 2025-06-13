@@ -344,7 +344,7 @@ export const createColumnsState = ({
     };
   }
 
-  let columnsToKeep: Record<string, boolean> = {};
+  const columnsToKeep: Record<string, boolean> = {};
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
     for (const key in columnsState.lookup) {
       if (Object.prototype.hasOwnProperty.call(columnsState.lookup, key)) {

@@ -74,8 +74,10 @@ export const getColumnGroupsHeaderStructure = (
   const haveSameParents = (field1: string, field2: string, depth: number): boolean => {
     const a = getParents(field1);
     const b = getParents(field2);
-    for (let i = 0; i <= depth; i++) {
-      if (a[i] !== b[i]) return false;
+    for (let i = 0; i <= depth; i += 1) {
+      if (a[i] !== b[i]) {
+        return false;
+      }
     }
     return true;
   };
@@ -90,10 +92,10 @@ export const getColumnGroupsHeaderStructure = (
     return inLeft1 !== inLeft2 || inRight1 !== inRight2;
   };
 
-  for (let depth = 0; depth < maxDepth; depth++) {
+  for (let depth = 0; depth < maxDepth; depth += 1) {
     const depthStructure: GridGroupingStructure[] = [];
 
-    for (let i = 0; i < orderedColumns.length; i++) {
+    for (let i = 0; i < orderedColumns.length; i += 1) {
       const field = orderedColumns[i];
       const groupId = getParents(field)[depth] ?? null;
 

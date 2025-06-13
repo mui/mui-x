@@ -23,10 +23,12 @@ import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../co
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
   const groupLookup: GridColumnGroupLookup = {};
 
-  for (let i = 0; i < columnGroupingModel.length; i++) {
+  for (let i = 0; i < columnGroupingModel.length; i += 1) {
     const node = columnGroupingModel[i];
 
-    if (isLeaf(node)) continue;
+    if (isLeaf(node)) {
+      continue;
+    }
 
     const { groupId, children, ...other } = node;
 
