@@ -6,9 +6,7 @@ import { days } from './time-grid-events';
 
 const startTime = DateTime.fromObject({ hour: 6 });
 const endTime = DateTime.fromObject({ hour: 23 });
-
 const duration = endTime.diff(startTime, 'hours').hours;
-console.log(duration);
 
 export default function TimeGridPrimitiveStartEndTime() {
   const { scrollableRef, scrollerRef } = useInitialScrollPosition();

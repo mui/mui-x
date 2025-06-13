@@ -20,12 +20,16 @@ export default function TimeGridPrimitive() {
         </div>
         <div className={classes.Body} ref={scrollerRef}>
           <div className={classes.ScrollableContent} ref={scrollableRef} role="row">
-            <div className={classes.TimeAxis} aria-hidden="true">
+            <div
+              className={classes.TimeAxis}
+              aria-hidden="true"
+              style={{ '--duration': 24 }}
+            >
               {Array.from({ length: 24 }, (_, hour) => (
                 <div
                   key={hour}
                   className={classes.TimeAxisCell}
-                  style={{ '--hour': hour }}
+                  style={{ '--hour-index': hour }}
                 >
                   {hour === 0
                     ? null

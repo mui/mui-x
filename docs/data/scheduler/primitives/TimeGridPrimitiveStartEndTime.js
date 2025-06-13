@@ -6,8 +6,7 @@ import { days } from './time-grid-events';
 
 const startTime = DateTime.fromObject({ hour: 6 });
 const endTime = DateTime.fromObject({ hour: 23 });
-
-console.log(startTime);
+const duration = endTime.diff(startTime, 'hours').hours;
 
 export default function TimeGridPrimitiveStartEndTime() {
   const { scrollableRef, scrollerRef } = useInitialScrollPosition();
@@ -25,23 +24,32 @@ export default function TimeGridPrimitiveStartEndTime() {
         </div>
         <div className={classes.Body} ref={scrollerRef}>
           <div className={classes.ScrollableContent} ref={scrollableRef} role="row">
-            <div className={classes.TimeAxis} aria-hidden="true">
-              {Array.from({ length: 24 }, (_, hour) => (
-                <div
-                  key={hour}
-                  className={classes.TimeAxisCell}
-                  style={{ '--hour': hour }}
-                >
-                  {hour === 0
-                    ? null
-                    : `${DateTime.now().set({ hour }).toFormat('hh a')}`}
-                </div>
-              ))}
+            <div
+              className={classes.TimeAxis}
+              aria-hidden="true"
+              style={{ '--duration': duration }}
+            >
+              {Array.from({ length: duration }, (_, index) => {
+                const hour = index + startTime.get('hour');
+                return (
+                  <div
+                    key={index}
+                    className={classes.TimeAxisCell}
+                    style={{ '--hour-index': index }}
+                  >
+                    {index === 0
+                      ? null
+                      : `${DateTime.now().set({ hour }).toFormat('hh a')}`}
+                  </div>
+                );
+              })}
             </div>
             {days.map((day) => (
               <TimeGrid.Column
                 key={day.date.toString()}
                 value={day.date}
+                startTime={startTime}
+                endTime={endTime}
                 className={classes.Column}
               >
                 {day.events.map((event) => (
