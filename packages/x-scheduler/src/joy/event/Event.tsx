@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useId } from '@base-ui-components/react/utils';
 import { TimeGrid } from '../../primitives/time-grid';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { EventProps } from './Event.types';
@@ -12,7 +13,9 @@ export const Event = React.forwardRef(function Event(
   props: EventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { event, ariaLabelledBy, variant, className, style, ...other } = props;
+  const { event, ariaLabelledBy, variant, className, style, id: idProp, ...other } = props;
+
+  const id = useId(idProp);
 
   const durationMs =
     adapter.toJsDate(event.end).getTime() - adapter.toJsDate(event.start).getTime();
@@ -93,7 +96,7 @@ export const Event = React.forwardRef(function Event(
   ]);
 
   return (
-    <div ref={forwardedRef} className={clsx('EventContainer', className)} {...other}>
+    <div ref={forwardedRef} className={clsx('EventContainer', className)} id={id} {...other}>
       <TimeGrid.Event
         className={clsx(
           'EventCard',
@@ -102,7 +105,7 @@ export const Event = React.forwardRef(function Event(
         )}
         start={event.start}
         end={event.end}
-        aria-labelledby={ariaLabelledBy}
+        aria-labelledby={`${ariaLabelledBy} ${id}`}
       >
         {renderContent}
       </TimeGrid.Event>
