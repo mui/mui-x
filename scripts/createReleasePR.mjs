@@ -867,7 +867,7 @@ async function main() {
       '--no-push',
       '--no-git-tag-version',
       '--no-private',
-    ]);
+    ], { stdio: 'inherit' });
 
     console.log('Version update completed successfully!');
     console.log(`New version: ${newVersion}`);
