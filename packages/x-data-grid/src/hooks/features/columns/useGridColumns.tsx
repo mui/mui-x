@@ -40,6 +40,7 @@ import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridPivotActiveSelector } from '../pivoting';
+import { isPivotingAvailable } from '@mui/x-data-grid-premium/hooks/features/pivoting/utils';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
@@ -420,8 +421,8 @@ export function useGridColumns(
   /**
    * APPLIERS
    */
+  const isPivotActive = gridPivotActiveSelector(apiRef);
   const hydrateColumns = React.useCallback(() => {
-    const isPivotActive = gridPivotActiveSelector(apiRef);
     if (isPivotActive) {
       return;
     }
@@ -434,7 +435,7 @@ export function useGridColumns(
       keepOnlyColumnsToUpsert: false,
     });
     setGridColumnsState(columnsState);
-  }, [apiRef, logger, setGridColumnsState]);
+  }, [apiRef, logger, setGridColumnsState, isPivotActive]);
 
   useGridRegisterPipeApplier(apiRef, 'hydrateColumns', hydrateColumns);
 
