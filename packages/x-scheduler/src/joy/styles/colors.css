@@ -1,89 +1,89 @@
 .palette-primary {
-  --color-1: var(--primary-1);
-  --color-2: var(--primary-2);
-  --color-3: var(--primary-3);
-  --color-4: var(--primary-4);
-  --color-5: var(--primary-5);
-  --color-6: var(--primary-6);
-  --color-7: var(--primary-7);
-  --color-8: var(--primary-8);
-  --color-9: var(--primary-9);
-  --color-10: var(--primary-10);
-  --color-11: var(--primary-11);
-  --color-12: var(--primary-12);
+  --event-color-1: var(--primary-1);
+  --event-color-2: var(--primary-2);
+  --event-color-3: var(--primary-3);
+  --event-color-4: var(--primary-4);
+  --event-color-5: var(--primary-5);
+  --event-color-6: var(--primary-6);
+  --event-color-7: var(--primary-7);
+  --event-color-8: var(--primary-8);
+  --event-color-9: var(--primary-9);
+  --event-color-10: var(--primary-10);
+  --event-color-11: var(--primary-11);
+  --event-color-12: var(--primary-12);
 }
 
 .palette-mauve {
-  --color-1: var(--mauve-1);
-  --color-2: var(--mauve-2);
-  --color-3: var(--mauve-3);
-  --color-4: var(--mauve-4);
-  --color-5: var(--mauve-5);
-  --color-6: var(--mauve-6);
-  --color-7: var(--mauve-7);
-  --color-8: var(--mauve-8);
-  --color-9: var(--mauve-9);
-  --color-10: var(--mauve-10);
-  --color-11: var(--mauve-11);
-  --color-12: var(--mauve-12);
+  --event-color-1: var(--mauve-1);
+  --event-color-2: var(--mauve-2);
+  --event-color-3: var(--mauve-3);
+  --event-color-4: var(--mauve-4);
+  --event-color-5: var(--mauve-5);
+  --event-color-6: var(--mauve-6);
+  --event-color-7: var(--mauve-7);
+  --event-color-8: var(--mauve-8);
+  --event-color-9: var(--mauve-9);
+  --event-color-10: var(--mauve-10);
+  --event-color-11: var(--mauve-11);
+  --event-color-12: var(--mauve-12);
 }
 
 .palette-violet {
-  --color-1: var(--violet-1);
-  --color-2: var(--violet-2);
-  --color-3: var(--violet-3);
-  --color-4: var(--violet-4);
-  --color-5: var(--violet-5);
-  --color-6: var(--violet-6);
-  --color-7: var(--violet-7);
-  --color-8: var(--violet-8);
-  --color-9: var(--violet-9);
-  --color-10: var(--violet-10);
-  --color-11: var(--violet-11);
-  --color-12: var(--violet-12);
+  --event-color-1: var(--violet-1);
+  --event-color-2: var(--violet-2);
+  --event-color-3: var(--violet-3);
+  --event-color-4: var(--violet-4);
+  --event-color-5: var(--violet-5);
+  --event-color-6: var(--violet-6);
+  --event-color-7: var(--violet-7);
+  --event-color-8: var(--violet-8);
+  --event-color-9: var(--violet-9);
+  --event-color-10: var(--violet-10);
+  --event-color-11: var(--violet-11);
+  --event-color-12: var(--violet-12);
 }
 
 .palette-cyan {
-  --color-1: var(--cyan-1);
-  --color-2: var(--cyan-2);
-  --color-3: var(--cyan-3);
-  --color-4: var(--cyan-4);
-  --color-5: var(--cyan-5);
-  --color-6: var(--cyan-6);
-  --color-7: var(--cyan-7);
-  --color-8: var(--cyan-8);
-  --color-9: var(--cyan-9);
-  --color-10: var(--cyan-10);
-  --color-11: var(--cyan-11);
-  --color-12: var(--cyan-12);
+  --event-color-1: var(--cyan-1);
+  --event-color-2: var(--cyan-2);
+  --event-color-3: var(--cyan-3);
+  --event-color-4: var(--cyan-4);
+  --event-color-5: var(--cyan-5);
+  --event-color-6: var(--cyan-6);
+  --event-color-7: var(--cyan-7);
+  --event-color-8: var(--cyan-8);
+  --event-color-9: var(--cyan-9);
+  --event-color-10: var(--cyan-10);
+  --event-color-11: var(--cyan-11);
+  --event-color-12: var(--cyan-12);
 }
 
 .palette-jade {
-  --color-1: var(--jade-1);
-  --color-2: var(--jade-2);
-  --color-3: var(--jade-3);
-  --color-4: var(--jade-4);
-  --color-5: var(--jade-5);
-  --color-6: var(--jade-6);
-  --color-7: var(--jade-7);
-  --color-8: var(--jade-8);
-  --color-9: var(--jade-9);
-  --color-10: var(--jade-10);
-  --color-11: var(--jade-11);
-  --color-12: var(--jade-12);
+  --event-color-1: var(--jade-1);
+  --event-color-2: var(--jade-2);
+  --event-color-3: var(--jade-3);
+  --event-color-4: var(--jade-4);
+  --event-color-5: var(--jade-5);
+  --event-color-6: var(--jade-6);
+  --event-color-7: var(--jade-7);
+  --event-color-8: var(--jade-8);
+  --event-color-9: var(--jade-9);
+  --event-color-10: var(--jade-10);
+  --event-color-11: var(--jade-11);
+  --event-color-12: var(--jade-12);
 }
 
 .palette-red {
-  --color-1: var(--red-1);
-  --color-2: var(--red-2);
-  --color-3: var(--red-3);
-  --color-4: var(--red-4);
-  --color-5: var(--red-5);
-  --color-6: var(--red-6);
-  --color-7: var(--red-7);
-  --color-8: var(--red-8);
-  --color-9: var(--red-9);
-  --color-10: var(--red-10);
-  --color-11: var(--red-11);
-  --color-12: var(--red-12);
+  --event-color-1: var(--red-1);
+  --event-color-2: var(--red-2);
+  --event-color-3: var(--red-3);
+  --event-color-4: var(--red-4);
+  --event-color-5: var(--red-5);
+  --event-color-6: var(--red-6);
+  --event-color-7: var(--red-7);
+  --event-color-8: var(--red-8);
+  --event-color-9: var(--red-9);
+  --event-color-10: var(--red-10);
+  --event-color-11: var(--red-11);
+  --event-color-12: var(--red-12);
 }
