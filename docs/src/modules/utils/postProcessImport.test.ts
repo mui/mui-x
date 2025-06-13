@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-// eslint-disable-next-line import/no-relative-packages
-import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
+import adapterDependencies from './adapter-dependencies.json';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
 
 describe('postProcessImport', () => {
@@ -13,7 +12,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });
@@ -32,7 +31,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });
@@ -51,7 +50,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });
