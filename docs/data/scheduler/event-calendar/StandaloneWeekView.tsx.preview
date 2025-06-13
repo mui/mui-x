@@ -1,1 +1,1 @@
-<WeekView events={events} className={classes.Container} />
+<WeekView events={events} resources={resources} className={classes.Container} />

@@ -5,6 +5,7 @@ import { useId } from '@base-ui-components/react/utils';
 import { TimeGrid } from '../../primitives/time-grid';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { EventProps } from './Event.types';
+import { getColorClassName } from '../internals/utils/color-utils';
 import './Event.css';
 
 const adapter = getAdapter();
@@ -13,7 +14,7 @@ export const Event = React.forwardRef(function Event(
   props: EventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { event, ariaLabelledBy, variant, className, style, id: idProp, ...other } = props;
+  const { event, eventResource, ariaLabelledBy, variant, className, id: idProp, ...other } = props;
 
   const id = useId(idProp);
 
@@ -96,7 +97,12 @@ export const Event = React.forwardRef(function Event(
   ]);
 
   return (
-    <div ref={forwardedRef} className={clsx('EventContainer', className)} id={id} {...other}>
+    <div
+      ref={forwardedRef}
+      className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
+      id={id}
+      {...other}
+    >
       <TimeGrid.Event
         className={clsx(
           'EventCard',
