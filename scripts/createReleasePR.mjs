@@ -5,9 +5,14 @@
  *
  * This script automates the release preparation process for MUI-X:
  * 1. Asking for the major version to update (v7.x, v6.x, etc.)
- * 2. Updating the git upstream branch
- * 3. Determining the new version (patch/minor/major or custom)
- * 4. Creating a new branch from upstream/vX.x and setting up tracking with origin/release/vX
+ * 2. Creating a release branch
+ * 3. Determining the new version:
+ *    - For non-latest major versions: patch/minor/custom
+ *    - For latest major version: patch/minor/major/custom and prerelease options:
+ *      - Start alpha prerelease (if no prerelease exists)
+ *      - Increase alpha version or start beta (if alpha exists)
+ *      - Increase beta version or go to major (if beta exists)
+ * 4. Creating a new branch from upstream/master (for latest major) or upstream/vX.x (for older versions)
  * 5. Updating the root package.json with the new version
  * 6. Running the lerna version script to update all package versions
  * 7. Generating the changelog with actual package versions
@@ -16,18 +21,6 @@
  * 10. Committing the changes to the branch
  * 11. Opening a PR with a title "[release] v<NEW_VERSION>" and label "release"
  *     with a checklist of all release steps
- *
- * Usage:
- *   node createReleasePR.mjs --patch
- *   node createReleasePR.mjs --minor
- *   node createReleasePR.mjs --major
- *   node createReleasePR.mjs --custom 8.5.2
- *   node createReleasePR.mjs (interactive mode with selection menu)
- *
- * Requirements:
- *   - Must be run from the repository root
- *   - Node.js installed
- *   - Lerna installed
  */
 
 import { execa } from 'execa';
@@ -209,10 +202,21 @@ async function calculateVersionsFromTags(majorVersion) {
 }
 
 /**
- * Select the version type (patch, minor, major, prerelease, or custom)
+ * Select the version type based on the current version and selected major version
  * @param {string} majorVersion - The selected major version
  * @param {string} currentVersion - The current version from package.json
- * @returns {Promise<{versionType: string, calculatedVersion?: string, customVersion?: string, prereleaseType?: string, prereleaseNumber?: number}>}
+ * @returns {Promise<{
+ *   versionType: string,
+ *   calculatedVersion?: string,
+ *   customVersion?: string,
+ *   prereleaseType?: string,
+ *   prereleaseNumber?: number
+ * }>} Object containing version information:
+ *   - versionType: 'patch', 'minor', 'major', 'prerelease', or 'custom'
+ *   - calculatedVersion: The calculated version string (if available)
+ *   - customVersion: The custom version string (if entered by user)
+ *   - prereleaseType: 'alpha' or 'beta' (for prerelease versions)
+ *   - prereleaseNumber: The prerelease version number (for prerelease versions)
  */
 async function selectVersionType(majorVersion, currentVersion) {
   console.log(`Fetching latest tag for major version ${majorVersion}...`);
@@ -397,14 +401,14 @@ async function selectVersionType(majorVersion, currentVersion) {
 }
 
 /**
- * Calculate the new version based on the selected version type
- * @param {string} versionType - The selected version type (patch, minor, major, prerelease, or custom)
+ * Calculate the new version based on the selected version type and parameters
+ * @param {string} versionType - The selected version type: 'patch', 'minor', 'major', 'prerelease', or 'custom'
  * @param {string} currentVersion - The current version from package.json
- * @param {string} calculatedVersion - The calculated version from git tags
- * @param {string} customVersion - The custom version entered by the user
- * @param {string} prereleaseType - The type of prerelease (alpha or beta)
- * @param {number} prereleaseNumber - The prerelease version number
- * @returns {string} The new version
+ * @param {string} calculatedVersion - The calculated version from git tags (if available)
+ * @param {string} customVersion - The custom version entered by the user (if applicable)
+ * @param {string} prereleaseType - The type of prerelease: 'alpha' or 'beta' (for prerelease versions)
+ * @param {number} prereleaseNumber - The prerelease version number (for prerelease versions)
+ * @returns {string} The new version string in semver format (e.g., '9.0.0', '9.0.0-alpha.1', '9.0.0-beta.0')
  */
 function calculateNewVersion(
   versionType,
@@ -775,7 +779,8 @@ async function main() {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(currentVersion);
 
-    // If no arguments provided, use interactive menu
+    // If no arguments provided, use interactive menu to select version type
+    // Initialize prerelease variables (used for alpha/beta versions)
     let prereleaseType = '';
     let prereleaseNumber = 0;
 
@@ -859,15 +864,19 @@ async function main() {
 
     // Run lerna version script
     console.log('Running lerna version script...');
-    await execa('npx', [
-      'lerna',
-      'version',
-      '--exact',
-      '--no-changelog',
-      '--no-push',
-      '--no-git-tag-version',
-      '--no-private',
-    ], { stdio: 'inherit' });
+    await execa(
+      'npx',
+      [
+        'lerna',
+        'version',
+        '--exact',
+        '--no-changelog',
+        '--no-push',
+        '--no-git-tag-version',
+        '--no-private',
+      ],
+      { stdio: 'inherit' },
+    );
 
     console.log('Version update completed successfully!');
     console.log(`New version: ${newVersion}`);
