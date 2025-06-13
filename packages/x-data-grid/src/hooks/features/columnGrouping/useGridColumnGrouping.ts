@@ -201,5 +201,5 @@ export const useGridColumnGrouping = (
       return;
     }
     updateColumnGroupingState(props.columnGroupingModel);
-  }, [updateColumnGroupingState, props.columnGroupingModel]);
+  }, [apiRef, updateColumnGroupingState, props.columnGroupingModel]);
 };
