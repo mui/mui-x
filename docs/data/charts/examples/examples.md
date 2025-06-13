@@ -23,15 +23,15 @@ packageName: '@mui/x-charts'
 
 {{"demo": "AreaChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
 
+### Scatter Charts
+
+{{"demo": "ScatterChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+
 ## Non-Cartesian Charts
 
 ### Pie Charts
 
 {{"demo": "PieChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
-
-### Scatter Charts
-
-{{"demo": "ScatterChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
 
 ### Other Charts
 
