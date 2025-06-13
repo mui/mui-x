@@ -44,7 +44,7 @@ describe('TurnWheel Gesture', () => {
     gestureTarget.addEventListener('turnWheel', (event) => {
       const detail = event.detail;
       events.push(
-        `wheel: deltaX: ${Math.round(detail.deltaX)} | deltaY: ${Math.round(detail.deltaY)} | totalDeltaX: ${Math.round(detail.totalDeltaX)} | totalDeltaY: ${Math.round(detail.totalDeltaY)}`,
+        `wheel: deltaX: ${Math.floor(detail.deltaX)} | deltaY: ${Math.floor(detail.deltaY)} | totalDeltaX: ${Math.floor(detail.totalDeltaX)} | totalDeltaY: ${Math.floor(detail.totalDeltaY)}`,
       );
     });
   });

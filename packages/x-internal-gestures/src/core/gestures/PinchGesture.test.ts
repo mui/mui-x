@@ -41,19 +41,19 @@ describe('Pinch Gesture', () => {
     gestureTarget.addEventListener('pinchStart', (event) => {
       const detail = event.detail;
       events.push(
-        `pinchStart: scale: ${detail.scale.toFixed(2)} | distance: ${Math.round(detail.distance)} | direction: ${detail.direction}`,
+        `pinchStart: scale: ${detail.scale.toFixed(2)} | distance: ${Math.floor(detail.distance)} | direction: ${detail.direction}`,
       );
     });
     gestureTarget.addEventListener('pinch', (event) => {
       const detail = event.detail;
       events.push(
-        `pinch: scale: ${detail.scale.toFixed(2)} | distance: ${Math.round(detail.distance)} | direction: ${detail.direction}`,
+        `pinch: scale: ${detail.scale.toFixed(2)} | distance: ${Math.floor(detail.distance)} | direction: ${detail.direction}`,
       );
     });
     gestureTarget.addEventListener('pinchEnd', (event) => {
       const detail = event.detail;
       events.push(
-        `pinchEnd: scale: ${detail.scale.toFixed(2)} | distance: ${Math.round(detail.distance)} | direction: ${detail.direction}`,
+        `pinchEnd: scale: ${detail.scale.toFixed(2)} | distance: ${Math.floor(detail.distance)} | direction: ${detail.direction}`,
       );
     });
   });

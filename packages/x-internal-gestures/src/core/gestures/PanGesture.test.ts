@@ -41,19 +41,19 @@ describe('Pan Gesture', () => {
     gestureTarget.addEventListener('panStart', (event) => {
       const detail = event.detail;
       events.push(
-        `panStart: deltaX: ${Math.round(detail.totalDeltaX)} | deltaY: ${Math.round(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
+        `panStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
       );
     });
     gestureTarget.addEventListener('pan', (event) => {
       const detail = event.detail;
       events.push(
-        `pan: deltaX: ${Math.round(detail.totalDeltaX)} | deltaY: ${Math.round(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
+        `pan: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
       );
     });
     gestureTarget.addEventListener('panEnd', (event) => {
       const detail = event.detail;
       events.push(
-        `panEnd: deltaX: ${Math.round(detail.totalDeltaX)} | deltaY: ${Math.round(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
+        `panEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
       );
     });
   });
@@ -121,8 +121,8 @@ describe('Pan Gesture', () => {
         : [
             `panStart: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
             `pan: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
-            `pan: deltaX: -35 | deltaY: -35 | direction: left up | mainAxis: diagonal`,
-            `panEnd: deltaX: -35 | deltaY: -35 | direction: left up | mainAxis: diagonal`,
+            `pan: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
+            `panEnd: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
           ],
     );
   });
@@ -185,9 +185,9 @@ describe('Pan Gesture', () => {
             `panEnd: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
           ]
         : [
-            `pan: deltaX: 26 | deltaY: 44 | direction: down | mainAxis: vertical`,
-            `pan: deltaX: 1 | deltaY: 38 | direction: left up | mainAxis: horizontal`,
-            `panEnd: deltaX: 1 | deltaY: 38 | direction: left up | mainAxis: horizontal`,
+            `pan: deltaX: 25 | deltaY: 43 | direction: down | mainAxis: vertical`,
+            `pan: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
+            `panEnd: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
           ],
     );
   });

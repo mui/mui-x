@@ -80,10 +80,10 @@ describe('Rotate Gesture', () => {
         ? [
             'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
             'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
-            'rotate: rotation: 45° | delta: 23° | totalRotation: 45°',
+            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
             'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
-            'rotate: rotation: 89° | delta: 22° | totalRotation: 89°',
-            'rotateEnd: rotation: 89° | delta: 22° | totalRotation: 89°',
+            'rotate: rotation: 88° | delta: 21° | totalRotation: 88°',
+            'rotateEnd: rotation: 88° | delta: 21° | totalRotation: 88°',
           ]
         : [
             'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
@@ -108,12 +108,12 @@ describe('Rotate Gesture', () => {
     expect(events).toStrictEqual(
       isWebkit
         ? [
-            'rotateStart: rotation: -23° | delta: -23° | totalRotation: -23°',
-            'rotate: rotation: -23° | delta: -23° | totalRotation: -23°',
+            'rotateStart: rotation: -24° | delta: -24° | totalRotation: -24°',
+            'rotate: rotation: -24° | delta: -24° | totalRotation: -24°',
             'rotate: rotation: -45° | delta: -22° | totalRotation: -45°',
             'rotate: rotation: -67° | delta: -22° | totalRotation: -67°',
-            'rotate: rotation: -90° | delta: -23° | totalRotation: -90°',
-            'rotateEnd: rotation: -90° | delta: -23° | totalRotation: -90°',
+            'rotate: rotation: -90° | delta: -24° | totalRotation: -90°',
+            'rotateEnd: rotation: -90° | delta: -24° | totalRotation: -90°',
           ]
         : [
             'rotateStart: rotation: -23° | delta: -23° | totalRotation: -23°',
@@ -148,12 +148,12 @@ describe('Rotate Gesture', () => {
         ? [
             'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
             'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
-            'rotate: rotation: 45° | delta: 23° | totalRotation: 45°',
-            'rotateEnd: rotation: 45° | delta: 23° | totalRotation: 45°',
+            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
+            'rotateEnd: rotation: 45° | delta: 22° | totalRotation: 45°',
             'rotateStart: rotation: 67° | delta: 22° | totalRotation: 67°',
             'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
-            'rotate: rotation: 90° | delta: 23° | totalRotation: 90°',
-            'rotateEnd: rotation: 90° | delta: 23° | totalRotation: 90°',
+            'rotate: rotation: 90° | delta: 22° | totalRotation: 90°',
+            'rotateEnd: rotation: 90° | delta: 22° | totalRotation: 90°',
           ]
         : [
             'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',

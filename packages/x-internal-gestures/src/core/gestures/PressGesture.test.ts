@@ -41,25 +41,25 @@ describe('Press Gesture', () => {
     gestureTarget.addEventListener('pressStart', (event) => {
       const detail = event.detail;
       events.push(
-        `pressStart: x: ${Math.round(detail.x)} | y: ${Math.round(detail.y)} | duration: ${Math.round(detail.duration)}`,
+        `pressStart: x: ${Math.floor(detail.x)} | y: ${Math.floor(detail.y)} | duration: ${Math.floor(detail.duration)}`,
       );
     });
     gestureTarget.addEventListener('press', (event) => {
       const detail = event.detail;
       events.push(
-        `press: x: ${Math.round(detail.x)} | y: ${Math.round(detail.y)} | duration: ${Math.round(detail.duration)}`,
+        `press: x: ${Math.floor(detail.x)} | y: ${Math.floor(detail.y)} | duration: ${Math.floor(detail.duration)}`,
       );
     });
     gestureTarget.addEventListener('pressEnd', (event) => {
       const detail = event.detail;
       events.push(
-        `pressEnd: x: ${Math.round(detail.x)} | y: ${Math.round(detail.y)} | duration: ${Math.round(detail.duration)}`,
+        `pressEnd: x: ${Math.floor(detail.x)} | y: ${Math.floor(detail.y)} | duration: ${Math.floor(detail.duration)}`,
       );
     });
     gestureTarget.addEventListener('pressCancel', (event) => {
       const detail = event.detail;
       events.push(
-        `pressCancel: x: ${Math.round(detail.x)} | y: ${Math.round(detail.y)} | duration: ${Math.round(detail.duration)}`,
+        `pressCancel: x: ${Math.floor(detail.x)} | y: ${Math.floor(detail.y)} | duration: ${Math.floor(detail.duration)}`,
       );
     });
   });

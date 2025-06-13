@@ -41,7 +41,7 @@ describe('Tap Gesture', () => {
     gestureTarget.addEventListener('tap', (event) => {
       const detail = event.detail;
       events.push(
-        `tap: x: ${Math.round(detail.x)} | y: ${Math.round(detail.y)} | tapCount: ${detail.tapCount}`,
+        `tap: x: ${Math.floor(detail.x)} | y: ${Math.floor(detail.y)} | tapCount: ${detail.tapCount}`,
       );
     });
   });

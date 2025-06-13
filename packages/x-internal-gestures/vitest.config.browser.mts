@@ -22,6 +22,12 @@ export default mergeConfig(sharedConfig, {
               }
             : {}),
         },
+        {
+          browser: 'webkit',
+        },
+        {
+          browser: 'firefox',
+        },
       ],
     },
   },
