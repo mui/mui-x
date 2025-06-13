@@ -13,7 +13,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
@@ -94,7 +93,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const virtualScroller = useGridVirtualScroller();
+  // @ts-ignore XXX
+  const virtualScroller = apiRef.current.virtualScroller.use();
   const {
     getContainerProps,
     getScrollerProps,
