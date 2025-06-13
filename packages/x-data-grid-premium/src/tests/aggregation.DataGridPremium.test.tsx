@@ -17,7 +17,6 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
 
 const baselineProps: DataGridPremiumProps = {
   autoHeight: isJSDOM,
