@@ -26,7 +26,7 @@ export const PickerActionsContext = React.createContext<PickerActionsContextValu
   any
 > | null>(null);
 
-export const PickerPrivateContext = React.createContext<PickerPrivateContextValue>({
+export const PickerPrivateContext = React.createContext<PickerPrivateContextValue<any>>({
   ownerState: {
     isPickerDisabled: false,
     isPickerReadOnly: false,
@@ -44,6 +44,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
   viewContainerRole: null,
   defaultActionBarActions: [],
   onPopperExited: undefined,
+  setForcedError: () => {},
 });
 
 /**
@@ -84,7 +85,7 @@ export function PickerProvider<TValue extends PickerValidValue>(
 export interface PickerProviderProps<TValue extends PickerValidValue> {
   contextValue: PickerContextValue<any, any, any>;
   actionsContextValue: PickerActionsContextValue<any, any, any>;
-  privateContextValue: PickerPrivateContextValue;
+  privateContextValue: PickerPrivateContextValue<any>;
   fieldPrivateContextValue: PickerFieldPrivateContextValue;
   isValidContextValue: (value: TValue) => boolean;
   localeText: PickersInputLocaleText | undefined;
@@ -319,16 +320,9 @@ export interface SetValueActionOptions<TError = string | null> {
    * @default changeImportance === "accept"
    */
   shouldClose?: boolean;
-  /**
-   * Whether the value is partially filled or not.
-   * This is useful when your UI has several elements to fill (for example a field UI with one section for the year, one for the month, etc.).
-   * Until all the elements are filled, the value is `null`, but the validation should treat it as an invalid value.
-   * @default false
-   */
-  isPartiallyFilled?: boolean;
 }
 
-export interface PickerPrivateContextValue {
+export interface PickerPrivateContextValue<TError> {
   /*
    * Close the Picker and accept the current value if it is not equal to the last accepted value.
    */
@@ -376,4 +370,9 @@ export interface PickerPrivateContextValue {
    * The function to call when the Popper is closing animation is finished.
    */
   onPopperExited: (() => void) | undefined;
+  /**
+   * Updates the error to force whatever the validation returns.
+   * @param {TError} error The error to force.
+   */
+  setForcedError: (error: TError) => void;
 }

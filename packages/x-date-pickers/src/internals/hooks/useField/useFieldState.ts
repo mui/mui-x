@@ -39,6 +39,7 @@ import {
   getSectionTypeGranularity,
 } from '../../utils/getDefaultReferenceDate';
 import { PickerValidValue } from '../../models';
+import { usePickerPrivateContext } from '../usePickerPrivateContext';
 
 const QUERY_LIFE_DURATION_MS = 5000;
 
@@ -59,6 +60,7 @@ export const useFieldState = <
 ): UseFieldStateReturnValue<TValue> => {
   const utils = useUtils();
   const translations = usePickerTranslations();
+  const { setForcedError } = usePickerPrivateContext();
   const adapter = useLocalizationContext();
   const isRtl = useRtl();
 
@@ -196,6 +198,10 @@ export const useFieldState = <
     () => fieldValueManager.getPartiallyFilledError(state.sections),
     [fieldValueManager, state.sections],
   );
+
+  React.useEffect(() => {
+    setForcedError(forcedError);
+  }, [forcedError]);
 
   const { hasValidationError } = useValidation({
     props: internalPropsWithDefaults,

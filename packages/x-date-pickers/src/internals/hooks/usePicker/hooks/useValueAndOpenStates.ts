@@ -120,18 +120,10 @@ export function useValueAndOpenStates<
     }
   });
 
-  const setForcedError = useEventCallback((isPartiallyFilled: boolean) => {
-    setState((prevState) => ({
-      ...prevState,
-      isPartiallyFilled,
-    }));
-  });
-
   const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions<TError>) => {
     const {
       changeImportance = 'accept',
       skipPublicationIfPristine = false,
-      isPartiallyFilled = false,
       validationError,
       shortcut,
       shouldClose = changeImportance === 'accept',
@@ -157,7 +149,11 @@ export function useValueAndOpenStates<
       clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
       lastCommittedValue: shouldFireOnAccept ? value : prevState.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
-      isPartiallyFilled,
+      forcedError:
+        validationError === undefined ||
+        valueManager.isSameError(validationError, valueManager.defaultErrorState)
+          ? undefined
+          : validationError,
     }));
 
     let cachedContext: PickerChangeHandlerContext<TError> | null = null;
@@ -187,6 +183,16 @@ export function useValueAndOpenStates<
     if (shouldClose) {
       setOpen(false);
     }
+  });
+
+  const setForcedError = useEventCallback((forcedError: TError) => {
+    if (
+      state.forcedError !== undefined &&
+      valueManager.isSameError(forcedError, state.forcedError)
+    ) {
+      return;
+    }
+    setState((prevState) => ({ ...prevState, forcedError }));
   });
 
   // If `prop.value` changes, we update the state to reflect the new value
@@ -238,7 +244,7 @@ export function useValueAndOpenStates<
     [utils, valueManager, state.clockShallowValue, value],
   );
 
-  return { timezone, state, setValue, setValueFromView, setOpen, value, viewValue };
+  return { timezone, state, setValue, setValueFromView, setOpen, setForcedError, value, viewValue };
 }
 
 interface UsePickerDateStateParameters<
