@@ -54,6 +54,7 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
+  apiRef.current.caches.columnGrouping = {};
   if (!props.columnGroupingModel) {
     return state;
   }
@@ -141,6 +142,10 @@ export const useGridColumnGrouping = (
 
   const updateColumnGroupingState = React.useCallback(
     (columnGroupingModel: GridColumnGroupingModel | undefined) => {
+      if (columnGroupingModel === apiRef.current.caches.columnGrouping.lastColumnGroupingModel) {
+        return;
+      }
+      apiRef.current.caches.columnGrouping.lastColumnGroupingModel = columnGroupingModel;
       // @ts-expect-error Move this logic to `Pro` package
       const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
       const columnFields = gridColumnFieldsSelector(apiRef);
@@ -176,7 +181,9 @@ export const useGridColumnGrouping = (
 
   useGridEvent(apiRef, 'columnIndexChange', handleColumnIndexChange);
   useGridEvent(apiRef, 'columnsChange', () => {
+    console.time('test');
     updateColumnGroupingState(props.columnGroupingModel);
+    console.timeEnd('test');
   });
   useGridEvent(apiRef, 'columnVisibilityModelChange', () => {
     updateColumnGroupingState(props.columnGroupingModel);
