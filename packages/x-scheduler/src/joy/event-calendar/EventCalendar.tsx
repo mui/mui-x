@@ -11,7 +11,7 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import '../index.css';
 import './EventCalendar.css';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { getEventColorCSSVars } from '../internals/utils/color-utils';
+import { getColorClassName } from '../internals/utils/color-utils';
 
 const adapter = getAdapter();
 
@@ -77,8 +77,10 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
               {resources.map((resource) => (
                 <div key={resource.id} className="EventCalendarResourceLegendItem">
                   <span
-                    className="EventCalendarResourceLegendColor"
-                    style={getEventColorCSSVars({ resource })}
+                    className={clsx(
+                      'EventCalendarResourceLegendColor',
+                      getColorClassName({ resource }),
+                    )}
                   />
                   <span className="EventCalendarResourceLegendName">{resource.name}</span>
                 </div>
