@@ -1,7 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "gap": { "description": "The gap, in pixels, between funnel sections." },
     "onItemClick": {
       "description": "Callback fired when a funnel item is clicked.",
       "typeDescriptions": {

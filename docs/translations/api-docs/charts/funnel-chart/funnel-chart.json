@@ -27,7 +27,7 @@
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
     },
     "onAxisClick": {
-      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "description": "The function called for onClick events. The second argument contains information about all funnel elements at the current position.",
       "typeDescriptions": {
         "event": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
         "data": "The data about the clicked axis and items associated with it."

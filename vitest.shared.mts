@@ -4,22 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
-    react({
-      babel: {
-        plugins: [
-          [
-            '@mui/internal-babel-plugin-display-name',
-            {
-              allowedCallees: {
-                '@mui/x-internals/forwardRef': ['forwardRef'],
-              },
-            },
-          ],
-        ],
-        babelrc: false,
-        configFile: false,
-      },
-    }),
+    react(),
     tsconfigPaths({
       skip: (dir) => dir.includes('x-charts-vendor'),
     }),

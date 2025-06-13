@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "8.5.1",
+  "version": "8.5.2",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Data Grid Components.",
   "main": "src/index.ts",
@@ -44,17 +44,16 @@
     "directory": "packages/x-data-grid-premium"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.4",
-    "@mui/utils": "^7.1.1",
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "^1.0.4",
-    "clsx": "^2.1.1",
-    "exceljs": "^4.4.0",
-    "prop-types": "^15.8.1",
-    "reselect": "^5.1.1"
+    "@types/format-util": "catalog:",
+    "clsx": "catalog:",
+    "exceljs": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -73,16 +72,16 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.9",
-    "@mui/material": "^7.1.1",
-    "@mui/system": "^7.1.1",
-    "@types/prop-types": "^15.7.14",
-    "@types/react-transition-group": "^4.4.12",
-    "date-fns": "^4.1.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-transition-group": "^4.4.5",
-    "rimraf": "^6.0.1"
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/react-transition-group": "catalog:",
+    "date-fns": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-transition-group": "catalog:",
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

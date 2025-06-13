@@ -68,7 +68,11 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/row-updates' },
               { pathname: '/x/react-data-grid/row-height' },
               { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
-              { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/master-detail',
+                plan: 'pro',
+                title: 'Master-detail row panels',
+              },
               { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
               { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },

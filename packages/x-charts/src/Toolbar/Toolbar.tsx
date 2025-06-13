@@ -16,6 +16,7 @@ const ToolbarRoot = styled('div', {
   justifyContent: 'end',
   gap: theme.spacing(0.25),
   padding: theme.spacing(0.5),
+  marginBottom: theme.spacing(1.5),
   minHeight: 44,
   boxSizing: 'border-box',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
