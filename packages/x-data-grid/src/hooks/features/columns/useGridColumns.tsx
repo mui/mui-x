@@ -469,10 +469,7 @@ export function useGridColumns(
   }, [logger, apiRef, setGridColumnsState, props.columns]);
 
   React.useEffect(() => {
-    if (
-      props.columnVisibilityModel !== undefined &&
-      gridColumnVisibilityModelSelector(apiRef) !== props.columnVisibilityModel
-    ) {
+    if (props.columnVisibilityModel !== undefined) {
       apiRef.current.setColumnVisibilityModel(props.columnVisibilityModel);
     }
   }, [apiRef, logger, props.columnVisibilityModel]);
