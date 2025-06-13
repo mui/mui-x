@@ -43,15 +43,55 @@ This kind of interaction is controlled by series properties `highlightScope` whi
 
 {{"demo": "ElementHighlights.js"}}
 
-## Controlled highlight
+## Controlled item highlight
 
-The highlight can be controlled by the user when they set `highlightedItem` and `onHighlightChange`.
+The item highlight can be controlled by using `highlightedItem` and `onHighlightChange`.
 
 You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
 
 {{"demo": "ControlledHighlight.js"}}
 
-### Synchronizing highlights
+## Controlled axis highlight
+
+The highlight can be controlled by using `highlightedAxis` prop.
+Its value can be `null` to remove axis highlight, or an object `{ direction: 'x' | 'y', axisId: string, dataIndex: number }`.
+
+The `onAxisInteraction` handler is trigger each time the pointer crosses the boundaries between two axis values.
+Its parameter is an array of objects `{ direction, axisId, dataIndex }`.
+One per axis.
+Axes without data are ignored by the handler.
+
+The handler gets an array of objects.
+Whereas the controlled value only accept one object.
+
+:::warning
+The `onAxisInteraction` can be triggered at a high frequency when user move their pointer on the chart.
+
+To avoid performance issues, avoid defining object in the props which creates a new reference at each render.
+Either define them outside the component, or memoize them.
+
+Especially for axes and series which when updated impact a lot of computation.
+
+```jsx
+// ❌ The chart gets a new axis at each render. Leading to useless computation.
+const Component = () => <BarChart xAxis={[{ data: [1, 2, 3]}]}>
+
+// ✅ For static settings, define them outside the component.
+const quarterAxis = [{ data: ['Q1', 'Q2', 'Q3', 'Q4'] }];
+const Component = () => <BarChart xAxis={quarterAxis}>
+
+// ✅ For dynamic settings, memoize them.
+const Component = ({ data }) => {
+  const axis = React.useMemo(() => [{ data }], [data]);
+  return <BarChart xAxis={quarterAxis}>
+}
+```
+
+:::
+
+{{"demo": "ControlledAxisHighlight.js"}}
+
+## Synchronizing highlights
 
 Having a controlled highlight allows you to control it in multiple charts at the same time.
 You need to ensure that the `series` has the same `ids` and the data is in the same order.
