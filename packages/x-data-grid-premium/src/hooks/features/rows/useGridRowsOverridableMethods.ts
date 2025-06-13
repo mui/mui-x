@@ -30,36 +30,20 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
         );
       }
 
-      /*
-        USE CASES
-        - 1. Source node and target node both are leaf nodes
-          - 1a. Source node and target node both have same parent
-            >> Source node and target node swap their positions (similar to the flat tree structure use case)
-          - 1b. Source node and target node both have different parents
-            >> Source node and target node swap their positions and the following information is updated in row tree.
-              - `sourceNode.parent` is updated to `targetNode.parent`
-              - `targetNode.parent` is updated to `sourceNode.parent`
-              - `sourceNode.id` is removed from `sourceNode.parent.children` and added to `targetNode.parent.children`
-              - `targetNode.id` is removed from `targetNode.parent.children` and added to `sourceNode.parent.children`
-              
-        - 2. Source node is a leaf node and target node is a group node
-          - 2a. Target node is source node's parent
-            >> Not allowed since it will technically have no difference
-          - 2b. Source node and target node both have different parents
-            >> Source node is moved as a child of target node
-              - `sourceNode.parent` is updated to `targetNode.id`
-              - `sourceNode.id` is removed from `sourceNode.parent.children`
-              - `targetNode.children` is updated to `[sourceNode.id, ...targetNode.children]`
-
-        - 3. Source node is a group node and target node is a leaf node
-          >> Not allowed since it will break the row grouping criteria
-
-        - 4. Source node is a group node and target node is a group node
-          - 4a. Source node and target node both have same parent
-            >> Source and target nodes swap their positions (along with their children)
-          - 4b. Source node and target node both have different parents
-            >> Not allowed since it will break the row grouping criteria
-      */
+      /**
+       * Logic Matrix
+       * ============
+       *
+       * | Source Node | Target Node | Parent Relationship       | Action                                            |
+       * | :---------- | :---------- | :------------------------ | :------------------------------------------------ |
+       * | Leaf        | Leaf        | Same parent               | Swap positions (similar to flat tree structure)   |
+       * | Group       | Group       | Same parent               | Swap positions (along with their descendants)     |
+       * | Leaf        | Leaf        | Different parents         | Swap positions and update parent nodes in tree    |
+       * | Leaf        | Group       | Different parents         | Make source a child of target                     |
+       * | Leaf        | Group       | Target is source's parent | Not allowed, will have no difference              |
+       * | Group       | Leaf        | Any                       | Not allowed, will break the row grouping criteria |
+       * | Group       | Group       | Different parents         | Not allowed, will break the row grouping criteria |
+       */
 
       if (
         ((sourceNode.type === 'leaf' && targetNode.type === 'leaf') ||
@@ -193,6 +177,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
                     }),
                 [targetNode.id]: {
                   ...targetNode,
+                  // Expand the target node to show the source node as a child
                   childrenExpanded: true,
                   children: updatedTargetChildren,
                 },
@@ -205,7 +190,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           };
         });
       } else {
-        // Unsupported use case
+        // Unsupported use cases
         return;
       }
 
@@ -214,10 +199,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
     [apiRef],
   );
 
-  return React.useMemo(
-    () => ({
-      setRowIndex,
-    }),
-    [setRowIndex],
-  );
+  return {
+    setRowIndex,
+  };
 };

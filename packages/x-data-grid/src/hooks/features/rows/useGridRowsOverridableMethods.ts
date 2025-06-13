@@ -54,10 +54,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
     [apiRef],
   );
 
-  return React.useMemo(
-    () => ({
-      setRowIndex,
-    }),
-    [setRowIndex],
-  );
+  return {
+    setRowIndex,
+  };
 };
