@@ -113,7 +113,7 @@ You can target scatter markers with the following CSS selectors:
 - `[data-highlighted=true]` Selects markers with highlighted state.
 - `[data-faded=true]` Selects markers with faded state.
 
-To select all marker groups, use the `scatterClasses.root` classe name.
+To select all marker groups, use the `scatterClasses.root` class name.
 
 Here is an example that customizes the look of highlighted items depending on the series they belong to.
 
