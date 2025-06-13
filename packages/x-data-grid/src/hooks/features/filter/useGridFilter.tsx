@@ -128,7 +128,6 @@ export const useGridFilter = (
     });
     apiRef.current.publishEvent('filteredRowsSet');
   }, [apiRef]);
-  const updateFilteredRowsDeferred = useRunOncePerLoop(updateFilteredRows);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
@@ -524,7 +523,7 @@ export const useGridFilter = (
     });
   }, [apiRef]);
 
-  useGridEvent(apiRef, 'rowsSet', updateFilteredRowsDeferred);
+  useGridEvent(apiRef, 'rowsSet', updateFilteredRows);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
   useGridEvent(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
@@ -532,7 +531,7 @@ export const useGridFilter = (
     const filterModel = gridFilterModelSelector(apiRef);
     if (filterModel.quickFilterValues && shouldQuickFilterExcludeHiddenColumns(filterModel)) {
       // re-apply filters because the quick filter results may have changed
-      updateFilteredRowsDeferred();
+      updateFilteredRows();
     }
   });
 
