@@ -26,6 +26,11 @@ export interface GridRowGroupChildrenGetterParams {
    * @default false
    */
   applySorting?: boolean;
+  /**
+   * If `true`, the method will only return the direct leaf children of the group
+   * @default false
+   */
+  directChildrenOnly?: boolean;
 }
 
 /**
