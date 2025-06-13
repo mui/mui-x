@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -128,6 +128,43 @@ describe('<DataGrid /> - Column headers', () => {
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
       await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+    });
+
+    it('should prevent wheel scroll event from closing the menu when scrolling within the menu', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      const menu = screen.getByRole('menu');
+
+      fireEvent.wheel(menu);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
+    });
+
+    it('should close the column menu when the grid is scrolled', async () => {
+      const { user } = render(
+        <div style={{ height: 300, width: 300 }}>
+          <DataGrid
+            rows={Array.from({ length: 50 }, (_, id) => ({ id, name: id }))}
+            columns={[{ field: 'brand' }]}
+          />
+        </div>,
+      );
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+
+      const scroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      fireEvent.wheel(scroller, { deltaY: 120 });
+
       await waitFor(() => {
         expect(screen.queryByRole('menu')).to.equal(null);
       });
