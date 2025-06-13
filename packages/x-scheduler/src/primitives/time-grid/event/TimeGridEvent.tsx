@@ -7,10 +7,9 @@ import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
+import { SchedulerValidDate } from '../../models';
 
 const adapter = getAdapter();
-
-const MINUTES_IN_DAY = 24 * 60;
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   componentProps: TimeGridEvent.Props,
@@ -36,20 +35,23 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
   const style = React.useMemo(() => {
+    const getMinutes = (date: SchedulerValidDate) =>
+      adapter.getHours(date) * 60 + adapter.getMinutes(date);
+
+    const minutesInColumn = getMinutes(columnEnd) - getMinutes(columnStart);
+
     const isStartingBeforeColumnStart = adapter.isBefore(start, columnStart);
     const isEndingAfterColumnEnd = adapter.isAfter(end, columnEnd);
-    const startTime = isStartingBeforeColumnStart
-      ? 0
-      : adapter.getHours(start) * 60 + adapter.getMinutes(start);
+    const startTime = isStartingBeforeColumnStart ? 0 : getMinutes(start) - getMinutes(columnStart);
     const endTime = isEndingAfterColumnEnd
-      ? MINUTES_IN_DAY
-      : adapter.getHours(end) * 60 + adapter.getMinutes(end);
+      ? minutesInColumn
+      : getMinutes(end) - getMinutes(columnStart);
 
-    const yPositionInt = isStartingBeforeColumnStart ? 0 : (startTime / MINUTES_IN_DAY) * 100;
+    const yPositionInt = isStartingBeforeColumnStart ? 0 : (startTime / minutesInColumn) * 100;
 
     const heightInt = isEndingAfterColumnEnd
       ? 100 - yPositionInt
-      : ((endTime - startTime) / MINUTES_IN_DAY) * 100;
+      : ((endTime - startTime) / minutesInColumn) * 100;
 
     return {
       [TimeGridEventCssVars.yPosition]: `${yPositionInt}%`,

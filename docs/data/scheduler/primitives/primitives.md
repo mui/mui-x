@@ -17,8 +17,16 @@ This package is not published yet.
 
 ## Time Grid
 
-{{"demo": "TimeGridPrimitives.js", "bg": "inline", "defaultCodeOpen": false}}
+### Basic example
+
+{{"demo": "TimeGridPrimitive.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Start and end time
+
+{{"demo": "TimeGridPrimitiveStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Day Grid
 
-{{"demo": "DayGridPrimitives.js", "bg": "inline", "defaultCodeOpen": false}}
+### Basic example
+
+{{"demo": "DayGridPrimitive.js", "bg": "inline", "defaultCodeOpen": false}}
