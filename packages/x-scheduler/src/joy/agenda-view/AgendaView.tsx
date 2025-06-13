@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
-import { SchedulerValidDate } from '../../primitives/utils/adapter/types';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { SchedulerValidDate } from '../../primitives/models';
 import { TimeGrid } from '../../primitives/time-grid';
 import { TimeGridEvent } from '../event/TimeGridEvent';
 import { AgendaViewProps } from './AgendaView.types';
@@ -10,22 +10,26 @@ import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../utils/date-utils';
 import { useTranslations } from '../utils/TranslationsContext';
 import './AgendaView.css';
+import { useDayList } from '@mui/x-scheduler/primitives/use-day-list';
+import { AgendaEvent } from '../event/AgendaEvent';
 
-function getCurrentWeekDays(today: SchedulerValidDate) {
-  const startOfWeek = today.startOf('week');
-  return Array.from({ length: 7 }, (_, i) => startOfWeek.plus({ days: i }));
-}
+const adapter = getAdapter();
 
 export const AgendaView = React.forwardRef(function AgendaView(
   props: AgendaViewProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const getDayList = useDayList();
+
+  const today = adapter.date('2025-05-26');
+  const days = React.useMemo(
+    () => getDayList({ date: today.startOf('week'), amount: 12 }),
+    [getDayList, today],
+  );
+
   const { events, className, ...other } = props;
 
-  const adapter = useAdapter();
   const translations = useTranslations();
-  const today = adapter.date('2025-05-26');
-  const currentWeekDays = getCurrentWeekDays(today);
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const headerWrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -41,9 +45,45 @@ export const AgendaView = React.forwardRef(function AgendaView(
     return map;
   }, [adapter, events]);
 
+  console.log('AgendaView eventsByDay', eventsByDay);
+
   return (
     <div ref={forwardedRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
-      hey
+      {days.map((day) => {
+        const dayKey = adapter.format(day, 'keyboardDate');
+        const dayEvents = eventsByDay.get(dayKey) || [];
+
+        return (
+          <div
+            className="AgendaViewRow"
+            key={day.day.toString()}
+            id={`AgendaViewRow-${day.day.toString()}`}
+          >
+            <div
+              className="DayHeaderCell"
+              aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+            >
+              <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
+              <div className="WeekDayCell">
+                <span className="WeekDayName">{adapter.formatByString(day, 'cccc')}</span>
+                <span className="YearAndMonth">
+                  {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
+                </span>
+              </div>
+            </div>
+            <div className="EventsList">
+              {dayEvents.map((event: CalendarEvent) => (
+                <AgendaEvent
+                  key={event.id}
+                  event={event}
+                  variant="regular"
+                  ariaLabelledBy={`AgendaEvent-${day.day.toString()}`}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 });
