@@ -147,7 +147,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                         key={event.id}
                         event={event}
                         variant="regular"
-                        ariaLabelledBy={`WeekViewHeaderCell-${day.day.toString()}`}
+                        ariaLabelledBy={`TimeGridHeaderCell-${day.day.toString()}`}
                       />
                     ))}
                   </TimeGridPrimitive.Column>
