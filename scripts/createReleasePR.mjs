@@ -73,9 +73,11 @@ async function findMuiXRemote() {
     const { stdout } = await execa('git', ['remote', '-v']);
     const remotes = stdout.split('\n');
 
+    console.log('Checking for MUI-X remote...', stdout);
+
     let upstreamRemote = '';
     for (const line of remotes) {
-      if (line.match(/:mui\/mui-x(\.git)?[[:space:]]+\(push\)/)) {
+      if (line.match(/\/mui\/mui-x(\.git)?\s+\(push\)/)) {
         upstreamRemote = line.split(/\s+/)[0];
         break;
       }
@@ -89,14 +91,12 @@ async function findMuiXRemote() {
         "Did you forget to add it via 'git remote add upstream git@github.com:mui/mui-x.git'?",
       );
       process.exit(1);
-      return '';
     }
 
     return upstreamRemote;
   } catch (error) {
     console.error('Error finding MUI-X remote:', error);
     process.exit(1);
-    return '';
   }
 }
 
@@ -209,10 +209,10 @@ async function calculateVersionsFromTags(majorVersion) {
 }
 
 /**
- * Select the version type (patch, minor, major, or custom)
+ * Select the version type (patch, minor, major, prerelease, or custom)
  * @param {string} majorVersion - The selected major version
  * @param {string} currentVersion - The current version from package.json
- * @returns {Promise<{versionType: string, calculatedVersion?: string, customVersion?: string}>}
+ * @returns {Promise<{versionType: string, calculatedVersion?: string, customVersion?: string, prereleaseType?: string, prereleaseNumber?: number}>}
  */
 async function selectVersionType(majorVersion, currentVersion) {
   console.log(`Fetching latest tag for major version ${majorVersion}...`);
@@ -231,6 +231,58 @@ async function selectVersionType(majorVersion, currentVersion) {
     nextMajorDisplay = 'X.0.0';
   }
 
+  // Check if the selected major version is the latest one
+  const currentMajorVersion = currentVersion.split('.')[0];
+  const isLatestMajor = majorVersion === currentMajorVersion;
+
+  // Check if current version is a prerelease (alpha or beta)
+  const alphaMatch = currentVersion.match(/-alpha\.(\d+)$/);
+  const betaMatch = currentVersion.match(/-beta\.(\d+)$/);
+  const isAlpha = !!alphaMatch;
+  const isBeta = !!betaMatch;
+  const alphaVersion = isAlpha ? parseInt(alphaMatch[1], 10) : 0;
+  const betaVersion = isBeta ? parseInt(betaMatch[1], 10) : 0;
+
+  // Build choices array based on version type
+  const choices = [
+    { name: `Patch (${nextPatchDisplay})`, value: 'patch' },
+    { name: `Minor (${nextMinorDisplay})`, value: 'minor' },
+    { name: 'Custom version', value: 'custom' },
+  ];
+
+  // Handle prerelease options based on current version
+  if (isLatestMajor) {
+    if (isAlpha) {
+      // If alpha is present, give option to increase alpha or start beta
+      choices.splice(
+        2,
+        0,
+        {
+          name: `Increase Alpha (${currentMajorVersion}.0.0-alpha.${alphaVersion + 1})`,
+          value: 'alpha-increase',
+        },
+        { name: `Start Beta (${currentMajorVersion}.0.0-beta.0)`, value: 'beta-start' },
+      );
+    } else if (isBeta) {
+      // If beta is present, give option to increase beta or go to major
+      choices.splice(
+        2,
+        0,
+        {
+          name: `Increase Beta (${currentMajorVersion}.0.0-beta.${betaVersion + 1})`,
+          value: 'beta-increase',
+        },
+        { name: `Major (${nextMajorDisplay})`, value: 'major' },
+      );
+    } else {
+      // If no prerelease, give option for major or start prerelease
+      choices.splice(2, 0, {
+        name: `Pre-Release (${nextMajorDisplay}-alpha.0)`,
+        value: 'alpha-start',
+      });
+    }
+  }
+
   // First prompt for version type
   const { versionChoice } = await inquirer.prompt([
     {
@@ -238,12 +290,7 @@ async function selectVersionType(majorVersion, currentVersion) {
       name: 'versionChoice',
       message: 'Please select the version type:',
       default: 'patch',
-      choices: [
-        { name: `Patch (${nextPatchDisplay})`, value: 'patch' },
-        { name: `Minor (${nextMinorDisplay})`, value: 'minor' },
-        { name: `Major (${nextMajorDisplay})`, value: 'major' },
-        { name: 'Custom version', value: 'custom' },
-      ],
+      choices,
     },
   ]);
 
@@ -303,6 +350,46 @@ async function selectVersionType(majorVersion, currentVersion) {
         customVersion,
       };
     }
+    case 'alpha-start': {
+      const calculatedVersion = `${nextMajor}-alpha.0`;
+      console.log(`Selected: Pre-Release (${calculatedVersion})`);
+      return {
+        versionType: 'prerelease',
+        calculatedVersion,
+        prereleaseType: 'alpha',
+        prereleaseNumber: 0,
+      };
+    }
+    case 'alpha-increase': {
+      const calculatedVersion = `${currentMajorVersion}.0.0-alpha.${alphaVersion + 1}`;
+      console.log(`Selected: Increase Alpha (${calculatedVersion})`);
+      return {
+        versionType: 'prerelease',
+        calculatedVersion,
+        prereleaseType: 'alpha',
+        prereleaseNumber: alphaVersion + 1,
+      };
+    }
+    case 'beta-start': {
+      const calculatedVersion = `${currentMajorVersion}.0.0-beta.0`;
+      console.log(`Selected: Start Beta (${calculatedVersion})`);
+      return {
+        versionType: 'prerelease',
+        calculatedVersion,
+        prereleaseType: 'beta',
+        prereleaseNumber: 0,
+      };
+    }
+    case 'beta-increase': {
+      const calculatedVersion = `${currentMajorVersion}.0.0-beta.${betaVersion + 1}`;
+      console.log(`Selected: Increase Beta (${calculatedVersion})`);
+      return {
+        versionType: 'prerelease',
+        calculatedVersion,
+        prereleaseType: 'beta',
+        prereleaseNumber: betaVersion + 1,
+      };
+    }
     default:
       // This shouldn't happen with inquirer's list type
       throw new Error(`Unexpected version choice: ${versionChoice}`);
@@ -311,13 +398,22 @@ async function selectVersionType(majorVersion, currentVersion) {
 
 /**
  * Calculate the new version based on the selected version type
- * @param {string} versionType - The selected version type (patch, minor, major, or custom)
+ * @param {string} versionType - The selected version type (patch, minor, major, prerelease, or custom)
  * @param {string} currentVersion - The current version from package.json
  * @param {string} calculatedVersion - The calculated version from git tags
  * @param {string} customVersion - The custom version entered by the user
+ * @param {string} prereleaseType - The type of prerelease (alpha or beta)
+ * @param {number} prereleaseNumber - The prerelease version number
  * @returns {string} The new version
  */
-function calculateNewVersion(versionType, currentVersion, calculatedVersion, customVersion) {
+function calculateNewVersion(
+  versionType,
+  currentVersion,
+  calculatedVersion,
+  customVersion,
+  prereleaseType,
+  prereleaseNumber,
+) {
   if (customVersion) {
     return customVersion;
   }
@@ -339,6 +435,15 @@ function calculateNewVersion(versionType, currentVersion, calculatedVersion, cus
 
   if (versionType === 'major') {
     return `${major + 1}.0.0`;
+  }
+
+  if (versionType === 'prerelease') {
+    if (prereleaseType === 'alpha') {
+      return `${major + 1}.0.0-alpha.${prereleaseNumber}`;
+    }
+    if (prereleaseType === 'beta') {
+      return `${major}.0.0-beta.${prereleaseNumber}`;
+    }
   }
 
   return currentVersion;
@@ -671,11 +776,16 @@ async function main() {
     const majorVersion = await selectMajorVersion(currentVersion);
 
     // If no arguments provided, use interactive menu
+    let prereleaseType = '';
+    let prereleaseNumber = 0;
+
     if (!versionType && !customVersion) {
       const result = await selectVersionType(majorVersion, currentVersion);
       versionType = result.versionType;
       calculatedVersion = result.calculatedVersion;
       customVersion = result.customVersion;
+      prereleaseType = result.prereleaseType;
+      prereleaseNumber = result.prereleaseNumber;
     } else {
       // Command-line arguments provided, calculate versions from tags
       const { success, nextPatch, nextMinor, nextMajor } =
@@ -702,6 +812,8 @@ async function main() {
       currentVersion,
       calculatedVersion,
       customVersion,
+      prereleaseType,
+      prereleaseNumber,
     );
     console.log(`New version: ${newVersion}`);
 
