@@ -1,44 +1,9 @@
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-
-const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
-const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
-
-export const alias = [
-  // Generates resolver aliases for all packages and their plans.
-  ...[
-    { lib: 'x-charts', plans: ['pro'] },
-    { lib: 'x-date-pickers', plans: ['pro'] },
-    { lib: 'x-tree-view', plans: ['pro'] },
-    { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
-    { lib: 'x-scheduler' },
-    { lib: 'x-internals' },
-    { lib: 'x-license' },
-    { lib: 'x-telemetry' },
-  ].flatMap((v) => {
-    return [
-      {
-        find: `@mui/${v.lib}`,
-        replacement: resolve(WORKSPACE_ROOT, `./packages/${v.lib}/src`),
-      },
-      ...(v.plans ?? []).map((plan) => ({
-        find: `@mui/${v.lib}-${plan}`,
-        replacement: resolve(WORKSPACE_ROOT, `./packages/${v.lib}-${plan}/src`),
-      })),
-    ];
-  }),
-  {
-    find: 'test/utils',
-    replacement: new URL('./test/utils', import.meta.url).pathname,
-  },
-];
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  // If enabling babel plugins, ensure the tests in CI are stable
-  // https://github.com/mui/mui-x/pull/18341
-  plugins: [react()],
+  plugins: [react(), tsconfigPaths()],
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
@@ -47,9 +12,6 @@ export default defineConfig({
   esbuild: {
     minifyIdentifiers: false,
     keepNames: true,
-  },
-  resolve: {
-    alias,
   },
   test: {
     globals: true,
