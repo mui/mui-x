@@ -9,6 +9,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "incremental": true,
+    "jsx": "preserve",
     "types": ["@mui/internal-test-utils/initMatchers", "chai-dom", "mocha"]
   },
   "include": ["next-env.d.ts", "next.config.mjs", "docs-env.d.ts", "src", "pages/**/*.ts*", "data"],
