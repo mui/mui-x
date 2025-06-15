@@ -530,7 +530,7 @@ export const useGridFilter = (
     const filterModel = gridFilterModelSelector(apiRef);
     if (filterModel.quickFilterValues && shouldQuickFilterExcludeHiddenColumns(filterModel)) {
       // re-apply filters because the quick filter results may have changed
-      apiRef.current.unstable_applyFilters();
+      updateFilteredRows();
     }
   });
 
@@ -538,7 +538,7 @@ export const useGridFilter = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    apiRef.current.unstable_applyFilters();
+    updateFilteredRows();
   });
 
   /**

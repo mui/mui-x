@@ -16,6 +16,7 @@ import type { GridAggregationModel } from '../aggregation';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
+import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
 
 const columnGroupIdSeparator = '>->';
 
@@ -190,10 +191,12 @@ export const getPivotedData = ({
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
 
-      visibleColumns.forEach(({ field: colGroupField }, depth) => {
+      for (let j = 0; j < visibleColumns.length; j += 1) {
+        const { field: colGroupField } = visibleColumns[j];
+        const depth = j;
         const column = initialColumns.get(colGroupField);
         if (!column) {
-          return;
+          continue;
         }
         let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
         if (column.type === 'singleSelect') {
@@ -236,7 +239,7 @@ export const getPivotedData = ({
             newRow[valueKey] = apiRef.current.getRowValue(row, originalColumn);
           });
         }
-      });
+      }
 
       newRows.push(newRow);
     }
@@ -311,7 +314,7 @@ export const getPivotedData = ({
     columns: pivotColumns,
     rowGroupingModel: visibleRows.map((row) => row.field),
     aggregationModel,
-    getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
+    getAggregationPosition: defaultGetAggregationPosition,
     columnVisibilityModel,
     columnGroupingModel,
     groupingColDef: {

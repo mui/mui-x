@@ -104,7 +104,12 @@ export const useGridPivoting = (
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
   const nonPivotDataRef = React.useRef<
-    { rows: GridRowModel[]; columns: Map<string, GridColDef> } | undefined
+    | {
+        rows: GridRowModel[];
+        columns: Map<string, GridColDef>;
+        originalRowsProp: readonly GridRowModel[];
+      }
+    | undefined
   >(undefined);
 
   const isPivotingAvailable = isPivotingAvailableFn(props);
@@ -115,14 +120,6 @@ export const useGridPivoting = (
     propOnChange: props.onPivotModelChange,
     stateSelector: gridPivotModelSelector,
     changeEvent: 'pivotModelChange',
-  });
-
-  apiRef.current.registerControlState({
-    stateId: 'pivotMode',
-    propModel: props.pivotActive,
-    propOnChange: props.onPivotActiveChange,
-    stateSelector: gridPivotActiveSelector,
-    changeEvent: 'pivotModeChange',
   });
 
   apiRef.current.registerControlState({
@@ -148,8 +145,8 @@ export const useGridPivoting = (
       apiRef.current.getLocaleText,
     );
 
-    return { rows, columns: initialColumns };
-  }, [apiRef, props.getPivotDerivedColumns, originalColumnsProp]);
+    return { rows, columns: initialColumns, originalRowsProp };
+  }, [apiRef, props.getPivotDerivedColumns, originalColumnsProp, originalRowsProp]);
 
   const computePivotingState = React.useCallback(
     ({ active, model: pivotModel }: Pick<GridPivotingState, 'active' | 'model'>) => {
@@ -213,13 +210,16 @@ export const useGridPivoting = (
 
   useEnhancedEffect(() => {
     if (!isPivotingAvailable || !isPivotActive) {
+      if (nonPivotDataRef.current) {
+        // Prevent rows from being resynced from the original rows prop
+        apiRef.current.caches.rows.rowsBeforePartialUpdates =
+          nonPivotDataRef.current.originalRowsProp;
+        apiRef.current.setRows(nonPivotDataRef.current!.rows);
+        nonPivotDataRef.current = undefined;
+      }
       if (exportedStateRef.current) {
         apiRef.current.restoreState(exportedStateRef.current);
         exportedStateRef.current = null;
-      }
-      if (nonPivotDataRef.current) {
-        apiRef.current.setRows(nonPivotDataRef.current.rows);
-        nonPivotDataRef.current = undefined;
       }
     }
   }, [isPivotActive, apiRef, isPivotingAvailable]);
@@ -323,7 +323,6 @@ export const useGridPivoting = (
       if (!isPivotingAvailable) {
         return;
       }
-      apiRef.current.selectRows([], false, true);
       apiRef.current.setState((state) => {
         const newPivotMode =
           typeof callback === 'function' ? callback(state.pivoting?.active) : callback;
@@ -349,8 +348,11 @@ export const useGridPivoting = (
           ...state,
           pivoting: newPivotingState,
         };
+
+        apiRef.current.publishEvent('pivotModeChange', newPivotMode);
         return newState;
       });
+      apiRef.current.selectRows([], false, true);
     },
     [apiRef, computePivotingState, getInitialData, isPivotingAvailable],
   );
@@ -472,6 +474,9 @@ export const useGridPivoting = (
 
   useEnhancedEffect(() => {
     apiRef.current.updateNonPivotRows(originalRowsProp, false);
+    if (nonPivotDataRef.current) {
+      nonPivotDataRef.current.originalRowsProp = originalRowsProp;
+    }
   }, [originalRowsProp, apiRef]);
 
   useEnhancedEffect(() => {
