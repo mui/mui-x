@@ -199,19 +199,22 @@ export const getPivotedData = ({
           continue;
         }
         let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
+        if (column.type !== 'number') {
+          colValue = String(colValue);
+        }
         if (column.type === 'singleSelect') {
           const singleSelectColumn = column as GridSingleSelectColDef;
           if (singleSelectColumn.getOptionLabel) {
             colValue = singleSelectColumn.getOptionLabel(colValue);
           }
         }
-        columnGroupPath.push(String(colValue));
+        columnGroupPath.push(colValue);
         const groupId = columnGroupPath.join(columnGroupIdSeparator);
 
         if (!columnGroupingModelLookup.has(groupId)) {
           const columnGroup: GridColumnGroupingModel[number] = {
             groupId,
-            headerName: String(colValue),
+            headerName: colValue,
             children: [],
           };
           columnGroupingModelLookup.set(groupId, columnGroup);
