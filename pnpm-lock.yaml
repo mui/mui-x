@@ -474,8 +474,8 @@ importers:
         specifier: ^2.31.0
         version: 2.31.0(@typescript-eslint/parser@8.34.0(eslint@9.28.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.28.0)
       eslint-plugin-jsdoc:
-        specifier: ^50.7.1
-        version: 50.7.1(eslint@9.28.0)
+        specifier: ^50.8.0
+        version: 50.8.0(eslint@9.28.0)
       eslint-plugin-jsx-a11y:
         specifier: ^6.10.2
         version: 6.10.2(eslint@9.28.0)
@@ -498,8 +498,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(eslint@9.28.0)
       eslint-plugin-testing-library:
-        specifier: ^7.4.0
-        version: 7.4.0(eslint@9.28.0)(typescript@5.8.3)
+        specifier: ^7.5.3
+        version: 7.5.3(eslint@9.28.0)(typescript@5.8.3)
       fast-glob:
         specifier: 'catalog:'
         version: 3.3.3
@@ -7544,8 +7544,8 @@ packages:
       '@typescript-eslint/parser':
         optional: true
 
-  eslint-plugin-jsdoc@50.7.1:
-    resolution: {integrity: sha512-XBnVA5g2kUVokTNUiE1McEPse5n9/mNUmuJcx52psT6zBs2eVcXSmQBvjfa7NZdfLVSy3u1pEDDUxoxpwy89WA==}
+  eslint-plugin-jsdoc@50.8.0:
+    resolution: {integrity: sha512-UyGb5755LMFWPrZTEqqvTJ3urLz1iqj+bYOHFNag+sw3NvaMWP9K2z+uIn37XfNALmQLQyrBlJ5mkiVPL7ADEg==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
@@ -7594,8 +7594,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-plugin-testing-library@7.4.0:
-    resolution: {integrity: sha512-rmryGUowFYlljNrN/sPjSfp4uZr6gIsiTHUeFg45xNwhWzgr+izRzOanrvd28XVlVmXlBpZdJGu+aHFUBBQatA==}
+  eslint-plugin-testing-library@7.5.3:
+    resolution: {integrity: sha512-sZk5hIrx0p1ehvdS2qHefKwXHiEysiQN+FMGCzES6xRNUgwI3q4KdWMeAwpPDP9u0RDkNzJpebRUnNch1sJh+A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0, pnpm: ^9.14.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
@@ -18877,7 +18877,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jsdoc@50.7.1(eslint@9.28.0):
+  eslint-plugin-jsdoc@50.8.0(eslint@9.28.0):
     dependencies:
       '@es-joy/jsdoccomment': 0.50.2
       are-docs-informative: 0.0.2
@@ -18967,7 +18967,7 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-testing-library@7.4.0(eslint@9.28.0)(typescript@5.8.3):
+  eslint-plugin-testing-library@7.5.3(eslint@9.28.0)(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/scope-manager': 8.34.0
       '@typescript-eslint/utils': 8.34.0(eslint@9.28.0)(typescript@5.8.3)
