@@ -1,4 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridInternationalization } from '../utils/getGridInternationalization';
+
+const internationalization = getGridInternationalization('en-US');
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
@@ -296,4 +299,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+
+  // Internationalization
+  ...internationalization,
 };

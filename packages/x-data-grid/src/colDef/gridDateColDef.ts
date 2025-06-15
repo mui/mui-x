@@ -33,7 +33,7 @@ export const gridDateFormatter: GridValueFormatter = (value: Date, row, column, 
   }
   const rowId = gridRowIdSelector(apiRef, row);
   throwIfNotDateObject({ value, columnType: 'date', rowId, field: column.field });
-  return value.toLocaleDateString();
+  return apiRef.current.getLocaleText('intlDateFormat')(value);
 };
 
 export const gridDateTimeFormatter: GridValueFormatter = (
@@ -47,7 +47,7 @@ export const gridDateTimeFormatter: GridValueFormatter = (
   }
   const rowId = gridRowIdSelector(apiRef, row);
   throwIfNotDateObject({ value, columnType: 'dateTime', rowId, field: column.field });
-  return value.toLocaleString();
+  return apiRef.current.getLocaleText('intlDateTimeFormat')(value);
 };
 
 export const GRID_DATE_COL_DEF: GridColTypeDef<Date, string> = {

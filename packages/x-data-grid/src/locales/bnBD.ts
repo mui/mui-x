@@ -1,5 +1,8 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import {getGridInternationalization} from '../utils/getGridInternationalization';
+
+const internationalization = getGridInternationalization('en-US');
 
 const bnBDGrid: Partial<GridLocaleText> = {
   // Root
@@ -297,6 +300,9 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+
+  // Internationalization
+  ...internationalization,
 };
 
 export const bnBD: Localization = getGridLocalization(bnBDGrid);
