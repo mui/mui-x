@@ -61,7 +61,7 @@
     "@floating-ui/react": "^0.27.12",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "lucide-react": "^0.513.0",
+    "lucide-react": "^0.515.0",
     "prop-types": "catalog:"
   },
   "peerDependencies": {
