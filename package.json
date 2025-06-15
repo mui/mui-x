@@ -110,7 +110,7 @@
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^17.0.4",
     "@types/yargs": "^17.0.33",
-    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/browser": "catalog:",
