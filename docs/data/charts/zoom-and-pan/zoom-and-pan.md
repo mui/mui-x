@@ -86,6 +86,12 @@ When formatting the zoom slider tooltip, the `valueFormatter` is called with `zo
 
 {{"demo": "ZoomSliderTooltip.js"}}
 
+### Limits
+
+The zoom slider uses the same limits as the zooming options. You can set the `minStart`, `maxEnd`, `minSpan`, and `maxSpan` properties on the axis config to restrict the zoom slider range.
+
+The zoom slider does not display values outside the range delimited by `minStart` and `maxEnd`.
+
 ### Composition
 
 When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.
