@@ -33,6 +33,8 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
+import { gridChartsConfigurationPanelOpenSelector } from '../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
+import { GridChartsConfigurationPanel } from '../components/chartsConfigurationPanel/GridChartsConfigurationPanel';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -70,17 +72,31 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
+  const chartsConfigurationOpen = useGridSelector(
+    privateApiRef,
+    gridChartsConfigurationPanelOpenSelector,
+  );
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
 
-  const sidePanel =
+  // TODO: side panel sould work the same as the preferences panel (swap different panels automatically)
+  const pivotingSidePanel =
     isPivotingAvailable(props) && pivotSettingsOpen ? (
       <Sidebar>
         <GridPivotPanel />
       </Sidebar>
     ) : null;
+
+  const chartsConfigurationSidePanel =
+    props.chartsIntegration && chartsConfigurationOpen ? (
+      <Sidebar>
+        <GridChartsConfigurationPanel />
+      </Sidebar>
+    ) : null;
+
+  const sidePanel = pivotingSidePanel || chartsConfigurationSidePanel;
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -225,6 +241,16 @@ DataGridPremiumRaw.propTypes = {
    * Set the cell selection model of the grid.
    */
   cellSelectionModel: PropTypes.object,
+  /**
+   * If `true`, the charts configuration side panel is visible.
+   * @default false
+   */
+  chartsConfigurationPanelOpen: PropTypes.bool,
+  /**
+   * If `true`, the charts integration feature is enabled.
+   * @default false
+   */
+  chartsIntegration: PropTypes.bool,
   /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
@@ -760,6 +786,11 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellSelectionModelChange: PropTypes.func,
+  /**
+   * Callback fired when the charts configuration side panel open state changes.
+   * @param {boolean} chartsConfigurationPanelOpen Whether the charts configuration side panel is visible.
+   */
+  onChartsConfigurationPanelOpenChange: PropTypes.func,
   /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.
