@@ -34,8 +34,13 @@ export const validateDate: Validator<PickerValue, DateValidationError, ValidateD
   props,
   value,
   timezone,
+  forcedError,
   adapter,
 }): DateValidationError => {
+  if (forcedError != null) {
+    return forcedError;
+  }
+
   if (value === null) {
     return null;
   }

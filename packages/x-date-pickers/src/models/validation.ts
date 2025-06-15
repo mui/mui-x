@@ -3,7 +3,12 @@ import type { PickerValidValue } from '../internals/models';
 /**
  * Validation error types applicable to both date and time validation
  */
-type CommonDateTimeValidationError = 'invalidDate' | 'disableFuture' | 'disablePast' | null;
+type CommonDateTimeValidationError =
+  | 'invalidDate'
+  | 'partiallyFilledDate'
+  | 'disableFuture'
+  | 'disablePast'
+  | null;
 
 export type DateValidationError =
   | CommonDateTimeValidationError

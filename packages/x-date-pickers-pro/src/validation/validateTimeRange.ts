@@ -1,5 +1,6 @@
 import type { MakeRequired } from '@mui/x-internals/types';
 import { validateTime, Validator } from '@mui/x-date-pickers/validation';
+import { TimeValidationError } from '@mui/x-date-pickers/models';
 import {
   TimeValidationProps,
   BaseTimeValidationProps,
@@ -31,26 +32,28 @@ export const validateTimeRange: Validator<
   PickerRangeValue,
   TimeRangeValidationError,
   ValidateTimeRangeProps
-> = ({ adapter, value, timezone, props }) => {
+> = ({ adapter, value, timezone, forcedError, props }) => {
   const [start, end] = value;
 
-  const dateTimeValidations: TimeRangeValidationError = [
+  const timeRangeValidations: TimeRangeValidationError = [
     validateTime({
       adapter,
       value: start,
       timezone,
+      forcedError: forcedError[0] as TimeValidationError,
       props,
     }),
     validateTime({
       adapter,
       value: end,
       timezone,
+      forcedError: forcedError[1] as TimeValidationError,
       props,
     }),
   ];
 
-  if (dateTimeValidations[0] || dateTimeValidations[1]) {
-    return dateTimeValidations;
+  if (timeRangeValidations[0] || timeRangeValidations[1]) {
+    return timeRangeValidations;
   }
 
   // for partial input

@@ -187,7 +187,7 @@ export interface UsePickerReturnValue<TValue extends PickerValidValue> {
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
-export interface UsePickerState<TValue extends PickerValidValue> {
+export interface UsePickerState<TValue extends PickerValidValue, TError> {
   /**
    * Whether the Picker is open.
    */
@@ -213,6 +213,12 @@ export interface UsePickerState<TValue extends PickerValidValue> {
    * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dismissing the Picker should not.
    */
   hasBeenModifiedSinceMount: boolean;
+  /**
+   * The error to force whatever the validation returns.
+   * This is useful when the UI you are validating has several elements to fill (for example a field UI with one section for the year, one for the month, etc.).
+   * Until all the elements are filled, the value remains `null`, but the validation should treat it as an invalid value.
+   */
+  forcedError: TError | undefined;
 }
 
 export interface PickerViewsRendererBaseExternalProps

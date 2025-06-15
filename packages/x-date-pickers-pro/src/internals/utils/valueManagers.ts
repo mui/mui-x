@@ -75,7 +75,7 @@ export const getRangeFieldValueManager = ({
   dateSeparator = '–',
 }: {
   dateSeparator: string | undefined;
-}): FieldValueManager<PickerRangeValue> => ({
+}): FieldValueManager<PickerRangeValue, any> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = utils.isValid(value[0]);
     const shouldKeepEndDate = utils.isValid(value[1]);
@@ -170,6 +170,36 @@ export const getRangeFieldValueManager = ({
     return [
       ...dateRangeSections.startDate,
       ...dateRangeSections.endDate.map((section) => ({ ...section, value: '' })),
+    ];
+  },
+  getPartiallyFilledError: (sections) => {
+    let hasStartDateEmptySection = false;
+    let hasEndDateEmptySection = false;
+    let hasStartDateFilledSection = false;
+    let hasEndDateFilledSection = false;
+
+    for (const section of sections) {
+      if (section.dateName === 'start') {
+        if (section.value === '') {
+          hasStartDateEmptySection = true;
+        } else {
+          hasStartDateFilledSection = true;
+        }
+      } else if (section.dateName === 'end') {
+        if (section.value === '') {
+          hasEndDateEmptySection = true;
+        } else {
+          hasEndDateFilledSection = true;
+        }
+      }
+    }
+
+    const isStartDatePartiallyFilled = hasStartDateEmptySection && hasStartDateFilledSection;
+    const isEndDatePartiallyFilled = hasEndDateEmptySection && hasEndDateFilledSection;
+
+    return [
+      isStartDatePartiallyFilled ? 'partiallyFilledDate' : null,
+      isEndDatePartiallyFilled ? 'partiallyFilledDate' : null,
     ];
   },
 });
