@@ -48,6 +48,11 @@ export default chartsApiPages;
       rootPath: path.join(process.cwd(), 'packages/x-charts-pro'),
       entryPointPath: 'src/index.ts',
     },
+    {
+      name: 'charts-premium',
+      rootPath: path.join(process.cwd(), 'packages/x-charts-premium'),
+      entryPointPath: 'src/index.ts',
+    },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/charts'),
   getComponentInfo,
