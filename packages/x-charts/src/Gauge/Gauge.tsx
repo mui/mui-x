@@ -126,6 +126,7 @@ Gauge.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  tabIndex: PropTypes.number,
   text: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   title: PropTypes.string,
   /**

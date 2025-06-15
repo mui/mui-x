@@ -35,6 +35,7 @@ export interface ChartsLegendProps {
   classes?: Partial<ChartsLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  tabIndex?: number;
 }
 
 const RootElement = styled('ul', {
