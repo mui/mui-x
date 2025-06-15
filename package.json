@@ -115,7 +115,7 @@
     "@vitejs/plugin-react": "catalog:",
     "@vitest/browser": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "@vvago/vale": "^3.11.2",
+    "@vvago/vale": "^3.12.0",
     "autoprefixer": "catalog:",
     "axe-core": "4.10.3",
     "babel-loader": "^10.0.0",
