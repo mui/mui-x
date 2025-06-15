@@ -585,8 +585,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       string-replace-loader:
-        specifier: ^3.1.0
-        version: 3.1.0(webpack@5.99.9)
+        specifier: ^3.2.0
+        version: 3.2.0(webpack@5.99.9)
       terser-webpack-plugin:
         specifier: ^5.3.14
         version: 5.3.14(@swc/core@1.12.0)(esbuild@0.25.5)(webpack@5.99.9)
@@ -11219,8 +11219,9 @@ packages:
   strict-event-emitter@0.5.1:
     resolution: {integrity: sha512-vMgjE/GGEPEFnhFub6pa4FmJBRBVOLpIII2hvCZ8Kzb7K0hlHo7mQv6xYrBvCL2LtAIBwFUK8wvuJgTVSQ5MFQ==}
 
-  string-replace-loader@3.1.0:
-    resolution: {integrity: sha512-5AOMUZeX5HE/ylKDnEa/KKBqvlnFmRZudSOjVJHxhoJg9QYTwl1rECx7SLR8BBH7tfxb4Rp7EM2XVfQFxIhsbQ==}
+  string-replace-loader@3.2.0:
+    resolution: {integrity: sha512-q7+F4DC6MAKkszF3ZQEuZ3dDH25wXPxFA0maTLk3TOTAYPLDgwqCeCKIvOd8xJhYYYl+EXusYRCyKIJliT/olg==}
+    engines: {node: '>=4'}
     peerDependencies:
       webpack: ^5
 
@@ -23268,10 +23269,9 @@ snapshots:
   strict-event-emitter@0.5.1:
     optional: true
 
-  string-replace-loader@3.1.0(webpack@5.99.9):
+  string-replace-loader@3.2.0(webpack@5.99.9):
     dependencies:
-      loader-utils: 2.0.4
-      schema-utils: 3.3.0
+      schema-utils: 4.3.2
       webpack: 5.99.9(@swc/core@1.12.0)(esbuild@0.25.5)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))
 
   string-width@4.2.3:
