@@ -164,6 +164,8 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'PieSeriesType',
       'ScatterSeriesType',
       'AxisConfig',
+      'ChartImageExportOptions',
+      'ChartPrintExportOptions',
     ],
   },
 ];

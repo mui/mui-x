@@ -1,0 +1,6 @@
+{
+  "interfaceDescription": "The options to apply on the Print export.",
+  "propertiesDescriptions": {
+    "fileName": { "description": "The name of the file without the extension." }
+  }
+}
