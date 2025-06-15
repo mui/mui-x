@@ -31,10 +31,7 @@ import {
 
 const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
   '&': {
-    fill:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[500]
-        : (theme.vars || theme).palette.grey[600],
+    fill: theme.palette.mode === 'dark' ? '#5a5d79' : '#343646',
     cursor: 'grab',
   },
 }));
@@ -245,8 +242,11 @@ export function ChartAxisZoomSliderActiveTrack({
       endThumbX = drawingArea.width - endThumbX;
     }
 
-    startThumbX -= previewThumbWidth / 2;
-    endThumbX -= previewThumbWidth / 2;
+    startThumbX += 2;
+    endThumbX -= previewThumbWidth + 2;
+
+    startThumbY += 2;
+    endThumbY += 2;
   } else {
     previewX = 0;
     previewY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
@@ -265,8 +265,11 @@ export function ChartAxisZoomSliderActiveTrack({
       endThumbY = drawingArea.height - endThumbY;
     }
 
-    startThumbY -= previewThumbHeight / 2;
-    endThumbY -= previewThumbHeight / 2;
+    startThumbY -= previewThumbHeight + 2;
+    endThumbY += 2;
+
+    startThumbX += 2;
+    endThumbX += 2;
   }
 
   const previewOffset = (ZOOM_SLIDER_THUMB_HEIGHT - ZOOM_SLIDER_ACTIVE_TRACK_SIZE) / 2;
@@ -275,8 +278,10 @@ export function ChartAxisZoomSliderActiveTrack({
     <React.Fragment>
       <ZoomSliderActiveTrackRect
         ref={activePreviewRectRef}
-        x={previewX + (axisDirection === 'x' ? 0 : previewOffset)}
-        y={previewY + (axisDirection === 'x' ? previewOffset : 0)}
+        rx={3}
+        ry={3}
+        x={previewX}
+        y={previewY}
         width={previewWidth}
         height={previewHeight}
         onPointerEnter={onPointerEnter}
