@@ -49,6 +49,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onAxisInteraction": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newAxisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["newAxisItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
