@@ -3,14 +3,27 @@ import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
-import { createSelector } from '../../utils/selectors';
-import { computeAxisValue } from './computeAxisValue';
-import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { ChartsSelector, createSelector } from '../../utils/selectors';
+import { computeAxisValue, ComputeResult } from './computeAxisValue';
+import {
+  DefaultizedZoomOptions,
+  ExtremumFilter,
+  UseChartCartesianAxisSignature,
+} from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import { AxisId } from '../../../../models/axis';
+import {
+  AxisConfig,
+  AxisId,
+  AxisScaleConfig,
+  ChartsAxisProps,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  DefaultedXAxis,
+  DefaultedYAxis,
+} from '../../../../models/axis';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -41,148 +54,162 @@ export const selectorChartZoomMap = createSelector(
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartXZoomOptionsLookup = createSelector(
-  selectorChartRawXAxis,
-  createZoomLookup('x'),
-);
-
-const selectorChartYZoomOptionsLookup = createSelector(
-  selectorChartRawYAxis,
-  createZoomLookup('y'),
-);
-
-export const selectorChartZoomOptionsLookup = createSelector(
-  [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
-  (xLookup, yLookup) => ({ ...xLookup, ...yLookup }),
-);
+export const selectorChartZoomOptionsLookup: ChartsSelector<
+  ChartState<any>,
+  any,
+  Record<AxisId, DefaultizedZoomOptions>
+> = createSelector([selectorChartRawXAxis, selectorChartRawYAxis], (xAxis, yAxis) => ({
+  ...createZoomLookup('x')(xAxis),
+  ...createZoomLookup('y')(yAxis),
+}));
 
 export const selectorChartAxisZoomOptionsLookup = createSelector(
-  [
-    selectorChartXZoomOptionsLookup,
-    selectorChartYZoomOptionsLookup,
-    (state, axisId: AxisId) => axisId,
-  ],
-  (xLookup, yLookup, axisId) => xLookup[axisId] ?? yLookup[axisId],
+  [selectorChartZoomOptionsLookup, (_, axisId: AxisId) => axisId],
+  (axisLookup, axisId) => axisLookup[axisId],
 );
 
-const selectorChartXFilter = createSelector(
-  [
-    selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
-    selectorChartSeriesConfig,
-    selectorChartSeriesProcessed,
-  ],
-  (zoomMap, zoomOptions, seriesConfig, formattedSeries) =>
-    zoomMap &&
-    zoomOptions &&
-    createAxisFilterMapper({
-      zoomMap,
-      zoomOptions,
-      seriesConfig,
-      formattedSeries,
-      direction: 'x',
-    }),
-);
+type AxisFilterMapper<Axis extends ChartsAxisProps> =
+  | ((
+      axis: AxisConfig<keyof AxisScaleConfig, any, Axis>,
+      axisIndex: number,
+    ) => ExtremumFilter | null)
+  | undefined;
+const getZoomAxisFilters = (
+  xMapper: AxisFilterMapper<ChartsXAxisProps>,
+  yMapper: AxisFilterMapper<ChartsYAxisProps>,
+  xAxis: DefaultedXAxis[] | undefined,
+  yAxis: DefaultedYAxis[] | undefined,
+) => {
+  if (xMapper === undefined || yMapper === undefined) {
+    // Early return if there is no zoom.
+    return undefined;
+  }
 
-const selectorChartYFilter = createSelector(
-  [
-    selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
-    selectorChartSeriesConfig,
-    selectorChartSeriesProcessed,
-  ],
-  (zoomMap, zoomOptions, seriesConfig, formattedSeries) =>
-    zoomMap &&
-    zoomOptions &&
-    createAxisFilterMapper({
-      zoomMap,
-      zoomOptions,
-      seriesConfig,
-      formattedSeries,
-      direction: 'y',
-    }),
-);
-
-const selectorChartZoomAxisFilters = createSelector(
-  [selectorChartXFilter, selectorChartYFilter, selectorChartRawXAxis, selectorChartRawYAxis],
-  (xMapper, yMapper, xAxis, yAxis) => {
-    if (xMapper === undefined || yMapper === undefined) {
-      // Early return if there is no zoom.
-      return undefined;
+  const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
+    const filter = xMapper(axis, index);
+    if (filter !== null) {
+      acc[axis.id] = filter;
     }
+    return acc;
+  }, {});
 
-    const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = xMapper(axis, index);
-      if (filter !== null) {
-        acc[axis.id] = filter;
-      }
-      return acc;
-    }, {});
-
-    const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = yMapper(axis, index);
-      if (filter !== null) {
-        acc[axis.id] = filter;
-      }
-      return acc;
-    }, {} as ZoomAxisFilters);
-
-    if (Object.keys(xFilters ?? {}).length === 0 && Object.keys(yFilters ?? {}).length === 0) {
-      return undefined;
+  const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
+    const filter = yMapper(axis, index);
+    if (filter !== null) {
+      acc[axis.id] = filter;
     }
+    return acc;
+  }, {} as ZoomAxisFilters);
 
-    return createGetAxisFilters({ ...xFilters, ...yFilters });
-  },
-);
+  if (Object.keys(xFilters ?? {}).length === 0 && Object.keys(yFilters ?? {}).length === 0) {
+    return undefined;
+  }
+
+  return createGetAxisFilters({ ...xFilters, ...yFilters });
+};
 
 /**
  * The only interesting selectors that merge axis data and zoom if provided.
  */
 
-export const selectorChartXAxis = createSelector(
+export const selectorChartXAxis: ChartsSelector<
+  ChartState<any>,
+  any,
+  ComputeResult<ChartsXAxisProps>
+> = createSelector(
   [
     selectorChartRawXAxis,
-    selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
-  ],
-  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
-    computeAxisValue({
-      drawingArea,
-      formattedSeries,
-      axis,
-      seriesConfig,
-      axisDirection: 'x',
-      zoomMap,
-      zoomOptions,
-      getFilters,
-    }),
-);
-
-export const selectorChartYAxis = createSelector(
-  [
     selectorChartRawYAxis,
     selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
   ],
-  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
-    computeAxisValue({
+  (xAxis, yAxis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions) => {
+    const xAxisFilter =
+      zoomMap &&
+      zoomOptions &&
+      createAxisFilterMapper({
+        zoomMap,
+        zoomOptions,
+        seriesConfig,
+        formattedSeries,
+        direction: 'x',
+      });
+    const yAxisFilter =
+      zoomMap &&
+      zoomOptions &&
+      createAxisFilterMapper({
+        zoomMap,
+        zoomOptions,
+        seriesConfig,
+        formattedSeries,
+        direction: 'y',
+      });
+
+    const getFilters = getZoomAxisFilters(xAxisFilter, yAxisFilter, xAxis, yAxis);
+    return computeAxisValue({
       drawingArea,
       formattedSeries,
-      axis,
+      axis: xAxis,
+      seriesConfig,
+      axisDirection: 'x',
+      zoomMap,
+      zoomOptions,
+      getFilters,
+    });
+  },
+);
+
+export const selectorChartYAxis: ChartsSelector<
+  ChartState<any>,
+  any,
+  ComputeResult<ChartsYAxisProps>
+> = createSelector(
+  [
+    selectorChartRawXAxis,
+    selectorChartRawYAxis,
+    selectorChartDrawingArea,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorChartZoomMap,
+    selectorChartZoomOptionsLookup,
+  ],
+  (xAxis, yAxis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions) => {
+    const xAxisFilter =
+      zoomMap &&
+      zoomOptions &&
+      createAxisFilterMapper({
+        zoomMap,
+        zoomOptions,
+        seriesConfig,
+        formattedSeries,
+        direction: 'x',
+      });
+    const yAxisFilter =
+      zoomMap &&
+      zoomOptions &&
+      createAxisFilterMapper({
+        zoomMap,
+        zoomOptions,
+        seriesConfig,
+        formattedSeries,
+        direction: 'y',
+      });
+
+    const getFilters = getZoomAxisFilters(xAxisFilter, yAxisFilter, xAxis, yAxis);
+    return computeAxisValue({
+      drawingArea,
+      formattedSeries,
+      axis: yAxis,
       seriesConfig,
       axisDirection: 'y',
       zoomMap,
       zoomOptions,
       getFilters,
-    }),
+    });
+  },
 );
 
 export const selectorChartAxis = createSelector(
