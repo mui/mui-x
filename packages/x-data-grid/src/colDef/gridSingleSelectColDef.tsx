@@ -62,10 +62,6 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
       }
       return false;
     });
-    if (valueOption) {
-      return value;
-    }
-    // do not paste the value if it is not in the valueOptions
-    return undefined;
+    return valueOption;
   },
 };
