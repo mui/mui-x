@@ -117,7 +117,8 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 
 With this feature, you would be able to use the `lazyLoading` flag in use cases that also involve tree data and/or row grouping.
 
-Meanwhile, you can use the row pinning feature to implement nested lazy loading in the userland with a few limitations. Check the [Recipes](/x/react-data-grid/server-side-data/recipes/) section for more details.
+Before it is implemented internally you can use the [row pinning](/x/react-data-grid/row-pinning/) feature to implement nested lazy loading with a few limitations.
+Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes/) section for a working example.
 
 ## Error handling
 
