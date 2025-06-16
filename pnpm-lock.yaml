@@ -112,13 +112,13 @@ catalogs:
       specifier: ^3.10.2
       version: 3.10.2
     '@vitest/browser':
-      specifier: ^3.2.2
+      specifier: ^3.2.3
       version: 3.2.3
     '@vitest/coverage-v8':
-      specifier: ^3.2.2
+      specifier: ^3.2.3
       version: 3.2.3
     '@vitest/ui':
-      specifier: ^3.2.2
+      specifier: ^3.2.3
       version: 3.2.3
     autoprefixer:
       specifier: ^10.4.21
