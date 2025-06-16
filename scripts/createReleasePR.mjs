@@ -31,7 +31,7 @@ import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
 import inquirer from 'inquirer';
-import { generateChangelog as generateChangelogFromModule } from './releaseChangelog.mjs';
+import { generateChangelog as generateChangelogFromModule } from './changelogUtils.mjs';
 
 // Create a custom Octokit class with retry functionality
 const MyOctokit = Octokit.plugin(retry);
@@ -340,12 +340,6 @@ async function selectVersionType(majorVersion, currentVersion) {
           name: 'customVersion',
           message: 'Enter custom version:',
           default: defaultCustomVersion,
-          validate: (input) => {
-            if (!/^\d+\.\d+\.\d+$/.test(input)) {
-              return 'Please enter a valid version number (e.g., 8.5.2)';
-            }
-            return true;
-          },
         },
       ]);
 
