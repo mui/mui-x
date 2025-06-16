@@ -22,12 +22,13 @@ export default mergeConfig(sharedConfig, {
               }
             : {}),
         },
-        {
-          browser: 'webkit',
-        },
-        {
-          browser: 'firefox',
-        },
+        // V8 Coverage in browser mode is not supported yet outside of chromium
+        // {
+        //   browser: 'webkit',
+        // },
+        // {
+        //   browser: 'firefox',
+        // },
       ],
     },
   },
