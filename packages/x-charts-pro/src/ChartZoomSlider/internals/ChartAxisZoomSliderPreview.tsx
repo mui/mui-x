@@ -31,27 +31,24 @@ export function ChartAxisZoomSliderPreview({
 }: ChartAxisZoomSliderPreviewProps) {
   return (
     <g {...props}>
-      <PreviewRectangles {...props} axisId={axisId} />
+      <PreviewRectangles {...props} axisId={axisId} axisDirection={axisDirection} />
       <rect {...props} fill="transparent" rx={4} ry={4} />
       <ChartAxisZoomSliderChartPreview axisId={axisId} {...props} />
     </g>
   );
 }
 
-function PreviewRectangles({
-  axisId,
-  x,
-  y,
-  height,
-  width,
-}: {
+function PreviewRectangles(props: {
   axisId: AxisId;
+  axisDirection: 'x' | 'y';
   x: number;
   y: number;
   height: number;
   width: number;
 }) {
+  const { axisId, axisDirection } = props;
   const store = useStore();
+
   const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
   const id = useId();
 
@@ -61,21 +58,36 @@ function PreviewRectangles({
 
   const maskId = `zoom-preview-mask-${axisId}-${id}`;
 
+  let x;
+  let y;
+  let width;
+  let height;
+
+  if (axisDirection === 'x') {
+    x = props.x + (zoomData.start / 100) * props.width;
+    y = props.y;
+    width = ((zoomData.end - zoomData.start) / 100) * props.width;
+    height = props.height;
+  } else {
+    x = props.x;
+    y = props.y + (1 - zoomData.end / 100) * props.height;
+    width = props.width;
+    height = ((zoomData.end - zoomData.start) / 100) * props.height;
+  }
+
   return (
     <React.Fragment>
       <mask id={maskId}>
-        <rect x={x} y={y} width={width} height={height} fill="white" />
-        <rect
-          x={x + (zoomData.start / 100) * width}
-          y={y}
-          width={((zoomData.end - zoomData.start) / 100) * width}
-          height={height}
-          fill="black"
-          rx={4}
-          ry={4}
-        />
+        <rect x={props.x} y={props.y} width={props.width} height={props.height} fill="white" />
+        <rect x={x} y={y} width={width} height={height} fill="black" rx={4} ry={4} />
       </mask>
-      <PreviewBackgroundRect x={x} y={y} width={width} height={height} mask={`url(#${maskId})`} />
+      <PreviewBackgroundRect
+        x={props.x}
+        y={props.y}
+        width={props.width}
+        height={props.height}
+        mask={`url(#${maskId})`}
+      />
     </React.Fragment>
   );
 }

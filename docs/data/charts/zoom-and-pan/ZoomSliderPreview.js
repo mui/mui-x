@@ -43,6 +43,7 @@ const settings = {
       width: 48,
       valueFormatter: (v) => percentageFormatter.format(v),
       min: 0,
+      zoom: { slider: { enabled: true, preview: true } },
     },
   ],
   series: [
