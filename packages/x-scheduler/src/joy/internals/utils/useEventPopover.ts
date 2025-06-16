@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarEvent } from '../models/events';
+import { CalendarEvent } from '../../models/events';
 
 export function useEventPopover() {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
