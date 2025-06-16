@@ -5,6 +5,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.5.3
+<!-- generated comparing v8.5.2..master -->
+_Jun 16, 2025_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community members for their valuable contributions:
+
+@alisasanib
+
+The following are all team members who have contributed to this release:
+
+@alexfauquette, @JCQuintas, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.5.3`
+
+- [DataGrid] Fix column menu scroll close (#18065) @alisasanib
+
+#### `@mui/x-data-grid-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@8.5.3`.
+
+#### `@mui/x-data-grid-premium@8.5.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@8.5.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.5.3`
+
+- [pickers] Add `inputSizeSmall` to classes interface (#18242) @sai6855
+
+#### `@mui/x-date-pickers-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@8.5.3`.
+
+### Charts
+
+#### `@mui/x-charts@8.5.3`
+
+- [charts] Fix `FunnelChart` label positioning with different curves (#18354) @JCQuintas
+- [charts] Make scatter chart use data attributes (#18048) @alexfauquette
+
+#### `@mui/x-charts-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@8.5.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.5.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@8.5.3`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.5.3`
+
+Internal changes.
+
+### Miscellaneous
+
+- chore(deps): bump @mui/monorepo digest to 29efc5b (#18369) @renovate[bot]
+- chore(deps): bump @types/node to ^22.15.31 (#18370) @renovate[bot]
+- chore(deps): bump @vvago/vale to ^3.12.0 (#18377) @renovate[bot]
+- chore(deps): bump eslint plugins (#18378) @renovate[bot]
+- chore(deps): bump eslint to ^9.29.0 (#18379) @renovate[bot]
+- chore(deps): bump github/codeql-action action to v3.29.0 (#18380) @renovate[bot]
+- chore(deps): bump jscodeshift to 17.3.0 (#17099) @renovate[bot]
+- chore(deps): bump string-replace-loader to ^3.2.0 (#18383) @renovate[bot]
+- [infra] Stabilise tests by removing babel and plugins from vitest (#18341) @JCQuintas
 ## 8.5.2
 
 _Jun 12, 2025_
