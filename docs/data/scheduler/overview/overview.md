@@ -16,4 +16,5 @@ This package is not published yet.
 :::
 
 - [Joy - Event Calendar](/x/react-scheduler/event-calendar/)
+- [Joy - Event Calendar (full screen demo)](/x/react-scheduler/full-screen-event-calendar/)
 - [Primitives](/x/react-scheduler/primitives/)
