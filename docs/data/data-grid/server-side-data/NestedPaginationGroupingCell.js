@@ -19,8 +19,8 @@ const gridRowSelector = createSelector(
 
 function GroupingIcon(props) {
   const apiRef = useGridApiContext();
-  const { rowNode, id, field, descendantCount, row, nestedLevelRef } = props;
-  const expanded = rowNode.childrenExpanded || row.expanded;
+  const { groupingKey, id, field, descendantCount, row, nestedLevelRef, expanded } =
+    props;
 
   const handleClick = useEventCallback((event) => {
     apiRef.current?.setRows([]);
@@ -29,18 +29,16 @@ function GroupingIcon(props) {
         ...prev,
         {
           ...row,
-          groupingKey: rowNode.groupingKey,
+          groupingKey,
           expanded: true,
           depth: nestedLevelRef.current,
         },
       ]);
-    } else if (row.expanded) {
+    } else {
       props.setExpandedRows((prev) => {
         const index = prev.findIndex((r) => r.id === id);
         return prev.slice(0, index);
       });
-    } else {
-      apiRef.current.setRowChildrenExpansion(id, !expanded);
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
@@ -53,7 +51,7 @@ function GroupingIcon(props) {
       size="small"
       onClick={handleClick}
       tabIndex={-1}
-      aria-label={`${rowNode.childrenExpanded ? 'Hide' : 'Show'} children`}
+      aria-label={`${expanded ? 'Hide' : 'Show'} children`}
     >
       <Icon fontSize="inherit" />
     </IconButton>
@@ -100,7 +98,8 @@ export default function NestedPaginationGroupingCell(props) {
         <GroupingIcon
           id={id}
           field={field}
-          rowNode={rowNode}
+          groupingKey={rowNode.groupingKey}
+          expanded={row.expanded || rowNode.childrenExpanded}
           row={row}
           setExpandedRows={setExpandedRows}
           nestedLevelRef={nestedLevelRef}

@@ -9,6 +9,7 @@ import {
   GridValidRowModel,
   gridRowsLookupSelector,
   type GridRowId,
+  type GridBasicGroupNode,
 } from '@mui/x-data-grid-pro';
 import { createSelector } from '@mui/x-data-grid-pro/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -30,15 +31,17 @@ interface NestedPaginationGroupingCellProps
 interface GroupingIconProps
   extends Pick<
     NestedPaginationGroupingCellProps,
-    'id' | 'field' | 'rowNode' | 'row' | 'setExpandedRows' | 'nestedLevelRef'
+    'id' | 'field' | 'row' | 'setExpandedRows' | 'nestedLevelRef'
   > {
   descendantCount: number;
+  groupingKey: GridBasicGroupNode['groupingKey'];
+  expanded: boolean;
 }
 
 function GroupingIcon(props: GroupingIconProps) {
   const apiRef = useGridApiContext();
-  const { rowNode, id, field, descendantCount, row, nestedLevelRef } = props;
-  const expanded = rowNode.childrenExpanded || row.expanded;
+  const { groupingKey, id, field, descendantCount, row, nestedLevelRef, expanded } =
+    props;
 
   const handleClick = useEventCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,18 +51,16 @@ function GroupingIcon(props: GroupingIconProps) {
           ...prev,
           {
             ...row,
-            groupingKey: rowNode.groupingKey,
+            groupingKey,
             expanded: true,
             depth: nestedLevelRef.current,
           },
         ]);
-      } else if (row.expanded) {
+      } else {
         props.setExpandedRows((prev) => {
           const index = prev.findIndex((r) => r.id === id);
           return prev.slice(0, index);
         });
-      } else {
-        apiRef.current.setRowChildrenExpansion(id, !expanded);
       }
       apiRef.current.setCellFocus(id, field);
       event.stopPropagation();
@@ -73,7 +74,7 @@ function GroupingIcon(props: GroupingIconProps) {
       size="small"
       onClick={handleClick}
       tabIndex={-1}
-      aria-label={`${rowNode.childrenExpanded ? 'Hide' : 'Show'} children`}
+      aria-label={`${expanded ? 'Hide' : 'Show'} children`}
     >
       <Icon fontSize="inherit" />
     </IconButton>
@@ -122,7 +123,8 @@ export default function NestedPaginationGroupingCell(
         <GroupingIcon
           id={id}
           field={field}
-          rowNode={rowNode}
+          groupingKey={rowNode.groupingKey}
+          expanded={row.expanded || rowNode.childrenExpanded}
           row={row}
           setExpandedRows={setExpandedRows}
           nestedLevelRef={nestedLevelRef}
