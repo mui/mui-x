@@ -31,6 +31,7 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 const MINIMUM_COLUMN_WIDTH = 50;
 
 export type VirtualScroller = ReturnType<typeof useVirtualizer>;
+export type VirtualScrollerState = ReturnType<VirtualScroller['use']>;
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
 
@@ -669,6 +670,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
 
   const state = {
     renderContext,
+    setPanels,
     getRows,
     getContainerProps: () => ({
       ref: mainRefCallback,

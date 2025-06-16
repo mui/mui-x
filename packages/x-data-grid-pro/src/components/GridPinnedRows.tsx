@@ -21,7 +21,7 @@ export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProp
 
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rows = pinnedRowsData[position];
-  const { getRows } = virtualScroller.use();
+  const { getRows } = virtualScroller;
 
   const pinnedRenderContext = React.useMemo(
     () => ({
