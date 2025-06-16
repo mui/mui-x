@@ -455,7 +455,7 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState, isPivotingAvailable],
+    [apiRef, computePivotingState, isPivotingAvailable, getInitialData],
   );
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
