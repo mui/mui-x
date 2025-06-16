@@ -67,7 +67,7 @@ export default function useNestedPagination(
   );
 
   const groupKeys = React.useMemo(
-    () => expandedRows.map((row) => row.groupingKey) ?? [],
+    () => expandedRows.map((row) => row.groupingKey),
     [expandedRows],
   );
 
