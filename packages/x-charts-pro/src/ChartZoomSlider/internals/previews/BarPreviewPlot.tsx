@@ -33,7 +33,7 @@ export function BarPreviewPlot(props: {
     bottom: props.y + props.height,
   };
 
-  const borderRadius = 0;
+  const borderRadius = 0; // TODO: How to obtain the border radius from props?
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const { completedData, masksData } = useBarPreviewData(props.axisId, drawingArea);
 
