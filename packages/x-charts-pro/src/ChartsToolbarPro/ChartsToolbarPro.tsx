@@ -99,7 +99,7 @@ function ChartsToolbarPro({
 
     children.push(
       <React.Fragment key="export-menu">
-        <Tooltip title={localeText.toolbarExport}>
+        <Tooltip title={localeText.toolbarExport} disableInteractive={exportMenuOpen}>
           <ToolbarButton
             ref={exportMenuTriggerRef}
             id={exportMenuTriggerId}

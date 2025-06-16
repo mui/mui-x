@@ -5,6 +5,7 @@ export type ChartBaseTooltipProps = ChartBaseCommonProps & {
   children: React.ReactElement<any, any>;
   enterDelay?: number;
   title: React.ReactNode;
+  disableInteractive?: boolean;
 };
 
 type BasePlacement = 'top' | 'bottom' | 'left' | 'right';
