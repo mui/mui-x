@@ -184,11 +184,13 @@ export const useGridPivoting = (
       return undefined;
     }
 
-    const isLoading = gridRowsLoadingSelector(apiRef) ?? false;
+    nonPivotDataRef.current = getInitialData();
 
-    if (!isLoading) {
-      nonPivotDataRef.current = getInitialData();
+    const isLoading = gridRowsLoadingSelector(apiRef) ?? false;
+    if (isLoading) {
+      return undefined;
     }
+
     apiRef.current.setState((state) => {
       const pivotingState = {
         ...state.pivoting,
@@ -418,11 +420,8 @@ export const useGridPivoting = (
 
   const updateNonPivotRows = React.useCallback<GridPivotingPrivateApi['updateNonPivotRows']>(
     (rows, keepPreviousRows = true) => {
-      if (!gridPivotActiveSelector(apiRef) || !isPivotingAvailable || !rows || rows.length === 0) {
+      if (!nonPivotDataRef.current || !isPivotingAvailable || !rows || rows.length === 0) {
         return;
-      }
-      if (!nonPivotDataRef.current) {
-        nonPivotDataRef.current = getInitialData();
       }
 
       if (keepPreviousRows) {
