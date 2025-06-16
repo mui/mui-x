@@ -114,7 +114,7 @@ async function findOriginOwner() {
     }
 
     if (!originUrl) {
-      console.error("Error: Unable to find the origin remote.");
+      console.error('Error: Unable to find the origin remote.');
       process.exit(1);
     }
 
@@ -138,8 +138,10 @@ async function findOriginOwner() {
     }
 
     if (!owner) {
-      console.error("Error: Unable to extract the username or organization name from the origin remote URL.");
-      console.error("Origin URL:", originUrl);
+      console.error(
+        'Error: Unable to extract the username or organization name from the origin remote URL.',
+      );
+      console.error('Origin URL:', originUrl);
       process.exit(1);
     }
 
@@ -660,9 +662,10 @@ function createPrBody(newVersion) {
 
 /**
  * Get all members of the mui/x team from GitHub
+ * @param {string} [excludeUsername] - Username to exclude from the results (e.g., PR author)
  * @returns {Promise<string[]>} Array of GitHub usernames
  */
-async function getTeamMembers() {
+async function getTeamMembers(excludeUsername) {
   try {
     console.log('Fetching members of the mui/x team...');
 
@@ -695,7 +698,14 @@ async function getTeamMembers() {
       team_slug: xTeam.slug,
     });
 
-    const usernames = members.map((member) => member.login);
+    let usernames = members.map((member) => member.login);
+
+    // Filter out the excluded username if provided
+    if (excludeUsername) {
+      usernames = usernames.filter((username) => username !== excludeUsername);
+      console.log(`Filtered out PR author (${excludeUsername}) from team members.`);
+    }
+
     console.log(`Found ${usernames.length} members in the mui/x team.`);
 
     return usernames;
@@ -977,7 +987,7 @@ async function main() {
         prBody,
         `${originOwner}:${branchName}`,
         baseBranch,
-        ['release']
+        ['release'],
       );
 
       console.log(`PR created successfully: ${prUrl}`);
@@ -985,8 +995,8 @@ async function main() {
       // Step 1: Apply the 'release' label to the PR
       // Note: This is already done in the createPullRequest function by passing ['release'] as the labels parameter
 
-      // Step 2: Get all members of the 'mui/x' team from GitHub
-      const teamMembers = await getTeamMembers();
+      // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
+      const teamMembers = await getTeamMembers(originOwner);
 
       if (teamMembers.length > 0) {
         // Randomly select up to 15 team members as reviewers
