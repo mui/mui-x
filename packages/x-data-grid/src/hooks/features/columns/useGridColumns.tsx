@@ -463,10 +463,11 @@ export function useGridColumns(
       columnsToUpsert: props.columns,
       keepOnlyColumnsToUpsert: true,
       updateInitialVisibilityModel: true,
+      columnVisibilityModel: props.columnVisibilityModel,
     });
     previousColumnsProp.current = props.columns;
     setGridColumnsState(columnsState);
-  }, [logger, apiRef, setGridColumnsState, props.columns]);
+  }, [logger, apiRef, setGridColumnsState, props.columns, props.columnVisibilityModel]);
 
   React.useEffect(() => {
     if (props.columnVisibilityModel !== undefined) {
