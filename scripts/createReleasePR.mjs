@@ -954,6 +954,11 @@ async function main() {
 
     console.log(`Changes committed to branch ${branchName}`);
 
+    // Push the committed changes to origin
+    console.log('Pushing committed changes to origin...');
+    await execa('git', ['push', 'origin', branchName]);
+    console.log(`Changes pushed to origin/${branchName}`);
+
     // Create PR body with checklist
     const prBody = createPrBody(newVersion);
 
