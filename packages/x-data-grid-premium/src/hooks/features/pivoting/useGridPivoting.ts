@@ -357,7 +357,6 @@ export const useGridPivoting = (
           pivoting: newPivotingState,
         };
 
-        apiRef.current.publishEvent('pivotModeChange', newPivotMode);
         return newState;
       });
       apiRef.current.selectRows([], false, true);
