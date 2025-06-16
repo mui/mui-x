@@ -64,47 +64,55 @@ const ResetZoomButton = React.forwardRef<HTMLButtonElement, React.PropsWithChild
 
 function CustomToolbar() {
   return (
-    <Toolbar>
+    <Stack
+      width="100%"
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      gap={1}
+      flexWrap="wrap"
+    >
       <Typography
-        flexGrow={1}
-        flexShrink={0}
         justifyContent="center"
         sx={{ textAlign: { xs: 'center', sm: 'left' } }}
+        variant="h6"
       >
         Chart with Custom Toolbar
       </Typography>
-      <Stack direction="row" flex={1} justifyContent={{ xs: 'center', sm: 'end' }}>
-        <Tooltip title="Zoom in">
-          <ChartsToolbarZoomInTrigger render={<ToolbarButton />}>
-            <ZoomInIcon />
-          </ChartsToolbarZoomInTrigger>
-        </Tooltip>
-        <Tooltip title="Zoom out">
-          <ChartsToolbarZoomOutTrigger render={<ToolbarButton />}>
-            <ZoomOutIcon />
-          </ChartsToolbarZoomOutTrigger>
-        </Tooltip>
+      <Stack>
+        <Toolbar>
+          <Tooltip title="Zoom in">
+            <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
+              <ZoomInIcon />
+            </ChartsToolbarZoomInTrigger>
+          </Tooltip>
+          <Tooltip title="Zoom out">
+            <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
+              <ZoomOutIcon />
+            </ChartsToolbarZoomOutTrigger>
+          </Tooltip>
 
-        <ResetZoomButton>Reset</ResetZoomButton>
-        <VerticalDivider orientation="vertical" />
-        <Tooltip title="Print">
-          <ChartsToolbarPrintExportTrigger
-            render={<ToolbarButton render={<IconButton />} />}
-            options={{ fileName: 'ChartWithCustomToolbar' }}
-          >
-            <PrintIcon />
-          </ChartsToolbarPrintExportTrigger>
-        </Tooltip>
-        <Tooltip title="Export as PNG">
-          <ChartsToolbarImageExportTrigger
-            render={<ToolbarButton render={<IconButton />} />}
-            options={{ type: 'image/png', fileName: 'ChartWithCustomToolbar' }}
-          >
-            <PhotoIcon />
-          </ChartsToolbarImageExportTrigger>
-        </Tooltip>
+          <ResetZoomButton>Reset</ResetZoomButton>
+          <VerticalDivider orientation="vertical" />
+          <Tooltip title="Print">
+            <ChartsToolbarPrintExportTrigger
+              render={<ToolbarButton render={<IconButton size="small" />} />}
+              options={{ fileName: 'ChartWithCustomToolbar' }}
+            >
+              <PrintIcon />
+            </ChartsToolbarPrintExportTrigger>
+          </Tooltip>
+          <Tooltip title="Export as PNG">
+            <ChartsToolbarImageExportTrigger
+              render={<ToolbarButton render={<IconButton size="small" />} />}
+              options={{ type: 'image/png', fileName: 'ChartWithCustomToolbar' }}
+            >
+              <PhotoIcon />
+            </ChartsToolbarImageExportTrigger>
+          </Tooltip>
+        </Toolbar>
       </Stack>
-    </Toolbar>
+    </Stack>
   );
 }
 
