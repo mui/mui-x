@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { WeekView } from '@mui/x-scheduler/joy/week-view';
 import classes from './StandaloneWeekView.module.css';
 
-const events = [
+const eventsList = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
@@ -68,7 +68,14 @@ const resources = [
 ];
 
 export default function StandaloneWeekView() {
+  const [events, setEvents] = React.useState(eventsList);
+
   return (
-    <WeekView events={events} resources={resources} className={classes.Container} />
+    <WeekView
+      events={events}
+      onEventsChange={setEvents}
+      resources={resources}
+      className={classes.Container}
+    />
   );
 }

@@ -1,1 +1,6 @@
-<WeekView events={events} resources={resources} className={classes.Container} />
+<WeekView
+  events={events}
+  onEventsChange={setEvents}
+  resources={resources}
+  className={classes.Container}
+/>

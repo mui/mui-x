@@ -1,5 +1,6 @@
 <DayView
   events={events}
+  onEventsChange={setEvents}
   resources={resources}
   className={classes.Container}
   day={DateTime.fromISO('2025-05-26')}
