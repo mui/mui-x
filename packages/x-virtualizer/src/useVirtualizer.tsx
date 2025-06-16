@@ -669,8 +669,6 @@ export const useVirtualizer = (params: VirtualizerParams) => {
 
   const state = {
     renderContext,
-    forceUpdateRenderContext,
-    setPanels,
     getRows,
     getContainerProps: () => ({
       ref: mainRefCallback,
@@ -714,6 +712,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
   return {
     use: () => useSelector(store, (state) => state),
     forceUpdateRenderContext,
+    setPanels,
   };
 };
 
