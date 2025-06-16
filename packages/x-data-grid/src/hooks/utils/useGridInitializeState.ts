@@ -31,6 +31,7 @@ export const useGridInitializeState = <
 
   if (key !== previousKey.current) {
     isInitialized.current = false;
+    previousKey.current = key;
   }
 
   if (!isInitialized.current) {
