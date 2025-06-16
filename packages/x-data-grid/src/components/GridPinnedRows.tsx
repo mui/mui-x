@@ -1,4 +1,4 @@
-import type { VirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+import type { VirtualScroller } from '@mui/x-virtualizer';
 
 export interface GridPinnedRowsProps {
   position: 'top' | 'bottom';
