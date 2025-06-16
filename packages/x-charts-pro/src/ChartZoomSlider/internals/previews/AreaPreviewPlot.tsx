@@ -61,14 +61,12 @@ export function AreaPreviewPlot({
 function useAreaPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  let xAxes = useSelector(store, selectorChartComputedXAxes, {
-    drawingArea,
-    zoomMap: undefined,
-  }).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, {
-    drawingArea,
-    zoomMap: undefined,
-  }).axis;
+  let xAxes = useSelector(store, selectorChartComputedXAxes, [
+    { drawingArea, zoomMap: undefined },
+  ]).axis;
+  let yAxes = useSelector(store, selectorChartComputedYAxes, [
+    { drawingArea, zoomMap: undefined },
+  ]).axis;
 
   /* We only want to show the data represented in this axis. */
   if (axisId in xAxes) {

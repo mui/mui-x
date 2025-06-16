@@ -3,6 +3,7 @@ export * from './components/ChartsAxesGradients';
 export * from './components/ChartsWrapper';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
+export * from '../BarChart/BarClipPath';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';

@@ -12,7 +12,7 @@ import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { LineElement } from '@mui/x-charts/LineChart';
 
 const LinePlotRoot = styled('g', {
-  name: 'MuiAreaPlot',
+  name: 'MuiLinePlot',
   slot: 'Root',
 })();
 
@@ -60,14 +60,12 @@ export function LinePreviewPlot({
 function useLinePreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  let xAxes = useSelector(store, selectorChartComputedXAxes, {
-    drawingArea,
-    zoomMap: undefined,
-  }).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, {
-    drawingArea,
-    zoomMap: undefined,
-  }).axis;
+  let xAxes = useSelector(store, selectorChartComputedXAxes, [
+    { drawingArea, zoomMap: undefined },
+  ]).axis;
+  let yAxes = useSelector(store, selectorChartComputedYAxes, [
+    { drawingArea, zoomMap: undefined },
+  ]).axis;
 
   /* We only want to show the data represented in this axis. */
   if (axisId in xAxes) {
