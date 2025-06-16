@@ -218,17 +218,19 @@ export async function generateChangelog({
         pull_number: Number(searchPullRequestId[1]),
       });
 
-      switch (author_association) {
-        case 'CONTRIBUTOR':
-          community.contributors.add(`@${login}`);
-          break;
-        case 'FIRST_TIMER':
-          community.firstTimers.add(`@${login}`);
-          break;
-        case 'MEMBER':
-          community.team.add(`@${login}`);
-          break;
-        default:
+      if (!login.includes('[bot]')) {
+        switch (author_association) {
+          case 'CONTRIBUTOR':
+            community.contributors.add(`@${login}`);
+            break;
+          case 'FIRST_TIMER':
+            community.firstTimers.add(`@${login}`);
+            break;
+          case 'MEMBER':
+            community.team.add(`@${login}`);
+            break;
+          default:
+        }
       }
 
       prsLabelsMap[commitsItem.sha] = labels;
