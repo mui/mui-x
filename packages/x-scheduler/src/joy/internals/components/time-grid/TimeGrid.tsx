@@ -10,9 +10,9 @@ import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid'
 import { TimeGridProps } from './TimeGrid.types';
 import { CalendarEvent } from '../../../models/events';
 import { Event } from '../../../event/Event';
-import { isWeekend } from '../../../utils/date-utils';
-import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventPopover } from '../../../utils/useEventPopover';
+import { isWeekend } from '../../utils/date-utils';
+import { useTranslations } from '../../utils/TranslationsContext';
 import './TimeGrid.css';
 
 const adapter = getAdapter();
@@ -21,7 +21,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   props: TimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, days, className, onDayHeaderClick, onEventAction, ...other } = props;
+  const { events, resources, days, className, onDayHeaderClick, onEventAction, ...other } = props;
 
   const translations = useTranslations();
   const today = adapter.date('2025-05-26');
@@ -44,6 +44,14 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     }
     return map;
   }, [events]);
+
+  const resourcesById = React.useMemo(() => {
+    const map = new Map();
+    for (const resource of resources || []) {
+      map.set(resource.id, resource);
+    }
+    return map;
+  }, [resources]);
 
   React.useLayoutEffect(() => {
     const body = bodyRef.current;
@@ -156,6 +164,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                         <Event
                           key={event.id}
                           event={event}
+                          eventResource={resourcesById.get(event.resource)}
                           variant="regular"
                           ariaLabelledBy={`TimeGridHeaderCell-${day.day.toString()}`}
                           onEventClick={handleEventClick}

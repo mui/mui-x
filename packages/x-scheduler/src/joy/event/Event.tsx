@@ -2,9 +2,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Popover } from '@base-ui-components/react/popover';
+import { useId } from '@base-ui-components/react/utils';
 import { TimeGrid } from '../../primitives/time-grid';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { EventProps } from './Event.types';
+import { getColorClassName } from '../internals/utils/color-utils';
 import './Event.css';
 
 const adapter = getAdapter();
@@ -15,13 +17,16 @@ export const Event = React.forwardRef(function Event(
 ) {
   const {
     event: calendarEvent,
+    eventResource,
     ariaLabelledBy,
     variant,
     className,
-    style,
     onEventClick,
+    id: idProp,
     ...other
   } = props;
+
+  const id = useId(idProp);
 
   const durationMs =
     adapter.toJsDate(calendarEvent.end).getTime() - adapter.toJsDate(calendarEvent.start).getTime();
@@ -104,7 +109,12 @@ export const Event = React.forwardRef(function Event(
   ]);
 
   return (
-    <div ref={forwardedRef} className={clsx('EventContainer', className)} {...other}>
+    <div
+      ref={forwardedRef}
+      id={id}
+      className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
+      {...other}
+    >
       <Popover.Trigger
         render={({ ...triggerProps }) => (
           <TimeGrid.Event
@@ -116,7 +126,7 @@ export const Event = React.forwardRef(function Event(
             )}
             start={calendarEvent.start}
             end={calendarEvent.end}
-            aria-labelledby={ariaLabelledBy}
+            aria-labelledby={`${ariaLabelledBy} ${id}`}
             onClick={(event) => {
               triggerProps.onClick?.(event);
               onEventClick?.(calendarEvent, event);

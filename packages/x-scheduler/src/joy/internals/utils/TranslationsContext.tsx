@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { SchedulerTranslations } from '../models/translations';
-import { enUS } from '../translations/enUS';
+import { SchedulerTranslations } from '../../models/translations';
+import { enUS } from '../../translations/enUS';
 
 export type TranslationsContext = SchedulerTranslations;
 

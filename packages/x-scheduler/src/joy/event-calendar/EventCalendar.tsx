@@ -7,8 +7,9 @@ import { ViewType } from '../models/views';
 import { WeekView } from '../week-view/WeekView';
 import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
-import { TranslationsProvider } from '../utils/TranslationsContext';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { TranslationsProvider } from '../internals/utils/TranslationsContext';
+import { getColorClassName } from '../internals/utils/color-utils';
 import '../index.css';
 import './EventCalendar.css';
 
@@ -18,7 +19,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, onEventsChange, translations, className, ...other } = props;
+  const { events, onEventsChange, resources, translations, className, ...other } = props;
 
   const [view, setView] = React.useState<ViewType>('week');
   const [visibleDate, setVisibleDate] = React.useState<SchedulerValidDate>(() => adapter.date());
@@ -39,11 +40,19 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           events={events}
           onDayHeaderClick={handleDayHeaderClick}
           onEventsChange={onEventsChange}
+          resources={resources}
         />
       );
       break;
     case 'day':
-      content = <DayView events={events} day={visibleDate} onEventsChange={onEventsChange} />;
+      content = (
+        <DayView
+          events={events}
+          day={visibleDate}
+          onEventsChange={onEventsChange}
+          resources={resources}
+        />
+      );
       break;
     case 'month':
       content = <div>TODO: Month view</div>;
@@ -71,12 +80,25 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           >
             Month Calendar
           </section>
-          <section
-            // TODO: Add localization
-            aria-label="Resource legend"
-          >
-            <span>TODO: Resource legend</span>
-          </section>
+          {resources && resources.length > 0 && (
+            <section
+              // TODO: Add localization
+              aria-label="Resource legend"
+              className="EventCalendarResourceLegend"
+            >
+              {resources.map((resource) => (
+                <div key={resource.id} className="EventCalendarResourceLegendItem">
+                  <span
+                    className={clsx(
+                      'EventCalendarResourceLegendColor',
+                      getColorClassName({ resource }),
+                    )}
+                  />
+                  <span className="EventCalendarResourceLegendName">{resource.name}</span>
+                </div>
+              ))}
+            </section>
+          )}
         </aside>
         <div className="EventCalendarMainPanel">
           <HeaderToolbar onTodayClick={() => {}} selectedView={view} setSelectedView={setView} />

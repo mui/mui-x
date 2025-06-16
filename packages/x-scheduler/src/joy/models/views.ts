@@ -1,5 +1,6 @@
 import { SchedulerValidDate } from '../../primitives/models';
 import { CalendarEvent } from './events';
+import { CalendarResource } from './resource';
 
 export type ViewType = 'week' | 'day' | 'month' | 'agenda';
 
@@ -16,4 +17,8 @@ export interface BaseViewProps extends React.HTMLAttributes<HTMLDivElement> {
    * Callback fired when some event of the calendar change.
    */
   onEventsChange?: (value: CalendarEvent[]) => void;
+  /**
+   * The resources that can be assigned to events.
+   */
+  resources?: CalendarResource[];
 }
