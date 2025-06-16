@@ -2,9 +2,10 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
-import { useVirtualizer, VirtualizationState } from '@mui/x-virtualizer';
+import { useVirtualizer, VirtualizationState, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   gridDimensionsSelector,
   gridColumnsTotalWidthSelector,
@@ -43,6 +44,24 @@ import { gridRowSelectionManagerSelector } from '../rowSelection';
 type RootProps = DataGridProcessedProps;
 
 export type GridVirtualizationState = VirtualizationState;
+
+// XXX: We want to use the virtualizer as the source of truth for its state, but this needs to
+// stay because some parts of the grid require the `virtualization` state during initialization.
+export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (state, props) => {
+  const { disableVirtualization, autoHeight } = props;
+
+  const virtualization = {
+    enabled: !disableVirtualization,
+    enabledForColumns: !disableVirtualization,
+    enabledForRows: !disableVirtualization && !autoHeight,
+    renderContext: EMPTY_RENDER_CONTEXT,
+  };
+
+  return {
+    ...state,
+    virtualization,
+  };
+};
 
 export function useGridVirtualization(
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -92,11 +111,7 @@ export function useGridVirtualization(
 
   const virtualizer = useVirtualizer({
     initialState: {
-      virtualization: {
-        enabled: !disableVirtualization,
-        enabledForColumns: !disableVirtualization,
-        enabledForRows: !disableVirtualization && !autoHeight,
-      },
+      virtualization: apiRef.current.state.virtualization,
       scroll: rootProps.initialState?.scroll,
     },
     isRtl,

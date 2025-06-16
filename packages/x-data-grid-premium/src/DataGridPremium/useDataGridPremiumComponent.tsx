@@ -66,6 +66,7 @@ import {
   useGridInfiniteLoadingIntersection,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
+  virtualizationStateInitializer,
   useGridVirtualization,
   useGridDataSourceTreeDataPreProcessors,
   dataSourceStateInitializer,
@@ -174,6 +175,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
+  useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);

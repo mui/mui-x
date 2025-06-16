@@ -43,6 +43,7 @@ import {
   columnGroupsStateInitializer,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
+  virtualizationStateInitializer,
   useGridVirtualization,
   useGridColumnResize,
   columnResizeStateInitializer,
@@ -137,6 +138,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
+  useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
