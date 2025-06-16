@@ -12,7 +12,7 @@ import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { LineElement } from '@mui/x-charts/LineChart';
 
 const LinePlotRoot = styled('g', {
-  name: 'MuiAreaPlot',
+  name: 'MuiLinePlot',
   slot: 'Root',
 })();
 

@@ -8,6 +8,7 @@ import {
 import { ScatterPreview } from './previews/ScatterPreview';
 import { LinePreviewPlot } from './previews/LinePreviewPlot';
 import { AreaPreviewPlot } from './previews/AreaPreviewPlot';
+import { BarPreviewPlot } from './previews/BarPreviewPlot';
 
 export function ChartAxisZoomSliderChartPreview(props: {
   axisId: AxisId;
@@ -33,7 +34,7 @@ export function ChartAxisZoomSliderChartPreview(props: {
   }
 
   if ((processedSeries.bar?.seriesOrder?.length ?? 0) > 0) {
-    return null; // TODO
+    return <BarPreviewPlot {...props} />;
   }
 
   return null;
