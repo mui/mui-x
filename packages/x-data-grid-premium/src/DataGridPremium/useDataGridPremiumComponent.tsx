@@ -154,14 +154,14 @@ export const useDataGridPremiumComponent = (
    * Register all state initializers here.
    */
   useGridInitializeState(propsStateInitializer, apiRef, props);
-  useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
+  useGridInitializeState(headerFilteringStateInitializer, apiRef, props, key);
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props, key);
   useGridInitializeState(aggregationStateInitializer, apiRef, props, key);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(cellSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
-  useGridInitializeState(columnPinningStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(columnPinningStateInitializer, apiRef, props, key);
+  useGridInitializeState(columnsStateInitializer, apiRef, props, key);
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
