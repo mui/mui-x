@@ -214,16 +214,18 @@ export function ChartAxisZoomSliderActiveTrack({
 
   const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
   const range = maxEnd - minStart;
+  const zoomStart = Math.max(minStart, zoomData.start);
+  const zoomEnd = Math.min(zoomData.end, maxEnd);
 
   if (axisDirection === 'x') {
-    previewX = ((zoomData.start - minStart) / range) * drawingArea.width;
+    previewX = ((zoomStart - minStart) / range) * drawingArea.width;
     previewY = 0;
-    previewWidth = (drawingArea.width * (zoomData.end - zoomData.start)) / range;
+    previewWidth = (drawingArea.width * (zoomEnd - zoomStart)) / range;
     previewHeight = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
 
-    startThumbX = ((zoomData.start - minStart) / range) * drawingArea.width;
+    startThumbX = ((zoomStart - minStart) / range) * drawingArea.width;
     startThumbY = 0;
-    endThumbX = ((zoomData.end - minStart) / range) * drawingArea.width;
+    endThumbX = ((zoomEnd - minStart) / range) * drawingArea.width;
     endThumbY = 0;
 
     if (reverse) {
@@ -237,14 +239,14 @@ export function ChartAxisZoomSliderActiveTrack({
     endThumbX -= previewThumbWidth / 2;
   } else {
     previewX = 0;
-    previewY = drawingArea.height - ((zoomData.end - minStart) / range) * drawingArea.height;
+    previewY = drawingArea.height - ((zoomEnd - minStart) / range) * drawingArea.height;
     previewWidth = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
-    previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / range;
+    previewHeight = (drawingArea.height * (zoomEnd - zoomStart)) / range;
 
     startThumbX = 0;
-    startThumbY = drawingArea.height - ((zoomData.start - minStart) / range) * drawingArea.height;
+    startThumbY = drawingArea.height - ((zoomStart - minStart) / range) * drawingArea.height;
     endThumbX = 0;
-    endThumbY = drawingArea.height - ((zoomData.end - minStart) / range) * drawingArea.height;
+    endThumbY = drawingArea.height - ((zoomEnd - minStart) / range) * drawingArea.height;
 
     if (reverse) {
       previewY = drawingArea.height - previewY - previewHeight;
