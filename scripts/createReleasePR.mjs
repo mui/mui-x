@@ -95,6 +95,63 @@ async function findMuiXRemote() {
 }
 
 /**
+ * Find the username or organization name from the origin remote
+ * @returns {Promise<string>} The username or organization name
+ */
+async function findOriginOwner() {
+  try {
+    const { stdout } = await execa('git', ['remote', '-v']);
+    const remotes = stdout.split('\n');
+
+    console.log('Checking for origin remote...', stdout);
+
+    let originUrl = '';
+    for (const line of remotes) {
+      if (line.startsWith('origin') && line.includes('(push)')) {
+        originUrl = line.split(/\s+/)[1];
+        break;
+      }
+    }
+
+    if (!originUrl) {
+      console.error("Error: Unable to find the origin remote.");
+      process.exit(1);
+    }
+
+    // Extract the username or organization name from the URL
+    let owner = '';
+    if (originUrl.includes('github.com')) {
+      // Handle SSH URLs like git@github.com:username/repo.git
+      if (originUrl.startsWith('git@')) {
+        const match = originUrl.match(/git@github\.com:([^/]+)/);
+        if (match && match[1]) {
+          owner = match[1];
+        }
+      }
+      // Handle HTTPS URLs like https://github.com/username/repo.git
+      else if (originUrl.startsWith('http')) {
+        const match = originUrl.match(/github\.com\/([^/]+)/);
+        if (match && match[1]) {
+          owner = match[1];
+        }
+      }
+    }
+
+    if (!owner) {
+      console.error("Error: Unable to extract the username or organization name from the origin remote URL.");
+      console.error("Origin URL:", originUrl);
+      process.exit(1);
+    }
+
+    console.log(`Found origin owner: ${owner}`);
+    return owner;
+  } catch (error) {
+    console.error('Error finding origin owner:', error);
+    process.exit(1);
+  }
+}
+
+/**
  * Get the current version from package.json
  * @returns {Promise<string>} The current version
  */
@@ -833,7 +890,7 @@ async function main() {
     await checkUncommittedChanges();
 
     // Create a new branch with the new version
-    const branchName = `release/v${newVersion}-${new Date().toISOString().replace(/[:.]/g, '').replace('T', '')}`;
+    const branchName = `release/v${newVersion}-${new Date().toISOString().slice(0, 10)}`;
     console.log(`Creating new branch: ${branchName}`);
 
     // Determine the source branch based on the selected major version
@@ -906,13 +963,16 @@ async function main() {
       // Determine the base branch based on the selected major version
       const baseBranch = majorVersion === currentMajorVersion ? 'master' : `v${majorVersion}.x`;
 
+      // Get the origin owner (username or organization)
+      const originOwner = await findOriginOwner();
+
       // Create the PR using Octokit
       const { url: prUrl, number: prNumber } = await createPullRequest(
         `[release] v${newVersion}`,
         prBody,
-        branchName,
+        `${originOwner}:${branchName}`,
         baseBranch,
-        ['release'],
+        ['release']
       );
 
       console.log(`PR created successfully: ${prUrl}`);
