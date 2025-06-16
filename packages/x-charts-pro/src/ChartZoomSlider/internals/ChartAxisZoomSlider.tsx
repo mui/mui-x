@@ -105,7 +105,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
       x={0}
       y={0}
       height={axisDirection === 'x' ? ZOOM_SLIDER_PREVIEW_SIZE : drawingArea.height}
-      width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_TRACK_SIZE}
+      width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_PREVIEW_SIZE}
     />
   ) : (
     <ZoomSliderTrack
