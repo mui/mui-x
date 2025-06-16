@@ -5,7 +5,6 @@ import {
   useSelector,
   useStore,
 } from '@mui/x-charts/internals';
-import { ScatterPreview } from './previews/ScatterPreview';
 import { LinePreviewPlot } from './previews/LinePreviewPlot';
 import { AreaPreviewPlot } from './previews/AreaPreviewPlot';
 import { BarPreviewPlot } from './previews/BarPreviewPlot';
@@ -27,10 +26,6 @@ export function ChartAxisZoomSliderChartPreview(props: {
         <LinePreviewPlot {...props} />
       </React.Fragment>
     );
-  }
-
-  if ((processedSeries.scatter?.seriesOrder?.length ?? 0) > 0) {
-    return <ScatterPreview {...props} />;
   }
 
   if ((processedSeries.bar?.seriesOrder?.length ?? 0) > 0) {
