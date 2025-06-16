@@ -186,34 +186,19 @@ export const useGridPivoting = (
 
     const isLoading = gridRowsLoadingSelector(apiRef) ?? false;
 
-    const runPivoting = () => {
-      nonPivotDataRef.current = getInitialData();
-      apiRef.current.setState((state) => {
-        const pivotingState = {
-          ...state.pivoting,
-          ...computePivotingState(state.pivoting),
-        };
-        return {
-          ...state,
-          pivoting: pivotingState,
-        };
-      });
-    };
-
     if (!isLoading) {
-      runPivoting();
-      return undefined;
+      nonPivotDataRef.current = getInitialData();
     }
-
-    const unsubscribe = apiRef.current?.store.subscribe(() => {
-      const loading = gridRowsLoadingSelector(apiRef);
-      if (loading === false) {
-        unsubscribe();
-        runPivoting();
-      }
+    apiRef.current.setState((state) => {
+      const pivotingState = {
+        ...state.pivoting,
+        ...computePivotingState(state.pivoting),
+      };
+      return {
+        ...state,
+        pivoting: pivotingState,
+      };
     });
-
-    return unsubscribe;
   });
 
   useEnhancedEffect(() => {
@@ -431,8 +416,11 @@ export const useGridPivoting = (
 
   const updateNonPivotRows = React.useCallback<GridPivotingPrivateApi['updateNonPivotRows']>(
     (rows, keepPreviousRows = true) => {
-      if (!nonPivotDataRef.current || !rows || rows.length === 0) {
+      if (!gridPivotActiveSelector(apiRef) || !isPivotingAvailable || !rows || rows.length === 0) {
         return;
+      }
+      if (!nonPivotDataRef.current) {
+        nonPivotDataRef.current = getInitialData();
       }
 
       if (keepPreviousRows) {
@@ -465,7 +453,7 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState],
+    [apiRef, computePivotingState, isPivotingAvailable],
   );
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
