@@ -31,7 +31,19 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 const MINIMUM_COLUMN_WIDTH = 50;
 
 export type VirtualScroller = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerState = ReturnType<VirtualScroller['use']>;
+export type VirtualScrollerUse = ReturnType<VirtualScroller['use']>;
+
+export type VirtualizationState = {
+  enabled: boolean;
+  enabledForColumns: boolean;
+  enabledForRows: boolean;
+  renderContext: GridRenderContext;
+};
+
+// XXX: use this
+export type VirtualizerState = {
+  virtualization: VirtualizerState;
+};
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
 
@@ -46,6 +58,7 @@ export const EMPTY_RENDER_CONTEXT = {
 
 type VirtualizerParams = {
   initialState?: {
+    virtualization?: Partial<VirtualizationState>;
     scroll?: { top: number; left: number };
   };
   isRtl: boolean;
@@ -668,9 +681,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     return undefined;
   });
 
-  const state = {
-    renderContext,
-    setPanels,
+  const newState = {
     getRows,
     getContainerProps: () => ({
       ref: mainRefCallback,
@@ -705,16 +716,33 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     }),
   };
 
-  const store = useLazyRef(() => new Store(state)).current;
+  const store = useLazyRef(() => {
+    const virtualizationState: VirtualizationState = {
+      enabled: true,
+      enabledForRows,
+      enabledForColumns,
+      renderContext,
+      ...initialState?.virtualization,
+    };
+
+    const state = {
+      virtualization: virtualizationState,
+      setPanels,
+      ...newState,
+    };
+
+    return new Store(state);
+  }).current;
 
   React.useEffect(() => {
-    store.update(state);
-  }, Object.values(state));
+    store.update({ ...store.state, ...newState });
+  }, Object.values(newState));
 
   return {
+    store,
     use: () => useSelector(store, (state) => state),
-    forceUpdateRenderContext,
     setPanels,
+    forceUpdateRenderContext,
   };
 };
 

@@ -2,10 +2,9 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
-import { useVirtualizer, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
+import { useVirtualizer, VirtualizationState } from '@mui/x-virtualizer';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   gridDimensionsSelector,
   gridColumnsTotalWidthSelector,
@@ -43,59 +42,12 @@ import { gridRowSelectionManagerSelector } from '../rowSelection';
 
 type RootProps = DataGridProcessedProps;
 
-export type GridVirtualizationState = {
-  enabled: boolean;
-  enabledForColumns: boolean;
-  enabledForRows: boolean;
-  renderContext: GridRenderContext;
-};
-
-export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (state, props) => {
-  const { disableVirtualization, autoHeight } = props;
-
-  const virtualization = {
-    enabled: !disableVirtualization,
-    enabledForColumns: !disableVirtualization,
-    enabledForRows: !disableVirtualization && !autoHeight,
-    renderContext: EMPTY_RENDER_CONTEXT,
-  };
-
-  return {
-    ...state,
-    virtualization,
-  };
-};
+export type GridVirtualizationState = VirtualizationState;
 
 export function useGridVirtualization(
   apiRef: RefObject<GridPrivateApiCommunity>,
   rootProps: RootProps,
 ): void {
-  /*
-   * API METHODS
-   */
-
-  const setVirtualization = (enabled: boolean) => {
-    apiRef.current.setState((state) => ({
-      ...state,
-      virtualization: {
-        ...state.virtualization,
-        enabled,
-        enabledForColumns: enabled,
-        enabledForRows: enabled && !rootProps.autoHeight,
-      },
-    }));
-  };
-
-  const setColumnVirtualization = (enabled: boolean) => {
-    apiRef.current.setState((state) => ({
-      ...state,
-      virtualization: {
-        ...state.virtualization,
-        enabledForColumns: enabled,
-      },
-    }));
-  };
-
   /*
    * Virtualizer setup
    */
@@ -130,7 +82,7 @@ export function useGridVirtualization(
   const needsHorizontalScrollbar = useGridSelector(apiRef, needsHorizontalScrollbarSelector);
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
-  const autoHeight = rootProps.autoHeight;
+  const { autoHeight, disableVirtualization } = rootProps;
 
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
 
@@ -138,8 +90,15 @@ export function useGridVirtualization(
 
   const scrollReset = listView;
 
-  const virtualScroller = useVirtualizer({
-    initialState: rootProps.initialState,
+  const virtualizer = useVirtualizer({
+    initialState: {
+      virtualization: {
+        enabled: !disableVirtualization,
+        enabledForColumns: !disableVirtualization,
+        enabledForRows: !disableVirtualization && !autoHeight,
+      },
+      scroll: rootProps.initialState?.scroll,
+    },
     isRtl,
     rows: currentPage.rows,
     range: currentPage.range,
@@ -239,32 +198,62 @@ export function useGridVirtualization(
     },
   });
 
-  const forceUpdateRenderContext = virtualScroller.forceUpdateRenderContext;
+  /*
+   * API METHODS
+   */
 
-  apiRef.current.register('private', {
-    updateRenderContext: forceUpdateRenderContext,
-  });
+  const setVirtualization = (enabled: boolean) => {
+    virtualizer.store.set('virtualization', {
+      ...virtualizer.store.state.virtualization,
+      enabled,
+      enabledForColumns: enabled,
+      enabledForRows: enabled && !autoHeight,
+    });
+  };
 
-  useGridEventPriority(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
-  useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
-  useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
+  const setColumnVirtualization = (enabled: boolean) => {
+    virtualizer.store.set('virtualization', {
+      ...virtualizer.store.state.virtualization,
+      enabledForColumns: enabled,
+    });
+  };
 
   const api = {
-    virtualScroller,
+    virtualScroller: virtualizer,
     unstable_setVirtualization: setVirtualization,
     unstable_setColumnVirtualization: setColumnVirtualization,
   };
 
   useGridApiMethod(apiRef, api, 'public');
 
+  const forceUpdateRenderContext = virtualizer.forceUpdateRenderContext;
+
+  apiRef.current.register('private', {
+    updateRenderContext: forceUpdateRenderContext,
+  });
+
   /*
    * EFFECTS
    */
 
+  useGridEventPriority(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
+
+  // HACK: Keep the grid's store in sync with the virtualizer store.
+  // TODO(v9): Remove this
+  React.useEffect(() => {
+    return virtualizer.store.subscribe((state) => {
+      if (state.virtualization !== apiRef.current.state.virtualization) {
+        apiRef.current.store.set('virtualization', state.virtualization);
+      }
+    });
+  }, [virtualizer.store]);
+
   /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
     setVirtualization(!rootProps.disableVirtualization);
-  }, [rootProps.disableVirtualization, rootProps.autoHeight]);
+  }, [disableVirtualization, autoHeight]);
   /* eslint-enable react-hooks/exhaustive-deps */
 }
 

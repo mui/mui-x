@@ -1,7 +1,7 @@
-import type { VirtualScrollerState } from '@mui/x-virtualizer';
+import type { VirtualScrollerUse } from '@mui/x-virtualizer';
 
 export interface GridDetailPanelsProps {
-  virtualScroller: VirtualScrollerState;
+  virtualScroller: VirtualScrollerUse;
 }
 
 export function GridDetailPanels(_: GridDetailPanelsProps) {

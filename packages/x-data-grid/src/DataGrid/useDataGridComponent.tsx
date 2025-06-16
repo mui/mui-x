@@ -46,10 +46,7 @@ import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
-import {
-  useGridVirtualization,
-  virtualizationStateInitializer,
-} from '../hooks/features/virtualization';
+import { useGridVirtualization } from '../hooks/features/virtualization';
 import {
   columnResizeStateInitializer,
   useGridColumnResize,
@@ -95,7 +92,6 @@ export const useDataGridComponent = (
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
-  useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
