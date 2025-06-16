@@ -7,7 +7,7 @@ import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { ViewSwitcherProps } from './ViewSwitcher.types';
 import { ViewType } from '../../models/views';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
 import './ViewSwitcher.css';
 
 export const DEFAULT_VIEWS = ['week', 'day', 'month', 'agenda'] as ViewType[];
