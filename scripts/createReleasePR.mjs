@@ -36,6 +36,9 @@ import { generateChangelog as generateChangelogFromModule } from './changelogUti
 // Create a custom Octokit class with retry functionality
 const MyOctokit = Octokit.plugin(retry);
 
+const ORG = 'mui';
+const REPO = 'mui-x';
+
 // Parse command line arguments
 const argv = yargs(hideBin(process.argv))
   .option('patch', {
@@ -681,7 +684,7 @@ async function getTeamMembers(excludeUsername) {
 
     // Get team members
     const { data: teams } = await octokit.rest.teams.list({
-      org: 'mui',
+      org: ORG,
     });
 
     // Find the x team
@@ -694,7 +697,7 @@ async function getTeamMembers(excludeUsername) {
 
     // Get team members
     const { data: members } = await octokit.rest.teams.listMembersInOrg({
-      org: 'mui',
+      org: ORG,
       team_slug: xTeam.slug,
     });
 
@@ -736,8 +739,8 @@ async function assignReviewers(prNumber, reviewers) {
 
     // Assign reviewers
     await octokit.rest.pulls.requestReviewers({
-      owner: 'mui',
-      repo: 'mui-x',
+      owner: ORG,
+      repo: REPO,
       pull_number: prNumber,
       reviewers,
     });
@@ -755,15 +758,49 @@ async function assignReviewers(prNumber, reviewers) {
 }
 
 /**
+ * Add labels to a pull request
+ * @param {number} prNumber - The PR number
+ * @param {string[]} labels - Array of label names to add to the PR
+ * @returns {Promise<boolean>} Whether the operation was successful
+ */
+async function addLabelsToPR(prNumber, labels) {
+  try {
+    console.log(`Adding labels [${labels.join(', ')}] to PR #${prNumber}...`);
+
+    // Initialize Octokit with authentication
+    const octokit = new MyOctokit({
+      auth: process.env.GITHUB_TOKEN,
+    });
+
+    // Add labels to the PR (PRs are treated as issues in the GitHub API)
+    await octokit.rest.issues.addLabels({
+      owner: ORG,
+      repo: REPO,
+      issue_number: prNumber,
+      labels,
+    });
+
+    console.log('Labels added successfully.');
+    return true;
+  } catch (error) {
+    console.error('Error adding labels:', error.message);
+    if (error.response) {
+      console.error(`Status: ${error.response.status}`);
+      console.error('Response data:', error.response.data);
+    }
+    return false;
+  }
+}
+
+/**
  * Create a pull request using Octokit
  * @param {string} title - The PR title
  * @param {string} body - The PR body
  * @param {string} head - The branch name
  * @param {string} base - The base branch
- * @param {string[]} labels - The labels to apply to the PR
  * @returns {Promise<{url: string, number: number}>} The URL and number of the created PR
  */
-async function createPullRequest(title, body, head, base, labels) {
+async function createPullRequest(title, body, head, base) {
   try {
     console.log('Creating PR using Octokit...');
 
@@ -779,13 +816,12 @@ async function createPullRequest(title, body, head, base, labels) {
 
     // Create the PR
     const { data } = await octokit.rest.pulls.create({
-      owner: 'mui',
-      repo: 'mui-x',
+      owner: ORG,
+      repo: REPO,
       title,
       body,
       head,
       base,
-      labels,
     });
 
     console.log(`PR created successfully: ${data.html_url}`);
@@ -987,13 +1023,14 @@ async function main() {
         prBody,
         `${originOwner}:${branchName}`,
         baseBranch,
-        ['release'],
       );
 
       console.log(`PR created successfully: ${prUrl}`);
 
-      // Step 1: Apply the 'release' label to the PR
-      // Note: This is already done in the createPullRequest function by passing ['release'] as the labels parameter
+      // Step 1: Apply labels to the PR
+      // Add 'release' label and a version label in the format 'v8.x'
+      const versionLabel = `v${majorVersion}.x`;
+      await addLabelsToPR(prNumber, ['release', versionLabel]);
 
       // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
       const teamMembers = await getTeamMembers(originOwner);
