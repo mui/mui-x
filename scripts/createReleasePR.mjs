@@ -611,7 +611,7 @@ async function updateChangelog(changelogContent) {
     // Create a new changelog with the new content
     const newChangelog = [
       ...lines.slice(0, firstVersionLineIndex),
-      changelogContent,
+      `${changelogContent}\n`,
       ...lines.slice(firstVersionLineIndex),
     ].join('\n');
 
