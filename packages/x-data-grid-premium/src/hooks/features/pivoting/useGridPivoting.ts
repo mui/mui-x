@@ -199,6 +199,8 @@ export const useGridPivoting = (
         pivoting: pivotingState,
       };
     });
+
+    return undefined;
   });
 
   useEnhancedEffect(() => {
