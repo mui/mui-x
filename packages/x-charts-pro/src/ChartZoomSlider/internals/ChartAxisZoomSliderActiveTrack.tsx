@@ -258,9 +258,9 @@ export function ChartAxisZoomSliderActiveTrack({
     previewWidth = size;
     previewHeight = (drawingArea.height * (zoomEnd - zoomStart)) / range;
 
-    startThumbX = 0;
+    startThumbX = ZOOM_SLIDER_THUMB_HEIGHT < size ? (size - ZOOM_SLIDER_THUMB_HEIGHT) / 2 : 0;
     startThumbY = drawingArea.height - ((zoomStart - minStart) / range) * drawingArea.height;
-    endThumbX = 0;
+    endThumbX = ZOOM_SLIDER_THUMB_HEIGHT < size ? (size - ZOOM_SLIDER_THUMB_HEIGHT) / 2 : 0;
     endThumbY = drawingArea.height - ((zoomEnd - minStart) / range) * drawingArea.height;
 
     if (reverse) {
