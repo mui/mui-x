@@ -126,6 +126,8 @@ export const useDataGridPremiumComponent = (
 
   useGridInitialization<GridPrivateApiPremium>(apiRef, props);
 
+  const key = pivotPropsOverrides ? 'pivoting' : undefined;
+
   /**
    * Register all pre-processors called during state initialization here.
    * Some pre-processors are changing the same part of the state (like the order of the columns).
@@ -153,8 +155,8 @@ export const useDataGridPremiumComponent = (
    */
   useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
-  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
-  useGridInitializeState(aggregationStateInitializer, apiRef, props);
+  useGridInitializeState(rowGroupingStateInitializer, apiRef, props, key);
+  useGridInitializeState(aggregationStateInitializer, apiRef, props, key);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(cellSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
@@ -174,7 +176,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props, key);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);

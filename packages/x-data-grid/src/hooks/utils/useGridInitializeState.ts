@@ -24,8 +24,14 @@ export const useGridInitializeState = <
   initializer: GridStateInitializer<P, PrivateApi>,
   privateApiRef: RefObject<PrivateApi>,
   props: P,
+  key?: string,
 ) => {
+  const previousKey = React.useRef<string | undefined>(key);
   const isInitialized = React.useRef(false);
+
+  if (key !== previousKey.current) {
+    isInitialized.current = false;
+  }
 
   if (!isInitialized.current) {
     privateApiRef.current.state = initializer(

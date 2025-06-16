@@ -61,7 +61,9 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
-  apiRef.current.caches.columnGrouping = {};
+  apiRef.current.caches.columnGrouping = {
+    lastColumnGroupingModel: props.columnGroupingModel,
+  };
   if (!props.columnGroupingModel) {
     return state;
   }
