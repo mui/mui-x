@@ -40,7 +40,7 @@ const settings = {
   yAxis: [
     {
       id: 'y',
-      width: 48,
+      width: 44,
       valueFormatter: (v) => percentageFormatter.format(v),
       min: 0,
       zoom: { slider: { enabled: true, preview: true } },

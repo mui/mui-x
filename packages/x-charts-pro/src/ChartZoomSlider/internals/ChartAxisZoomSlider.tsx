@@ -56,6 +56,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   let reverse: boolean;
   let axisPosition: 'top' | 'bottom' | 'left' | 'right';
   let tooltipConditions: ZoomSliderShowTooltip;
+  const sliderSize = showPreview ? ZOOM_SLIDER_PREVIEW_SIZE : ZOOM_SLIDER_SIZE;
 
   if (axisDirection === 'x') {
     const axis = xAxis[axisId];
@@ -70,7 +71,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
     y =
       axis.position === 'bottom'
         ? drawingArea.top + drawingArea.height + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
-        : drawingArea.top - axis.offset - axisSize - ZOOM_SLIDER_SIZE - ZOOM_SLIDER_MARGIN;
+        : drawingArea.top - axis.offset - axisSize - sliderSize - ZOOM_SLIDER_MARGIN;
     reverse = axis.reverse ?? false;
     axisPosition = axis.position ?? 'bottom';
     tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
@@ -86,14 +87,14 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
     x =
       axis.position === 'right'
         ? drawingArea.left + drawingArea.width + axis.offset + axisSize + ZOOM_SLIDER_MARGIN
-        : drawingArea.left - axis.offset - axisSize - ZOOM_SLIDER_SIZE - ZOOM_SLIDER_MARGIN;
+        : drawingArea.left - axis.offset - axisSize - sliderSize - ZOOM_SLIDER_MARGIN;
     y = drawingArea.top;
     reverse = axis.reverse ?? false;
     axisPosition = axis.position ?? 'left';
     tooltipConditions = axis.zoom?.slider?.showTooltip ?? DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP;
   }
 
-  const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_TRACK_SIZE) / 2;
+  const backgroundRectOffset = (sliderSize - ZOOM_SLIDER_TRACK_SIZE) / 2;
 
   const ZoomSliderTrack = ChartAxisZoomSliderTrack;
 

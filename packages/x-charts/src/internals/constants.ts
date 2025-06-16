@@ -5,6 +5,7 @@ export const ZOOM_SLIDER_MARGIN = 4;
 
 /** Size reserved for the zoom slider. The actual size of the slider might be smaller. */
 export const DEFAULT_ZOOM_SLIDER_SIZE = 20 + 2 * ZOOM_SLIDER_MARGIN;
+export const DEFAULT_ZOOM_SLIDER_PREVIEW_SIZE = 40 + 2 * ZOOM_SLIDER_MARGIN;
 
 export const DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP: ZoomSliderShowTooltip = 'hover';
 
