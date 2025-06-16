@@ -123,6 +123,14 @@ export const useGridPivoting = (
   });
 
   apiRef.current.registerControlState({
+    stateId: 'pivotMode',
+    propModel: props.pivotActive,
+    propOnChange: props.onPivotActiveChange,
+    stateSelector: gridPivotActiveSelector,
+    changeEvent: 'pivotModeChange',
+  });
+
+  apiRef.current.registerControlState({
     stateId: 'pivotPanelOpen',
     propModel: props.pivotPanelOpen,
     propOnChange: props.onPivotPanelOpenChange,
