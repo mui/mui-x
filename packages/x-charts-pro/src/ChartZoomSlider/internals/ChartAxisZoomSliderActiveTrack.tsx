@@ -62,7 +62,7 @@ export function ChartAxisZoomSliderActiveTrack({
 }: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
-  const axis = useSelector(store, selectorChartAxis, axisId);
+  const axis = useSelector(store, selectorChartAxis, [axisId]);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);

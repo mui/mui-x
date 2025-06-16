@@ -6,13 +6,17 @@ export const selectorChartCartesianAxisState = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.cartesianAxis;
 
-export type SelectorChartRawXAxisType = <State extends ChartState<[], [UseChartCartesianAxisSignature]>>(
+export type SelectorChartRawXAxisType = <
+  State extends ChartState<[], [UseChartCartesianAxisSignature]>,
+>(
   state: State,
 ) => DefaultedXAxis[] | undefined;
 
 export const selectorChartRawXAxis: SelectorChartRawXAxisType = (state) => state.cartesianAxis?.x;
 
-export type SelectorChartRawYAxisType = <State extends ChartState<[], [UseChartCartesianAxisSignature]>>(
+export type SelectorChartRawYAxisType = <
+  State extends ChartState<[], [UseChartCartesianAxisSignature]>,
+>(
   state: State,
 ) => DefaultedYAxis[] | undefined;
 

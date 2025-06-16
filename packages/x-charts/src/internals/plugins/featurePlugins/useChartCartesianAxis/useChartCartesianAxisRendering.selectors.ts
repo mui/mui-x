@@ -3,13 +3,9 @@ import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
-import { ChartsSelector, createSelector } from '../../utils/selectors';
-import { computeAxisValue, ComputeResult } from './computeAxisValue';
-import {
-  DefaultizedZoomOptions,
-  ExtremumFilter,
-  UseChartCartesianAxisSignature,
-} from './useChartCartesianAxis.types';
+import { createSelector } from '../../utils/selectors';
+import { computeAxisValue } from './computeAxisValue';
+import { ExtremumFilter, UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
@@ -45,23 +41,22 @@ const selectorChartZoomState = (state: ChartState<[], [UseChartCartesianAxisSign
  */
 
 export const selectorChartZoomIsInteracting = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.isInteracting,
 );
 
 export const selectorChartZoomMap = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-export const selectorChartZoomOptionsLookup: ChartsSelector<
-  ChartState<any>,
-  any,
-  Record<AxisId, DefaultizedZoomOptions>
-> = createSelector([selectorChartRawXAxis, selectorChartRawYAxis], (xAxis, yAxis) => ({
-  ...createZoomLookup('x')(xAxis),
-  ...createZoomLookup('y')(yAxis),
-}));
+export const selectorChartZoomOptionsLookup = createSelector(
+  [selectorChartRawXAxis, selectorChartRawYAxis],
+  (xAxis, yAxis) => ({
+    ...createZoomLookup('x')(xAxis),
+    ...createZoomLookup('y')(yAxis),
+  }),
+);
 
 export const selectorChartAxisZoomOptionsLookup = createSelector(
   [selectorChartZoomOptionsLookup, (_, axisId: AxisId) => axisId],
@@ -112,11 +107,7 @@ const getZoomAxisFilters = (
  * The only interesting selectors that merge axis data and zoom if provided.
  */
 
-export const selectorChartXAxis: ChartsSelector<
-  ChartState<any>,
-  any,
-  ComputeResult<ChartsXAxisProps>
-> = createSelector(
+export const selectorChartXAxis = createSelector(
   [
     selectorChartRawXAxis,
     selectorChartRawYAxis,
@@ -162,11 +153,7 @@ export const selectorChartXAxis: ChartsSelector<
   },
 );
 
-export const selectorChartYAxis: ChartsSelector<
-  ChartState<any>,
-  any,
-  ComputeResult<ChartsYAxisProps>
-> = createSelector(
+export const selectorChartYAxis = createSelector(
   [
     selectorChartRawXAxis,
     selectorChartRawYAxis,
