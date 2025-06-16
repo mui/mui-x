@@ -217,7 +217,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
       }
       return undefined;
     },
-    [refs.main],
+    [refs.main, onResize],
   );
 
   /*
