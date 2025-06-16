@@ -7,8 +7,8 @@ import { TimeGrid } from '../../primitives/time-grid';
 import { TimeGridEvent } from '../event/TimeGridEvent';
 import { AgendaViewProps } from './AgendaView.types';
 import { CalendarEvent } from '../models/events';
-import { isWeekend } from '../utils/date-utils';
-import { useTranslations } from '../utils/TranslationsContext';
+import { isWeekend } from '../internals/utils/date-utils';
+import { useTranslations } from '../internals/utils/TranslationsContext';
 import './AgendaView.css';
 import { useDayList } from '@mui/x-scheduler/primitives/use-day-list';
 import { AgendaEvent } from '../event/AgendaEvent';
@@ -21,17 +21,13 @@ export const AgendaView = React.forwardRef(function AgendaView(
 ) {
   const getDayList = useDayList();
 
-  const today = adapter.date('2025-05-26');
+  const today = adapter.date();
   const days = React.useMemo(
     () => getDayList({ date: today.startOf('week'), amount: 12 }),
     [getDayList, today],
   );
 
-  const { events, className, ...other } = props;
-
-  const translations = useTranslations();
-  const bodyRef = React.useRef<HTMLDivElement>(null);
-  const headerWrapperRef = React.useRef<HTMLDivElement>(null);
+  const { events, resources, className, ...other } = props;
 
   const eventsByDay = React.useMemo(() => {
     const map = new Map();
@@ -44,6 +40,14 @@ export const AgendaView = React.forwardRef(function AgendaView(
     }
     return map;
   }, [adapter, events]);
+
+  const resourcesById = React.useMemo(() => {
+    const map = new Map();
+    for (const resource of resources || []) {
+      map.set(resource.id, resource);
+    }
+    return map;
+  }, [resources]);
 
   console.log('AgendaView eventsByDay', eventsByDay);
 
@@ -60,7 +64,7 @@ export const AgendaView = React.forwardRef(function AgendaView(
             id={`AgendaViewRow-${day.day.toString()}`}
           >
             <div
-              className="DayHeaderCell"
+              className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
               aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
             >
               <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
@@ -77,6 +81,7 @@ export const AgendaView = React.forwardRef(function AgendaView(
                   key={event.id}
                   event={event}
                   variant="regular"
+                  eventResource={resourcesById.get(event.resource)}
                   ariaLabelledBy={`AgendaEvent-${day.day.toString()}`}
                 />
               ))}
