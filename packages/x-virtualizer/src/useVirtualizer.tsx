@@ -34,7 +34,7 @@ export type VirtualScroller = ReturnType<typeof useVirtualizer>;
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
 
-export const EMPTY_DETAIL_PANELS = Object.freeze(new Map<RowId, React.ReactNode>());
+const EMPTY_DETAIL_PANELS = Object.freeze(new Map<RowId, React.ReactNode>());
 
 export const EMPTY_RENDER_CONTEXT = {
   firstRowIndex: 0,
