@@ -1,11 +1,16 @@
 import * as React from 'react';
 import { CalendarEvent } from '../models/events';
+import { CalendarResource } from '../models/resource';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event info to display in the popover.
    */
   calendarEvent: CalendarEvent;
+  /**
+   * The resource the event is associated with.
+   */
+  calendarEventResource: CalendarResource | undefined;
   /**
    * The anchor element for the popover positioning.
    */

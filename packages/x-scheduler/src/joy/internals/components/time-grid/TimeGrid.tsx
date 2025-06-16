@@ -82,7 +82,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
 
   return (
     <div ref={handleRef} className={clsx('TimeGridContainer', 'joy', className)} {...other}>
-      <Popover.Root open={isPopoverOpen} onOpenChange={handlePopoverClose}>
+      <Popover.Root open={isPopoverOpen} onOpenChange={handlePopoverClose} modal>
         <TimeGridPrimitive.Root className="TimeGridRoot">
           <div ref={headerWrapperRef} className="TimeGridHeader">
             <div className="TimeGridGridRow TimeGridHeaderRow" role="row">
@@ -181,6 +181,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
           <EventPopover
             anchor={anchor}
             calendarEvent={selectedEvent}
+            calendarEventResource={resourcesById.get(selectedEvent.resource)}
             container={containerRef.current}
             onEventAction={onEventAction}
             onClose={handlePopoverClose}

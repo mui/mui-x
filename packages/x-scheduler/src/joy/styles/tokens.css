@@ -25,6 +25,7 @@
   --primary-2: var(--violet-2);
   --primary-3: var(--violet-3);
   --primary-4: var(--violet-4);
+  --primary-4-rgb: var(--violet-4-rgb);
   --primary-4-rgba-70: rgba(var(--violet-4-rgb), 0.7);
   --primary-4-rgba-80: rgba(var(--violet-4-rgb), 0.8);
   --primary-5: var(--violet-5);
@@ -82,6 +83,7 @@
   --mauve-2-rgb: 233, 233, 236;
   --mauve-3: #b5b2bc;
   --mauve-4: #7c7a85;
+  --mauve-4-rgb: #124, 122, 133;
   --mauve-5: #6f6d78;
   --mauve-6: #625f69;
   --mauve-7: #49474e;
@@ -111,6 +113,7 @@
   --cyan-2: #f2fafb;
   --cyan-3: #def7f9;
   --cyan-4: #caf1f6;
+  --cyan-4-rgb: 202, 241, 246;
   --cyan-5: #b5e9f0;
   --cyan-6: #9ddde7;
   --cyan-7: #7dcedc;
@@ -125,6 +128,7 @@
   --jade-2: #f4fbf7;
   --jade-3: #e6f7ed;
   --jade-4: #d6f1e3;
+  --jade-4-rgb: 214, 241, 227;
   --jade-5: #c3e9d7;
   --jade-6: #acdec8;
   --jade-7: #8bceb6;
@@ -138,6 +142,7 @@
   --red-2: #fff7f7;
   --red-3: #feebec;
   --red-4: #ffdbdc;
+  --red-4-rgb: 255, 219, 220;
   --red-5: #ffcdce;
   --red-6: #fdbdbe;
   --red-7: #f4a9aa;

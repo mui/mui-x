@@ -86,12 +86,22 @@
   white-space: nowrap;
 }
 
+.Under30MinutesEvent {
+  line-height: 0;
+}
+
 .Under30MinutesEvent .EventTitle {
   font-size: var(--font-size-1);
+  line-height: 10px;
 }
 
 .Under30MinutesEvent .EventTime {
   font-size: 10px;
+  line-height: 10px;
+}
+
+.EventCard[role='button'] {
+  cursor: pointer;
 }
 
 .EventCard--regular::before {
