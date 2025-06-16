@@ -10,20 +10,20 @@ const tests: Test[] = [];
 // Also use some of the demos to avoid code duplication.
 const docsImports = import.meta.glob<React.ComponentType>(
   [
-    'docsx/data/**/[A-Z]*.js',
+    '../../docs/data/**/[A-Z]*.js',
     // Hooks examples
-    'docsx/data/**/use[A-Z]*.js',
+    '../../docs/data/**/use[A-Z]*.js',
     // ================== Exclusions ==================
-    '!docsx/data/charts/lines/GDPperCapita.js',
-    '!docsx/data/data-grid/list-view/components/*.js',
+    '!../../docs/data/charts/lines/GDPperCapita.js',
+    '!../../docs/data/data-grid/list-view/components/*.js',
     // Excludes demos that we don't want
-    '!docsx/data/**/*NoSnap.*',
-    '!docsx/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
-    '!docsx/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
-    '!docsx/data/data-grid/filtering/CustomInputComponent', // Needs interaction
-    '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
-    '!docsx/data/charts/tooltip/Custom*', // Composition example
-    '!docsx/data/charts/tooltip/Item*', // Composition example
+    '!../../docs/data/**/*NoSnap.*',
+    '!../../docs/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
+    '!../../docs/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
+    '!../../docs/data/data-grid/filtering/CustomInputComponent', // Needs interaction
+    '!../../docs/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
+    '!../../docs/data/charts/tooltip/Custom*', // Composition example
+    '!../../docs/data/charts/tooltip/Item*', // Composition example
   ],
   { eager: true, import: 'default' },
 );
