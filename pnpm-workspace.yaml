@@ -80,7 +80,7 @@ catalog:
   rimraf: ^6.0.1
   serve: ^14.2.4
   stylis: ^4.3.6
-  tsx: ^4.19.4
+  tsx: ^4.20.3
   use-sync-external-store: ^1.5.0
   vitest: 3.2.3
   '@vitejs/plugin-react': ^4.5.2
