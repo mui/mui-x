@@ -125,7 +125,6 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "babel-plugin-transform-react-remove-prop-types": "catalog:",
     "babel-plugin-transform-replace-expressions": "^0.2.0",
-    "chai": "catalog:",
     "chai-dom": "^1.12.1",
     "compression-webpack-plugin": "^11.1.0",
     "concurrently": "^9.1.2",

@@ -27,7 +27,6 @@
     "@types/react-router": "catalog:",
     "@types/react-transition-group": "catalog:",
     "@types/semver": "catalog:",
-    "chai": "catalog:",
     "dayjs": "catalog:",
     "moment": "catalog:",
     "moment-jalaali": "catalog:",

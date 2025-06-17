@@ -32,7 +32,6 @@
     "@types/react-router": "catalog:",
     "@types/semver": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "chai": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:",

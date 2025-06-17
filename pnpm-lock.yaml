@@ -132,9 +132,6 @@ catalogs:
     babel-plugin-transform-react-remove-prop-types:
       specifier: ^0.4.24
       version: 0.4.24
-    chai:
-      specifier: ^5.2.0
-      version: 5.2.0
     chance:
       specifier: ^1.1.13
       version: 1.1.13
@@ -416,9 +413,6 @@ importers:
       babel-plugin-transform-replace-expressions:
         specifier: ^0.2.0
         version: 0.2.0(@babel/core@7.27.4)
-      chai:
-        specifier: 'catalog:'
-        version: 5.2.0
       chai-dom:
         specifier: ^1.12.1
         version: 1.12.1(chai@5.2.0)
@@ -2000,9 +1994,6 @@ importers:
       '@types/semver':
         specifier: 'catalog:'
         version: 7.7.0
-      chai:
-        specifier: 'catalog:'
-        version: 5.2.0
       dayjs:
         specifier: 'catalog:'
         version: 1.11.13
@@ -2268,9 +2259,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.5.2(vite@6.3.5(@types/node@24.0.1)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.20.3)(yaml@2.7.0))
-      chai:
-        specifier: 'catalog:'
-        version: 5.2.0
       react:
         specifier: 'catalog:'
         version: 19.0.0
