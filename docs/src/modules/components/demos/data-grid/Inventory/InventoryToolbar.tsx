@@ -15,7 +15,7 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({ // TODO: Maybe add a sliding animation across the toggles horizontally
   backgroundColor: theme.palette.background.paper,
   borderRadius: '8px',
   border: `1px solid ${theme.palette.divider}`,
@@ -28,9 +28,6 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
     textTransform: 'none',
     color: theme.palette.text.secondary,
     '&.MuiButton-contained': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    '&:hover': {
       backgroundColor: theme.palette.action.hover,
     },
   },
