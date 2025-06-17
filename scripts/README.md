@@ -15,7 +15,7 @@ A typical release goes like this:
 ### Prepare the release of the packages
 
 > [!INFO]
-> You can now use the new automated release preparation script by running `pnpm release:create-pr`. This script automates steps 1-5 below by:
+> You can now use the new automated release preparation script by running `pnpm release:prepare`. This script automates steps 1-5 below by:
 >
 > - Asking for the major version to update (v7.x, v6.x, etc.)
 > - Determining the new version based on the selected major version:
