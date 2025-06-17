@@ -12,13 +12,16 @@ import {
   selectorChartPropsSize,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
-export interface ChartsSurfaceProps {
+export interface ChartsSurfaceProps
+  extends Omit<
+    React.SVGProps<SVGSVGElement>,
+    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox'
+  > {
   className?: string;
   title?: string;
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
-  tabIndex?: number;
 }
 
 const ChartsSurfaceStyles = styled('svg', {
@@ -96,7 +99,6 @@ ChartsSurface.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  tabIndex: PropTypes.number,
   title: PropTypes.string,
 } as any;
 

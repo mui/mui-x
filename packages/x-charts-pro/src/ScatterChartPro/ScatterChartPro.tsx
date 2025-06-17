@@ -289,7 +289,6 @@ ScatterChartPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  tabIndex: PropTypes.number,
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**

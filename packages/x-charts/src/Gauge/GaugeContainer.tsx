@@ -172,7 +172,6 @@ GaugeContainer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  tabIndex: PropTypes.number,
   title: PropTypes.string,
   /**
    * The value of the gauge.
