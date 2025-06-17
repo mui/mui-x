@@ -19,6 +19,7 @@ export interface LineElementClasses {
   /** Styles applied to the root element when faded. */
   faded: string;
   /**
+   * @deprecated use `.lineElementClasses.root[data-series="${seriesId}"]` instead. This class will be removed in the next major version.
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.
    */
@@ -129,6 +130,7 @@ function LineElement(props: LineElementProps) {
       ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
+      'data-series': id,
     },
     className: classes.root,
     ownerState,

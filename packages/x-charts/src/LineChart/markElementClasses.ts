@@ -13,6 +13,7 @@ export interface MarkElementClasses {
   /** Styles applied to the root element when animation is not skipped. */
   animate: string;
   /**
+   * @deprecated use `.markElementClasses.root[data-series="${seriesId}"]` instead. This class will be removed in the next major version.
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.
    */

@@ -119,6 +119,7 @@ const ChartsLegend = consumeSlots(
                       (event) => onItemClick(event, seriesContextBuilder(item), i)
                     : undefined
                 }
+                data-series={item.id}
               >
                 <ChartsLabelMark
                   className={classes?.mark}
