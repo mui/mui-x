@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { EventPopoverProps } from './EventPopover.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { getColorClassName } from '../internals/utils/color-utils';
+import { useTranslations } from '../internals/utils/TranslationsContext';
 import './EventPopover.css';
 
 const adapter = getAdapter();
@@ -26,6 +27,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
     onClose,
     ...other
   } = props;
+
+  const translations = useTranslations();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -72,11 +75,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     type="text"
                     name="title"
                     defaultValue={calendarEvent.title}
-                    aria-label="Event name"
+                    aria-label={translations.eventTitleAriaLabel}
                     required
                   />
                 </label>
-                <Popover.Close aria-label="Close modal" className="EventPopoverCloseButton">
+                <Popover.Close
+                  aria-label={translations.closeButtonAriaLabel}
+                  className="EventPopoverCloseButton"
+                >
                   <X size={24} strokeWidth={2} />
                 </Popover.Close>
               </header>
@@ -84,7 +90,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
               <div className="EventPopoverMainContent">
                 <div className="EventPopoverDateTimeFields">
                   <label className="EventPopoverFormLabel">
-                    Start date
+                    {translations.startDateLabel}
                     <input
                       className="EventPopoverInput"
                       type="date"
@@ -94,7 +100,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     />
                   </label>
                   <label className="EventPopoverFormLabel">
-                    Start time
+                    {translations.startTimeLabel}
                     <input
                       className="EventPopoverInput"
                       type="time"
@@ -104,7 +110,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     />
                   </label>
                   <label className="EventPopoverFormLabel">
-                    End date
+                    {translations.endDateLabel}
                     <input
                       className="EventPopoverInput"
                       type="date"
@@ -114,7 +120,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     />
                   </label>
                   <label className="EventPopoverFormLabel">
-                    End time
+                    {translations.endTimeLabel}
                     <input
                       className="EventPopoverInput"
                       type="time"
@@ -127,7 +133,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                 <Separator className="EventPopoverSeparator" />
                 <div>
                   <label className="EventPopoverFormLabel">
-                    Description
+                    {translations.descriptionLabel}
                     <textarea
                       className="EventPopoverTextarea"
                       name="description"
@@ -139,7 +145,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
               </div>
               <Separator className="EventPopoverSeparator" />
               <div className="EventPopoverActions">
-                <button type="submit">Save changes</button>
+                <button className="PrimaryButton" type="submit">
+                  {translations.saveChanges}
+                </button>
               </div>
             </form>
           </Popover.Popup>

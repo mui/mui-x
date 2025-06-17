@@ -9,4 +9,14 @@ export interface SchedulerTranslations {
 
   // WeekView
   allDay: string;
+
+  // EventPopover
+  closeButtonAriaLabel: string;
+  descriptionLabel: string;
+  endDateLabel: string;
+  endTimeLabel: string;
+  eventTitleAriaLabel: string;
+  saveChanges: string;
+  startDateLabel: string;
+  startTimeLabel: string;
 }
