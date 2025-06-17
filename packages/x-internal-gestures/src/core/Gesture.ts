@@ -137,7 +137,7 @@ export abstract class Gesture<GestureName extends string> {
   protected gesturesRegistry!: ActiveGesturesRegistry<GestureName>;
 
   /** The DOM element this gesture is attached to */
-  protected element!: HTMLElement;
+  protected element!: TargetElement;
 
   /** Stores the active gesture state */
   protected abstract state: GestureState;
@@ -187,7 +187,7 @@ export abstract class Gesture<GestureName extends string> {
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
   ): void {
-    this.element = element as HTMLElement;
+    this.element = element;
     this.pointerManager = pointerManager;
     this.gesturesRegistry = gestureRegistry;
 
