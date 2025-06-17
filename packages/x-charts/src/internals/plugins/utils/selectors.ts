@@ -22,7 +22,7 @@ const cache = new WeakMap<
   ChartStateCacheKey,
   Map<
     [
-      inputSelectors: [...SelectorArray<any>],
+      inputSelectors: SelectorArray<any>,
       combiner: Combiner<any, any>,
       createSelectorOptions?: Simplify<
         CreateSelectorOptions<
