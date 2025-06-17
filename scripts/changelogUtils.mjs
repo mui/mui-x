@@ -405,7 +405,7 @@ export async function generateChangelog({
   }) => {
     const hasProVersion = proCommits !== null;
     const hasPremiumVersion = premiumCommits !== null;
-    const packageVersion = getPackageVersion(packageName);
+    const packageVersion = nextVersion ? getPackageVersion(packageName) : '__VERSION__';
 
     const lines = [`### ${productName}`];
 
