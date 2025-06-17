@@ -338,6 +338,9 @@ importers:
       '@types/babel__traverse':
         specifier: ^7.20.7
         version: 7.20.7
+      '@types/chai-dom':
+        specifier: ^1.11.3
+        version: 1.11.3
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -5430,6 +5433,9 @@ packages:
 
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
+
+  '@types/chai-dom@1.11.3':
+    resolution: {integrity: sha512-EUEZI7uID4ewzxnU7DJXtyvykhQuwe+etJ1wwOiJyQRTH/ifMWKX+ghiXkxCUvNJ6IQDodf0JXhuP6zZcy2qXQ==}
 
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
@@ -16374,6 +16380,10 @@ snapshots:
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 24.0.1
+
+  '@types/chai-dom@1.11.3':
+    dependencies:
+      '@types/chai': 5.2.2
 
   '@types/chai@5.2.2':
     dependencies:
