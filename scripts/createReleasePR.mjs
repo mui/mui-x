@@ -33,13 +33,44 @@ import path from 'path';
 import inquirer from 'inquirer';
 import { generateChangelog as generateChangelogFromModule } from './changelogUtils.mjs';
 
-// Create a custom Octokit class with retry functionality
+/**
+ * Create a custom Octokit class with retry functionality
+ * @type {typeof import('@octokit/rest').Octokit}
+ */
 const MyOctokit = Octokit.plugin(retry);
 
+/**
+ * Global variable to store the Octokit instance
+ * @type {import('@octokit/rest').Octokit | null}
+ */
+let octokit = null;
+
+/**
+ * @type {string}
+ * GitHub organization name
+ */
 const ORG = 'mui';
+
+/**
+ * @type {string}
+ * GitHub repository name
+ */
 const REPO = 'mui-x';
 
-// Parse command line arguments
+/**
+ * Command line arguments for the script
+ * @typedef {object} ArgvOptions
+ * @property {boolean} [patch] - Create a patch release
+ * @property {boolean} [minor] - Create a minor release
+ * @property {boolean} [major] - Create a major release
+ * @property {string} [custom] - Create a release with a custom version number
+ * @property {string} [githubToken] - GitHub token for authentication
+ */
+
+/**
+ * Parse command line arguments
+ * @type {ArgvOptions}
+ */
 const argv = yargs(hideBin(process.argv))
   .option('patch', {
     type: 'boolean',
@@ -208,7 +239,12 @@ async function selectMajorVersion(currentVersion) {
 /**
  * Calculate versions from git tags
  * @param {string} majorVersion - The selected major version
- * @returns {Promise<{success: boolean, nextPatch?: string, nextMinor?: string, nextMajor?: string}>}
+ * @returns {Promise<{
+ *   success: boolean,
+ *   nextPatch?: string,
+ *   nextMinor?: string,
+ *   nextMajor?: string
+ * }>}
  */
 async function calculateVersionsFromTags(majorVersion) {
   try {
@@ -269,17 +305,12 @@ async function calculateVersionsFromTags(majorVersion) {
  * @param {string} majorVersion - The selected major version
  * @param {string} currentVersion - The current version from package.json
  * @returns {Promise<{
- *   versionType: string,
+ *   versionType: 'patch' | 'minor' | 'major' | 'prerelease' | 'custom',
  *   calculatedVersion?: string,
  *   customVersion?: string,
- *   prereleaseType?: string,
+ *   prereleaseType?: 'alpha' | 'beta',
  *   prereleaseNumber?: number
- * }>} Object containing version information:
- *   - versionType: 'patch', 'minor', 'major', 'prerelease', or 'custom'
- *   - calculatedVersion: The calculated version string (if available)
- *   - customVersion: The custom version string (if entered by user)
- *   - prereleaseType: 'alpha' or 'beta' (for prerelease versions)
- *   - prereleaseNumber: The prerelease version number (for prerelease versions)
+ * }>} Object containing version information
  */
 async function selectVersionType(majorVersion, currentVersion) {
   console.log(`Fetching latest tag for major version ${majorVersion}...`);
@@ -459,12 +490,12 @@ async function selectVersionType(majorVersion, currentVersion) {
 
 /**
  * Calculate the new version based on the selected version type and parameters
- * @param {string} versionType - The selected version type: 'patch', 'minor', 'major', 'prerelease', or 'custom'
+ * @param {'patch' | 'minor' | 'major' | 'prerelease' | 'custom'} versionType - The selected version type
  * @param {string} currentVersion - The current version from package.json
- * @param {string} calculatedVersion - The calculated version from git tags (if available)
- * @param {string} customVersion - The custom version entered by the user (if applicable)
- * @param {string} prereleaseType - The type of prerelease: 'alpha' or 'beta' (for prerelease versions)
- * @param {number} prereleaseNumber - The prerelease version number (for prerelease versions)
+ * @param {string} [calculatedVersion] - The calculated version from git tags (if available)
+ * @param {string} [customVersion] - The custom version entered by the user (if applicable)
+ * @param {'alpha' | 'beta' | undefined} [prereleaseType] - The type of prerelease (for prerelease versions)
+ * @param {number} [prereleaseNumber] - The prerelease version number (for prerelease versions)
  * @returns {string} The new version string in semver format (e.g., '9.0.0', '9.0.0-alpha.1', '9.0.0-beta.0')
  */
 function calculateNewVersion(
@@ -672,11 +703,6 @@ async function getTeamMembers(excludeUsername) {
   try {
     console.log('Fetching members of the mui/x team...');
 
-    // Initialize Octokit with authentication
-    const octokit = new MyOctokit({
-      auth: process.env.GITHUB_TOKEN,
-    });
-
     if (!process.env.GITHUB_TOKEN) {
       console.warn('Warning: GITHUB_TOKEN environment variable is not set.');
       console.warn('You may encounter rate limiting issues or be unable to fetch team members.');
@@ -732,11 +758,6 @@ async function assignReviewers(prNumber, reviewers) {
   try {
     console.log(`Assigning ${reviewers.length} reviewers to PR #${prNumber}...`);
 
-    // Initialize Octokit with authentication
-    const octokit = new MyOctokit({
-      auth: process.env.GITHUB_TOKEN,
-    });
-
     // Assign reviewers
     await octokit.rest.pulls.requestReviewers({
       owner: ORG,
@@ -767,11 +788,6 @@ async function addLabelsToPR(prNumber, labels) {
   try {
     console.log(`Adding labels [${labels.join(', ')}] to PR #${prNumber}...`);
 
-    // Initialize Octokit with authentication
-    const octokit = new MyOctokit({
-      auth: process.env.GITHUB_TOKEN,
-    });
-
     // Add labels to the PR (PRs are treated as issues in the GitHub API)
     await octokit.rest.issues.addLabels({
       owner: ORG,
@@ -798,16 +814,14 @@ async function addLabelsToPR(prNumber, labels) {
  * @param {string} body - The PR body
  * @param {string} head - The branch name
  * @param {string} base - The base branch
- * @returns {Promise<{url: string, number: number}>} The URL and number of the created PR
+ * @returns {Promise<{
+ *   url: string,
+ *   number: number
+ * }>} The URL and number of the created PR
  */
 async function createPullRequest(title, body, head, base) {
   try {
     console.log('Creating PR using Octokit...');
-
-    // Initialize Octokit with authentication
-    const octokit = new MyOctokit({
-      auth: process.env.GITHUB_TOKEN,
-    });
 
     if (!process.env.GITHUB_TOKEN) {
       console.warn('Warning: GITHUB_TOKEN environment variable is not set.');
@@ -839,7 +853,7 @@ async function createPullRequest(title, body, head, base) {
 /**
  * Main function
  */
-async function main() {
+async function main({ githubToken }) {
   try {
     // Check if we're in the repository root
     try {
@@ -851,6 +865,18 @@ async function main() {
       console.error('Error: Please run this script from the repository root.');
       process.exit(1);
     }
+
+    // If no token is provided, throw an error
+    if (!githubToken) {
+      console.error(
+        'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
+      );
+      process.exit(1);
+    }
+
+    octokit = new MyOctokit({
+      auth: githubToken,
+    });
 
     // Initialize variables
     let versionType = '';
@@ -1064,12 +1090,21 @@ async function main() {
   }
 }
 
-// Run the main function
-main()
-  .then(() => {
-    console.log('Script completed successfully.');
+yargs(hideBin(process.argv))
+  .command({
+    command: '$0',
+    description: 'Prepares a release PR for MUI X',
+    builder: (command) => {
+      return command.option('githubToken', {
+        default: process.env.GITHUB_TOKEN,
+        describe:
+          'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
+        type: 'string',
+      });
+    },
+    handler: main,
   })
-  .catch((err) => {
-    console.error('Script failed:', err);
-    process.exit(1);
-  });
+  .help()
+  .strict(true)
+  .version(false)
+  .parse();

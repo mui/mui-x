@@ -9,20 +9,38 @@
  * - Uses actual versions from package.json files
  * - Can return the changelog as a string when returnEntry is true
  */
-import { Octokit } from '@octokit/rest';
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * @type {string}
+ * GitHub organization name
+ */
 const GIT_ORGANIZATION = 'mui';
+
+/**
+ * @type {string}
+ * GitHub repository name
+ */
 const GIT_REPO = 'mui-x';
 
+/**
+ * @type {string[]}
+ * Labels to exclude from the changelog
+ */
 const excludeLabels = ['dependencies', 'scope: scheduler'];
 
+/**
+ * @type {string}
+ * Formatted current date for the changelog
+ */
 const nowFormatted = new Date().toLocaleDateString('en-US', {
   month: 'short',
   day: 'numeric',
   year: 'numeric',
 });
+
+let octokit = null;
 
 /**
  * Get the version of a package from its package.json file
@@ -58,8 +76,8 @@ function getPackageVersion(packageName) {
 
 /**
  * Removes duplicate empty lines from a string.
- * @param text
- * @returns {string}
+ * @param {string} text - The text to process
+ * @returns {string} The text with duplicate empty lines removed
  */
 function removeDuplicateEmptyLines(text) {
   return text
@@ -88,10 +106,17 @@ function parseTags(commitMessage) {
     .join(',');
 }
 
-async function findLatestTaggedVersion(octokit) {
+/**
+ * Find the latest tagged version from GitHub
+ * @returns {Promise<string>} The latest tagged version
+ */
+async function findLatestTaggedVersion() {
   // fetch tags from the GitHub API and return the last one
-  const { data } = await octokit.request(`GET /repos/${GIT_ORGANIZATION}/${GIT_REPO}/tags`);
-  return data[0].name.trim();
+  const { data: tags } = await octokit.rest.repos.listTags({
+    owner: GIT_ORGANIZATION,
+    repo: GIT_REPO,
+  });
+  return tags[0].name.trim();
 }
 
 function resolvePackagesByLabels(labels) {
@@ -122,8 +147,8 @@ function resolvePackagesByLabels(labels) {
 
 /**
  * Generates a changelog for MUI X packages
- * @param {Object} options - The options for generating the changelog
- * @param {string} options.githubToken - The GitHub token for authentication
+ * @param {object} options - The options for generating the changelog
+ * @param {import('@octokit/rest').Octokit} options.octokit - The Octokit instance to use for GitHub API calls
  * @param {string} [options.lastRelease] - The release to compare against
  * @param {string} options.release - The release to generate the changelog for
  * @param {string} [options.nextVersion] - The version expected to be released
@@ -131,22 +156,12 @@ function resolvePackagesByLabels(labels) {
  * @returns {Promise<string|null>} The changelog string or null
  */
 export async function generateChangelog({
-  githubToken,
+  octokit: octokitInput,
   lastRelease: lastReleaseInput,
   release = 'master',
   nextVersion,
   returnEntry = false,
 }) {
-  if (!githubToken) {
-    throw new TypeError(
-      'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
-    );
-  }
-  // Initialize the API client
-  const octokit = new Octokit({
-    auth: githubToken,
-  });
-
   // fetch the last tag and chose the one to use for the release
   const latestTaggedVersion = await findLatestTaggedVersion(octokit);
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
@@ -156,9 +171,11 @@ export async function generateChangelog({
     );
   }
 
+  octokit = octokitInput;
+
   // Now We will fetch all the commits between the chosen tag and release branch
   /**
-   * @type {AsyncIterableIterator<Octokit.Response<Octokit.ReposCompareCommitsResponse>>}
+   * @type {AsyncIterableIterator<import('@octokit/rest').Octokit.Response<import('@octokit/rest').Octokit.ReposCompareCommitsResponse>>}
    */
   const timeline = octokit.paginate.iterator(
     octokit.repos.compareCommits.endpoint.merge({
@@ -170,7 +187,7 @@ export async function generateChangelog({
   );
 
   /**
-   * @type {Octokit.ReposCompareCommitsResponseCommitsItem[]}
+   * @type {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]}
    */
   const commitsItems = [];
   for await (const response of timeline) {
@@ -201,7 +218,7 @@ export async function generateChangelog({
           author_association,
           user: { login },
         },
-      } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
+      } = await octokit.rest.pulls.get({
         owner: GIT_ORGANIZATION,
         repo: GIT_REPO,
         pull_number: Number(searchPullRequestId[1]),
@@ -386,12 +403,12 @@ export async function generateChangelog({
 
   /**
    * Generates a changelog section for a product
-   * @param {Object} options - The options for generating the product section
+   * @param {object} options - The options for generating the product section
    * @param {string} options.productName - The display name of the product (e.g., 'Data Grid', 'Charts')
    * @param {string} options.packageName - The base package name (e.g., 'x-data-grid', 'x-charts')
-   * @param {Array} options.baseCommits - The commits for the base package
-   * @param {Array} [options.proCommits] - The commits for the Pro package (if applicable)
-   * @param {Array} [options.premiumCommits] - The commits for the Premium package (if applicable)
+   * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} options.baseCommits - The commits for the base package
+   * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} [options.proCommits] - The commits for the Pro package (if applicable)
+   * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} [options.premiumCommits] - The commits for the Premium package (if applicable)
    * @param {string} [options.changelogKey] - The key to use for changelog messages (e.g., 'DataGrid', 'charts')
    * @returns {string} The formatted changelog section for the product
    */
@@ -447,9 +464,9 @@ export async function generateChangelog({
 
   /**
    * Generates a changelog section for a product
-   * @param {Object} options - The options for generating the product section
+   * @param {object} options - The options for generating the product section
    * @param {string} options.sectionName - The name of the section (e.g., 'Docs', 'Core', 'Miscellaneous')
-   * @param {Array} options.commits - The commits to log for the section
+   * @param {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]} options.commits - The commits to log for the section
    * @returns {string} The formatted changelog section for the product
    */
   const logOtherSection = (options) => {

@@ -11,15 +11,36 @@
  */
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { Octokit } from '@octokit/rest';
+import { retry } from '@octokit/plugin-retry';
 import { generateChangelog } from './changelogUtils.mjs';
+
+// Create a custom Octokit class with retry functionality
+const MyOctokit = Octokit.plugin(retry);
 
 /**
  * Main function for the CLI
- * @param {Object} argv - The command line arguments
+ * @param {object} argv - The command line arguments
+ * @param {string} [argv.release] - Ref which we want to release
+ * @param {string} [argv.lastRelease] - The release to compare against
+ * @param {string} [argv.nextVersion] - The version expected to be released
+ * @param {string} [argv.githubToken] - GitHub token for authentication
  * @returns {Promise<string|null>} The changelog string or null
  */
 async function main(argv) {
-  return generateChangelog(argv);
+  const { githubToken, ...rest } = argv;
+
+  if (!githubToken) {
+    throw new TypeError(
+      'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
+    );
+  }
+
+  const octokit = new MyOctokit({
+    auth: githubToken,
+  });
+
+  return generateChangelog({ ...rest, octokit });
 }
 
 yargs(hideBin(process.argv))
@@ -50,11 +71,6 @@ yargs(hideBin(process.argv))
           describe:
             'The version expected to be released e.g. `5.2.0`. Replaces `__VERSION__` placeholder in the changelog.',
           type: 'string',
-        })
-        .option('returnEntry', {
-          describe: 'Return the changelog string instead of logging it to the console.',
-          type: 'boolean',
-          default: false,
         });
     },
     handler: main,
