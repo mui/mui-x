@@ -1,4 +1,4 @@
-const DIRECTION_THRESHOLD = 0.00001;
+const DIRECTION_THRESHOLD = 0;
 
 export const getPinchDirection = (velocity: number) => {
   if (velocity > DIRECTION_THRESHOLD) {
