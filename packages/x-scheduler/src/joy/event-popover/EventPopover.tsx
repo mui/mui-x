@@ -57,8 +57,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
     onEventAction(
       {
         ...calendarEvent,
-        title: (form.elements.namedItem('title') as HTMLInputElement).value,
-        description: (form.elements.namedItem('description') as HTMLTextAreaElement).value,
+        title: (form.elements.namedItem('title') as HTMLInputElement).value.trim(),
+        description: (form.elements.namedItem('description') as HTMLTextAreaElement).value.trim(),
         start: adapter.date(startISO),
         end: adapter.date(endISO),
       },
