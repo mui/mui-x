@@ -1,4 +1,4 @@
-import { afterAll, beforeAll } from 'vitest';
+import { afterAll, beforeAll, beforeEach, afterEach } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
