@@ -1,39 +1,29 @@
 'use client';
 import * as React from 'react';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { WeekViewProps } from './WeekView.types';
 import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
+import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
+import { useSelector } from '../../base-ui-copy/utils/store';
+import { selectors } from '../event-calendar/store';
 
-const adapter = getAdapter();
+export const WeekView = React.memo(
+  React.forwardRef(function WeekView(
+    props: WeekViewProps,
+    forwardedRef: React.ForwardedRef<HTMLDivElement>,
+  ) {
+    const { className, ...other } = props;
 
-export const WeekView = React.forwardRef(function WeekView(
-  props: WeekViewProps,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { events, className, ...other } = props;
+    const store = useEventCalendarStore();
+    const visibleDate = useSelector(store, selectors.visibleDate);
 
-  const today = adapter.date('2025-05-26');
-  const getDayList = useDayList();
+    const getDayList = useDayList();
 
-  const currentWeekDays = React.useMemo(
-    () => getDayList({ date: today.startOf('week'), amount: 7 }),
-    [getDayList, today],
-  );
+    const days = React.useMemo(
+      () => getDayList({ date: visibleDate.startOf('week'), amount: 7 }),
+      [getDayList, visibleDate],
+    );
 
-  const filteredEvents = React.useMemo(() => {
-    const weekStart = adapter.startOfDay(currentWeekDays[0]);
-    const weekEnd = adapter.endOfDay(currentWeekDays[6]);
-    return events.filter((event) => adapter.isWithinRange(event.start, [weekStart, weekEnd]));
-  }, [events, currentWeekDays]);
-
-  return (
-    <TimeGrid
-      ref={forwardedRef}
-      days={currentWeekDays}
-      events={filteredEvents}
-      className={className}
-      {...other}
-    />
-  );
-});
+    return <TimeGrid ref={forwardedRef} days={days} className={className} {...other} />;
+  }),
+);

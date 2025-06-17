@@ -62,7 +62,9 @@
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
     "lucide-react": "^0.515.0",
-    "prop-types": "catalog:"
+    "reselect": "catalog:",
+    "prop-types": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "luxon": "^3.0.2",
@@ -73,6 +75,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@types/luxon": "catalog:",
     "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
     "luxon": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

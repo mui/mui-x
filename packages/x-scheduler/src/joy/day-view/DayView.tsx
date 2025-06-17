@@ -1,30 +1,23 @@
 'use client';
 import * as React from 'react';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { DayViewProps } from './DayView.types';
 import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
+import { useSelector } from '../../base-ui-copy/utils/store';
+import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
+import { selectors } from '../event-calendar/store';
 
-const adapter = getAdapter();
+export const DayView = React.memo(
+  React.forwardRef(function DayView(
+    props: DayViewProps,
+    forwardedRef: React.ForwardedRef<HTMLDivElement>,
+  ) {
+    const { className, ...other } = props;
 
-export const DayView = React.forwardRef(function DayView(
-  props: DayViewProps,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { events, day, className, ...other } = props;
+    const store = useEventCalendarStore();
+    const visibleDate = useSelector(store, selectors.visibleDate);
 
-  const filteredEvents = React.useMemo(() => {
-    const dayStart = adapter.startOfDay(day);
-    const dayEnd = adapter.endOfDay(day);
-    return events.filter((event) => adapter.isWithinRange(event.start, [dayStart, dayEnd]));
-  }, [events, day]);
+    const days = React.useMemo(() => [visibleDate], [visibleDate]);
 
-  return (
-    <TimeGrid
-      ref={forwardedRef}
-      days={[day]}
-      events={filteredEvents}
-      className={className}
-      {...other}
-    />
-  );
-});
+    return <TimeGrid ref={forwardedRef} days={days} className={className} {...other} />;
+  }),
+);
