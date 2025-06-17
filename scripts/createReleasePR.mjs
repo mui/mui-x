@@ -607,7 +607,7 @@ async function generateChangelog(newVersion) {
     console.log('Generating changelog...');
 
     return await generateChangelogFromModule({
-      githubToken: process.env.GITHUB_TOKEN,
+      octokit,
       nextVersion: newVersion,
       release: 'master', // Default value from releaseChangelog.mjs
       returnEntry: true,
