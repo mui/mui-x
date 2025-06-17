@@ -44,9 +44,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const startISO = `${startDateValue}T${startTimeValue}`;
     const endISO = `${endDateValue}T${endTimeValue}`;
 
-    const startDate = adapter.date(startISO);
-    const endDate = adapter.date(endISO);
-    if (startDate >= endDate) {
+    const start = adapter.date(startISO);
+    const end = adapter.date(endISO);
+
+    if (adapter.isAfter(start, end) || adapter.isEqual(start, end)) {
       setError(translations.startDateAfterEndDateError);
       return;
     }
