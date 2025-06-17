@@ -210,7 +210,6 @@ async function getCurrentVersion() {
  */
 async function selectMajorVersion(currentVersion) {
   const currentMajorVersion = currentVersion.split('.')[0];
-  console.log(`Current major version: ${currentVersion}`);
 
   const selection = await inquirer.prompt([
     {
@@ -615,7 +614,6 @@ async function generateChangelog(newVersion) {
   } catch (error) {
     console.error('Error generating changelog:', error);
     process.exit(1);
-    return '';
   }
 }
 
@@ -976,10 +974,6 @@ async function main({ githubToken }) {
     }
 
     await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
-
-    // Push to origin and set up tracking
-    console.log('Pushing branch to origin and setting up tracking...');
-    await execa('git', ['push', '-u', 'origin', branchName]);
 
     // Update package.json
     await updatePackageJson(newVersion);

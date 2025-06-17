@@ -162,16 +162,16 @@ export async function generateChangelog({
   nextVersion,
   returnEntry = false,
 }) {
+  octokit = octokitInput;
+
   // fetch the last tag and chose the one to use for the release
-  const latestTaggedVersion = await findLatestTaggedVersion(octokit);
+  const latestTaggedVersion = await findLatestTaggedVersion();
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
       `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
-
-  octokit = octokitInput;
 
   // Now We will fetch all the commits between the chosen tag and release branch
   /**
