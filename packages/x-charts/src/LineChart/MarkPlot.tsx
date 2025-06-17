@@ -15,6 +15,7 @@ import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 
 export interface MarkPlotSlots {
@@ -69,7 +70,7 @@ function MarkPlot(props: MarkPlotProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const chartId = useChartId();
-  const { instance, store } = useChartContext();
+  const { instance, store } = useChartContext<[UseChartCartesianAxisSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
   const xAxisInteractionIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
 
