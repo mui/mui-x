@@ -17,6 +17,7 @@ export interface SchedulerTranslations {
   endTimeLabel: string;
   eventTitleAriaLabel: string;
   saveChanges: string;
+  startDateAfterEndDateError: string;
   startDateLabel: string;
   startTimeLabel: string;
 }

@@ -19,6 +19,7 @@ export const enUS: SchedulerTranslations = {
   endTimeLabel: 'End time',
   eventTitleAriaLabel: 'Event title',
   saveChanges: 'Save changes',
+  startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
 };

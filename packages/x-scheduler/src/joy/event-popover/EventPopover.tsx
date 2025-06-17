@@ -30,17 +30,28 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const translations = useTranslations();
 
+  const [error, setError] = React.useState<string | null>(null);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
 
-    const startDate = (form.elements.namedItem('startDate') as HTMLInputElement).value;
-    const startTime = (form.elements.namedItem('startTime') as HTMLInputElement).value;
-    const endDate = (form.elements.namedItem('endDate') as HTMLInputElement).value;
-    const endTime = (form.elements.namedItem('endTime') as HTMLInputElement).value;
+    const startDateValue = (form.elements.namedItem('startDate') as HTMLInputElement).value;
+    const startTimeValue = (form.elements.namedItem('startTime') as HTMLInputElement).value;
+    const endDateValue = (form.elements.namedItem('endDate') as HTMLInputElement).value;
+    const endTimeValue = (form.elements.namedItem('endTime') as HTMLInputElement).value;
 
-    const startISO = `${startDate}T${startTime}`;
-    const endISO = `${endDate}T${endTime}`;
+    const startISO = `${startDateValue}T${startTimeValue}`;
+    const endISO = `${endDateValue}T${endTimeValue}`;
+
+    const startDate = adapter.date(startISO);
+    const endDate = adapter.date(endISO);
+    if (startDate >= endDate) {
+      setError(translations.startDateAfterEndDateError);
+      return;
+    }
+
+    setError(null);
 
     onEventAction(
       {
@@ -129,6 +140,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       required
                     />
                   </label>
+                  {error && (
+                    <div className="EventPopoverDateTimeFieldsError" role="alert">
+                      {error}
+                    </div>
+                  )}
                 </div>
                 <Separator className="EventPopoverSeparator" />
                 <div>
