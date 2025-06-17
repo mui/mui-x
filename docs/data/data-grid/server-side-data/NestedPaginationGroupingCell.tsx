@@ -25,13 +25,13 @@ const gridRowSelector = createSelector(
 interface NestedPaginationGroupingCellProps
   extends GridRenderCellParams<any, any, any, GridDataSourceGroupNode> {
   setExpandedRows: React.Dispatch<React.SetStateAction<GridValidRowModel[]>>;
-  nestedLevelRef: React.RefObject<number>;
+  depth: number;
 }
 
 interface GroupingIconProps
   extends Pick<
     NestedPaginationGroupingCellProps,
-    'id' | 'field' | 'row' | 'setExpandedRows' | 'nestedLevelRef'
+    'id' | 'field' | 'row' | 'setExpandedRows' | 'depth'
   > {
   descendantCount: number;
   groupingKey: GridBasicGroupNode['groupingKey'];
@@ -46,7 +46,7 @@ function GroupingIcon(props: GroupingIconProps) {
     field,
     descendantCount,
     row,
-    nestedLevelRef,
+    depth,
     expanded,
     setExpandedRows,
   } = props;
@@ -62,7 +62,7 @@ function GroupingIcon(props: GroupingIconProps) {
             ...row,
             groupingKey,
             expanded: true,
-            depth: nestedLevelRef.current,
+            depth,
           },
         ]);
       } else {
@@ -93,8 +93,7 @@ function GroupingIcon(props: GroupingIconProps) {
 export default function NestedPaginationGroupingCell(
   props: NestedPaginationGroupingCellProps,
 ) {
-  const { id, field, formattedValue, rowNode, setExpandedRows, nestedLevelRef } =
-    props;
+  const { id, field, formattedValue, rowNode, setExpandedRows, depth } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -108,9 +107,9 @@ export default function NestedPaginationGroupingCell(
     );
   }
 
-  let depth = row.depth ? row.depth : rowNode.depth;
-  if (!row.expanded && nestedLevelRef.current > 0) {
-    depth = nestedLevelRef.current;
+  let marginFactor = row.depth ? row.depth : rowNode.depth;
+  if (!row.expanded && depth > 0) {
+    marginFactor = depth;
   }
 
   return (
@@ -119,7 +118,7 @@ export default function NestedPaginationGroupingCell(
         display: 'flex',
         alignItems: 'center',
         width: '100%',
-        ml: depth * 2,
+        ml: marginFactor * 2,
       }}
     >
       <div
@@ -136,7 +135,7 @@ export default function NestedPaginationGroupingCell(
           expanded={row.expanded || rowNode.childrenExpanded}
           row={row}
           setExpandedRows={setExpandedRows}
-          nestedLevelRef={nestedLevelRef}
+          depth={depth}
           descendantCount={descendantCount}
         />
       </div>

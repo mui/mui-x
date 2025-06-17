@@ -25,7 +25,7 @@ function GroupingIcon(props) {
     field,
     descendantCount,
     row,
-    nestedLevelRef,
+    depth,
     expanded,
     setExpandedRows,
   } = props;
@@ -40,7 +40,7 @@ function GroupingIcon(props) {
           ...row,
           groupingKey,
           expanded: true,
-          depth: nestedLevelRef.current,
+          depth,
         },
       ]);
     } else {
@@ -68,8 +68,7 @@ function GroupingIcon(props) {
 }
 
 export default function NestedPaginationGroupingCell(props) {
-  const { id, field, formattedValue, rowNode, setExpandedRows, nestedLevelRef } =
-    props;
+  const { id, field, formattedValue, rowNode, setExpandedRows, depth } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -83,9 +82,9 @@ export default function NestedPaginationGroupingCell(props) {
     );
   }
 
-  let depth = row.depth ? row.depth : rowNode.depth;
-  if (!row.expanded && nestedLevelRef.current > 0) {
-    depth = nestedLevelRef.current;
+  let marginFactor = row.depth ? row.depth : rowNode.depth;
+  if (!row.expanded && depth > 0) {
+    marginFactor = depth;
   }
 
   return (
@@ -94,7 +93,7 @@ export default function NestedPaginationGroupingCell(props) {
         display: 'flex',
         alignItems: 'center',
         width: '100%',
-        ml: depth * 2,
+        ml: marginFactor * 2,
       }}
     >
       <div
@@ -111,7 +110,7 @@ export default function NestedPaginationGroupingCell(props) {
           expanded={row.expanded || rowNode.childrenExpanded}
           row={row}
           setExpandedRows={setExpandedRows}
-          nestedLevelRef={nestedLevelRef}
+          depth={depth}
           descendantCount={descendantCount}
         />
       </div>

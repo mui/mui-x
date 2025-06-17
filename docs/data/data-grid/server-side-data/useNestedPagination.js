@@ -8,10 +8,8 @@ export default function useNestedPagination(initialPaginationModel) {
   const [paginationModels, setPaginationModels] = React.useState({
     0: initialPaginationModel,
   });
-  const nestedLevelRef = React.useRef(0);
 
   React.useEffect(() => {
-    nestedLevelRef.current = expandedRows.length;
     setPaginationModels((prev) => {
       const newPaginationModels = { ...prev };
       if (prev[expandedRows.length] == null) {
@@ -32,7 +30,7 @@ export default function useNestedPagination(initialPaginationModel) {
       <NestedPaginationGroupingCell
         {...params}
         rowNode={params.rowNode}
-        nestedLevelRef={nestedLevelRef}
+        depth={expandedRows.length}
         setExpandedRows={setExpandedRows}
       />
     ),
