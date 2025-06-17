@@ -1,8 +1,8 @@
 import chaiDom from 'chai-dom';
-// import chaiPlugin from '@mui/internal-test-utils/chaiPlugin';
+import chaiPlugin from '@mui/internal-test-utils/chaiPlugin';
 
 chai.use(chaiDom);
-// chai.use(chaiPlugin);
+chai.use(chaiPlugin);
 
 // https://stackoverflow.com/a/46755166/3406963
 declare global {
