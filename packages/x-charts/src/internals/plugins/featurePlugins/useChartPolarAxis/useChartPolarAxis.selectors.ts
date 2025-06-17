@@ -12,12 +12,12 @@ export const selectorChartPolarAxisState = (state: ChartState<[], [UseChartPolar
   state.polarAxis;
 
 export const selectorChartRawRotationAxis = createSelector(
-  selectorChartPolarAxisState,
+  [selectorChartPolarAxisState],
   (axis) => axis?.rotation,
 );
 
 export const selectorChartRawRadiusAxis = createSelector(
-  selectorChartPolarAxisState,
+  [selectorChartPolarAxisState],
   (axis) => axis?.radius,
 );
 
