@@ -490,19 +490,19 @@ export async function generateChangelog({
       ...Array.from(community.firstTimers),
     ].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
+    const teamMembers = Array.from(community.team).sort((a, b) =>
+      a.toLowerCase().localeCompare(b.toLowerCase()),
+    );
+
     if (contributors.length > 0) {
       lines.push(
-        `Special thanks go out to the community members for their valuable contributions:`,
-        contributors.join(', '),
+        `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}`,
       );
     }
 
     if (community.team.size > 0) {
       lines.push(
-        `The following are all team members who have contributed to this release:`,
-        Array.from(community.team)
-          .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-          .join(', '),
+        `The following are all team members who have contributed to this release:\n${teamMembers.join(', ')}`,
       );
     }
 
