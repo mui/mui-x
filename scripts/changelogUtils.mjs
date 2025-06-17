@@ -90,6 +90,7 @@ function parseTags(commitMessage) {
  * @param {Octokit.ReposCompareCommitsResponseCommitsItem} commitsItem
  */
 function filterCommit(commitsItem) {
+  console.log(JSON.stringify(commitsItem, null, 2));
   return (
     commitsItem.labels.includes('dependencies') || commitsItem.labels.includes('scope: scheduler')
   );
