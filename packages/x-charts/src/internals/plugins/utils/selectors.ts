@@ -102,7 +102,7 @@ export const createSelector = <InputSelectors extends SelectorArray<any>, Result
     // If there is a cached selector, execute it.
     const cachedSelector = cacheForCurrentChartInstance.get(createSelectorArgs);
     if (cachedSelector) {
-      return cachedSelector(state, selectorArgs);
+      return cachedSelector(state, ...selectorArgs);
     }
 
     // Otherwise, create a new selector and cache it and execute it.
