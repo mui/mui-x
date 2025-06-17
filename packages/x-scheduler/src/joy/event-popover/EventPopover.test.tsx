@@ -3,10 +3,10 @@ import { expect } from 'chai';
 import { DateTime } from 'luxon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
-import { EventPopover } from './EventPopover';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
 import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
+import { EventPopover } from './EventPopover';
 
 const calendarEvent: CalendarEvent = {
   id: '1',
