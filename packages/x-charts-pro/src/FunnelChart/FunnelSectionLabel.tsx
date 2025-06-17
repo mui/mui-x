@@ -54,8 +54,8 @@ const FunnelSectionLabel = consumeSlots(
         y={label.y}
         textAnchor={label.textAnchor ?? 'middle'}
         dominantBaseline={label.dominantBaseline ?? 'central'}
-        data-series-id={props.seriesId}
-        data-data-index={props.dataIndex}
+        data-series={props.seriesId}
+        data-index={props.dataIndex}
         {...other}
         ref={ref}
       >
