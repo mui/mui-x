@@ -139,13 +139,10 @@ async function initializeEnvironment(
 
 [chromium, webkit, firefox].forEach((browserType) => {
   describe(`e2e: ${browserType.name()}`, () => {
-    // @ts-expect-error, will be defined
     beforeAll(async () => {
       await initializeEnvironment(browserType);
     });
 
-    // TODO: remove with mocha types
-    // @ts-expect-error, will be defined
     afterAll(async () => {
       await context.close();
       await browser.close();
@@ -233,7 +230,6 @@ async function initializeEnvironment(
       });
 
       // this test sometimes fails on webkit for some reason
-      // @ts-expect-error
       it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
         'should reorder columns by dropping into the header',
         async () => {
@@ -328,7 +324,6 @@ async function initializeEnvironment(
       // if this test fails locally on chromium, be aware that it uses system locale format,
       // instead of one specified by the `locale`
       // webkit has issues with date input locale on circleci
-      // @ts-expect-error
       it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
         'should edit date cells',
         async () => {
@@ -1134,13 +1129,10 @@ async function initializeEnvironment(
 });
 
 describe('e2e: chromium on Android', () => {
-  // @ts-expect-error, will be defined
   beforeAll(async () => {
     await initializeEnvironment(chromium, devices['Pixel 5']);
   });
 
-  // TODO: remove with mocha types
-  // @ts-expect-error, will be defined
   afterAll(async () => {
     await context.close();
     await browser.close();
