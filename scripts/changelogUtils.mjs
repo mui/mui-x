@@ -16,6 +16,8 @@ import path from 'path';
 const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
 
+const excludeLabels = ['dependencies', 'scope: scheduler'];
+
 const nowFormatted = new Date().toLocaleDateString('en-US', {
   month: 'short',
   day: 'numeric',
@@ -84,16 +86,6 @@ function parseTags(commitMessage) {
       return a.localeCompare(b);
     })
     .join(',');
-}
-
-/**
- * @param {Octokit.ReposCompareCommitsResponseCommitsItem} commitsItem
- */
-function filterCommit(commitsItem) {
-  console.log(JSON.stringify(commitsItem, null, 2));
-  return (
-    commitsItem.labels.includes('dependencies') || commitsItem.labels.includes('scope: scheduler')
-  );
 }
 
 async function findLatestTaggedVersion(octokit) {
@@ -183,7 +175,7 @@ export async function generateChangelog({
   const commitsItems = [];
   for await (const response of timeline) {
     const { data: compareCommits } = response;
-    commitsItems.push(...compareCommits.commits.filter(filterCommit));
+    commitsItems.push(...compareCommits.commits);
   }
 
   // Fetch all the pull Request and check if there is a section named changelog
@@ -215,6 +207,7 @@ export async function generateChangelog({
         pull_number: Number(searchPullRequestId[1]),
       });
 
+      // Skip bot accounts
       if (!login.includes('[bot]')) {
         switch (author_association) {
           case 'CONTRIBUTOR':
@@ -274,95 +267,97 @@ export async function generateChangelog({
   const otherCommits = [];
   const codemodCommits = [];
 
-  commitsItems.forEach((commitItem) => {
-    const tag = parseTags(commitItem.commit.message);
-    // for now we use only one parsed tag
-    const firstTag = tag.split(',')[0];
-    switch (firstTag) {
-      case 'DataGrid':
-      case 'data grid':
-        dataGridCommits.push(commitItem);
-        break;
-      case 'DataGridPro':
-        dataGridProCommits.push(commitItem);
-        break;
-      case 'DataGridPremium':
-        dataGridPremiumCommits.push(commitItem);
-        break;
-      case 'DatePicker':
-      case 'TimePicker':
-      case 'DateTimePicker':
-      case 'pickers':
-      case 'fields':
-        pickersCommits.push(commitItem);
-        break;
-      case 'DateRangePicker':
-      case 'DateTimeRangePicker':
-      case 'TimeRangePicker':
-        pickersProCommits.push(commitItem);
-        break;
-      case 'charts-pro':
-        chartsProCommits.push(commitItem);
-        break;
-      case 'charts':
-        chartsCommits.push(commitItem);
-        break;
-      case 'TreeView':
-      case 'RichTreeView':
-      case 'tree view':
-      case 'TreeItem':
-        treeViewCommits.push(commitItem);
-        break;
-      case 'RichTreeViewPro':
-      case 'tree view pro':
-        treeViewProCommits.push(commitItem);
-        break;
-      case 'scheduler':
-        schedulerCommits.push(commitItem);
-        break;
-      case 'scheduler-pro':
-        schedulerProCommits.push(commitItem);
-        break;
-      case 'docs':
-        docsCommits.push(commitItem);
-        break;
-      case 'core':
-        coreCommits.push(commitItem);
-        break;
-      case 'codemod':
-        codemodCommits.push(commitItem);
-        break;
-      case 'l10n':
-      case '118n': {
-        const prLabels = prsLabelsMap[commitItem.sha];
-        const resolvedPackages = resolvePackagesByLabels(prLabels);
-        if (resolvedPackages.length > 0) {
-          resolvedPackages.forEach((resolvedPackage) => {
-            switch (resolvedPackage) {
-              case 'DataGrid':
-                dataGridCommits.push(commitItem);
-                break;
-              case 'pickers':
-                pickersCommits.push(commitItem);
-                break;
-              case 'Scheduler':
-                schedulerCommits.push(commitItem);
-                break;
-              default:
-                coreCommits.push(commitItem);
-                break;
-            }
-          });
-        } else {
-          otherCommits.push(commitItem);
+  commitsItems
+    .filter((item) => !prsLabelsMap[item.sha].some((label) => excludeLabels.includes(label.name)))
+    .forEach((commitItem) => {
+      const tag = parseTags(commitItem.commit.message);
+      // for now we use only one parsed tag
+      const firstTag = tag.split(',')[0];
+      switch (firstTag) {
+        case 'DataGrid':
+        case 'data grid':
+          dataGridCommits.push(commitItem);
+          break;
+        case 'DataGridPro':
+          dataGridProCommits.push(commitItem);
+          break;
+        case 'DataGridPremium':
+          dataGridPremiumCommits.push(commitItem);
+          break;
+        case 'DatePicker':
+        case 'TimePicker':
+        case 'DateTimePicker':
+        case 'pickers':
+        case 'fields':
+          pickersCommits.push(commitItem);
+          break;
+        case 'DateRangePicker':
+        case 'DateTimeRangePicker':
+        case 'TimeRangePicker':
+          pickersProCommits.push(commitItem);
+          break;
+        case 'charts-pro':
+          chartsProCommits.push(commitItem);
+          break;
+        case 'charts':
+          chartsCommits.push(commitItem);
+          break;
+        case 'TreeView':
+        case 'RichTreeView':
+        case 'tree view':
+        case 'TreeItem':
+          treeViewCommits.push(commitItem);
+          break;
+        case 'RichTreeViewPro':
+        case 'tree view pro':
+          treeViewProCommits.push(commitItem);
+          break;
+        case 'scheduler':
+          schedulerCommits.push(commitItem);
+          break;
+        case 'scheduler-pro':
+          schedulerProCommits.push(commitItem);
+          break;
+        case 'docs':
+          docsCommits.push(commitItem);
+          break;
+        case 'core':
+          coreCommits.push(commitItem);
+          break;
+        case 'codemod':
+          codemodCommits.push(commitItem);
+          break;
+        case 'l10n':
+        case '118n': {
+          const prLabels = prsLabelsMap[commitItem.sha];
+          const resolvedPackages = resolvePackagesByLabels(prLabels);
+          if (resolvedPackages.length > 0) {
+            resolvedPackages.forEach((resolvedPackage) => {
+              switch (resolvedPackage) {
+                case 'DataGrid':
+                  dataGridCommits.push(commitItem);
+                  break;
+                case 'pickers':
+                  pickersCommits.push(commitItem);
+                  break;
+                case 'Scheduler':
+                  schedulerCommits.push(commitItem);
+                  break;
+                default:
+                  coreCommits.push(commitItem);
+                  break;
+              }
+            });
+          } else {
+            otherCommits.push(commitItem);
+          }
+          break;
         }
-        break;
+        default:
+          otherCommits.push(commitItem);
+          break;
       }
-      default:
-        otherCommits.push(commitItem);
-        break;
-    }
-  });
+    });
 
   // Helper to print a list of commits in a section of the changelog
   const logCommitEntries = (commitsList) => {
