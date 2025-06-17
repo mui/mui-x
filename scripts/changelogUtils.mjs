@@ -31,6 +31,12 @@ const GIT_REPO = 'mui-x';
 const excludeLabels = ['dependencies', 'scope: scheduler'];
 
 /**
+ * @type {string[]}
+ * Tags found in title to exclude the commit from the changelog
+ */
+const excludeTitleTags = ['[charts-premium]'];
+
+/**
  * @type {string}
  * Formatted current date for the changelog
  */
@@ -286,6 +292,7 @@ export async function generateChangelog({
 
   commitsItems
     .filter((item) => !prsLabelsMap[item.sha].some((label) => excludeLabels.includes(label.name)))
+    .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
       const tag = parseTags(commitItem.commit.message);
       // for now we use only one parsed tag
