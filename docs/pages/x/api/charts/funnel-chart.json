@@ -29,12 +29,6 @@
     "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" }, "default": "false" },
-    "highlightedAxis": {
-      "type": {
-        "name": "shape",
-        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }"
-      }
-    },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -55,13 +49,6 @@
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
-      }
-    },
-    "onAxisInteraction": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(newAxisItems: Array<AxisItemIdentifier>) => void",
-        "describedArgs": ["newAxisItems"]
       }
     },
     "onHighlightChange": {
