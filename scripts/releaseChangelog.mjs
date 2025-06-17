@@ -27,6 +27,18 @@ const MyOctokit = Octokit.plugin(retry);
  * @param {string} [argv.githubToken] - GitHub token for authentication
  * @returns {Promise<string|null>} The changelog string or null
  */
+function filterCommit(commitsItem) {
+  // TODO: Use labels
+
+  // Filter dependency updates
+  return (
+    !commitsItem.commit.message.startsWith('Bump') &&
+    !commitsItem.commit.message.includes('[scheduler]') &&
+    // TODO: CHARTS-PREMIUM: Remove ignore when ready, also add it to the template
+    !commitsItem.commit.message.includes('[charts-premium]')
+  );
+}
+
 async function main(argv) {
   const { githubToken, ...rest } = argv;
 
