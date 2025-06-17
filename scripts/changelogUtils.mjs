@@ -90,12 +90,8 @@ function parseTags(commitMessage) {
  * @param {Octokit.ReposCompareCommitsResponseCommitsItem} commitsItem
  */
 function filterCommit(commitsItem) {
-  // TODO: Use labels
-
-  // Filter dependency updates
   return (
-    !commitsItem.commit.message.startsWith('Bump') &&
-    !commitsItem.commit.message.includes('[scheduler]')
+    commitsItem.labels.includes('dependencies') || commitsItem.labels.includes('scope: scheduler')
   );
 }
 
