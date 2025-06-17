@@ -32,6 +32,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import inquirer from 'inquirer';
 import { generateChangelog as generateChangelogFromModule } from './changelogUtils.mjs';
+import pck from '../package.json' with { type: 'json' };
+
+const packageVersion = pck.version;
 
 /**
  * Create a custom Octokit class with retry functionality
@@ -188,28 +191,11 @@ async function findOriginOwner() {
 }
 
 /**
- * Get the current version from package.json
- * @returns {Promise<string>} The current version
- */
-async function getCurrentVersion() {
-  try {
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
-    const packageJsonContent = await fs.readFile(packageJsonPath, 'utf8');
-    const packageJson = JSON.parse(packageJsonContent);
-    return packageJson.version;
-  } catch (error) {
-    console.error('Error reading package.json:', error);
-    process.exit(1);
-  }
-}
-
-/**
  * Select the major version to update
- * @param {string} currentVersion - The current version from package.json
  * @returns {Promise<string>} The selected major version
  */
-async function selectMajorVersion(currentVersion) {
-  const currentMajorVersion = currentVersion.split('.')[0];
+async function selectMajorVersion() {
+  const currentMajorVersion = packageVersion.split('.')[0];
 
   const selection = await inquirer.prompt([
     {
@@ -302,7 +288,6 @@ async function calculateVersionsFromTags(majorVersion) {
 /**
  * Select the version type based on the current version and selected major version
  * @param {string} majorVersion - The selected major version
- * @param {string} currentVersion - The current version from package.json
  * @returns {Promise<{
  *   versionType: 'patch' | 'minor' | 'major' | 'prerelease' | 'custom',
  *   calculatedVersion?: string,
@@ -311,7 +296,7 @@ async function calculateVersionsFromTags(majorVersion) {
  *   prereleaseNumber?: number
  * }>} Object containing version information
  */
-async function selectVersionType(majorVersion, currentVersion) {
+async function selectVersionType(majorVersion) {
   console.log(`Fetching latest tag for major version ${majorVersion}...`);
 
   const { success, nextPatch, nextMinor, nextMajor } =
@@ -329,12 +314,12 @@ async function selectVersionType(majorVersion, currentVersion) {
   }
 
   // Check if the selected major version is the latest one
-  const currentMajorVersion = currentVersion.split('.')[0];
+  const currentMajorVersion = packageVersion.split('.')[0];
   const isLatestMajor = majorVersion === currentMajorVersion;
 
   // Check if current version is a prerelease (alpha or beta)
-  const alphaMatch = currentVersion.match(/-alpha\.(\d+)$/);
-  const betaMatch = currentVersion.match(/-beta\.(\d+)$/);
+  const alphaMatch = packageVersion.match(/-alpha\.(\d+)$/);
+  const betaMatch = packageVersion.match(/-beta\.(\d+)$/);
   const isAlpha = !!alphaMatch;
   const isBeta = !!betaMatch;
   const alphaVersion = isAlpha ? parseInt(alphaMatch[1], 10) : 0;
@@ -422,7 +407,7 @@ async function selectVersionType(majorVersion, currentVersion) {
         defaultCustomVersion = nextPatch;
       } else {
         // If no tags were found, fall back to calculating from package.json
-        const [defaultMajor, defaultMinor, defaultPatch] = currentVersion.split('.').map(Number);
+        const [defaultMajor, defaultMinor, defaultPatch] = packageVersion.split('.').map(Number);
         defaultCustomVersion = `${defaultMajor}.${defaultMinor}.${defaultPatch + 1}`;
       }
 
@@ -490,7 +475,6 @@ async function selectVersionType(majorVersion, currentVersion) {
 /**
  * Calculate the new version based on the selected version type and parameters
  * @param {'patch' | 'minor' | 'major' | 'prerelease' | 'custom'} versionType - The selected version type
- * @param {string} currentVersion - The current version from package.json
  * @param {string} [calculatedVersion] - The calculated version from git tags (if available)
  * @param {string} [customVersion] - The custom version entered by the user (if applicable)
  * @param {'alpha' | 'beta' | undefined} [prereleaseType] - The type of prerelease (for prerelease versions)
@@ -499,7 +483,6 @@ async function selectVersionType(majorVersion, currentVersion) {
  */
 function calculateNewVersion(
   versionType,
-  currentVersion,
   calculatedVersion,
   customVersion,
   prereleaseType,
@@ -514,7 +497,7 @@ function calculateNewVersion(
   }
 
   // Fall back to calculating from package.json if no calculated version is available
-  const [major, minor, patch] = currentVersion.split('.').map(Number);
+  const [major, minor, patch] = packageVersion.split('.').map(Number);
 
   if (versionType === 'patch') {
     return `${major}.${minor}.${patch + 1}`;
@@ -537,7 +520,7 @@ function calculateNewVersion(
     }
   }
 
-  return currentVersion;
+  return packageVersion; // Fallback to current version if something goes wrong
 }
 
 /**
@@ -892,12 +875,8 @@ async function main({ githubToken }) {
       customVersion = argv.custom;
     }
 
-    // Get current version from package.json
-    const currentVersion = await getCurrentVersion();
-    console.log(`Current version: ${currentVersion}`);
-
     // Always prompt for major version first
-    const majorVersion = await selectMajorVersion(currentVersion);
+    const majorVersion = await selectMajorVersion();
 
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
@@ -905,7 +884,7 @@ async function main({ githubToken }) {
     let prereleaseNumber = 0;
 
     if (!versionType && !customVersion) {
-      const result = await selectVersionType(majorVersion, currentVersion);
+      const result = await selectVersionType(majorVersion);
       versionType = result.versionType;
       calculatedVersion = result.calculatedVersion;
       customVersion = result.customVersion;
@@ -934,7 +913,6 @@ async function main({ githubToken }) {
     // Calculate new version
     const newVersion = calculateNewVersion(
       versionType,
-      currentVersion,
       calculatedVersion,
       customVersion,
       prereleaseType,
@@ -947,7 +925,7 @@ async function main({ githubToken }) {
     console.log(`Found upstream remote: ${upstreamRemote}`);
 
     // Determine which branch to update based on the selected major version
-    const currentMajorVersion = currentVersion.split('.')[0];
+    const currentMajorVersion = packageVersion.split('.')[0];
     if (majorVersion === currentMajorVersion) {
       console.log('Updating the upstream master branch for current major version...');
       await execa('git', ['fetch', upstreamRemote, 'master']);
