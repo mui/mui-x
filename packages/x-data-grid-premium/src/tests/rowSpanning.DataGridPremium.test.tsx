@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { DataGridPremium, DataGridPremiumProps } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 

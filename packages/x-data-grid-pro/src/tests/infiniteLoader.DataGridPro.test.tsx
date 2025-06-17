@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy, restore } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { flushMicrotasks, randomStringValue } from '@mui/internal-test-utils';
 import { throwMissingPropError } from './utils';
 import type {

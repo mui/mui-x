@@ -1,5 +1,4 @@
 import * as fse from 'fs-extra';
-import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium } from '@playwright/test';

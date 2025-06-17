@@ -8,7 +8,6 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { SinonSpy, spy, stub, SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';

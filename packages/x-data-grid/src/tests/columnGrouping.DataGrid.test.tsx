@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { expect } from 'chai';
 import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
 import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
 

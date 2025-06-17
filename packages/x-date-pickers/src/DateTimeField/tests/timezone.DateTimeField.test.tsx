@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { DateTime } from 'luxon';
 import { fireEvent } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { fireEvent } from '@mui/internal-test-utils';

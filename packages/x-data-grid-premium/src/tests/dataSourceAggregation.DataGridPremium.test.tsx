@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useSeries } from './useSeries';

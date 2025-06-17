@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { expect } from 'chai';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartProvider } from '../context/ChartProvider';
 

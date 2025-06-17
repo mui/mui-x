@@ -2,7 +2,6 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
-import { expect } from 'chai';
 import { DataGrid, DataGridProps, gridClasses, GridToolbar } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
 import {

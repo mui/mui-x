@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import {

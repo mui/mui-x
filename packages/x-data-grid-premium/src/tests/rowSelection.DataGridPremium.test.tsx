@@ -3,7 +3,6 @@ import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,

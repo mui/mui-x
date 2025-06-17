@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 // eslint-disable-next-line import/no-relative-packages
 import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '@mui/x-charts/BarChart';

@@ -4,7 +4,6 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ChartsLabelGradient } from '@mui/x-charts/ChartsLabel/ChartsLabelGradient';
 import { labelGradientClasses } from '@mui/x-charts/ChartsLabel';
-import { expect } from 'chai';
 import { isJSDOM } from 'test/utils/skipIf';
 import RtlProvider from '@mui/system/RtlProvider';
 

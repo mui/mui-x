@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useFunnelSeries, useFunnelSeriesContext } from './useFunnelSeries';
 import {

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { UseTreeViewLabelSignature } from '@mui/x-tree-view/internals';

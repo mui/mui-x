@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { spy, SinonSpy } from 'sinon';
-import { expect } from 'chai';
 import {
   createRenderer,
   fireEvent,

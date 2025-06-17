@@ -1,5 +1,4 @@
 import { platform } from 'node:os';
-import { expect } from 'chai';
 import {
   chromium,
   webkit,

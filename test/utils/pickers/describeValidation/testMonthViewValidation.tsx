@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { Unstable_RadarChart as RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 

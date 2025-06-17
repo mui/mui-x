@@ -9,7 +9,6 @@ import {
   waitFor,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
-import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
 import {

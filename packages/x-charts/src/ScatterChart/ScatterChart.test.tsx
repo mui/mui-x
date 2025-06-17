@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { expect } from 'chai';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const cellSelector = '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th';

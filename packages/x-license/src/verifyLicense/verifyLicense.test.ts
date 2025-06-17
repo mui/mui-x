@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { isJSDOM } from 'test/utils/skipIf';
 import { generateLicense } from '../generateLicense/generateLicense';
 import { generateReleaseInfo, verifyLicense } from './verifyLicense';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import {
   useLicenseVerifier,

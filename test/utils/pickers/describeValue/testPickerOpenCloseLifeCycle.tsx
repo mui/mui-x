@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { config } from 'react-transition-group';
 import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';

@@ -9,7 +9,6 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import semver from 'semver';
 import childProcess from 'child_process';
 import { isJSDOM } from 'test/utils/skipIf';

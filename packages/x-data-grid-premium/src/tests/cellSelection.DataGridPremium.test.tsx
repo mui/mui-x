@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { stub, SinonStub, spy } from 'sinon';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';

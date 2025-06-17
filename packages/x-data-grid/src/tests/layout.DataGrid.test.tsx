@@ -9,7 +9,6 @@ import {
   act,
 } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
-import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,

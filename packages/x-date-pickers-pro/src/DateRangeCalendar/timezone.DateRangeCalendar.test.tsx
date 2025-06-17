@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
 import { DateRangeCalendar } from './DateRangeCalendar';

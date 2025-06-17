@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { LineChart } from '@mui/x-charts/LineChart';

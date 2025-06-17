@@ -1,5 +1,4 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, createEvent } from '@mui/internal-test-utils';
 import { UseTreeViewItemsReorderingSignature } from '@mui/x-tree-view-pro/internals';
