@@ -108,6 +108,12 @@ export const Event = React.forwardRef(function Event(
     titleLineCountRegularVariant,
   ]);
 
+  const handleEventClick =
+    (triggerOnClick?: (e: React.MouseEvent) => void) => (event: React.MouseEvent) => {
+      triggerOnClick?.(event);
+      onEventClick?.(calendarEvent, event);
+    };
+
   return (
     <div
       ref={forwardedRef}
@@ -127,10 +133,7 @@ export const Event = React.forwardRef(function Event(
             start={calendarEvent.start}
             end={calendarEvent.end}
             aria-labelledby={`${ariaLabelledBy} ${id}`}
-            onClick={(event) => {
-              triggerProps.onClick?.(event);
-              onEventClick?.(calendarEvent, event);
-            }}
+            onClick={handleEventClick(triggerProps.onClick)}
           >
             {renderContent}
           </TimeGrid.Event>
