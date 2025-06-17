@@ -17,8 +17,8 @@
     },
     "root": { "description": "Styles applied to the root element." },
     "series": {
-      "description": "",
-      "deprecationInfo": "use <code>.barElementClasses.root[data-series=&quot;${seriesId}&quot;]</code> instead. This class will be removed in the next major version. Styles applied to the root element for a specified series. Needs to be suffixed with the series ID: <code>.${barElementClasses.series}-${seriesId}</code>."
+      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${barElementClasses.series}-${seriesId}</code>.",
+      "nodeName": "the root element for a specified series"
     }
   },
   "slotDescriptions": { "bar": "The component that renders the bar." }
