@@ -19,7 +19,6 @@ export interface AreaElementClasses {
   /** Styles applied to the root element when faded. */
   faded: string;
   /**
-   * @deprecated use `.areaElementClasses.root[data-series="${seriesId}"]` instead. This class will be removed in the next major version.
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.
    */

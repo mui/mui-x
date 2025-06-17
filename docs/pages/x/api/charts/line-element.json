@@ -44,9 +44,8 @@
     {
       "key": "series",
       "className": "MuiLineElement-series",
-      "description": "",
-      "isGlobal": false,
-      "isDeprecated": true
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${lineElementClasses.series}-${seriesId}`.",
+      "isGlobal": false
     }
   ],
   "muiName": "MuiLineElement",
