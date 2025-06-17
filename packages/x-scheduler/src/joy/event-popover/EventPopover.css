@@ -5,7 +5,8 @@
   width: 100%;
   background-color: var(--surface);
   border: 1px solid var(--gray-2);
-  border-radius: var(--radius-3);
+  border-radius: var(--radius-4);
+  overflow: hidden;
   z-index: 5;
 }
 
