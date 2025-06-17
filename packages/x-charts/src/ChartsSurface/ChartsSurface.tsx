@@ -15,7 +15,7 @@ import {
 export interface ChartsSurfaceProps
   extends Omit<
     React.SVGProps<SVGSVGElement>,
-    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox'
+    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
   > {
   className?: string;
   title?: string;
