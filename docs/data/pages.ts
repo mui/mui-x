@@ -42,6 +42,7 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/demos/real-time-data', title: 'Real-time data' },
           { pathname: '/x/react-data-grid/demos/time-off-calendar', title: 'Time off calendar' },
+          { pathname: '/x/react-data-grid/demos/inventory', title: 'Inventory' },
         ],
       },
       {
