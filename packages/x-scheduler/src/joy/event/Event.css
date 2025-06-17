@@ -101,7 +101,7 @@
 }
 
 .EventCard:focus-visible {
-  outline: var(--outline-focus);
+  outline: 2px solid var(--event-color-5);
   outline-offset: var(--outline-focus-offset);
 }
 
