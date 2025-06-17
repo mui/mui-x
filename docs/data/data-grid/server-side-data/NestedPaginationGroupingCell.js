@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/system';
 import {
   useGridSelector,
   useGridRootProps,
@@ -16,6 +17,12 @@ const gridRowSelector = createSelector(
   gridRowsLookupSelector,
   (lookup, id) => lookup[id],
 );
+
+const IconWrapper = styled('div')({
+  flex: '0 0 28px',
+  alignSelf: 'stretch',
+  marginRight: '8px',
+});
 
 function GroupingIcon(props) {
   const apiRef = useGridApiContext();
@@ -55,16 +62,20 @@ function GroupingIcon(props) {
 
   const Icon = expanded ? ExpandMore : ChevronRight;
 
-  return descendantCount > 0 ? (
-    <IconButton
-      size="small"
-      onClick={handleClick}
-      tabIndex={-1}
-      aria-label={`${expanded ? 'Hide' : 'Show'} children`}
-    >
-      <Icon fontSize="inherit" />
-    </IconButton>
-  ) : null;
+  return (
+    <IconWrapper>
+      {descendantCount === -1 || descendantCount > 0 ? (
+        <IconButton
+          size="small"
+          onClick={handleClick}
+          tabIndex={-1}
+          aria-label={`${expanded ? 'Hide' : 'Show'} children`}
+        >
+          <Icon fontSize="inherit" />
+        </IconButton>
+      ) : null}
+    </IconWrapper>
+  );
 }
 
 export default function NestedPaginationGroupingCell(props) {
@@ -76,50 +87,37 @@ export default function NestedPaginationGroupingCell(props) {
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(
-      rootProps.dataSource?.getChildrenCount?.(row) ?? 0,
-      0,
-    );
+    descendantCount = rootProps.dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
-  let marginFactor = row.depth ? row.depth : rowNode.depth;
+  let marginFactor = row?.depth ? row.depth : rowNode.depth;
   if (!row.expanded && depth > 0) {
     marginFactor = depth;
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        width: '100%',
-        ml: marginFactor * 2,
-      }}
+    <Stack
+      alignItems="center"
+      width="100%"
+      flexDirection="row"
+      marginLeft={marginFactor * 2}
     >
-      <div
-        style={{
-          flex: '0 0 28px',
-          alignSelf: 'stretch',
-          marginRight: '8px',
-        }}
-      >
-        <GroupingIcon
-          id={id}
-          field={field}
-          groupingKey={rowNode.groupingKey}
-          expanded={row.expanded || rowNode.childrenExpanded}
-          row={row}
-          setExpandedRows={setExpandedRows}
-          depth={depth}
-          descendantCount={descendantCount}
-        />
-      </div>
+      <GroupingIcon
+        id={id}
+        field={field}
+        groupingKey={rowNode.groupingKey}
+        expanded={row.expanded || rowNode.childrenExpanded}
+        row={row}
+        setExpandedRows={setExpandedRows}
+        depth={depth}
+        descendantCount={descendantCount}
+      />
       <span>
         {formattedValue === undefined
           ? (rowNode.groupingKey ?? row.groupingKey)
           : formattedValue}
         {descendantCount > 0 ? ` (${descendantCount})` : ''}
       </span>
-    </Box>
+    </Stack>
   );
 }

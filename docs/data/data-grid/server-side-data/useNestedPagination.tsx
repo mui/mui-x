@@ -10,6 +10,8 @@ import type {
 import { vars } from '@mui/x-data-grid/internals';
 import NestedPaginationGroupingCell from './NestedPaginationGroupingCell';
 
+type Depth = number;
+
 interface UseNestedPaginationReturnType {
   groupKeys: GridGetRowsParams['groupKeys'];
   paginationModel: DataGridProProps['paginationModel'];
@@ -24,7 +26,7 @@ export default function useNestedPagination(
 ): UseNestedPaginationReturnType {
   const [expandedRows, setExpandedRows] = React.useState<GridValidRowModel[]>([]);
   const [paginationModels, setPaginationModels] = React.useState<
-    Record<number, GridPaginationModel>
+    Record<Depth, GridPaginationModel>
   >({
     0: initialPaginationModel,
   });
@@ -54,7 +56,7 @@ export default function useNestedPagination(
         setExpandedRows={setExpandedRows}
       />
     ),
-    [setExpandedRows],
+    [setExpandedRows, expandedRows.length],
   );
 
   const setPaginationModel = React.useCallback(

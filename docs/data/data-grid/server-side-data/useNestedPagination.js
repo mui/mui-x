@@ -34,7 +34,7 @@ export default function useNestedPagination(initialPaginationModel) {
         setExpandedRows={setExpandedRows}
       />
     ),
-    [setExpandedRows],
+    [setExpandedRows, expandedRows.length],
   );
 
   const setPaginationModel = React.useCallback(
