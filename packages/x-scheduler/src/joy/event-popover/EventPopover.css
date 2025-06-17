@@ -11,13 +11,33 @@
 
 .EventPopoverHeader {
   display: flex;
+  align-items: flex-start;
   gap: var(--space-3);
   background-color: var(--event-color-3);
   padding: var(--space-6);
 }
 
-.EventPopoverCloseButton {
+.joy .EventPopoverCloseButton {
   display: flex;
+  border-radius: var(--radius-4);
+  background-color: var(--event-color-3);
+}
+
+.joy .EventPopoverCloseButton:hover {
+  background-color: var(--event-color-4);
+}
+
+.joy .EventPopoverCloseButton:active {
+  background-color: var(--event-color-5);
+}
+
+.joy .EventPopoverCloseButton:focus-visible {
+  outline: 2px solid var(--event-color-5);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.joy .PopoverPositioner .PrimaryButton:focus-visible {
+  outline: 2px solid var(--event-color-5);
 }
 
 .EventPopoverTitle {
@@ -68,6 +88,13 @@
   color: var(--gray-9);
   font-size: var(--font-size-2);
   line-height: var(--line-height-1);
+}
+
+.joy .EventPopoverTitleInput:focus-visible,
+.joy .EventPopoverInput:focus-visible,
+.joy .EventPopoverTextarea:focus-visible {
+  outline: 2px solid var(--event-color-5);
+  outline-offset: var(--outline-focus-offset);
 }
 
 .joy .EventPopoverInput {

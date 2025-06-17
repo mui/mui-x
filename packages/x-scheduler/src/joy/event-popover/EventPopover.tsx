@@ -67,7 +67,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   };
 
   return (
-    <div ref={forwardedRef} className={clsx('EventPopoverContainer', className)} {...other}>
+    <div ref={forwardedRef} className={className} {...other}>
       <Popover.Portal container={container}>
         <Popover.Positioner
           sideOffset={8}

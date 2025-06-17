@@ -100,6 +100,11 @@
   line-height: 10px;
 }
 
+.EventCard:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
 .EventCard[role='button'] {
   cursor: pointer;
 }
