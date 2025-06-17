@@ -46,8 +46,9 @@
     {
       "key": "series",
       "className": "MuiMarkElement-series",
-      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.",
-      "isGlobal": false
+      "description": "",
+      "isGlobal": false,
+      "isDeprecated": true
     }
   ],
   "muiName": "MuiMarkElement",
