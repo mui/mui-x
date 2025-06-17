@@ -68,7 +68,7 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
     "@argos-ci/core": "^3.2.0",
-    "execa": "^8.0.1",
+    "execa": "^9.6.0",
     "inquirer": "^9.2.15",
     "@babel/cli": "^7.27.2",
     "@babel/core": "catalog:",
