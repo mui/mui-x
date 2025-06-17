@@ -110,7 +110,7 @@ export const Event = React.forwardRef(function Event(
 
   const handleEventClick =
     (triggerOnClick?: (e: React.MouseEvent) => void) => (event: React.MouseEvent) => {
-      triggerOnClick?.(event);
+      // triggerOnClick?.(event);
       onEventClick?.(calendarEvent, event);
     };
 
