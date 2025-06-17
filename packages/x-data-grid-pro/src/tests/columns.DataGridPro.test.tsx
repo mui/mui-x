@@ -711,7 +711,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  describeSkipIf(isJSDOM)('flex columns with pinned columns', () => {
+  describe.skipIf(isJSDOM)('flex columns with pinned columns', () => {
     it('should maintain correct widths and positions when flex columns are set', () => {
       render(
         <Test

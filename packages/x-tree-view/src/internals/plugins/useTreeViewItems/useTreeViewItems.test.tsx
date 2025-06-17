@@ -160,7 +160,7 @@ describeTreeView<
         },
       );
 
-      testSkipIf(!isRichTreeView)('should use getItemLabel to render the label', () => {
+      it.skipIf(!isRichTreeView)('should use getItemLabel to render the label', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
           getItemLabel: (item) => `Label: ${item.id}`,
@@ -170,7 +170,7 @@ describeTreeView<
         expect(view.getItemContent('2')).to.have.text('Label: 2');
       });
 
-      testSkipIf(!isRichTreeView)('should use getItemChildren to find children', () => {
+      it.skipIf(!isRichTreeView)('should use getItemChildren to find children', () => {
         const items = [
           {
             id: '1',
