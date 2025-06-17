@@ -7,7 +7,7 @@
   border: 1px solid var(--gray-2);
   border-radius: var(--radius-4);
   overflow: hidden;
-  z-index: 5;
+  z-index: 1300;
 }
 
 .EventPopoverHeader {
@@ -91,6 +91,10 @@
   line-height: var(--line-height-1);
 }
 
+.joy .EventPopoverInput {
+  max-height: var(--space-7);
+}
+
 .joy .EventPopoverTitleInput:focus-visible {
   outline: 2px solid var(--event-color-5);
   outline-offset: var(--outline-focus-offset);
@@ -100,10 +104,6 @@
 .joy .EventPopoverTextarea:focus-visible {
   outline: 2px solid var(--gray-2);
   outline-offset: var(--outline-focus-offset);
-}
-
-.joy .EventPopoverInput {
-  max-height: var(--space-7);
 }
 
 .EventPopoverDateTimeFields {
