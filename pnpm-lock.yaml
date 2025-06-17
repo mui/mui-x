@@ -1058,7 +1058,7 @@ importers:
         version: 7.1.1(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0)
       '@types/prop-types':
         specifier: 'catalog:'
-        version: 15.7.14
+        version: 15.7.15
       csstype:
         specifier: 'catalog:'
         version: 3.1.3
