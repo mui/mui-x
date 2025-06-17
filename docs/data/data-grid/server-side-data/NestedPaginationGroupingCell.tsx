@@ -40,14 +40,23 @@ interface GroupingIconProps
 
 function GroupingIcon(props: GroupingIconProps) {
   const apiRef = useGridApiContext();
-  const { groupingKey, id, field, descendantCount, row, nestedLevelRef, expanded } =
-    props;
+  const {
+    groupingKey,
+    id,
+    field,
+    descendantCount,
+    row,
+    nestedLevelRef,
+    expanded,
+    setExpandedRows,
+  } = props;
 
   const handleClick = useEventCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
+      // Avoid showing outdated rows while loading
       apiRef.current?.setRows([]);
       if (!expanded) {
-        props.setExpandedRows((prev) => [
+        setExpandedRows((prev) => [
           ...prev,
           {
             ...row,
@@ -57,7 +66,7 @@ function GroupingIcon(props: GroupingIconProps) {
           },
         ]);
       } else {
-        props.setExpandedRows((prev) => {
+        setExpandedRows((prev) => {
           const index = prev.findIndex((r) => r.id === id);
           return prev.slice(0, index);
         });

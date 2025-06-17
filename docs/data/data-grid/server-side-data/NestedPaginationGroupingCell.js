@@ -19,13 +19,22 @@ const gridRowSelector = createSelector(
 
 function GroupingIcon(props) {
   const apiRef = useGridApiContext();
-  const { groupingKey, id, field, descendantCount, row, nestedLevelRef, expanded } =
-    props;
+  const {
+    groupingKey,
+    id,
+    field,
+    descendantCount,
+    row,
+    nestedLevelRef,
+    expanded,
+    setExpandedRows,
+  } = props;
 
   const handleClick = useEventCallback((event) => {
+    // Avoid showing outdated rows while loading
     apiRef.current?.setRows([]);
     if (!expanded) {
-      props.setExpandedRows((prev) => [
+      setExpandedRows((prev) => [
         ...prev,
         {
           ...row,
@@ -35,7 +44,7 @@ function GroupingIcon(props) {
         },
       ]);
     } else {
-      props.setExpandedRows((prev) => {
+      setExpandedRows((prev) => {
         const index = prev.findIndex((r) => r.id === id);
         return prev.slice(0, index);
       });
