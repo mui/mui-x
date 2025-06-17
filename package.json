@@ -59,7 +59,7 @@
     "release:publish": "pnpm publish --recursive --tag latest",
     "release:publish:dry-run": "pnpm publish --recursive --tag latest --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
-    "release:create-pr": "node scripts/createReleasePR.mjs",
+    "release:prepare": "node scripts/createReleasePR.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\"",
     "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
