@@ -36,7 +36,9 @@ function filterCommit(commitsItem) {
   // Filter dependency updates
   return (
     !commitsItem.commit.message.startsWith('Bump') &&
-    !commitsItem.commit.message.includes('[scheduler]')
+    !commitsItem.commit.message.includes('[scheduler]') &&
+    // TODO: CHARTS-PREMIUM: Remove ignore when ready, also add it to the template
+    !commitsItem.commit.message.includes('[charts-premium]')
   );
 }
 
@@ -50,17 +52,20 @@ function resolvePackagesByLabels(labels) {
   const resolvedPackages = [];
   labels.forEach((label) => {
     switch (label.name) {
-      case 'component: data grid':
+      case 'scope: data grid':
         resolvedPackages.push('DataGrid');
         break;
-      case 'component: pickers':
+      case 'scope: pickers':
         resolvedPackages.push('pickers');
         break;
-      case 'component: charts':
+      case 'scope: charts':
         resolvedPackages.push('charts');
         break;
-      case 'component: tree view':
+      case 'scope: tree view':
         resolvedPackages.push('TreeView');
+        break;
+      case 'scope: scheduler':
+        resolvedPackages.push('Scheduler');
         break;
       default:
         break;

@@ -36,24 +36,9 @@ export const alias = [
 ];
 
 export default defineConfig({
-  plugins: [
-    react({
-      babel: {
-        plugins: [
-          [
-            '@mui/internal-babel-plugin-display-name',
-            {
-              allowedCallees: {
-                '@mui/x-internals/forwardRef': ['forwardRef'],
-              },
-            },
-          ],
-        ],
-        babelrc: false,
-        configFile: false,
-      },
-    }),
-  ],
+  // If enabling babel plugins, ensure the tests in CI are stable
+  // https://github.com/mui/mui-x/pull/18341
+  plugins: [react()],
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
@@ -79,6 +64,13 @@ export default defineConfig({
       provider: 'playwright',
       headless: true,
       screenshotFailures: false,
+      orchestratorScripts: [
+        {
+          id: 'vitest-reload-on-error',
+          content: `window.addEventListener('vite:preloadError', (event) => { window.location.reload(); });`,
+          async: true,
+        },
+      ],
     },
     // Disable isolation to speed up the tests.
     isolate: false,

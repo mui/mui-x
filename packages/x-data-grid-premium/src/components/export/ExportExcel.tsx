@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridSlotProps, RenderProp } from '@mui/x-data-grid';
-import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -43,7 +43,7 @@ const ExportExcel = forwardRef<HTMLButtonElement, ExportExcelProps>(
       onClick?.(event);
     };
 
-    const element = useGridComponentRenderer(rootProps.slots.baseButton, render, {
+    const element = useComponentRenderer(rootProps.slots.baseButton, render, {
       onClick: handleClick,
       ...rootProps.slotProps?.baseButton,
       ...other,

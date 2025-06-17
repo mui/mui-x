@@ -1,17 +1,56 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { SchedulerValidDate } from '../../primitives/models';
+import { EventCalendarProps } from './EventCalendar.types';
+import { ViewType } from '../models/views';
+import { WeekView } from '../week-view/WeekView';
+import { DayView } from '../day-view/DayView';
+import { HeaderToolbar } from '../header-toolbar';
+import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import '../index.css';
 import './EventCalendar.css';
-import { EventCalendarProps } from './EventCalendar.types';
-import { WeekView } from '../week-view/WeekView';
-import { TranslationsProvider } from '../utils/TranslationsContext';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { getColorClassName } from '../internals/utils/color-utils';
+
+const adapter = getAdapter();
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, onEventsChange, translations, className, ...other } = props;
+  const { events, onEventsChange, resources, translations, className, ...other } = props;
+
+  const [view, setView] = React.useState<ViewType>('week');
+  const [visibleDate, setVisibleDate] = React.useState<SchedulerValidDate>(() => adapter.date());
+
+  const handleDayHeaderClick = React.useCallback(
+    (day: SchedulerValidDate) => {
+      setVisibleDate(day);
+      setView('day');
+    },
+    [setVisibleDate, setView],
+  );
+
+  let content: React.ReactNode;
+  switch (view) {
+    case 'week':
+      content = (
+        <WeekView events={events} onDayHeaderClick={handleDayHeaderClick} resources={resources} />
+      );
+      break;
+    case 'day':
+      content = <DayView events={events} day={visibleDate} resources={resources} />;
+      break;
+    case 'month':
+      content = <div>TODO: Month view</div>;
+      break;
+    case 'agenda':
+      content = <div>TODO: Agenda view</div>;
+      break;
+    default:
+      content = null;
+  }
 
   return (
     <TranslationsProvider translations={translations}>
@@ -29,23 +68,34 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           >
             Month Calendar
           </section>
-          <section
-            // TODO: Add localization
-            aria-label="Resource legend"
-          >
-            <span>TODO: Resource legend</span>
-          </section>
+          {resources && resources.length > 0 && (
+            <section
+              // TODO: Add localization
+              aria-label="Resource legend"
+              className="EventCalendarResourceLegend"
+            >
+              {resources.map((resource) => (
+                <div key={resource.id} className="EventCalendarResourceLegendItem">
+                  <span
+                    className={clsx(
+                      'EventCalendarResourceLegendColor',
+                      getColorClassName({ resource }),
+                    )}
+                  />
+                  <span className="EventCalendarResourceLegendName">{resource.name}</span>
+                </div>
+              ))}
+            </section>
+          )}
         </aside>
         <div className="EventCalendarMainPanel">
-          <header className="EventCalendarToolbar">
-            <span>TODO: View switch</span>
-          </header>
+          <HeaderToolbar onTodayClick={() => {}} selectedView={view} setSelectedView={setView} />
           <section
             // TODO: Add localization
             className="EventCalendarContent"
             aria-label="Calendar content"
           >
-            <WeekView events={events} />
+            {content}
           </section>
         </div>
       </div>

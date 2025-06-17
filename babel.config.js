@@ -27,6 +27,7 @@ const defaultAlias = {
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
+  '@mui/x-charts-premium': resolveAliasPath('./packages/x-charts-premium/src'),
   '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
   '@mui/x-scheduler': resolveAliasPath('./packages/x-scheduler'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
@@ -170,18 +171,6 @@ module.exports = function getBabelConfig(api) {
       /prettier/,
     ],
     env: {
-      coverage: {
-        plugins: [
-          'babel-plugin-istanbul',
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
-            },
-          ],
-        ],
-      },
       development: {
         plugins: [
           [
@@ -189,18 +178,6 @@ module.exports = function getBabelConfig(api) {
             {
               alias: defaultAlias,
               root: ['./'],
-            },
-          ],
-        ],
-      },
-      test: {
-        sourceMaps: 'both',
-        plugins: [
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
             },
           ],
         ],

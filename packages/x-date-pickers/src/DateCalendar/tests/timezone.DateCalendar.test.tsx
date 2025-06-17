@@ -60,7 +60,7 @@ describe('<DateCalendar /> - Timezone', () => {
 
         expect(
           screen.getAllByRole('gridcell', {
-            name: (_, element) => element.nodeName === 'BUTTON',
+            name: (_, element) => element.attributes.getNamedItem('data-testid')?.value === 'day',
           }).length,
         ).to.equal(30);
 
@@ -69,7 +69,7 @@ describe('<DateCalendar /> - Timezone', () => {
         // the amount of rendered days should remain the same after changing timezone
         expect(
           screen.getAllByRole('gridcell', {
-            name: (_, element) => element.nodeName === 'BUTTON',
+            name: (_, element) => element.attributes.getNamedItem('data-testid')?.value === 'day',
           }).length,
         ).to.equal(30);
       });
