@@ -96,11 +96,11 @@ export const useMockStockServer = () => {
         const change = Number((newPrice - row.price).toFixed(2));
         const changePercent = Number(((change / row.price) * 100).toFixed(2));
 
-        const history = [...row.history];
-        history[history.length - 1] = {
+        const history = row.history.slice(1);
+        history.push({
           date: new Date().toISOString(),
           price: newPrice,
-        };
+        });
 
         return {
           ...row,
