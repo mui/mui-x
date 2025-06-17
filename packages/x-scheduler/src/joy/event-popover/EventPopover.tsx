@@ -107,7 +107,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       className="EventPopoverInput"
                       type="date"
                       name="startDate"
-                      defaultValue={calendarEvent.start.toISODate() ?? ''}
+                      defaultValue={adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''} // Mejor que .toISODate()
                       required
                     />
                   </label>
@@ -117,7 +117,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       className="EventPopoverInput"
                       type="time"
                       name="startTime"
-                      defaultValue={calendarEvent.start.toFormat('HH:mm')}
+                      defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
                       required
                     />
                   </label>
@@ -127,7 +127,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       className="EventPopoverInput"
                       type="date"
                       name="endDate"
-                      defaultValue={calendarEvent.end.toISODate() ?? ''}
+                      defaultValue={adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''}
                       required
                     />
                   </label>
@@ -137,7 +137,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       className="EventPopoverInput"
                       type="time"
                       name="endTime"
-                      defaultValue={calendarEvent.end.toFormat('HH:mm')}
+                      defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
                       required
                     />
                   </label>
