@@ -1,6 +1,7 @@
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { ChartPlugin } from '../../models';
 import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
 
@@ -33,6 +34,12 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   });
 
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
+    const prevItem = store.getSnapshot().highlight.item;
+
+    if (fastObjectShallowCompare(prevItem, newItem)) {
+      return;
+    }
+
     params.onHighlightChange?.(newItem);
     store.update((prev) => ({ ...prev, highlight: { item: newItem } }));
   });

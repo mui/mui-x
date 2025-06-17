@@ -1,3 +1,4 @@
+export * from './gridApiPremium';
 export * from './gridGroupingValueGetter';
 export * from './gridPremiumIconSlotsComponent';
 export * from './gridPremiumSlotsComponent';

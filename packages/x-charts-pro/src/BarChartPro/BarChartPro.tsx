@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
+import { BarChartProps, BarChartSlotProps, BarChartSlots, BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -12,6 +12,11 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -19,17 +24,31 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { BAR_CHART_PRO_PLUGINS, BarChartProPluginsSignatures } from './BarChartPro.plugins';
 
+export interface BarChartProSlots
+  extends Omit<BarChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
+export interface BarChartProSlotProps
+  extends Omit<BarChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {}
+
 export interface BarChartProProps
-  extends Omit<BarChartProps, 'apiRef'>,
+  extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
     > {
   /**
-   * If true, shows the default chart toolbar.
-   * @default false
+   * Overridable component slots.
+   * @default {}
    */
-  showToolbar?: boolean;
+  slots?: BarChartProSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarChartProSlotProps;
 }
 
 /**
@@ -79,11 +98,12 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {showToolbar ? <ChartsToolbarPro /> : null}
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
@@ -94,10 +114,10 @@ const BarChartPro = React.forwardRef(function BarChartPro(
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartZoomSlider />
-          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -112,6 +132,7 @@ BarChartPro.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
@@ -376,6 +397,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -465,6 +488,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -545,6 +570,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -625,6 +652,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -705,6 +734,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -785,6 +816,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -865,6 +898,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -945,6 +980,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1044,6 +1081,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1132,6 +1171,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1211,6 +1252,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1290,6 +1333,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1369,6 +1414,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1448,6 +1495,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1527,6 +1576,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),
@@ -1606,6 +1657,8 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
             }),
             step: PropTypes.number,
           }),

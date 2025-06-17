@@ -11,12 +11,31 @@ type PackageJson = {
 export function checkMaterialVersion({
   packageJson,
   materialPackageJson,
+  testFilePath,
 }: {
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
+  testFilePath: string;
 }) {
   it.skipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
-    const expectedVersion = packageJson.devDependencies['@mui/material'];
+    let expectedVersion = packageJson.devDependencies['@mui/material'];
+
+    if (expectedVersion === 'catalog:') {
+      // take only relevant part of the file path
+      // e.g. file:///Users/dev/mui/mui-x/packages/x-charts-pro/src/tests/materialVersion.test.tsx
+      // becomes packages/x-charts-pro
+      const workingDirectory = testFilePath.substring(
+        testFilePath.indexOf('packages/'),
+        testFilePath.indexOf('/src/'),
+      );
+      const listedMuiMaterial = childProcess.execSync('pnpm list "@mui/material" --json', {
+        cwd: workingDirectory,
+      });
+      if (listedMuiMaterial) {
+        const jsonListedDependencies = JSON.parse(listedMuiMaterial.toString());
+        expectedVersion = jsonListedDependencies[0].devDependencies['@mui/material'].version;
+      }
+    }
 
     const versions = childProcess.execSync(
       `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,

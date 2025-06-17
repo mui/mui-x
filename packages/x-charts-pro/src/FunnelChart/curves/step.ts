@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions, Point } from './curve.types';
+import { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { max, min } from './utils';
 
@@ -14,10 +13,12 @@ import { max, min } from './utils';
  * The implementation is based on the d3-shape step curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/step.js
  */
-export class Step implements CurveGenerator {
+export class Step implements FunnelCurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private isHorizontal: boolean = false;
+
+  private isIncreasing: boolean = false;
 
   private gap: number = 0;
 
@@ -25,17 +26,21 @@ export class Step implements CurveGenerator {
 
   private position: number = 0;
 
+  private sections: number = 0;
+
   private points: Point[] = [];
 
   constructor(
     context: CanvasRenderingContext2D,
-    { isHorizontal, gap, position, borderRadius }: CurveOptions,
+    { isHorizontal, gap, position, borderRadius, isIncreasing, sections }: CurveOptions,
   ) {
     this.context = context;
     this.isHorizontal = isHorizontal ?? false;
-    this.gap = (gap ?? 0) / 2;
+    this.gap = gap ?? 0;
     this.position = position ?? 0;
+    this.sections = sections ?? 1;
     this.borderRadius = borderRadius ?? 0;
+    this.isIncreasing = isIncreasing ?? false;
   }
 
   areaStart(): void {}
@@ -47,21 +52,30 @@ export class Step implements CurveGenerator {
   lineEnd(): void {}
 
   protected getBorderRadius(): number | number[] {
-    return this.gap > 0 || this.position === 0
-      ? this.borderRadius
-      : [this.borderRadius, this.borderRadius];
-  }
-
-  point(xIn: number, yIn: number): void {
-    this.points.push({ x: xIn, y: yIn });
-    if (this.points.length < 4) {
-      return;
+    if (this.gap > 0) {
+      return this.borderRadius;
     }
 
+    if (this.isIncreasing) {
+      if (this.position === this.sections - 1) {
+        return this.borderRadius;
+      }
+
+      return [0, 0, this.borderRadius, this.borderRadius];
+    }
+
+    if (this.position === 0) {
+      return this.borderRadius;
+    }
+
+    return [this.borderRadius, this.borderRadius];
+  }
+
+  processPoints(points: Point[]): Point[] {
     // Ensure we have rectangles instead of trapezoids.
-    this.points = this.points.map((_, index) => {
-      const allX = this.points.map((p) => p.x);
-      const allY = this.points.map((p) => p.y);
+    const processedPoints = points.map((_, index) => {
+      const allX = points.map((p) => p.x);
+      const allY = points.map((p) => p.y);
       if (this.isHorizontal) {
         return {
           x: index === 1 || index === 2 ? max(allX) : min(allX),
@@ -74,19 +88,14 @@ export class Step implements CurveGenerator {
       };
     });
 
-    // Add gaps where they are needed.
-    this.points = this.points.map((point, index) => {
-      if (this.isHorizontal) {
-        return {
-          x: point.x + (index === 0 || index === 3 ? this.gap : -this.gap),
-          y: point.y,
-        };
-      }
-      return {
-        x: point.x,
-        y: point.y + (index === 0 || index === 3 ? this.gap : -this.gap),
-      };
-    });
+    return processedPoints;
+  }
+
+  point(xIn: number, yIn: number): void {
+    this.points.push({ x: xIn, y: yIn });
+    if (this.points.length < 4) {
+      return;
+    }
 
     borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }

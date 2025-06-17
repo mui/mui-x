@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { ExportedBaseTabsProps } from '../internals/models/props/tabs';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { getRow } from 'test/utils/helperFn';
+import { getCell, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -11,6 +11,7 @@ import {
   GridDataSource,
   GridGetRowsParams,
   GridGetRowsResponse,
+  GridRowSelectionModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
@@ -127,6 +128,43 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
+  });
+
+  it('should keep the selection state on scroll', async () => {
+    let rowSelectionModel: GridRowSelectionModel = {
+      type: 'include',
+      ids: new Set(),
+    };
+
+    function TestCase() {
+      const handleSelectionChange: DataGridProProps['onRowSelectionModelChange'] = (newModel) => {
+        rowSelectionModel = newModel;
+      };
+
+      return (
+        <TestDataSourceLazyLoader
+          onRowSelectionModelChange={handleSelectionChange}
+          disableVirtualization={false}
+        />
+      );
+    }
+
+    render(<TestCase />);
+    // wait until the rows are rendered
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(0);
+    await act(async () => apiRef.current?.selectRow(getCell(1, 0).textContent!));
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(1);
+
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    await act(async () => apiRef.current?.scroll({ top: 12345 }));
+
+    // wait until the row is not in the render context anymore
+    await waitFor(() => expect(() => getRow(1)).to.throw());
+
+    // selection is kept
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(1);
   });
 
   describe('Viewport loading', () => {

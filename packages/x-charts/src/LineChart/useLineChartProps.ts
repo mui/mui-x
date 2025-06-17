@@ -50,6 +50,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    showToolbar,
     ...other
   } = props;
 

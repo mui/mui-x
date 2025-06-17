@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
+import { RadarChart } from '@mui/x-charts/RadarChart';
 
 import Box from '@mui/material/Box';
 

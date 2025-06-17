@@ -171,7 +171,7 @@ describeTreeView<[UseTreeViewLabelSignature]>(
         });
       });
     });
-    describe.skipIf(isSimpleTreeView)('updateItemLabel api method', () => {
+    describe.skipIf(isSimpleTreeView)('updateItemLabel public API method', () => {
       it('should change the label value', () => {
         const view = render({
           items: [{ id: '1', label: 'test' }],
@@ -182,6 +182,52 @@ describeTreeView<[UseTreeViewLabelSignature]>(
         });
 
         expect(view.getItemLabel('1').textContent).to.equal('new value');
+      });
+    });
+    describe.skipIf(isSimpleTreeView)('setEditedItem public API method', () => {
+      it('should enter editing mode via setEditedItem if item is editable', () => {
+        const view = render({
+          items: [{ id: '1', editable: true }],
+          isItemEditable: (item) => item.editable,
+        });
+
+        act(() => {
+          view.apiRef.current.setEditedItem('1');
+        });
+
+        expect(view.getItemLabelInput('1')).not.to.equal(null);
+      });
+
+      it('should not enter editing mode via setEditedItem if item is not editable', () => {
+        const view = render({
+          items: [{ id: '1', editable: false }],
+          isItemEditable: (item) => item.editable,
+        });
+
+        act(() => {
+          view.apiRef.current.setEditedItem('1');
+        });
+
+        expect(view.getItemLabelInput('1')).to.equal(null);
+      });
+
+      it('should exit editing mode via setEditedItem(null)', () => {
+        const view = render({
+          items: [{ id: '1', editable: true }],
+          isItemEditable: (item) => item.editable,
+        });
+
+        act(() => {
+          view.apiRef.current.setEditedItem('1');
+        });
+
+        expect(view.getItemLabelInput('1')).not.to.equal(null);
+
+        act(() => {
+          view.apiRef.current.setEditedItem(null);
+        });
+
+        expect(view.getItemLabelInput('1')).to.equal(null);
       });
     });
   },

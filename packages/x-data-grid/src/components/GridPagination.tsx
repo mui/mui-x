@@ -100,7 +100,7 @@ function GridPagination() {
       rowsPerPageOptions={pageSizeOptions}
       rowsPerPage={paginationModel.pageSize}
       onPageChange={handlePageChange}
-      onRowsPerPageChange={handlePageSizeChange as any}
+      onRowsPerPageChange={handlePageSizeChange}
       disabled={disabled}
     />
   );
