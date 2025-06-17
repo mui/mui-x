@@ -92,6 +92,8 @@ const columns: GridColDef<Product>[] = [
           icon={iconMap[params.value as keyof typeof iconMap]}
           label={statusMap[params.value as keyof typeof statusMap]}
           className={params.value}
+          clickable={false}
+          onClick={() => {}} // TODO: Fix. Adding as placeholder. These shouldnt be clickable but for some reason it's giving me a runtime error for now, even if setting clickable to false. 
         />
       );
     },
