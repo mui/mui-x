@@ -210,7 +210,7 @@ export const products: Product[] = [
     totalSold: 195,
     incoming: 10,
     colors: ['Black'],
-    image: 'https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?w=500&h=500&fit=crop',
+    image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop',
   },
   {
     id: 13,
