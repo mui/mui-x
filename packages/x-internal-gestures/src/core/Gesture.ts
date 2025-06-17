@@ -12,7 +12,7 @@ import { eventList } from './utils/eventList';
  * The possible phases of a gesture during its lifecycle.
  *
  * - 'start': The gesture has been recognized and is beginning
- * - 'ongoing': The gesture is in progress (event.g., a finger is moving)
+ * - 'ongoing': The gesture is in progress (e.g., a finger is moving)
  * - 'end': The gesture has completed successfully
  * - 'cancel': The gesture was interrupted or terminated abnormally
  */
