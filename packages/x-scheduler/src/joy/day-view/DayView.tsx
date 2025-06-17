@@ -20,6 +20,7 @@ export const DayView = React.forwardRef(function DayView(
   }, [events, day]);
 
   const handleEventAction = (event: CalendarEvent, action: EventAction) => {
+    // TODO: For now, event editing is fully controlled via onEventsChange
     if (!onEventsChange) {
       return;
     }
