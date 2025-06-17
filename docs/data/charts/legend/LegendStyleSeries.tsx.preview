@@ -1,0 +1,14 @@
+<BarChart
+  {...settings}
+  onHighlightChange={setHighlightedItem}
+  sx={
+    highlightedItem
+      ? {
+          [`.${legendClasses.item}:not([data-series="${highlightedItem.seriesId}"])`]:
+            {
+              opacity: 0.4,
+            },
+        }
+      : undefined
+  }
+/>
