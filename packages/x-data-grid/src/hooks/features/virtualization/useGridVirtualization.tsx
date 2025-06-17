@@ -3,6 +3,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { useVirtualizer, VirtualizationState, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
+import { useOnMount } from '../../utils/useOnMount';
+import { useFirstRender } from '../../utils/useFirstRender';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -260,15 +262,20 @@ export function useGridVirtualization(
   useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
   useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
 
-  // HACK: Keep the grid's store in sync with the virtualizer store.
+  // HACK: Keep the grid's store in sync with the virtualizer store. We set up the
+  // subscription in the render phase rather than in an effect because other grid
+  // initialization code runs between those two moments.
+  //
   // TODO(v9): Remove this
-  React.useEffect(() => {
-    return virtualizer.store.subscribe((state) => {
+  const disposeRef = React.useRef<Function>(null);
+  useFirstRender(() => {
+    disposeRef.current = virtualizer.store.subscribe((state) => {
       if (state.virtualization !== apiRef.current.state.virtualization) {
         apiRef.current.store.set('virtualization', state.virtualization);
       }
     });
-  }, [virtualizer.store]);
+  });
+  useOnMount(() => () => disposeRef.current?.());
 
   /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
