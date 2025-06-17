@@ -12,8 +12,6 @@ export const WeekView = React.memo(
     props: WeekViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, ...other } = props;
-
     const store = useEventCalendarStore();
     const visibleDate = useSelector(store, selectors.visibleDate);
 
@@ -24,6 +22,6 @@ export const WeekView = React.memo(
       [getDayList, visibleDate],
     );
 
-    return <TimeGrid ref={forwardedRef} days={days} className={className} {...other} />;
+    return <TimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
 );

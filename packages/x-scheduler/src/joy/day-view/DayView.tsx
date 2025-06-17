@@ -11,13 +11,11 @@ export const DayView = React.memo(
     props: DayViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, ...other } = props;
-
     const store = useEventCalendarStore();
     const visibleDate = useSelector(store, selectors.visibleDate);
 
     const days = React.useMemo(() => [visibleDate], [visibleDate]);
 
-    return <TimeGrid ref={forwardedRef} days={days} className={className} {...other} />;
+    return <TimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
 );
