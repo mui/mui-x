@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { gridClasses } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid/internals';
 import NestedPaginationGroupingCell from './NestedPaginationGroupingCell';
 
@@ -51,7 +51,7 @@ export default function useNestedPagination(initialPaginationModel) {
 
   const sx = React.useMemo(
     () => ({
-      [`& .MuiDataGrid-rowSkeleton .MuiDataGrid-cell:nth-child(1)`]: {
+      [`& .${gridClasses.rowSkeleton} .${gridClasses.cell}:nth-child(1)`]: {
         paddingLeft: vars.spacing((expandedRows.length + 1) * 2),
       },
     }),

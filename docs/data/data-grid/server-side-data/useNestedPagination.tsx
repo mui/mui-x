@@ -1,25 +1,28 @@
 import * as React from 'react';
-import type {
+import {
   GridValidRowModel,
   GridPaginationModel,
   GridDataSourceGroupNode,
   GridRenderCellParams,
   DataGridProProps,
   GridGetRowsParams,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid/internals';
 import NestedPaginationGroupingCell from './NestedPaginationGroupingCell';
 
 type Depth = number;
 
-interface UseNestedPaginationReturnType {
-  groupKeys: GridGetRowsParams['groupKeys'];
-  paginationModel: DataGridProProps['paginationModel'];
-  onPaginationModelChange: DataGridProProps['onPaginationModelChange'];
-  groupingColDef: DataGridProProps['groupingColDef'];
-  pinnedRows: DataGridProProps['pinnedRows'];
-  sx: DataGridProProps['sx'];
-}
+interface UseNestedPaginationReturnType
+  extends Pick<
+      DataGridProProps,
+      | 'paginationModel'
+      | 'onPaginationModelChange'
+      | 'groupingColDef'
+      | 'pinnedRows'
+      | 'sx'
+    >,
+    Pick<GridGetRowsParams, 'groupKeys'> {}
 
 export default function useNestedPagination(
   initialPaginationModel: GridPaginationModel,
@@ -73,7 +76,7 @@ export default function useNestedPagination(
 
   const sx = React.useMemo(
     () => ({
-      [`& .MuiDataGrid-rowSkeleton .MuiDataGrid-cell:nth-child(1)`]: {
+      [`& .${gridClasses.rowSkeleton} .${gridClasses.cell}:nth-child(1)`]: {
         paddingLeft: vars.spacing((expandedRows.length + 1) * 2),
       },
     }),
