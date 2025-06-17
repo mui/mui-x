@@ -11,6 +11,7 @@ export interface BarElementClasses {
   /** Styles applied to the root element if it is faded. */
   faded: string;
   /**
+   * @deprecated use `.barElementClasses.root[data-series="${seriesId}"]` instead. This class will be removed in the next major version.
    * Styles applied to the root element for a specified series.
    * Needs to be suffixed with the series ID: `.${barElementClasses.series}-${seriesId}`.
    */
