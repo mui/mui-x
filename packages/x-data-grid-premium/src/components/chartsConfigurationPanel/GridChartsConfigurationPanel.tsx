@@ -67,6 +67,16 @@ GridChartsConfigurationPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override the default column name generation logic. Use field in combination with the grid state to determine the name of the column that will be shown to the user.
+   * @param {string} field The field name
+   * @returns {string} The name of the column
+   */
+  getColumnName: PropTypes.func,
+  /**
+   * The schema of the charts configuration.
+   * @type {GridChartsConfigurationOptions}
+   */
   schema: PropTypes.object,
 } as any;
 
