@@ -175,14 +175,16 @@ export const useGridChartsIntegration = (
     );
     for (let i = 0; i < rows.length; i += 1) {
       for (let j = 0; j < dataColumns.length; j += 1) {
-        const value: string | { label: string } = getRowValue(
+        const value: string | { label: string } | null = getRowValue(
           rows[i].model,
           dataColumns[j],
           apiRef,
         );
-        data[dataColumns[j].field].push(
-          typeof value === 'object' && 'label' in value ? value.label : value,
-        );
+        if (value !== null) {
+          data[dataColumns[j].field].push(
+            typeof value === 'object' && 'label' in value ? value.label : value,
+          );
+        }
       }
     }
 

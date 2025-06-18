@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import { getDataGridUtilityClass, GridMenu } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { vars } from '@mui/x-data-grid-pro/internals';
+import { gridPivotActiveSelector, vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -11,6 +11,7 @@ import type { FieldTransferObject, DropPosition } from './GridChartsDataPanelBod
 import { GridChartsDataPanelFieldMenu } from './GridChartsDataPanelFieldMenu';
 import { gridAggregationModelSelector } from '../../hooks/features/aggregation';
 import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
+import { COLUMN_GROUP_ID_SEPARATOR } from '../../constants/columnGroups';
 
 type GridChartsDataPanelFieldProps = {
   children: React.ReactNode;
@@ -122,24 +123,51 @@ export function AggregationSelect({
 
   const apiRef = useGridApiContext();
   const aggregationModel = gridAggregationModelSelector(apiRef);
-  const colDef = apiRef.current.getColumn(field);
+  const pivotActive = gridPivotActiveSelector(apiRef);
+
+  const getActualFieldName = React.useCallback(
+    (fieldName: string) =>
+      pivotActive ? fieldName.split(COLUMN_GROUP_ID_SEPARATOR).slice(-1)[0] : fieldName,
+    [pivotActive],
+  );
+
+  const colDef = React.useCallback(
+    (fieldName: string) => apiRef.current.getColumn(getActualFieldName(fieldName)),
+    [apiRef, getActualFieldName],
+  );
 
   const availableAggregationFunctions = React.useMemo(
     () => [
-      'none',
+      ...(pivotActive ? [] : ['none']),
       ...getAvailableAggregationFunctions({
         aggregationFunctions: rootProps.aggregationFunctions,
-        colDef,
-        isDataSource: false,
+        colDef: colDef(field),
+        isDataSource: !!rootProps.dataSource,
       }),
     ],
-    [colDef, rootProps.aggregationFunctions],
+    [colDef, field, pivotActive, rootProps.aggregationFunctions, rootProps.dataSource],
   );
 
-  const handleClick = (func: string) => {
-    apiRef.current.setAggregationModel({ ...aggregationModel, [field]: func });
-    setAggregationMenuOpen(false);
-  };
+  const handleClick = React.useCallback(
+    (func: string) => {
+      if (pivotActive) {
+        const fieldName = getActualFieldName(field);
+        apiRef.current.setPivotModel((prev) => ({
+          ...prev,
+          values: prev.values.map((col) => {
+            if (col.field === fieldName) {
+              return { ...col, aggFunc: func };
+            }
+            return col;
+          }),
+        }));
+      } else {
+        apiRef.current.setAggregationModel({ ...aggregationModel, [field]: func });
+      }
+      setAggregationMenuOpen(false);
+    },
+    [apiRef, field, getActualFieldName, pivotActive, aggregationModel, setAggregationMenuOpen],
+  );
 
   return (
     <React.Fragment>
