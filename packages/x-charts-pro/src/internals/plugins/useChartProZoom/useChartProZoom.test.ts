@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { ZoomData } from '@mui/x-charts/internals';
 import { initializeZoomData } from './useChartProZoom';
 
