@@ -1,6 +1,11 @@
 import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import * as React from 'react';
-import { useChartContext, useSelector, useChartsSlots } from '@mui/x-charts/internals';
+import {
+  useChartContext,
+  useSelector,
+  useChartsSlots,
+  UseChartCartesianAxisSignature,
+} from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
@@ -14,7 +19,7 @@ export interface ChartsToolbarProProps extends ChartsToolbarProps {}
  */
 export function ChartsToolbarPro(props: ChartsToolbarProProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
-  const { store } = useChartContext();
+  const { store } = useChartContext<[UseChartCartesianAxisSignature]>();
   const { localeText } = useChartsLocalization();
   const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
 
