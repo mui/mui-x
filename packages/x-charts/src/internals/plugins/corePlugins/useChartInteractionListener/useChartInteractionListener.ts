@@ -8,7 +8,7 @@ import {
   PressGesture,
   TapGesture,
   TurnWheelGesture,
-} from '@web-gestures/core';
+} from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import {
   UseChartInteractionListenerSignature,

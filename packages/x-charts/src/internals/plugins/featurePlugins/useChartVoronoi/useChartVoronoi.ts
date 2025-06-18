@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
-import { PointerGestureEventData } from '@web-gestures/core';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import { SeriesId } from '../../../../models/seriesType/common';

@@ -945,12 +945,12 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
+      '@mui/x-internal-gestures':
+        specifier: 'workspace:'
+        version: link:../x-internal-gestures/build
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
-      '@web-gestures/core':
-        specifier: ^0.0.12
-        version: 0.0.12
       bezier-easing:
         specifier: ^2.1.0
         version: 2.1.0
@@ -5836,9 +5836,6 @@ packages:
   '@vvago/vale@3.12.0':
     resolution: {integrity: sha512-9VxKDaJT0oyxJh+qN+tW2e78M+1xGMkXqbbZ2XlAvyhOrjA3OSOCaZQjRu6+c9lv/h1OQRNT50XIuhngrVoSew==}
     hasBin: true
-
-  '@web-gestures/core@0.0.12':
-    resolution: {integrity: sha512-JIheYzT2b2wI6w1JVKFmq8pXGs1B5oUHydRYtwsRTS4AleN5BJBx9zg1nmhpaCGNZoNVUbWc/ZM9e5X1HSMyGQ==}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -16878,8 +16875,6 @@ snapshots:
       unzipper: 0.10.14
     transitivePeerDependencies:
       - debug
-
-  '@web-gestures/core@0.0.12': {}
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:

@@ -5,7 +5,7 @@ import {
   PressEvent,
   TapEvent,
   TurnWheelEvent,
-} from '@web-gestures/core';
+} from '@mui/x-internal-gestures/core';
 import { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =

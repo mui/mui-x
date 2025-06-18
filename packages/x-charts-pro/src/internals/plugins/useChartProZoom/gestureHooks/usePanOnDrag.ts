@@ -8,7 +8,7 @@ import {
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { PanEvent } from '@web-gestures/core';
+import { PanEvent } from '@mui/x-internal-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 

@@ -8,7 +8,7 @@ import {
   ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { PinchEvent } from '@web-gestures/core';
+import { PinchEvent } from '@mui/x-internal-gestures/core';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
