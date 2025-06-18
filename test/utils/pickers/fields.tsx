@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import { FieldRef, FieldSectionType } from '@mui/x-date-pickers/models';

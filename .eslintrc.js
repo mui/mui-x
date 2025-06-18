@@ -116,6 +116,10 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
       ]),
 ];
 
+const mochaPluginOverride = baseline.overrides.find((override) =>
+  override.extends?.includes('plugin:mocha/recommended'),
+);
+
 module.exports = {
   ...baseline,
   plugins: [
@@ -187,7 +191,19 @@ module.exports = {
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
-    ...baseline.overrides,
+    ...baseline.overrides.filter(
+      (override) => !override.extends?.includes('plugin:mocha/recommended'),
+    ),
+    {
+      ...mochaPluginOverride,
+      extends: [],
+      rules: Object.entries(mochaPluginOverride.rules).reduce((acc, [key, value]) => {
+        if (!key.includes('mocha')) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {}),
+    },
     {
       files: [
         // matching the pattern of the test runner

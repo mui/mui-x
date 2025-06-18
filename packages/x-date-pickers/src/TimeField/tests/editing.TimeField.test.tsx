@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { fireEvent } from '@mui/internal-test-utils';
