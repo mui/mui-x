@@ -922,6 +922,22 @@ async function main({ githubToken }) {
       await execa('git', ['fetch', upstreamRemote, `v${majorVersion}.x`]);
     }
 
+    // Create a new branch with the new version
+    const branchName = `release/v${newVersion}-${new Date().toISOString().slice(0, 10)}`;
+    console.log(`Creating new branch: ${branchName}`);
+
+    // Determine the source branch based on the selected major version
+    let branchSource;
+    if (majorVersion === currentMajorVersion) {
+      branchSource = `${upstreamRemote}/master`;
+      console.log(`Creating branch from master for current major version: ${branchSource}`);
+    } else {
+      branchSource = `${upstreamRemote}/v${majorVersion}.x`;
+      console.log(`Creating branch from version branch: ${branchSource}`);
+    }
+
+    await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
+
     // Check for uncommitted changes
     await checkUncommittedChanges();
 
@@ -962,22 +978,6 @@ async function main({ githubToken }) {
         default: true,
       },
     ]);
-
-    // Create a new branch with the new version
-    const branchName = `release/v${newVersion}-${new Date().toISOString().slice(0, 10)}`;
-    console.log(`Creating new branch: ${branchName}`);
-
-    // Determine the source branch based on the selected major version
-    let branchSource;
-    if (majorVersion === currentMajorVersion) {
-      branchSource = `${upstreamRemote}/master`;
-      console.log(`Creating branch from master for current major version: ${branchSource}`);
-    } else {
-      branchSource = `${upstreamRemote}/v${majorVersion}.x`;
-      console.log(`Creating branch from version branch: ${branchSource}`);
-    }
-
-    await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
 
     // Commit the changes
     console.log('Committing changes...');
