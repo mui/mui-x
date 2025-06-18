@@ -120,6 +120,10 @@ export const useDataGridPremiumComponent = (
       return {
         ...inProps,
         ...pivotPropsOverrides,
+        initialState: {
+          ...inProps.initialState,
+          columns: undefined,
+        },
       };
     }
     return inProps;
