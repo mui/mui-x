@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
@@ -44,7 +45,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     return map;
   }, [resources]);
 
-  React.useLayoutEffect(() => {
+  useModernLayoutEffect(() => {
     const body = bodyRef.current;
     const header = headerWrapperRef.current;
     if (!body || !header) {
