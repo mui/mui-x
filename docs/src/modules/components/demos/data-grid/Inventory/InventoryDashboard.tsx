@@ -12,6 +12,7 @@ import { Product, products } from './data/products';
 import { ProductDetailPanel } from './DetailPanel';
 import { InventoryToolbar } from './InventoryToolbar';
 import { dataGridStyles } from './styles';
+import { CustomExpandIcon, CustomCollapseIcon } from './icons';
 
 const StatusChip = styled(Chip)(({ theme }) => ({
   borderRadius: '6px',
@@ -189,6 +190,10 @@ function InventoryDashboard() {
                 getDetailPanelContent={({ row }) => <ProductDetailPanel row={row} />}
                 getDetailPanelHeight={() => 120}
                 rowHeight={80}
+                slots={{
+                  detailPanelExpandIcon: CustomExpandIcon,
+                  detailPanelCollapseIcon: CustomCollapseIcon,
+                }}
                 sx={{
                   ...dataGridStyles,
                   '& .MuiDataGrid-virtualScroller': {
