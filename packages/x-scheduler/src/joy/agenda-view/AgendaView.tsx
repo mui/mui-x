@@ -21,7 +21,7 @@ export const AgendaView = React.forwardRef(function AgendaView(
 ) {
   const getDayList = useDayList();
 
-  const today = adapter.date();
+  const today = adapter.date('2025-05-26');
   const days = React.useMemo(
     () => getDayList({ date: today.startOf('week'), amount: 12 }),
     [getDayList, today],
