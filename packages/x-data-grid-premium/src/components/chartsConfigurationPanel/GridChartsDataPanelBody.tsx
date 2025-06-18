@@ -19,6 +19,10 @@ import {
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../../hooks/features/rowGrouping/gridRowGroupingSelector';
+import {
+  gridPivotModelSelector,
+  gridPivotActiveSelector,
+} from '../../hooks/features/pivoting/gridPivotingSelectors';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -147,21 +151,24 @@ export interface FieldTransferObject {
 
 export type DropPosition = 'top' | 'bottom' | null;
 
-function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
+interface GridChartsDataPanelBodyProps {
+  searchValue: string;
+}
+
+function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector);
   const series = useGridSelector(apiRef, gridChartsSeriesSelector);
   const classes = useUtilityClasses(rootProps);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
-  const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+  const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
+  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
 
-  const getColumnName = React.useCallback(
-    (field: string) => {
-      const column = columns[field];
-      return column?.headerName || field;
-    },
-    [columns],
+  const pivotingModelValues = React.useMemo(
+    () => pivotModel.values.map((value) => value.field),
+    [pivotModel.values],
   );
 
   const availableFields = React.useMemo(() => {
@@ -170,16 +177,26 @@ function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
         columns[field].chartable &&
         !categories.includes(field) &&
         !series.includes(field) &&
-        !rowGroupingModel.includes(field),
+        !rowGroupingModel.includes(field) &&
+        (!pivotActive || !pivotingModelValues.includes(field)),
     );
     if (searchValue) {
       return notUsedFields.filter((field) => {
-        const fieldName = getColumnName(field);
+        const fieldName = apiRef.current.chartsIntegration.getColumnName(field);
         return fieldName.toLowerCase().includes(searchValue.toLowerCase());
       });
     }
     return notUsedFields;
-  }, [searchValue, columns, rowGroupingModel, categories, series, getColumnName]);
+  }, [
+    apiRef,
+    searchValue,
+    columns,
+    rowGroupingModel,
+    pivotActive,
+    pivotingModelValues,
+    categories,
+    series,
+  ]);
 
   const [drag, setDrag] = React.useState<{
     active: boolean;
@@ -269,7 +286,7 @@ function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
               >
-                {getColumnName(field)}
+                {apiRef.current.chartsIntegration.getColumnName(field)}
               </GridChartsDataPanelField>
             ))}
           </GridChartsDataPanelFieldList>
@@ -323,7 +340,7 @@ function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {getColumnName(field)}
+                      {apiRef.current.chartsIntegration.getColumnName(field)}
                     </GridChartsDataPanelField>
                   ))}
                 </GridChartsDataPanelFieldList>
@@ -370,7 +387,7 @@ function GridChartsDataPanelBody({ searchValue }: { searchValue: string }) {
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {getColumnName(field)}
+                      {apiRef.current.chartsIntegration.getColumnName(field)}
                     </GridChartsDataPanelField>
                   ))}
                 </GridChartsDataPanelFieldList>

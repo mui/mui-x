@@ -21,6 +21,16 @@ export interface GridChartsIntegrationApi {
    * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the charts configuration side panel open state.
    */
   setChartsConfigurationPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+  /**
+   * Updates the categories selection for the charts integration.
+   * @param {string[] | ((prev: string[]) => string[])} categories - The new categories selection or a function that returns the new categories selection.
+   */
+  updateCategories: (categories: string[] | ((prev: string[]) => string[])) => void;
+  /**
+   * Updates the series selection for the charts integration.
+   * @param {string[] | ((prev: string[]) => string[])} series - The new series selection or a function that returns the new series selection.
+   */
+  updateSeries: (series: string[] | ((prev: string[]) => string[])) => void;
 }
 
 export interface GridChartsIntegrationPrivateApi {
@@ -32,5 +42,6 @@ export interface GridChartsIntegrationPrivateApi {
       targetField?: string,
       placementRelativeToTargetField?: 'top' | 'bottom',
     ) => void;
+    getColumnName: (field: string) => string;
   };
 }
