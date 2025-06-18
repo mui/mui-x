@@ -31,7 +31,7 @@ describe('<EventPopover />', () => {
     container: document.body,
     calendarEvent,
     calendarEventResource,
-    onEventAction: () => {},
+    onEventEdit: () => {},
     onClose: () => {},
   };
 
@@ -40,7 +40,7 @@ describe('<EventPopover />', () => {
   it('should render the event data in the form fields', () => {
     render(
       <Popover.Root open>
-        <EventPopover {...defaultProps} onEventEdit={() => {}} />
+        <EventPopover {...defaultProps} />
       </Popover.Root>,
     );
     expect(screen.getByDisplayValue('Footing')).not.to.equal(null);
@@ -70,7 +70,7 @@ describe('<EventPopover />', () => {
   it('should show error if start date is after end date', () => {
     render(
       <Popover.Root open>
-        <EventPopover {...defaultProps} onEventEdit={() => {}} />
+        <EventPopover {...defaultProps} />
       </Popover.Root>,
     );
     fireEvent.change(screen.getByLabelText(/start date/i), { target: { value: '2025-05-27' } });
