@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 
 /*
  * This test verifies that these modules and types are exported correctly

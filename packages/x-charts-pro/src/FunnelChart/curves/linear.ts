@@ -1,127 +1,187 @@
-import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-
-// From point1 to point2, get the x value from y
-const xFromY =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (y: number): number => {
-    if (y1 === y2) {
-      return x1;
-    }
-
-    const result = ((x2 - x1) * (y - y1)) / (y2 - y1) + x1;
-
-    return Number.isNaN(result) ? 0 : result;
-  };
-
-// From point1 to point2, get the y value from x
-const yFromX =
-  (x1: number, y1: number, x2: number, y2: number) =>
-  (x: number): number => {
-    if (x1 === x2) {
-      return y1;
-    }
-    const result = ((y2 - y1) * (x - x1)) / (x2 - x1) + y1;
-    return Number.isNaN(result) ? 0 : result;
-  };
+/* eslint-disable class-methods-use-this */
+import { FunnelCurveGenerator, CurveOptions, FunnelPointShape, Point } from './curve.types';
+import { borderRadiusPolygon } from './borderRadiusPolygon';
+import { lerpX, lerpY } from './utils';
 
 /**
  * This is a custom "linear" curve generator.
+ * It draws straight lines for the 4 provided points,
+ * with the option to properly handling the border radius.
  *
- * It takes into account the gap between the points and draws a smooth curve between them.
- *
- * It is based on the d3-shape linear curve generator.
+ * The implementation is based on the d3-shape linear curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/linear.js
  */
-export class Linear implements CurveGenerator {
+export class Linear implements FunnelCurveGenerator {
   private context: CanvasRenderingContext2D;
 
-  private line: number = NaN;
+  private position: number = 0;
 
-  private x: number = NaN;
-
-  private y: number = NaN;
-
-  private currentPoint: number = 0;
+  private sections: number = 0;
 
   private isHorizontal: boolean = false;
 
+  private isIncreasing: boolean = false;
+
   private gap: number = 0;
 
-  constructor(context: CanvasRenderingContext2D, isHorizontal: boolean, gap: number = 0) {
+  private borderRadius: number = 0;
+
+  private min: Point = { x: 0, y: 0 };
+
+  private max: Point = { x: 0, y: 0 };
+
+  private points: Point[] = [];
+
+  private pointShape: FunnelPointShape = 'square';
+
+  constructor(
+    context: CanvasRenderingContext2D,
+    {
+      isHorizontal,
+      gap,
+      position,
+      sections,
+      borderRadius,
+      min,
+      max,
+      isIncreasing,
+      pointShape,
+    }: CurveOptions,
+  ) {
     this.context = context;
-    this.isHorizontal = isHorizontal;
-    this.gap = gap / 2;
-  }
+    this.isHorizontal = isHorizontal ?? false;
+    this.gap = gap ?? 0;
+    this.position = position ?? 0;
+    this.sections = sections ?? 1;
+    this.borderRadius = borderRadius ?? 0;
+    this.isIncreasing = isIncreasing ?? false;
+    this.min = min ?? { x: 0, y: 0 };
+    this.max = max ?? { x: 0, y: 0 };
+    this.pointShape = pointShape ?? 'square';
 
-  areaStart(): void {
-    this.line = 0;
-  }
-
-  areaEnd(): void {
-    this.line = NaN;
-  }
-
-  lineStart(): void {
-    this.currentPoint = 0;
-  }
-
-  lineEnd() {
-    if (this.line || (this.line !== 0 && this.currentPoint === 1)) {
-      this.context.closePath();
+    if (isIncreasing) {
+      const currentMin = this.min;
+      const currentMax = this.max;
+      this.min = currentMax;
+      this.max = currentMin;
     }
-    this.line = 1 - this.line;
   }
 
-  point(x: number, y: number): void {
-    x = +x;
-    y = +y;
+  areaStart(): void {}
 
-    // We draw the lines only at currentPoint 1 & 3 because we need
-    // The data of a pair of points to draw the lines.
-    // Hence currentPoint 1 draws a line from point 0 to point 1 and point 1 to point 2.
-    // currentPoint 3 draws a line from point 2 to point 3 and point 3 to point 0.
+  areaEnd(): void {}
 
-    if (this.isHorizontal) {
-      const yGetter = yFromX(this.x, this.y, x, y);
-      let xGap = 0;
+  lineStart(): void {}
 
-      // 0 is the top-left corner.
-      if (this.currentPoint === 1) {
-        xGap = this.x + this.gap;
-        this.context.moveTo(xGap, yGetter(xGap));
-        this.context.lineTo(xGap, yGetter(xGap));
-        xGap = x - this.gap;
-        this.context.lineTo(xGap, yGetter(xGap));
-      } else if (this.currentPoint === 3) {
-        xGap = this.x - this.gap;
-        this.context.lineTo(xGap, yGetter(xGap));
-        xGap = x + this.gap;
-        this.context.lineTo(xGap, yGetter(xGap));
+  lineEnd(): void {}
+
+  protected getBorderRadius(): number | number[] {
+    if (this.gap > 0) {
+      return this.borderRadius;
+    }
+
+    if (this.isIncreasing) {
+      // Is largest section
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === 0 && this.pointShape === 'sharp') {
+        return [0, 0, this.borderRadius];
+      }
+      // Is smallest section
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius, this.borderRadius];
       }
     }
 
-    if (!this.isHorizontal) {
-      const xGetter = xFromY(this.x, this.y, x, y);
-      let yGap = 0;
+    if (!this.isIncreasing) {
+      // Is largest section
+      if (this.position === 0) {
+        return [0, 0, this.borderRadius, this.borderRadius];
+      }
+      // Is smallest section and shaped like a triangle
+      if (this.position === this.sections - 1 && this.pointShape === 'sharp') {
+        return [0, 0, this.borderRadius];
+      }
 
-      // 0 is the top-right corner.
-      if (this.currentPoint === 1) {
-        yGap = this.y + this.gap;
-        this.context.moveTo(xGetter(yGap), yGap);
-        this.context.lineTo(xGetter(yGap), yGap);
-        yGap = y - this.gap;
-        this.context.lineTo(xGetter(yGap), yGap);
-      } else if (this.currentPoint === 3) {
-        yGap = this.y - this.gap;
-        this.context.lineTo(xGetter(yGap), yGap);
-        yGap = y + this.gap;
-        this.context.lineTo(xGetter(yGap), yGap);
+      // Is smallest section
+      if (this.position === this.sections - 1) {
+        return [this.borderRadius, this.borderRadius];
       }
     }
 
-    // Increment the values
-    this.currentPoint += 1;
-    this.x = x;
-    this.y = y;
+    return 0;
+  }
+
+  processPoints(points: Point[]): Point[] {
+    // Add gaps where they are needed.
+    const processedPoints = points.map((point, index) => {
+      const slopeStart = points.at(index <= 1 ? 0 : 3)!;
+      const slopeEnd = points.at(index <= 1 ? 1 : 2)!;
+
+      if (this.isHorizontal) {
+        const yGetter = lerpY(slopeStart.x - this.gap, slopeStart.y, slopeEnd.x, slopeEnd.y);
+
+        return {
+          x: point.x,
+          y: yGetter(point.x),
+        };
+      }
+
+      const xGetter = lerpX(slopeStart.x, slopeStart.y - this.gap, slopeEnd.x, slopeEnd.y);
+
+      return {
+        x: xGetter(point.y),
+        y: point.y,
+      };
+    });
+
+    if (this.pointShape === 'sharp') {
+      // In the last section, to form a triangle we need 3 points instead of 4
+      // Else the algorithm will break.
+      const isLastSection = this.position === this.sections - 1;
+      const isFirstSection = this.position === 0;
+
+      let firstPoint: Point | null = null;
+      let secondPoint: Point | null = null;
+
+      if (isFirstSection && this.isIncreasing) {
+        firstPoint = processedPoints[1];
+        secondPoint = processedPoints[2];
+      }
+
+      if (isLastSection && !this.isIncreasing) {
+        firstPoint = processedPoints[3];
+        secondPoint = processedPoints[0];
+      }
+
+      if (firstPoint && secondPoint) {
+        return [
+          // Sharp point at the start
+          this.isHorizontal
+            ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
+            : { x: (this.max.x + this.min.x) / 2, y: this.max.y },
+          // Then other points
+          firstPoint,
+          secondPoint,
+        ];
+      }
+    }
+    return processedPoints;
+  }
+
+  point(xIn: number, yIn: number): void {
+    this.points.push({ x: xIn, y: yIn });
+    const isLastSection = this.position === this.sections - 1;
+    const isFirstSection = this.position === 0;
+    const isSharpPoint =
+      this.pointShape === 'sharp' &&
+      ((isLastSection && !this.isIncreasing) || (isFirstSection && this.isIncreasing));
+    if (this.points.length < (isSharpPoint ? 3 : 4)) {
+      return;
+    }
+
+    borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }
 }

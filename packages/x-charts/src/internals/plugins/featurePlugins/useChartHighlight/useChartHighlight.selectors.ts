@@ -12,13 +12,13 @@ const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) =
 const selectSeries: ChartRootSelector<UseChartSeriesSignature> = (state) => state.series;
 
 export const selectorChartsHighlightScopePerSeriesId = createSelector(
-  selectSeries,
+  [selectSeries],
   (series): Map<SeriesId, Partial<HighlightScope> | undefined> => {
     const map = new Map<SeriesId, Partial<HighlightScope> | undefined>();
 
     Object.keys(series.processedSeries).forEach((seriesType) => {
       const seriesData = series.processedSeries[seriesType as ChartSeriesType];
-      Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
+      seriesData?.seriesOrder?.forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
         map.set(seriesId, seriesItem?.highlightScope);
       });
@@ -28,7 +28,7 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
 );
 
 export const selectorChartsHighlightedItem = createSelector(
-  selectHighlight,
+  [selectHighlight],
   (highlight) => highlight.item,
 );
 

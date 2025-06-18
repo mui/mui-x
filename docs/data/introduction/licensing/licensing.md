@@ -48,6 +48,8 @@ The Premium version is available under a commercial license—visit [the Pricing
 Exclusive features are marked with the <span class="plan-premium" aria-label="MUI X Premium plan icon"></span> icon throughout the documentation.
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
+  <!-- TODO: CHARTS-PREMIUM: uncomment when ready -->
+  <!-- - [`@mui/x-charts-premium`](https://www.npmjs.com/package/@mui/x-charts-premium) -->
 
 ## Upgrading
 
@@ -231,7 +233,7 @@ This method is required if your codebase is "source-available" (to hide the lice
 :::
 
 The license key is validated on the server and client-side so you must expose the environment variable to the browser.
-To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser):
+To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/guides/environment-variables#bundling-environment-variables-for-the-browser):
 
 ```tsx title="app/layout.tsx"
 'use client';

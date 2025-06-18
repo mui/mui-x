@@ -3,7 +3,7 @@ title: Data Grid - AI Assistant Panel component
 productId: x-data-grid
 components: AiAssistantPanelTrigger
 packageName: '@mui/x-data-grid-premium'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
 # Data Grid - AI Assistant Panel component [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
@@ -17,6 +17,10 @@ Currently, the AI Assistant Panel Trigger is the only part of the AI Assistant P
 Future versions of the AI Assistant Panel component will make it possible to compose each of its parts for full customization.
 
 :::
+
+The AI assistant panel is part of the [AI Assistant feature](/x/react-data-grid/ai-assistant/).
+
+You can use the AI Assistant Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components when you need to customize the AI assistant panel trigger, or when implementing a custom toolbar.
 
 ## Basic usage
 

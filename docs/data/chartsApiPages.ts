@@ -101,6 +101,21 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-pro',
+    title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
+    title: 'ChartsToolbarZoomInTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-trigger',
+    title: 'ChartsToolbarZoomOutTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-tooltip',
     title: 'ChartsTooltip',
   },
@@ -115,6 +130,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-y-axis',
     title: 'ChartsYAxis',
+  },
+  {
+    pathname: '/x/api/charts/chart-zoom-slider',
+    title: 'ChartZoomSlider',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/continuous-color-legend',
@@ -151,6 +171,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap-tooltip',
     title: 'HeatmapTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip-content',
+    title: 'HeatmapTooltipContent',
     plan: 'pro',
   },
   {
@@ -211,6 +236,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'PieChart',
   },
   {
+    pathname: '/x/api/charts/pie-chart-pro',
+    title: 'PieChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
   },
@@ -223,8 +253,9 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarChart',
   },
   {
-    pathname: '/x/api/charts/radar-data-provider',
-    title: 'RadarDataProvider',
+    pathname: '/x/api/charts/radar-chart-pro',
+    title: 'RadarChartPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/radar-grid',
@@ -266,6 +297,14 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/spark-line-chart',
     title: 'SparkLineChart',
+  },
+  {
+    pathname: '/x/api/charts/toolbar',
+    title: 'Toolbar',
+  },
+  {
+    pathname: '/x/api/charts/toolbar-button',
+    title: 'ToolbarButton',
   },
 ];
 export default chartsApiPages;

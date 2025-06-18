@@ -1,4 +1,5 @@
-import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
@@ -7,11 +8,16 @@ import {
   isBandScaleConfig,
   isPointScaleConfig,
   AxisId,
+  DefaultedXAxis,
+  DefaultedYAxis,
+  DefaultedAxis,
+  AxisValueFormatterContext,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber } from '../../../../hooks/useTicks';
+import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
+import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
@@ -34,18 +40,6 @@ function getRange(
   return axis.reverse ? [range[1], range[0]] : range;
 }
 
-const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] instanceof Date;
-
-function createDateFormatter(
-  axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,
-  range: number[],
-): AxisConfig<'band' | 'point', any, ChartsAxisProps>['valueFormatter'] {
-  const timeScale = scaleTime(axis.data!, range);
-
-  return (v, { location }) =>
-    location === 'tick' ? timeScale.tickFormat(axis.tickNumber)(v) : `${v.toLocaleString()}`;
-}
-
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
@@ -65,13 +59,13 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
 
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    axis?: DefaultedYAxis[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis?: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+    axis?: DefaultedXAxis[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsXAxisProps>;
@@ -85,7 +79,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomOptions,
   getFilters,
 }: ComputeCommonParams<T> & {
-  axis?: AxisConfig[];
+  axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
 }) {
   if (allAxis === undefined) {
@@ -104,7 +98,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
@@ -197,7 +191,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
@@ -216,6 +210,19 @@ export function computeAxisValue<T extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      valueFormatter:
+        axis.valueFormatter ??
+        (createScalarFormatter(
+          tickNumber,
+          getScale(
+            scaleType,
+            range.map((v) => scale.invert(v)),
+            range,
+          ),
+        ) as <TScaleName extends ScaleName>(
+          value: any,
+          context: AxisValueFormatterContext<TScaleName>,
+        ) => string),
     };
   });
   return {

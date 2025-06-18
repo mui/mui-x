@@ -574,7 +574,7 @@ export const useGridCellSelection = (
       );
       const copyData = sortedSelectedRowIds.reduce<string>((acc, rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
-        const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+        const rowValues = Object.keys(fieldsMap).map((field) => {
           let cellData: string;
           if (fieldsMap[field]) {
             const cellParams = apiRef.current.getCellParams(rowId, field);
@@ -589,8 +589,9 @@ export const useGridCellSelection = (
           } else {
             cellData = '';
           }
-          return acc2 === '' ? cellData : [acc2, cellData].join(clipboardCopyCellDelimiter);
+          return cellData;
         }, '');
+        const rowString = rowValues.join(clipboardCopyCellDelimiter);
         return acc === '' ? rowString : [acc, rowString].join('\r\n');
       }, '');
       return copyData;

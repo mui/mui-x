@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
@@ -31,7 +31,9 @@ const VARIANT_COMPONENT = {
 const PickersTextFieldRoot = styled(FormControl, {
   name: 'MuiPickersTextField',
   slot: 'Root',
-})<{ ownerState: PickerTextFieldOwnerState }>({});
+})<{ ownerState: PickerTextFieldOwnerState }>({
+  maxWidth: '100%',
+});
 
 const useUtilityClasses = (
   classes: Partial<PickersTextFieldClasses> | undefined,
@@ -71,6 +73,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     error = false,
     variant = 'outlined',
     required = false,
+    hiddenLabel = false,
     // Props used by PickersInput
     InputProps,
     inputProps,
@@ -148,6 +151,16 @@ const PickersTextField = React.forwardRef(function PickersTextField(
 
   const PickersInputComponent = VARIANT_COMPONENT[variant];
 
+  const inputAdditionalProps: Record<string, any> = {};
+  if (variant === 'outlined') {
+    if (InputLabelProps && typeof InputLabelProps.shrink !== 'undefined') {
+      inputAdditionalProps.notched = InputLabelProps.shrink;
+    }
+    inputAdditionalProps.label = label;
+  } else if (variant === 'filled') {
+    inputAdditionalProps.hiddenLabel = hiddenLabel;
+  }
+
   return (
     <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
       <PickersTextFieldRoot
@@ -196,6 +209,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           aria-describedby={helperTextId}
           aria-live={helperTextId ? 'polite' : undefined}
           data-active-range-position={dataActiveRangePosition}
+          {...inputAdditionalProps}
           {...InputProps}
         />
         {helperText && (

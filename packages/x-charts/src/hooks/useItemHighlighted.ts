@@ -36,8 +36,8 @@ type UseItemHighlightedParams = HighlightItemData | null;
 export function useItemHighlighted(item: UseItemHighlightedParams): UseItemHighlightedReturnType {
   const store = useStore<[UseChartHighlightSignature]>();
 
-  const isHighlighted = useSelector(store, selectorChartsIsHighlighted, item);
-  const isFaded = useSelector(store, selectorChartsIsFaded, item);
+  const isHighlighted = useSelector(store, selectorChartsIsHighlighted, [item]);
+  const isFaded = useSelector(store, selectorChartsIsFaded, [item]);
 
   return { isHighlighted, isFaded: !isHighlighted && isFaded };
 }

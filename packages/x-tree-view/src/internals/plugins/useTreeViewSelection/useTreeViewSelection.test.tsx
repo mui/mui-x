@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, act } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
@@ -6,6 +5,7 @@ import {
   UseTreeViewExpansionSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 
 /**
  * All tests related to keyboard navigation (e.g.: selection using "Space")
@@ -15,6 +15,10 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
   'useTreeViewSelection plugin',
   ({ render }) => {
     describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
+      beforeEach(() => {
+        clearWarningsCache();
+      });
+
       it('should not select items when no default state and no control state are defined', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
@@ -76,7 +80,6 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
 
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
-      // eslint-disable-next-line mocha/no-skipped-tests
       it.skip('should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item', () => {
         const onSelectedItemsChange = spy();
 

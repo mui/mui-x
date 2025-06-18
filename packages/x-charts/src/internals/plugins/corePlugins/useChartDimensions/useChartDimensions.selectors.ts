@@ -6,40 +6,42 @@ import {
   selectorChartRightAxisSize,
   selectorChartTopAxisSize,
 } from '../../featurePlugins/useChartCartesianAxis/useChartAxisSize.selectors';
+import { ChartState } from '../../models/chart';
 
 export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (
   state,
 ) => state.dimensions;
 
-const selectorChartMargin = createSelector(
-  selectorChartDimensionsState,
-  (dimensionsState) => dimensionsState.margin,
-);
-const selectorChartWidth = createSelector(
-  selectorChartDimensionsState,
-  (dimensionsState) => dimensionsState.width,
-);
-const selectorChartHeight = createSelector(
-  selectorChartDimensionsState,
-  (dimensionsState) => dimensionsState.height,
-);
+export const selectorChartMargin = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.margin;
 
-const selectorChartTopMargin = createSelector(selectorChartMargin, (margin) => margin.top);
-const selectorChartRightMargin = createSelector(selectorChartMargin, (margin) => margin.right);
-const selectorChartBottomMargin = createSelector(selectorChartMargin, (margin) => margin.bottom);
-const selectorChartLeftMargin = createSelector(selectorChartMargin, (margin) => margin.left);
+const selectorChartWidth = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.width;
+const selectorChartHeight = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.height;
+
+const selectorChartTopMargin = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.margin.top;
+const selectorChartRightMargin = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.margin.right;
+const selectorChartBottomMargin = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.margin.bottom;
+const selectorChartLeftMargin = (state: ChartState<[UseChartDimensionsSignature]>) =>
+  state.dimensions.margin.left;
 
 export const selectorChartDrawingArea = createSelector(
-  selectorChartWidth,
-  selectorChartHeight,
-  selectorChartTopMargin,
-  selectorChartRightMargin,
-  selectorChartBottomMargin,
-  selectorChartLeftMargin,
-  selectorChartTopAxisSize,
-  selectorChartRightAxisSize,
-  selectorChartBottomAxisSize,
-  selectorChartLeftAxisSize,
+  [
+    selectorChartWidth,
+    selectorChartHeight,
+    selectorChartTopMargin,
+    selectorChartRightMargin,
+    selectorChartBottomMargin,
+    selectorChartLeftMargin,
+    selectorChartTopAxisSize,
+    selectorChartRightAxisSize,
+    selectorChartBottomAxisSize,
+    selectorChartLeftAxisSize,
+  ],
   (
     width,
     height,
@@ -62,7 +64,7 @@ export const selectorChartDrawingArea = createSelector(
 );
 
 export const selectorChartPropsSize = createSelector(
-  selectorChartDimensionsState,
+  [selectorChartDimensionsState],
   (dimensionsState) => ({
     width: dimensionsState.propsWidth,
     height: dimensionsState.propsHeight,
@@ -70,8 +72,7 @@ export const selectorChartPropsSize = createSelector(
 );
 
 export const selectorChartContainerSize = createSelector(
-  selectorChartWidth,
-  selectorChartHeight,
+  [selectorChartWidth, selectorChartHeight],
   (width, height) => ({
     width,
     height,

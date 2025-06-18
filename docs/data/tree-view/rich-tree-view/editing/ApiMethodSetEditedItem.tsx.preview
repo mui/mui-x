@@ -1,0 +1,11 @@
+<Stack spacing={2} direction="row">
+  <Button onClick={handleAddFolder}>+ Add Folder</Button>
+</Stack>
+<Box sx={{ minHeight: 352, minWidth: 260 }}>
+  <RichTreeView
+    items={items}
+    apiRef={apiRef}
+    isItemEditable={(item) => item.editable}
+    onItemLabelChange={handleItemLabelChange}
+  />
+</Box>

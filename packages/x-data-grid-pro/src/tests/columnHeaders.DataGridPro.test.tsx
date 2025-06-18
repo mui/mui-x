@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { config } from 'react-transition-group';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { SinonFakeTimers, useFakeTimers } from 'sinon';
+import { isJSDOM } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 
 describe('<DataGridPro /> - Column headers', () => {
   const { render } = createRenderer();
@@ -33,7 +32,7 @@ describe('<DataGridPro /> - Column headers', () => {
   };
 
   // JSDOM version of .focus() doesn't scroll
-  testSkipIf(isJSDOM)('should not scroll the column headers when a column is focused', async () => {
+  it.skipIf(isJSDOM)('should not scroll the column headers when a column is focused', async () => {
     render(
       <div style={{ width: 102, height: 500 }}>
         <DataGridPro
@@ -51,15 +50,12 @@ describe('<DataGridPro /> - Column headers', () => {
   });
 
   describe('GridColumnHeaderMenu', () => {
-    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-    let timer: SinonFakeTimers | null = null;
-
     beforeEach(() => {
-      timer = useFakeTimers();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      timer?.restore();
+      vi.useRealTimers();
     });
 
     it('should close the menu when the window is scrolled', async () => {
@@ -71,11 +67,11 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       fireEvent.wheel(virtualScroller);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).to.equal(null);
     });
 
@@ -91,10 +87,10 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
       setProps({ rows: [...baselineProps.rows] });
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
     });
 
@@ -108,7 +104,7 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menu'));
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -124,7 +120,7 @@ describe('<DataGridPro /> - Column headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -147,14 +143,14 @@ describe('<DataGridPro /> - Column headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
 
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
       const separator = columnCell.querySelector('.MuiDataGrid-iconSeparator')!;
       fireEvent.mouseDown(separator);
       // TODO remove mouseUp once useGridColumnReorder will handle cleanup properly
       fireEvent.mouseUp(separator);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).to.equal(null);
     });
 
@@ -179,18 +175,18 @@ describe('<DataGridPro /> - Column headers', () => {
       )!;
 
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
       const separator = columnToResizeCell.querySelector(
         `.${gridClasses['columnSeparator--resizable']}`,
       )!;
       fireEvent.mouseDown(separator);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).to.equal(null);
       // cleanup
       fireEvent.mouseUp(separator);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
     });
 
     it('should close the menu of a column when pressing the Escape key', async () => {
@@ -204,11 +200,11 @@ describe('<DataGridPro /> - Column headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
 
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
       /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).to.equal(null);
     });
 
@@ -226,10 +222,10 @@ describe('<DataGridPro /> - Column headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
       expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
-      await act(() => timer?.runAll()); // Wait for the transition to run
+      await act(async () => vi.runAllTimersAsync()); // Wait for the transition to run
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
-      await act(() => timer?.runAll()); // Wait for the transition to run
+      await act(async () => vi.runAllTimersAsync()); // Wait for the transition to run
       expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
 
       // restore previous config
@@ -253,7 +249,7 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
 
       const menu = screen.getByRole('menu');
       const descMenuitem = screen.getByRole('menuitem', { name: /sort by desc/i });
@@ -277,7 +273,7 @@ describe('<DataGridPro /> - Column headers', () => {
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
       fireEvent.click(menuIconButton);
-      await act(() => timer?.runAll());
+      await act(async () => vi.runAllTimersAsync());
 
       const menu = screen.getByRole('menu');
       expect(menu).toHaveFocus();

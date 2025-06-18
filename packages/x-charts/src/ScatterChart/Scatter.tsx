@@ -22,6 +22,7 @@ import { useChartContext } from '../context/ChartProvider';
 import { ScatterMarker } from './ScatterMarker';
 import { SeriesId } from '../models/seriesType/common';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
+import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -38,6 +39,7 @@ export interface ScatterProps {
     event: React.MouseEvent<SVGElement, MouseEvent>,
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
+  classes?: Partial<ScatterClasses>;
   slots?: ScatterSlots;
   slotProps?: ScatterSlotProps;
 }
@@ -57,7 +59,17 @@ export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
 function Scatter(props: ScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, onItemClick, slots, slotProps } = props;
+  const {
+    series,
+    xScale,
+    yScale,
+    color,
+    colorGetter,
+    onItemClick,
+    classes: inClasses,
+    slots,
+    slotProps,
+  } = props;
 
   const { instance } = useChartContext();
   const store = useStore<[UseChartVoronoiSignature]>();
@@ -86,14 +98,12 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = instance.isPointInside({ x, y });
-
-      const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
+      const isInRange = instance.isPointInside(x, y);
 
       if (isInRange) {
         const currentItem = {
-          seriesId: pointCtx.seriesId,
-          dataIndex: pointCtx.dataIndex,
+          seriesId: series.id,
+          dataIndex: i,
         };
         const isItemHighlighted = isHighlighted(currentItem);
         temp.push({
@@ -136,8 +146,10 @@ function Scatter(props: ScatterProps) {
     ownerState: {},
   });
 
+  const classes = useUtilityClasses(inClasses);
+
   return (
-    <g>
+    <g data-series={series.id} className={classes.root}>
       {cleanData.map((dataPoint, i) => (
         <Marker
           key={dataPoint.id ?? dataPoint.dataIndex}
@@ -156,6 +168,8 @@ function Scatter(props: ScatterProps) {
                 dataIndex: dataPoint.dataIndex,
               }))
           }
+          data-highlighted={dataPoint.isHighlighted || undefined}
+          data-faded={dataPoint.isFaded || undefined}
           {...interactionItemProps[i]}
           {...markerProps}
         />
@@ -169,6 +183,7 @@ Scatter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  classes: PropTypes.object,
   color: PropTypes.string.isRequired,
   colorGetter: PropTypes.func,
   /**

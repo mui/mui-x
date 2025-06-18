@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { TransitionProps } from '@mui/material/transitions';
 import { SlotComponentProps } from '@mui/utils/types';
@@ -81,6 +83,10 @@ export interface TreeItemProps
   extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * Override or extend the styles applied to the component.
    */

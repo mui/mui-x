@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setEditedItem: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
       }
     },
     "canMoveItemToNewPosition": {
@@ -28,8 +28,14 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ lazyLoading?: bool }" }
+    "getItemChildren": {
+      "type": { "name": "func" },
+      "default": "(item) => item.children",
+      "signature": {
+        "type": "function(item: R) => Array<R>",
+        "describedArgs": ["item"],
+        "returned": "Array<R>"
+      }
     },
     "getItemId": {
       "type": { "name": "func" },

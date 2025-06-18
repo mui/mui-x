@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { SinonFakeTimers, useFakeTimers, spy } from 'sinon';
+import { isJSDOM } from 'test/utils/skipIf';
+import { spy } from 'sinon';
+import { vi } from 'vitest';
 
 describe('<DateCalendar />', () => {
   const { render } = createPickerRenderer();
@@ -94,7 +94,8 @@ describe('<DateCalendar />', () => {
     // days are disabled
     const cells = screen.getAllByRole('gridcell');
     const disabledDays = cells.filter(
-      (cell) => cell.getAttribute('disabled') !== null && cell.tagName === 'BUTTON',
+      (cell) =>
+        cell.getAttribute('disabled') !== null && cell.getAttribute('data-testid') === 'day',
     );
 
     expect(cells.length).to.equal(35);
@@ -127,15 +128,12 @@ describe('<DateCalendar />', () => {
   });
 
   describe('with fake timers', () => {
-    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-    let timer: SinonFakeTimers | null = null;
-
     beforeEach(() => {
-      timer = useFakeTimers({ now: new Date(2019, 0, 2), toFake: ['Date'] });
+      vi.setSystemTime(new Date(2019, 0, 2));
     });
 
     afterEach(() => {
-      timer?.restore();
+      vi.useRealTimers();
     });
 
     // test: https://github.com/mui/mui-x/issues/12373
@@ -186,7 +184,7 @@ describe('<DateCalendar />', () => {
       // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
-          '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+          '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="day"]',
         ),
       ).to.have.text('1');
     });
@@ -531,7 +529,7 @@ describe('<DateCalendar />', () => {
     });
 
     // Needs layout
-    testSkipIf(isJSDOM)('should scroll to show the selected year', () => {
+    it.skipIf(isJSDOM)('should scroll to show the selected year', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}

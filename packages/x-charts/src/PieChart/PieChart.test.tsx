@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
-import { expect } from 'chai';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();

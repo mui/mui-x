@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, screen, act, waitFor, fireEvent } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -11,7 +10,6 @@ import {
   useGridApiRef,
   GridApi,
   GridRowSelectionModel,
-  GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -24,7 +22,7 @@ import {
   includeRowSelection,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
@@ -417,26 +415,23 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
-    testSkipIf(isJSDOM)('should remove the selection from rows that are filtered out', async () => {
-      render(
-        <TestDataGridSelection
-          checkboxSelection
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
+    it('should remove the selection from rows that are filtered out', async () => {
+      const { user } = render(<TestDataGridSelection checkboxSelection />);
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      fireEvent.click(selectAllCheckbox);
+      await user.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-        target: { value: 1 },
-      });
+      const idText = screen.getByRole('columnheader', { name: 'id' });
+      await user.hover(idText);
+      const idMenu = idText.querySelector('button[aria-label="id column menu"]')!;
+      await user.click(idMenu);
+
+      const filterButton = screen.getByText('Filter');
+      await user.click(filterButton);
+
+      await user.keyboard('1');
+
       await waitFor(() => {
         // Previous selection is cleaned with only the filtered rows
         expect(getSelectedRowIds()).to.deep.equal([1]);
@@ -445,42 +440,38 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
-      render(
-        <TestDataGridSelection
-          checkboxSelection
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
+      const { user } = render(<TestDataGridSelection checkboxSelection />);
 
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      fireEvent.click(selectAllCheckbox);
+      await user.click(selectAllCheckbox);
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      // Click on Menu in id header column
-      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
-        target: { value: 1 },
-      });
+      const idText = screen.getByRole('columnheader', { name: 'id' });
+      await user.hover(idText);
+      const idMenu = idText.querySelector('button[aria-label="id column menu"]')!;
+      await user.click(idMenu);
+
+      const filterButton = screen.getByText('Filter');
+      await user.click(filterButton);
+
+      await user.keyboard('1');
+
       await waitFor(() => {
         // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
-      fireEvent.click(selectAllCheckbox); // Unselect all
+      await user.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([]);
       });
       expect(grid('selectedRowCount')).to.equal(null);
 
-      fireEvent.click(selectAllCheckbox); // Select all filtered rows
+      await user.click(selectAllCheckbox); // Select all filtered rows
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
@@ -588,7 +579,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     // HTMLElement.focus() only scrolls to the element on a real browser
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should not jump during scroll while the focus is on the checkbox',
       async () => {
         const data = getBasicGridData(20, 1);
@@ -646,7 +637,7 @@ describe('<DataGrid /> - Row selection', () => {
     //
     //     // JSDOM doesn't fire "blur" when .focus is called in another element
     //     // FIXME Firefox doesn't show any ripple
-    //     testSkipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
+    //     it.skipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
     //       render(<TestDataGridSelection checkboxSelection />);
     //       const cell = getCell(1, 1);
     //       fireUserEvent.mousePress(cell);
@@ -839,6 +830,32 @@ describe('<DataGrid /> - Row selection', () => {
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([0, 2]));
       setProps({ checkboxSelection: false, isRowSelectable: () => false });
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([]));
+    });
+
+    it('should call onRowSelectionModelChange with the correct reason when clicking on a row', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          pagination
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await user.click(getCell(0, 0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('singleRowSelection');
+    });
+
+    it('should call onRowSelectionModelChange with the correct reason when clicking on the header checkbox', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          pagination
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await user.click(getColumnHeaderCell(0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('multipleRowsSelection');
     });
 
     it('should call onRowSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', async () => {
