@@ -1,12 +1,13 @@
+import type { TreeViewComponentNameToClassKey } from '@mui/x-tree-view/internals';
 import { RichTreeViewProClassKey } from '../RichTreeViewPro';
 
-// prettier-ignore
-export interface TreeViewComponentNameToClassKey {
+export interface TreeViewProComponentNameToClassKey
+  extends Omit<TreeViewComponentNameToClassKey, 'MuiRichTreeView'> {
   MuiRichTreeViewPro: RichTreeViewProClassKey;
 }
 
 declare module '@mui/material/styles' {
-  interface ComponentNameToClassKey extends TreeViewComponentNameToClassKey {}
+  interface ComponentNameToClassKey extends TreeViewProComponentNameToClassKey {}
 }
 
 // disable automatic export

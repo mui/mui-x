@@ -1,6 +1,8 @@
 import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
+import type { TreeViewComponents } from '@mui/x-tree-view/internals';
 
-export interface TreeViewComponents<Theme = unknown> {
+export interface TreeViewProComponents<Theme = unknown>
+  extends Omit<TreeViewComponents<Theme>, 'MuiRichTreeView'> {
   MuiRichTreeViewPro?: {
     defaultProps?: ComponentsProps['MuiRichTreeViewPro'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiRichTreeViewPro'];
@@ -9,5 +11,5 @@ export interface TreeViewComponents<Theme = unknown> {
 }
 
 declare module '@mui/material/styles' {
-  interface Components<Theme = unknown> extends TreeViewComponents<Theme> {}
+  interface Components<Theme = unknown> extends TreeViewProComponents<Theme> {}
 }
