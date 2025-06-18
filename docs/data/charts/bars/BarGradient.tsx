@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses, barElementClasses } from '@mui/x-charts/BarChart';
 
 const settings = {
   xAxis: [{ data: ['group A', 'group B', 'group C'] }],
@@ -16,7 +16,7 @@ export default function BarGradient() {
     <BarChart
       {...settings}
       sx={{
-        [`& .${barElementClasses.root}[data-series="2"]`]: {
+        [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
           fill: 'url(#gradient)',
         },
       }}

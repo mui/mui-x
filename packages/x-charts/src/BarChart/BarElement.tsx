@@ -103,7 +103,6 @@ function BarElement(props: BarElementProps) {
       fill: color,
       skipAnimation,
       layout,
-      'data-series': id,
     },
     className: classes.root,
     ownerState,

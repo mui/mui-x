@@ -1,7 +1,7 @@
 <BarChart
   {...settings}
   sx={{
-    [`& .${barElementClasses.root}[data-series="2"]`]: {
+    [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
       fill: 'url(#gradient)',
     },
   }}
