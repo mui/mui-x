@@ -520,26 +520,31 @@ function calculateNewVersion(
  */
 async function checkUncommittedChanges() {
   try {
-    await execa('git', ['status', '--porcelain']);
-
-    console.warn('Warning: You have uncommitted changes.');
-    console.warn('Please commit or stash your changes before continuing.');
-    console.warn('You can run:');
-    console.warn('  git add . && git commit -m "Your commit message"');
-    console.warn('  or');
-    console.warn('  git stash');
-    console.warn('in another terminal window.');
-
-    await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'continue',
-        message: 'Press Enter to check again, or Ctrl+C to abort...',
-        default: true,
-      },
-    ]);
-
-    await execa('git', ['status', '--porcelain']);
+    let { stdout } = await execa('git', ['status', '--porcelain']);
+    if (!stdout) {
+      return;
+    }
+    while (stdout) {
+      console.warn('Warning: You have uncommitted changes.');
+      console.warn('Please commit or stash your changes before continuing.');
+      console.warn('You can run:');
+      console.warn('  git add . && git commit -m "Your commit message"');
+      console.warn('  or');
+      console.warn('  git stash');
+      console.warn('in another terminal window.');
+      // eslint-disable-next-line no-await-in-loop
+      await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'continue',
+          message: 'Press Enter to check again, or Ctrl+C to abort...',
+          default: true,
+        },
+      ]);
+      // eslint-disable-next-line no-await-in-loop
+      const result = await execa('git', ['status', '--porcelain']);
+      stdout = result.stdout;
+    }
   } catch (error) {
     console.error('Error checking for uncommitted changes:', error);
     process.exit(1);
