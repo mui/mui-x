@@ -129,7 +129,6 @@ function LineElement(props: LineElementProps) {
       ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
-      'data-series': id,
     },
     className: classes.root,
     ownerState,

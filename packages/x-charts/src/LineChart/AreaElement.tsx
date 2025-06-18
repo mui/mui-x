@@ -130,7 +130,6 @@ function AreaElement(props: AreaElementProps) {
       ...interactionProps,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
-      'data-series': id,
     },
     className: classes.root,
     ownerState,
