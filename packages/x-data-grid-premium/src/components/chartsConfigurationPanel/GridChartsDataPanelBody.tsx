@@ -281,7 +281,7 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
             {availableFields.map((field) => (
               <GridChartsDataPanelField
                 key={field}
-                field={field}
+                column={columns[field]}
                 zone={null}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
@@ -335,7 +335,7 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
                   {categories.map((field) => (
                     <GridChartsDataPanelField
                       key={field}
-                      field={field}
+                      column={columns[field]}
                       zone="categories"
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
@@ -382,7 +382,7 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
                   {series.map((field) => (
                     <GridChartsDataPanelField
                       key={field}
-                      field={field}
+                      column={columns[field]}
                       zone="series"
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
