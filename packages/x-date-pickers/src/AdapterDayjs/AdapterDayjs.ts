@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 /* v8 ignore start */
-import defaultDayjs, { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 // dayjs has no exports field defined
 // See https://github.com/iamkun/dayjs/issues/2562
 /* eslint-disable import/extensions */
@@ -21,12 +21,10 @@ import {
   DateBuilderReturnType,
 } from '../models';
 
-defaultDayjs.extend(localizedFormatPlugin);
-defaultDayjs.extend(weekOfYearPlugin);
-defaultDayjs.extend(isBetweenPlugin);
-defaultDayjs.extend(advancedFormatPlugin);
-
-type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
+dayjs.extend(localizedFormatPlugin);
+dayjs.extend(weekOfYearPlugin);
+dayjs.extend(isBetweenPlugin);
+dayjs.extend(advancedFormatPlugin);
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -107,10 +105,6 @@ const MISSING_TIMEZONE_PLUGIN = [
   'To be able to use timezones, you have to enable both the `utc` and the `timezone` plugin',
   'Find more information on https://mui.com/x/react-date-pickers/timezone/#day-js-and-timezone',
 ].join('\n');
-
-const withLocale = (dayjs: any, locale?: string): Constructor =>
-  !locale ? dayjs : (...args) => dayjs(...args).locale(locale);
-
 declare module '@mui/x-date-pickers/models' {
   interface PickerValidDateLookup {
     dayjs: Dayjs;
@@ -149,8 +143,6 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   public lib = 'dayjs';
 
-  public dayjs: Constructor;
-
   public locale?: string;
 
   public formats: AdapterFormats;
@@ -160,13 +152,12 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   public formatTokenMap = formatTokenMap;
 
   constructor({ locale, formats }: AdapterOptions<string, never> = {}) {
-    this.dayjs = withLocale(defaultDayjs, locale);
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
 
     // Moved plugins to the constructor to allow for users to use options on the library
     // for reference: https://github.com/mui/mui-x/pull/11151
-    defaultDayjs.extend(customParseFormatPlugin);
+    dayjs.extend(customParseFormatPlugin);
   }
 
   private setLocaleToValue = (value: Dayjs) => {
@@ -178,9 +169,9 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     return value.locale(expectedLocale);
   };
 
-  private hasUTCPlugin = () => typeof defaultDayjs.utc !== 'undefined';
+  private hasUTCPlugin = () => typeof dayjs.utc !== 'undefined';
 
-  private hasTimezonePlugin = () => typeof defaultDayjs.tz !== 'undefined';
+  private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
 
   private isSame = (value: Dayjs, comparing: Dayjs, comparisonTemplate: string) => {
     const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
@@ -197,7 +188,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
         return undefined;
       }
       case 'system': {
-        return defaultDayjs.tz.guess();
+        return dayjs.tz.guess();
       }
       default: {
         return timezone;
@@ -206,19 +197,22 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   private createSystemDate = (value: string | undefined): Dayjs => {
+    let date: Dayjs;
     if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
-      const timezone = defaultDayjs.tz.guess();
+      const timezone = dayjs.tz.guess();
 
       // We can't change the system timezone in the tests
       /* v8 ignore next 3 */
       if (timezone !== 'UTC') {
-        return defaultDayjs.tz(value, timezone);
+        date = dayjs.tz(value, timezone);
+      } else {
+        date = dayjs(value);
       }
-
-      return defaultDayjs(value);
+    } else {
+      date = dayjs(value);
     }
 
-    return defaultDayjs(value);
+    return this.setLocaleToValue(date);
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {
@@ -227,7 +221,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       throw new Error(MISSING_UTC_PLUGIN);
     }
 
-    return defaultDayjs.utc(value);
+    return this.setLocaleToValue(dayjs.utc(value));
   };
 
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Dayjs => {
@@ -242,11 +236,11 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     const keepLocalTime = value !== undefined && !value.endsWith('Z');
-    return defaultDayjs(value).tz(this.cleanTimezone(timezone), keepLocalTime);
+    return this.setLocaleToValue(dayjs(value).tz(this.cleanTimezone(timezone), keepLocalTime));
   };
 
   private getLocaleFormats = () => {
-    const locales = defaultDayjs.Ls;
+    const locales = dayjs.Ls;
     const locale = this.locale || 'en';
 
     let localeObject = locales[locale];
@@ -275,6 +269,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
    * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
    */
   private adjustOffset = (value: Dayjs) => {
+    return value;
     if (!this.hasTimezonePlugin()) {
       return value;
     }
@@ -307,23 +302,16 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       return null as unknown as R;
     }
 
-    let parsedValue: Dayjs;
     if (timezone === 'UTC') {
-      parsedValue = this.createUTCDate(value);
-    } else if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
-      parsedValue = this.createSystemDate(value);
-    } else {
-      parsedValue = this.createTZDate(value, timezone);
+      return this.createUTCDate(value) as unknown as R;
     }
-
-    if (this.locale === undefined) {
-      return parsedValue as unknown as R;
+    if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
+      return this.createSystemDate(value) as unknown as R;
     }
-
-    return parsedValue.locale(this.locale) as unknown as R;
+    return this.createTZDate(value, timezone) as unknown as R;
   };
 
-  public getInvalidDate = () => defaultDayjs(new Date('Invalid date'));
+  public getInvalidDate = () => dayjs(new Date('Invalid date'));
 
   public getTimezone = (value: Dayjs): string => {
     if (this.hasTimezonePlugin()) {
@@ -372,7 +360,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
 
-    return defaultDayjs.tz(value, this.cleanTimezone(timezone));
+    return this.setLocaleToValue(dayjs.tz(value, this.cleanTimezone(timezone)));
   };
 
   public toJsDate = (value: Dayjs) => {
@@ -384,7 +372,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       return null;
     }
 
-    return this.dayjs(value, format, this.locale, true);
+    return dayjs(value, format, this.locale, true);
   };
 
   public getCurrentLocaleCode = () => {
@@ -432,7 +420,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public formatByString = (value: Dayjs, formatString: string) => {
-    return this.dayjs(value).format(formatString);
+    return this.setLocaleToValue(value).format(formatString);
   };
 
   public formatNumber = (numberToFormat: string) => {
