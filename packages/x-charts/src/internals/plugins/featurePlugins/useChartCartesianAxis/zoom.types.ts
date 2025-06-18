@@ -18,6 +18,7 @@ export type ZoomData = {
 };
 
 export type ZoomFilterMode = 'keep' | 'discard';
+export type ZoomSliderShowTooltip = 'always' | 'hover' | 'never';
 
 export interface ZoomOptions {
   /**
@@ -83,12 +84,21 @@ export interface ZoomSliderOptions {
    */
   enabled?: boolean;
   /**
-   * The size of the slider.
-   * This is the height of the slider for the x-axis and the width of the slider for the y-axis.
+   * The size reserved for the zoom slider. The actual size of the slider might be smaller, so
+   * increasing this value effectively increases the margin around the slider.
+   * This means the height for the x-axis and the width for the y-axis.
    *
-   * @default 30
+   * @default 28
    */
   size?: number;
+  /**
+   * Defines when the tooltip with the zoom values should be shown.
+   * - 'always': The tooltip is always shown.
+   * - 'hover': The tooltip is shown when hovering over the track or thumb.
+   * - 'never': The tooltip is never shown.
+   * @default 'hover'
+   */
+  showTooltip?: ZoomSliderShowTooltip;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;

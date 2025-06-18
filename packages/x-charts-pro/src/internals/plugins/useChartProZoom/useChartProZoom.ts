@@ -8,9 +8,11 @@ import {
   useSelector,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
+  selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
 import { useEventCallback } from '@mui/material/utils';
+import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
@@ -142,6 +144,21 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [onZoomChange, store, removeIsInteracting],
   );
 
+  const setAxisZoomData = React.useCallback(
+    (axisId: AxisId, zoomData: ZoomData | ((prev: ZoomData) => ZoomData)) => {
+      setZoomDataCallback((prev) =>
+        prev.map((prevZoom) => {
+          if (prevZoom.axisId !== axisId) {
+            return prevZoom;
+          }
+
+          return typeof zoomData === 'function' ? zoomData(prevZoom) : zoomData;
+        }),
+      );
+    },
+    [setZoomDataCallback],
+  );
+
   const moveZoomRange = React.useCallback(
     (axisId: AxisId, by: number) => {
       setZoomDataCallback((prevZoomData) => {
@@ -191,13 +208,38 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 
   useZoomOnPinch(pluginData, setZoomDataCallback);
 
+  const zoom = React.useCallback(
+    (step: number) => {
+      setZoomDataCallback((prev) =>
+        prev.map((zoomData) => {
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(
+            store.getSnapshot(),
+            zoomData.axisId,
+          );
+
+          return calculateZoom(zoomData, step, zoomOptions);
+        }),
+      );
+    },
+    [setZoomDataCallback, store],
+  );
+
+  const zoomIn = React.useCallback(() => zoom(0.1), [zoom]);
+  const zoomOut = React.useCallback(() => zoom(-0.1), [zoom]);
+
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
+      zoomIn,
+      zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       moveZoomRange,
+      zoomIn,
+      zoomOut,
     },
   };
 };

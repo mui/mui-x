@@ -8,7 +8,7 @@ components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider
 
 <p class="description">Enables zooming and panning on specific charts or axis.</p>
 
-Zooming is possible on the **Pro**[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') versions of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
+Zooming is possible on the Pro version of the charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`.
 
 ## Basic usage
 
@@ -54,15 +54,43 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 ## Zoom slider 🧪
 
-:::warning
-This feature is unstable and its API, visuals and/or behavior may change in future minor or patch releases.
+:::info
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 :::
 
 You can provide an overview and allow the manipulation of the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
 
 {{"demo": "ZoomSlider.js"}}
 
-Optionally, you can set the `zoom.slider.size` property to customize the zoom slider's size, that is, the height on an x-axis and the width on a y-axis.
+You can set the `zoom.slider.size` property to customize the size reserved for the zoom slider.
+This can be useful if you're using a custom zoom slider and want to update the space reserved for it.
+If you're using the default zoom slider, updating `zoom.slider.size` effectively changes the padding around the slider.
+
+The size is the height on an x-axis and the width on a y-axis.
+
+### Tooltip
+
+The zoom slider supports a tooltip that displays the current zoom range.
+
+You can configure the tooltip by setting the `zoom.slider.showTooltip` property on the axis config. The following options are available:
+
+- `true`: The tooltip is always displayed.
+- `'hover'`: The tooltip is displayed on hover (default).
+- `false`: The tooltip is never displayed.
+
+#### Tooltip value formatting
+
+The value shown in the tooltip can also be customized by using the `valueFormatter` property of the respective axis.
+
+When formatting the zoom slider tooltip, the `valueFormatter` is called with `zoom-slider-tooltip` as its location.
+
+{{"demo": "ZoomSliderTooltip.js"}}
+
+### Limits
+
+The zoom slider uses the same limits as the zooming options. You can set the `minStart`, `maxEnd`, `minSpan`, and `maxSpan` properties on the axis config to restrict the zoom slider range.
+
+The zoom slider does not display values outside the range delimited by `minStart` and `maxEnd`.
 
 ### Composition
 

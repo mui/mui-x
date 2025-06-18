@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+/* v8 ignore start */
 import defaultDayjs, { Dayjs } from 'dayjs';
 // dayjs has no exports field defined
 // See https://github.com/iamkun/dayjs/issues/2562
@@ -8,6 +9,7 @@ import customParseFormatPlugin from 'dayjs/plugin/customParseFormat.js';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat.js';
 import isBetweenPlugin from 'dayjs/plugin/isBetween.js';
 import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
+/* v8 ignore stop */
 /* eslint-enable import/extensions */
 import { warnOnce } from '@mui/x-internals/warning';
 import {
@@ -208,7 +210,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       const timezone = defaultDayjs.tz.guess();
 
       // We can't change the system timezone in the tests
-      /* istanbul ignore next */
+      /* v8 ignore next 3 */
       if (timezone !== 'UTC') {
         return defaultDayjs.tz(value, timezone);
       }
@@ -220,7 +222,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {
-    /* istanbul ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
       throw new Error(MISSING_UTC_PLUGIN);
     }
@@ -229,12 +231,12 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Dayjs => {
-    /* istanbul ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
       throw new Error(MISSING_UTC_PLUGIN);
     }
 
-    /* istanbul ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasTimezonePlugin()) {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
@@ -250,7 +252,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     let localeObject = locales[locale];
 
     if (localeObject === undefined) {
-      /* istanbul ignore next */
+      /* v8 ignore start */
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
           'MUI X: Your locale has not been found.',
@@ -259,6 +261,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
           'fallback on English locale.',
         ]);
       }
+      /* v8 ignore stop */
       localeObject = locales.en;
     }
 
@@ -280,7 +283,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     if (timezone !== 'UTC') {
       const fixedValue = value.tz(this.cleanTimezone(timezone), true);
       // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
-      /* istanbul ignore next */
+      /* v8 ignore next 3 */
       // @ts-ignore
       if (fixedValue.$offset === (value.$offset ?? 0)) {
         return value;
@@ -345,7 +348,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     if (timezone === 'UTC') {
-      /* istanbul ignore next */
+      /* v8 ignore next 3 */
       if (!this.hasUTCPlugin()) {
         throw new Error(MISSING_UTC_PLUGIN);
       }
@@ -365,7 +368,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
         return value;
       }
 
-      /* istanbul ignore next */
+      /* v8 ignore next */
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
 
@@ -389,7 +392,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public is12HourCycleInCurrentLocale = () => {
-    /* istanbul ignore next */
+    /* v8 ignore next */
     return /A|a/.test(this.getLocaleFormats().LT || '');
   };
 

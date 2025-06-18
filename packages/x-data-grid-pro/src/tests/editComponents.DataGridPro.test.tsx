@@ -12,7 +12,6 @@ import {
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
 

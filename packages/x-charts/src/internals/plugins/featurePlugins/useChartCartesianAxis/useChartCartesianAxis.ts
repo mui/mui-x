@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PointerGestureEventData } from '@web-gestures/core';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -85,9 +85,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       const srvEvent = event.detail.srcEvent;
       const target = event.detail.srcEvent.target as SVGElement | undefined;
       const svgPoint = getSVGPoint(element, srvEvent);
-      const isPointInside = instance.isPointInside(svgPoint, {
-        targetElement: target,
-      });
       // Release the pointer capture if we are panning, as this would cause the tooltip to
       // be locked to the first "section" it touches.
       if (
@@ -96,7 +93,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       ) {
         target?.releasePointerCapture(event.detail.srcEvent.pointerId);
       }
-      if (!isPointInside) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
         instance.cleanInteraction?.();
         return;
       }

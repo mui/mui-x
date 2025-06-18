@@ -5,6 +5,7 @@ import {
   CommonSeriesType,
   CommonDefaultizedProps,
   StackableSeriesType,
+  SeriesId,
 } from './common';
 
 export interface BarSeriesType
@@ -42,7 +43,7 @@ export interface BarSeriesType
  */
 export type BarItemIdentifier = {
   type: 'bar';
-  seriesId: DefaultizedBarSeriesType['id'];
+  seriesId: SeriesId;
   dataIndex: number;
 };
 

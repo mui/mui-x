@@ -53,6 +53,13 @@ export interface UseChartProZoomPublicApi {
    * @returns {void}
    */
   setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
+  /**
+   * Set the zoom data for an axis.
+   * @param {AxisId} axisId The id of the axis to set the zoom data for.
+   * @param {ZoomData | ((prev: ZoomData) => ZoomData)} value  The new value. Can either be the new zoom data, or an updater function.
+   * @returns {void}
+   */
+  setAxisZoomData: (axisId: AxisId, value: ZoomData | ((prev: ZoomData) => ZoomData)) => void;
 }
 
 export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
@@ -62,6 +69,14 @@ export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
    * @param {number} by The amount to move the zoom range by. Ranges from 0 to 100.
    */
   moveZoomRange: (axisId: AxisId, by: number) => void;
+  /**
+   * Zoom in the chart.
+   */
+  zoomIn: () => void;
+  /**
+   * Zoom out the chart.
+   */
+  zoomOut: () => void;
 }
 
 export type UseChartProZoomSignature = ChartPluginSignature<{

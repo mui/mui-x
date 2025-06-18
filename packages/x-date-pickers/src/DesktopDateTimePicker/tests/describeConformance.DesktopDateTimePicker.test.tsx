@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';

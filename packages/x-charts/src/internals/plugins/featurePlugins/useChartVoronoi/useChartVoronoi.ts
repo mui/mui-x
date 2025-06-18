@@ -76,7 +76,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         const pointX = getXPosition(x);
         const pointY = getYPosition(y);
 
-        if (!instance.isPointInside({ x: pointX, y: pointY })) {
+        if (!instance.isPointInside(pointX, pointY)) {
           // If the point is not displayed we move them to a trash coordinate.
           // This avoids managing index mapping before/after filtering.
           // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
@@ -125,7 +125,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       // Get mouse coordinate in global SVG space
       const svgPoint = getSVGPoint(element, event);
 
-      if (!instance.isPointInside(svgPoint)) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
         lastFind.current = undefined;
         return 'outside-chart';
       }

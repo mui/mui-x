@@ -52,7 +52,11 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/column-menu' },
               { pathname: '/x/react-data-grid/column-spanning' },
               { pathname: '/x/react-data-grid/column-groups' },
-              { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/column-ordering',
+                title: 'Column reordering',
+                plan: 'pro',
+              },
               { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/column-recipes', title: 'Recipes' },
             ],
@@ -64,7 +68,11 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/row-updates' },
               { pathname: '/x/react-data-grid/row-height' },
               { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
-              { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/master-detail',
+                plan: 'pro',
+                title: 'Master-detail row panels',
+              },
               { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
               { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
@@ -514,7 +522,7 @@ const pages: MuiPage[] = [
             title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
-          { pathname: '/x/react-charts/radar', unstable: true },
+          { pathname: '/x/react-charts/radar' },
           {
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
@@ -546,6 +554,7 @@ const pages: MuiPage[] = [
                 title: 'Export',
                 plan: 'pro',
               },
+              { pathname: '/x/react-charts/toolbar', title: 'Toolbar', unstable: true },
             ],
           },
           {

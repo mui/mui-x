@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { SinonFakeTimers, useFakeTimers, spy } from 'sinon';
+import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
@@ -17,6 +16,7 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { onTestFinished, vi } from 'vitest';
 
 describe('<DataGridPro /> - Row editing', () => {
   const { render } = createRenderer();
@@ -409,15 +409,12 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
-        // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-        let timer: SinonFakeTimers | null = null;
-
         beforeEach(() => {
-          timer = useFakeTimers();
+          vi.useFakeTimers();
         });
 
         afterEach(() => {
-          timer?.restore();
+          vi.useRealTimers();
         });
 
         it('should debounce multiple changes if debounceMs > 0', async () => {
@@ -447,7 +444,7 @@ describe('<DataGridPro /> - Row editing', () => {
           expect(renderEditCell.callCount).to.equal(0);
 
           await act(async () => {
-            await timer?.tickAsync(100);
+            await vi.advanceTimersByTimeAsync(100);
           });
           expect(renderEditCell.callCount).not.to.equal(0);
           expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
@@ -637,13 +634,20 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(apiRef.current?.getRowsCount()).to.equal(allRows.length);
       });
 
-      it('should stay in edit mode if processRowUpdate throws an error', () => {
+      it('should stay in edit mode if processRowUpdate throws an error', async () => {
+        const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        onTestFinished(() => {
+          consoleMock.mockRestore();
+        });
+
         const processRowUpdate = () => {
           throw new Error('Something went wrong');
         };
         render(<TestCase processRowUpdate={processRowUpdate} />);
-        act(() => apiRef.current?.startRowEditMode({ id: 0 }));
-        expect(() => act(() => apiRef.current?.stopRowEditMode({ id: 0 }))).toErrorDev(
+        await act(async () => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+
+        expect(consoleMock.mock.lastCall?.[0]).to.include(
           'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
@@ -985,6 +989,24 @@ describe('<DataGridPro /> - Row editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
         expect(listener.callCount).to.equal(0);
+      });
+
+      it('should call preProcessEditCellProps for editable columns only', async () => {
+        const preProcessEditCellProps1 = spy(({ props }: GridPreProcessEditCellProps) => props);
+        const preProcessEditCellProps2 = spy(({ props }: GridPreProcessEditCellProps) => props);
+        const { user } = render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps: preProcessEditCellProps1 }}
+            column2Props={{ preProcessEditCellProps: preProcessEditCellProps2, editable: false }}
+          />,
+        );
+
+        const cell = getCell(0, 1);
+        await user.click(cell);
+        await user.keyboard('a');
+
+        expect(preProcessEditCellProps1.callCount).to.equal(1);
+        expect(preProcessEditCellProps2.callCount).to.equal(0);
       });
 
       ['ctrlKey', 'metaKey'].forEach((key) => {

@@ -1,9 +1,15 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
+import {
+  adapterToUse,
+  createPickerRenderer,
+  openPicker,
+  openPickerAsync,
+  getFieldSectionsContainer,
+  expectFieldValueV7,
+} from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -113,6 +119,31 @@ describe('<DesktopDateTimePicker />', () => {
     await user.click(screen.getByText(/ok/i));
     expect(onAccept.callCount).to.equal(1);
     expect(onClose.callCount).to.equal(1);
+  });
+
+  it('should cycle focused views among the visible step after selection', async () => {
+    const { user } = render(
+      <DesktopDateTimePicker referenceDate={adapterToUse.date('2018-01-10')} />,
+    );
+
+    await openPickerAsync(user, { type: 'date-time' });
+
+    const day = screen.getByRole('gridcell', { name: '10' });
+    expect(day).toHaveFocus();
+    await user.click(day);
+
+    const hours = screen.getByRole('option', { name: '12 hours' });
+    expect(hours).toHaveFocus();
+    await user.click(hours);
+
+    const minutes = screen.getByRole('option', { name: '0 minutes' });
+    expect(minutes).toHaveFocus();
+    await user.click(minutes);
+
+    const meridiem = screen.getByRole('option', { name: 'AM' });
+    expect(meridiem).toHaveFocus();
+    const sectionsContainer = getFieldSectionsContainer();
+    expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM');
   });
 
   describe('prop: timeSteps', () => {

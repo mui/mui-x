@@ -1,0 +1,5 @@
+<EventCalendar
+  events={events}
+  resources={resources}
+  className={classes.Container}
+/>

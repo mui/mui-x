@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -28,7 +27,7 @@ import {
   grid,
   includeRowSelection,
 } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Filter', () => {
   const { render } = createRenderer();
@@ -501,9 +500,7 @@ describe('<DataGridPro /> - Filter', () => {
     // The first combo is hidden and we include hidden elements to make the query faster
     // https://github.com/testing-library/dom-testing-library/issues/820#issuecomment-726936225
     const input = getSelectInput(
-      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[
-        isJSDOM ? 1 : 0 // https://github.com/testing-library/dom-testing-library/issues/846
-      ],
+      screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[0],
     );
     fireEvent.change(input!, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
@@ -668,7 +665,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
+  it.skipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
     render(
       <div>
         {/* To simulate a page that needs to be scrolled to reach the grid. */}
@@ -700,7 +697,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not scroll the page when opening the filter panel and the operator=isAnyOf',
     () => {
       render(
@@ -918,7 +915,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // It's not re-rendering the filter panel correctly
-  testSkipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
+  it.skipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
     const { rerender } = render(<TestCase showToolbar />);
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);
@@ -1362,8 +1359,7 @@ describe('<DataGridPro /> - Filter', () => {
         },
       };
       render(<TestCase initialState={initialState} filterModel={newModel} columns={columns} />);
-      // For JSDom, the first hidden combo is also found which we are not interested in
-      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
+      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[0];
       expect(select).not.to.have.class('Mui-disabled');
     });
 

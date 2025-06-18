@@ -1,9 +1,8 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
 
@@ -19,7 +18,7 @@ const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   return axisData as string[];
 };
 
-describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
+describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   const { render } = createRenderer();
 
   const lineChartProps = {
@@ -50,23 +49,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     ),
   };
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  beforeEach(() => {
-    // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
-  it('should zoom on wheel', async function test() {
-    this.timeout(10000);
+  it('should zoom on wheel', async () => {
     const onZoomChange = sinon.spy();
     const { user } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,

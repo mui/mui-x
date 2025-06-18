@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
@@ -42,6 +42,8 @@ const rendererInterceptor = function RendererInterceptor(
 
   const finalProps = {
     ...otherProps,
+    // we control the focused view manually
+    autoFocus: false,
     focusedView: null,
     sx: [
       {

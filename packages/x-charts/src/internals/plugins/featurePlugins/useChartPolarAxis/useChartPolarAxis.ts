@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PointerGestureEventData } from '@web-gestures/core';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
@@ -117,11 +117,10 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       const target = event.detail.srcEvent;
       const svgPoint = getSVGPoint(element, target);
 
-      const isPointInside = instance.isPointInside(svgPoint, {
-        targetElement: event.detail.srcEvent.target as SVGElement,
-      });
       // Test if it's in the drawing area
-      if (!isPointInside) {
+      if (
+        !instance.isPointInside(svgPoint.x, svgPoint.y, event.detail.srcEvent.target as SVGElement)
+      ) {
         if (mousePosition.current.isInChart) {
           instance?.cleanInteraction();
           mousePosition.current.isInChart = false;

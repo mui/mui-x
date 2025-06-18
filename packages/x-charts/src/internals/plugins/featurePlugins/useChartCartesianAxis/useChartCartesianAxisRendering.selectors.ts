@@ -1,4 +1,4 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+// import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -33,45 +33,34 @@ const selectorChartZoomState = (state: ChartState<[], [UseChartCartesianAxisSign
  */
 
 export const selectorChartZoomIsInteracting = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.isInteracting,
 );
 
 export const selectorChartZoomMap = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartXZoomOptionsLookup = createSelector(
-  selectorChartRawXAxis,
-  createZoomLookup('x'),
-);
-
-const selectorChartYZoomOptionsLookup = createSelector(
-  selectorChartRawYAxis,
-  createZoomLookup('y'),
-);
-
 export const selectorChartZoomOptionsLookup = createSelector(
-  [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
-  (xLookup, yLookup) => ({ ...xLookup, ...yLookup }),
-  {
-    memoizeOptions: {
-      // This selector returns Record<AxisId, DefaultizedZoomOptions> which is a map.
-      // Whenever the component re-renders, the axis is often a new object, which makes this a new instance.
-      // We need to use a custom equality check to avoid re-rendering the chart.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  [selectorChartRawXAxis, selectorChartRawYAxis],
+  (xAxis, yAxis) => ({
+    ...createZoomLookup('x')(xAxis),
+    ...createZoomLookup('y')(yAxis),
+  }),
+  //   {
+  //   memoizeOptions: {
+  //     // This selector returns Record<AxisId, DefaultizedZoomOptions> which is a map.
+  //     // Whenever the component re-renders, the axis is often a new object, which makes this a new instance.
+  //     // We need to use a custom equality check to avoid re-rendering the chart.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 export const selectorChartAxisZoomOptionsLookup = createSelector(
-  [
-    selectorChartXZoomOptionsLookup,
-    selectorChartYZoomOptionsLookup,
-    (state, axisId: AxisId) => axisId,
-  ],
-  (xLookup, yLookup, axisId) => xLookup[axisId] ?? yLookup[axisId],
+  [selectorChartZoomOptionsLookup, (_, axisId: AxisId) => axisId],
+  (axisLookup, axisId) => axisLookup[axisId],
 );
 
 const selectorChartXFilter = createSelector(
@@ -192,4 +181,22 @@ export const selectorChartYAxis = createSelector(
       zoomOptions,
       getFilters,
     }),
+);
+
+export const selectorChartAxis = createSelector(
+  [selectorChartXAxis, selectorChartYAxis, (_, axisId: AxisId) => axisId],
+  (xAxes, yAxes, axisId) => xAxes?.axis[axisId] ?? yAxes?.axis[axisId],
+);
+
+export const selectorChartRawAxis = createSelector(
+  [selectorChartRawXAxis, selectorChartRawYAxis, (state, axisId: AxisId) => axisId],
+  (xAxes, yAxes, axisId) => {
+    const axis = xAxes?.find((a) => a.id === axisId) ?? yAxes?.find((a) => a.id === axisId) ?? null;
+
+    if (!axis) {
+      return undefined;
+    }
+
+    return axis;
+  },
 );

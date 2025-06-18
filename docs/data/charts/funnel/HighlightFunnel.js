@@ -11,19 +11,35 @@ export default function HighlightFunnel() {
   const [fade, setFade] = React.useState('global');
 
   return (
-    <Stack spacing={1} sx={{ width: '100%', maxWidth: 400 }}>
-      <FunnelChart
-        series={[
-          {
-            ...populationByEducationLevelPercentageSeriesLabeled,
-            highlightScope: {
-              highlight,
-              fade,
+    <Stack spacing={1} sx={{ width: '100%' }}>
+      <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }}>
+        <FunnelChart
+          series={[
+            {
+              ...populationByEducationLevelPercentageSeriesLabeled,
+              highlightScope: {
+                highlight,
+                fade,
+              },
             },
-          },
-        ]}
-        {...funnelChartParams}
-      />
+          ]}
+          {...funnelChartParams}
+        />
+        <FunnelChart
+          series={[
+            {
+              ...populationByEducationLevelPercentageSeriesLabeled,
+              variant: 'outlined',
+              highlightScope: {
+                highlight,
+                fade,
+              },
+            },
+          ]}
+          {...funnelChartParams}
+        />
+      </Stack>
+
       <Controls
         highlight={highlight}
         setHighlight={setHighlight}
