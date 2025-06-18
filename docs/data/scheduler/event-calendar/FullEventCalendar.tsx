@@ -4,7 +4,7 @@ import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
 import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
 import classes from './FullEventCalendar.module.css';
 
-const eventsList: CalendarEvent[] = [
+const initialEvents: CalendarEvent[] = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
@@ -68,7 +68,7 @@ const resources: CalendarResource[] = [
 ];
 
 export default function FullEventCalendar() {
-  const [events, setEvents] = React.useState<CalendarEvent[]>(eventsList);
+  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
     <EventCalendar

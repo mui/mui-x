@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { DayView } from '@mui/x-scheduler/joy/day-view';
 import classes from './StandaloneWeekView.module.css';
 
-const eventsList = [
+const initialEvents = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
@@ -27,7 +27,7 @@ const resources = [
 ];
 
 export default function StandaloneDayView() {
-  const [events, setEvents] = React.useState(eventsList);
+  const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <DayView

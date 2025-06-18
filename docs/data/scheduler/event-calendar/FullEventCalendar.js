@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
 import classes from './FullEventCalendar.module.css';
 
-const eventsList = [
+const initialEvents = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
@@ -68,7 +68,7 @@ const resources = [
 ];
 
 export default function FullEventCalendar() {
-  const [events, setEvents] = React.useState(eventsList);
+  const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <EventCalendar
