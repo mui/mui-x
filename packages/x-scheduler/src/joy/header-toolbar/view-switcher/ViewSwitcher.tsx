@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Menu } from '@base-ui-components/react/menu';
-import useForkRef from '@mui/utils/useForkRef';
+import { useForkRef } from '@base-ui-components/react/utils';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { ViewSwitcherProps } from './ViewSwitcher.types';

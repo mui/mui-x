@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { sliceUntil } from './sliceUntil';
 
 describe('sliceUntil', () => {

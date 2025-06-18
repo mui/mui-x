@@ -94,7 +94,7 @@ Same changes as in `@mui/x-tree-view@8.5.2`.
 - [code-infra] Revert `React` to `19.0.0` (#18265) @LukasTy
 - [code-infra] Use `catalog` for reused dependencies (#18302) @LukasTy
 - [infra] Remove unused karma/mocha deps and files (#18340) @JCQuintas
-- [infra] Update github label references to use 'scope' instead of 'component' (#18260) @michelengelen
+- [infra] Update GitHub label references to use 'scope' instead of 'component' (#18260) @michelengelen
 - [infra] Use a single browser server in CI (#18230) @JCQuintas
 
 ## 8.5.1
@@ -189,15 +189,6 @@ Same changes as in `@mui/x-tree-view@8.5.1`.
 
 ### Core
 
-- chore(deps): bump @next/eslint-plugin-next to 15.3.3 (#18155) @renovate[bot]
-- chore(deps): bump @types/lodash to ^4.17.17 (#17990) @renovate[bot]
-- chore(deps): bump babel (#18157) @renovate[bot]
-- chore(deps): bump eslint to ^9.28.0 (#17352) @renovate[bot]
-- chore(deps): bump material ui (#17802) @renovate[bot]
-- chore(deps): bump next to ^15.3.3 (#18159) @renovate[bot]
-- chore(deps): bump ossf/scorecard-action action to v2.4.2 (#18160) @renovate[bot]
-- chore(deps): bump react-router to ^7.6.1 (#18162) @renovate[bot]
-- chore(deps): bump yargs to ^18.0.0 (#18169) @renovate[bot]
 - [code-infra] Different approach to console testing for `processRowUpdate` (#18213) @JCQuintas
 - [code-infra] Fix act warnings in DataGrid/toolbar (#18207) @JCQuintas
 - [code-infra] Remove `istanbul` references (#18194) @JCQuintas
@@ -4641,7 +4632,6 @@ No changes since `@mui/x-charts@7.22.2`.
 - [docs] Add `next` version links (#15423) @LukasTy
 - [docs] Use the `loading` state in the demos (#15538) @cherniavskii
 - [docs] Add data caching to lazy loaded detail panel demo (#15506) @cherniavskii
-
 - [code-infra] Tentative fix for Argos flaky screenshot tests (#15399) @JCQuintas
 - [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
 - [core] Clarify release version bump strategy (#15536) @cherniavskii
