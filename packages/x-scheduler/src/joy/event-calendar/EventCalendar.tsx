@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
@@ -49,6 +50,13 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const handleDayHeaderClick = useEventCallback((day: SchedulerValidDate) => {
     store.apply({ visibleDate: day, currentView: 'day' });
   });
+
+  useModernLayoutEffect(() => {
+    store.apply({
+      events: eventsProp,
+      resources: resourcesProp || [],
+    });
+  }, [store, eventsProp, resourcesProp]);
 
   let content: React.ReactNode;
   switch (currentView) {
