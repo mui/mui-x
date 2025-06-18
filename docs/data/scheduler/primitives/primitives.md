@@ -7,7 +7,7 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Overview
 
-<p class="description">A collection of primitives following the principles of Base UI to create custom event calendar UIs. </p>
+<p class="description">A collection of primitives following the principles of Base UI to create custom event calendar UIs.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
