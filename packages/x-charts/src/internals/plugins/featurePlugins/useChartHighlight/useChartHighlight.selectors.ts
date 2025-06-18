@@ -18,7 +18,7 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
 
     Object.keys(series.processedSeries).forEach((seriesType) => {
       const seriesData = series.processedSeries[seriesType as ChartSeriesType];
-      Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
+      seriesData?.seriesOrder?.forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
         map.set(seriesId, seriesItem?.highlightScope);
       });
