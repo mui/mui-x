@@ -1650,6 +1650,13 @@ importers:
         version: 6.0.1
     publishDirectory: build
 
+  packages/x-internal-gestures:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.27.4
+        version: 7.27.6
+    publishDirectory: build
+
   packages/x-internals:
     dependencies:
       '@babel/runtime':
