@@ -21,3 +21,11 @@ The following example shows how to wrap a Data Grid and a chart in the same cont
 The following example shows chart integration with grouped and aggregated data
 
 {{"demo": "GridChartsIntegrationRowGrouping.js", "bg": "inline"}}
+
+## With Pivoting
+
+Pivoting creates columns dynamically, based on the pivoting model.
+Names of those columns are determined by the values used to generate them, which makes it impossible to initialize `series` with those values.
+The demo below shows how to use column grouping state selector to get the dynamic names and select few of those columns on initial render.
+
+{{"demo": "GridChartsIntegrationPivoting.js", "bg": "inline"}}
