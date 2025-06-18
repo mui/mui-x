@@ -40,7 +40,7 @@ describe('<EventPopover />', () => {
   it('should render the event data in the form fields', () => {
     render(
       <Popover.Root open>
-        <EventPopover {...defaultProps} />
+        <EventPopover {...defaultProps} onEventEdit={() => {}} />
       </Popover.Root>,
     );
     expect(screen.getByDisplayValue('Footing')).not.to.equal(null);
@@ -51,26 +51,26 @@ describe('<EventPopover />', () => {
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
   });
 
-  it('should call onEventAction with updated values on submit', () => {
-    const onEventAction = spy();
+  it('should call onEventEdit with updated values on submit', () => {
+    const onEventEdit = spy();
     render(
       <Popover.Root open>
-        <EventPopover {...defaultProps} onEventAction={onEventAction} />
+        <EventPopover {...defaultProps} onEventEdit={onEventEdit} />
       </Popover.Root>,
     );
     fireEvent.change(screen.getByRole('textbox', { name: /event title/i }), {
       target: { value: 'Updated title' },
     });
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
-    expect(onEventAction.calledOnce).to.equal(true);
-    expect(onEventAction.firstCall.args[0].title).to.equal('Updated title');
-    expect(onEventAction.firstCall.args[1]).to.equal('edit');
+    expect(onEventEdit.calledOnce).to.equal(true);
+    expect(onEventEdit.firstCall.args[0].title).to.equal('Updated title');
+    expect(onEventEdit.firstCall.args[1]).to.equal('edit');
   });
 
   it('should show error if start date is after end date', () => {
     render(
       <Popover.Root open>
-        <EventPopover {...defaultProps} />
+        <EventPopover {...defaultProps} onEventEdit={() => {}} />
       </Popover.Root>,
     );
     fireEvent.change(screen.getByLabelText(/start date/i), { target: { value: '2025-05-27' } });

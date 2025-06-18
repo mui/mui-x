@@ -23,7 +23,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     anchor,
     calendarEvent,
     calendarEventResource,
-    onEventAction,
+    onEventEdit,
     onClose,
     ...other
   } = props;
@@ -54,16 +54,13 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
     setError(null);
 
-    onEventAction(
-      {
-        ...calendarEvent,
-        title: (form.elements.namedItem('title') as HTMLInputElement).value.trim(),
-        description: (form.elements.namedItem('description') as HTMLTextAreaElement).value.trim(),
-        start,
-        end,
-      },
-      'edit',
-    );
+    onEventEdit({
+      ...calendarEvent,
+      title: (form.elements.namedItem('title') as HTMLInputElement).value.trim(),
+      description: (form.elements.namedItem('description') as HTMLTextAreaElement).value.trim(),
+      start,
+      end,
+    });
     onClose();
   };
 
