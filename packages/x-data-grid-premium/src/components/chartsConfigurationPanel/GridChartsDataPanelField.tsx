@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { getDataGridUtilityClass, GridMenu } from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass, GridColDef, GridMenu } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridPivotActiveSelector, vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -15,7 +15,7 @@ import { COLUMN_GROUP_ID_SEPARATOR } from '../../constants/columnGroups';
 
 type GridChartsDataPanelFieldProps = {
   children: React.ReactNode;
-  field: string;
+  column: GridColDef;
   zone: 'categories' | 'series' | null;
   onDragStart: (zone: 'categories' | 'series' | null) => void;
   onDragEnd: () => void;
@@ -211,7 +211,7 @@ export function AggregationSelect({
 }
 
 function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
-  const { children, field, onDragStart, onDragEnd } = props;
+  const { children, column, onDragStart, onDragEnd } = props;
   const rootProps = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.zone;
@@ -219,6 +219,8 @@ function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
   const aggregationModel = gridAggregationModelSelector(apiRef);
+
+  const field = column.field;
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
@@ -304,7 +306,7 @@ function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
         ownerState={ownerState}
         className={classes.actionContainer}
       >
-        <GridChartsDataPanelFieldMenu field={field} zone={section} />
+        <GridChartsDataPanelFieldMenu column={column} zone={section} />
       </GridChartsDataPanelFieldActionContainer>
     </GridChartsDataPanelFieldRoot>
   );

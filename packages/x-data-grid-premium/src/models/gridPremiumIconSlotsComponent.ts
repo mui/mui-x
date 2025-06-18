@@ -204,9 +204,4 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridDeleteIcon
    */
   chartsMenuRemoveIcon: React.JSXElementConstructor<IconProps>;
-  /**
-   * Icon used for the check sign in the charts configuration panel menu
-   * @default GridCheckIcon
-   */
-  chartsMenuCheckIcon: React.JSXElementConstructor<IconProps>;
 }
