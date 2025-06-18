@@ -1089,10 +1089,10 @@ importers:
         specifier: workspace:*
         version: link:../x-license/build
       clsx:
-        specifier: ^2.1.1
+        specifier: 'catalog:'
         version: 2.1.1
       prop-types:
-        specifier: ^15.8.1
+        specifier: 'catalog:'
         version: 15.8.1
     devDependencies:
       '@mui/material':
