@@ -10,10 +10,20 @@ import { GridChartsConfigurationForm } from './GridChartsConfigurationForm';
 import { Tab, TabList, TabPanel, Tabs } from '../tabs';
 
 export interface GridChartsConfigurationPanelProps {
+  /**
+   * The schema of the charts configuration.
+   * @type {GridChartsConfigurationOptions}
+   */
   schema?: GridChartsConfigurationOptions;
+  /**
+   * Override the default column name generation logic. Use field in combination with the grid state to determine the name of the column that will be shown to the user.
+   * @param {string} field The field name
+   * @returns {string} The name of the column
+   */
+  getColumnName?: (field: string) => string;
 }
 
-function GridChartsConfigurationPanel() {
+function GridChartsConfigurationPanel(_: GridChartsConfigurationPanelProps) {
   const [searchValue, setSearchValue] = React.useState<string>('');
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
