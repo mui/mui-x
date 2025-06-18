@@ -110,7 +110,6 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       name: this.name,
       preventDefault: this.preventDefault,
       stopPropagation: this.stopPropagation,
-      threshold: this.threshold,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
       maxDistance: this.maxDistance,

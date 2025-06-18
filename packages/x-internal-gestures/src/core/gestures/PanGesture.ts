@@ -39,6 +39,17 @@ export type PanGestureOptions<GestureName extends string> = PointerGestureOption
    * If not specified, all directions are allowed
    */
   direction?: Array<'up' | 'down' | 'left' | 'right'>;
+
+  /**
+   * Distance threshold in pixels for gesture activation.
+   *
+   * The gesture will only be recognized once the pointers have moved this many
+   * pixels from their starting positions. Higher values prevent accidental
+   * gesture recognition when the user makes small unintentional movements.
+   *
+   * @default 0 (no threshold)
+   */
+  threshold?: number;
 };
 
 /**
@@ -136,6 +147,12 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   >;
 
   /**
+   * Movement threshold in pixels that must be exceeded before the gesture activates.
+   * Higher values reduce false positive gesture detection for small movements.
+   */
+  protected threshold: number;
+
+  /**
    * Allowed directions for the pan gesture
    * Default allows all directions
    */
@@ -144,6 +161,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   constructor(options: PanGestureOptions<GestureName>) {
     super(options);
     this.direction = options.direction || ['up', 'down', 'left', 'right'];
+    this.threshold = options.threshold || 0;
   }
 
   public clone(overrides?: Record<string, unknown>): PanGesture<GestureName> {

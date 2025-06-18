@@ -67,7 +67,6 @@ tapGesture.addEventListener('tap', (event) => console.log(event.detail));
 | `name`            | `string`   | ✓        | -          | Unique name for the gesture instance                                     |
 | `minPointers`     | `number`   |          | `1`        | Minimum number of pointers required                                      |
 | `maxPointers`     | `number`   |          | `Infinity` | Maximum number of pointers allowed                                       |
-| `threshold`       | `number`   |          | `0`        | Movement threshold in pixels before gesture activates                    |
 | `maxDistance`     | `number`   |          | `10`       | Maximum distance in pixels the pointer can move for it to still be a tap |
 | `taps`            | `number`   |          | `1`        | Number of consecutive taps required (1 for single tap, 2 for double tap) |
 | `preventDefault`  | `boolean`  |          | `false`    | Prevent default browser behavior                                         |
@@ -92,17 +91,16 @@ pressGesture.addEventListener('pressEnd', (event) => console.log(event.detail));
 
 #### Press Gesture Options
 
-| Option            | Type       | Required | Default | Description                                           |
-| :---------------- | :--------- | :------- | :------ | :---------------------------------------------------- |
-| `name`            | `string`   | ✓        | -       | Unique name for the gesture instance                  |
-| `minPointers`     | `number`   |          | `1`     | Minimum number of pointers required                   |
-| `maxPointers`     | `number`   |          | `1`     | Maximum number of pointers allowed                    |
-| `threshold`       | `number`   |          | `0`     | Movement threshold in pixels before gesture activates |
-| `duration`        | `number`   |          | `500`   | Time required to hold in milliseconds                 |
-| `maxDistance`     | `number`   |          | `10`    | Maximum distance pointer can move during press        |
-| `preventDefault`  | `boolean`  |          | `false` | Prevent default browser behavior                      |
-| `stopPropagation` | `boolean`  |          | `false` | Stop event propagation                                |
-| `preventIf`       | `string[]` |          | `[]`    | Gesture names that should prevent this gesture        |
+| Option            | Type       | Required | Default | Description                                    |
+| :---------------- | :--------- | :------- | :------ | :--------------------------------------------- |
+| `name`            | `string`   | ✓        | -       | Unique name for the gesture instance           |
+| `minPointers`     | `number`   |          | `1`     | Minimum number of pointers required            |
+| `maxPointers`     | `number`   |          | `1`     | Maximum number of pointers allowed             |
+| `duration`        | `number`   |          | `500`   | Time required to hold in milliseconds          |
+| `maxDistance`     | `number`   |          | `10`    | Maximum distance pointer can move during press |
+| `preventDefault`  | `boolean`  |          | `false` | Prevent default browser behavior               |
+| `stopPropagation` | `boolean`  |          | `false` | Stop event propagation                         |
+| `preventIf`       | `string[]` |          | `[]`    | Gesture names that should prevent this gesture |
 
 ### Move Gesture
 
@@ -210,15 +208,14 @@ rotateGesture.addEventListener('rotateCancel', (event) => console.log(event.deta
 
 #### Rotate Gesture Options
 
-| Option            | Type       | Required | Default    | Description                                           |
-| :---------------- | :--------- | :------- | :--------- | :---------------------------------------------------- |
-| `name`            | `string`   | ✓        | -          | Unique name for the gesture instance                  |
-| `minPointers`     | `number`   |          | `2`        | Minimum number of pointers required                   |
-| `maxPointers`     | `number`   |          | `Infinity` | Maximum number of pointers allowed                    |
-| `threshold`       | `number`   |          | `0`        | Movement threshold in pixels before gesture activates |
-| `preventDefault`  | `boolean`  |          | `false`    | Prevent default browser behavior                      |
-| `stopPropagation` | `boolean`  |          | `false`    | Stop event propagation                                |
-| `preventIf`       | `string[]` |          | `[]`       | Gesture names that should prevent this gesture        |
+| Option            | Type       | Required | Default    | Description                                    |
+| :---------------- | :--------- | :------- | :--------- | :--------------------------------------------- |
+| `name`            | `string`   | ✓        | -          | Unique name for the gesture instance           |
+| `minPointers`     | `number`   |          | `2`        | Minimum number of pointers required            |
+| `maxPointers`     | `number`   |          | `Infinity` | Maximum number of pointers allowed             |
+| `preventDefault`  | `boolean`  |          | `false`    | Prevent default browser behavior               |
+| `stopPropagation` | `boolean`  |          | `false`    | Stop event propagation                         |
+| `preventIf`       | `string[]` |          | `[]`       | Gesture names that should prevent this gesture |
 
 ### Turn Wheel Gesture
 

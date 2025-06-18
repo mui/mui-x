@@ -138,7 +138,6 @@ describe('Press Gesture', () => {
       name: 'press',
       preventDefault: true,
       stopPropagation: true,
-      threshold: 0,
       minPointers: 1,
       maxPointers: 1,
       preventIf: ['tap'],

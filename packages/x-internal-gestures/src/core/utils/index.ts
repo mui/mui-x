@@ -12,4 +12,4 @@ export { getDirection } from './getDirection';
 export { getDistance } from './getDistance';
 export { getVelocity } from './getVelocity';
 export { isDirectionAllowed } from './isDirectionAllowed';
-export { getPinchDirection } from '../gestures/getPinchDirection';
+export { getPinchDirection } from './getPinchDirection';

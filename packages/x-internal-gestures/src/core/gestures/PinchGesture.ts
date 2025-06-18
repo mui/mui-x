@@ -32,6 +32,17 @@ export type PinchGestureOptions<GestureName extends string> = PointerGestureOpti
    * @default 2
    */
   minPointers?: number;
+
+  /**
+   * Distance threshold in pixels for gesture activation.
+   *
+   * The gesture will only be recognized once the pointers have moved this many
+   * pixels from their starting positions. Higher values prevent accidental
+   * gesture recognition when the user makes small unintentional movements.
+   *
+   * @default 0 (no threshold)
+   */
+  threshold?: number;
 };
 
 /**
@@ -111,12 +122,19 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     'startDistance' | 'lastDistance' | 'lastScale' | 'lastTime' | 'velocity'
   >;
 
+  /**
+   * Movement threshold in pixels that must be exceeded before the gesture activates.
+   * Higher values reduce false positive gesture detection for small movements.
+   */
+  protected threshold: number;
+
   constructor(options: PinchGestureOptions<GestureName>) {
     super({
       ...options,
       minPointers: options.minPointers ?? 2,
-      threshold: options.threshold ?? 2,
     });
+
+    this.threshold = options.threshold ?? 0;
   }
 
   public clone(overrides?: Record<string, unknown>): PinchGesture<GestureName> {

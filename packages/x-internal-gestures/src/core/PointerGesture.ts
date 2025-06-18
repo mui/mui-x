@@ -26,17 +26,6 @@ export interface PointerGestureOptions<GestureName extends string>
    * @default Infinity (no maximum)
    */
   maxPointers?: number;
-
-  /**
-   * Distance threshold in pixels for gesture activation.
-   *
-   * The gesture will only be recognized once the pointers have moved this many
-   * pixels from their starting positions. Higher values prevent accidental
-   * gesture recognition when the user makes small unintentional movements.
-   *
-   * @default 0 (no threshold)
-   */
-  threshold?: number;
 }
 
 export type PointerGestureEventData<
@@ -103,17 +92,10 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
    */
   protected maxPointers: number;
 
-  /**
-   * Movement threshold in pixels that must be exceeded before the gesture activates.
-   * Higher values reduce false positive gesture detection for small movements.
-   */
-  protected threshold: number;
-
   constructor(options: PointerGestureOptions<GestureName>) {
     super(options);
     this.minPointers = options.minPointers ?? 1;
     this.maxPointers = options.maxPointers ?? Infinity;
-    this.threshold = options.threshold ?? 0;
   }
 
   public init(
@@ -133,7 +115,6 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
 
     this.minPointers = options.minPointers ?? this.minPointers;
     this.maxPointers = options.maxPointers ?? this.maxPointers;
-    this.threshold = options.threshold ?? this.threshold;
   }
 
   /**

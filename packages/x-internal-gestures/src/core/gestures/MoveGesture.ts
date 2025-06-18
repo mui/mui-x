@@ -23,7 +23,18 @@ import { calculateCentroid, createEventName } from '../utils';
  * Configuration options for the MoveGesture
  * Extends the base PointerGestureOptions
  */
-export type MoveGestureOptions<GestureName extends string> = PointerGestureOptions<GestureName>;
+export type MoveGestureOptions<GestureName extends string> = PointerGestureOptions<GestureName> & {
+  /**
+   * Distance threshold in pixels for gesture activation.
+   *
+   * The gesture will only be recognized once the pointers have moved this many
+   * pixels from their starting positions. Higher values prevent accidental
+   * gesture recognition when the user makes small unintentional movements.
+   *
+   * @default 0 (no threshold)
+   */
+  threshold?: number;
+};
 
 /**
  * Event data specific to move gesture events
@@ -70,6 +81,12 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
 
   protected readonly mutableStateType!: never;
 
+  /**
+   * Movement threshold in pixels that must be exceeded before the gesture activates.
+   * Higher values reduce false positive gesture detection for small movements.
+   */
+  protected threshold: number;
+
   // Store bound event handlers to properly remove them
   private handleElementEnterBound: (event: PointerEvent) => void;
 
@@ -80,6 +97,8 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     // Pre-bind handlers to this instance to maintain reference equality
     this.handleElementEnterBound = this.handleElementEnter.bind(this);
     this.handleElementLeaveBound = this.handleElementLeave.bind(this);
+
+    this.threshold = options.threshold || 0;
   }
 
   public clone(overrides?: Record<string, unknown>): MoveGesture<GestureName> {
@@ -105,13 +124,17 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
 
     // Add event listeners for entering and leaving elements
     // These are different from pointer events handled by PointerManager
+    // @ts-expect-error, PointerEvent is correct.
     this.element.addEventListener('pointerenter', this.handleElementEnterBound);
+    // @ts-expect-error, PointerEvent is correct.
     this.element.addEventListener('pointerleave', this.handleElementLeaveBound);
   }
 
   public destroy(): void {
     // Remove event listeners using the same function references
+    // @ts-expect-error, PointerEvent is correct.
     this.element.removeEventListener('pointerenter', this.handleElementEnterBound);
+    // @ts-expect-error, PointerEvent is correct.
     this.element.removeEventListener('pointerleave', this.handleElementLeaveBound);
     this.resetState();
     super.destroy();

@@ -123,7 +123,6 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
       name: this.name,
       preventDefault: this.preventDefault,
       stopPropagation: this.stopPropagation,
-      threshold: this.threshold,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
       duration: this.duration,

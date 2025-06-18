@@ -24,7 +24,6 @@ describe('Rotate Gesture', () => {
       gestures: [
         new RotateGesture({
           name: 'rotate',
-          threshold: 0,
           minPointers: 2,
         }),
       ],
@@ -187,7 +186,6 @@ describe('Rotate Gesture', () => {
       name: 'rotate',
       preventDefault: true,
       stopPropagation: true,
-      threshold: 0,
       minPointers: 2,
       maxPointers: 3,
       preventIf: ['pinch', 'pan'],

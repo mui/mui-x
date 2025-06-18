@@ -199,11 +199,13 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     super.init(element, pointerManager, gestureRegistry);
 
     // Add event listener directly to the element
+    // @ts-expect-error, WheelEvent is correct.
     this.element.addEventListener('wheel', this.handleWheelEventBound);
   }
 
   public destroy(): void {
     // Remove the element-specific event listener
+    // @ts-expect-error, WheelEvent is correct.
     this.element.removeEventListener('wheel', this.handleWheelEventBound);
     this.resetState();
     super.destroy();
