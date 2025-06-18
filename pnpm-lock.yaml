@@ -57,9 +57,6 @@ catalogs:
     '@react-spring/web':
       specifier: ^10.0.1
       version: 10.0.1
-    '@types/chai':
-      specifier: ^5.2.2
-      version: 5.2.2
     '@types/chance':
       specifier: ^1.1.6
       version: 1.1.6
@@ -135,9 +132,6 @@ catalogs:
     babel-plugin-transform-react-remove-prop-types:
       specifier: ^0.4.24
       version: 0.4.24
-    chai:
-      specifier: ^5.2.0
-      version: 5.2.0
     chance:
       specifier: ^1.1.13
       version: 1.1.13
@@ -341,9 +335,6 @@ importers:
       '@types/babel__traverse':
         specifier: ^7.20.7
         version: 7.20.7
-      '@types/chai':
-        specifier: 'catalog:'
-        version: 5.2.2
       '@types/chai-dom':
         specifier: ^1.11.3
         version: 1.11.3
@@ -353,9 +344,6 @@ importers:
       '@types/lodash':
         specifier: 'catalog:'
         version: 4.17.17
-      '@types/mocha':
-        specifier: ^10.0.10
-        version: 10.0.10
       '@types/node':
         specifier: ^24.0.1
         version: 24.0.1
@@ -422,9 +410,6 @@ importers:
       babel-plugin-transform-replace-expressions:
         specifier: ^0.2.0
         version: 0.2.0(@babel/core@7.27.4)
-      chai:
-        specifier: 'catalog:'
-        version: 5.2.0
       chai-dom:
         specifier: ^1.12.1
         version: 1.12.1(chai@5.2.0)
@@ -482,9 +467,6 @@ importers:
       eslint-plugin-material-ui:
         specifier: workspace:^
         version: link:packages/eslint-plugin-material-ui
-      eslint-plugin-mocha:
-        specifier: ^10.5.0
-        version: 10.5.0(eslint@9.29.0)
       eslint-plugin-prettier:
         specifier: ^5.4.1
         version: 5.4.1(@types/eslint@9.6.1)(eslint-config-prettier@10.1.5(eslint@9.29.0))(eslint@9.29.0)(prettier@3.5.3)
@@ -879,9 +861,6 @@ importers:
       '@mui/internal-scripts':
         specifier: ^2.0.9
         version: 2.0.9
-      '@types/chai':
-        specifier: 'catalog:'
-        version: 5.2.2
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.6
@@ -1991,9 +1970,6 @@ importers:
       '@react-spring/web':
         specifier: 'catalog:'
         version: 10.0.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@types/chai':
-        specifier: 'catalog:'
-        version: 5.2.2
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
@@ -2012,9 +1988,6 @@ importers:
       '@types/semver':
         specifier: 'catalog:'
         version: 7.7.0
-      chai:
-        specifier: 'catalog:'
-        version: 5.2.0
       dayjs:
         specifier: 'catalog:'
         version: 1.11.13
@@ -2130,9 +2103,6 @@ importers:
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.53.0
-      '@types/chai':
-        specifier: 'catalog:'
-        version: 5.2.2
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
@@ -2148,9 +2118,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.5.2(vite@6.3.5(@types/node@24.0.1)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.20.3)(yaml@2.7.0))
-      chai:
-        specifier: 'catalog:'
-        version: 5.2.0
       react:
         specifier: 'catalog:'
         version: 19.0.0
@@ -2271,9 +2238,6 @@ importers:
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.53.0
-      '@types/chai':
-        specifier: 'catalog:'
-        version: 5.2.2
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
@@ -2289,9 +2253,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 4.5.2(vite@6.3.5(@types/node@24.0.1)(lightningcss@1.29.3)(terser@5.39.0)(tsx@4.20.3)(yaml@2.7.0))
-      chai:
-        specifier: 'catalog:'
-        version: 5.2.0
       react:
         specifier: 'catalog:'
         version: 19.0.0
@@ -5596,9 +5557,6 @@ packages:
   '@types/minimist@1.2.5':
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
 
-  '@types/mocha@10.0.10':
-    resolution: {integrity: sha512-xPyYSz1cMPnJQhl0CLMH68j3gprKZaTjG3s5Vi+fDgx+uhG9NOXwbVt52eFS8ECyXhyKcjDLCBEqBExKuiZb7Q==}
-
   '@types/moment-hijri@2.1.4':
     resolution: {integrity: sha512-pGX1DaSducJDkJAC3q8fCuemow0pzI4oa0iKcspwQNPXuwlI55WRgBVrA6NVi+rf8bZN1qjWVsGdUatrLhZk6Q==}
 
@@ -7637,12 +7595,6 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-mocha@10.5.0:
-    resolution: {integrity: sha512-F2ALmQVPT1GoP27O1JTZGrV9Pqg8k79OeIuvw63UxMtQKREZtmkK1NFgkZQ2TW7L2JSSFKHFPTtHu5z8R9QNRw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      eslint: '>=7.0.0'
-
   eslint-plugin-prettier@5.4.1:
     resolution: {integrity: sha512-9dF+KuU/Ilkq27A8idRP7N2DH8iUR6qXcjF3FR2wETY21PZdBrIjwCau8oboyGj9b7etWmTGEeM8e7oOed6ZWg==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -7688,16 +7640,6 @@ packages:
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  eslint-utils@3.0.0:
-    resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==}
-    engines: {node: ^10.0.0 || ^12.0.0 || >= 14.0.0}
-    peerDependencies:
-      eslint: '>=5'
-
-  eslint-visitor-keys@2.1.0:
-    resolution: {integrity: sha512-0rSmRBzXgDzIsD6mGdJgevzgezI534Cer5L/vyMX0kHzT/jiB43jRhd9YUlMGYLQy2zprNmoT8qasCGtY+QaKw==}
-    engines: {node: '>=10'}
 
   eslint-visitor-keys@3.4.3:
     resolution: {integrity: sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==}
@@ -8227,10 +8169,6 @@ packages:
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
     engines: {node: '>=4'}
-
-  globals@13.24.0:
-    resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
-    engines: {node: '>=8'}
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
@@ -10630,9 +10568,6 @@ packages:
   quote-unquote@1.0.0:
     resolution: {integrity: sha512-twwRO/ilhlG/FIgYeKGFqyHhoEhqgnKVkcmqMKi2r524gz3ZbDTcyFt38E9xjJI2vT+KbRNHVbnJ/e0I25Azwg==}
 
-  rambda@7.5.0:
-    resolution: {integrity: sha512-y/M9weqWAH4iopRd7EHDEQQvpFPHj1AA3oHozE9tfITHUtTR7Z9PSlIRRG2l1GuW7sefC1cXFfIcF+cgnShdBA==}
-
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
@@ -11701,10 +11636,6 @@ packages:
 
   type-fest@0.18.1:
     resolution: {integrity: sha512-OIAYXk8+ISY+qTOwkHtKqzAuxchoMiD9Udx+FSGQDuiRR+PJKJHc2NJAXlbhkGwTt/4/nKZxELY1w3ReWOL8mw==}
-    engines: {node: '>=10'}
-
-  type-fest@0.20.2:
-    resolution: {integrity: sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==}
     engines: {node: '>=10'}
 
   type-fest@0.21.3:
@@ -16540,8 +16471,6 @@ snapshots:
 
   '@types/minimist@1.2.5': {}
 
-  '@types/mocha@10.0.10': {}
-
   '@types/moment-hijri@2.1.4':
     dependencies:
       moment: 2.30.1
@@ -18994,13 +18923,6 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-mocha@10.5.0(eslint@9.29.0):
-    dependencies:
-      eslint: 9.29.0
-      eslint-utils: 3.0.0(eslint@9.29.0)
-      globals: 13.24.0
-      rambda: 7.5.0
-
   eslint-plugin-prettier@5.4.1(@types/eslint@9.6.1)(eslint-config-prettier@10.1.5(eslint@9.29.0))(eslint@9.29.0)(prettier@3.5.3):
     dependencies:
       eslint: 9.29.0
@@ -19067,13 +18989,6 @@ snapshots:
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
-
-  eslint-utils@3.0.0(eslint@9.29.0):
-    dependencies:
-      eslint: 9.29.0
-      eslint-visitor-keys: 2.1.0
-
-  eslint-visitor-keys@2.1.0: {}
 
   eslint-visitor-keys@3.4.3: {}
 
@@ -19736,10 +19651,6 @@ snapshots:
       path-scurry: 1.11.1
 
   globals@11.12.0: {}
-
-  globals@13.24.0:
-    dependencies:
-      type-fest: 0.20.2
 
   globals@14.0.0: {}
 
@@ -22505,8 +22416,6 @@ snapshots:
 
   quote-unquote@1.0.0: {}
 
-  rambda@7.5.0: {}
-
   randombytes@2.1.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -23761,8 +23670,6 @@ snapshots:
   type-detect@4.1.0: {}
 
   type-fest@0.18.1: {}
-
-  type-fest@0.20.2: {}
 
   type-fest@0.21.3: {}
 

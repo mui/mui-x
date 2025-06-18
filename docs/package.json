@@ -104,7 +104,6 @@
     "@babel/preset-typescript": "catalog:",
     "@mui/internal-docs-utils": "^2.0.1",
     "@mui/internal-scripts": "^2.0.9",
-    "@types/chai": "catalog:",
     "@types/chance": "catalog:",
     "@types/d3-scale": "catalog:",
     "@types/d3-scale-chromatic": "^3.1.0",

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';

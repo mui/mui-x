@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { testDayViewValidation } from './testDayViewValidation';
@@ -22,7 +21,7 @@ function innerDescribeValidation(
 ) {
   const { after: runAfterHook = () => {}, views } = getOptions();
 
-  after(runAfterHook);
+  afterAll(runAfterHook);
 
   function getTestOptions() {
     return {

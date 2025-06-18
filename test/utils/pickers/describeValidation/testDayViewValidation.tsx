@@ -1,15 +1,13 @@
-import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, views, render, withDate, withTime } = getOptions();
 
-  describeSkipIf(componentFamily === 'field' || !views.includes('day'))('day view:', () => {
+  describe.skipIf(componentFamily === 'field' || !views.includes('day'))('day view:', () => {
     const defaultProps = {
       onChange: () => {},
       open: true,
@@ -85,9 +83,8 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
         timer?.restore();
       });
       it('should apply disablePast', () => {
-        let now;
+        const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
-          now = adapterToUse.date();
           return <ElementToTest value={now} {...props} />;
         }
         const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -115,9 +112,8 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       });
 
       it('should apply disableFuture', () => {
-        let now;
+        const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
-          now = adapterToUse.date();
           return <ElementToTest value={now} {...props} />;
         }
         const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
@@ -180,7 +176,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
     });
 
     // prop only available on DateTime pickers
-    testSkipIf(!withDate || !withTime)('should apply maxDateTime', () => {
+    it.skipIf(!withDate || !withTime)('should apply maxDateTime', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -196,7 +192,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
     });
 
     // prop only available on DateTime pickers
-    testSkipIf(!withDate || !withTime)('should apply minDateTime', () => {
+    it.skipIf(!withDate || !withTime)('should apply minDateTime', () => {
       render(
         <ElementToTest
           {...defaultProps}

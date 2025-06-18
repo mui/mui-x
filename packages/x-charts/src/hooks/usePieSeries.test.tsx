@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { usePieSeries, usePieSeriesContext } from './usePieSeries';
 import { DefaultizedPieSeriesType, PieSeriesType } from '../models';
@@ -38,7 +37,6 @@ describe('usePieSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('usePieSeries', () => {
   it('should return the specific pie series when a single seriesId is provided', () => {
     const { result } = renderHook(() => usePieSeries('1'), options);
