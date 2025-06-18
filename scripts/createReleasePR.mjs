@@ -926,6 +926,9 @@ async function main({ githubToken }) {
     const branchName = `release/v${newVersion}-${new Date().toISOString().slice(0, 10)}`;
     console.log(`Creating new branch: ${branchName}`);
 
+    // Check for uncommitted changes
+    await checkUncommittedChanges();
+
     // Determine the source branch based on the selected major version
     let branchSource;
     if (majorVersion === currentMajorVersion) {
@@ -937,9 +940,6 @@ async function main({ githubToken }) {
     }
 
     await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
-
-    // Check for uncommitted changes
-    await checkUncommittedChanges();
 
     // Update package.json
     await updatePackageJson(newVersion);
