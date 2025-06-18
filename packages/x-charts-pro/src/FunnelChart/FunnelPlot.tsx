@@ -223,6 +223,10 @@ function FunnelPlot(props: FunnelPlotProps) {
   return (
     <React.Fragment>
       {data.map((series) => {
+        if (series.length === 0) {
+          return null;
+        }
+
         return (
           <g data-series={series[0].seriesId} key={series[0].seriesId}>
             {series.map(({ d, color, id, seriesId, dataIndex, variant }) => (
@@ -246,6 +250,10 @@ function FunnelPlot(props: FunnelPlotProps) {
         );
       })}
       {data.map((series) => {
+        if (series.length === 0) {
+          return null;
+        }
+
         return (
           <g data-series={series[0].seriesId} key={series[0].seriesId}>
             {series.map(({ id, label, seriesId, dataIndex }) => {
