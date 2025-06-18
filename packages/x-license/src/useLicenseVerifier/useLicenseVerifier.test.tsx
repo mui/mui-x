@@ -26,7 +26,6 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
   let env: any;
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     env = process.env.NODE_ENV;
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
@@ -34,7 +33,6 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     process.env['NODE_' + 'ENV'] = 'test';
   });
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
     // eslint-disable-next-line no-useless-concat

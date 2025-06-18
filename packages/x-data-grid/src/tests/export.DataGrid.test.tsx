@@ -21,12 +21,10 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   let spyCreateObjectURL: SinonSpy;
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     spyCreateObjectURL.restore();
   });

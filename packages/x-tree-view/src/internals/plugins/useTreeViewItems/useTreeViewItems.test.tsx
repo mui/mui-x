@@ -395,7 +395,6 @@ describeTreeView<
       describe.skipIf(treeViewComponentName === 'SimpleTreeView')(
         'getItemTree with RichTreeView',
         () => {
-          // eslint-disable-next-line mocha/no-identical-title
           it('should return the tree', () => {
             const view = render({
               items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -407,7 +406,6 @@ describeTreeView<
             ]);
           });
 
-          // eslint-disable-next-line mocha/no-identical-title
           it('should have up to date tree when props.items changes', () => {
             const view = render({
               items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -418,7 +416,6 @@ describeTreeView<
             expect(view.apiRef.current.getItemTree()).to.deep.equal([{ id: '1' }, { id: '2' }]);
           });
 
-          // eslint-disable-next-line mocha/no-identical-title
           it('should contain custom item properties', () => {
             const view = render({
               items: [{ id: '1', customProp: 'foo' }],

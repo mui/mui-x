@@ -43,7 +43,6 @@ describe('useScatterSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useScatterSeries', () => {
   it('should return the specific scatter series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useScatterSeries('1'), options);

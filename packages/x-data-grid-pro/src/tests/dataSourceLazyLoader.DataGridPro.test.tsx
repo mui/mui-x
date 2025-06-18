@@ -101,7 +101,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     );
   }
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     transformGetRowsResponse = defaultTransformGetRowsResponse;
   });

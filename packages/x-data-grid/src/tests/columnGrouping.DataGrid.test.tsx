@@ -376,8 +376,7 @@ describe('<DataGrid /> - Column grouping', () => {
   });
 
   // TODO: remove the skip. I failed to test if an error is thrown
-  // eslint-disable-next-line mocha/no-skipped-tests
-  describe.skip('error messages', () => {
+    describe.skip('error messages', () => {
     function TestWithError(props: TestDataGridProps) {
       return (
         <ErrorBoundary>

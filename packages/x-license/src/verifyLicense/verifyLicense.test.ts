@@ -11,13 +11,11 @@ const RELEASE_INFO = generateReleaseInfo(releaseDate);
 describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
   let env: any;
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     env = process.env.NODE_ENV;
     process.env.NODE_ENV = 'test';
   });
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     process.env.NODE_ENV = env;
   });

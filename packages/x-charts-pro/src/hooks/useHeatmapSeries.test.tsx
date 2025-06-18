@@ -47,7 +47,6 @@ describe('useHeatmapSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useHeatmapSeries', () => {
   it('should return the specific heatmap series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useHeatmapSeries('1'), options);

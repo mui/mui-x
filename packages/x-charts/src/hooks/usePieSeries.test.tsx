@@ -37,7 +37,6 @@ describe('usePieSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('usePieSeries', () => {
   it('should return the specific pie series when a single seriesId is provided', () => {
     const { result } = renderHook(() => usePieSeries('1'), options);

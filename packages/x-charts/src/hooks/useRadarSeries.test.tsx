@@ -38,7 +38,6 @@ describe('useRadarSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useRadarSeries', () => {
   it('should return the specific radar series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useRadarSeries('1'), options);

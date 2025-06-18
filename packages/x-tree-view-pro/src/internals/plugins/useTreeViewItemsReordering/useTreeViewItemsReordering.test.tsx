@@ -69,14 +69,12 @@ describeTreeView<
     treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView',
   )('reordering', () => {
     let dragEvents: ReturnType<typeof buildTreeViewDragInteractions>;
-    // eslint-disable-next-line mocha/no-top-level-hooks
     beforeEach(() => {
       const dataTransfer = new MockedDataTransfer();
       dataTransfer.dropEffect = 'move';
       dragEvents = buildTreeViewDragInteractions(dataTransfer);
     });
 
-    // eslint-disable-next-line mocha/no-top-level-hooks
     afterEach(() => {
       dragEvents = {} as typeof dragEvents;
     });

@@ -37,7 +37,6 @@ describe('useLineSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useLineSeries', () => {
   it('should return the specific line series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useLineSeries('1'), options);
