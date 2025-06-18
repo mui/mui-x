@@ -7,6 +7,7 @@ import {
   useRunOncePerLoop,
   gridRenderContextSelector,
   gridVisibleColumnFieldsSelector,
+  gridSortModelSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -135,6 +136,11 @@ export const useGridAggregation = (
 
         const currentChunk = chunks[chunkIndex];
         if (!currentChunk) {
+          const sortModel = gridSortModelSelector(apiRef).map((s) => s.field);
+          const hasAggregatedSorting = sortModel.some((field) => aggregationRules[field]);
+          if (hasAggregatedSorting) {
+            apiRef.current.applySorting();
+          }
           abortControllerRef.current = null;
           return;
         }
