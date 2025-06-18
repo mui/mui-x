@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Popover } from '@base-ui-components/react/popover';
-import { useForkRef } from '@base-ui-components/react/utils';
+import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { EventPopover } from '../../../event-popover/EventPopover';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
@@ -53,7 +53,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     return map;
   }, [resources]);
 
-  React.useLayoutEffect(() => {
+  useModernLayoutEffect(() => {
     const body = bodyRef.current;
     const header = headerWrapperRef.current;
     if (!body || !header) {
