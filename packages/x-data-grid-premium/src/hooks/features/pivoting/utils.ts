@@ -11,13 +11,12 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
+import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridAggregationModel } from '../aggregation';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
-
-const columnGroupIdSeparator = '>->';
 
 export const isPivotingAvailable = (
   props: Pick<DataGridPremiumProcessedProps, 'disablePivoting'>,
@@ -203,7 +202,7 @@ export const getPivotedData = ({
           }
         }
         columnGroupPath.push(String(colValue));
-        const groupId = columnGroupPath.join(columnGroupIdSeparator);
+        const groupId = columnGroupPath.join(COLUMN_GROUP_ID_SEPARATOR);
 
         if (!columnGroupingModelLookup.has(groupId)) {
           const columnGroup: GridColumnGroupingModel[number] = {
@@ -215,7 +214,7 @@ export const getPivotedData = ({
           if (depth === 0) {
             columnGroupingModel.push(columnGroup);
           } else {
-            const parentGroupId = columnGroupPath.slice(0, -1).join(columnGroupIdSeparator);
+            const parentGroupId = columnGroupPath.slice(0, -1).join(COLUMN_GROUP_ID_SEPARATOR);
             const parentGroup = columnGroupingModelLookup.get(parentGroupId);
             if (parentGroup) {
               parentGroup.children.push(columnGroup);
@@ -232,7 +231,7 @@ export const getPivotedData = ({
             if (!originalColumn) {
               return;
             }
-            const valueKey = `${columnGroupPath.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${valueField}`;
+            const valueKey = `${columnGroupPath.join(COLUMN_GROUP_ID_SEPARATOR)}${COLUMN_GROUP_ID_SEPARATOR}${valueField}`;
             newRow[valueKey] = apiRef.current.getRowValue(row, originalColumn);
           });
         }
@@ -255,7 +254,7 @@ export const getPivotedData = ({
         if (visibleValues.length === 0) {
           // If there are no visible values, there are no actual columns added to the data grid, which leads to column groups not being visible.
           // Adding an empty column to each column group ensures that the column groups are visible.
-          const emptyColumnField = `${columnGroup.groupId}${columnGroupIdSeparator}empty`;
+          const emptyColumnField = `${columnGroup.groupId}${COLUMN_GROUP_ID_SEPARATOR}empty`;
           const emptyColumn: GridColDef = {
             field: emptyColumnField,
             headerName: '',
@@ -273,15 +272,17 @@ export const getPivotedData = ({
         } else {
           visibleValues.forEach((pivotValue) => {
             const valueField = pivotValue.field;
-            const mapValueKey = `${columnGroup.groupId}${columnGroupIdSeparator}${valueField}`;
+            const mapValueKey = `${columnGroup.groupId}${COLUMN_GROUP_ID_SEPARATOR}${valueField}`;
             const overrides =
               typeof pivotingColDef === 'function'
-                ? pivotingColDef(valueField, columnGroup.groupId.split(columnGroupIdSeparator))
+                ? pivotingColDef(valueField, columnGroup.groupId.split(COLUMN_GROUP_ID_SEPARATOR))
                 : pivotingColDef;
             const column: GridColDef = {
               headerName: String(valueField),
               ...getAttributesFromInitialColumn(pivotValue.field),
               ...overrides,
+              // pivoting values are always numbers
+              type: 'number',
               field: mapValueKey,
               aggregable: false,
               groupable: false,
