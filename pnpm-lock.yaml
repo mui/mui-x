@@ -501,8 +501,8 @@ importers:
         specifier: ^7.5.3
         version: 7.5.3(eslint@9.29.0)(typescript@5.8.3)
       execa:
-        specifier: ^8.0.1
-        version: 8.0.1
+        specifier: ^9.6.0
+        version: 9.6.0
       fast-glob:
         specifier: 'catalog:'
         version: 3.3.3
