@@ -72,7 +72,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
         {...other}
       >
         <aside className="EventCalendarSidePanel">
-          <span style={{ display: 'flex', alignItems: 'center', height: 42 }}>TODO: Time nav</span>
+          <span style={{ display: 'flex', alignItems: 'center', height: 44 }}>TODO: Time nav</span>
           <section
             className="EventCalendarMonthCalendarPlaceholder"
             // TODO: Add localization
