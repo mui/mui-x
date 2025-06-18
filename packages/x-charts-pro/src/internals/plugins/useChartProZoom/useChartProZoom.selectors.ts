@@ -11,12 +11,12 @@ export const selectorChartZoomState: ChartRootSelector<UseChartProZoomSignature>
   state.zoom;
 
 export const selectorChartZoomIsInteracting = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom.isInteracting,
 );
 
 export const selectorChartZoomIsEnabled = createSelector(
-  selectorChartZoomOptionsLookup,
+  [selectorChartZoomOptionsLookup],
   (optionsLookup) => Object.keys(optionsLookup).length > 0,
 );
 

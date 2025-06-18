@@ -1,19 +1,25 @@
-import { Toolbar, ChartsToolbarProps } from '@mui/x-charts/Toolbar';
-import PropTypes from 'prop-types';
+import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import * as React from 'react';
-import { useChartContext, useSelector, useChartsSlots } from '@mui/x-charts/internals';
+import {
+  useChartContext,
+  useSelector,
+  useChartsSlots,
+  UseChartCartesianAxisSignature,
+} from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
-import { ChartsToolbarZoomInButton } from './ChartsToolbarZoomInButton';
-import { ChartsToolbarZoomOutButton } from './ChartsToolbarZoomOutButton';
+import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
+import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsSlotsPro } from '../internals/material';
+
+export interface ChartsToolbarProProps extends ChartsToolbarProps {}
 
 /**
  * The chart toolbar component for the pro package.
  */
-export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarProps>) {
+export function ChartsToolbarPro(props: ChartsToolbarProProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
-  const { store } = useChartContext();
+  const { store } = useChartContext<[UseChartCartesianAxisSignature]>();
   const { localeText } = useChartsLocalization();
   const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
 
@@ -26,16 +32,16 @@ export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarPro
 
     children.push(
       <Tooltip key="zoom-in" {...slotProps.baseTooltip} title={localeText.zoomIn}>
-        <ChartsToolbarZoomInButton>
+        <ChartsToolbarZoomInTrigger render={<ToolbarButton />}>
           <ZoomInIcon {...slotProps.zoomInIcon} />
-        </ChartsToolbarZoomInButton>
+        </ChartsToolbarZoomInTrigger>
       </Tooltip>,
     );
     children.push(
       <Tooltip key="zoom-out" {...slotProps.baseTooltip} title={localeText.zoomOut}>
-        <ChartsToolbarZoomOutButton>
+        <ChartsToolbarZoomOutTrigger render={<ToolbarButton />}>
           <ZoomOutIcon {...slotProps.zoomOutIcon} />
-        </ChartsToolbarZoomOutButton>
+        </ChartsToolbarZoomOutTrigger>
       </Tooltip>,
     );
   }
@@ -46,11 +52,3 @@ export function ChartsToolbarPro(props: React.PropsWithChildren<ChartsToolbarPro
 
   return <Toolbar {...props}>{children}</Toolbar>;
 }
-
-ChartsToolbarPro.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  className: PropTypes.string,
-} as any;

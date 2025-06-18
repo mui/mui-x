@@ -48,13 +48,13 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
   return (ids?: SeriesId | SeriesId[]) => {
     const store = useStore();
 
-    return useSelector(store, selectorSeriesWithIds, ids, fastArrayCompare);
+    return useSelector(store, selectorSeriesWithIds, [ids], fastArrayCompare);
   };
 }
 
 export function createAllSeriesSelectorOfType<T extends keyof ChartsSeriesConfig>(seriesType: T) {
   const selectorSeries = createSelector(
-    selectorChartSeriesProcessed,
+    [selectorChartSeriesProcessed],
     (processedSeries) => processedSeries[seriesType],
   );
 
