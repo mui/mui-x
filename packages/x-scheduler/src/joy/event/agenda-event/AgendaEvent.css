@@ -1,5 +1,3 @@
-@import '../styles/tokens.css';
-
 .EventContainer {
   container-type: inline-size;
   display: flex;
@@ -24,15 +22,15 @@
     flex-direction: column;
     align-items: flex-end;
   }
-  .EventTime {
+  .AgendaEventTime {
     order: 2;
   }
-  .EventTitle {
+  .AgendaEventTitle {
     order: 1;
   }
 }
 
-.EventTime {
+.AgendaEventTime {
   --number-of-lines: 1;
   color: var(--gray-8);
   font-weight: var(--font-weight-1);
@@ -42,7 +40,7 @@
   max-width: 150px;
 }
 
-.EventTitle {
+.AgendaEventTitle {
   --number-of-lines: 1;
 
   color: var(--gray-9);

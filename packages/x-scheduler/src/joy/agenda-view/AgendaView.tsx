@@ -4,14 +4,14 @@ import clsx from 'clsx';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { SchedulerValidDate } from '../../primitives/models';
 import { TimeGrid } from '../../primitives/time-grid';
-import { TimeGridEvent } from '../event/TimeGridEvent';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { AgendaViewProps } from './AgendaView.types';
 import { CalendarEvent } from '../models/events';
 import { isWeekend } from '../internals/utils/date-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import './AgendaView.css';
 import { useDayList } from '@mui/x-scheduler/primitives/use-day-list';
-import { AgendaEvent } from '../event/AgendaEvent';
+import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
 
 const adapter = getAdapter();
 
@@ -48,8 +48,6 @@ export const AgendaView = React.forwardRef(function AgendaView(
     }
     return map;
   }, [resources]);
-
-  console.log('AgendaView eventsByDay', eventsByDay);
 
   return (
     <div ref={forwardedRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>

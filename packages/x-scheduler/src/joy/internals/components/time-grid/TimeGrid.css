@@ -1,5 +1,3 @@
-@import '../../../styles/tokens.css';
-
 .TimeGridContainer {
   --weekend-background: var(--mauve-1);
   --text-strong: var(--mauve-9);

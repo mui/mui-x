@@ -13,7 +13,7 @@ export const WeekView = React.forwardRef(function WeekView(
 ) {
   const { events, className, ...other } = props;
 
-  const today = adapter.date('2025-05-26');
+  const today = adapter.date();
   const getDayList = useDayList();
 
   const currentWeekDays = React.useMemo(

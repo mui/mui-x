@@ -47,7 +47,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       content = <div>TODO: Month view</div>;
       break;
     case 'agenda':
-      content = <AgendaView events={events} />;
+      content = <AgendaView events={events} resources={resources} />;
       break;
     default:
       content = null;

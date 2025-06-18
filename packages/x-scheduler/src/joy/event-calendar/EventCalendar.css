@@ -1,4 +1,6 @@
 @import '../styles/colors.css';
+@import '../styles/tokens.css';
+@import '../styles/utils.css';
 
 .EventCalendarRoot {
   width: 100%;
