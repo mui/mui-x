@@ -3,6 +3,7 @@ import {
   GridColDef,
   GridRowId,
   GridRowModel,
+  gridColumnDefinitionsSelector,
   gridDataRowIdsSelector,
   gridRowIdSelector,
   gridRowsLoadingSelector,
@@ -19,7 +20,7 @@ import {
   GridPipeProcessor,
   gridPivotInitialColumnsSelector,
 } from '@mui/x-data-grid-pro/internals';
-import { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -55,6 +56,14 @@ export const pivotingStateInitializer: GridStateInitializer<
     | 'columns'
   >
 > = (state, props, apiRef) => {
+  apiRef.current.caches.pivoting = {
+    exportedStateRef: {
+      current: null,
+    },
+    nonPivotDataRef: {
+      current: undefined,
+    },
+  };
   if (!isPivotingAvailableFn(props)) {
     return {
       ...state,
@@ -102,15 +111,7 @@ export const useGridPivoting = (
   originalRowsProp: readonly GridRowModel[],
 ) => {
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
-  const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
-  const nonPivotDataRef = React.useRef<
-    | {
-        rows: GridRowModel[];
-        columns: Map<string, GridColDef>;
-        originalRowsProp: readonly GridRowModel[];
-      }
-    | undefined
-  >(undefined);
+  const { exportedStateRef, nonPivotDataRef } = apiRef.current.caches.pivoting;
 
   const isPivotingAvailable = isPivotingAvailableFn(props);
 
@@ -492,4 +493,27 @@ export const useGridPivoting = (
       apiRef.current.setPivotPanelOpen(props.pivotPanelOpen);
     }
   }, [apiRef, props.pivotPanelOpen]);
+};
+
+export const useGridPivotingExportState = (apiRef: RefObject<GridPrivateApiPremium>) => {
+  const stateExportPreProcessing: GridPipeProcessor<'exportState'> = React.useCallback(
+    (state: GridInitialStatePremium, context) => {
+      const isPivotActive = gridPivotActiveSelector(apiRef);
+      if (!isPivotActive) {
+        return state;
+      }
+
+      // To-do: implement context.exportOnlyDirtyModels
+      const newState = {
+        ...state,
+        ...apiRef.current.caches.pivoting.exportedStateRef.current,
+        sorting: state.sorting,
+      };
+
+      return newState;
+    },
+    [apiRef],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
 };

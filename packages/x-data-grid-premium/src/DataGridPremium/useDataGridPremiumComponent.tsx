@@ -101,6 +101,7 @@ import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipb
 import {
   pivotingStateInitializer,
   useGridPivoting,
+  useGridPivotingExportState,
 } from '../hooks/features/pivoting/useGridPivoting';
 import { gridPivotPropsOverridesSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import {
@@ -230,6 +231,7 @@ export const useDataGridPremiumComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
+  useGridPivotingExportState(apiRef);
 
   return props;
 };

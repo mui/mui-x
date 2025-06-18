@@ -125,6 +125,8 @@ export const useGridAggregation = (
 
       let chunkIndex = 0;
       const aggregationLookup: GridAggregationLookup = {};
+      let chunkStartTime = performance.now();
+      const timeLimit = 1000 / 120;
 
       const processChunk = () => {
         if (abortController.signal.aborted) {
@@ -159,11 +161,19 @@ export const useGridAggregation = (
 
         apiRef.current.setState((state) => ({
           ...state,
-          aggregation: { ...state.aggregation, lookup: aggregationLookup },
+          aggregation: { ...state.aggregation, lookup: { ...aggregationLookup } },
         }));
 
         chunkIndex += 1;
-        setTimeout(processChunk, 0);
+
+        if (performance.now() - chunkStartTime < timeLimit) {
+          return processChunk();
+        }
+
+        setTimeout(() => {
+          chunkStartTime = performance.now();
+          processChunk();
+        }, 0);
       };
 
       processChunk();
