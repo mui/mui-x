@@ -99,7 +99,9 @@ async function findMuiXRemote() {
 
     let upstreamRemote = '';
     for (const line of remotes) {
-      if (line.match(/\/mui\/mui-x(\.git)?\s+\(push\)/)) {
+      // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
+      // eslint-disable-next-line no-useless-escape
+      if (line.match(/([\/:])mui\/mui-x(\.git)?\s+\(push\)/)) {
         upstreamRemote = line.split(/\s+/)[0];
         break;
       }
