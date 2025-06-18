@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataGridPro, GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, GridRenderCellParams, GridEventListener, useGridApiRef } from '@mui/x-data-grid-pro';
 import { Box, Typography, Rating, Chip, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
@@ -135,6 +135,14 @@ const columns: GridColDef<Product>[] = [
 function InventoryDashboard() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState('all');
+  const apiRef = useGridApiRef();
+
+  const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
+    (params) => {
+      apiRef.current?.toggleDetailPanel(params.id);
+    },
+    [apiRef]
+  );
 
   const filteredProducts = React.useMemo(() => {
     return products.filter((product) => {
@@ -178,6 +186,7 @@ function InventoryDashboard() {
             />
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <DataGridPro<Product>
+                apiRef={apiRef}
                 rows={filteredProducts}
                 columns={columns}
                 initialState={{
@@ -190,6 +199,7 @@ function InventoryDashboard() {
                 getDetailPanelContent={({ row }) => <ProductDetailPanel row={row} />}
                 getDetailPanelHeight={() => 120}
                 rowHeight={80}
+                onRowClick={onRowClick}
                 slots={{
                   detailPanelExpandIcon: CustomExpandIcon,
                   detailPanelCollapseIcon: CustomCollapseIcon,

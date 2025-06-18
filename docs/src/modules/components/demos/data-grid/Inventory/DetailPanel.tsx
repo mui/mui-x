@@ -10,6 +10,15 @@ const DetailPanelContainer = styled(Box)(({ theme }) => ({
   paddingLeft: theme.spacing(5),
   margin: theme.spacing(1),
   backgroundColor: theme.palette.background.default,
+  animation: 'fadeIn 0.5s ease-out',
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
 }));
 
 const ColorCircle = styled('div')<{ color: string }>(({ color, theme }) => ({
