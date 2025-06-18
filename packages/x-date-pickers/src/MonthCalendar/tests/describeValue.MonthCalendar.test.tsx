@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pickers';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';

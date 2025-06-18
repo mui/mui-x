@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import adapterDependencies from './adapter-dependencies.json';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
 
