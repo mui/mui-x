@@ -37,11 +37,11 @@ const addReactCompilerRule = (packagesNames, isEnabled) =>
   !isEnabled
     ? []
     : packagesNames.map((packageName) => ({
-        files: [`packages/${packageName}/src/**/*.?(c|m)[jt]s?(x)`],
-        rules: {
-          'react-compiler/react-compiler': 'error',
-        },
-      }));
+      files: [`packages/${packageName}/src/**/*.?(c|m)[jt]s?(x)`],
+      rules: {
+        'react-compiler/react-compiler': 'error',
+      },
+    }));
 
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
@@ -95,26 +95,28 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
   ...(allowRootImports
     ? []
     : [
-        {
-          files: [
-            `packages/${root}/src/**/*.test.?(c|m)[jt]s?(x)`,
-            `packages/${root}/src/**/*.spec.?(c|m)[jt]s?(x)`,
+      {
+        files: [
+          `packages/${root}/src/**/*.test.?(c|m)[jt]s?(x)`,
+          `packages/${root}/src/**/*.spec.?(c|m)[jt]s?(x)`,
+        ],
+        excludedFiles: ['*.d.ts'],
+        rules: {
+          'no-restricted-imports': [
+            'error',
+            {
+              paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
+                name,
+                message: 'Use deeper import instead',
+              })),
+            },
           ],
-          excludedFiles: ['*.d.ts'],
-          rules: {
-            'no-restricted-imports': [
-              'error',
-              {
-                paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
-                  name,
-                  message: 'Use deeper import instead',
-                })),
-              },
-            ],
-          },
         },
-      ]),
+      },
+    ]),
 ];
+
+const mochaPluginOverride = baseline.overrides.find((override) => override.extends?.includes('plugin:mocha/recommended'));
 
 module.exports = {
   ...baseline,
@@ -187,7 +189,15 @@ module.exports = {
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
-    ...baseline.overrides,
+    ...baseline.overrides.filter((override) => !override.extends?.includes('plugin:mocha/recommended')),
+    {
+      ...mochaPluginOverride, extends: [], rules: Object.entries(mochaPluginOverride.rules).reduce((acc, [key, value]) => {
+        if (!key.includes('mocha')) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {})
+    },
     {
       files: [
         // matching the pattern of the test runner
