@@ -62,6 +62,9 @@ export type GestureOptions<GestureName extends string> = {
    * This only works when the gestures in the array have phases. Because `TurnWheel` and `Tap`
    * gestures are single-phase, they will not be able to prevent other gestures.
    *
+   * Phased events are those that have multiple phases, usually denoted by `<event>Start`
+   * and `<event>End`, like `pan` and `pinch` events.
+   *
    * @example ['pan', 'pinch']
    * @default [] (no prevented gestures)
    */
