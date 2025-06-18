@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarEvent, EventAction } from '../models/events';
+import { CalendarEvent } from '../models/events';
 import { CalendarResource } from '../models/resource';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -20,11 +20,10 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
    */
   container: HTMLElement | null;
   /**
-   * Callback fired when an action is performed on the event (edit or delete).
-   * @param {CalendarEvent} event  The updated or deleted event.
-   * @param {EventAction} action The action performed: 'edit' or 'delete'.
+   * Callback fired when an event is edited.
+   * @param {CalendarEvent} event The updated event.
    */
-  onEventAction: (event: CalendarEvent, action: EventAction) => void;
+  onEventEdit: (event: CalendarEvent) => void;
   /**
    * Handles the close action of the popover.
    */

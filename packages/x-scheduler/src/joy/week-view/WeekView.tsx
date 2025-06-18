@@ -4,7 +4,7 @@ import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { WeekViewProps } from './WeekView.types';
 import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
-import { CalendarEvent, EventAction } from '../models/events';
+import { CalendarEvent } from '../models/events';
 
 const adapter = getAdapter();
 
@@ -28,15 +28,13 @@ export const WeekView = React.forwardRef(function WeekView(
     return events.filter((event) => adapter.isWithinRange(event.start, [weekStart, weekEnd]));
   }, [events, currentWeekDays]);
 
-  const handleEventAction = (event: CalendarEvent, action: EventAction) => {
+  const handleEventEdit = (event: CalendarEvent) => {
     // TODO: For now, event editing is fully controlled via onEventsChange
     if (!onEventsChange) {
       return;
     }
 
-    if (action === 'edit') {
-      onEventsChange(events.map((ev) => (ev.id === event.id ? event : ev)));
-    }
+    onEventsChange(events.map((ev) => (ev.id === event.id ? event : ev)));
   };
 
   return (
@@ -44,7 +42,7 @@ export const WeekView = React.forwardRef(function WeekView(
       ref={forwardedRef}
       days={currentWeekDays}
       events={filteredEvents}
-      onEventAction={handleEventAction}
+      onEventEdit={handleEventEdit}
       className={className}
       {...other}
     />

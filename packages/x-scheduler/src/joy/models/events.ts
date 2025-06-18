@@ -3,8 +3,6 @@ import { CalendarResourceId } from './resource';
 
 export type EventVariant = 'regular' | 'compact' | 'allDay';
 
-export type EventAction = 'edit' | 'delete';
-
 export interface CalendarEvent {
   /**
    * The unique identifier of the event.

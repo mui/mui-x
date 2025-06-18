@@ -1,4 +1,4 @@
-import { CalendarEvent, EventAction } from '../../../models/events';
+import { CalendarEvent } from '../../../models/events';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { BaseViewProps } from '../../../models/views';
 
@@ -8,9 +8,8 @@ export interface TimeGridProps extends BaseViewProps {
    */
   days: SchedulerValidDate[];
   /**
-   * Callback fired when an action is performed on the event.
-   * @param {CalendarEvent} event  The updated or deleted event.
-   * @param {EventAction} action The action performed: 'edit' or 'delete'.
+   * Callback fired when an event is edited.
+   * @param {CalendarEvent} event The updated event.
    */
-  onEventAction: (event: CalendarEvent, action: EventAction) => void;
+  onEventEdit: (event: CalendarEvent) => void;
 }

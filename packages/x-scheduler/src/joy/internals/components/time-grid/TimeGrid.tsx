@@ -21,7 +21,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   props: TimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, resources, days, className, onDayHeaderClick, onEventAction, ...other } = props;
+  const { events, resources, days, className, onDayHeaderClick, onEventEdit, ...other } = props;
 
   const translations = useTranslations();
   const today = adapter.date('2025-05-26');
@@ -183,7 +183,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
             calendarEvent={selectedEvent}
             calendarEventResource={resourcesById.get(selectedEvent.resource)}
             container={containerRef.current}
-            onEventAction={onEventAction}
+            onEventEdit={onEventEdit}
             onClose={handlePopoverClose}
           />
         )}
