@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Popover } from '@base-ui-components/react/popover';
-import useForkRef from '@mui/utils/useForkRef';
+import { useForkRef } from '@base-ui-components/react/utils';
 import { EventPopover } from '../../../event-popover/EventPopover';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
