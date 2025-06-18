@@ -34,8 +34,6 @@ interface ProductDetailPanelProps {
 }
 
 export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
-  const revenuePercentage = ((row.price - row.cost) / row.price) * 100;
-
   const detailColumns: GridColDef[] = [
     { field: 'model', headerName: 'Model', flex: 1 },
     {
@@ -87,8 +85,12 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
       field: 'revenuePercentage',
       headerName: 'Revenue',
       flex: 1,
+      valueGetter: (value, row, column, apiRef) => {
+        const revenuePercentage = ((row.price - row.cost) / row.price) * 100;
+        return revenuePercentage.toFixed(1);
+      },
       renderCell: (params) => (
-        <Typography sx={{ fontSize: '0.875rem' }}>{revenuePercentage.toFixed(1)}%</Typography>
+        <Typography sx={{ fontSize: '0.875rem' }}>{params.value}%</Typography>
       ),
     },
   ];
@@ -101,7 +103,8 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
     colors: row.colors,
     stock: row.stock,
     status: row.status,
-    revenuePercentage,
+    price: row.price,
+    cost: row.cost,
   };
 
   return (
