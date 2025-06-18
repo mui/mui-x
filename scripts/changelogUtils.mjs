@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /* eslint-disable no-restricted-syntax */
 /**
  * This module provides utilities for generating a changelog for MUI X packages.
@@ -12,17 +13,8 @@
 import fs from 'fs';
 import path from 'path';
 
-/**
- * @type {string}
- * GitHub organization name
- */
-const GIT_ORGANIZATION = 'mui';
-
-/**
- * @type {string}
- * GitHub repository name
- */
-const GIT_REPO = 'mui-x';
+const ORG = 'mui';
+const REPO = 'mui-x';
 
 /**
  * @type {string[]}
@@ -46,6 +38,10 @@ const nowFormatted = new Date().toLocaleDateString('en-US', {
   year: 'numeric',
 });
 
+/**
+ * Global variable to store the Octokit instance
+ * @type {import('@octokit/rest').Octokit | null}
+ */
 let octokit = null;
 
 /**
@@ -119,8 +115,8 @@ function parseTags(commitMessage) {
 async function findLatestTaggedVersion() {
   // fetch tags from the GitHub API and return the last one
   const { data: tags } = await octokit.rest.repos.listTags({
-    owner: GIT_ORGANIZATION,
-    repo: GIT_REPO,
+    owner: ORG,
+    repo: REPO,
   });
   return tags[0].name.trim();
 }
@@ -185,8 +181,8 @@ export async function generateChangelog({
    */
   const timeline = octokit.paginate.iterator(
     octokit.repos.compareCommits.endpoint.merge({
-      owner: GIT_ORGANIZATION,
-      repo: GIT_REPO,
+      owner: ORG,
+      repo: REPO,
       base: lastRelease,
       head: release,
     }),
@@ -225,8 +221,8 @@ export async function generateChangelog({
           user: { login },
         },
       } = await octokit.rest.pulls.get({
-        owner: GIT_ORGANIZATION,
-        repo: GIT_REPO,
+        owner: ORG,
+        repo: REPO,
         pull_number: Number(searchPullRequestId[1]),
       });
 
@@ -261,7 +257,7 @@ export async function generateChangelog({
         const prLabels = prsLabelsMap[commitsItem.sha];
         const resolvedPackage = resolvePackagesByLabels(prLabels)[0];
         const changelogIndex = changelogMatches[0].index;
-        const message = `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${
+        const message = `From https://github.com/${ORG}/${REPO}/pull/${
           searchPullRequestId[1]
         }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`;
         if (changeLogMessages[resolvedPackage || 'general']) {

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /* eslint-disable no-restricted-syntax */
 /**
  * This script generates a changelog for MUI X packages.
@@ -15,7 +16,10 @@ import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import { generateChangelog } from './changelogUtils.mjs';
 
-// Create a custom Octokit class with retry functionality
+/**
+ * Create a custom Octokit class with retry functionality
+ * @type {typeof import('@octokit/rest').Octokit}
+ */
 const MyOctokit = Octokit.plugin(retry);
 
 /**

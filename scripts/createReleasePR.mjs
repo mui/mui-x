@@ -48,16 +48,7 @@ const MyOctokit = Octokit.plugin(retry);
  */
 let octokit = null;
 
-/**
- * @type {string}
- * GitHub organization name
- */
 const ORG = 'mui';
-
-/**
- * @type {string}
- * GitHub repository name
- */
 const REPO = 'mui-x';
 
 /**
