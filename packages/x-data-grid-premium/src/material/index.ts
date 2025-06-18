@@ -72,7 +72,6 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   chartsMenuMoveToBottomIcon: GridMoveToBottomIcon,
   chartsMenuAddIcon: GridAddIcon,
   chartsMenuRemoveIcon: GridDeleteIcon,
-  chartsMenuCheckIcon: GridCheckIcon,
 };
 
 const materialSlots = {
