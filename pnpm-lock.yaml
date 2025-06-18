@@ -1079,20 +1079,20 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
+      '@mui/x-internal-gestures':
+        specifier: workspace:*
+        version: link:../x-internal-gestures/build
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
       '@mui/x-license':
         specifier: workspace:*
         version: link:../x-license/build
-      '@web-gestures/core':
-        specifier: ^0.0.12
-        version: 0.0.12
       clsx:
-        specifier: 'catalog:'
+        specifier: ^2.1.1
         version: 2.1.1
       prop-types:
-        specifier: 'catalog:'
+        specifier: ^15.8.1
         version: 15.8.1
     devDependencies:
       '@mui/material':
