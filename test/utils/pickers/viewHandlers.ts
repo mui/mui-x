@@ -12,7 +12,7 @@ export const timeClockHandler: ViewHandler<TimeView> = {
     const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
 
     let valueInt;
-    let clockView;
+    let clockView: 'minutes' | '12hours' | '24hours';
 
     if (view === 'hours') {
       valueInt = adapter.getHours(value);
