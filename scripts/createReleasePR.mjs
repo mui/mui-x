@@ -682,11 +682,6 @@ async function getTeamMembers(excludeUsername) {
   try {
     console.log('Fetching members of the mui/x team...');
 
-    if (!process.env.GITHUB_TOKEN) {
-      console.warn('Warning: GITHUB_TOKEN environment variable is not set.');
-      console.warn('You may encounter rate limiting issues or be unable to fetch team members.');
-    }
-
     // Get team members
     const { data: teams } = await octokit.rest.teams.list({
       org: ORG,
@@ -801,11 +796,6 @@ async function addLabelsToPR(prNumber, labels) {
 async function createPullRequest(title, body, head, base) {
   try {
     console.log('Creating PR using Octokit...');
-
-    if (!process.env.GITHUB_TOKEN) {
-      console.warn('Warning: GITHUB_TOKEN environment variable is not set.');
-      console.warn('You may encounter rate limiting issues or be unable to create the PR.');
-    }
 
     // Create the PR
     const { data } = await octokit.rest.pulls.create({
