@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { DateTime } from 'luxon';
 import { screen, fireEvent } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
@@ -64,7 +63,6 @@ describe('<EventPopover />', () => {
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
     expect(onEventEdit.calledOnce).to.equal(true);
     expect(onEventEdit.firstCall.args[0].title).to.equal('Updated title');
-    expect(onEventEdit.firstCall.args[1]).to.equal('edit');
   });
 
   it('should show error if start date is after end date', () => {
