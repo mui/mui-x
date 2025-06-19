@@ -1744,6 +1744,12 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
+      reselect:
+        specifier: 'catalog:'
+        version: 5.1.1
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.5.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1754,6 +1760,9 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.5.0
       luxon:
         specifier: 'catalog:'
         version: 3.6.1

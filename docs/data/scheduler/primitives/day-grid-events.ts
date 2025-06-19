@@ -1,17 +1,20 @@
-import * as React from 'react';
 import { DateTime } from 'luxon';
 
-import { WeekView } from '@mui/x-scheduler/joy/week-view';
-import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
-import classes from './StandaloneWeekView.module.css';
+export interface Event {
+  id: string;
+  start: DateTime;
+  end: DateTime;
+  title: string;
+  resource: string;
+}
 
-const events = [
+export const events: Event[] = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
     end: DateTime.fromISO('2025-05-26T08:15:00'),
     title: 'Footing',
-    resource: 'workout',
+    resource: 'personal',
   },
   {
     id: '2',
@@ -32,6 +35,7 @@ const events = [
     start: DateTime.fromISO('2025-05-27T19:00:00'),
     end: DateTime.fromISO('2025-05-27T22:00:00'),
     title: 'Pizza party',
+    resource: 'personal',
   },
   {
     id: '5',
@@ -45,33 +49,13 @@ const events = [
     start: DateTime.fromISO('2025-05-29T07:30:00'),
     end: DateTime.fromISO('2025-05-29T08:15:00'),
     title: 'Footing',
-    resource: 'workout',
+    resource: 'personal',
   },
   {
     id: '7',
-    start: DateTime.fromISO('2025-05-29T08:15:00'),
-    end: DateTime.fromISO('2025-05-29T08:30:00'),
-    title: 'Standup',
-    resource: 'work',
-  },
-  {
-    id: '8',
     start: DateTime.fromISO('2025-05-30T15:00:00'),
     end: DateTime.fromISO('2025-05-30T15:45:00'),
     title: 'Retrospective',
     resource: 'work',
   },
 ];
-
-const resources = [
-  { name: 'Work', id: 'work', color: 'red' },
-  { name: 'Workout', id: 'workout', color: 'jade' },
-];
-
-export default function StandaloneWeekView() {
-  return (
-    <StandaloneView events={events} resources={resources}>
-      <WeekView className={classes.Container} />
-    </StandaloneView>
-  );
-}
