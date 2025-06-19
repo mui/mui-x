@@ -2,8 +2,8 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
 import { AgendaView } from '@mui/x-scheduler/joy/agenda-view';
-import classes from './StandaloneWeekView.module.css';
 import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
+import classes from './StandaloneWeekView.module.css';
 
 const events: CalendarEvent[] = [
   {
