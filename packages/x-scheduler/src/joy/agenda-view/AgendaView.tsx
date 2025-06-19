@@ -25,8 +25,6 @@ export const AgendaView = React.memo(
 
     const visibleDate = useSelector(store, selectors.visibleDate);
 
-    console.log('AgendaView', visibleDate.toString());
-
     const getDayList = useDayList();
 
     const days = React.useMemo(
