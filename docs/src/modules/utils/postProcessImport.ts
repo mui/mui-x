@@ -1,6 +1,13 @@
-import adapterDependencies from './adapter-dependencies.json';
+export type AdapterLibrary =
+  | 'date-fns'
+  | 'date-fns-jalali'
+  | 'dayjs'
+  | 'luxon'
+  | 'moment'
+  | 'moment-hijri'
+  | 'moment-jalaali';
 
-export const ADAPTER_TO_LIBRARY: Record<string, keyof typeof adapterDependencies> = {
+export const ADAPTER_TO_LIBRARY: Record<string, AdapterLibrary> = {
   AdapterDateFns: 'date-fns',
   AdapterDateFnsJalali: 'date-fns-jalali',
   AdapterDayjs: 'dayjs',
@@ -26,7 +33,10 @@ export const postProcessImport = (importName: string): Record<string, string> | 
         `Can't determine required npm package for adapter '${dateAdapterMatch[1]}'`,
       );
     }
-    return { [packageName]: adapterDependencies[packageName] ?? 'latest' };
+    return {
+      // @ts-expect-error, ADAPTER_DEPENDENCIES is replaced at run/build time
+      [packageName]: JSON.parse(ADAPTER_DEPENDENCIES)[packageName] ?? 'latest',
+    };
   }
   return null;
 };

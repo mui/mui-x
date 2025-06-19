@@ -1,5 +1,10 @@
-import adapterDependencies from './adapter-dependencies.json';
+import { getPickerAdapterDeps } from './getPickerAdapterDeps';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
+
+const adapterDependencies = getPickerAdapterDeps();
+
+// @ts-expect-error, ADAPTER_DEPENDENCIES is replaced at run/build time
+globalThis.ADAPTER_DEPENDENCIES = JSON.stringify(adapterDependencies);
 
 describe('postProcessImport', () => {
   const ADAPTERS = ['AdapterDateFns', 'AdapterDayjs', 'AdapterLuxon', 'AdapterMoment'];
