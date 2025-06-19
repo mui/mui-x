@@ -16,8 +16,6 @@ declare global {
     DOCS_STATS_ENABLED?: string;
     PULL_REQUEST?: string;
   }
-
-  const ADAPTER_DEPENDENCIES: string;
 }
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
