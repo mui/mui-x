@@ -1,12 +1,8 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import DemoWrapper from '../../DemoWrapper';
-import data from '../data/transistorCPU';
 import { ScatterSeriesType } from '@mui/x-charts/models';
+import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import data from '../data/transistorCPU';
+import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const chartSetting = {
   yAxis: [{ label: 'processor density', width: 60, scaleType: 'log' as const }],
@@ -49,33 +45,10 @@ function Scatter() {
 }
 
 export default function ScatterChartDemo() {
-  const brandingTheme = useTheme();
-  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
-
   return (
-    <DemoWrapper link="/x/react-charts/bar/">
-      <Stack
-        spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
-      >
-        <Box
-          sx={{
-            height: 352,
-            overflow: 'auto',
-            minWidth: 260,
-            padding: 2,
-            width: '100%',
-            alignSelf: 'center',
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <Scatter />
-          </ThemeProvider>
-        </Box>
-
-        <HighlightedCode
-          code={`
+    <ChartDemoWrapper
+      link="/x/react-charts/scatter/"
+      code={`
 <ScatterChart
   series={[
     { label: 'Other', data },
@@ -85,10 +58,8 @@ export default function ScatterChartDemo() {
   ]}
   yAxis={[{ scaleType: 'log', label: 'processor density' }]}
 />`}
-          language="js"
-          sx={{ overflowX: 'hidden' }}
-        />
-      </Stack>
-    </DemoWrapper>
+    >
+      <Scatter />
+    </ChartDemoWrapper>
   );
 }

@@ -1,8 +1,4 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
@@ -12,7 +8,7 @@ import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { BarSeriesType, LineSeriesType } from '@mui/x-charts/models';
-import DemoWrapper from '../../DemoWrapper';
+import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const dataset = [
   { min: -12, max: -4, precip: 79, month: 'Jan' },
@@ -85,28 +81,10 @@ function MultiAxes() {
 }
 
 export default function MultiAxesDemo() {
-  const brandingTheme = useTheme();
-  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
-
   return (
-    <DemoWrapper link="/x/react-charts/bar/">
-      <Stack sx={{ width: '100%', padding: 2, minHeight: '600px' }} justifyContent="space-between">
-        <Box
-          sx={{
-            height: 300,
-            overflow: 'auto',
-            minWidth: 260,
-            width: '100%',
-            alignSelf: 'center',
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <MultiAxes />
-          </ThemeProvider>
-        </Box>
-
-        <HighlightedCode
-          code={`
+    <ChartDemoWrapper
+      link="/x/react-charts/axis/"
+      code={`
 <ChartContainer
   series={[precipitations, minTemperature, maxTemperature]}
   xAxis={[monthsAxis]}
@@ -119,10 +97,8 @@ export default function MultiAxesDemo() {
   <ChartsYAxis axisId="rightAxis" label="precipitation (mm)" />
   <ChartsTooltip />
 </ChartContainer>`}
-          language="js"
-          sx={{ overflowX: 'hidden' }}
-        />
-      </Stack>
-    </DemoWrapper>
+    >
+      <MultiAxes />
+    </ChartDemoWrapper>
   );
 }

@@ -1,11 +1,9 @@
 /* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
-import DemoWrapper from '../../DemoWrapper';
+import ChartDemoWrapper from '../ChartDemoWrapper';
 
 // Data from https://ourworldindata.org/grapher/gender-gap-education-levels
 
@@ -20,7 +18,7 @@ function Funnel() {
   return (
     <Stack sx={{ height: '100%' }}>
       <Typography>World education enrollement in 2000 and 2020</Typography>
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ flexGrow: 1, minHeight: 0 }}>
         <FunnelChart
           sx={{ '.MuiFunnelSection-series-2020': { filter: 'brightness(0.7)' } }}
           margin={{ left: 50, right: 50 }}
@@ -92,27 +90,9 @@ function Funnel() {
 }
 
 export default function FunnelDemo() {
-  const brandingTheme = useTheme();
-  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
-
   return (
-    <DemoWrapper link="/x/react-charts/pie/">
-      <Stack spacing={1} sx={{ width: '100%', padding: 2 }} justifyContent="space-between">
-        <Box
-          sx={{
-            height: 352,
-            overflow: 'auto',
-            minWidth: 260,
-            padding: 2,
-            width: '100%',
-            alignSelf: 'center',
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <Funnel />
-          </ThemeProvider>
-        </Box>
-      </Stack>
-    </DemoWrapper>
+    <ChartDemoWrapper link="/x/react-charts/funnel/">
+      <Funnel />
+    </ChartDemoWrapper>
   );
 }

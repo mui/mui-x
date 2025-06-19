@@ -1,10 +1,6 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import { LineChart } from '@mui/x-charts/LineChart';
-import DemoWrapper from '../../DemoWrapper';
+import ChartDemoWrapper from '../ChartDemoWrapper';
 
 /* Source: https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG?end=2024&locations=DE&start=1960&view=chart */
 const years = [
@@ -105,33 +101,10 @@ function Line() {
 }
 
 export default function LineChartDemo() {
-  const brandingTheme = useTheme();
-  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
-
   return (
-    <DemoWrapper link="/x/react-charts/bar/">
-      <Stack
-        spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
-      >
-        <Box
-          sx={{
-            height: 352,
-            overflow: 'auto',
-            minWidth: 260,
-            padding: 2,
-            width: '100%',
-            alignSelf: 'center',
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <Line />
-          </ThemeProvider>
-        </Box>
-
-        <HighlightedCode
-          code={`
+    <ChartDemoWrapper
+      link="/x/react-charts/lines/"
+      code={`
 <LineChart
   dataset={inflationData}
   series={[
@@ -140,10 +113,8 @@ export default function LineChartDemo() {
     { dataKey: 'rateFR', label: 'France', valueFormatter },
   ]}
 />`}
-          language="js"
-          sx={{ overflowX: 'hidden' }}
-        />
-      </Stack>
-    </DemoWrapper>
+    >
+      <Line />
+    </ChartDemoWrapper>
   );
 }

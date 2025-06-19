@@ -1,10 +1,6 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
-import DemoWrapper from '../../DemoWrapper';
+import ChartDemoWrapper from '../ChartDemoWrapper';
 
 // Data derived from https://gs.statcounter.com/os-market-share/desktop/worldwide/2023
 // And https://gs.statcounter.com/os-market-share/mobile/worldwide/2023
@@ -55,43 +51,18 @@ function Pie() {
 }
 
 export default function PieChartDemo() {
-  const brandingTheme = useTheme();
-  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
-
   return (
-    <DemoWrapper link="/x/react-charts/pie/">
-      <Stack
-        spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
-      >
-        <Box
-          sx={{
-            height: 352,
-            overflow: 'auto',
-            minWidth: 260,
-            padding: 2,
-            width: '100%',
-            alignSelf: 'center',
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <Pie />
-          </ThemeProvider>
-        </Box>
-
-        <HighlightedCode
-          code={`
+    <ChartDemoWrapper
+      link="/x/react-charts/pie/"
+      code={`
 <PieChart
   series={[{
     data: desktopOS,
     valueFormatter,
   }]}
 />`}
-          language="js"
-          sx={{ overflowX: 'hidden' }}
-        />
-      </Stack>
-    </DemoWrapper>
+    >
+      <Pie />
+    </ChartDemoWrapper>
   );
 }
