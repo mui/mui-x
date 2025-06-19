@@ -727,6 +727,14 @@ async function getTeamMembers(excludeUsername) {
 
     return usernames;
   } catch (error) {
+    if (error.status === 403) {
+      console.error(
+        'Error: You do not have permission to access the mui/x team members.',
+        'You need admin permissions on the repo to view teams and team members.',
+        'Please add reviewers manually.',
+      );
+      return [];
+    }
     console.error('Error fetching team members:', error.message);
     if (error.response) {
       console.error(`Status: ${error.response.status}`);
@@ -1052,8 +1060,6 @@ async function main({ githubToken }) {
 
         // Assign the selected reviewers to the PR
         await assignReviewers(prNumber, selectedReviewers);
-      } else {
-        console.warn('No team members found. Skipping reviewer assignment.');
       }
     } catch (error) {
       console.error('Failed to create PR with Octokit or assign reviewers.');
