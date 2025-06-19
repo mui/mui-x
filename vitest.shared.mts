@@ -31,7 +31,7 @@ export const alias = [
   }),
   {
     find: 'test/utils',
-    replacement: new URL('./test/utils', import.meta.url).pathname,
+    replacement: fileURLToPath(new URL('./test/utils', import.meta.url)),
   },
 ];
 
@@ -53,7 +53,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    setupFiles: [new URL('test/setupVitest.ts', import.meta.url).pathname],
+    setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
     env: {

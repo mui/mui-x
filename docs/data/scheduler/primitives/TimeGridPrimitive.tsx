@@ -1,86 +1,10 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
-import classes from './TimeGridPrimitives.module.css';
+import classes from './TimeGridPrimitive.module.css';
+import { days } from './time-grid-events';
 
-const days = [
-  {
-    date: DateTime.fromISO('2025-05-26'),
-    events: [
-      {
-        id: '1',
-        start: DateTime.fromISO('2025-05-26T07:30:00'),
-        end: DateTime.fromISO('2025-05-26T08:15:00'),
-        title: 'Footing',
-        resource: 'personal',
-      },
-      {
-        id: '2',
-        start: DateTime.fromISO('2025-05-26T16:00:00'),
-        end: DateTime.fromISO('2025-05-26T17:00:00'),
-        title: 'Weekly',
-        resource: 'work',
-      },
-    ],
-  },
-  {
-    date: DateTime.fromISO('2025-05-27'),
-    events: [
-      {
-        id: '3',
-        start: DateTime.fromISO('2025-05-27T10:00:00'),
-        end: DateTime.fromISO('2025-05-27T11:00:00'),
-        title: 'Backlog grooming',
-        resource: 'work',
-      },
-      {
-        id: '4',
-        start: DateTime.fromISO('2025-05-27T19:00:00'),
-        end: DateTime.fromISO('2025-05-27T22:00:00'),
-        title: 'Pizza party',
-        resource: 'personal',
-      },
-    ],
-  },
-  {
-    date: DateTime.fromISO('2025-05-28'),
-    events: [
-      {
-        id: '5',
-        start: DateTime.fromISO('2025-05-28T08:00:00'),
-        end: DateTime.fromISO('2025-05-28T17:00:00'),
-        title: 'Scheduler deep dive',
-        resource: 'work',
-      },
-    ],
-  },
-  {
-    date: DateTime.fromISO('2025-05-29'),
-    events: [
-      {
-        id: '1',
-        start: DateTime.fromISO('2025-05-29T07:30:00'),
-        end: DateTime.fromISO('2025-05-29T08:15:00'),
-        title: 'Footing',
-        resource: 'personal',
-      },
-    ],
-  },
-  {
-    date: DateTime.fromISO('2025-05-30'),
-    events: [
-      {
-        id: '1',
-        start: DateTime.fromISO('2025-05-30T15:00:00'),
-        end: DateTime.fromISO('2025-05-30T15:45:00'),
-        title: 'Retrospective',
-        resource: 'work',
-      },
-    ],
-  },
-];
-
-export default function TimeGridPrimitives() {
+export default function TimeGridPrimitive() {
   const { scrollableRef, scrollerRef } = useInitialScrollPosition();
 
   return (
@@ -96,12 +20,16 @@ export default function TimeGridPrimitives() {
         </div>
         <div className={classes.Body} ref={scrollerRef}>
           <div className={classes.ScrollableContent} ref={scrollableRef} role="row">
-            <div className={classes.TimeAxis} aria-hidden="true">
+            <div
+              className={classes.TimeAxis}
+              aria-hidden="true"
+              style={{ '--duration': 24 } as React.CSSProperties}
+            >
               {Array.from({ length: 24 }, (_, hour) => (
                 <div
                   key={hour}
                   className={classes.TimeAxisCell}
-                  style={{ '--hour': hour } as React.CSSProperties}
+                  style={{ '--hour-index': hour } as React.CSSProperties}
                 >
                   {hour === 0
                     ? null
