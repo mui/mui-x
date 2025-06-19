@@ -13,16 +13,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
   props: AgendaEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    event,
-    eventResource,
-    ariaLabelledBy,
-    variant = 'regular',
-    className,
-    style,
-    id: idProp,
-    ...other
-  } = props;
+  const { event, eventResource, ariaLabelledBy, className, style, id: idProp, ...other } = props;
   const id = useId(idProp);
 
   return (
