@@ -26,7 +26,6 @@ const StatusChip = styled(Chip)(({ theme }) => ({
     fontSize: '0.875rem',
   },
   '&.in_stock': {
-    border: `1px solid ${theme.palette.success.light}`,
     color: theme.palette.success.dark,
     backgroundColor: 'rgba(46, 125, 50, 0.1)',
     '& .MuiChip-icon': {
@@ -34,7 +33,6 @@ const StatusChip = styled(Chip)(({ theme }) => ({
     },
   },
   '&.out_of_stock': {
-    border: `1px solid ${theme.palette.error.light}`,
     color: theme.palette.error.dark,
     backgroundColor: 'rgba(211, 47, 47, 0.1)',
     '& .MuiChip-icon': {
@@ -42,7 +40,6 @@ const StatusChip = styled(Chip)(({ theme }) => ({
     },
   },
   '&.restocking': {
-    border: `1px solid ${theme.palette.warning.light}`,
     color: theme.palette.warning.dark,
     backgroundColor: 'rgba(255, 193, 7, 0.1)',
     '& .MuiChip-icon': {
