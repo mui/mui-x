@@ -197,7 +197,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     return () => {
       removeIsInteracting.clear();
     };
-  }, [setZoomDataCallback, removeIsInteracting]);
+  }, [removeIsInteracting]);
 
   // Add events
   const pluginData = { store, instance, svgRef };
