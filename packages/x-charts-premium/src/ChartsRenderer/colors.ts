@@ -15,7 +15,7 @@ import {
   ChartsColorPaletteCallback,
 } from '@mui/x-charts/colorPalettes';
 
-export const getColorPallete = (palette: string): ChartsColorPaletteCallback | undefined => {
+export const getColorPalette = (palette: string): ChartsColorPaletteCallback | undefined => {
   switch (palette) {
     case 'blueberryTwilightPalette':
       return blueberryTwilightPalette;
