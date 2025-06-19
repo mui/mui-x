@@ -1,8 +1,10 @@
-import type { TreeViewComponentNameToClassKey } from '@mui/x-tree-view/internals';
+import type { SimpleTreeViewClassKey } from '@mui/x-tree-view/SimpleTreeView';
+import type { TreeItemClassKey } from '@mui/x-tree-view/TreeItem';
 import { RichTreeViewProClassKey } from '../RichTreeViewPro';
 
-export interface TreeViewProComponentNameToClassKey
-  extends Omit<TreeViewComponentNameToClassKey, 'MuiRichTreeView'> {
+export interface TreeViewProComponentNameToClassKey {
+  MuiSimpleTreeView: SimpleTreeViewClassKey;
+  MuiTreeItem: TreeItemClassKey;
   MuiRichTreeViewPro: RichTreeViewProClassKey;
 }
 

@@ -1,12 +1,20 @@
 import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
-import type { TreeViewComponents } from '@mui/x-tree-view/internals';
 
-export interface TreeViewProComponents<Theme = unknown>
-  extends Omit<TreeViewComponents<Theme>, 'MuiRichTreeView'> {
+export interface TreeViewProComponents<Theme = unknown> {
   MuiRichTreeViewPro?: {
     defaultProps?: ComponentsProps['MuiRichTreeViewPro'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiRichTreeViewPro'];
     variants?: ComponentsVariants<Theme>['MuiRichTreeViewPro'];
+  };
+  MuiSimpleTreeView?: {
+    defaultProps?: ComponentsProps['MuiSimpleTreeView'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiSimpleTreeView'];
+    variants?: ComponentsVariants<Theme>['MuiSimpleTreeView'];
+  };
+  MuiTreeItem?: {
+    defaultProps?: ComponentsProps['MuiTreeItem'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiTreeItem'];
+    variants?: ComponentsVariants<Theme>['MuiTreeItem'];
   };
 }
 
