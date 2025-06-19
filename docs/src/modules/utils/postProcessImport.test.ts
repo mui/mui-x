@@ -3,7 +3,8 @@ import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
 
 const adapterDependencies = getPickerAdapterDeps();
 
-// @ts-expect-error, ADAPTER_DEPENDENCIES is replaced at run/build time
+// @ts-expect-error, ADAPTER_DEPENDENCIES is set on the global object. This will be automatically picked up the
+// postProcessImport function when testing, though in production we automatically replace this with the actual value.
 globalThis.ADAPTER_DEPENDENCIES = JSON.stringify(adapterDependencies);
 
 describe('postProcessImport', () => {
