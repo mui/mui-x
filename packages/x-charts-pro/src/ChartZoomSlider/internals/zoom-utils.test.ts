@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { calculateZoomEnd, calculateZoomStart, calculateZoomFromPointImpl } from './zoom-utils';
 import { ZoomData } from '../../models';
 

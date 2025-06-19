@@ -1,5 +1,4 @@
 import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useAnimateInternal } from '@mui/x-charts/internals/animation/useAnimateInternal';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
