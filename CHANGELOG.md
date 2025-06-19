@@ -5,6 +5,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.5.3
+<!-- generated comparing v8.5.2..master -->
+_Jun 19, 2025_
+
+We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community members for their valuable contributions:
+@alisasanib, @arminmeh, @sai6855
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @oliviertassinari
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.5.3`
+
+- [data grid] Fix export menu button tooltip being interactive when menu is open (#18327) @bernardobelchior
+- [DataGrid] Fix column menu scroll close (#18065) @alisasanib
+- [DataGrid] Fix page size issue with data source (#18419) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@8.5.3`, plus:
+
+- [DataGridPro] Ignore missing `rowCount` response when new children are fetched with the data source (#17711) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.5.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@8.5.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.5.3`
+
+- [pickers] Add `inputSizeSmall` to classes interface (#18242) @sai6855
+
+#### `@mui/x-date-pickers-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@8.5.3`.
+
+### Charts
+
+#### `@mui/x-charts@8.5.3`
+
+- [charts] Add `x-internal-gestures` package (#18307) @JCQuintas
+- [charts] Add item class to list item around each series in legend (#18411) @bernardobelchior
+- [charts] Allow `tabIndex` in surface and legend (#18344) @JCQuintas
+- [charts] Explore selector typing (#18362) @alexfauquette
+- [charts] Fix `FunnelChart` label positioning with different curves (#18354) @JCQuintas
+- [charts] Fix highlight with number ids (#18423) @alexfauquette
+- [charts] Make scatter chart use data attributes (#18048) @alexfauquette
+
+#### `@mui/x-charts-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@8.5.3`, plus:
+
+- [charts-pro] Add data-series to elements of funnel chart (#18067) @JCQuintas
+- [charts-pro] Hide values outside minStart and maxEnd in zoom slider (#18336) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.5.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@8.5.3`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.5.3`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix 404 in charts docs (#18440) @alexfauquette
+- [docs][pickers] Fix adapter version resolving when opening demo to edit (#18363) @LukasTy
+
+### Core
+
+- [core] Fix pnpm valelint error (#18420) @oliviertassinari
+
+### Miscellaneous
+
+- [code-infra] Add back a `Playwright` renovate group (#18397) @LukasTy
+- [code-infra] Setup `CODEOWNERS` for charts repositories (#18418) @JCQuintas
+- [code-infra] Strengthen `URL` usage for test config (#18444) @LukasTy
+- [code-infra] Use `vitest` bundled types  (#17758) @JCQuintas
+- [infra] Stabilise tests by removing babel and plugins from vitest (#18341) @JCQuintas
+
 ## 8.5.2
 
 _Jun 12, 2025_
