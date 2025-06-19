@@ -23,6 +23,7 @@ import {
   gridPivotModelSelector,
   gridPivotActiveSelector,
 } from '../../hooks/features/pivoting/gridPivotingSelectors';
+import { getBlockedZones } from '../../hooks/features/chartsIntegration/utils';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -89,7 +90,9 @@ const GridChartsDataPanelScrollArea = styled(GridShadowScrollArea, {
 const GridChartsDataPanelSection = styled(Collapsible, {
   name: 'MuiDataGrid',
   slot: 'ChartsDataPanelSection',
-})<{ ownerState: OwnerState }>({
+  shouldForwardProp: (prop) => prop !== 'disabled',
+})<{ ownerState: OwnerState; disabled: boolean }>(({ disabled }) => ({
+  opacity: disabled ? 0.5 : 1,
   margin: vars.spacing(0.5, 1),
   transition: vars.transition(['border-color', 'background-color'], {
     duration: vars.transitions.duration.short,
@@ -99,7 +102,7 @@ const GridChartsDataPanelSection = styled(Collapsible, {
     backgroundColor: vars.colors.interactive.hover,
     outline: `2px solid ${vars.colors.interactive.selected}`,
   },
-});
+}));
 
 const GridChartsDataPanelSectionTitle = styled('div', {
   name: 'MuiDataGrid',
@@ -142,7 +145,7 @@ const GridChartsDataPanelPlaceholder = styled('div', {
   font: vars.typography.font.body,
 });
 
-const INITIAL_DRAG_STATE = { active: false, dropZone: null, initialZone: null };
+const INITIAL_DRAG_STATE = { active: false, field: null, dropZone: null, initialZone: null };
 
 export interface FieldTransferObject {
   field: string;
@@ -165,6 +168,14 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+
+  const blockedZonesLookup = React.useMemo(
+    () =>
+      new Map<string, string[]>(
+        Object.keys(columns).map((field) => [field, getBlockedZones(columns[field])]),
+      ),
+    [columns],
+  );
 
   const pivotingModelValues = React.useMemo(
     () => pivotModel.values.map((value) => value.field),
@@ -200,12 +211,20 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
 
   const [drag, setDrag] = React.useState<{
     active: boolean;
+    field: string | null;
     dropZone: FieldTransferObject['zone'];
     initialZone: FieldTransferObject['zone'];
   }>(INITIAL_DRAG_STATE);
 
-  const handleDragStart = (zone: FieldTransferObject['zone']) => {
-    setDrag({ active: true, initialZone: zone, dropZone: null });
+  const disabledSections = React.useMemo(() => {
+    if (!drag.field) {
+      return new Set<string>();
+    }
+    return new Set<string>(getBlockedZones(columns[drag.field]));
+  }, [columns, drag.field]);
+
+  const handleDragStart = (field: string, zone: FieldTransferObject['zone']) => {
+    setDrag({ active: true, field, initialZone: zone, dropZone: null });
   };
 
   const handleDragEnd = () => {
@@ -281,8 +300,9 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
             {availableFields.map((field) => (
               <GridChartsDataPanelField
                 key={field}
-                column={columns[field]}
+                field={field}
                 zone={null}
+                blockedZones={blockedZonesLookup.get(field)}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
               >
@@ -305,8 +325,9 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
+            disabled={disabledSections.has('categories')}
             data-section="categories"
-            data-drag-over={drag.dropZone === 'categories'}
+            data-drag-over={!disabledSections.has('categories') && drag.dropZone === 'categories'}
           >
             <CollapsibleTrigger
               aria-label={apiRef.current.getLocaleText('chartsConfigurationCategories')}
@@ -335,8 +356,10 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
                   {categories.map((field) => (
                     <GridChartsDataPanelField
                       key={field}
-                      column={columns[field]}
+                      field={field}
                       zone="categories"
+                      blockedZones={blockedZonesLookup.get(field)}
+                      disabled={disabledSections.has('categories')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
@@ -354,8 +377,9 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
+            disabled={disabledSections.has('series')}
             data-section="series"
-            data-drag-over={drag.dropZone === 'series'}
+            data-drag-over={!disabledSections.has('series') && drag.dropZone === 'series'}
           >
             <CollapsibleTrigger
               aria-label={apiRef.current.getLocaleText('chartsConfigurationSeries')}
@@ -382,8 +406,10 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
                   {series.map((field) => (
                     <GridChartsDataPanelField
                       key={field}
-                      column={columns[field]}
+                      field={field}
                       zone="series"
+                      blockedZones={blockedZonesLookup.get(field)}
+                      disabled={disabledSections.has('series')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
