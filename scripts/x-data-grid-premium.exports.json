@@ -747,7 +747,7 @@
   { "name": "unstable_gridDefaultPromptResolver", "kind": "Function" },
   { "name": "unstable_resetCleanupTracking", "kind": "Function" },
   { "name": "unstable_useGridPivoting", "kind": "Variable" },
-  { "name": "useFirstRender", "kind": "Variable" },
+  { "name": "useFirstRender", "kind": "Function" },
   { "name": "useGridApiContext", "kind": "Variable" },
   { "name": "useGridApiMethod", "kind": "Function" },
   { "name": "useGridApiRef", "kind": "Variable" },
