@@ -12,8 +12,8 @@ import {
 
 interface GridChartsDataPanelFieldMenuProps {
   field: string;
-  zone: FieldTransferObject['zone'];
-  blockedZones?: string[];
+  section: FieldTransferObject['section'];
+  blockedSections?: string[];
 }
 
 type MenuAction = {
@@ -28,17 +28,19 @@ type MenuDivider = {
 };
 
 function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) {
-  const { field, zone, blockedZones } = props;
+  const { field, section, blockedSections } = props;
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridPrivateApiContext();
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector);
   const series = useGridSelector(apiRef, gridChartsSeriesSelector);
-  const isAvailableField = zone === null;
+  const isAvailableField = section === null;
   const fieldIndexInModel = !isAvailableField
-    ? (zone === 'categories' ? categories : series).findIndex((item) => item === field)
+    ? (section === 'categories' ? categories : series).findIndex((item) => item === field)
     : -1;
-  const modelLength = !isAvailableField ? (zone === 'categories' ? categories : series).length : 0;
+  const modelLength = !isAvailableField
+    ? (section === 'categories' ? categories : series).length
+    : 0;
   const canMoveUp = fieldIndexInModel > 0;
   const canMoveDown = !isAvailableField && fieldIndexInModel < modelLength - 1;
   const menuId = useId();
@@ -50,7 +52,7 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
       return [
         { key: 'categories', label: 'Add to categories' },
         { key: 'series', label: 'Add to series' },
-      ].filter((item) => !blockedZones?.includes(item.key)) as MenuAction[];
+      ].filter((item) => !blockedSections?.includes(item.key)) as MenuAction[];
     }
 
     const moveMenuItems: (MenuAction | MenuDivider)[] = [
@@ -101,14 +103,16 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
         label: 'Add to series',
         icon: <span />,
       },
-    ].filter((item) => item.key !== zone && !blockedZones?.includes(item.key)) as MenuAction[];
+    ].filter(
+      (item) => item.key !== section && !blockedSections?.includes(item.key),
+    ) as MenuAction[];
 
     if (addToSectionMenuItems.length > 0) {
       addToSectionMenuItems.push({ divider: true });
     }
 
     return [...moveMenuItems, ...addToSectionMenuItems, ...removeMenuItem];
-  }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, zone, blockedZones]);
+  }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, section, blockedSections]);
 
   const handleClick = () => {
     setOpen(!open);
@@ -118,19 +122,19 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
     setOpen(false);
   };
 
-  const handleMove = (to: 'up' | 'down' | 'top' | 'bottom' | FieldTransferObject['zone']) => {
+  const handleMove = (to: 'up' | 'down' | 'top' | 'bottom' | FieldTransferObject['section']) => {
     handleClose();
 
     // Do nothing if the field is already in the target section
-    if (to === zone) {
+    if (to === section) {
       return;
     }
 
-    const items = zone === 'categories' ? categories : series;
+    const items = section === 'categories' ? categories : series;
 
     let targetField: string | undefined;
     let targetFieldPosition: DropPosition = null;
-    let targetSection: FieldTransferObject['zone'] = zone;
+    let targetSection: FieldTransferObject['section'] = section;
 
     switch (to) {
       case 'up':
@@ -160,7 +164,7 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
 
     apiRef.current.chartsIntegration.updateDataReference(
       field,
-      zone,
+      section,
       targetSection,
       targetField,
       targetFieldPosition || undefined,

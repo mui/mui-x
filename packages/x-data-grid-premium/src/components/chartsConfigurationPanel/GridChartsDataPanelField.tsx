@@ -16,17 +16,17 @@ import { COLUMN_GROUP_ID_SEPARATOR } from '../../constants/columnGroups';
 type GridChartsDataPanelFieldProps = {
   children: React.ReactNode;
   field: string;
-  zone: 'categories' | 'series' | null;
-  blockedZones?: string[];
+  section: 'categories' | 'series' | null;
+  blockedSections?: string[];
   disabled?: boolean;
-  onDragStart: (field: string, zone: 'categories' | 'series' | null) => void;
+  onDragStart: (field: string, section: 'categories' | 'series' | null) => void;
   onDragEnd: () => void;
 };
 
 type OwnerState = GridChartsDataPanelFieldProps &
   Pick<DataGridPremiumProcessedProps, 'classes'> & {
     dropPosition: DropPosition;
-    zone: 'categories' | 'series' | null;
+    section: 'categories' | 'series' | null;
   };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -67,7 +67,7 @@ const GridChartsDataPanelFieldRoot = styled('div', {
       style: { borderBottomColor: vars.colors.interactive.selected },
     },
     {
-      props: { zone: null },
+      props: { section: null },
       style: { borderTopColor: 'transparent', borderBottomColor: 'transparent' },
     },
   ],
@@ -213,10 +213,9 @@ export function AggregationSelect({
 }
 
 function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
-  const { children, field, blockedZones, disabled, onDragStart, onDragEnd } = props;
+  const { children, field, section, blockedSections, disabled, onDragStart, onDragEnd } = props;
   const rootProps = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
-  const section = props.zone;
   const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
@@ -224,7 +223,7 @@ function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
-      const data: FieldTransferObject = { field, zone: section };
+      const data: FieldTransferObject = { field, section };
       event.dataTransfer.setData('text/plain', JSON.stringify(data));
       event.dataTransfer.dropEffect = 'move';
       onDragStart(field, section);
@@ -269,7 +268,7 @@ function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
 
         const position = getDropPosition(event);
 
-        const { field: droppedField, zone: originSection } = JSON.parse(
+        const { field: droppedField, section: originSection } = JSON.parse(
           event.dataTransfer.getData('text/plain'),
         ) as FieldTransferObject;
 
@@ -310,7 +309,11 @@ function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
         ownerState={ownerState}
         className={classes.actionContainer}
       >
-        <GridChartsDataPanelFieldMenu field={field} zone={section} blockedZones={blockedZones} />
+        <GridChartsDataPanelFieldMenu
+          field={field}
+          section={section}
+          blockedSections={blockedSections}
+        />
       </GridChartsDataPanelFieldActionContainer>
     </GridChartsDataPanelFieldRoot>
   );
