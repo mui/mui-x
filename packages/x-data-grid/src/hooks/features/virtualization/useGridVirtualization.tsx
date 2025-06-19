@@ -3,6 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { useVirtualizer, VirtualizationState, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
+import { isJSDOM } from '../../../utils/isJSDOM';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -35,6 +36,8 @@ import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 import { gridRowSelectionManagerSelector } from '../rowSelection';
 
+const HAS_LAYOUT = !isJSDOM;
+
 type RootProps = DataGridProcessedProps;
 
 // HACK: Typescript doesn't use the alias name ("GridVirtualizationState") and changes
@@ -50,9 +53,9 @@ export const virtualizationStateInitializer: GridStateInitializer<RootProps> = (
   const { disableVirtualization, autoHeight } = props;
 
   const virtualization = {
-    enabled: !disableVirtualization,
-    enabledForColumns: !disableVirtualization,
-    enabledForRows: !disableVirtualization && !autoHeight,
+    enabled: !disableVirtualization && HAS_LAYOUT,
+    enabledForColumns: !disableVirtualization && HAS_LAYOUT,
+    enabledForRows: !disableVirtualization && !autoHeight && HAS_LAYOUT,
     renderContext: EMPTY_RENDER_CONTEXT,
   };
 
@@ -219,6 +222,7 @@ export function useGridVirtualization(
    */
 
   const setVirtualization = (enabled: boolean) => {
+    enabled &&= HAS_LAYOUT;
     virtualizer.store.set('virtualization', {
       ...virtualizer.store.state.virtualization,
       enabled,
@@ -228,6 +232,7 @@ export function useGridVirtualization(
   };
 
   const setColumnVirtualization = (enabled: boolean) => {
+    enabled &&= HAS_LAYOUT;
     virtualizer.store.set('virtualization', {
       ...virtualizer.store.state.virtualization,
       enabledForColumns: enabled,
