@@ -71,8 +71,6 @@ const resources: CalendarResource[] = [
 export default function StandaloneWeekView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
-  console.log('events', events);
-
   return (
     <StandaloneView events={events} resources={resources}>
       <WeekView className={classes.Container} onEventsChange={setEvents} />
