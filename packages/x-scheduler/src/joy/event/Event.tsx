@@ -114,21 +114,18 @@ export const Event = React.forwardRef(function Event(
       {...other}
     >
       <Popover.Trigger
+        className={clsx(
+          'EventCard',
+          `EventCard--${variant}`,
+          (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+        )}
+        aria-labelledby={`${ariaLabelledBy} ${id}`}
         render={(triggerProps) => (
           <TimeGrid.Event
             {...triggerProps}
-            className={clsx(
-              'EventCard',
-              `EventCard--${variant}`,
-              (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
-            )}
             start={eventProp.start}
             end={eventProp.end}
-            aria-labelledby={`${ariaLabelledBy} ${id}`}
-            onClick={(event) => {
-              triggerProps.onClick?.(event);
-              onEventClick?.(event, eventProp);
-            }}
+            onClick={(event) => onEventClick?.(event, eventProp)}
           >
             {renderContent}
           </TimeGrid.Event>
