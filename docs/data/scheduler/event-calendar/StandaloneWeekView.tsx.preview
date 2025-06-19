@@ -1,1 +1,3 @@
-<WeekView events={events} resources={resources} className={classes.Container} />
+<StandaloneView events={events} resources={resources}>
+  <WeekView className={classes.Container} />
+</StandaloneView>
