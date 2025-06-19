@@ -1,17 +1,26 @@
+import { GridColDef } from '@mui/x-data-grid-pro';
+
 export interface ChartsConfigurationPanelState {
   open: boolean;
 }
 
+export type GridChartsIntegrationSection = 'categories' | 'series' | null;
+
+export type GridChartsIntegrationItem = {
+  field: GridColDef['field'];
+  hidden?: boolean;
+};
+
 export interface GridChartsIntegrationState {
   configurationPanel: ChartsConfigurationPanelState;
-  categories: string[];
-  series: string[];
+  categories: GridChartsIntegrationItem[];
+  series: GridChartsIntegrationItem[];
 }
 
 export interface GridChartsIntegrationInitialState {
   configurationPanel?: Partial<ChartsConfigurationPanelState>;
-  categories?: string[];
-  series?: string[];
+  categories?: GridChartsIntegrationItem[] | GridColDef['field'][];
+  series?: GridChartsIntegrationItem[] | GridColDef['field'][];
   chartType?: string;
 }
 
@@ -23,22 +32,30 @@ export interface GridChartsIntegrationApi {
   setChartsConfigurationPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   /**
    * Updates the categories selection for the charts integration.
-   * @param {string[] | ((prev: string[]) => string[])} categories - The new categories selection or a function that returns the new categories selection.
+   * @param {GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[])} categories - The new categories selection or a function that returns the new categories selection.
    */
-  updateCategories: (categories: string[] | ((prev: string[]) => string[])) => void;
+  updateCategories: (
+    categories:
+      | GridChartsIntegrationItem[]
+      | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
+  ) => void;
   /**
    * Updates the series selection for the charts integration.
-   * @param {string[] | ((prev: string[]) => string[])} series - The new series selection or a function that returns the new series selection.
+   * @param {GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[])} series - The new series selection or a function that returns the new series selection.
    */
-  updateSeries: (series: string[] | ((prev: string[]) => string[])) => void;
+  updateSeries: (
+    series:
+      | GridChartsIntegrationItem[]
+      | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
+  ) => void;
 }
 
 export interface GridChartsIntegrationPrivateApi {
   chartsIntegration: {
     updateDataReference: (
       field: string,
-      originSection: 'categories' | 'series' | null,
-      targetSection: 'categories' | 'series' | null,
+      originSection: GridChartsIntegrationSection,
+      targetSection: GridChartsIntegrationSection,
       targetField?: string,
       placementRelativeToTargetField?: 'top' | 'bottom',
     ) => void;
