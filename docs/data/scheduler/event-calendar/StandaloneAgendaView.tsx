@@ -68,7 +68,7 @@ const resources: CalendarResource[] = [
   { name: 'Workout', id: 'workout', color: 'jade' },
 ];
 
-export default function StandaloneWeekView() {
+export default function StandaloneAgendaView() {
   return (
     <StandaloneView events={events} resources={resources}>
       <AgendaView className={classes.Container} />

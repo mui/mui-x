@@ -2,15 +2,14 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-
 import { AgendaViewProps } from './AgendaView.types';
 import { CalendarEvent } from '../models/events';
-import './AgendaView.css';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
+import './AgendaView.css';
 
 const adapter = getAdapter();
 
