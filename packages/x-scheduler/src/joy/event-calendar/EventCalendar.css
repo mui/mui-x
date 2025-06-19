@@ -58,7 +58,7 @@
 .EventCalendarResourceLegendColor {
   width: 10px;
   height: 10px;
-  border-radius: 5px;
+  border-radius: 50%;
   flex-shrink: 0;
   background-color: var(--event-color-9);
 }

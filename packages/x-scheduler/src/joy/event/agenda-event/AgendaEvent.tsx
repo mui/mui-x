@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { TimeGrid } from '../../../primitives/time-grid';
+import { useId } from '@base-ui-components/react/utils';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
-import { EventProps } from '../Event.types';
 import './AgendaEvent.css';
 import { getColorClassName } from '../../internals/utils/color-utils';
+import { AgendaEventProps } from './AgendaEventProps';
 
 const adapter = getAdapter();
 
 export const AgendaEvent = React.forwardRef(function AgendaEvent(
-  props: EventProps,
+  props: AgendaEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -20,13 +20,16 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
     variant = 'regular',
     className,
     style,
+    id: idProp,
     ...other
   } = props;
+  const id = useId(idProp);
 
-  console.log('AgendaEvent', event, eventResource, getColorClassName({ resource: eventResource }));
   return (
     <div
+      id={id}
       ref={forwardedRef}
+      aria-labelledby={`${ariaLabelledBy} ${id}`}
       className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
       {...other}
     >

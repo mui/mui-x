@@ -67,8 +67,10 @@ export const AgendaView = React.forwardRef(function AgendaView(
             >
               <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
               <div className="WeekDayCell">
-                <span className="WeekDayName">{adapter.formatByString(day, 'cccc')}</span>
-                <span className="YearAndMonth">
+                <span className={clsx('WeekDayName', 'LinesClamp')}>
+                  {adapter.formatByString(day, 'cccc')}
+                </span>
+                <span className={clsx('YearAndMonth', 'LinesClamp')}>
                   {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
                 </span>
               </div>
@@ -78,9 +80,9 @@ export const AgendaView = React.forwardRef(function AgendaView(
                 <AgendaEvent
                   key={event.id}
                   event={event}
-                  variant="regular"
+                  variant="compact"
                   eventResource={resourcesById.get(event.resource)}
-                  ariaLabelledBy={`AgendaEvent-${day.day.toString()}`}
+                  ariaLabelledBy={`WeekDayName-${day.day.toString()}`}
                 />
               ))}
             </div>
