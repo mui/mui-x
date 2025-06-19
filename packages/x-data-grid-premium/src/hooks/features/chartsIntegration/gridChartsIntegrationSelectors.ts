@@ -23,13 +23,14 @@ export const gridChartsCategoriesSelector = createSelectorMemoized(
   gridColumnFieldsSelector,
   gridRowGroupingSanitizedModelSelector,
   (chartsIntegration, columns, rowGroupingModel) =>
-    chartsIntegration.categories.map((category) =>
-      rowGroupingModel.includes(category)
+    chartsIntegration.categories.map((category) => ({
+      ...category,
+      field: rowGroupingModel.includes(category.field)
         ? getRowGroupingFieldFromGroupingCriteria(
-            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : category,
+            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : category.field,
           )
-        : category,
-    ),
+        : category.field,
+    })),
 );
 
 export const gridChartsSeriesSelector = createSelectorMemoized(
@@ -37,11 +38,12 @@ export const gridChartsSeriesSelector = createSelectorMemoized(
   gridColumnFieldsSelector,
   gridRowGroupingSanitizedModelSelector,
   (chartsIntegration, columns, rowGroupingModel) =>
-    chartsIntegration.series.map((seriesItem) =>
-      rowGroupingModel.includes(seriesItem)
+    chartsIntegration.series.map((seriesItem) => ({
+      ...seriesItem,
+      field: rowGroupingModel.includes(seriesItem.field)
         ? getRowGroupingFieldFromGroupingCriteria(
-            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : seriesItem,
+            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : seriesItem.field,
           )
-        : seriesItem,
-    ),
+        : seriesItem.field,
+    })),
 );
