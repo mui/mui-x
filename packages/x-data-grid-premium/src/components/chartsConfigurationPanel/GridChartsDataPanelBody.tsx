@@ -24,6 +24,7 @@ import {
   gridPivotActiveSelector,
 } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { getBlockedSections } from '../../hooks/features/chartsIntegration/utils';
+import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -149,7 +150,7 @@ const INITIAL_DRAG_STATE = { active: false, field: null, dropSection: null, init
 
 export interface FieldTransferObject {
   field: string;
-  section: 'categories' | 'series' | null;
+  section: GridChartsIntegrationSection;
 }
 
 export type DropPosition = 'top' | 'bottom' | null;
@@ -186,8 +187,8 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
     const notUsedFields = Object.keys(columns).filter(
       (field) =>
         columns[field].chartable &&
-        !categories.includes(field) &&
-        !series.includes(field) &&
+        !categories.some((category) => category.field === field) &&
+        !series.some((seriesItem) => seriesItem.field === field) &&
         !rowGroupingModel.includes(field) &&
         (!pivotActive || !pivotingModelValues.includes(field)),
     );
@@ -274,6 +275,19 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
     }
   }, []);
 
+  const handleChange = React.useCallback(
+    (field: string, section: GridChartsIntegrationSection) => {
+      const apiMethod =
+        section === 'categories' ? apiRef.current.updateCategories : apiRef.current.updateSeries;
+      apiMethod((currentItems) =>
+        currentItems.map((item) =>
+          item.field === field ? { ...item, hidden: item.hidden !== true } : item,
+        ),
+      );
+    },
+    [apiRef],
+  );
+
   return (
     <GridChartsDataPanelBodyRoot
       ownerState={rootProps}
@@ -355,17 +369,19 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
               )}
               {categories.length > 0 && (
                 <GridChartsDataPanelFieldList ownerState={rootProps} className={classes.fieldList}>
-                  {categories.map((field) => (
+                  {categories.map((category) => (
                     <GridChartsDataPanelField
-                      key={field}
-                      field={field}
+                      key={category.field}
+                      field={category.field}
+                      selected={category.hidden !== true}
+                      onChange={handleChange}
                       section="categories"
-                      blockedSections={blockedSectionsLookup.get(field)}
+                      blockedSections={blockedSectionsLookup.get(category.field)}
                       disabled={disabledSections.has('categories')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {apiRef.current.chartsIntegration.getColumnName(field)}
+                      {apiRef.current.chartsIntegration.getColumnName(category.field)}
                     </GridChartsDataPanelField>
                   ))}
                 </GridChartsDataPanelFieldList>
@@ -405,17 +421,19 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
               )}
               {series.length > 0 && (
                 <GridChartsDataPanelFieldList ownerState={rootProps} className={classes.fieldList}>
-                  {series.map((field) => (
+                  {series.map((seriesItem) => (
                     <GridChartsDataPanelField
-                      key={field}
-                      field={field}
+                      key={seriesItem.field}
+                      field={seriesItem.field}
+                      selected={seriesItem.hidden !== true}
+                      onChange={handleChange}
                       section="series"
-                      blockedSections={blockedSectionsLookup.get(field)}
+                      blockedSections={blockedSectionsLookup.get(seriesItem.field)}
                       disabled={disabledSections.has('series')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {apiRef.current.chartsIntegration.getColumnName(field)}
+                      {apiRef.current.chartsIntegration.getColumnName(seriesItem.field)}
                     </GridChartsDataPanelField>
                   ))}
                 </GridChartsDataPanelFieldList>
