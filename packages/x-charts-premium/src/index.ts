@@ -49,3 +49,6 @@ export * from '@mui/x-charts-pro/FunnelChart';
 export * from '@mui/x-charts-pro/RadarChartPro';
 export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
+
+// Premium components
+export * from './ChartsRenderer';
