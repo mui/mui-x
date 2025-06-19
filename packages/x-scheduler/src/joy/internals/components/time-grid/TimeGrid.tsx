@@ -1,22 +1,20 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { Popover } from '@base-ui-components/react/popover';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { EventPopover } from '../../../event-popover/EventPopover';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
 import { TimeGridProps } from './TimeGrid.types';
 import { CalendarEvent } from '../../../models/events';
 import { Event } from '../../../event/Event';
-import { useEventPopover } from '../../utils/useEventPopover';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
-import './TimeGrid.css';
 import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
 import { selectors } from '../../../event-calendar/store';
+import { EventPopoverProvider } from '../../utils/EventPopoverProvider';
+import './TimeGrid.css';
 
 const adapter = getAdapter();
 
@@ -32,9 +30,6 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   const headerWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useForkRef(forwardedRef, containerRef);
-
-  const { isPopoverOpen, anchor, selectedEvent, handleEventClick, handlePopoverClose } =
-    useEventPopover();
 
   const store = useEventCalendarStore();
   const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
@@ -81,108 +76,100 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
 
   return (
     <div ref={handleRef} className={clsx('TimeGridContainer', 'joy', className)} {...other}>
-      <Popover.Root open={isPopoverOpen} onOpenChange={handlePopoverClose} modal>
-        <TimeGridPrimitive.Root className="TimeGridRoot">
-          <div ref={headerWrapperRef} className="TimeGridHeader">
-            <div className="TimeGridGridRow TimeGridHeaderRow" role="row">
-              <div className="TimeGridAllDayEventsCell" />
-              {days.map((day) => (
-                <div
-                  key={day.day.toString()}
-                  id={`TimeGridHeaderCell-${day.day.toString()}`}
-                  role="columnheader"
-                  aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
-                >
-                  {onDayHeaderClick ? (
-                    <button
-                      type="button"
-                      className="TimeGridHeaderButton"
-                      onClick={handleHeaderClick(day)}
-                      tabIndex={0}
-                    >
-                      {renderHeaderContent(day)}
-                    </button>
-                  ) : (
-                    renderHeaderContent(day)
-                  )}
-                </div>
-              ))}
-            </div>
-            <div
-              className={clsx('TimeGridGridRow', 'TimeGridAllDayEventsRow')}
-              role="row"
-              data-weekend={lastIsWeekend ? '' : undefined}
-            >
-              <div
-                className="TimeGridAllDayEventsCell TimeGridAllDayEventsHeaderCell"
-                role="columnheader"
-              >
-                {translations.allDay}
-              </div>
-              {days.map((day) => (
-                <div
-                  key={day.day.toString()}
-                  className="TimeGridAllDayEventsCell"
-                  aria-labelledby={`TimeGridHeaderCell-${day.day.toString()}`}
-                  role="gridcell"
-                  data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                />
-              ))}
-            </div>
-          </div>
-          <div ref={bodyRef} className="TimeGridBody">
-            <div className="TimeGridScrollableContent">
-              <div className="TimeGridTimeAxis" aria-hidden="true">
-                {/* TODO: Handle DST days where there are not exactly 24 hours */}
-                {Array.from({ length: 24 }, (_, hour) => (
+      <EventPopoverProvider containerRef={containerRef} onEventEdit={handleEventEdit}>
+        {({ onEventClick }) => (
+          <TimeGridPrimitive.Root className="TimeGridRoot">
+            <div ref={headerWrapperRef} className="TimeGridHeader">
+              <div className="TimeGridGridRow TimeGridHeaderRow" role="row">
+                <div className="TimeGridAllDayEventsCell" />
+                {days.map((day) => (
                   <div
-                    key={hour}
-                    className="TimeGridTimeAxisCell"
-                    style={{ '--hour': hour } as React.CSSProperties}
+                    key={day.day.toString()}
+                    id={`TimeGridHeaderCell-${day.day.toString()}`}
+                    role="columnheader"
+                    aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
                   >
-                    <time className="TimeGridTimeAxisText">
-                      {hour === 0
-                        ? null
-                        : adapter.formatByString(adapter.setHours(today, hour), 'h:mm a')}
-                    </time>
+                    {onDayHeaderClick ? (
+                      <button
+                        type="button"
+                        className="TimeGridHeaderButton"
+                        onClick={handleHeaderClick(day)}
+                        tabIndex={0}
+                      >
+                        {renderHeaderContent(day)}
+                      </button>
+                    ) : (
+                      renderHeaderContent(day)
+                    )}
                   </div>
                 ))}
               </div>
-              <div className="TimeGridGrid">
+              <div
+                className={clsx('TimeGridGridRow', 'TimeGridAllDayEventsRow')}
+                role="row"
+                data-weekend={lastIsWeekend ? '' : undefined}
+              >
+                <div
+                  className="TimeGridAllDayEventsCell TimeGridAllDayEventsHeaderCell"
+                  role="columnheader"
+                >
+                  {translations.allDay}
+                </div>
                 {days.map((day) => (
-                  <TimeGridPrimitive.Column
+                  <div
                     key={day.day.toString()}
-                    value={day}
-                    className="TimeGridColumn"
+                    className="TimeGridAllDayEventsCell"
+                    aria-labelledby={`TimeGridHeaderCell-${day.day.toString()}`}
+                    role="gridcell"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                  >
-                    {getEventsStartingInDay(day).map((event: CalendarEvent) => (
-                      <Event
-                        key={event.id}
-                        event={event}
-                        eventResource={resourcesByIdMap.get(event.resource)}
-                        variant="regular"
-                        ariaLabelledBy={`TimeGridHeaderCell-${day.day.toString()}`}
-                        onEventClick={handleEventClick}
-                      />
-                    ))}
-                  </TimeGridPrimitive.Column>
+                  />
                 ))}
               </div>
             </div>
-          </div>
-        </TimeGridPrimitive.Root>
-        {anchor && selectedEvent && (
-          <EventPopover
-            anchor={anchor}
-            calendarEvent={selectedEvent}
-            calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
-            container={containerRef.current}
-            onEventEdit={handleEventEdit}
-            onClose={handlePopoverClose}
-          />
+            <div ref={bodyRef} className="TimeGridBody">
+              <div className="TimeGridScrollableContent">
+                <div className="TimeGridTimeAxis" aria-hidden="true">
+                  {/* TODO: Handle DST days where there are not exactly 24 hours */}
+                  {Array.from({ length: 24 }, (_, hour) => (
+                    <div
+                      key={hour}
+                      className="TimeGridTimeAxisCell"
+                      style={{ '--hour': hour } as React.CSSProperties}
+                    >
+                      <time className="TimeGridTimeAxisText">
+                        {hour === 0
+                          ? null
+                          : adapter.formatByString(adapter.setHours(today, hour), 'h:mm a')}
+                      </time>
+                    </div>
+                  ))}
+                </div>
+                <div className="TimeGridGrid">
+                  {days.map((day) => (
+                    <TimeGridPrimitive.Column
+                      key={day.day.toString()}
+                      value={day}
+                      className="TimeGridColumn"
+                      data-weekend={isWeekend(adapter, day) ? '' : undefined}
+                    >
+                      {getEventsStartingInDay(day).map((event: CalendarEvent) => (
+                        <Event
+                          key={event.id}
+                          event={event}
+                          eventResource={resourcesByIdMap.get(event.resource)}
+                          variant="regular"
+                          ariaLabelledBy={`TimeGridHeaderCell-${day.day.toString()}`}
+                          onEventClick={onEventClick}
+                        />
+                      ))}
+                    </TimeGridPrimitive.Column>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </TimeGridPrimitive.Root>
         )}
-      </Popover.Root>
+      </EventPopoverProvider>
     </div>
   );
 });
