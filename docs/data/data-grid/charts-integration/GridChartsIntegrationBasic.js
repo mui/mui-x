@@ -9,7 +9,7 @@ import {
 import {
   ChartsRenderer,
   configurationOptions,
-} from '@mui/x-charts-pro/ChartsRenderer';
+} from '@mui/x-charts-premium/ChartsRenderer';
 
 export default function GridChartsIntegrationBasic() {
   const { data } = useDemoData({
