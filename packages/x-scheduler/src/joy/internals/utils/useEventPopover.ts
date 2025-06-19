@@ -7,7 +7,7 @@ export function useEventPopover() {
   const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
 
   const handleEventClick = React.useCallback(
-    (calendarEvent: CalendarEvent, event: React.MouseEvent) => {
+    (event: React.MouseEvent, calendarEvent: CalendarEvent) => {
       setAnchor(event.currentTarget as HTMLElement);
       setSelectedEvent(calendarEvent);
       setIsPopoverOpen(true);
