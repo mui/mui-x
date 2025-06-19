@@ -269,7 +269,6 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
    * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
    */
   private adjustOffset = (value: Dayjs) => {
-    return value;
     if (!this.hasTimezonePlugin()) {
       return value;
     }

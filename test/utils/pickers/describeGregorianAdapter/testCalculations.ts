@@ -652,7 +652,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
   });
 
-  describe('Method: addWeeks', () => {
+  describe('Method: addDays', () => {
     it('should handle basic usecases', () => {
       expect(adapter.addDays(testDateIso, 2)).toEqualDateTime('2018-11-01T11:44:00.000Z');
       expect(adapter.addDays(testDateIso, -2)).toEqualDateTime('2018-10-28T11:44:00.000Z');
