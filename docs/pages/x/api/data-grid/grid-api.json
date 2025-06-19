@@ -535,7 +535,7 @@
     },
     "updateCategories": {
       "type": {
-        "description": "(categories: string[] | ((prev: string[]) =&gt; string[])) =&gt; void"
+        "description": "(categories: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
@@ -550,7 +550,7 @@
     },
     "updateSeries": {
       "type": {
-        "description": "(series: string[] | ((prev: string[]) =&gt; string[])) =&gt; void"
+        "description": "(series: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
