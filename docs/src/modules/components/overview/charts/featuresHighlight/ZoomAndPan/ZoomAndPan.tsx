@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { AxisValueFormatterContext, YAxis } from '@mui/x-charts/models';
 import { sxColors } from '../colors';
 import dataset from '../../data/Goolge-Meta-stoks.json';
 
@@ -43,7 +44,19 @@ export default function ZoomAndPan() {
           ]}
           margin={{ left: 0, right: 0, bottom: 0, top: 20 }}
           xAxis={[
-            { id: 'x-axis', scaleType: 'time', dataKey: 'date', zoom: true, domainLimit: 'strict' },
+            {
+              id: 'x-axis',
+              scaleType: 'time',
+              dataKey: 'date',
+              zoom: true,
+              domainLimit: 'strict',
+              valueFormatter: (value: Date, context: AxisValueFormatterContext<'time'>) => {
+                if (context.location === 'tick') {
+                  return context.scale.tickFormat()(value);
+                }
+                return dateFormatter(value);
+              },
+            },
           ]}
           yAxis={[
             {
@@ -53,11 +66,7 @@ export default function ZoomAndPan() {
               tickNumber: 4,
               min: 80,
               max: 200,
-              valueFormatter: (value, context) =>
-                context.location === 'tick'
-                  ? context.scale.tickFormat()(value)
-                  : dateFormatter(value),
-            },
+            } as YAxis,
           ]}
           initialZoom={[
             { axisId: 'x-axis', start: 40, end: 80 },
