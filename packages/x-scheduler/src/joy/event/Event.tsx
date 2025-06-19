@@ -16,7 +16,7 @@ export const Event = React.forwardRef(function Event(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
-    event: calendarEvent,
+    event: eventProp,
     eventResource,
     ariaLabelledBy,
     variant,
@@ -29,7 +29,7 @@ export const Event = React.forwardRef(function Event(
   const id = useId(idProp);
 
   const durationMs =
-    adapter.toJsDate(calendarEvent.end).getTime() - adapter.toJsDate(calendarEvent.start).getTime();
+    adapter.toJsDate(eventProp.end).getTime() - adapter.toJsDate(eventProp.start).getTime();
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
@@ -42,13 +42,13 @@ export const Event = React.forwardRef(function Event(
         return (
           <React.Fragment>
             <time className={clsx('EventTime')}>
-              {adapter.formatByString(calendarEvent.start, 'h:mm a')}
+              {adapter.formatByString(eventProp.start, 'h:mm a')}
             </time>
             <p
               className={clsx('EventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {calendarEvent.title}
+              {eventProp.title}
             </p>
           </React.Fragment>
         );
@@ -58,7 +58,7 @@ export const Event = React.forwardRef(function Event(
             className={clsx('EventTitle', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
           >
-            {calendarEvent.title}
+            {eventProp.title}
           </p>
         );
       case 'regular':
@@ -73,10 +73,8 @@ export const Event = React.forwardRef(function Event(
               )}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              <span className="EventTitle">{calendarEvent.title}</span>
-              <time className="EventTime">
-                {adapter.formatByString(calendarEvent.start, 'h:mm a')}
-              </time>
+              <span className="EventTitle">{eventProp.title}</span>
+              <time className="EventTime">{adapter.formatByString(eventProp.start, 'h:mm a')}</time>
             </p>
           );
         }
@@ -86,23 +84,23 @@ export const Event = React.forwardRef(function Event(
               className={clsx('EventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': titleLineCountRegularVariant } as React.CSSProperties}
             >
-              {calendarEvent.title}
+              {eventProp.title}
             </p>
             <time
               className={clsx('EventTime', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {adapter.formatByString(calendarEvent.start, 'h:mm a')} -{' '}
-              {adapter.formatByString(calendarEvent.end, 'h:mm a')}
+              {adapter.formatByString(eventProp.start, 'h:mm a')} -{' '}
+              {adapter.formatByString(eventProp.end, 'h:mm a')}
             </time>
           </React.Fragment>
         );
     }
   }, [
     variant,
-    calendarEvent.start,
-    calendarEvent.title,
-    calendarEvent.end,
+    eventProp.start,
+    eventProp.title,
+    eventProp.end,
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,
@@ -124,12 +122,12 @@ export const Event = React.forwardRef(function Event(
               `EventCard--${variant}`,
               (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
             )}
-            start={calendarEvent.start}
-            end={calendarEvent.end}
+            start={eventProp.start}
+            end={eventProp.end}
             aria-labelledby={`${ariaLabelledBy} ${id}`}
             onClick={(event) => {
               triggerProps.onClick?.(event);
-              onEventClick?.(calendarEvent, event);
+              onEventClick?.(eventProp, event);
             }}
           >
             {renderContent}
