@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { RefObject } from '@mui/x-internals/types';
 import {
+  GridColDef,
   gridColumnGroupsUnwrappedModelSelector,
   gridFilteredSortedTopLevelRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
@@ -31,6 +32,7 @@ import {
 } from './gridChartsIntegrationSelectors';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
+import { getBlockedZones } from './utils';
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
@@ -52,10 +54,16 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   }
 
   const columnsLookup = state.columns?.lookup ?? {};
-  const initialCategories = props.initialState?.chartsIntegration?.categories ?? [];
+  const initialCategories = (props.initialState?.chartsIntegration?.categories ?? []).filter(
+    (category) =>
+      columnsLookup[category] &&
+      !getBlockedZones(columnsLookup[category] as GridColDef).includes('categories'),
+  );
   const initialSeries = (props.initialState?.chartsIntegration?.series ?? []).filter(
     (seriesItem) =>
-      columnsLookup[seriesItem]?.type === 'number' && !initialCategories.includes(seriesItem),
+      columnsLookup[seriesItem] &&
+      !getBlockedZones(columnsLookup[seriesItem] as GridColDef).includes('series') &&
+      !initialCategories.includes(seriesItem),
   );
 
   return {
@@ -280,8 +288,7 @@ export const useGridChartsIntegration = (
       const categories = gridChartsCategoriesSelector(apiRef);
       const series = gridChartsSeriesSelector(apiRef);
 
-      // TODO: update UI for this
-      if (targetSection === 'series' && columns[field].type !== 'number') {
+      if (targetSection && getBlockedZones(columns[field]).includes(targetSection)) {
         return;
       }
 
