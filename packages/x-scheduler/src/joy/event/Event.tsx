@@ -114,7 +114,7 @@ export const Event = React.forwardRef(function Event(
       {...other}
     >
       <Popover.Trigger
-        render={({ ...triggerProps }) => (
+        render={(triggerProps) => (
           <TimeGrid.Event
             {...triggerProps}
             className={clsx(
