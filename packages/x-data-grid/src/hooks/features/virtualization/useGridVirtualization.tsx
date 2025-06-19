@@ -3,7 +3,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { useVirtualizer, VirtualizationState, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
-import { useOnMount } from '../../utils/useOnMount';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -27,11 +26,9 @@ import {
 import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridEventPriority } from '../../utils';
-import { type GridRenderContext } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import {
-  gridRenderContextSelector,
   gridVirtualizationRowEnabledSelector,
   gridVirtualizationColumnEnabledSelector,
 } from './gridVirtualizationSelectors';
@@ -40,7 +37,6 @@ import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
 import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
 import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
-import { isJSDOM } from '../../../utils/isJSDOM';
 import { gridRowSelectionManagerSelector } from '../rowSelection';
 
 type RootProps = DataGridProcessedProps;
@@ -84,10 +80,6 @@ export function useGridVirtualization(
     listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
   );
 
-  const enabledForRows = useGridSelector(apiRef, gridVirtualizationRowEnabledSelector) && !isJSDOM;
-  const enabledForColumns =
-    useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector) && !isJSDOM;
-
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = listView
     ? (EMPTY_PINNED_COLUMN_FIELDS as unknown as GridPinnedColumns)
@@ -123,8 +115,6 @@ export function useGridVirtualization(
     rows: currentPage.rows,
     range: currentPage.range,
     columns: visibleColumns,
-    enabledForRows,
-    enabledForColumns,
     pinnedRows,
     pinnedColumns,
     refs: {
@@ -159,7 +149,8 @@ export function useGridVirtualization(
       dimensions: () => apiRef.current.state.dimensions,
       onContextChange: (nextRenderContext) =>
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext),
-      inputs: () => inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
+      inputs: (enabledForRows, enabledForColumns) =>
+        inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
       onScrollChange: (scrollPosition, nextRenderContext) => {
         apiRef.current.publishEvent('scrollPositionChange', {
           top: scrollPosition.current.top,

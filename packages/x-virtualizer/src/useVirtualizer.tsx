@@ -36,8 +36,8 @@ export type VirtualScrollerUse = ReturnType<VirtualScroller['use']>;
 
 export type VirtualizationState = {
   enabled: boolean;
-  enabledForColumns: boolean;
   enabledForRows: boolean;
+  enabledForColumns: boolean;
   renderContext: GridRenderContext;
 };
 
@@ -67,8 +67,6 @@ type VirtualizerParams = {
   /** current page range */
   range: { firstRowIndex: number; lastRowIndex: number } | null;
   columns: Column[];
-  enabledForRows: boolean;
-  enabledForColumns: boolean;
   pinnedRows: PinnedRows;
   pinnedColumns: PinnedColumns;
   refs: {
@@ -100,7 +98,7 @@ type VirtualizerParams = {
   fixme: {
     dimensions: () => any;
     onContextChange: (c: GridRenderContext) => void;
-    inputs: () => RenderContextInputs;
+    inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
     onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;
     rowTree: () => any;
     columnPositions: () => any;
@@ -133,6 +131,10 @@ type VirtualizerParams = {
 
 const selectors = {
   renderContext: createSelector((state: VirtualizerState) => state.virtualization.renderContext),
+  enabledForRows: createSelector((state: VirtualizerState) => state.virtualization.enabledForRows),
+  enabledForColumns: createSelector(
+    (state: VirtualizerState) => state.virtualization.enabledForColumns,
+  ),
 };
 
 export const useVirtualizer = (params: VirtualizerParams) => {
@@ -142,8 +144,6 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     rows,
     range,
     columns,
-    enabledForRows,
-    enabledForColumns,
     pinnedRows,
     pinnedColumns,
     refs,
@@ -237,9 +237,9 @@ export const useVirtualizer = (params: VirtualizerParams) => {
 
   const store = useLazyRef(() => {
     const virtualizationState: VirtualizationState = {
-      enabled: true,
-      enabledForRows,
-      enabledForColumns,
+      enabled: !platform.isJSDOM,
+      enabledForRows: !platform.isJSDOM,
+      enabledForColumns: !platform.isJSDOM,
       renderContext: EMPTY_RENDER_CONTEXT,
       ...initialState?.virtualization,
     };
@@ -255,6 +255,8 @@ export const useVirtualizer = (params: VirtualizerParams) => {
   }).current;
 
   const renderContext = useSelector(store, selectors.renderContext);
+  const enabledForRows = useSelector(store, selectors.enabledForRows);
+  const enabledForColumns = useSelector(store, selectors.enabledForColumns);
 
   /*
    * Scroll context logic
@@ -381,7 +383,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
       MINIMUM_COLUMN_WIDTH * 6,
     );
 
-    const inputs = fixme.inputs();
+    const inputs = fixme.inputs(enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
     if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
@@ -401,7 +403,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     if (!fixme.dimensions().isReady && (enabledForRows || enabledForColumns)) {
       return;
     }
-    const inputs = fixme.inputs();
+    const inputs = fixme.inputs(enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
