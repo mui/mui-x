@@ -203,10 +203,10 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
       // We can't change the system timezone in the tests
       /* v8 ignore next 3 */
-      if (timezone !== 'UTC') {
-        date = dayjs.tz(value, timezone);
-      } else {
+      if (timezone === 'UTC') {
         date = dayjs(value);
+      } else {
+        date = dayjs.tz(value, timezone);
       }
     } else {
       date = dayjs(value);
@@ -236,6 +236,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     const keepLocalTime = value !== undefined && !value.endsWith('Z');
+
     return this.setLocaleToValue(dayjs(value).tz(this.cleanTimezone(timezone), keepLocalTime));
   };
 
@@ -531,45 +532,31 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public addYears = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(
-      amount < 0 ? value.subtract(Math.abs(amount), 'year') : value.add(amount, 'year'),
-    );
+    return this.adjustOffset(value.add(amount, 'year'));
   };
 
   public addMonths = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(
-      amount < 0 ? value.subtract(Math.abs(amount), 'month') : value.add(amount, 'month'),
-    );
+    return this.adjustOffset(value.add(amount, 'month'));
   };
 
   public addWeeks = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(
-      amount < 0 ? value.subtract(Math.abs(amount), 'week') : value.add(amount, 'week'),
-    );
+    return this.adjustOffset(value.add(amount, 'week'));
   };
 
   public addDays = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(
-      amount < 0 ? value.subtract(Math.abs(amount), 'day') : value.add(amount, 'day'),
-    );
+    return this.adjustOffset(value.add(amount, 'day'));
   };
 
   public addHours = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(
-      amount < 0 ? value.subtract(Math.abs(amount), 'hour') : value.add(amount, 'hour'),
-    );
+    return this.adjustOffset(value.add(amount, 'hour'));
   };
 
   public addMinutes = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(
-      amount < 0 ? value.subtract(Math.abs(amount), 'minute') : value.add(amount, 'minute'),
-    );
+    return this.adjustOffset(value.add(amount, 'minute'));
   };
 
   public addSeconds = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(
-      amount < 0 ? value.subtract(Math.abs(amount), 'second') : value.add(amount, 'second'),
-    );
+    return this.adjustOffset(value.add(amount, 'second'));
   };
 
   public getYear = (value: Dayjs) => {
@@ -646,7 +633,6 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       nestedWeeks[weekNumber].push(current);
 
       current = this.addDays(current, 1);
-
       count += 1;
     }
 
