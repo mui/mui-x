@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
-import { richTreeViewProClasses } from '../RichTreeViewPro';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
+import { richTreeViewProClasses } from '../RichTreeViewPro';
 
 createTheme({
   components: {
