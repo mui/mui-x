@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { cleanText } from 'test/utils/pickers';
 import moment from 'moment';

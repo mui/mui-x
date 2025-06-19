@@ -10,7 +10,10 @@ import { CalendarEvent } from '../../../models/events';
 import { Event } from '../../../event/Event';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
+import { useSelector } from '../../../../base-ui-copy/utils/store';
 import './TimeGrid.css';
+import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
+import { selectors } from '../../../event-calendar/store';
 
 const adapter = getAdapter();
 
@@ -18,32 +21,16 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   props: TimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { events, resources, days, className, onDayHeaderClick, ...other } = props;
+  const { days, className, onDayHeaderClick, ...other } = props;
 
   const translations = useTranslations();
   const today = adapter.date('2025-05-26');
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const headerWrapperRef = React.useRef<HTMLDivElement>(null);
 
-  const eventsByDay = React.useMemo(() => {
-    const map = new Map();
-    for (const event of events) {
-      const dayKey = adapter.format(event.start, 'keyboardDate');
-      if (!map.has(dayKey)) {
-        map.set(dayKey, []);
-      }
-      map.get(dayKey).push(event);
-    }
-    return map;
-  }, [events]);
-
-  const resourcesById = React.useMemo(() => {
-    const map = new Map();
-    for (const resource of resources || []) {
-      map.set(resource.id, resource);
-    }
-    return map;
-  }, [resources]);
+  const store = useEventCalendarStore();
+  const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
+  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
 
   useModernLayoutEffect(() => {
     const body = bodyRef.current;
@@ -53,7 +40,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     }
     const hasScroll = body.scrollHeight > body.clientHeight;
     header.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
-  }, [events]);
+  }, [getEventsStartingInDay]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
@@ -141,28 +128,24 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
               ))}
             </div>
             <div className="TimeGridGrid">
-              {days.map((day) => {
-                const dayKey = adapter.format(day, 'keyboardDate');
-                const dayEvents = eventsByDay.get(dayKey) || [];
-                return (
-                  <TimeGridPrimitive.Column
-                    key={day.day.toString()}
-                    value={day}
-                    className="TimeGridColumn"
-                    data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                  >
-                    {dayEvents.map((event: CalendarEvent) => (
-                      <Event
-                        key={event.id}
-                        event={event}
-                        eventResource={resourcesById.get(event.resource)}
-                        variant="regular"
-                        ariaLabelledBy={`TimeGridHeaderCell-${day.day.toString()}`}
-                      />
-                    ))}
-                  </TimeGridPrimitive.Column>
-                );
-              })}
+              {days.map((day) => (
+                <TimeGridPrimitive.Column
+                  key={day.day.toString()}
+                  value={day}
+                  className="TimeGridColumn"
+                  data-weekend={isWeekend(adapter, day) ? '' : undefined}
+                >
+                  {getEventsStartingInDay(day).map((event: CalendarEvent) => (
+                    <Event
+                      key={event.id}
+                      event={event}
+                      eventResource={resourcesByIdMap.get(event.resource)}
+                      variant="regular"
+                      ariaLabelledBy={`TimeGridHeaderCell-${day.day.toString()}`}
+                    />
+                  ))}
+                </TimeGridPrimitive.Column>
+              ))}
             </div>
           </div>
         </div>
