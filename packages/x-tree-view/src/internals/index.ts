@@ -24,9 +24,6 @@ export type {
   TreeViewInstance,
   TreeViewItemPlugin,
   TreeViewUsedStore,
-  TreeViewComponentNameToClassKey,
-  TreeViewComponentsPropsList,
-  TreeViewComponents,
 } from './models';
 
 // Core plugins
