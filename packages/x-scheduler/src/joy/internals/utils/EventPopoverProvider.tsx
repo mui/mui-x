@@ -13,12 +13,12 @@ type EventPopoverContextProps = {
 type EventPopoverProviderProps = {
   containerRef: React.RefObject<HTMLElement | null>;
   children: (context: EventPopoverContextProps) => React.ReactNode;
-  onEventEdit: (event: CalendarEvent) => void;
+  onEventsChange?: (value: CalendarEvent[]) => void;
 };
 
 export function EventPopoverProvider({
   containerRef,
-  onEventEdit,
+  onEventsChange,
   children,
 }: EventPopoverProviderProps) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
@@ -42,6 +42,18 @@ export function EventPopoverProvider({
     setSelectedEvent(null);
   }, []);
 
+  const handleEventEdit = React.useCallback(
+    (editedEvent: CalendarEvent) => {
+      const prevEvents = store.state.events;
+      const updatedEvents = prevEvents.map((ev) => (ev.id === editedEvent.id ? editedEvent : ev));
+
+      if (onEventsChange) {
+        onEventsChange(updatedEvents);
+      }
+    },
+    [store, onEventsChange],
+  );
+
   return (
     <Popover.Root open={isPopoverOpen} onOpenChange={handleClose} modal>
       {children({ onEventClick: handleEventClick })}
@@ -51,7 +63,7 @@ export function EventPopoverProvider({
           calendarEvent={selectedEvent}
           calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
           container={containerRef.current}
-          onEventEdit={onEventEdit}
+          onEventEdit={handleEventEdit}
           onClose={handleClose}
         />
       )}

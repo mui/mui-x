@@ -54,18 +54,6 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     [onDayHeaderClick],
   );
 
-  const handleEventEdit = React.useCallback(
-    (editedEvent: CalendarEvent) => {
-      const prevEvents = store.state.events;
-      const updatedEvents = prevEvents.map((ev) => (ev.id === editedEvent.id ? editedEvent : ev));
-
-      if (onEventsChange) {
-        onEventsChange(updatedEvents);
-      }
-    },
-    [store, onEventsChange],
-  );
-
   const renderHeaderContent = (day: SchedulerValidDate) => (
     <span className="TimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
@@ -76,7 +64,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
 
   return (
     <div ref={handleRef} className={clsx('TimeGridContainer', 'joy', className)} {...other}>
-      <EventPopoverProvider containerRef={containerRef} onEventEdit={handleEventEdit}>
+      <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
         {({ onEventClick }) => (
           <TimeGridPrimitive.Root className="TimeGridRoot">
             <div ref={headerWrapperRef} className="TimeGridHeader">
