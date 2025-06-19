@@ -301,7 +301,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
             this.isActive = true;
 
             // Update total accumulated delta
-            this.state.lastDeltas = { x: currentCentroid.x, y: currentCentroid.y };
+            this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
             this.state.totalDeltaX += lastDeltaX;
             this.state.totalDeltaY += lastDeltaY;
 
