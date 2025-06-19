@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 
 import { AgendaView } from '@mui/x-scheduler/joy/agenda-view';
 import classes from './StandaloneWeekView.module.css';
+import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
 
 const events = [
   {
@@ -69,10 +70,8 @@ const resources = [
 
 export default function StandaloneWeekView() {
   return (
-    <AgendaView
-      events={events}
-      resources={resources}
-      className={classes.Container}
-    />
+    <StandaloneView events={events} resources={resources}>
+      <AgendaView className={classes.Container} />
+    </StandaloneView>
   );
 }

@@ -43,7 +43,7 @@
   gap: var(--space-2);
 }
 
-.WeekDayName {
+.AgendaWeekDayNameLabel {
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-3);
   line-height: 1;
@@ -51,13 +51,13 @@
   min-width: 80px;
 }
 
-.YearAndMonth {
+.AgendaYearAndMonthLabel {
   font-size: var(--font-size-1);
   color: var(--gray-8);
   line-height: 1;
 }
 
-.Today .YearAndMonth {
+.Today .AgendaYearAndMonthLabel {
   color: var(--primary-13);
 }
 
