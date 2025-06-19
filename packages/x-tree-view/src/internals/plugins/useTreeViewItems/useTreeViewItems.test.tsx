@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent, reactMajor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
@@ -9,7 +8,7 @@ import {
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describeTreeView<
   [UseTreeViewItemsSignature, UseTreeViewExpansionSignature, UseTreeViewSelectionSignature]
@@ -20,7 +19,7 @@ describeTreeView<
 
     // can't catch render errors in the browser for unknown reason
     // tried try-catch + error boundary + window onError preventDefault
-    testSkipIf(!isJSDOM)('should throw an error when two items have the same ID', () => {
+    it.skipIf(!isJSDOM)('should throw an error when two items have the same ID', () => {
       if (treeViewComponentName === 'SimpleTreeView') {
         expect(() =>
           render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
@@ -45,7 +44,7 @@ describeTreeView<
     });
 
     // For now, only SimpleTreeView can use custom id attributes
-    testSkipIf(isRichTreeView)('should be able to use a custom id attribute', () => {
+    it.skipIf(isRichTreeView)('should be able to use a custom id attribute', () => {
       const view = render({
         items: [{ id: '1' }],
         slotProps: {
@@ -113,7 +112,7 @@ describeTreeView<
         expect(view.getItemRoot('1')).not.to.have.attribute('aria-expanded');
       });
 
-      testSkipIf(isRichTreeView)(
+      it.skipIf(isRichTreeView)(
         'should mark an item as not expandable if it has only empty conditional arrays',
         () => {
           const view = renderFromJSX(
@@ -129,7 +128,7 @@ describeTreeView<
         },
       );
 
-      testSkipIf(isRichTreeView)(
+      it.skipIf(isRichTreeView)(
         'should mark an item as expandable if it has two array as children, one of which is empty (SimpleTreeView only)',
         () => {
           const view = renderFromJSX(
@@ -145,7 +144,7 @@ describeTreeView<
         },
       );
 
-      testSkipIf(isRichTreeView)(
+      it.skipIf(isRichTreeView)(
         'should mark an item as not expandable if it has one array containing an empty array as a children (SimpleTreeView only)',
         () => {
           const view = renderFromJSX(
@@ -160,7 +159,7 @@ describeTreeView<
         },
       );
 
-      testSkipIf(!isRichTreeView)('should use getItemLabel to render the label', () => {
+      it.skipIf(!isRichTreeView)('should use getItemLabel to render the label', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
           getItemLabel: (item) => `Label: ${item.id}`,
@@ -170,7 +169,7 @@ describeTreeView<
         expect(view.getItemContent('2')).to.have.text('Label: 2');
       });
 
-      testSkipIf(!isRichTreeView)('should use getItemChildren to find children', () => {
+      it.skipIf(!isRichTreeView)('should use getItemChildren to find children', () => {
         const items = [
           {
             id: '1',
@@ -250,7 +249,7 @@ describeTreeView<
     });
 
     describe('Memoization (Rich Tree View only)', () => {
-      testSkipIf(!isRichTreeView)(
+      it.skipIf(!isRichTreeView)(
         'should not re-render any children when the Tree View re-renders (flat tree)',
         () => {
           const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -268,7 +267,7 @@ describeTreeView<
         },
       );
 
-      testSkipIf(!isRichTreeView)(
+      it.skipIf(!isRichTreeView)(
         'should not re-render every children when updating the state on an item (flat tree)',
         () => {
           const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -290,7 +289,7 @@ describeTreeView<
         },
       );
 
-      testSkipIf(!isRichTreeView)(
+      it.skipIf(!isRichTreeView)(
         'should not re-render any children when the Tree View re-renders (nested tree)',
         () => {
           const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -311,7 +310,7 @@ describeTreeView<
         },
       );
 
-      testSkipIf(!isRichTreeView)(
+      it.skipIf(!isRichTreeView)(
         'should not re-render every children when updating the state on an item (nested tree)',
         () => {
           const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -340,7 +339,7 @@ describeTreeView<
 
     describe('API methods', () => {
       // This method is only usable with Rich Tree View components
-      describeSkipIf(treeViewComponentName === 'SimpleTreeView')('getItem', () => {
+      describe.skipIf(treeViewComponentName === 'SimpleTreeView')('getItem', () => {
         it('should return the tree', () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -393,10 +392,9 @@ describeTreeView<
       });
 
       // This method is only usable with Rich Tree View components
-      describeSkipIf(treeViewComponentName === 'SimpleTreeView')(
+      describe.skipIf(treeViewComponentName === 'SimpleTreeView')(
         'getItemTree with RichTreeView',
         () => {
-          // eslint-disable-next-line mocha/no-identical-title
           it('should return the tree', () => {
             const view = render({
               items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -408,7 +406,6 @@ describeTreeView<
             ]);
           });
 
-          // eslint-disable-next-line mocha/no-identical-title
           it('should have up to date tree when props.items changes', () => {
             const view = render({
               items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
@@ -419,7 +416,6 @@ describeTreeView<
             expect(view.apiRef.current.getItemTree()).to.deep.equal([{ id: '1' }, { id: '2' }]);
           });
 
-          // eslint-disable-next-line mocha/no-identical-title
           it('should contain custom item properties', () => {
             const view = render({
               items: [{ id: '1', customProp: 'foo' }],
@@ -433,7 +429,7 @@ describeTreeView<
       );
 
       // This method is only usable with Rich Tree View components
-      describeSkipIf(treeViewComponentName === 'SimpleTreeView')(
+      describe.skipIf(treeViewComponentName === 'SimpleTreeView')(
         'getItemOrderedChildrenIds',
         () => {
           it('should return the children of an item in their rendering order', () => {

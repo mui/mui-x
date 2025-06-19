@@ -102,8 +102,8 @@
 }
 
 .TimeAxisCell {
-  height: calc(100% / 24);
-  line-height: calc(100% / 24);
+  height: calc(100% / var(--duration));
+  line-height: calc(100% / var(--duration));
   font-size: 12px;
   padding-inline-start: 4px;
 
@@ -113,7 +113,7 @@
     position: absolute;
     right: 0;
     left: 48px;
-    top: calc((100% / 24) * var(--hour));
+    top: calc((100% / var(--duration)) * var(--hour-index));
   }
 }
 

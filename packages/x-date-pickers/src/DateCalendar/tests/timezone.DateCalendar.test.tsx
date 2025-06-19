@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
 describe('<DateCalendar /> - Timezone', () => {
   describeAdapters('Timezone prop', DateCalendar, ({ adapter, render }) => {
-    describeSkipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
+    describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
         const onChange = spy();
         render(<DateCalendar onChange={onChange} />);

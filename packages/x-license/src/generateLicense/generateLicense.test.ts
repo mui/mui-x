@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { generateLicense } from './generateLicense';
 
 describe('License: generateLicense', () => {
