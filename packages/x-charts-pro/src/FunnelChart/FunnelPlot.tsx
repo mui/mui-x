@@ -209,7 +209,7 @@ const useAggregatedData = () => {
       });
     });
 
-    return result.flat();
+    return result;
   }, [seriesData, xAxis, xAxisIds, yAxis, yAxisIds, gap]);
 
   return allData;
@@ -222,36 +222,56 @@ function FunnelPlot(props: FunnelPlotProps) {
 
   return (
     <React.Fragment>
-      {data.map(({ d, color, id, seriesId, dataIndex, variant }) => (
-        <FunnelSection
-          {...other}
-          d={d}
-          color={color}
-          key={id}
-          dataIndex={dataIndex}
-          seriesId={seriesId}
-          variant={variant}
-          onClick={
-            onItemClick &&
-            ((event) => {
-              onItemClick(event, { type: 'funnel', seriesId, dataIndex });
-            })
-          }
-        />
-      ))}
-      {data.map(({ id, label, seriesId, dataIndex }) => {
-        if (!label || !label.value) {
+      {data.map((series) => {
+        if (series.length === 0) {
           return null;
         }
 
         return (
-          <FunnelSectionLabel
-            key={id}
-            label={label}
-            dataIndex={dataIndex}
-            seriesId={seriesId}
-            {...other}
-          />
+          <g data-series={series[0].seriesId} key={series[0].seriesId}>
+            {series.map(({ d, color, id, seriesId, dataIndex, variant }) => (
+              <FunnelSection
+                {...other}
+                d={d}
+                color={color}
+                key={id}
+                dataIndex={dataIndex}
+                seriesId={seriesId}
+                variant={variant}
+                onClick={
+                  onItemClick &&
+                  ((event) => {
+                    onItemClick(event, { type: 'funnel', seriesId, dataIndex });
+                  })
+                }
+              />
+            ))}
+          </g>
+        );
+      })}
+      {data.map((series) => {
+        if (series.length === 0) {
+          return null;
+        }
+
+        return (
+          <g data-series={series[0].seriesId} key={series[0].seriesId}>
+            {series.map(({ id, label, seriesId, dataIndex }) => {
+              if (!label || !label.value) {
+                return null;
+              }
+
+              return (
+                <FunnelSectionLabel
+                  key={id}
+                  label={label}
+                  dataIndex={dataIndex}
+                  seriesId={seriesId}
+                  {...other}
+                />
+              );
+            })}
+          </g>
         );
       })}
     </React.Fragment>

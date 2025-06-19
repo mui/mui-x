@@ -32,37 +32,26 @@ const selectorChartZoomState = (state: ChartState<[], [UseChartCartesianAxisSign
  */
 
 export const selectorChartZoomIsInteracting = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.isInteracting,
 );
 
 export const selectorChartZoomMap = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartXZoomOptionsLookup = createSelector(
-  selectorChartRawXAxis,
-  createZoomLookup('x'),
-);
-
-const selectorChartYZoomOptionsLookup = createSelector(
-  selectorChartRawYAxis,
-  createZoomLookup('y'),
-);
-
 export const selectorChartZoomOptionsLookup = createSelector(
-  [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
-  (xLookup, yLookup) => ({ ...xLookup, ...yLookup }),
+  [selectorChartRawXAxis, selectorChartRawYAxis],
+  (xAxis, yAxis) => ({
+    ...createZoomLookup('x')(xAxis),
+    ...createZoomLookup('y')(yAxis),
+  }),
 );
 
 export const selectorChartAxisZoomOptionsLookup = createSelector(
-  [
-    selectorChartXZoomOptionsLookup,
-    selectorChartYZoomOptionsLookup,
-    (state, axisId: AxisId) => axisId,
-  ],
-  (xLookup, yLookup, axisId) => xLookup[axisId] ?? yLookup[axisId],
+  [selectorChartZoomOptionsLookup, (_, axisId: AxisId) => axisId],
+  (axisLookup, axisId) => axisLookup[axisId],
 );
 
 const selectorChartXFilter = createSelector(

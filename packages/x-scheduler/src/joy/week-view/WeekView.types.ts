@@ -1,3 +1,3 @@
-import { BaseViewProps } from '../models/views';
+import { ExportedTimeGridProps } from '../internals/components/time-grid/TimeGrid.types';
 
-export interface WeekViewProps extends BaseViewProps {}
+export interface WeekViewProps extends ExportedTimeGridProps {}

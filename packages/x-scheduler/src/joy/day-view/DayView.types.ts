@@ -1,6 +1,3 @@
-import { SchedulerValidDate } from '../../primitives/models';
-import { BaseViewProps } from '../models/views';
+import { ExportedTimeGridProps } from '../internals/components/time-grid/TimeGrid.types';
 
-export interface DayViewProps extends BaseViewProps {
-  day: SchedulerValidDate;
-}
+export interface DayViewProps extends ExportedTimeGridProps {}
