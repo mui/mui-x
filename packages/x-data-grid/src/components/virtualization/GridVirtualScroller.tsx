@@ -94,7 +94,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const classes = useUtilityClasses(ownerState);
 
   // @ts-ignore XXX
-  const virtualScroller = apiRef.current.virtualScroller.use();
+  const virtualScroller = apiRef.current.virtualScroller.virtualization.use();
+
   const {
     getContainerProps,
     getScrollerProps,
@@ -104,7 +105,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getScrollbarHorizontalProps,
     getRows,
     getScrollAreaProps,
-  } = virtualScroller;
+  } = virtualScroller.getters;
 
   const rows = getRows();
 
