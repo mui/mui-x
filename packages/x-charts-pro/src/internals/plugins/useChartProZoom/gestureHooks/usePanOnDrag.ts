@@ -40,6 +40,7 @@ export const usePanOnDrag = (
       setZoomDataCallback((prev) => {
         const newZoomData = translateZoom(
           prev,
+          // TODO: fix pan not being precise
           { x: event.detail.deltaX, y: -event.detail.deltaY },
           {
             width: drawingArea.width,
