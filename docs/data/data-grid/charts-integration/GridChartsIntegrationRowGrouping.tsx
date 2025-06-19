@@ -10,7 +10,7 @@ import {
 import {
   ChartsRenderer,
   configurationOptions,
-} from '@mui/x-charts-pro/ChartsRenderer';
+} from '@mui/x-charts-premium/ChartsRenderer';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function GridChartsIntegrationRowGrouping() {

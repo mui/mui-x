@@ -6,7 +6,7 @@ title: Data Grid & Charts Integration
 
 <p class="description">Visualize the grid data.</p>
 
-This page demonstrates how to integrate the Data Grid with MUI X Charts using the `GridChartsIntegrationContextProvider` and the `ChartsRenderer` component from `@mui/x-charts-pro`.
+This page demonstrates how to integrate the Data Grid with MUI X Charts using the `GridChartsIntegrationContextProvider` and the `ChartsRenderer` component from `@mui/x-charts-premium`.
 
 By combining these components, you can visualize grid data as charts and enable dynamic chart updates based on grid state or user interaction.
 

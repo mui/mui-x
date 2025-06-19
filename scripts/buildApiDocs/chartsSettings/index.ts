@@ -94,7 +94,7 @@ export default chartsApiPages;
       'x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx',
       'x-charts/src/LineChart/FocusedMark.tsx',
       'x-charts/src/ScatterChart/BatchScatter.tsx',
-      'x-charts-pro/src/ChartsRenderer/ChartsRenderer.tsx',
+      'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

@@ -193,7 +193,6 @@
   { "name": "cheerfulFiestaPaletteLight", "kind": "Variable" },
   { "name": "ColorLegendSelector", "kind": "Interface" },
   { "name": "ComputedPieRadius", "kind": "Interface" },
-  { "name": "configurationOptions", "kind": "Variable" },
   { "name": "ContinuousColorLegend", "kind": "Variable" },
   { "name": "continuousColorLegendClasses", "kind": "Variable" },
   { "name": "ContinuousColorLegendClasses", "kind": "Interface" },
