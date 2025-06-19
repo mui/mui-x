@@ -1,14 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { RefObject } from '@mui/x-internals/types';
-import * as platform from '@mui/x-internals/platform';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { RefObject } from '@mui/x-internals/types';
+import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
+import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import reactMajor from '@mui/x-internals/reactMajor';
-import { Store, useSelector } from '@mui/x-internals/store';
+import { createSelector, useSelector, Store } from '@mui/x-internals/store';
 
 import {
   Column,
@@ -31,7 +32,19 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 const MINIMUM_COLUMN_WIDTH = 50;
 
 export type VirtualScroller = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerState = ReturnType<VirtualScroller['use']>;
+export type VirtualScrollerUse = ReturnType<VirtualScroller['use']>;
+
+export type VirtualizationState = {
+  enabled: boolean;
+  enabledForColumns: boolean;
+  enabledForRows: boolean;
+  renderContext: GridRenderContext;
+};
+
+// XXX: use this
+export type VirtualizerState = {
+  virtualization: VirtualizationState;
+};
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
 
@@ -46,6 +59,7 @@ export const EMPTY_RENDER_CONTEXT = {
 
 type VirtualizerParams = {
   initialState?: {
+    virtualization?: Partial<VirtualizationState>;
     scroll?: { top: number; left: number };
   };
   isRtl: boolean;
@@ -76,7 +90,6 @@ type VirtualizerParams = {
   onWheel?: (event: React.WheelEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;
 
-  renderContext: GridRenderContext;
   focusedCell: FocusedCell | null;
 
   rowBufferPx: number;
@@ -86,8 +99,6 @@ type VirtualizerParams = {
 
   fixme: {
     dimensions: () => any;
-    renderContext: () => GridRenderContext;
-    setRenderContext: (c: GridRenderContext) => void;
     onContextChange: (c: GridRenderContext) => void;
     inputs: () => RenderContextInputs;
     onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;
@@ -120,6 +131,10 @@ type VirtualizerParams = {
   };
 };
 
+const selectors = {
+  renderContext: createSelector((state: VirtualizerState) => state.virtualization.renderContext),
+};
+
 export const useVirtualizer = (params: VirtualizerParams) => {
   const {
     initialState,
@@ -145,7 +160,6 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     onWheel,
     onTouchMove,
 
-    renderContext,
     focusedCell,
     rowBufferPx,
     columnBufferPx,
@@ -221,6 +235,27 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     [refs.main, onResize],
   );
 
+  const store = useLazyRef(() => {
+    const virtualizationState: VirtualizationState = {
+      enabled: true,
+      enabledForRows,
+      enabledForColumns,
+      renderContext: EMPTY_RENDER_CONTEXT,
+      ...initialState?.virtualization,
+    };
+
+    const state = {
+      virtualization: virtualizationState,
+      setPanels,
+      // XXX: Refactor once the state shape is settled
+      ...(null as unknown as typeof newState),
+    };
+
+    return new Store(state);
+  }).current;
+
+  const renderContext = useSelector(store, selectors.renderContext);
+
   /*
    * Scroll context logic
    * ====================
@@ -248,7 +283,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
   ).current;
 
   const updateRenderContext = React.useCallback((nextRenderContext: GridRenderContext) => {
-    if (areRenderContextsEqual(nextRenderContext, fixme.renderContext())) {
+    if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
       return;
     }
 
@@ -256,7 +291,10 @@ export const useVirtualizer = (params: VirtualizerParams) => {
       nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
       nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
 
-    fixme.setRenderContext(nextRenderContext);
+    store.set('virtualization', {
+      ...store.state.virtualization,
+      renderContext: nextRenderContext,
+    });
 
     // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
     // but only does something if we already have a render context, because
@@ -668,9 +706,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     return undefined;
   });
 
-  const state = {
-    renderContext,
-    setPanels,
+  const newState = {
     getRows,
     getContainerProps: () => ({
       ref: mainRefCallback,
@@ -705,16 +741,21 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     }),
   };
 
-  const store = useLazyRef(() => new Store(state)).current;
-
+  useFirstRender(() => {
+    store.state = {
+      ...store.state,
+      ...newState,
+    };
+  });
   React.useEffect(() => {
-    store.update(state);
-  }, Object.values(state));
+    store.update({ ...store.state, ...newState });
+  }, Object.values(newState));
 
   return {
+    store,
     use: () => useSelector(store, (state) => state),
-    forceUpdateRenderContext,
     setPanels,
+    forceUpdateRenderContext,
   };
 };
 
