@@ -7,9 +7,8 @@ import { getColorValue } from './utils/colors';
 import { detailPanelDataGridStyles } from './styles';
 
 const DetailPanelContainer = styled(Box)(({ theme }) => ({
-  paddingLeft: theme.spacing(5),
   margin: theme.spacing(1),
-  backgroundColor: theme.palette.background.default,
+  paddingLeft: theme.spacing(6),
   animation: 'fadeIn 0.5s ease-out',
   '@keyframes fadeIn': {
     from: {
@@ -118,7 +117,13 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
         disableColumnSelector
         disableDensitySelector
         disableRowSelectionOnClick
-        sx={detailPanelDataGridStyles}
+        sx={{
+          ...detailPanelDataGridStyles,
+          '& .MuiDataGrid-columnHeader': {
+            backgroundColor: 'transparent',
+            border: 'none',
+          },
+        }}
       />
     </DetailPanelContainer>
   );
