@@ -21,5 +21,5 @@ export interface EventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Callback fired when the event is clicked.
    */
-  onEventClick?: (calendarEvent: CalendarEvent, event: React.MouseEvent) => void;
+  onEventClick?: (event: React.MouseEvent, calendarEvent: CalendarEvent) => void;
 }

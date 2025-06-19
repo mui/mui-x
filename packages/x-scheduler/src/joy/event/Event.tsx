@@ -127,7 +127,7 @@ export const Event = React.forwardRef(function Event(
             aria-labelledby={`${ariaLabelledBy} ${id}`}
             onClick={(event) => {
               triggerProps.onClick?.(event);
-              onEventClick?.(eventProp, event);
+              onEventClick?.(event, eventProp);
             }}
           >
             {renderContent}
