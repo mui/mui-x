@@ -1650,6 +1650,13 @@ importers:
         version: 6.0.1
     publishDirectory: build
 
+  packages/x-internal-gestures:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.27.4
+        version: 7.27.6
+    publishDirectory: build
+
   packages/x-internals:
     dependencies:
       '@babel/runtime':
@@ -1731,6 +1738,12 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
+      reselect:
+        specifier: 'catalog:'
+        version: 5.1.1
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.5.0(react@19.0.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1741,6 +1754,9 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.5.0
       luxon:
         specifier: 'catalog:'
         version: 3.6.1

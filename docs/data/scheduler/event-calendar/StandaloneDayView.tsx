@@ -2,6 +2,7 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
 import { DayView } from '@mui/x-scheduler/joy/day-view';
+import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
 import classes from './StandaloneWeekView.module.css';
 
 const initialEvents: CalendarEvent[] = [
@@ -30,12 +31,8 @@ export default function StandaloneDayView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
-    <DayView
-      events={events}
-      onEventsChange={setEvents}
-      resources={resources}
-      className={classes.Container}
-      day={DateTime.fromISO('2025-05-26')}
-    />
+    <StandaloneView events={events} resources={resources}>
+      <DayView className={classes.Container} onEventsChange={setEvents} />
+    </StandaloneView>
   );
 }
