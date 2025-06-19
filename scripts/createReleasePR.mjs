@@ -51,6 +51,10 @@ let octokit = null;
 const ORG = 'mui';
 const REPO = 'mui-x';
 
+// we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
+// eslint-disable-next-line no-useless-escape
+const getRemoteRegex = (owner) => new RegExp(`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
+
 /**
  * Command line arguments for the script
  * @typedef {object} ArgvOptions
@@ -94,14 +98,15 @@ async function findMuiXRemote() {
   try {
     const { stdout } = await execa('git', ['remote', '-v']);
     const remotes = stdout.split('\n');
+    // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
+    // eslint-disable-next-line no-useless-escape
+    const rx = getRemoteRegex(ORG);
 
     console.log('Checking for MUI-X remote...', stdout);
 
     let upstreamRemote = '';
     for (const line of remotes) {
-      // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-      // eslint-disable-next-line no-useless-escape
-      if (line.match(/([\/:])mui\/mui-x(\.git)?\s+\(push\)/)) {
+      if (line.match(rx)) {
         upstreamRemote = line.split(/\s+/)[0];
         break;
       }
@@ -125,61 +130,70 @@ async function findMuiXRemote() {
 }
 
 /**
- * Find the username or organization name from the origin remote
+ * Find the username or organization name from the authenticated GitHub user
  * @returns {Promise<string>} The username or organization name
  */
-async function findOriginOwner() {
+async function findForkOwner() {
   try {
+    console.log('Getting authenticated GitHub user...');
+
+    // Get the authenticated user from GitHub API
+    const { data: user } = await octokit.rest.users.getAuthenticated();
+    const owner = user.login;
+
+    if (!owner) {
+      console.error('Error: Unable to get the authenticated GitHub user.');
+      process.exit(1);
+    }
+
+    console.log(`Found authenticated user: ${owner}`);
+    return owner;
+  } catch (error) {
+    console.error('Error finding authenticated user:', error);
+    process.exit(1);
+  }
+}
+
+/**
+ * Find the remote name of the fork for the repo
+ * @returns {Promise<string>} The name of the remote
+ */
+async function findForkRemote() {
+  try {
+    // Get the fork owner (username)
+    const forkOwner = await findForkOwner();
+
+    // Get all remotes
     const { stdout } = await execa('git', ['remote', '-v']);
     const remotes = stdout.split('\n');
 
-    console.log('Checking for origin remote...', stdout);
+    console.log('Checking for fork remote...');
 
-    let originUrl = '';
+    // Look for a remote that points to the fork owner's repository
+    let forkRemote = '';
     for (const line of remotes) {
-      if (line.startsWith('origin') && line.includes('(push)')) {
-        originUrl = line.split(/\s+/)[1];
+      // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
+      // eslint-disable-next-line no-useless-escape
+      const rx = getRemoteRegex(forkOwner);
+
+      if (line.match(rx)) {
+        forkRemote = line.split(/\s+/)[0];
         break;
       }
     }
 
-    if (!originUrl) {
-      console.error('Error: Unable to find the origin remote.');
-      process.exit(1);
+    // If no fork remote is found, default to 'origin'
+    if (!forkRemote) {
+      console.log('No specific fork remote found, defaulting to "origin"');
+      return 'origin';
     }
 
-    // Extract the username or organization name from the URL
-    let owner = '';
-    if (originUrl.includes('github.com')) {
-      // Handle SSH URLs like git@github.com:username/repo.git
-      if (originUrl.startsWith('git@')) {
-        const match = originUrl.match(/git@github\.com:([^/]+)/);
-        if (match && match[1]) {
-          owner = match[1];
-        }
-      }
-      // Handle HTTPS URLs like https://github.com/username/repo.git
-      else if (originUrl.startsWith('http')) {
-        const match = originUrl.match(/github\.com\/([^/]+)/);
-        if (match && match[1]) {
-          owner = match[1];
-        }
-      }
-    }
-
-    if (!owner) {
-      console.error(
-        'Error: Unable to extract the username or organization name from the origin remote URL.',
-      );
-      console.error('Origin URL:', originUrl);
-      process.exit(1);
-    }
-
-    console.log(`Found origin owner: ${owner}`);
-    return owner;
+    console.log(`Found fork remote: ${forkRemote}`);
+    return forkRemote;
   } catch (error) {
-    console.error('Error finding origin owner:', error);
-    process.exit(1);
+    console.error('Error finding fork remote:', error);
+    console.log('Defaulting to "origin" as fork remote');
+    return 'origin';
   }
 }
 
@@ -986,10 +1000,18 @@ async function main({ githubToken }) {
 
     console.log(`Changes committed to branch ${branchName}`);
 
-    // Push the committed changes to origin
-    console.log('Pushing committed changes to origin...');
-    await execa('git', ['push', 'origin', branchName]);
-    console.log(`Changes pushed to origin/${branchName}`);
+    // Push the committed changes to fork remote
+    console.log('Pushing committed changes to fork remote...');
+    try {
+      const forkRemote = await findForkRemote();
+      await execa('git', ['push', forkRemote, branchName]);
+      console.log(`Changes pushed to ${forkRemote}/${branchName}`);
+    } catch (error) {
+      console.error('Error pushing to fork remote:', error);
+      console.error('Falling back to pushing to origin...');
+      await execa('git', ['push', 'origin', branchName]);
+      console.log(`Changes pushed to origin/${branchName}`);
+    }
 
     // Create PR body with checklist
     const prBody = createPrBody(newVersion);
@@ -1001,13 +1023,13 @@ async function main({ githubToken }) {
       const baseBranch = majorVersion === currentMajorVersion ? 'master' : `v${majorVersion}.x`;
 
       // Get the origin owner (username or organization)
-      const originOwner = await findOriginOwner();
+      const forkOwner = await findForkOwner();
 
       // Create the PR using Octokit
       const { url: prUrl, number: prNumber } = await createPullRequest(
         `[release] v${newVersion}`,
         prBody,
-        `${originOwner}:${branchName}`,
+        `${forkOwner}:${branchName}`,
         baseBranch,
       );
 
@@ -1019,7 +1041,7 @@ async function main({ githubToken }) {
       await addLabelsToPR(prNumber, ['release', versionLabel]);
 
       // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
-      const teamMembers = await getTeamMembers(originOwner);
+      const teamMembers = await getTeamMembers(forkOwner);
 
       if (teamMembers.length > 0) {
         // Randomly select up to 15 team members as reviewers
