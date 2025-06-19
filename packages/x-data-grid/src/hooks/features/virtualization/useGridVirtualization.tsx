@@ -28,10 +28,6 @@ import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRo
 import { useGridEventPriority } from '../../utils';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import {
-  gridVirtualizationRowEnabledSelector,
-  gridVirtualizationColumnEnabledSelector,
-} from './gridVirtualizationSelectors';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
