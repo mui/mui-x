@@ -122,9 +122,9 @@ export default function ExportChartToolbarCustomization() {
                 .join(' , ')} }`,
           )
           .join(',\n        ')}
-        ]`
+      ]`
       }
-      },
+    },
   }}
 />`}
           language="jsx"
