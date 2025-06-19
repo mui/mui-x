@@ -42,12 +42,15 @@ export const useZoomOnWheel = (
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
-      const point = getSVGPoint(element, event.detail.srcEvent);
+      const point = getSVGPoint(element, {
+        clientX: event.detail.centroid.x,
+        clientY: event.detail.centroid.y,
+      });
 
       // This prevents a zoom event from being triggered when the mouse is outside the chart area.
       // The timeout is used to prevent an weird behavior where if the mouse is outside but enters due to
       // scrolling, then the zoom event is triggered.
-      if (startedOutsideRef.current! || instance.isPointInside(point.x, point.y)) {
+      if (startedOutsideRef.current! || !instance.isPointInside(point.x, point.y)) {
         startedOutsideRef.current = true;
         if (startedOutsideTimeoutRef.current) {
           clearTimeout(startedOutsideTimeoutRef.current);
