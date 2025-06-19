@@ -13,7 +13,6 @@ import {
   gridColumnLookupSelector,
   runIf,
   getRowValue,
-  GridStateColDef,
   gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 
@@ -22,6 +21,7 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridChartsIntegrationContextValue } from '../../../models/gridChartsIntegration';
 import {
   GridChartsIntegrationApi,
+  GridChartsIntegrationItem,
   GridChartsIntegrationPrivateApi,
   GridChartsIntegrationState,
 } from './gridChartsIntegrationInterfaces';
@@ -54,17 +54,25 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   }
 
   const columnsLookup = state.columns?.lookup ?? {};
-  const initialCategories = (props.initialState?.chartsIntegration?.categories ?? []).filter(
-    (category) =>
-      columnsLookup[category] &&
-      !getBlockedSections(columnsLookup[category] as GridColDef).includes('categories'),
-  );
-  const initialSeries = (props.initialState?.chartsIntegration?.series ?? []).filter(
-    (seriesItem) =>
-      columnsLookup[seriesItem] &&
-      !getBlockedSections(columnsLookup[seriesItem] as GridColDef).includes('series') &&
-      !initialCategories.includes(seriesItem),
-  );
+  const initialCategories = (props.initialState?.chartsIntegration?.categories ?? [])
+    .map((category) =>
+      typeof category === 'string' ? { field: category, hidden: false } : category,
+    )
+    .filter(
+      (category) =>
+        columnsLookup[category.field] &&
+        !getBlockedSections(columnsLookup[category.field] as GridColDef).includes('categories'),
+    );
+  const initialSeries = (props.initialState?.chartsIntegration?.series ?? [])
+    .map((seriesItem) =>
+      typeof seriesItem === 'string' ? { field: seriesItem, hidden: false } : seriesItem,
+    )
+    .filter(
+      (seriesItem) =>
+        columnsLookup[seriesItem.field] &&
+        !getBlockedSections(columnsLookup[seriesItem.field] as GridColDef).includes('series') &&
+        !initialCategories.some((category) => category.field === seriesItem.field),
+    );
 
   return {
     ...state,
@@ -144,41 +152,50 @@ export const useGridChartsIntegration = (
     const selectedSeries = gridChartsSeriesSelector(apiRef);
     const selectedCategories = gridChartsCategoriesSelector(apiRef);
 
-    const series: GridStateColDef[] = [];
-    const categories: GridStateColDef[] = [];
+    const series: GridChartsIntegrationItem[] = [];
+    const categories: GridChartsIntegrationItem[] = [];
 
     // Sanitize selectedSeries and selectedCategories while maintaining their order
     for (let i = 0; i < selectedSeries.length; i += 1) {
-      const field = selectedSeries[i];
-      if (columns[field]) {
-        series.push(columns[field]);
+      if (columns[selectedSeries[i].field]) {
+        series.push(selectedSeries[i]);
       }
     }
 
     // categories cannot contain fields that are already in series
     for (let i = 0; i < selectedCategories.length; i += 1) {
-      const field = selectedCategories[i];
-      if (!selectedSeries.includes(field) && columns[field]) {
-        categories.push(columns[field]);
+      const item = selectedCategories[i];
+      if (
+        !selectedSeries.some((seriesItem) => seriesItem.field === item.field) &&
+        columns[item.field]
+      ) {
+        categories.push(item);
       }
     }
 
     if (selectedCategories.length !== categories.length) {
-      apiRef.current.updateCategories(categories.map((item) => item.field));
+      apiRef.current.updateCategories(categories);
     }
 
     if (selectedSeries.length !== series.length) {
-      apiRef.current.updateSeries(series.map((item) => item.field));
+      apiRef.current.updateSeries(series);
     }
 
-    if (categories.length === 0 || series.length === 0) {
+    const visibleCategories = categories
+      .filter((category) => category.hidden !== true)
+      .map((category) => columns[category.field]);
+    const visibleSeries = series
+      .filter((seriesItem) => seriesItem.hidden !== true)
+      .map((seriesItem) => columns[seriesItem.field]);
+
+    if (visibleCategories.length === 0 || visibleSeries.length === 0) {
       setCategories([]);
       setSeries([]);
       return;
     }
 
-    const dataColumns = [...categories, ...series];
-    const data: Record<string, (string | number | null)[]> = Object.fromEntries(
+    const dataColumns = [...visibleCategories, ...visibleSeries];
+    const data: Record<any, (string | number | null)[]> = Object.fromEntries(
       dataColumns.map((column) => [column.field, []]),
     );
     for (let i = 0; i < rows.length; i += 1) {
@@ -197,14 +214,14 @@ export const useGridChartsIntegration = (
     }
 
     setCategories(
-      categories.map((category) => ({
+      visibleCategories.map((category) => ({
         id: category.field,
         label: getColumnName(category.field),
         data: data[category.field] || [],
       })),
     );
     setSeries(
-      series.map((seriesItem) => ({
+      visibleSeries.map((seriesItem) => ({
         id: seriesItem.field,
         label: getColumnName(seriesItem.field),
         data: (data[seriesItem.field] || []) as (number | null)[],
@@ -243,7 +260,11 @@ export const useGridChartsIntegration = (
   }, [apiRef, props.chartsConfigurationPanelOpen]);
 
   const updateCategories = React.useCallback(
-    (categories: string[] | ((prev: string[]) => string[])) => {
+    (
+      categories:
+        | GridChartsIntegrationItem[]
+        | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
+    ) => {
       apiRef.current.setState((state) => {
         const newCategories =
           typeof categories === 'function'
@@ -263,7 +284,11 @@ export const useGridChartsIntegration = (
   );
 
   const updateSeries = React.useCallback(
-    (series: string[] | ((prev: string[]) => string[])) => {
+    (
+      series:
+        | GridChartsIntegrationItem[]
+        | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
+    ) => {
       apiRef.current.setState((state) => {
         const newSeries =
           typeof series === 'function' ? series(state.chartsIntegration.series) : series;
@@ -292,12 +317,20 @@ export const useGridChartsIntegration = (
         return;
       }
 
+      let hidden: boolean | undefined;
       if (originSection) {
         const method = originSection === 'categories' ? updateCategories : updateSeries;
+        const currentItems = originSection === 'categories' ? [...categories] : [...series];
+
+        const fieldIndex = currentItems.findIndex((item) => item.field === field);
+        if (fieldIndex !== -1) {
+          hidden = currentItems[fieldIndex].hidden;
+        }
 
         // if the target is another section, remove the field from the origin section
         if (targetSection !== originSection) {
-          method((currentItems) => currentItems.filter((item) => item !== field));
+          currentItems.splice(fieldIndex, 1);
+          method(currentItems);
         }
       }
 
@@ -306,17 +339,17 @@ export const useGridChartsIntegration = (
         const currentItems = targetSection === 'categories' ? categories : series;
         const remainingItems =
           targetSection === originSection
-            ? currentItems.filter((item) => item !== field)
-            : currentItems;
+            ? currentItems.filter((item) => item.field !== field)
+            : [...currentItems];
 
         if (targetField) {
-          const targetFieldIndex = remainingItems.findIndex((item) => item === targetField);
+          const targetFieldIndex = remainingItems.findIndex((item) => item.field === targetField);
           const targetIndex =
             placementRelativeToTargetField === 'top' ? targetFieldIndex : targetFieldIndex + 1;
-          remainingItems.splice(targetIndex, 0, field);
+          remainingItems.splice(targetIndex, 0, { field, hidden });
           method(remainingItems);
         } else {
-          method([...remainingItems, field]);
+          method([...remainingItems, { field, hidden }]);
         }
       }
     },
