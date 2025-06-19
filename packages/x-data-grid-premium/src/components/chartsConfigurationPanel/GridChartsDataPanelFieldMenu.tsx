@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { GridColDef, GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
+import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { FieldTransferObject, DropPosition } from './GridChartsDataPanelBody';
@@ -11,8 +11,9 @@ import {
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 
 interface GridChartsDataPanelFieldMenuProps {
-  column: GridColDef;
+  field: string;
   zone: FieldTransferObject['zone'];
+  blockedZones?: string[];
 }
 
 type MenuAction = {
@@ -27,7 +28,7 @@ type MenuDivider = {
 };
 
 function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) {
-  const { column, zone } = props;
+  const { field, zone, blockedZones } = props;
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridPrivateApiContext();
@@ -35,7 +36,7 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
   const series = useGridSelector(apiRef, gridChartsSeriesSelector);
   const isAvailableField = zone === null;
   const fieldIndexInModel = !isAvailableField
-    ? (zone === 'categories' ? categories : series).findIndex((item) => item === column.field)
+    ? (zone === 'categories' ? categories : series).findIndex((item) => item === field)
     : -1;
   const modelLength = !isAvailableField ? (zone === 'categories' ? categories : series).length : 0;
   const canMoveUp = fieldIndexInModel > 0;
@@ -48,10 +49,8 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
     if (isAvailableField) {
       return [
         { key: 'categories', label: 'Add to categories' },
-        ...(column.type === 'number'
-          ? [{ key: 'series', label: 'Add to series' } as MenuAction]
-          : []),
-      ];
+        { key: 'series', label: 'Add to series' },
+      ].filter((item) => !blockedZones?.includes(item.key)) as MenuAction[];
     }
 
     const moveMenuItems: (MenuAction | MenuDivider)[] = [
@@ -91,36 +90,25 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
       },
     ];
 
-    if (zone === 'categories') {
-      return [
-        ...moveMenuItems,
-        ...(column.type === 'number'
-          ? [
-              {
-                key: 'series',
-                label: 'Add to series',
-                icon: <span />,
-              } as MenuAction,
-              { divider: true } as MenuDivider,
-            ]
-          : []),
-        ...removeMenuItem,
-      ];
+    const addToSectionMenuItems: (MenuAction | MenuDivider)[] = [
+      {
+        key: 'categories',
+        label: 'Add to categories',
+        icon: <span />,
+      },
+      {
+        key: 'series',
+        label: 'Add to series',
+        icon: <span />,
+      },
+    ].filter((item) => item.key !== zone && !blockedZones?.includes(item.key)) as MenuAction[];
+
+    if (addToSectionMenuItems.length > 0) {
+      addToSectionMenuItems.push({ divider: true });
     }
 
-    return [
-      ...moveMenuItems,
-      ...[
-        {
-          key: 'categories',
-          label: 'Add to categories',
-          icon: <span />,
-        } as MenuAction,
-        { divider: true } as MenuDivider,
-      ],
-      ...removeMenuItem,
-    ];
-  }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, zone, column.type]);
+    return [...moveMenuItems, ...addToSectionMenuItems, ...removeMenuItem];
+  }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, zone, blockedZones]);
 
   const handleClick = () => {
     setOpen(!open);
@@ -171,7 +159,7 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
     }
 
     apiRef.current.chartsIntegration.updateDataReference(
-      column.field,
+      field,
       zone,
       targetSection,
       targetField,

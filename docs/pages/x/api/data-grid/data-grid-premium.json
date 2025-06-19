@@ -1540,12 +1540,6 @@
       "description": "Icon used for the remove button in the charts configuration panel menu",
       "default": "GridDeleteIcon",
       "class": null
-    },
-    {
-      "name": "chartsMenuCheckIcon",
-      "description": "Icon used for the check sign in the charts configuration panel menu",
-      "default": "GridCheckIcon",
-      "class": null
     }
   ],
   "classes": [

@@ -1834,7 +1834,6 @@
     "chartsConfigurationPanel": "Component rendered when charts configuration panel is open. Only needed when <code>chartsIntegration</code> prop is passed to the grid. Pass <code>GridChartsConfigurationPanel</code> to render the default charts configuration panel.",
     "chartsIcon": "Icon used for the charts configuration button",
     "chartsMenuAddIcon": "Icon used for the add button in the charts configuration panel menu",
-    "chartsMenuCheckIcon": "Icon used for the check sign in the charts configuration panel menu",
     "chartsMenuMoveDownIcon": "Icon used for the move down button in the charts configuration panel menu",
     "chartsMenuMoveToBottomIcon": "Icon used for the move to bottom button in the charts configuration panel menu",
     "chartsMenuMoveToTopIcon": "Icon used for the move to top button in the charts configuration panel menu",

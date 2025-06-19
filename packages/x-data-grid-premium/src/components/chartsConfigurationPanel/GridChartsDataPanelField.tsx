@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { getDataGridUtilityClass, GridColDef, GridMenu } from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass, GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridPivotActiveSelector, vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -15,9 +15,11 @@ import { COLUMN_GROUP_ID_SEPARATOR } from '../../constants/columnGroups';
 
 type GridChartsDataPanelFieldProps = {
   children: React.ReactNode;
-  column: GridColDef;
+  field: string;
   zone: 'categories' | 'series' | null;
-  onDragStart: (zone: 'categories' | 'series' | null) => void;
+  blockedZones?: string[];
+  disabled?: boolean;
+  onDragStart: (field: string, zone: 'categories' | 'series' | null) => void;
   onDragEnd: () => void;
 };
 
@@ -211,23 +213,21 @@ export function AggregationSelect({
 }
 
 function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
-  const { children, column, onDragStart, onDragEnd } = props;
+  const { children, field, blockedZones, disabled, onDragStart, onDragEnd } = props;
   const rootProps = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.zone;
   const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
-  const aggregationModel = gridAggregationModelSelector(apiRef);
-
-  const field = column.field;
+  const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
       const data: FieldTransferObject = { field, zone: section };
       event.dataTransfer.setData('text/plain', JSON.stringify(data));
       event.dataTransfer.dropEffect = 'move';
-      onDragStart(section);
+      onDragStart(field, section);
     },
     [field, onDragStart, section],
   );
@@ -243,11 +243,15 @@ function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
 
   const handleDragOver = React.useCallback(
     (event: React.DragEvent) => {
+      if (disabled) {
+        return;
+      }
+
       if (!event.currentTarget.contains(event.relatedTarget as HTMLElement)) {
         setDropPosition(getDropPosition(event));
       }
     },
-    [getDropPosition],
+    [disabled, getDropPosition],
   );
 
   const handleDragLeave = React.useCallback((event: React.DragEvent) => {
@@ -306,7 +310,7 @@ function GridChartsDataPanelField(props: GridChartsDataPanelFieldProps) {
         ownerState={ownerState}
         className={classes.actionContainer}
       >
-        <GridChartsDataPanelFieldMenu column={column} zone={section} />
+        <GridChartsDataPanelFieldMenu field={field} zone={section} blockedZones={blockedZones} />
       </GridChartsDataPanelFieldActionContainer>
     </GridChartsDataPanelFieldRoot>
   );
