@@ -2,17 +2,14 @@ import * as React from 'react';
 import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { ScatterValueType } from '@mui/x-charts/models';
 import {
   continents,
   populationGdpPerCapitaData,
 } from './populationGdpPerCapitaData';
+import ExportOptionSelector from './ExportOptionSelector';
 
 const populationFormatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
@@ -65,57 +62,13 @@ export default function ExportChartToolbarCustomization() {
 
   return (
     <Stack width="100%">
-      <FormControl fullWidth sx={{ alignItems: 'center', mb: 1 }}>
-        <FormLabel>Export Options</FormLabel>
-        <FormGroup row>
-          <FormControlLabel
-            label="Print"
-            control={
-              <Checkbox
-                name="print"
-                checked={formats.print}
-                onChange={handleChange}
-              />
-            }
-          />
-          <FormControlLabel
-            label="image/png"
-            control={
-              <Checkbox
-                name="image/png"
-                checked={formats['image/png']}
-                onChange={handleChange}
-              />
-            }
-          />
-          <FormControlLabel
-            label="image/jpeg"
-            control={
-              <Checkbox
-                name="image/jpeg"
-                checked={formats['image/jpeg']}
-                onChange={handleChange}
-              />
-            }
-          />
-          <FormControlLabel
-            label="image/webp"
-            control={
-              <Checkbox
-                name="image/webp"
-                checked={formats['image/webp']}
-                onChange={handleChange}
-              />
-            }
-          />
-        </FormGroup>
-      </FormControl>
       <Typography sx={{ alignSelf: 'center', my: 1 }}>
         Population vs GDP Per Capita (USD), 2019
       </Typography>
       <ScatterChartPro
         apiRef={apiRef}
         height={300}
+        margin={{ bottom: 2 }}
         xAxis={[
           {
             scaleType: 'log',
@@ -141,7 +94,46 @@ export default function ExportChartToolbarCustomization() {
           },
         }}
       />
-      <Typography variant="caption">Source: World Bank</Typography>
+      <Typography variant="caption" textAlign="end" marginBottom={2}>
+        Source: World Bank
+      </Typography>
+      <Stack direction={{ xs: 'column', md: 'row-reverse' }} spacing={2}>
+        <ExportOptionSelector formats={formats} handleChange={handleChange} />
+        <HighlightedCode
+          sx={{ minWidth: 0, flexGrow: 1, '& pre': { margin: 0 } }}
+          code={`const filename = '${fileName}';
+          
+<ScatterChartPro
+  // ...
+  slotProps={{
+    toolbar: {
+      printOptions: ${formats.print ? `{ fileName }` : `{ disableToolbarButton: true }`},
+      imageExportOptions: ${
+        imageExportOptions.length === 0
+          ? '[]'
+          : `[
+        ${imageExportOptions
+          .map(
+            (option) =>
+              `{ ${Object.entries(option)
+                .map(([key, value]) => {
+                  if (key === 'fileName') {
+                    return 'filename';
+                  }
+                  return `${key}: ${JSON.stringify(value)}`;
+                })
+                .join(' , ')} }`,
+          )
+          .join(',\n        ')}
+        ]`
+      }
+      },
+  }}
+/>`}
+          language="jsx"
+          copyButtonHidden
+        />
+      </Stack>
     </Stack>
   );
 }
