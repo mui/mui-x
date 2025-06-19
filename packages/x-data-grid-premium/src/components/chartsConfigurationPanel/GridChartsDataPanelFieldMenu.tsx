@@ -9,6 +9,7 @@ import {
   gridChartsCategoriesSelector,
   gridChartsSeriesSelector,
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
+import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 interface GridChartsDataPanelFieldMenuProps {
   field: string;
@@ -17,7 +18,7 @@ interface GridChartsDataPanelFieldMenuProps {
 }
 
 type MenuAction = {
-  key: 'up' | 'down' | 'top' | 'bottom' | 'categories' | 'series' | null;
+  key: 'up' | 'down' | 'top' | 'bottom' | GridChartsIntegrationSection;
   label: string;
   icon?: React.ReactElement;
   disabled?: boolean;
@@ -36,7 +37,7 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
   const series = useGridSelector(apiRef, gridChartsSeriesSelector);
   const isAvailableField = section === null;
   const fieldIndexInModel = !isAvailableField
-    ? (section === 'categories' ? categories : series).findIndex((item) => item === field)
+    ? (section === 'categories' ? categories : series).findIndex((item) => item.field === field)
     : -1;
   const modelLength = !isAvailableField
     ? (section === 'categories' ? categories : series).length
@@ -138,19 +139,19 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
 
     switch (to) {
       case 'up':
-        targetField = items[fieldIndexInModel - 1];
+        targetField = items[fieldIndexInModel - 1].field;
         targetFieldPosition = 'top';
         break;
       case 'down':
-        targetField = items[fieldIndexInModel + 1];
+        targetField = items[fieldIndexInModel + 1].field;
         targetFieldPosition = 'bottom';
         break;
       case 'top':
-        targetField = items[0];
+        targetField = items[0].field;
         targetFieldPosition = 'top';
         break;
       case 'bottom':
-        targetField = items[modelLength - 1];
+        targetField = items[modelLength - 1].field;
         targetFieldPosition = 'bottom';
         break;
       case 'categories':
