@@ -1,4 +1,7 @@
 export type Size = { width: number; height: number };
+export namespace Size {
+  export const EMPTY = { width: 0, height: 0 };
+}
 
 export type Row = any; // TODO
 export type Column = any; // TODO
