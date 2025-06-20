@@ -76,7 +76,14 @@ export interface HeatmapSlotProps
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'xAxis'
+      | 'yAxis'
+      | 'skipAnimation'
+      | 'slots'
+      | 'slotProps'
+      | 'highlightedAxis'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -355,6 +362,14 @@ Heatmap.propTypes = {
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function get called if at least ones axis is updated.
+   * And the parameter contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} newAxisItems The array of axes item identifiers.
+   */
+  onAxisInteraction: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
