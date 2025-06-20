@@ -22,14 +22,14 @@ interface BuildSectionsFromFormatParameters {
 
 type FormatEscapedParts = { start: number; end: number }[];
 
-const expandFormat = ({ adapter: utils, format }: BuildSectionsFromFormatParameters) => {
+const expandFormat = ({ adapter, format }: BuildSectionsFromFormatParameters) => {
   // Expand the provided format
   let formatExpansionOverflow = 10;
   let prevFormat = format;
-  let nextFormat = utils.expandFormat(format);
+  let nextFormat = adapter.expandFormat(format);
   while (nextFormat !== prevFormat) {
     prevFormat = nextFormat;
-    nextFormat = utils.expandFormat(prevFormat);
+    nextFormat = adapter.expandFormat(prevFormat);
     formatExpansionOverflow -= 1;
     if (formatExpansionOverflow < 0) {
       throw new Error(
@@ -59,7 +59,7 @@ const getEscapedPartsFromFormat = ({
 };
 
 const getSectionPlaceholder = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   localeText: PickersLocaleText,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
   sectionFormat: string,
@@ -67,7 +67,8 @@ const getSectionPlaceholder = (
   switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
-        digitAmount: utils.formatByString(utils.date(undefined, 'default'), sectionFormat).length,
+        digitAmount: adapter.formatByString(adapter.date(undefined, 'default'), sectionFormat)
+          .length,
         format: sectionFormat,
       });
     }

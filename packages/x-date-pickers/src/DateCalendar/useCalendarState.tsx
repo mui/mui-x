@@ -31,7 +31,7 @@ interface SetVisibleDatePayload {
 }
 
 const createCalendarStateReducer =
-  (reduceAnimations: boolean, utils: MuiPickersAdapter) =>
+  (reduceAnimations: boolean, adapter: MuiPickersAdapter) =>
   (
     state: CalendarState,
     action:
@@ -46,7 +46,7 @@ const createCalendarStateReducer =
           slideDirection: action.direction,
           currentMonth: action.month,
           isMonthSwitchingAnimating:
-            !utils.isSameMonth(action.month, state.currentMonth) &&
+            !adapter.isSameMonth(action.month, state.currentMonth) &&
             !reduceAnimations &&
             !action.skipAnimation,
           focusedDay: action.focusedDay,
@@ -54,12 +54,12 @@ const createCalendarStateReducer =
 
       case 'changeMonthTimezone': {
         const newTimezone = action.newTimezone;
-        if (utils.getTimezone(state.currentMonth) === newTimezone) {
+        if (adapter.getTimezone(state.currentMonth) === newTimezone) {
           return state;
         }
-        let newCurrentMonth = utils.setTimezone(state.currentMonth, newTimezone);
-        if (utils.getMonth(newCurrentMonth) !== utils.getMonth(state.currentMonth)) {
-          newCurrentMonth = utils.setMonth(newCurrentMonth, utils.getMonth(state.currentMonth));
+        let newCurrentMonth = adapter.setTimezone(state.currentMonth, newTimezone);
+        if (adapter.getMonth(newCurrentMonth) !== adapter.getMonth(state.currentMonth)) {
+          newCurrentMonth = adapter.setMonth(newCurrentMonth, adapter.getMonth(state.currentMonth));
         }
         return {
           ...state,

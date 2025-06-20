@@ -80,13 +80,13 @@ export const getHourNumbers = ({
 };
 
 export const getMinutesNumbers = ({
-  adapter: utils,
+  adapter,
   value,
   isDisabled,
   getClockNumberText,
   selectedId,
 }: Omit<GetHourNumbersOptions, 'ampm' | 'value'> & { value: number }) => {
-  const f = utils.formatNumber;
+  const f = adapter.formatNumber;
 
   return (
     [

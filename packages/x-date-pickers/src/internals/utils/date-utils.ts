@@ -9,15 +9,15 @@ import { DateOrTimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
 export const mergeDateAndTime = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   dateParam: PickerValidDate,
   timeParam: PickerValidDate,
 ): PickerValidDate => {
   let mergedDate = dateParam;
-  mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
-  mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
-  mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
-  mergedDate = utils.setMilliseconds(mergedDate, utils.getMilliseconds(timeParam));
+  mergedDate = adapter.setHours(mergedDate, adapter.getHours(timeParam));
+  mergedDate = adapter.setMinutes(mergedDate, adapter.getMinutes(timeParam));
+  mergedDate = adapter.setSeconds(mergedDate, adapter.getSeconds(timeParam));
+  mergedDate = adapter.setMilliseconds(mergedDate, adapter.getMilliseconds(timeParam));
 
   return mergedDate;
 };
@@ -146,9 +146,9 @@ export const getTodayDate = (
     ? adapter.startOfDay(adapter.date(undefined, timezone))
     : adapter.date(undefined, timezone);
 
-export const formatMeridiem = (utils: MuiPickersAdapter, meridiem: 'am' | 'pm') => {
-  const date = utils.setHours(utils.date(), meridiem === 'am' ? 2 : 14);
-  return utils.format(date, 'meridiem');
+export const formatMeridiem = (adapter: MuiPickersAdapter, meridiem: 'am' | 'pm') => {
+  const date = adapter.setHours(adapter.date(), meridiem === 'am' ? 2 : 14);
+  return adapter.format(date, 'meridiem');
 };
 
 export const DATE_VIEWS = ['year', 'month', 'day'] as const;

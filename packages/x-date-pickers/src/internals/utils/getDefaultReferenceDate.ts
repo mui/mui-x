@@ -28,27 +28,27 @@ export const getSectionTypeGranularity = (sections: FieldSection[]) =>
     ),
   );
 
-const roundDate = (utils: MuiPickersAdapter, granularity: number, date: PickerValidDate) => {
+const roundDate = (adapter: MuiPickersAdapter, granularity: number, date: PickerValidDate) => {
   if (granularity === SECTION_TYPE_GRANULARITY.year) {
-    return utils.startOfYear(date);
+    return adapter.startOfYear(date);
   }
   if (granularity === SECTION_TYPE_GRANULARITY.month) {
-    return utils.startOfMonth(date);
+    return adapter.startOfMonth(date);
   }
   if (granularity === SECTION_TYPE_GRANULARITY.day) {
-    return utils.startOfDay(date);
+    return adapter.startOfDay(date);
   }
 
   // We don't have startOfHour / startOfMinute / startOfSecond
   let roundedDate = date;
   if (granularity < SECTION_TYPE_GRANULARITY.minutes) {
-    roundedDate = utils.setMinutes(roundedDate, 0);
+    roundedDate = adapter.setMinutes(roundedDate, 0);
   }
   if (granularity < SECTION_TYPE_GRANULARITY.seconds) {
-    roundedDate = utils.setSeconds(roundedDate, 0);
+    roundedDate = adapter.setSeconds(roundedDate, 0);
   }
   if (granularity < SECTION_TYPE_GRANULARITY.milliseconds) {
-    roundedDate = utils.setMilliseconds(roundedDate, 0);
+    roundedDate = adapter.setMilliseconds(roundedDate, 0);
   }
 
   return roundedDate;

@@ -168,7 +168,7 @@ function getDeltaFromKeyCode(keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End
 }
 
 function adjustSectionValue<TValue extends PickerValidValue>(
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   timezone: PickersTimezone,
   section: InferFieldSection<TValue>,
   keyCode: AvailableAdjustKeyCode,
@@ -191,7 +191,7 @@ function adjustSectionValue<TValue extends PickerValidValue>(
     });
 
     const getCleanValue = (value: number) =>
-      cleanDigitSectionValue(utils, value, sectionBoundaries, localizedDigits, section);
+      cleanDigitSectionValue(adapter, value, sectionBoundaries, localizedDigits, section);
 
     const step =
       section.type === 'minutes' && stepsAttributes?.minutesStep ? stepsAttributes.minutesStep : 1;
@@ -200,7 +200,7 @@ function adjustSectionValue<TValue extends PickerValidValue>(
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
-        return utils.formatByString(utils.date(undefined, timezone), section.format);
+        return adapter.formatByString(adapter.date(undefined, timezone), section.format);
       }
 
       if (delta > 0 || isStart) {
@@ -245,7 +245,7 @@ function adjustSectionValue<TValue extends PickerValidValue>(
   };
 
   const adjustLetterSection = () => {
-    const options = getLetterEditingOptions(utils, timezone, section.type, section.format);
+    const options = getLetterEditingOptions(adapter, timezone, section.type, section.format);
     if (options.length === 0) {
       return section.value;
     }
