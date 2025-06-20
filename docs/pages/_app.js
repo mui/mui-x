@@ -70,6 +70,7 @@ globalThis.muiDocConfig = {
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
+      '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',
     };
   },

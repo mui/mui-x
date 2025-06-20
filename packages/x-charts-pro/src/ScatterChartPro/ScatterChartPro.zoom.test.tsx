@@ -168,17 +168,17 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         {
           keys: `[${pointerName}>]`,
           target: svg,
-          coords: { x: 15, y: 85 },
+          coords: { x: 15, y: 300 },
         },
         {
           pointerName: pointerName === 'MouseLeft' ? undefined : pointerName,
           target: svg,
-          coords: { x: 300, y: -200 },
+          coords: { x: 300, y: 5 },
         },
         {
           keys: `[/${pointerName}]`,
           target: svg,
-          coords: { x: 300, y: -200 },
+          coords: { x: 300, y: 5 },
         },
       ]);
       // Wait the animation frame
@@ -188,5 +188,56 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       expect(getAxisTickValues('x')).to.deep.equal(['1.0', '1.2', '1.4']);
       expect(getAxisTickValues('y')).to.deep.equal(['10', '12', '14']);
     });
+  });
+
+  it('should zoom on pinch', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <ScatterChartPro {...scatterChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
+    expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
+
+    const svg = document.querySelector('svg')!;
+
+    await user.pointer([
+      {
+        keys: '[TouchA>]',
+        target: svg,
+        coords: { x: 55, y: 45 },
+      },
+      {
+        keys: '[TouchB>]',
+        target: svg,
+        coords: { x: 45, y: 55 },
+      },
+      {
+        pointerName: 'TouchA',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        pointerName: 'TouchB',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+      {
+        keys: '[/TouchA]',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        keys: '[/TouchB]',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+    ]);
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.be.above(0);
+    expect(getAxisTickValues('x')).to.deep.equal(['2.0']);
+    expect(getAxisTickValues('y')).to.deep.equal(['20']);
   });
 });

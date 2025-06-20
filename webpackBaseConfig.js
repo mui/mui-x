@@ -24,6 +24,7 @@ module.exports = {
       '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
       '@mui/x-telemetry': path.resolve(__dirname, './packages/x-telemetry/src'),
       '@mui/x-internals': path.resolve(__dirname, './packages/x-internals/src'),
+      '@mui/x-internal-gestures': path.resolve(__dirname, './packages/x-internal-gestures/src'),
       '@mui/material-nextjs': path.resolve(
         __dirname,
         './node_modules/@mui/monorepo/packages/mui-material-nextjs/src',

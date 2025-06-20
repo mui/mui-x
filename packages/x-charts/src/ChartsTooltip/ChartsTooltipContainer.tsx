@@ -6,7 +6,8 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
-import { useSvgRef } from '../hooks/useSvgRef';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
@@ -16,6 +17,7 @@ import {
   selectorChartsInteractionAxisTooltip,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useChartContext } from '../context/ChartProvider';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 
@@ -60,9 +62,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     name: 'MuiChartsTooltipContainer',
   });
   const { trigger = 'axis', classes: propClasses, children, ...other } = props;
+  const { instance } = useChartContext();
   const classes = useUtilityClasses(propClasses);
 
-  const svgRef = useSvgRef();
   const pointerType = usePointerType();
   const isFineMainPointer = useIsFineMainPointer();
 
@@ -82,25 +84,25 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   );
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
+    const update = rafThrottle(() => popperRef.current?.update());
 
-    const handlePointerEvent = (event: PointerEvent) => {
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: event.clientX, y: event.clientY };
-      popperRef.current?.update();
+      positionRef.current = { x: event.detail.centroid.x, y: event.detail.centroid.y };
+      update();
     };
 
-    element.addEventListener('pointerdown', handlePointerEvent);
-    element.addEventListener('pointermove', handlePointerEvent);
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const quickPressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
-      element.removeEventListener('pointerdown', handlePointerEvent);
-      element.removeEventListener('pointermove', handlePointerEvent);
+      moveHandler.cleanup();
+      panHandler.cleanup();
+      quickPressHandler.cleanup();
+      update.clear();
     };
-  }, [svgRef, positionRef]);
+  }, [positionRef, instance]);
 
   const anchorEl = React.useMemo(
     () => ({
