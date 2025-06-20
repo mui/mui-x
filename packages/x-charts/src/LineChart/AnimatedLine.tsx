@@ -40,6 +40,7 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
           fill="none"
           filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
           opacity={ownerState.isFaded ? 0.3 : 1}
+          data-series={ownerState.id}
           {...other}
           {...animateProps}
         />

@@ -43,6 +43,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
         }
         opacity={ownerState.isFaded ? 0.3 : 1}
         stroke="none"
+        data-series={ownerState.id}
         {...other}
         {...animatedProps}
       />
