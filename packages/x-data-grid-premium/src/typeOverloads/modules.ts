@@ -49,6 +49,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the AI Assistant active conversation index changes.
    */
   aiAssistantActiveConversationIndexChange: { params: number };
+  /**
+   * Fired when the charts configuration side panel open state changes.
+   */
+  chartsConfigurationPanelOpenChange: { params: boolean };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
@@ -89,6 +93,11 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @default true
    */
   pivotable?: boolean;
+  /**
+   * If `false`, the column will not be available for charts integration.
+   * @default true
+   */
+  chartable?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
