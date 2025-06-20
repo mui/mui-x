@@ -17,6 +17,7 @@ export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlot
 export * from '../constants/signature';
 export { vars } from '../constants/cssVariables';
 
+export { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 export { propsStateInitializer } from '../hooks/core/useGridProps';
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';

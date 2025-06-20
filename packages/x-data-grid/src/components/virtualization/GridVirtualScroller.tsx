@@ -9,7 +9,7 @@ import {
 } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -78,7 +78,7 @@ export interface GridVirtualScrollerProps {
 }
 
 function GridVirtualScroller(props: GridVirtualScrollerProps) {
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
@@ -94,7 +94,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const classes = useUtilityClasses(ownerState);
 
   // @ts-ignore XXX
-  const virtualScroller = apiRef.current.virtualScroller.virtualization.use();
+  const virtualScroller = apiRef.current.virtualizer.virtualization.use();
 
   const {
     getContainerProps,

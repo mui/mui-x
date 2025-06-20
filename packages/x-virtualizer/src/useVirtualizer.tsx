@@ -2,6 +2,7 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { RefObject } from '@mui/x-internals/types';
 import { Store } from '@mui/x-internals/store';
+import { Dimensions } from './features/dimensions';
 import { Virtualization } from './features/virtualization';
 
 export * from './features/virtualization';
@@ -17,8 +18,8 @@ import {
   RowEntry,
 } from './models';
 
-export type VirtualScroller = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerUse = ReturnType<VirtualScroller['virtualization']['use']>;
+export type Virtualizer = ReturnType<typeof useVirtualizer>;
+export type VirtualScrollerUse = ReturnType<Virtualizer['virtualization']['use']>;
 
 export type VirtualizerState = Virtualization.State;
 
@@ -26,9 +27,22 @@ export type VirtualizerState = Virtualization.State;
 type RenderContextInputs = any;
 
 export type VirtualizerParams = {
+  scrollbarSize?: number;
+  dimensions: {
+    rowHeight: number;
+    headerHeight: number;
+    groupHeaderHeight: number;
+    headerFilterHeight: number;
+    columnsTotalWidth: number;
+    headersTotalHeight: number;
+    leftPinnedWidth: number;
+    rightPinnedWidth: number;
+  };
+
   initialState?: {
-    virtualization?: Partial<Virtualization.State['virtualization']>;
     scroll?: { top: number; left: number };
+    dimensions?: Partial<Dimensions.State['dimensions']>;
+    virtualization?: Partial<Virtualization.State['virtualization']>;
   };
   isRtl: boolean;
   rows: RowEntry[];
@@ -38,19 +52,18 @@ export type VirtualizerParams = {
   pinnedRows: PinnedRows;
   pinnedColumns: PinnedColumns;
   refs: {
-    main: RefObject<HTMLElement | null>;
-    scroller: RefObject<HTMLElement | null>;
-    scrollbarVertical: RefObject<HTMLElement | null>;
-    scrollbarHorizontal: RefObject<HTMLElement | null>;
+    main: RefObject<HTMLDivElement | null>;
+    scroller: RefObject<HTMLDivElement | null>;
+    scrollbarVertical: RefObject<HTMLDivElement | null>;
+    scrollbarHorizontal: RefObject<HTMLDivElement | null>;
   };
   hasColSpan: boolean;
 
-  rowHeight: number;
   contentHeight: number;
   minimalContentHeight: number | string;
-  columnsTotalWidth: number;
   needsHorizontalScrollbar: boolean;
   autoHeight: boolean;
+  getRowHeight?: (params: any) => number | null | undefined | 'auto';
 
   onResize?: (lastSize: Size) => void;
   onWheel?: (event: React.WheelEvent) => void;
@@ -64,6 +77,7 @@ export type VirtualizerParams = {
   scrollReset?: any;
 
   fixme: {
+    rowsMeta: () => any;
     dimensions: () => any;
     onContextChange: (c: GridRenderContext) => void;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
@@ -100,15 +114,18 @@ export type VirtualizerParams = {
 export const useVirtualizer = (params: VirtualizerParams) => {
   const store = useLazyRef(() => {
     const state = {
-      ...Virtualization.state(params),
+      ...Dimensions.initialize(params),
+      ...Virtualization.initialize(params),
     };
     return new Store(state);
   }).current;
 
   const virtualization = Virtualization.use(store, params);
+  const dimensions = Dimensions.use(store, params);
 
   return {
     store,
+    dimensions,
     virtualization,
   };
 };

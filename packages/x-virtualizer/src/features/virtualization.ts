@@ -50,7 +50,7 @@ export const EMPTY_RENDER_CONTEXT = {
   lastColumnIndex: 0,
 };
 
-export const selectors = {
+const selectors = {
   renderContext: createSelector((state: VirtualizerState) => state.virtualization.renderContext),
   enabledForRows: createSelector((state: VirtualizerState) => state.virtualization.enabledForRows),
   enabledForColumns: createSelector(
@@ -59,8 +59,9 @@ export const selectors = {
 };
 
 export const Virtualization = {
-  state: initializeState,
+  initialize: initializeState,
   use: useVirtualization,
+  selectors,
 };
 export namespace Virtualization {
   export type State = {
@@ -96,10 +97,10 @@ function useVirtualization(store: Store<Virtualization.State>, params: Virtualiz
     refs,
     hasColSpan,
 
-    rowHeight,
+    dimensions: { rowHeight, columnsTotalWidth },
+
     contentHeight,
     minimalContentHeight,
-    columnsTotalWidth,
     needsHorizontalScrollbar,
     autoHeight,
 

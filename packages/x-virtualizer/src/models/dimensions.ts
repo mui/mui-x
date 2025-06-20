@@ -1,6 +1,6 @@
 import { Size } from './core';
 
-export interface Dimensions {
+export interface DimensionsState {
   /**
    * Indicates that the dimensions have been initialized.
    */

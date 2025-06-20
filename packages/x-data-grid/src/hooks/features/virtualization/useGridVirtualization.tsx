@@ -1,40 +1,23 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
-import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
-import { useVirtualizer, Virtualization, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
+import { Virtualization, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { useFirstRender } from '../../utils/useFirstRender';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import {
-  gridDimensionsSelector,
-  gridColumnsTotalWidthSelector,
-  gridContentHeightSelector,
-  gridHasFillerSelector,
-  gridRowHeightSelector,
-  gridVerticalScrollbarWidthSelector,
-} from '../dimensions/gridDimensionsSelectors';
 import { useGridRootProps } from '../../utils/useGridRootProps';
-import { useGridSelector } from '../../utils/useGridSelector';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
   gridColumnPositionsSelector,
-  gridHasColSpanSelector,
 } from '../columns/gridColumnsSelector';
-import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridEventPriority } from '../../utils';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
-import { minimalContentHeight } from '../rows/gridRowsUtils';
-import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../columns';
-import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
-import { gridRowSelectionManagerSelector } from '../rowSelection';
 
 const HAS_LAYOUT = !isJSDOM;
 
@@ -69,153 +52,8 @@ export function useGridVirtualization(
   apiRef: RefObject<GridPrivateApiCommunity>,
   rootProps: RootProps,
 ): void {
-  /*
-   * Virtualizer setup
-   */
-
-  const isRtl = useRtl();
-  const { listView } = rootProps;
-  const visibleColumns = useGridSelector(apiRef, () =>
-    listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
-  );
-
-  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const pinnedColumns = listView
-    ? (EMPTY_PINNED_COLUMN_FIELDS as unknown as GridPinnedColumns)
-    : gridVisiblePinnedColumnDefinitionsSelector(apiRef);
-
-  const rowSelectionManager = useGridSelector(apiRef, gridRowSelectionManagerSelector);
-  const isRowSelected = (id: any) =>
-    rowSelectionManager.has(id) && apiRef.current.isRowSelectable(id);
-
-  const currentPage = useGridVisibleRows(apiRef);
-
-  const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
-
-  /* TODO: extract dimensions code */
-  const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
-  const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const needsHorizontalScrollbar = useGridSelector(apiRef, needsHorizontalScrollbarSelector);
-  const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
-  const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
+  const { virtualizer } = apiRef.current;
   const { autoHeight, disableVirtualization } = rootProps;
-
-  const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
-
-  const scrollReset = listView;
-
-  const virtualizer = useVirtualizer({
-    initialState: {
-      virtualization: apiRef.current.state.virtualization,
-      scroll: rootProps.initialState?.scroll,
-    },
-    isRtl,
-    rows: currentPage.rows,
-    range: currentPage.range,
-    columns: visibleColumns,
-    pinnedRows,
-    pinnedColumns,
-    refs: {
-      main: apiRef.current.mainElementRef,
-      scroller: apiRef.current.virtualScrollerRef,
-      scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
-      scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
-    },
-    hasColSpan,
-    rowHeight,
-    contentHeight,
-    minimalContentHeight,
-    columnsTotalWidth,
-    needsHorizontalScrollbar: needsHorizontalScrollbar && !listView,
-    autoHeight,
-
-    focusedCell: focusedVirtualCell,
-    rowBufferPx: rootProps.rowBufferPx,
-    columnBufferPx: rootProps.columnBufferPx,
-
-    onResize: useEventCallback((lastSize) => apiRef.current.publishEvent('resize', lastSize)),
-    onWheel: useEventCallback((event: React.WheelEvent) => {
-      apiRef.current.publishEvent('virtualScrollerWheel', {}, event);
-    }),
-    onTouchMove: useEventCallback((event: React.TouchEvent) => {
-      apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
-    }),
-
-    scrollReset,
-
-    fixme: {
-      dimensions: () => apiRef.current.state.dimensions,
-      onContextChange: (nextRenderContext) =>
-        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext),
-      inputs: (enabledForRows, enabledForColumns) =>
-        inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
-      onScrollChange: (scrollPosition, nextRenderContext) => {
-        apiRef.current.publishEvent('scrollPositionChange', {
-          top: scrollPosition.current.top,
-          left: scrollPosition.current.left,
-          renderContext: nextRenderContext,
-        });
-      },
-
-      rowTree: () => gridRowTreeSelector(apiRef),
-      columnPositions: () => gridColumnPositionsSelector(apiRef),
-
-      calculateColSpan: (params) => apiRef.current.calculateColSpan(params),
-
-      getRowHeight: (id) =>
-        !apiRef.current.rowHasAutoHeight(id) ? apiRef.current.unstable_getRowHeight(id) : 'auto',
-
-      renderRow: (params) => (
-        <rootProps.slots.row
-          key={params.id}
-          row={params.model}
-          rowId={params.id}
-          index={params.rowIndex}
-          selected={isRowSelected(params.id)}
-          offsetLeft={params.offsetLeft}
-          columnsTotalWidth={columnsTotalWidth}
-          rowHeight={params.baseRowHeight}
-          pinnedColumns={pinnedColumns}
-          visibleColumns={params.columns}
-          firstColumnIndex={params.firstColumnIndex}
-          lastColumnIndex={params.lastColumnIndex}
-          focusedColumnIndex={params.focusedColumnIndex}
-          isFirstVisible={params.isFirstVisible}
-          isLastVisible={params.isLastVisible}
-          isNotVisible={params.isVirtualFocusRow}
-          showBottomBorder={params.showBottomBorder}
-          scrollbarWidth={verticalScrollbarWidth}
-          gridHasFiller={hasFiller}
-          {...rootProps.slotProps?.row}
-        />
-      ),
-      renderInfiniteLoadingTrigger: (id) =>
-        (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
-    },
-  });
-
-  // HACK: Keep the grid's store in sync with the virtualizer store. We set up the
-  // subscription in the render phase rather than in an effect because other grid
-  // initialization code runs between those two moments.
-  //
-  // TODO(v9): Remove this
-  const disposeRef = React.useRef<Function>(null);
-  useFirstRender(() => {
-    apiRef.current.store.set('virtualization', virtualizer.store.state.virtualization);
-
-    disposeRef.current = virtualizer.store.subscribe((state) => {
-      if (state.virtualization !== apiRef.current.state.virtualization) {
-        apiRef.current.setState((gridState) => ({
-          ...gridState,
-          virtualization: state.virtualization,
-        }));
-      }
-    });
-  });
-  // XXX: We don't cleanup because there are async issues with the autosizing promise
-  // code in testing. This could cause a memory leak.
-  // useOnMount(() => () => { disposeRef.current?.(); });
 
   /*
    * API METHODS
@@ -240,7 +78,6 @@ export function useGridVirtualization(
   };
 
   const api = {
-    virtualScroller: virtualizer,
     unstable_setVirtualization: setVirtualization,
     unstable_setColumnVirtualization: setColumnVirtualization,
   };

@@ -120,6 +120,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
   const isFirstSizing = React.useRef(true);
 
+  const virtualizer = apiRef.current.virtualizer;
+
   const {
     rowHeight,
     headerHeight,
@@ -134,7 +136,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   const setDimensions = React.useCallback(
     (dimensions: GridDimensions) => {
-      apiRef.current.setState((state) => ({ ...state, dimensions }));
+      virtualizer.store.update({ dimensions });
+
       if (apiRef.current.rootElementRef.current) {
         setCSSVariables(apiRef.current.rootElementRef.current, gridDimensionsSelector(apiRef));
       }
