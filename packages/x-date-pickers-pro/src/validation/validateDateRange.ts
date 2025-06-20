@@ -1,5 +1,6 @@
 import type { MakeRequired } from '@mui/x-internals/types';
 import { validateDate, Validator } from '@mui/x-date-pickers/validation';
+import { DateValidationError } from '@mui/x-date-pickers/models';
 import { BaseDateValidationProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { DayRangeValidationProps } from '../internals/models/dateRange';
@@ -28,7 +29,7 @@ export const validateDateRange: Validator<
   PickerRangeValue,
   DateRangeValidationError,
   ValidateDateRangeProps
-> = ({ adapter, value, timezone, props }) => {
+> = ({ adapter, value, timezone, forcedError, props }) => {
   const [start, end] = value;
 
   const { shouldDisableDate, ...otherProps } = props;
@@ -38,6 +39,7 @@ export const validateDateRange: Validator<
       adapter,
       value: start,
       timezone,
+      forcedError: forcedError[0] as DateValidationError,
       props: {
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'start'),
@@ -47,6 +49,7 @@ export const validateDateRange: Validator<
       adapter,
       value: end,
       timezone,
+      forcedError: forcedError[1] as DateValidationError,
       props: {
         ...otherProps,
         shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'end'),

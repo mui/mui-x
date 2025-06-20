@@ -87,12 +87,13 @@ export function useValueAndOpenStates<
     valueManager,
   });
 
-  const [state, setState] = React.useState<UsePickerState<TValue>>(() => ({
+  const [state, setState] = React.useState<UsePickerState<TValue, TError>>(() => ({
     open: false,
     lastExternalValue: value,
     clockShallowValue: undefined,
     lastCommittedValue: value,
     hasBeenModifiedSinceMount: false,
+    forcedError: valueManager.defaultErrorState,
   }));
 
   const { getValidationErrorForNewValue } = useValidation({
@@ -101,6 +102,7 @@ export function useValueAndOpenStates<
     timezone,
     value,
     onError: props.onError,
+    forcedError: state.forcedError,
   });
 
   const setOpen = useEventCallback((action: React.SetStateAction<boolean>) => {
@@ -147,6 +149,11 @@ export function useValueAndOpenStates<
       clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
       lastCommittedValue: shouldFireOnAccept ? value : prevState.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
+      forcedError:
+        validationError === undefined ||
+        valueManager.isSameError(validationError, valueManager.defaultErrorState)
+          ? undefined
+          : validationError,
     }));
 
     let cachedContext: PickerChangeHandlerContext<TError> | null = null;
@@ -176,6 +183,16 @@ export function useValueAndOpenStates<
     if (shouldClose) {
       setOpen(false);
     }
+  });
+
+  const setForcedError = useEventCallback((forcedError: TError) => {
+    if (
+      state.forcedError !== undefined &&
+      valueManager.isSameError(forcedError, state.forcedError)
+    ) {
+      return;
+    }
+    setState((prevState) => ({ ...prevState, forcedError }));
   });
 
   // If `prop.value` changes, we update the state to reflect the new value
@@ -227,7 +244,7 @@ export function useValueAndOpenStates<
     [utils, valueManager, state.clockShallowValue, value],
   );
 
-  return { timezone, state, setValue, setValueFromView, setOpen, value, viewValue };
+  return { timezone, state, setValue, setValueFromView, setOpen, setForcedError, value, viewValue };
 }
 
 interface UsePickerDateStateParameters<
