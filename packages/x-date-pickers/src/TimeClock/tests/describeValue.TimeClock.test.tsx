@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { clockPointerClasses, TimeClock } from '@mui/x-date-pickers/TimeClock';
 import {

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { ellipsize } from './ellipsize';
 
 describe('ellipsizeText', () => {

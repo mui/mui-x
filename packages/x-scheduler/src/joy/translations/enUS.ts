@@ -11,4 +11,15 @@ export const enUS: SchedulerTranslations = {
 
   // WeekView
   allDay: 'All day',
+
+  // EventPopover
+  closeButtonAriaLabel: 'Close modal',
+  descriptionLabel: 'Description',
+  endDateLabel: 'End date',
+  endTimeLabel: 'End time',
+  eventTitleAriaLabel: 'Event title',
+  saveChanges: 'Save changes',
+  startDateAfterEndDateError: 'Start date/time must be before end date/time.',
+  startDateLabel: 'Start date',
+  startTimeLabel: 'Start time',
 };
