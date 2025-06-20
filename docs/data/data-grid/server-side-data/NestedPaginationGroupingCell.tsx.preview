@@ -1,0 +1,16 @@
+<GroupingIcon
+  id={id}
+  field={field}
+  groupingKey={rowNode.groupingKey}
+  expanded={row.expanded || rowNode.childrenExpanded}
+  row={row}
+  setExpandedRows={setExpandedRows}
+  depth={depth}
+  descendantCount={descendantCount}
+/>
+<span>
+  {formattedValue === undefined
+    ? (rowNode.groupingKey ?? row.groupingKey)
+    : formattedValue}
+  {descendantCount > 0 ? ` (${descendantCount})` : ''}
+</span>
