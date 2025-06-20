@@ -89,7 +89,9 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       // be locked to the first "section" it touches.
       if (
         event.detail.srcEvent.buttons >= 1 &&
-        target?.hasPointerCapture(event.detail.srcEvent.pointerId)
+        target?.hasPointerCapture(event.detail.srcEvent.pointerId) &&
+        // Ensure we are not removing the capture from the zoom slider
+        !target.hasAttribute('data-charts-zoom-slider')
       ) {
         target?.releasePointerCapture(event.detail.srcEvent.pointerId);
       }

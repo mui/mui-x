@@ -39,6 +39,11 @@ export const usePanOnDrag = (
     const setZoomDataRafThrottle = rafThrottle(setZoomDataCallback);
 
     const handlePan = (event: PanEvent) => {
+      const target = event.detail.srcEvent.target as SVGElement | undefined;
+      if (target?.hasAttribute('data-charts-zoom-slider')) {
+        return;
+      }
+
       setZoomDataRafThrottle((prev) => {
         const newZoomData = translateZoom(
           prev,

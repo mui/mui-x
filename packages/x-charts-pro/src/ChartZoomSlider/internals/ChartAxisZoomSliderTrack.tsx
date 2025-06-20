@@ -153,6 +153,7 @@ export function ChartAxisZoomSliderTrack({
       onPointerDown={onPointerDown}
       axisDirection={axisDirection}
       isSelecting={isSelecting}
+      data-charts-zoom-slider
       {...other}
     />
   );
