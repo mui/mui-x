@@ -5,7 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '../models';
 import { PickersInputLocaleText } from '../locales';
 
-export interface MuiPickersAdapterContextValue {
+export interface PickersAdapterContextValue {
   defaultDates: {
     minDate: PickerValidDate;
     maxDate: PickerValidDate;
@@ -17,12 +17,20 @@ export interface MuiPickersAdapterContextValue {
   localeText: PickersInputLocaleText | undefined;
 }
 
-export type MuiPickersAdapterContextNullableValue = {
-  [K in keyof MuiPickersAdapterContextValue]: MuiPickersAdapterContextValue[K] | null;
+export type PickerAdapterContextNullableValue = {
+  [K in keyof PickersAdapterContextValue]: PickersAdapterContextValue[K] | null;
 };
 
-export const MuiPickersAdapterContext =
-  React.createContext<MuiPickersAdapterContextNullableValue | null>(null);
+export const PickerAdapterContext = React.createContext<PickerAdapterContextNullableValue | null>(
+  null,
+);
+
+// TODO v9: Remove this public export
+/**
+ * The context that provides the date adapter and default dates to the pickers.
+ * @deprecated Use `usePickersAdapter` hook if you need access to the adapter instead.
+ */
+export const MuiPickersAdapterContext = PickerAdapterContext;
 
 export interface LocalizationProviderProps<TLocale> {
   children?: React.ReactNode;
@@ -72,7 +80,7 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
   const { localeText: inLocaleText, ...otherInProps } = inProps;
 
   const { adapter: parentAdapter, localeText: parentLocaleText } = React.useContext(
-    MuiPickersAdapterContext,
+    PickerAdapterContext,
   ) ?? { utils: undefined, adapter: undefined, localeText: undefined };
 
   const props: LocalizationProviderProps<TLocale> = useThemeProps({
@@ -124,7 +132,7 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
     return dateAdapter;
   }, [DateAdapter, adapterLocale, dateFormats, dateLibInstance, parentAdapter]);
 
-  const defaultDates: MuiPickersAdapterContextNullableValue['defaultDates'] = React.useMemo(() => {
+  const defaultDates: PickerAdapterContextNullableValue['defaultDates'] = React.useMemo(() => {
     if (!adapter) {
       return null;
     }
@@ -135,7 +143,7 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
     };
   }, [adapter]);
 
-  const contextValue: MuiPickersAdapterContextNullableValue = React.useMemo(() => {
+  const contextValue: PickerAdapterContextNullableValue = React.useMemo(() => {
     return {
       utils: adapter,
       adapter,
@@ -145,9 +153,9 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
   }, [defaultDates, adapter, localeText]);
 
   return (
-    <MuiPickersAdapterContext.Provider value={contextValue}>
+    <PickerAdapterContext.Provider value={contextValue}>
       {children}
-    </MuiPickersAdapterContext.Provider>
+    </PickerAdapterContext.Provider>
   );
 } as LocalizationProviderComponent;
 

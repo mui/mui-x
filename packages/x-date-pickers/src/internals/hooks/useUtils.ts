@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {
-  MuiPickersAdapterContext,
-  MuiPickersAdapterContextValue,
+  PickerAdapterContext,
+  PickersAdapterContextValue,
 } from '../../LocalizationProvider/LocalizationProvider';
 import { DEFAULT_LOCALE } from '../../locales/enUS';
 import { PickersLocaleText } from '../../locales/utils/pickersLocaleTextApi';
 import { PickersTimezone, PickerValidDate } from '../../models';
 
 export const useLocalizationContext = () => {
-  const localization = React.useContext(MuiPickersAdapterContext);
+  const localization = React.useContext(PickerAdapterContext);
   if (localization === null) {
     throw new Error(
       [
@@ -59,6 +59,6 @@ export const useNow = (timezone: PickersTimezone): PickerValidDate => {
 };
 
 export interface UseLocalizationContextReturnValue
-  extends Omit<MuiPickersAdapterContextValue, 'localeText'> {
+  extends Omit<PickersAdapterContextValue, 'localeText'> {
   localeText: PickersLocaleText;
 }
