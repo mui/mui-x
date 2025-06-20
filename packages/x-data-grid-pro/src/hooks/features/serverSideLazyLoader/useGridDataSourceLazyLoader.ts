@@ -409,7 +409,7 @@ export const useGridDataSourceLazyLoader = (
         visibleRows: currentVisibleRows.rows,
         range: {
           firstRowIndex: params.firstRowIndex,
-          lastRowIndex: params.lastRowIndex,
+          lastRowIndex: params.lastRowIndex - 1,
         },
       });
 
