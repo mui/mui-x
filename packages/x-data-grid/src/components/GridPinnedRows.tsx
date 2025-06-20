@@ -1,8 +1,8 @@
-import type { VirtualScrollerUse } from '@mui/x-virtualizer';
+import type { VirtualScrollerCompat } from '@mui/x-virtualizer';
 
 export interface GridPinnedRowsProps {
   position: 'top' | 'bottom';
-  virtualScroller: VirtualScrollerUse;
+  virtualScroller: VirtualScrollerCompat;
 }
 
 export function GridPinnedRows(_: GridPinnedRowsProps) {

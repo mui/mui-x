@@ -19,9 +19,9 @@ import {
 } from './models';
 
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerUse = ReturnType<Virtualizer['virtualization']['use']>;
+export type VirtualScrollerCompat = Virtualization.State['getters'];
 
-export type VirtualizerState = Virtualization.State;
+export type VirtualizerState = Virtualization.State & Dimensions.State;
 
 // FIXME
 type RenderContextInputs = any;
