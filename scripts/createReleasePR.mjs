@@ -53,7 +53,8 @@ const REPO = 'mui-x';
 
 // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
 // eslint-disable-next-line no-useless-escape
-const getRemoteRegex = (owner) => new RegExp(`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
+const getRemoteRegex = (owner) =>
+  new RegExp(String.raw`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
 
 /**
  * Command line arguments for the script
