@@ -30,7 +30,7 @@ export default function FeaturesHighlight() {
       </Typography>
       <Typography sx={{ textAlign: 'center' }}>
         A high-performance, customizable React component with the best possible developer
-        axperience.
+        experience.
       </Typography>
       <Paper
         component="div"

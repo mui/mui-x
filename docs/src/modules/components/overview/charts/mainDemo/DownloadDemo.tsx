@@ -1,6 +1,8 @@
 /* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { lineElementClasses } from '@mui/x-charts/LineChart';
+import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
@@ -110,6 +112,9 @@ export default function DownloadDemo() {
 
       <div style={{ flex: 1, minHeight: 0 }}>
         <LineChartPro
+          colors={(mode) =>
+            rainbowSurgePalette(mode).slice(selectedPackage === '@mui/x-charts' ? 1 : 0)
+          }
           skipAnimation
           dataset={packages[selectedPackage]}
           series={versions[selectedPackage].map((v) => ({
@@ -137,6 +142,11 @@ export default function DownloadDemo() {
             { min: 0, width: 80, zoom: true, max: selectedFormat === 'relative' ? 100 : undefined },
           ]}
           margin={{ left: 0 }}
+          sx={{
+            [`& .${lineElementClasses.root}`]: {
+              display: 'none',
+            },
+          }}
         />
       </div>
     </Stack>

@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
@@ -22,8 +23,8 @@ const valueFormatter: AxisConfig['valueFormatter'] = (value, { location }) => {
 
 export default function BarChartDemo() {
   return (
-    <>
-      <Typography>Issues open daily</Typography>
+    <React.Fragment>
+      <Typography>Issues opened daily</Typography>
       <BarChart
         dataset={dataset}
         series={[{ dataKey: 'value' }]}
@@ -32,6 +33,6 @@ export default function BarChartDemo() {
         xAxis={[{ dataKey: 'weekDay', scaleType: 'band', valueFormatter, disableTicks: true }]}
         yAxis={[{ position: 'none' }]}
       />
-    </>
+    </React.Fragment>
   );
 }

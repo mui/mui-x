@@ -8,19 +8,19 @@ import ChartDemoNavigator from '../ChartDemoNavigator';
 const advancedFeatures = [
   {
     title: 'Bar Chart',
-    description: 'Provides users with control over the presentation of their data.',
+    description: '',
   },
   {
     title: 'Line Chart',
-    description: 'Offers an intuitive and efficient way to reorganize the tree structure.',
+    description: '',
   },
   {
     title: 'Pie Chart',
-    description: 'Improves performance by loading children on demand, especially for large trees.',
+    description: '',
   },
   {
     title: 'Scatter Chart',
-    description: 'Improves performance by loading children on demand, especially for large trees.',
+    description: '',
   },
 ];
 
