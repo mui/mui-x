@@ -21,14 +21,14 @@ export function useNextMonthDisabled(
     timezone,
   }: Pick<MonthValidationOptions, 'disableFuture' | 'maxDate' | 'timezone'>,
 ) {
-  const utils = usePickerAdapter();
+  const adapter = usePickerAdapter();
   return React.useMemo(() => {
-    const now = utils.date(undefined, timezone);
-    const lastEnabledMonth = utils.startOfMonth(
-      disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
+    const now = adapter.date(undefined, timezone);
+    const lastEnabledMonth = adapter.startOfMonth(
+      disableFuture && adapter.isBefore(now, maxDate) ? now : maxDate,
     );
-    return !utils.isAfter(lastEnabledMonth, month);
-  }, [disableFuture, maxDate, month, utils, timezone]);
+    return !adapter.isAfter(lastEnabledMonth, month);
+  }, [disableFuture, maxDate, month, adapter, timezone]);
 }
 
 export function usePreviousMonthDisabled(
