@@ -5,6 +5,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.5.4
+<!-- generated comparing v8.5.3..master -->
+_Jun 20, 2025_
+
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+The following are all team members who have contributed to this release:
+@bernardobelchior, @LukasTy, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.5.3`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@8.5.3`.
+
+#### `@mui/x-data-grid-premium@8.5.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@8.5.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.5.3`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@8.5.3`.
+
+### Charts
+
+#### `@mui/x-charts@8.5.4`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.5.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@8.5.4`, plus:
+
+- [charts-pro] Add export menu to charts toolbar (#18210) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.5.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@8.5.3`, plus:
+
+- [tree view pro] Fix theme augmentation (#18437) @LukasTy
+
+### Codemod
+
+#### `@mui/x-codemod@8.5.3`
+
+Internal changes.
+
 ## 8.5.3
 
 _Jun 19, 2025_
