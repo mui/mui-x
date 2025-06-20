@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValueManager } from '../../../models';
 import { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
 import { useControlledValue } from '../../useControlledValue';
-import { useUtils } from '../../useUtils';
+import { usePickerAdapter } from '../../../../hooks/usePickerAdapter';
 import { InferError, PickerChangeHandlerContext } from '../../../../models';
 import { SetValueActionOptions } from '../../../components/PickerProvider';
 import { useValidation, Validator } from '../../../../validation';
@@ -33,7 +33,7 @@ export function useValueAndOpenStates<
   const { current: defaultValue } = React.useRef(defaultValueProp);
   const { current: isValueControlled } = React.useRef(valueProp !== undefined);
   const { current: isOpenControlled } = React.useRef(openProp !== undefined);
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
@@ -135,10 +135,10 @@ export function useValueAndOpenStates<
       shouldFireOnChange = true;
       shouldFireOnAccept = changeImportance === 'accept';
     } else {
-      shouldFireOnChange = !valueManager.areValuesEqual(utils, newValue, value);
+      shouldFireOnChange = !valueManager.areValuesEqual(adapter, newValue, value);
       shouldFireOnAccept =
         changeImportance === 'accept' &&
-        !valueManager.areValuesEqual(utils, newValue, state.lastCommittedValue);
+        !valueManager.areValuesEqual(adapter, newValue, state.lastCommittedValue);
     }
 
     setState((prevState) => ({
@@ -221,10 +221,10 @@ export function useValueAndOpenStates<
   const viewValue = React.useMemo(
     () =>
       valueManager.cleanValue(
-        utils,
+        adapter,
         state.clockShallowValue === undefined ? value : state.clockShallowValue,
       ),
-    [utils, valueManager, state.clockShallowValue, value],
+    [adapter, valueManager, state.clockShallowValue, value],
   );
 
   return { timezone, state, setValue, setValueFromView, setOpen, value, viewValue };

@@ -8,14 +8,17 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   PickersToolbar,
   PickersToolbarButton,
-  useUtils,
   BaseToolbarProps,
   ExportedBaseToolbarProps,
   PickerRangeValue,
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
-import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import {
+  usePickerAdapter,
+  usePickerContext,
+  usePickerTranslations,
+} from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateRangePickerToolbarClasses,
@@ -75,7 +78,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   inProps: DateRangePickerToolbarProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
   const { toolbarFormat: toolbarFormatProp, className, classes: classesProp, ...other } = props;
@@ -87,14 +90,14 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   const classes = useUtilityClasses(classesProp);
 
   // This can't be a default value when spreading because it breaks the API generation.
-  const toolbarFormat = toolbarFormatProp ?? utils.formats.shortDate;
+  const toolbarFormat = toolbarFormatProp ?? adapter.formats.shortDate;
 
   const formatDate = (date: PickerValidDate | null, fallback: string) => {
-    if (!utils.isValid(date)) {
+    if (!adapter.isValid(date)) {
       return fallback;
     }
 
-    return utils.formatByString(date, toolbarFormat);
+    return adapter.formatByString(date, toolbarFormat);
   };
 
   return (

@@ -8,7 +8,6 @@ import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   PickersToolbar,
   PickersToolbarButton,
-  useUtils,
   BaseToolbarProps,
   ExportedBaseToolbarProps,
   PickerVariant,
@@ -23,7 +22,11 @@ import {
   useToolbarOwnerState,
   PickerToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
-import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import {
+  usePickerAdapter,
+  usePickerContext,
+  usePickerTranslations,
+} from '@mui/x-date-pickers/hooks';
 import {
   TimeRangePickerToolbarClasses,
   getTimeRangePickerToolbarUtilityClass,
@@ -130,12 +133,12 @@ type TimeRangePickerToolbarTimeElementProps = Pick<
  */
 function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElementProps) {
   const { value, ampm, onViewChange, view, separatorClasses, toolbarPlaceholder } = props;
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const { variant, views } = usePickerContext();
 
   const formatHours = (time: PickerValidDate) =>
-    ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
-  const meridiemMode = getMeridiem(value, utils);
+    ampm ? adapter.format(time, 'hours12h') : adapter.format(time, 'hours24h');
+  const meridiemMode = getMeridiem(value, adapter);
   const sectionWidth = variant === 'desktop' ? MULTI_SECTION_CLOCK_SECTION_WIDTH : '100%';
 
   return (
@@ -147,7 +150,7 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
             width={sectionWidth}
             onClick={() => onViewChange('hours')}
             selected={view === 'hours'}
-            value={utils.isValid(value) ? formatHours(value) : toolbarPlaceholder}
+            value={adapter.isValid(value) ? formatHours(value) : toolbarPlaceholder}
           />
           <TimeRangePickerToolbarSeparator variant="h5" value=":" className={separatorClasses} />
           <PickersToolbarButton
@@ -155,7 +158,7 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
             width={sectionWidth}
             onClick={() => onViewChange('minutes')}
             selected={view === 'minutes' || (!views.includes('minutes') && view === 'hours')}
-            value={utils.isValid(value) ? utils.format(value, 'minutes') : toolbarPlaceholder}
+            value={adapter.isValid(value) ? adapter.format(value, 'minutes') : toolbarPlaceholder}
             disabled={!views.includes('minutes')}
           />
         </React.Fragment>
@@ -169,7 +172,7 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
             width={sectionWidth}
             onClick={() => onViewChange('seconds')}
             selected={view === 'seconds'}
-            value={value ? utils.format(value, 'seconds') : toolbarPlaceholder}
+            value={value ? adapter.format(value, 'seconds') : toolbarPlaceholder}
           />
         </React.Fragment>
       )}
@@ -179,7 +182,7 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
           variant="h5"
           onClick={() => onViewChange('meridiem')}
           selected={view === 'meridiem'}
-          value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : toolbarPlaceholder}
+          value={value && meridiemMode ? formatMeridiem(adapter, meridiemMode) : toolbarPlaceholder}
           width={sectionWidth}
         />
       )}

@@ -270,13 +270,13 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The utils to manipulate the date.
+   * @param {MuiPickersAdapter} adapter The adapter to manipulate the date.
    * @param {TValue} value The new value from which we want to take all valid dates in the `referenceValue` state.
    * @param {TValue} prevReferenceValue The previous reference value. It is used as a fallback for invalid dates in the new value.
    * @returns {TValue} The new reference value with no invalid date.
    */
   updateReferenceValue: (
-    utils: MuiPickersAdapter,
+    adapter: MuiPickersAdapter,
     value: TValue,
     prevReferenceValue: InferNonNullablePickerValue<TValue>,
   ) => InferNonNullablePickerValue<TValue>;

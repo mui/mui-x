@@ -7,9 +7,8 @@ import {
   PickersArrowSwitcher,
   useNextMonthDisabled,
   usePreviousMonthDisabled,
-  useUtils,
 } from '@mui/x-date-pickers/internals';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = ((
@@ -27,7 +26,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   props: PickersRangeCalendarHeaderProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
 
   const { calendars, month, monthIndex, labelId, ...other } = props;
@@ -65,9 +64,9 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
     return <PickersCalendarHeader {...other} labelId={labelId} ref={ref} />;
   }
 
-  const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1));
+  const selectNextMonth = () => onMonthChange(adapter.addMonths(currentMonth, 1));
 
-  const selectPreviousMonth = () => onMonthChange(utils.addMonths(currentMonth, -1));
+  const selectPreviousMonth = () => onMonthChange(adapter.addMonths(currentMonth, -1));
 
   return (
     <PickersRangeCalendarHeaderContentMultipleCalendars
@@ -85,7 +84,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
       slotProps={slotProps}
       labelId={labelId}
     >
-      {utils.formatByString(month, format ?? `${utils.formats.month} ${utils.formats.year}`)}
+      {adapter.formatByString(month, format ?? `${adapter.formats.month} ${adapter.formats.year}`)}
     </PickersRangeCalendarHeaderContentMultipleCalendars>
   );
 }) as PickersRangeCalendarHeaderComponent;

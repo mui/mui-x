@@ -55,12 +55,12 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
   /**
    * Determines if two values are equal.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The adapter.
+   * @param {MuiPickersAdapter} adapter The Picker date adapter instance.
    * @param {TValue} valueLeft The first value to compare.
    * @param {TValue} valueRight The second value to compare.
    * @returns {boolean} A boolean indicating if the two values are equal.
    */
-  areValuesEqual: (utils: MuiPickersAdapter, valueLeft: TValue, valueRight: TValue) => boolean;
+  areValuesEqual: (adapter: MuiPickersAdapter, valueLeft: TValue, valueRight: TValue) => boolean;
   /**
    * Value to set when clicking the "Clear" button.
    */
@@ -68,13 +68,13 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
   /**
    * Method returning the value to set when clicking the "Today" button.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The adapter.
+   * @param {MuiPickersAdapter} adapter The Picker date adapter instance.
    * @param {PickersTimezone} timezone The current timezone.
    * @param {PickerValueType} valueType The type of the value being edited.
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (
-    utils: MuiPickersAdapter,
+    adapter: MuiPickersAdapter,
     timezone: PickersTimezone,
     valueType: PickerValueType,
   ) => TValue;
@@ -85,7 +85,7 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
    * @param {PickerValidDate | undefined} params.referenceDate The referenceDate provided by the user.
    * @param {TValue} params.value The value provided by the user.
    * @param {GetDefaultReferenceDateProps} params.props The validation props needed to compute the reference value.
-   * @param {MuiPickersAdapter} params.utils The adapter.
+   * @param {MuiPickersAdapter} params.adapter The Picker date adapter instance.
    * @param {number} params.granularity The granularity of the selection possible on this component.
    * @param {PickersTimezone} params.timezone The current timezone.
    * @param {() => PickerValidDate} params.getTodayDate The reference date to use if no reference date is passed to the component.
@@ -95,7 +95,7 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
     referenceDate: PickerValidDate | undefined;
     value: TValue;
     props: GetDefaultReferenceDateProps;
-    utils: MuiPickersAdapter;
+    adapter: MuiPickersAdapter;
     granularity: number;
     timezone: PickersTimezone;
     getTodayDate?: () => PickerValidDate;
@@ -103,20 +103,20 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The adapter.
+   * @param {MuiPickersAdapter} adapter The Picker date adapter instance.
    * @param {TValue} value The value to parse.
    * @returns {TValue} The value without invalid date.
    */
-  cleanValue: (utils: MuiPickersAdapter, value: TValue) => TValue;
+  cleanValue: (adapter: MuiPickersAdapter, value: TValue) => TValue;
   /**
    * Generates the new value, given the previous value and the new proposed value.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The adapter.
+   * @param {MuiPickersAdapter} adapter The Picker date adapter instance.
    * @param {TValue} lastValidDateValue The last valid value.
    * @param {TValue} value The proposed value.
    * @returns {TValue} The new value.
    */
-  valueReducer?: (utils: MuiPickersAdapter, lastValidDateValue: TValue, value: TValue) => TValue;
+  valueReducer?: (adapter: MuiPickersAdapter, lastValidDateValue: TValue, value: TValue) => TValue;
   /**
    * Compare two errors to know if they are equal.
    * @template TError
@@ -140,18 +140,18 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
      * Return the timezone of the date inside a value.
      * When used on a range Picker, throw an error if both values don't have the same timezone.
      * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-     @param {MuiPickersAdapter} utils The utils to manipulate the date.
+     @param {MuiPickersAdapter} adapter The Picker date adapter instance.
      @param {TValue} value The current value.
      @returns {string | null} The timezone of the current value.
      */
-  getTimezone: (utils: MuiPickersAdapter, value: TValue) => string | null;
+  getTimezone: (adapter: MuiPickersAdapter, value: TValue) => string | null;
   /**
      * Change the timezone of the dates inside a value.
      * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-     @param {MuiPickersAdapter} utils The utils to manipulate the date.
+     @param {MuiPickersAdapter} adapter The Picker date adapter instance.
      @param {PickersTimezone} timezone The current timezone.
      @param {TValue} value The value to convert.
      @returns {TValue} The value with the new dates in the new timezone.
      */
-  setTimezone: (utils: MuiPickersAdapter, timezone: PickersTimezone, value: TValue) => TValue;
+  setTimezone: (adapter: MuiPickersAdapter, timezone: PickersTimezone, value: TValue) => TValue;
 }

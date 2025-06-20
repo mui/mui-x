@@ -3,8 +3,7 @@ import useControlled from '@mui/utils/useControlled';
 import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
-import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
-import { useUtils, useLocalizationContext } from '../useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import {
   UseFieldInternalProps,
   UseFieldState,
@@ -57,9 +56,8 @@ export const useFieldState = <
     TForwardedProps
   >,
 ): UseFieldStateReturnValue<TValue> => {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
-  const adapter = useLocalizationContext();
   const isRtl = useRtl();
 
   const {
@@ -118,18 +116,18 @@ export const useFieldState = <
     return hasValidationError;
   }, [hasValidationError, errorProp]);
 
-  const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
+  const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
 
   const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries(utils, localizedDigits, timezone),
-    [utils, localizedDigits, timezone],
+    () => getSectionsBoundaries(adapter, localizedDigits, timezone),
+    [adapter, localizedDigits, timezone],
   );
 
   const getSectionsFromValue = React.useCallback(
     (valueToAnalyze: TValue) =>
       fieldValueManager.getSectionsFromValue(valueToAnalyze, (date) =>
         buildSectionsFromFormat({
-          utils,
+          adapter,
           localeText: translations,
           localizedDigits,
           format,
@@ -147,7 +145,7 @@ export const useFieldState = <
       localizedDigits,
       isRtl,
       shouldRespectLeadingZeros,
-      utils,
+      adapter,
       formatDensity,
       enableAccessibleFieldDOMStructure,
     ],
@@ -160,7 +158,7 @@ export const useFieldState = <
     const stateWithoutReferenceDate: Omit<UseFieldState<TValue>, 'referenceValue'> = {
       sections,
       lastExternalValue: value,
-      lastSectionsDependencies: { format, isRtl, locale: utils.locale },
+      lastSectionsDependencies: { format, isRtl, locale: adapter.locale },
       tempValueStrAndroid: null,
       characterQuery: null,
     };
@@ -169,7 +167,7 @@ export const useFieldState = <
     const referenceValue = valueManager.getInitialReferenceValue({
       referenceDate: referenceDateProp,
       value,
-      utils,
+      adapter,
       props: internalPropsWithDefaults as GetDefaultReferenceDateProps,
       granularity,
       timezone,
@@ -255,7 +253,7 @@ export const useFieldState = <
   };
 
   const clearValue = () => {
-    if (valueManager.areValuesEqual(utils, value, valueManager.emptyValue)) {
+    if (valueManager.areValuesEqual(adapter, value, valueManager.emptyValue)) {
       setState((prevState) => ({
         ...prevState,
         sections: prevState.sections.map((section) => ({ ...section, value: '' })),
@@ -295,13 +293,13 @@ export const useFieldState = <
 
   const updateValueFromValueStr = (valueStr: string) => {
     const parseDateStr = (dateStr: string, referenceDate: PickerValidDate) => {
-      const date = utils.parse(dateStr, format);
-      if (!utils.isValid(date)) {
+      const date = adapter.parse(dateStr, format);
+      if (!adapter.isValid(date)) {
         return null;
       }
 
       const sections = buildSectionsFromFormat({
-        utils,
+        adapter,
         localeText: translations,
         localizedDigits,
         format,
@@ -311,7 +309,7 @@ export const useFieldState = <
         enableAccessibleFieldDOMStructure,
         isRtl,
       });
-      return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
+      return mergeDateIntoReferenceDate(adapter, date, sections, referenceDate, false);
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
@@ -341,16 +339,16 @@ export const useFieldState = <
      */
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
     const newActiveDateSections = fieldValueManager.getDateSectionsFromValue(newSections, section);
-    const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
+    const newActiveDate = getDateFromDateSections(adapter, newActiveDateSections, localizedDigits);
 
     /**
      * If the new date is valid,
      * Then we merge the value of the modified sections into the reference date.
      * This makes sure that we don't lose some information of the initial date (like the time on a date field).
      */
-    if (utils.isValid(newActiveDate)) {
+    if (adapter.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
-        utils,
+        adapter,
         newActiveDate,
         newActiveDateSections,
         fieldValueManager.getDateFromSection(state.referenceValue as any, section)!,
@@ -378,7 +376,7 @@ export const useFieldState = <
      */
     if (
       newActiveDateSections.every((sectionBis) => sectionBis.value !== '') &&
-      (activeDate == null || utils.isValid(activeDate))
+      (activeDate == null || adapter.isValid(activeDate))
     ) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
       return publishValue(fieldValueManager.updateDateInValue(value, section, newActiveDate));
@@ -416,7 +414,7 @@ export const useFieldState = <
     let sections: InferFieldSection<TValue>[];
     if (
       sectionToUpdateOnNextInvalidDateRef.current != null &&
-      !utils.isValid(
+      !adapter.isValid(
         fieldValueManager.getDateFromSection(
           value,
           state.sections[sectionToUpdateOnNextInvalidDateRef.current.sectionIndex],
@@ -435,9 +433,9 @@ export const useFieldState = <
       ...prevState,
       lastExternalValue: value,
       sections,
-      sectionsDependencies: { format, isRtl, locale: utils.locale },
+      sectionsDependencies: { format, isRtl, locale: adapter.locale },
       referenceValue: fieldValueManager.updateReferenceValue(
-        utils,
+        adapter,
         value,
         prevState.referenceValue,
       ),
@@ -448,13 +446,13 @@ export const useFieldState = <
   if (
     isRtl !== state.lastSectionsDependencies.isRtl ||
     format !== state.lastSectionsDependencies.format ||
-    utils.locale !== state.lastSectionsDependencies.locale
+    adapter.locale !== state.lastSectionsDependencies.locale
   ) {
     const sections = getSectionsFromValue(value);
     validateSections(sections, valueType);
     setState((prevState) => ({
       ...prevState,
-      lastSectionsDependencies: { format, isRtl, locale: utils.locale },
+      lastSectionsDependencies: { format, isRtl, locale: adapter.locale },
       sections,
       tempValueStrAndroid: null,
       characterQuery: null,

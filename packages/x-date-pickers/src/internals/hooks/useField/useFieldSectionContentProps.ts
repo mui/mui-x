@@ -4,8 +4,7 @@ import useId from '@mui/utils/useId';
 import { UseFieldStateReturnValue } from './useFieldState';
 import { FieldSection, MuiPickersAdapter, PickerManager } from '../../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
-import { useUtils } from '../useUtils';
-import { usePickerTranslations } from '../../../hooks';
+import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { FieldRangeSection } from '../../models';
@@ -21,7 +20,7 @@ import { PickersSectionElement } from '../../../PickersSectionList';
 export function useFieldSectionContentProps(
   parameters: UseFieldSectionContentPropsParameters,
 ): UseFieldSectionContentPropsReturnValue {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
   const id = useId();
 
@@ -179,10 +178,12 @@ export function useFieldSectionContentProps(
         // Aria attributes
         'aria-labelledby': `${id}-${section.type}`,
         'aria-readonly': readOnly,
-        'aria-valuenow': getSectionValueNow(section, utils),
+        'aria-valuenow': getSectionValueNow(section, adapter),
         'aria-valuemin': sectionBoundaries.minimum,
         'aria-valuemax': sectionBoundaries.maximum,
-        'aria-valuetext': section.value ? getSectionValueText(section, utils) : translations.empty,
+        'aria-valuetext': section.value
+          ? getSectionValueText(section, adapter)
+          : translations.empty,
         'aria-label': translations[section.type],
         'aria-disabled': disabled,
 
@@ -207,7 +208,7 @@ export function useFieldSectionContentProps(
       readOnly,
       isEditable,
       translations,
-      utils,
+      adapter,
       handleInput,
       handlePaste,
       handleMouseUp,
@@ -233,22 +234,25 @@ type UseFieldSectionContentPropsReturnValue = (
   sectionIndex: number,
 ) => PickersSectionElement['content'];
 
-function getSectionValueText(section: FieldSection, utils: MuiPickersAdapter): string | undefined {
+function getSectionValueText(
+  section: FieldSection,
+  adapter: MuiPickersAdapter,
+): string | undefined {
   if (!section.value) {
     return undefined;
   }
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return utils.format(utils.setMonth(utils.date(), Number(section.value) - 1), 'month');
+        return adapter.format(adapter.setMonth(adapter.date(), Number(section.value) - 1), 'month');
       }
-      const parsedDate = utils.parse(section.value, section.format);
-      return parsedDate ? utils.format(parsedDate, 'month') : undefined;
+      const parsedDate = adapter.parse(section.value, section.format);
+      return parsedDate ? adapter.format(parsedDate, 'month') : undefined;
     }
     case 'day':
       return section.contentType === 'digit'
-        ? utils.format(
-            utils.setDate(utils.startOfYear(utils.date()), Number(section.value)),
+        ? adapter.format(
+            adapter.setDate(adapter.startOfYear(adapter.date()), Number(section.value)),
             'dayOfMonthFull',
           )
         : section.value;
@@ -260,7 +264,7 @@ function getSectionValueText(section: FieldSection, utils: MuiPickersAdapter): s
   }
 }
 
-function getSectionValueNow(section: FieldSection, utils: MuiPickersAdapter): number | undefined {
+function getSectionValueNow(section: FieldSection, adapter: MuiPickersAdapter): number | undefined {
   if (!section.value) {
     return undefined;
   }
@@ -273,12 +277,12 @@ function getSectionValueNow(section: FieldSection, utils: MuiPickersAdapter): nu
       return Number(section.value);
     }
     case 'meridiem': {
-      const parsedDate = utils.parse(
+      const parsedDate = adapter.parse(
         `01:00 ${section.value}`,
-        `${utils.formats.hours12h}:${utils.formats.minutes} ${section.format}`,
+        `${adapter.formats.hours12h}:${adapter.formats.minutes} ${section.format}`,
       );
       if (parsedDate) {
-        return utils.getHours(parsedDate) >= 12 ? 1 : 0;
+        return adapter.getHours(parsedDate) >= 12 ? 1 : 0;
       }
       return undefined;
     }
@@ -290,8 +294,8 @@ function getSectionValueNow(section: FieldSection, utils: MuiPickersAdapter): nu
       if (section.contentType === 'digit') {
         return Number(section.value);
       }
-      const parsedDate = utils.parse(section.value, section.format);
-      return parsedDate ? utils.getMonth(parsedDate) + 1 : undefined;
+      const parsedDate = adapter.parse(section.value, section.format);
+      return parsedDate ? adapter.getMonth(parsedDate) + 1 : undefined;
     }
     default:
       return section.contentType !== 'letter' ? Number(section.value) : undefined;

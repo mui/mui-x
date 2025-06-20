@@ -17,7 +17,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: getTodayDate,
   getInitialReferenceValue: ({ value, referenceDate, ...params }) => {
-    if (params.utils.isValid(value)) {
+    if (params.adapter.isValid(value)) {
       return value;
     }
 
@@ -32,14 +32,14 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   isSameError: (a, b) => a === b,
   hasError: (error) => error != null,
   defaultErrorState: null,
-  getTimezone: (utils, value) => (utils.isValid(value) ? utils.getTimezone(value) : null),
-  setTimezone: (utils, timezone, value) =>
-    value == null ? null : utils.setTimezone(value, timezone),
+  getTimezone: (adapter, value) => (adapter.isValid(value) ? adapter.getTimezone(value) : null),
+  setTimezone: (adapter, timezone, value) =>
+    value == null ? null : adapter.setTimezone(value, timezone),
 };
 
 export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
-  updateReferenceValue: (utils, value, prevReferenceValue) =>
-    utils.isValid(value) ? value : prevReferenceValue,
+  updateReferenceValue: (adapter, value, prevReferenceValue) =>
+    adapter.isValid(value) ? value : prevReferenceValue,
   getSectionsFromValue: (date, getSectionsFromDate) => getSectionsFromDate(date),
   getV7HiddenInputValueFromSections: createDateStrForV7HiddenInputFromSections,
   getV6InputValueFromSections: createDateStrForV6InputFromSections,

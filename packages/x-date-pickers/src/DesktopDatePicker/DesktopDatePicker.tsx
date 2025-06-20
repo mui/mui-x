@@ -6,7 +6,7 @@ import refType from '@mui/utils/refType';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { validateDate, extractValidationProps } from '../validation';
 import { DateView, PickerOwnerState } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -35,7 +35,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   inProps: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<
@@ -54,7 +54,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     ...defaultizedProps,
     closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
-    format: resolveDateFormat(utils, defaultizedProps, false),
+    format: resolveDateFormat(adapter, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
       field: DateField,

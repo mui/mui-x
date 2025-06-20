@@ -1,20 +1,20 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import refType from '@mui/utils/refType';
+import Divider from '@mui/material/Divider';
 import {
   isDatePickerView,
   isInternalTimeView,
   PickerViewRenderer,
   resolveDateTimeFormat,
-  useUtils,
   PickerRangeValue,
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import refType from '@mui/utils/refType';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -23,9 +23,9 @@ import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import Divider from '@mui/material/Divider';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -114,7 +114,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   inProps: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
@@ -144,7 +144,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ...defaultizedProps,
     views,
     viewRenderers,
-    format: resolveDateTimeFormat(utils, defaultizedProps, true),
+    format: resolveDateTimeFormat(adapter, defaultizedProps, true),
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,
     calendars: defaultizedProps.calendars ?? 1,
@@ -194,7 +194,7 @@ DesktopDateTimeRangePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

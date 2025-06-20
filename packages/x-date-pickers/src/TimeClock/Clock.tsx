@@ -6,8 +6,7 @@ import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
 import { ClockPointer } from './ClockPointer';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
@@ -229,7 +228,7 @@ export function Clock(inProps: ClockProps) {
     classes: classesProp,
   } = props;
 
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const ownerState: ClockOwnerState = {
@@ -390,7 +389,7 @@ export function Clock(inProps: ClockProps) {
           aria-activedescendant={selectedId}
           aria-label={translations.clockLabelText(
             type,
-            value == null ? null : utils.format(value, ampm ? 'fullTime12h' : 'fullTime24h'),
+            value == null ? null : adapter.format(value, ampm ? 'fullTime12h' : 'fullTime24h'),
           )}
           ref={listboxRef}
           role="listbox"
@@ -409,10 +408,10 @@ export function Clock(inProps: ClockProps) {
             disabled={disabled || meridiemMode === null}
             ownerState={ownerState}
             className={classes.amButton}
-            title={formatMeridiem(utils, 'am')}
+            title={formatMeridiem(adapter, 'am')}
           >
             <ClockMeridiemText variant="caption" className={classes.meridiemText}>
-              {formatMeridiem(utils, 'am')}
+              {formatMeridiem(adapter, 'am')}
             </ClockMeridiemText>
           </ClockAmButton>
           <ClockPmButton
@@ -421,10 +420,10 @@ export function Clock(inProps: ClockProps) {
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             ownerState={ownerState}
             className={classes.pmButton}
-            title={formatMeridiem(utils, 'pm')}
+            title={formatMeridiem(adapter, 'pm')}
           >
             <ClockMeridiemText variant="caption" className={classes.meridiemText}>
-              {formatMeridiem(utils, 'pm')}
+              {formatMeridiem(adapter, 'pm')}
             </ClockMeridiemText>
           </ClockPmButton>
         </React.Fragment>

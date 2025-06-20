@@ -34,8 +34,8 @@ export const rangeValueManager: RangePickerValueManager = {
     getTodayDate(utils, timezone, valueType),
   ],
   getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
-    const shouldKeepStartDate = params.utils.isValid(value[0]);
-    const shouldKeepEndDate = params.utils.isValid(value[1]);
+    const shouldKeepStartDate = params.adapter.isValid(value[0]);
+    const shouldKeepEndDate = params.adapter.isValid(value[1]);
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
       return value as PickerNonNullableRangeValue;
@@ -55,9 +55,9 @@ export const rangeValueManager: RangePickerValueManager = {
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
   hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
-  getTimezone: (utils, value) => {
-    const timezoneStart = utils.isValid(value[0]) ? utils.getTimezone(value[0]) : null;
-    const timezoneEnd = utils.isValid(value[1]) ? utils.getTimezone(value[1]) : null;
+  getTimezone: (adapter, value) => {
+    const timezoneStart = adapter.isValid(value[0]) ? adapter.getTimezone(value[0]) : null;
+    const timezoneEnd = adapter.isValid(value[1]) ? adapter.getTimezone(value[1]) : null;
 
     if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
       throw new Error('MUI X: The timezone of the start and the end date should be the same.');
@@ -65,9 +65,9 @@ export const rangeValueManager: RangePickerValueManager = {
 
     return timezoneStart ?? timezoneEnd;
   },
-  setTimezone: (utils, timezone, value) => [
-    value[0] == null ? null : utils.setTimezone(value[0], timezone),
-    value[1] == null ? null : utils.setTimezone(value[1], timezone),
+  setTimezone: (adapter, timezone, value) => [
+    value[0] == null ? null : adapter.setTimezone(value[0], timezone),
+    value[1] == null ? null : adapter.setTimezone(value[1], timezone),
   ],
 };
 
@@ -76,9 +76,9 @@ export const getRangeFieldValueManager = ({
 }: {
   dateSeparator: string | undefined;
 }): FieldValueManager<PickerRangeValue> => ({
-  updateReferenceValue: (utils, value, prevReferenceValue) => {
-    const shouldKeepStartDate = utils.isValid(value[0]);
-    const shouldKeepEndDate = utils.isValid(value[1]);
+  updateReferenceValue: (adapter, value, prevReferenceValue) => {
+    const shouldKeepStartDate = adapter.isValid(value[0]);
+    const shouldKeepEndDate = adapter.isValid(value[1]);
 
     if (!shouldKeepStartDate && !shouldKeepEndDate) {
       return prevReferenceValue;

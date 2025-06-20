@@ -15,8 +15,8 @@ import {
   ValidateDateTimeProps,
 } from '../validation/validateDateTime';
 import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
-import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
+import { useDefaultDates } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
 
 export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -40,13 +40,13 @@ export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends bo
 }
 
 function useOpenPickerButtonAriaLabel(value: PickerValue) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
 
   return React.useMemo(() => {
-    const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+    const formattedValue = adapter.isValid(value) ? adapter.format(value, 'fullDate') : null;
     return translations.openDatePickerDialogue(formattedValue);
-  }, [value, translations, utils]);
+  }, [value, translations, adapter]);
 }
 
 function useApplyDefaultValuesToDateTimeFieldInternalProps<
@@ -56,12 +56,12 @@ function useApplyDefaultValuesToDateTimeFieldInternalProps<
 ): PickerManagerFieldInternalPropsWithDefaults<
   UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
 > {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToDateTimeValidationProps(internalProps);
 
   const ampm = React.useMemo(
-    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
-    [internalProps.ampm, utils],
+    () => internalProps.ampm ?? adapter.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, adapter],
   );
 
   return React.useMemo(
@@ -70,9 +70,9 @@ function useApplyDefaultValuesToDateTimeFieldInternalProps<
       ...validationProps,
       format:
         internalProps.format ??
-        (ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h),
+        (ampm ? adapter.formats.keyboardDateTime12h : adapter.formats.keyboardDateTime24h),
     }),
-    [internalProps, validationProps, ampm, utils],
+    [internalProps, validationProps, ampm, adapter],
   );
 }
 
@@ -90,7 +90,7 @@ export function useApplyDefaultValuesToDateTimeValidationProps(
     SharedDateTimeAndDateTimeRangeValidationProps | 'minDateTime' | 'maxDateTime'
   >,
 ): Pick<ValidateDateTimeProps, SharedDateTimeAndDateTimeRangeValidationProps> {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const defaultDates = useDefaultDates();
 
   return React.useMemo(
@@ -100,8 +100,8 @@ export function useApplyDefaultValuesToDateTimeValidationProps(
       // TODO: Explore if we can remove it from the public API
       disableIgnoringDatePartForTimeValidation:
         !!props.minDateTime || !!props.maxDateTime || !!props.disableFuture || !!props.disablePast,
-      minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
-      maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
+      minDate: applyDefaultDate(adapter, props.minDateTime ?? props.minDate, defaultDates.minDate),
+      maxDate: applyDefaultDate(adapter, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
       minTime: props.minDateTime ?? props.minTime,
       maxTime: props.maxDateTime ?? props.maxTime,
     }),
@@ -114,7 +114,7 @@ export function useApplyDefaultValuesToDateTimeValidationProps(
       props.maxDate,
       props.disableFuture,
       props.disablePast,
-      utils,
+      adapter,
       defaultDates,
     ],
   );

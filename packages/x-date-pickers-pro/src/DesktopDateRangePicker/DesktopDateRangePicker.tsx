@@ -1,15 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  PickerViewRendererLookup,
-  useUtils,
-  PickerRangeValue,
-} from '@mui/x-date-pickers/internals';
-import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
+import { PickerViewRendererLookup, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -39,7 +36,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   inProps: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
@@ -56,7 +53,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
     // TODO: Replace with resolveDateFormat() once we support month and year views
-    format: defaultizedProps.format ?? utils.formats.keyboardDate,
+    format: defaultizedProps.format ?? adapter.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,

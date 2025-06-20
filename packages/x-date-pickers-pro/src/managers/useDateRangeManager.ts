@@ -2,13 +2,12 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
   useApplyDefaultValuesToDateValidationProps,
-  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -43,12 +42,12 @@ export function useDateRangeManager<TEnableAccessibleFieldDOMStructure extends b
 }
 
 function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
 
   return React.useMemo(() => {
-    return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
-  }, [value, translations, utils]);
+    return translations.openRangePickerDialogue(formatRange(adapter, value, 'fullDate'));
+  }, [value, translations, adapter]);
 }
 
 function useApplyDefaultValuesToDateRangeFieldInternalProps<
@@ -58,16 +57,16 @@ function useApplyDefaultValuesToDateRangeFieldInternalProps<
 ): PickerManagerFieldInternalPropsWithDefaults<
   UseDateRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
 > {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToDateValidationProps(internalProps);
 
   return React.useMemo(
     () => ({
       ...internalProps,
       ...validationProps,
-      format: internalProps.format ?? utils.formats.keyboardDate,
+      format: internalProps.format ?? adapter.formats.keyboardDate,
     }),
-    [internalProps, validationProps, utils],
+    [internalProps, validationProps, adapter],
   );
 }
 

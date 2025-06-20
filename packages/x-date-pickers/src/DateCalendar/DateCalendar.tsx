@@ -223,7 +223,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
 
     const closestEnabledDate = isDateDisabled(newDate)
       ? findClosestEnabledDate({
-          utils: adapter,
+          adapter,
           date: newDate,
           minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
           maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
@@ -249,7 +249,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
 
     const closestEnabledDate = isDateDisabled(newDate)
       ? findClosestEnabledDate({
-          utils: adapter,
+          adapter,
           date: newDate,
           minDate: adapter.isBefore(minDate, startOfYear) ? startOfYear : minDate,
           maxDate: adapter.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
   TimeViewWithMeridiem,
-  useUtils,
   resolveTimeFormat,
   PickerRangeValue,
   PickerRendererInterceptorProps,
@@ -24,6 +23,7 @@ import {
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
@@ -85,7 +85,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   inProps: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all time range pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<
@@ -115,7 +115,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     views,
     viewRenderers,
     ampmInClock: true,
-    format: resolveTimeFormat(utils, defaultizedProps),
+    format: resolveTimeFormat(adapter, defaultizedProps),
     slots: {
       field: SingleInputTimeRangeField,
       ...defaultizedProps.slots,
@@ -171,7 +171,7 @@ DesktopTimeRangePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
