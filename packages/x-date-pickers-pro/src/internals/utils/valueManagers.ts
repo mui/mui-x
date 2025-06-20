@@ -34,8 +34,8 @@ export const rangeValueManager: RangePickerValueManager = {
     getTodayDate(utils, timezone, valueType),
   ],
   getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
-    const shouldKeepStartDate = params.utils.isValid(value[0]);
-    const shouldKeepEndDate = params.utils.isValid(value[1]);
+    const shouldKeepStartDate = params.adapter.isValid(value[0]);
+    const shouldKeepEndDate = params.adapter.isValid(value[1]);
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
       return value as PickerNonNullableRangeValue;

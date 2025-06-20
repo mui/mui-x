@@ -4,8 +4,7 @@ import useId from '@mui/utils/useId';
 import { UseFieldStateReturnValue } from './useFieldState';
 import { FieldSection, MuiPickersAdapter, PickerManager } from '../../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
-import { useUtils } from '../useUtils';
-import { usePickerTranslations } from '../../../hooks';
+import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { FieldRangeSection } from '../../models';
@@ -21,7 +20,7 @@ import { PickersSectionElement } from '../../../PickersSectionList';
 export function useFieldSectionContentProps(
   parameters: UseFieldSectionContentPropsParameters,
 ): UseFieldSectionContentPropsReturnValue {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
   const id = useId();
 
@@ -179,10 +178,12 @@ export function useFieldSectionContentProps(
         // Aria attributes
         'aria-labelledby': `${id}-${section.type}`,
         'aria-readonly': readOnly,
-        'aria-valuenow': getSectionValueNow(section, utils),
+        'aria-valuenow': getSectionValueNow(section, adapter),
         'aria-valuemin': sectionBoundaries.minimum,
         'aria-valuemax': sectionBoundaries.maximum,
-        'aria-valuetext': section.value ? getSectionValueText(section, utils) : translations.empty,
+        'aria-valuetext': section.value
+          ? getSectionValueText(section, adapter)
+          : translations.empty,
         'aria-label': translations[section.type],
         'aria-disabled': disabled,
 
@@ -207,7 +208,7 @@ export function useFieldSectionContentProps(
       readOnly,
       isEditable,
       translations,
-      utils,
+      adapter,
       handleInput,
       handlePaste,
       handleMouseUp,

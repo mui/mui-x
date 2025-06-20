@@ -17,7 +17,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: getTodayDate,
   getInitialReferenceValue: ({ value, referenceDate, ...params }) => {
-    if (params.utils.isValid(value)) {
+    if (params.adapter.isValid(value)) {
       return value;
     }
 

@@ -56,50 +56,50 @@ const roundDate = (utils: MuiPickersAdapter, granularity: number, date: PickerVa
 
 export const getDefaultReferenceDate = ({
   props,
-  utils,
+  adapter,
   granularity,
   timezone,
   getTodayDate: inGetTodayDate,
 }: {
   props: GetDefaultReferenceDateProps;
-  utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
   granularity: number;
   timezone: PickersTimezone;
   getTodayDate?: () => PickerValidDate;
 }): PickerValidDate => {
   let referenceDate = inGetTodayDate
     ? inGetTodayDate()
-    : roundDate(utils, granularity, getTodayDate(utils, timezone));
+    : roundDate(adapter, granularity, getTodayDate(adapter, timezone));
 
-  if (props.minDate != null && utils.isAfterDay(props.minDate, referenceDate)) {
-    referenceDate = roundDate(utils, granularity, props.minDate);
+  if (props.minDate != null && adapter.isAfterDay(props.minDate, referenceDate)) {
+    referenceDate = roundDate(adapter, granularity, props.minDate);
   }
 
-  if (props.maxDate != null && utils.isBeforeDay(props.maxDate, referenceDate)) {
-    referenceDate = roundDate(utils, granularity, props.maxDate);
+  if (props.maxDate != null && adapter.isBeforeDay(props.maxDate, referenceDate)) {
+    referenceDate = roundDate(adapter, granularity, props.maxDate);
   }
 
   const isAfter = createIsAfterIgnoreDatePart(
     props.disableIgnoringDatePartForTimeValidation ?? false,
-    utils,
+    adapter,
   );
   if (props.minTime != null && isAfter(props.minTime, referenceDate)) {
     referenceDate = roundDate(
-      utils,
+      adapter,
       granularity,
       props.disableIgnoringDatePartForTimeValidation
         ? props.minTime
-        : mergeDateAndTime(utils, referenceDate, props.minTime),
+        : mergeDateAndTime(adapter, referenceDate, props.minTime),
     );
   }
 
   if (props.maxTime != null && isAfter(referenceDate, props.maxTime)) {
     referenceDate = roundDate(
-      utils,
+      adapter,
       granularity,
       props.disableIgnoringDatePartForTimeValidation
         ? props.maxTime
-        : mergeDateAndTime(utils, referenceDate, props.maxTime),
+        : mergeDateAndTime(adapter, referenceDate, props.maxTime),
     );
   }
 

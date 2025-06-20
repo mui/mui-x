@@ -6,6 +6,7 @@ import {
 import { DEFAULT_LOCALE } from '../../locales/enUS';
 import { PickersLocaleText } from '../../locales/utils/pickersLocaleTextApi';
 import { PickersTimezone, PickerValidDate } from '../../models';
+import { usePickerAdapter } from '../../hooks/usePickerAdapter';
 
 export const useLocalizationContext = () => {
   const localization = React.useContext(PickerAdapterContext);
@@ -43,16 +44,14 @@ export const useLocalizationContext = () => {
   );
 };
 
-export const useUtils = () => useLocalizationContext().utils;
-
 export const useDefaultDates = () => useLocalizationContext().defaultDates;
 
 export const useNow = (timezone: PickersTimezone): PickerValidDate => {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const now = React.useRef<PickerValidDate>(undefined);
   if (now.current === undefined) {
-    now.current = utils.date(undefined, timezone);
+    now.current = adapter.date(undefined, timezone);
   }
 
   return now.current!;

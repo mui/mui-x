@@ -20,10 +20,10 @@ import { getMonthsInYear } from '../../utils/date-utils';
 import { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   formatToken: string,
 ): Pick<FieldSection, 'type' | 'contentType'> & { maxLength: number | undefined } => {
-  const config = utils.formatTokenMap[formatToken];
+  const config = adapter.formatTokenMap[formatToken];
 
   if (config == null) {
     throw new Error(

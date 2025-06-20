@@ -7,7 +7,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateDateTime } from '../validation';
 import { PickerOwnerState } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
@@ -53,7 +53,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   inProps: MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
@@ -86,7 +86,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: resolveDateTimeFormat(utils, defaultizedProps),
+    format: resolveDateTimeFormat(adapter, defaultizedProps),
     views,
     ampmInClock,
     slots: {

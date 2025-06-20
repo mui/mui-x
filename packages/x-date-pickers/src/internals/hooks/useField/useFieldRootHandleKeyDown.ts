@@ -8,13 +8,13 @@ import {
 } from '../../../models';
 import { PickerValidValue } from '../../models';
 import { UseFieldStateReturnValue } from './useFieldState';
-import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries, UseFieldInternalProps } from './useField.types';
 import {
   cleanDigitSectionValue,
   getLetterEditingOptions,
   removeLocalizedDigits,
 } from './useField.utils';
+import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 
 /**
  * Returns the `onKeyDown` handler to pass to the root element of the field.
@@ -22,7 +22,7 @@ import {
 export function useFieldRootHandleKeyDown<TValue extends PickerValidValue>(
   parameters: UseFieldRootHandleKeyDownParameters<TValue>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const {
     manager: { internal_fieldValueManager: fieldValueManager },
@@ -131,7 +131,7 @@ export function useFieldRootHandleKeyDown<TValue extends PickerValidValue>(
         const activeSection = state.sections[activeSectionIndex];
 
         const newSectionValue = adjustSectionValue(
-          utils,
+          adapter,
           timezone,
           activeSection,
           event.key as AvailableAdjustKeyCode,
