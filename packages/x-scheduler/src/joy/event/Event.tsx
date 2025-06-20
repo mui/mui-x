@@ -120,16 +120,12 @@ export const Event = React.forwardRef(function Event(
           (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
         )}
         aria-labelledby={`${ariaLabelledBy} ${id}`}
-        render={(triggerProps) => (
-          <TimeGrid.Event
-            {...triggerProps}
-            start={eventProp.start}
-            end={eventProp.end}
-            onClick={(event) => onEventClick?.(event, eventProp)}
-          >
+        onClick={(event) => onEventClick?.(event, eventProp)}
+        render={
+          <TimeGrid.Event start={eventProp.start} end={eventProp.end}>
             {renderContent}
           </TimeGrid.Event>
-        )}
+        }
       />
     </div>
   );

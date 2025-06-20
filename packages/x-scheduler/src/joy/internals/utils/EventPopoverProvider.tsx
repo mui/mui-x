@@ -37,10 +37,13 @@ export function EventPopoverProvider({
   );
 
   const handleClose = React.useCallback(() => {
+    if (!isPopoverOpen) {
+      return;
+    }
     setIsPopoverOpen(false);
     setAnchor(null);
     setSelectedEvent(null);
-  }, []);
+  }, [isPopoverOpen]);
 
   const handleEventEdit = React.useCallback(
     (editedEvent: CalendarEvent) => {
