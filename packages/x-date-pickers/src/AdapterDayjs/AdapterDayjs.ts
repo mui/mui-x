@@ -201,11 +201,10 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
       const timezone = dayjs.tz.guess();
 
-      // We can't change the system timezone in the tests
-      /* v8 ignore next 3 */
       if (timezone === 'UTC') {
         date = dayjs(value);
-      } else {
+      } /* v8 ignore next */ else {
+        // We can't change the system timezone in the tests
         date = dayjs.tz(value, timezone);
       }
     } else {
