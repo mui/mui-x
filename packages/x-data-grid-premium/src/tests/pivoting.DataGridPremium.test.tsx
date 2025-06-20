@@ -281,7 +281,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    });
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
@@ -320,7 +322,6 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await waitFor(() => {
       expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
     });
-
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
@@ -505,7 +506,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1,058,475', '1,293,770']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1,058,475', '1,293,770']);
+    });
     expect(getRowValues(1)).to.deep.equal(['GOOGL (1)', '402,144', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (1)', '1,415,402', '']);
   });
@@ -681,7 +684,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+    });
   });
 
   it('should not revert prior edits when pivot mode is disabled', async () => {
