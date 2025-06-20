@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { BarSeriesType } from '@mui/x-charts/models';
-import { SelectOptions } from './types';
 import { HighlightItemData, HighlightScope } from '@mui/x-charts/context';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { SelectOptions } from './types';
 
 const dataset: Record<'x' | 'a' | 'b' | 'c', number>[] = [
   { x: 0, a: 10, b: 15 },

@@ -1,3 +1,4 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import Typography from '@mui/material/Typography';
@@ -10,7 +11,7 @@ const data = [
 
 export default function PieChartDemo() {
   return (
-    <>
+    <React.Fragment>
       <Typography>Downloads per package</Typography>
       <PieChart
         series={[
@@ -36,6 +37,6 @@ export default function PieChartDemo() {
           },
         }}
       />
-    </>
+    </React.Fragment>
   );
 }

@@ -27,9 +27,9 @@ export default function ChartsCommunityOrPro() {
           proDescription={
             'Requires a commercial license. better suited for data rich and enterprise applications, including features such as reordering, lazy loading or virtualization.'
           }
-          premiumDescription={
-            'Requires a commercial license. better suited for data rich and enterprise applications, including features such as reordering, lazy loading or virtualization.'
-          }
+          // premiumDescription={
+          //   'Requires a commercial license. better suited for data rich and enterprise applications, including features such as reordering, lazy loading or virtualization.'
+          // }
         />
       </Stack>
     </React.Fragment>
