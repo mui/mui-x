@@ -105,6 +105,14 @@ const onItemClick = (
 
 {{"demo": "PieClick.js"}}
 
+## CSS
+
+You can customize the different elements rendered by a pie chart using CSS.
+
+In the example below, the outer series is selected using the `data-series` attribute to reduce its opacity.
+
+{{"demo": "PieCSSStyling.js"}}
+
 ## Animation
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
