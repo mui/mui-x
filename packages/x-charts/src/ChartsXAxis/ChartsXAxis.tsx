@@ -363,9 +363,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
-        const showTick = instance.isXInside(tickOffset);
         const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
+        const showTick = instance.isXInside(tickOffset) && tickLabel !== undefined;
 
         return (
           <g
