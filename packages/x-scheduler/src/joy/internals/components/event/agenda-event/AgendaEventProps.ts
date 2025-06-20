@@ -1,4 +1,4 @@
-import { EventVariant } from '../../models/events';
+import { EventVariant } from '../../../../models/events';
 import { EventProps } from '../Event.types';
 
 export interface AgendaEventProps extends EventProps {

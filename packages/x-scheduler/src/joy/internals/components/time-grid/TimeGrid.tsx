@@ -7,7 +7,7 @@ import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
 import { TimeGridProps } from './TimeGrid.types';
 import { CalendarEvent } from '../../../models/events';
-import { TimeGridEvent } from '../../../event/time-grid-event/TimeGridEvent';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';

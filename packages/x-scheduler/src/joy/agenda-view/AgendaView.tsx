@@ -5,7 +5,7 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { CalendarEvent } from '../models/events';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
+import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
@@ -51,7 +51,7 @@ export const AgendaView = React.memo(
               <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
               <div className="WeekDayCell">
                 <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
-                  {adapter.formatByString(day, 'cccc')}
+                  {adapter.format(day, 'weekday')}
                 </span>
                 <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
                   {adapter.format(day, 'month')}, {adapter.format(day, 'year')}

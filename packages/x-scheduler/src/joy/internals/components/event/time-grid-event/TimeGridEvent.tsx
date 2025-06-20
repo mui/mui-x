@@ -2,11 +2,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useId } from '@base-ui-components/react/utils';
-import { TimeGrid } from '../../../primitives/time-grid';
-import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { EventProps } from '../Event.types';
+import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
+import { TimeGrid } from '../../../../../primitives/time-grid';
+import { getColorClassName } from '../../../utils/color-utils';
 import './TimeGridEvent.css';
-import { getColorClassName } from '../../internals/utils/color-utils';
 
 const adapter = getAdapter();
 
