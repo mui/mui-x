@@ -29,6 +29,7 @@ export default function EssentialCharts() {
 
   return (
     <ChartDemoNavigator
+      overline="Essential Charts"
       descriptions={advancedFeatures}
       activeItem={activeItem}
       setActiveItem={setActiveItem}

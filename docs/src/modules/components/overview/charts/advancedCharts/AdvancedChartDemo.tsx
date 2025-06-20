@@ -11,12 +11,12 @@ const advancedCharts = [
   },
   {
     title: 'Heatmap',
-    description: 'Offers an intuitive and efficient way to reorganize the tree structure.',
+    description: 'Highlight patterns on bidimentional data.',
     iconLink: '/static/x/pro.svg',
   },
   {
     title: 'Funnel',
-    description: 'Improves performance by loading children on demand, especially for large trees.',
+    description: 'Show pipeline performances.',
     iconLink: '/static/x/pro.svg',
   },
 ];
@@ -26,6 +26,7 @@ export default function AdvancedCharts() {
 
   return (
     <ChartDemoNavigator
+      overline="Advanced Charts"
       descriptions={advancedCharts}
       activeItem={activeItem}
       setActiveItem={setActiveItem}

@@ -16,12 +16,13 @@ export interface DemoDescription {
 
 export default function ChartDemoNavigator(
   props: React.PropsWithChildren<{
+    overline: string;
     descriptions: DemoDescription[];
     activeItem: number;
     setActiveItem: React.Dispatch<React.SetStateAction<number>>;
   }>,
 ) {
-  const { descriptions, activeItem, setActiveItem, children } = props;
+  const { descriptions, overline, activeItem, setActiveItem, children } = props;
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
@@ -44,7 +45,7 @@ export default function ChartDemoNavigator(
           }}
         >
           <SectionHeadline
-            overline="Essential charts"
+            overline={overline}
             title={
               <Typography variant="h2" fontSize="1.625rem">
                 {descriptions[activeItem].title}

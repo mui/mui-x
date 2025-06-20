@@ -27,6 +27,7 @@ export default function AdvancedFeatures() {
 
   return (
     <ChartDemoNavigator
+      overline="Advanced Features"
       descriptions={advancedFeatures}
       activeItem={activeItem}
       setActiveItem={setActiveItem}
