@@ -18,4 +18,8 @@ export interface EventProps extends React.HTMLAttributes<HTMLDivElement> {
    * The variant of the event, which determines its styling.
    */
   variant: EventVariant;
+  /**
+   * Callback fired when the event is clicked.
+   */
+  onEventClick?: (event: React.MouseEvent, calendarEvent: CalendarEvent) => void;
 }

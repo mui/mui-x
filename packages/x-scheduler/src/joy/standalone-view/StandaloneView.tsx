@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { EventCalendarStoreContext } from '../internals/hooks/useEventCalendarStore';
 import { Store } from '../../base-ui-copy/utils/store';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
@@ -25,6 +26,10 @@ export function StandaloneView(props: StandaloneViewProps) {
         views: ['week', 'day', 'month', 'agenda'],
       }),
   ).current;
+
+  useModernLayoutEffect(() => {
+    store.apply({ events, resources });
+  }, [events, resources]);
 
   return (
     <EventCalendarStoreContext.Provider value={store}>

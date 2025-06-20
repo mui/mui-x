@@ -11,6 +11,8 @@
   --event-color-10: var(--primary-10);
   --event-color-11: var(--primary-11);
   --event-color-12: var(--primary-12);
+
+  --event-color-4-rgb: var(--primary-4-rgb);
 }
 
 .palette-mauve {
@@ -26,6 +28,8 @@
   --event-color-10: var(--mauve-10);
   --event-color-11: var(--mauve-11);
   --event-color-12: var(--mauve-12);
+
+  --event-color-4-rgb: var(--mauve-4-rgb);
 }
 
 .palette-violet {
@@ -41,6 +45,8 @@
   --event-color-10: var(--violet-10);
   --event-color-11: var(--violet-11);
   --event-color-12: var(--violet-12);
+
+  --event-color-4-rgb: var(--violet-4-rgb);
 }
 
 .palette-cyan {
@@ -56,6 +62,8 @@
   --event-color-10: var(--cyan-10);
   --event-color-11: var(--cyan-11);
   --event-color-12: var(--cyan-12);
+
+  --event-color-4-rgb: var(--cyan-4-rgb);
 }
 
 .palette-jade {
@@ -71,6 +79,8 @@
   --event-color-10: var(--jade-10);
   --event-color-11: var(--jade-11);
   --event-color-12: var(--jade-12);
+
+  --event-color-4-rgb: var(--jade-4-rgb);
 }
 
 .palette-red {
@@ -86,4 +96,6 @@
   --event-color-10: var(--red-10);
   --event-color-11: var(--red-11);
   --event-color-12: var(--red-12);
+
+  --event-color-4-rgb: var(--red-4-rgb);
 }
