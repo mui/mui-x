@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useForkRef } from '@base-ui-components/react/utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { AgendaViewProps } from './AgendaView.types';
 import { CalendarEvent } from '../models/events';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
