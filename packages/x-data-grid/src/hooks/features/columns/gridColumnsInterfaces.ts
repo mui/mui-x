@@ -53,3 +53,7 @@ export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
 export type GridHydrateColumnsValue = GridColumnsRawState;
 
 export type GridColumnVisibilityModel = Record<GridColDef['field'], boolean>;
+
+export interface GridColumnsInternalCache {
+  lastColumnsProp: readonly GridColDef[];
+}
