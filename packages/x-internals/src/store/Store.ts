@@ -26,7 +26,7 @@ export class Store<State> {
     return this.state;
   };
 
-  private setState(newState: State) {
+  public setState(newState: State) {
     this.state = newState;
     this.listeners.forEach((l) => l(newState));
   }
