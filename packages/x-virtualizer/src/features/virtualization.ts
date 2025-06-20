@@ -10,7 +10,7 @@ import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import reactMajor from '@mui/x-internals/reactMajor';
 import { createSelector, useSelector, Store } from '@mui/x-internals/store';
-import type { VirtualizerState, VirtualizerParams } from '../useVirtualizer';
+import type { CoreState, VirtualizerParams } from '../useVirtualizer';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -44,11 +44,9 @@ export const EMPTY_RENDER_CONTEXT = {
 };
 
 const selectors = {
-  renderContext: createSelector((state: VirtualizerState) => state.virtualization.renderContext),
-  enabledForRows: createSelector((state: VirtualizerState) => state.virtualization.enabledForRows),
-  enabledForColumns: createSelector(
-    (state: VirtualizerState) => state.virtualization.enabledForColumns,
-  ),
+  renderContext: createSelector((state: CoreState) => state.virtualization.renderContext),
+  enabledForRows: createSelector((state: CoreState) => state.virtualization.enabledForRows),
+  enabledForColumns: createSelector((state: CoreState) => state.virtualization.enabledForColumns),
 };
 
 export const Virtualization = {
@@ -78,7 +76,7 @@ function initializeState(params: VirtualizerParams) {
   return state;
 }
 
-function useVirtualization(store: Store<Virtualization.State>, params: VirtualizerParams) {
+function useVirtualization(store: Store<CoreState>, params: VirtualizerParams) {
   const {
     initialState,
     isRtl,

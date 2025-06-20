@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Store } from '@mui/x-internals/store';
 import { Size, DimensionsState } from '../models';
 import type { VirtualizerParams } from '../useVirtualizer';
-import { Virtualization } from './virtualization';
+import type { CoreState } from '../useVirtualizer';
 
 const EMPTY_SIZE: Size = { width: 0, height: 0 };
 const EMPTY_DIMENSIONS: DimensionsState = {
@@ -49,10 +49,7 @@ function initializeState(params: VirtualizerParams) {
   };
 }
 
-function useDimensions(
-  store: Store<Virtualization.State & Dimensions.State>,
-  params: VirtualizerParams,
-) {
+function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
 
