@@ -1,5 +1,5 @@
-import { CalendarEvent, EventVariant } from '../models/events';
-import { CalendarResource } from '../models/resource';
+import { CalendarEvent, EventVariant } from '../../../models/events';
+import { CalendarResource } from '../../../models/resource';
 
 export interface EventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

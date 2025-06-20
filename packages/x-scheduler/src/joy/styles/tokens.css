@@ -2,6 +2,7 @@
 
 .joy {
   /* Aliases */
+  --border-color: var(--mauve-2);
 
   --gray-1: var(--mauve-1);
   --gray-2: var(--mauve-2);
