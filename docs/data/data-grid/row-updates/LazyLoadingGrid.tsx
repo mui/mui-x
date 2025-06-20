@@ -93,6 +93,10 @@ export default function LazyLoadingGrid() {
     [handleFetchRows],
   );
 
+  const resetRows = React.useCallback(() => {
+    setInitialRows([]);
+  }, []);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
@@ -105,6 +109,8 @@ export default function LazyLoadingGrid() {
         filterMode="server"
         rowsLoadingMode="server"
         onFetchRows={debouncedHandleFetchRows}
+        onSortModelChange={resetRows}
+        onFilterModelChange={resetRows}
       />
     </div>
   );
