@@ -11,7 +11,9 @@ export interface MuiPickersAdapterContextValue {
     maxDate: PickerValidDate;
   };
 
+  // TODO v9: Remove in favor of keeping only `adapter` field
   utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
   localeText: PickersInputLocaleText | undefined;
 }
 
@@ -69,9 +71,9 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
 ) {
   const { localeText: inLocaleText, ...otherInProps } = inProps;
 
-  const { utils: parentUtils, localeText: parentLocaleText } = React.useContext(
+  const { adapter: parentAdapter, localeText: parentLocaleText } = React.useContext(
     MuiPickersAdapterContext,
-  ) ?? { utils: undefined, localeText: undefined };
+  ) ?? { utils: undefined, adapter: undefined, localeText: undefined };
 
   const props: LocalizationProviderProps<TLocale> = useThemeProps({
     // We don't want to pass the `localeText` prop to the theme, that way it will always return the theme value,
@@ -94,22 +96,22 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
     [themeLocaleText, parentLocaleText, inLocaleText],
   );
 
-  const utils = React.useMemo(() => {
+  const adapter = React.useMemo(() => {
     if (!DateAdapter) {
-      if (parentUtils) {
-        return parentUtils;
+      if (parentAdapter) {
+        return parentAdapter;
       }
 
       return null;
     }
 
-    const adapter = new DateAdapter({
+    const dateAdapter = new DateAdapter({
       locale: adapterLocale,
       formats: dateFormats,
       instance: dateLibInstance,
     });
 
-    if (!adapter.isMUIAdapter) {
+    if (!dateAdapter.isMUIAdapter) {
       throw new Error(
         [
           'MUI X: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
@@ -119,27 +121,28 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
       );
     }
 
-    return adapter;
-  }, [DateAdapter, adapterLocale, dateFormats, dateLibInstance, parentUtils]);
+    return dateAdapter;
+  }, [DateAdapter, adapterLocale, dateFormats, dateLibInstance, parentAdapter]);
 
   const defaultDates: MuiPickersAdapterContextNullableValue['defaultDates'] = React.useMemo(() => {
-    if (!utils) {
+    if (!adapter) {
       return null;
     }
 
     return {
-      minDate: utils.date('1900-01-01T00:00:00.000'),
-      maxDate: utils.date('2099-12-31T00:00:00.000'),
+      minDate: adapter.date('1900-01-01T00:00:00.000'),
+      maxDate: adapter.date('2099-12-31T00:00:00.000'),
     };
-  }, [utils]);
+  }, [adapter]);
 
   const contextValue: MuiPickersAdapterContextNullableValue = React.useMemo(() => {
     return {
-      utils,
+      utils: adapter,
+      adapter,
       defaultDates,
       localeText,
     };
-  }, [defaultDates, utils, localeText]);
+  }, [defaultDates, adapter, localeText]);
 
   return (
     <MuiPickersAdapterContext.Provider value={contextValue}>
