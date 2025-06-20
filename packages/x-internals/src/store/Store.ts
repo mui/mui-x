@@ -3,7 +3,8 @@ type Listener<T> = (value: T) => void;
 export class Store<State> {
   public state: State;
 
-  private listeners: Set<Listener<State>>;
+  // HACK: Fixes adding listeners that accept partial state.
+  private listeners: Set<Listener<any>>;
 
   static create<T>(state: T) {
     return new Store(state);
@@ -25,17 +26,15 @@ export class Store<State> {
     return this.state;
   };
 
-  public update = (newState: State) => {
-    if (this.state !== newState) {
-      this.state = newState;
-      this.listeners.forEach((l) => l(newState));
-    }
-  };
+  private setState(newState: State) {
+    this.state = newState;
+    this.listeners.forEach((l) => l(newState));
+  }
 
-  public apply(changes: Partial<State>) {
+  public update(changes: Partial<State>) {
     for (const key in changes) {
       if (!Object.is(this.state[key], changes[key])) {
-        this.update({ ...this.state, ...changes });
+        this.setState({ ...this.state, ...changes });
         return;
       }
     }
@@ -43,7 +42,7 @@ export class Store<State> {
 
   public set<T>(key: keyof State, value: T) {
     if (!Object.is(this.state[key], value)) {
-      this.update({ ...this.state, [key]: value });
+      this.setState({ ...this.state, [key]: value });
     }
   }
 }
