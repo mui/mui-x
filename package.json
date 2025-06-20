@@ -1,5 +1,5 @@
 {
-  "version": "8.5.2",
+  "version": "8.5.3",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -59,6 +59,7 @@
     "release:publish": "pnpm publish --recursive --tag latest",
     "release:publish:dry-run": "pnpm publish --recursive --tag latest --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
+    "release:prepare": "node scripts/createReleasePR.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\"",
     "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
@@ -67,6 +68,8 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
     "@argos-ci/core": "^3.2.0",
+    "execa": "^9.6.0",
+    "inquirer": "^9.2.15",
     "@babel/cli": "^7.27.2",
     "@babel/core": "catalog:",
     "@babel/plugin-transform-class-properties": "^7.27.1",

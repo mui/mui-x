@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { Popover } from '@base-ui-components/react/popover';
 import { useId } from '@base-ui-components/react/utils';
 import { EventProps } from '../Event.types';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
@@ -14,12 +15,21 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: EventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { event, eventResource, ariaLabelledBy, variant, className, id: idProp, ...other } = props;
+  const {
+    event: eventProp,
+    eventResource,
+    ariaLabelledBy,
+    variant,
+    className,
+    onEventClick,
+    id: idProp,
+    ...other
+  } = props;
 
   const id = useId(idProp);
 
   const durationMs =
-    adapter.toJsDate(event.end).getTime() - adapter.toJsDate(event.start).getTime();
+    adapter.toJsDate(eventProp.end).getTime() - adapter.toJsDate(eventProp.start).getTime();
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
@@ -32,13 +42,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         return (
           <React.Fragment>
             <time className={clsx('EventTime')}>
-              {adapter.formatByString(event.start, 'h:mm a')}
+              {adapter.formatByString(eventProp.start, 'h:mm a')}
             </time>
             <p
               className={clsx('EventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {event.title}
+              {eventProp.title}
             </p>
           </React.Fragment>
         );
@@ -48,7 +58,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
             className={clsx('EventTitle', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
           >
-            {event.title}
+            {eventProp.title}
           </p>
         );
       case 'regular':
@@ -63,8 +73,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
               )}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              <span className="EventTitle">{event.title}</span>
-              <time className="EventTime">{adapter.formatByString(event.start, 'h:mm a')}</time>
+              <span className="EventTitle">{eventProp.title}</span>
+              <time className="EventTime">{adapter.formatByString(eventProp.start, 'h:mm a')}</time>
             </p>
           );
         }
@@ -74,23 +84,23 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
               className={clsx('EventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': titleLineCountRegularVariant } as React.CSSProperties}
             >
-              {event.title}
+              {eventProp.title}
             </p>
             <time
               className={clsx('EventTime', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {adapter.formatByString(event.start, 'h:mm a')} -{' '}
-              {adapter.formatByString(event.end, 'h:mm a')}
+              {adapter.formatByString(eventProp.start, 'h:mm a')} -{' '}
+              {adapter.formatByString(eventProp.end, 'h:mm a')}
             </time>
           </React.Fragment>
         );
     }
   }, [
     variant,
-    event.start,
-    event.title,
-    event.end,
+    eventProp.start,
+    eventProp.title,
+    eventProp.end,
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,
@@ -99,22 +109,24 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   return (
     <div
       ref={forwardedRef}
-      className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
       id={id}
+      className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
       {...other}
     >
-      <TimeGrid.Event
+      <Popover.Trigger
         className={clsx(
           'EventCard',
           `EventCard--${variant}`,
           (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
         )}
-        start={event.start}
-        end={event.end}
         aria-labelledby={`${ariaLabelledBy} ${id}`}
-      >
-        {renderContent}
-      </TimeGrid.Event>
+        onClick={(event) => onEventClick?.(event, eventProp)}
+        render={
+          <TimeGrid.Event start={eventProp.start} end={eventProp.end}>
+            {renderContent}
+          </TimeGrid.Event>
+        }
+      />
     </div>
   );
 });

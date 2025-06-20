@@ -575,6 +575,14 @@ const pages: MuiPage[] = [
                       { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
                       { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
                       { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                      {
+                        pathname: '/x/api/charts/chart-image-export-options',
+                        title: 'ChartImageExportOptions',
+                      },
+                      {
+                        pathname: '/x/api/charts/chart-print-export-options',
+                        title: 'ChartPrintExportOptions',
+                      },
                     ],
                   },
                 ],
