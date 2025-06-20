@@ -1,0 +1,78 @@
+import * as React from 'react';
+import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import dataset from '../data/Goolge-Meta-stoks.json';
+import ChartDemoWrapper from '../ChartDemoWrapper';
+
+const base = {
+  google: dataset[0].google!,
+  meta: dataset[0].meta!,
+};
+const formattedDataset = dataset.map((item) => ({
+  date: new Date(item.date),
+  google: item.google ? (100 * item.google) / base.google : null,
+  meta: item.meta ? (100 * item.meta) / base.meta : null,
+}));
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+}).format;
+const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+  .format;
+
+function ZoomAndPan() {
+  return (
+    <LineChartPro
+      dataset={formattedDataset}
+      series={[
+        {
+          label: 'Google',
+          dataKey: 'google',
+          showMark: false,
+          valueFormatter: (value: number | null) =>
+            value === null ? '' : currencyFormatter(value),
+        },
+        {
+          label: 'Meta',
+          dataKey: 'meta',
+          showMark: false,
+          valueFormatter: (value: number | null) =>
+            value === null ? '' : currencyFormatter(value),
+        },
+      ]}
+      xAxis={[
+        {
+          id: 'x-axis',
+          scaleType: 'time',
+          dataKey: 'date',
+          zoom: { slider: { enabled: true }, filterMode: 'discard' },
+          domainLimit: 'strict',
+          valueFormatter: (value, context) => {
+            if (context.location === 'tick') {
+              return context.scale.tickFormat()(value);
+            }
+            return dateFormatter(value);
+          },
+        },
+      ]}
+      yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40 }]}
+      slotProps={{ tooltip: { disablePortal: true } }}
+    />
+  );
+}
+
+export default function ZoomAndPanDemo() {
+  return (
+    <ChartDemoWrapper
+      link="/x/react-charts/zoom-and-pan/"
+      code={`
+<LinChartPro
+  xAxis={[{ scaleType: 'time', dataKey: 'date', zoom: true }]}
+  yAxis={[{ zoom: true }]}
+/>`}
+    >
+      <ZoomAndPan />
+    </ChartDemoWrapper>
+  );
+}
