@@ -5,7 +5,7 @@ import { AgendaView } from '@mui/x-scheduler/joy/agenda-view';
 import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
 import classes from './StandaloneWeekView.module.css';
 
-const events = [
+const initialEvents = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
@@ -69,9 +69,11 @@ const resources = [
 ];
 
 export default function StandaloneAgendaView() {
+  const [events, setEvents] = React.useState(initialEvents);
+
   return (
     <StandaloneView events={events} resources={resources}>
-      <AgendaView className={classes.Container} />
+      <AgendaView className={classes.Container} onEventsChange={setEvents} />
     </StandaloneView>
   );
 }

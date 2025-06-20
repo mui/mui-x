@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { AgendaViewProps } from './AgendaView.types';
 import { CalendarEvent } from '../models/events';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
@@ -9,6 +10,7 @@ import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEv
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
+import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import './AgendaView.css';
 
 const adapter = getAdapter();
@@ -18,7 +20,10 @@ export const AgendaView = React.memo(
     props: AgendaViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, ...other } = props;
+    const containerRef = React.useRef<HTMLElement | null>(null);
+    const handleRef = useForkRef(forwardedRef, containerRef);
+
+    const { onEventsChange, className, ...other } = props;
     const store = useEventCalendarStore();
 
     const today = adapter.date();
@@ -36,41 +41,48 @@ export const AgendaView = React.memo(
     const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
 
     return (
-      <div ref={forwardedRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
-        {days.map((day) => (
-          <div
-            className="AgendaViewRow"
-            key={day.day.toString()}
-            id={`AgendaViewRow-${day.day.toString()}`}
-          >
-            <div
-              id={`DayHeaderCell-${day.day.toString()}`}
-              className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
-              aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
-            >
-              <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
-              <div className="WeekDayCell">
-                <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
-                  {adapter.format(day, 'weekday')}
-                </span>
-                <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
-                  {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
-                </span>
-              </div>
-            </div>
-            <div className="EventsList">
-              {getEventsStartingInDay(day).map((event: CalendarEvent) => (
-                <AgendaEvent
-                  key={event.id}
-                  event={event}
-                  variant="compact"
-                  eventResource={resourcesByIdMap.get(event.resource)}
-                  ariaLabelledBy={`DayHeaderCell-${day.day.toString()}`}
-                />
+      <div ref={handleRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
+        <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
+          {({ onEventClick }) => (
+            <React.Fragment>
+              {days.map((day) => (
+                <div
+                  className="AgendaViewRow"
+                  key={day.day.toString()}
+                  id={`AgendaViewRow-${day.day.toString()}`}
+                >
+                  <div
+                    id={`DayHeaderCell-${day.day.toString()}`}
+                    className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
+                    aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+                  >
+                    <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
+                    <div className="WeekDayCell">
+                      <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
+                        {adapter.format(day, 'weekday')}
+                      </span>
+                      <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
+                        {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="EventsList">
+                    {getEventsStartingInDay(day).map((event: CalendarEvent) => (
+                      <AgendaEvent
+                        key={event.id}
+                        event={event}
+                        variant="compact"
+                        eventResource={resourcesByIdMap.get(event.resource)}
+                        ariaLabelledBy={`DayHeaderCell-${day.day.toString()}`}
+                        onEventClick={onEventClick}
+                      />
+                    ))}
+                  </div>
+                </div>
               ))}
-            </div>
-          </div>
-        ))}
+            </React.Fragment>
+          )}
+        </EventPopoverProvider>
       </div>
     );
   }),

@@ -1,9 +1,25 @@
 .EventContainer {
+  --hover-background: var(--gray-1);
+  --active-background: var(--gray-2);
+}
+
+.AgendaEventCard--compact {
   container-type: inline-size;
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
   flex-wrap: nowrap;
+  cursor: pointer;
+  border-radius: var(--radius-3);
+  padding: var(--space-2) var(--space-2);
+}
+
+.AgendaEventCard--compact:active {
+  background-color: var(--active-background);
+}
+
+.AgendaEventCard--compact:hover {
+  background-color: var(--hover-background);
 }
 
 .EventCalendarResourceLegendColor {
