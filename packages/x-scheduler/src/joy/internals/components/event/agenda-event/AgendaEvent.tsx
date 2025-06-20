@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Popover } from '@base-ui-components/react/popover';
 import { useId } from '@base-ui-components/react/utils';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
-import { AgendaEventProps } from './AgendaEventProps';
+import { AgendaEventProps } from './AgendaEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import './AgendaEvent.css';
 
