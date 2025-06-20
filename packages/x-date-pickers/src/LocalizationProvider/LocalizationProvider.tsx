@@ -153,9 +153,7 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
   }, [defaultDates, adapter, localeText]);
 
   return (
-    <PickerAdapterContext.Provider value={contextValue}>
-      {children}
-    </PickerAdapterContext.Provider>
+    <PickerAdapterContext.Provider value={contextValue}>{children}</PickerAdapterContext.Provider>
   );
 } as LocalizationProviderComponent;
 

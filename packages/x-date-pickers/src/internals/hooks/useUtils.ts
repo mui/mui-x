@@ -19,7 +19,7 @@ export const useLocalizationContext = () => {
     );
   }
 
-  if (localization.utils === null) {
+  if (localization.adapter === null) {
     throw new Error(
       [
         'MUI X: Can not find the date and time pickers adapter from its localization context.',
