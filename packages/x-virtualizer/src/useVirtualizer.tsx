@@ -13,7 +13,7 @@ import {
   Size,
   PinnedRows,
   PinnedColumns,
-  GridRenderContext,
+  RenderContext,
   Row,
   RowEntry,
 } from './models';
@@ -79,7 +79,7 @@ export type VirtualizerParams = {
   fixme: {
     rowsMeta: () => any;
     dimensions: () => any;
-    onContextChange: (c: GridRenderContext) => void;
+    onContextChange: (c: RenderContext) => void;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
     onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;
     rowTree: () => any;

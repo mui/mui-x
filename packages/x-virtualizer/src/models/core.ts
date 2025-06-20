@@ -27,11 +27,11 @@ export type FocusedCell = {
   field?: string;
 };
 
-export interface GridColumnsRenderContext {
+export interface ColumnsRenderContext {
   firstColumnIndex: number;
   lastColumnIndex: number;
 }
-export interface GridRenderContext extends GridColumnsRenderContext {
+export interface RenderContext extends ColumnsRenderContext {
   firstRowIndex: number;
   lastRowIndex: number;
 }
@@ -39,7 +39,7 @@ export interface GridRenderContext extends GridColumnsRenderContext {
 export interface GridScrollParams {
   left: number;
   top: number;
-  renderContext?: GridRenderContext;
+  renderContext?: RenderContext;
 }
 
 export type GridScrollFn = (v: GridScrollParams) => void;

@@ -11,17 +11,10 @@ import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import reactMajor from '@mui/x-internals/reactMajor';
 import { createSelector, useSelector, Store } from '@mui/x-internals/store';
 import type { VirtualizerState, VirtualizerParams } from '../useVirtualizer';
-
 import {
-  Column,
-  FocusedCell,
-  Size,
-  PinnedRows,
-  PinnedColumns,
   PinnedRowPosition,
-  GridRenderContext,
-  GridColumnsRenderContext,
-  Row,
+  RenderContext,
+  ColumnsRenderContext,
   RowId,
   RowEntry,
   ScrollPosition,
@@ -36,7 +29,7 @@ export type VirtualizationState = {
   enabled: boolean;
   enabledForRows: boolean;
   enabledForColumns: boolean;
-  renderContext: GridRenderContext;
+  renderContext: RenderContext;
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -208,12 +201,12 @@ function useVirtualization(store: Store<Virtualization.State>, params: Virtualiz
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
 
   const scrollTimeout = useTimeout();
-  const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
+  const frozenContext = React.useRef<RenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
     createScrollCache(isRtl, rowBufferPx, columnBufferPx, rowHeight * 15, MINIMUM_COLUMN_WIDTH * 6),
   ).current;
 
-  const updateRenderContext = React.useCallback((nextRenderContext: GridRenderContext) => {
+  const updateRenderContext = React.useCallback((nextRenderContext: RenderContext) => {
     if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
       return;
     }
@@ -354,7 +347,7 @@ function useVirtualization(store: Store<Virtualization.State>, params: Virtualiz
     params: {
       rows?: RowEntry[];
       position?: PinnedRowPosition;
-      renderContext?: GridRenderContext;
+      renderContext?: RenderContext;
     } = {},
   ) => {
     if (!params.rows && !range) {
@@ -364,7 +357,7 @@ function useVirtualization(store: Store<Virtualization.State>, params: Virtualiz
 
     let baseRenderContext = renderContext;
     if (params.renderContext) {
-      baseRenderContext = params.renderContext as GridRenderContext;
+      baseRenderContext = params.renderContext as RenderContext;
 
       baseRenderContext.firstColumnIndex = renderContext.firstColumnIndex;
       baseRenderContext.lastColumnIndex = renderContext.lastColumnIndex;
@@ -721,7 +714,7 @@ function computeRenderContext(
   scrollPosition: ScrollPosition,
   scrollCache: ScrollCache,
 ) {
-  const renderContext: GridRenderContext = {
+  const renderContext: RenderContext = {
     firstRowIndex: 0,
     lastRowIndex: inputs.rows.length,
     firstColumnIndex: 0,
@@ -853,7 +846,7 @@ function getNearestIndexToRender(
  */
 function deriveRenderContext(
   inputs: RenderContextInputs,
-  nextRenderContext: GridRenderContext,
+  nextRenderContext: RenderContext,
   scrollCache: ScrollCache,
 ) {
   const [firstRowToRender, lastRowToRender] = getIndexesToRender({
@@ -994,7 +987,7 @@ function getIndexesToRender({
   ];
 }
 
-export function areRenderContextsEqual(context1: GridRenderContext, context2: GridRenderContext) {
+export function areRenderContextsEqual(context1: RenderContext, context2: RenderContext) {
   if (context1 === context2) {
     return true;
   }
@@ -1008,7 +1001,7 @@ export function areRenderContextsEqual(context1: GridRenderContext, context2: Gr
 
 export function computeOffsetLeft(
   columnPositions: number[],
-  renderContext: GridColumnsRenderContext,
+  renderContext: ColumnsRenderContext,
   pinnedLeftLength: number,
 ) {
   const left =
