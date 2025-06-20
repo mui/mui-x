@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useRadarSeries, useRadarSeriesContext } from './useRadarSeries';
 import { DefaultizedRadarSeriesType, RadarSeriesType } from '../models';
@@ -39,7 +38,6 @@ describe('useRadarSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useRadarSeries', () => {
   it('should return the specific radar series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useRadarSeries('1'), options);

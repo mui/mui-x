@@ -1,27 +1,28 @@
 @import '../styles/tokens.css';
+@import '../styles/colors.css';
 
 .EventContainer {
   /* Regular */
-  --regular-accepted-bg: var(--primary-3);
-  --regular-line-bg: var(--primary-12);
-  --regular-accepted-primary-text: var(--primary-12);
-  --regular-accepted-secondary-text: var(--primary-11);
+  --regular-accepted-bg: var(--event-color-3);
+  --regular-line-bg: var(--event-color-12);
+  --regular-accepted-primary-text: var(--event-color-12);
+  --regular-accepted-secondary-text: var(--event-color-11);
 
   /* Compact */
   --compact-accepted-bg: var(--surface);
-  --compact-square-bg: var(--primary-12);
-  --compact-accepted-primary-text: var(--primary-12);
-  --compact-accepted-secondary-text: var(--primary-12);
+  --compact-square-bg: var(--event-color-12);
+  --compact-accepted-primary-text: var(--event-color-12);
+  --compact-accepted-secondary-text: var(--event-color-12);
 
   /* All Day */
-  --allDay-accepted-bg: var(--primary-5);
-  --allDay-accepted-primary-text: var(--primary-13);
+  --allDay-accepted-bg: var(--event-color-5);
+  --allDay-accepted-primary-text: var(--event-color-13);
 }
 
 .mode-dark .EventContainer {
-  --regular-accepted-bg: var(--primary-3);
+  --regular-accepted-bg: var(--event-color-3);
   --compact-accepted-bg: var(--surface);
-  --allDay-accepted-bg: var(--primary-5);
+  --allDay-accepted-bg: var(--event-color-5);
 }
 
 .EventCard {
@@ -85,12 +86,27 @@
   white-space: nowrap;
 }
 
+.Under30MinutesEvent {
+  line-height: 0;
+}
+
 .Under30MinutesEvent .EventTitle {
   font-size: var(--font-size-1);
+  line-height: 10px;
 }
 
 .Under30MinutesEvent .EventTime {
   font-size: 10px;
+  line-height: 10px;
+}
+
+.EventCard:focus-visible {
+  outline: 2px solid var(--event-color-5);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.EventCard[role='button'] {
+  cursor: pointer;
 }
 
 .EventCard--regular::before {

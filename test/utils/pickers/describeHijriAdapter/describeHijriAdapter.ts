@@ -18,11 +18,11 @@ function innerJalaliDescribeAdapter(
     };
 
     if (params.before) {
-      before(params.before);
+      beforeAll(params.before);
     }
 
     if (params.after) {
-      after(params.after);
+      afterAll(params.after);
     }
 
     testCalculations(testSuitParams);
