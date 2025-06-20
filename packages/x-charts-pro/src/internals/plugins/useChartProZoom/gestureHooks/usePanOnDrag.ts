@@ -36,8 +36,10 @@ export const usePanOnDrag = (
       return () => {};
     }
 
-    const rafThrottledCallback = rafThrottle((event: PanEvent) => {
-      setZoomDataCallback((prev) => {
+    const setZoomDataRafThrottle = rafThrottle(setZoomDataCallback);
+
+    const handlePan = (event: PanEvent) => {
+      setZoomDataRafThrottle((prev) => {
         const newZoomData = translateZoom(
           prev,
           // TODO: fix pan not being precise
@@ -50,13 +52,13 @@ export const usePanOnDrag = (
         );
         return newZoomData;
       });
-    });
+    };
 
-    const panHandler = instance.addInteractionListener('pan', rafThrottledCallback);
+    const panHandler = instance.addInteractionListener('pan', handlePan);
 
     return () => {
       panHandler.cleanup();
-      rafThrottledCallback.clear();
+      setZoomDataRafThrottle.clear();
     };
   }, [
     instance,
