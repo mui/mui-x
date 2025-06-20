@@ -103,6 +103,8 @@ function BarElement(props: BarElementProps) {
       fill: color,
       skipAnimation,
       layout,
+      'data-highlighted': isHighlighted || undefined,
+      'data-faded': isFaded || undefined,
     },
     className: classes.root,
     ownerState,

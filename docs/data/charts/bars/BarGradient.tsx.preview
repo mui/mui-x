@@ -1,0 +1,15 @@
+<BarChart
+  {...settings}
+  sx={{
+    [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
+      fill: 'url(#gradient)',
+    },
+  }}
+>
+  <defs>
+    <linearGradient id="gradient" gradientTransform="rotate(90)">
+      <stop offset="5%" stopColor="gold" />
+      <stop offset="95%" stopColor="red" />
+    </linearGradient>
+  </defs>
+</BarChart>
