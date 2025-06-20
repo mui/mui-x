@@ -28,6 +28,7 @@ export default function LazyLoadingGrid() {
   const apiRef = useGridApiRef();
   const [initialRows, setInitialRows] = React.useState<typeof rowsServerSide>([]);
   const [rowCount, setRowCount] = React.useState(0);
+  const fetchReference = React.useRef(0);
 
   const fetchRow = React.useCallback(
     async (params: GridFetchRowsParams) => {
@@ -80,7 +81,11 @@ export default function LazyLoadingGrid() {
   // Fetch rows as they become visible in the viewport
   const handleFetchRows = React.useCallback(
     async (params: GridFetchRowsParams) => {
+      const reference = fetchReference.current;
       const { slice, total } = await fetchRow(params);
+      if (reference !== fetchReference.current) {
+        return;
+      }
 
       apiRef.current.unstable_replaceRows(params.firstRowToRender, slice);
       setRowCount(total);
@@ -92,6 +97,11 @@ export default function LazyLoadingGrid() {
     () => debounce(handleFetchRows, 200),
     [handleFetchRows],
   );
+
+  const handleModelChange = React.useCallback(() => {
+    fetchReference.current += 1;
+    setInitialRows([]);
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -105,6 +115,8 @@ export default function LazyLoadingGrid() {
         filterMode="server"
         rowsLoadingMode="server"
         onFetchRows={debouncedHandleFetchRows}
+        onSortModelChange={handleModelChange}
+        onFilterModelChange={handleModelChange}
       />
     </div>
   );
