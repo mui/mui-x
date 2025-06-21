@@ -3,7 +3,7 @@ title: React Gauge chart
 productId: x-charts
 components: Gauge, GaugeContainer
 packageName: '@mui/x-charts'
-githubLabel: 'component: charts'
+githubLabel: 'scope: charts'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 ---
 

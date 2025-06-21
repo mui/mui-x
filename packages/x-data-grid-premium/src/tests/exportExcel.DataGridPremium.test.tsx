@@ -10,7 +10,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { spy, SinonSpy } from 'sinon';
-import { expect } from 'chai';
 import Excel from 'exceljs';
 import { spyApi } from 'test/utils/helperFn';
 

@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 
-import { expect } from 'chai';
 import { vi } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { getTelemetryEnvConfig } from './config';

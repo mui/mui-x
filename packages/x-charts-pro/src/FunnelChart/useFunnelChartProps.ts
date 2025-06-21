@@ -168,7 +168,6 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
   };
 
   const funnelPlotProps: FunnelPlotProps = {
-    gap,
     onItemClick,
     slots,
     slotProps,

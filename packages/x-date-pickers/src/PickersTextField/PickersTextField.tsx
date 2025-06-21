@@ -73,6 +73,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     error = false,
     variant = 'outlined',
     required = false,
+    hiddenLabel = false,
     // Props used by PickersInput
     InputProps,
     inputProps,
@@ -150,12 +151,14 @@ const PickersTextField = React.forwardRef(function PickersTextField(
 
   const PickersInputComponent = VARIANT_COMPONENT[variant];
 
-  const inputAdditionalProps = {} as any;
+  const inputAdditionalProps: Record<string, any> = {};
   if (variant === 'outlined') {
     if (InputLabelProps && typeof InputLabelProps.shrink !== 'undefined') {
       inputAdditionalProps.notched = InputLabelProps.shrink;
     }
     inputAdditionalProps.label = label;
+  } else if (variant === 'filled') {
+    inputAdditionalProps.hiddenLabel = hiddenLabel;
   }
 
   return (
