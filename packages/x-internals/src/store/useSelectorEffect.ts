@@ -2,36 +2,39 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import useOnMount from '@mui/utils/useOnMount';
 import type { Store } from './Store';
 
+const noop = () => {};
+
 export function useSelectorEffect<State, Value>(
   store: Store<State>,
   selector: (state: State) => Value,
   effect: (previous: Value, next: Value) => void,
 ): void {
-  const ref = useLazyRef(initialize, { store, selector, effect } as any);
-  useOnMount(ref.current.onMount);
+  const instance = useLazyRef(initialize, { store, selector }).current;
+  instance.effect = effect;
+  useOnMount(instance.onMount);
 }
 
-function initialize<State, Value>({
-  store,
-  selector,
-  effect,
-}: {
+// `useLazyRef` typings are incorrect, `params` should not be optional
+function initialize<State, Value>(params?: {
   store: Store<State>;
   selector: (state: State) => Value;
-  effect: (previous: Value, next: Value) => void;
 }) {
+  const { store, selector } = params!;
+
   let previousState = selector(store.state);
-  const state = {
+
+  const instance = {
+    effect: noop as (previous: Value, next: Value) => void,
     dispose: store.subscribe((state) => {
       const nextState = selector(state);
-      effect(previousState, nextState);
+      instance.effect(previousState, nextState);
       previousState = nextState;
     }),
     onMount: () => {
       return () => {
-        state.dispose();
+        instance.dispose();
       };
     },
   };
-  return state;
+  return instance;
 }
