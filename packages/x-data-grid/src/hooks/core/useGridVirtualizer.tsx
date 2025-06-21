@@ -156,7 +156,8 @@ export function useGridVirtualizer(
     rowBufferPx: rootProps.rowBufferPx,
     columnBufferPx: rootProps.columnBufferPx,
 
-    onResize: useEventCallback((lastSize) => apiRef.current.publishEvent('resize', lastSize)),
+    resizeThrottleMs: rootProps.resizeThrottleMs,
+    onResize: useEventCallback((size) => apiRef.current.publishEvent('resize', size)),
     onWheel: useEventCallback((event: React.WheelEvent) => {
       apiRef.current.publishEvent('virtualScrollerWheel', {}, event);
     }),

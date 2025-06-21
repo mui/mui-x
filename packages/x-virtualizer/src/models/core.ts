@@ -1,6 +1,10 @@
 export type Size = { width: number; height: number };
 export namespace Size {
   export const EMPTY = { width: 0, height: 0 };
+
+  export function equals(a: Size, b: Size) {
+    return a.width === b.width && a.height === b.height;
+  }
 }
 
 export type Row = any; // TODO

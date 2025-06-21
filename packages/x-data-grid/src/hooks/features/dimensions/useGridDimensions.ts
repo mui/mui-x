@@ -4,7 +4,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { throttle } from '@mui/x-internals/throttle';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { useSelectorEffect } from '@mui/x-internals/store';
+import { Dimensions } from '@mui/x-virtualizer/features/dimensions';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -114,13 +115,25 @@ const columnsTotalWidthSelector = createSelector(
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
-  const rootDimensionsRef = React.useRef(EMPTY_SIZE);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
-  const isFirstSizing = React.useRef(true);
 
   const virtualizer = apiRef.current.virtualizer;
+  const isFirstSizing = virtualizer.dimensions.isFirstSizing;
+  const rootDimensionsRef = virtualizer.dimensions.rootDimensionsRef;
+
+  useSelectorEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
+    if (apiRef.current.rootElementRef.current) {
+      setCSSVariables(apiRef.current.rootElementRef.current, gridDimensionsSelector(apiRef));
+    }
+
+    if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
+      apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
+    }
+
+    apiRef.current.updateRenderContext?.();
+    apiRef.current.publishEvent('debouncedResize', next.root);
+  });
 
   const {
     rowHeight,
@@ -133,17 +146,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
 
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
-
-  const setDimensions = React.useCallback(
-    (dimensions: GridDimensions) => {
-      virtualizer.store.update({ dimensions });
-
-      if (apiRef.current.rootElementRef.current) {
-        setCSSVariables(apiRef.current.rootElementRef.current, gridDimensionsSelector(apiRef));
-      }
-    },
-    [apiRef],
-  );
 
   const getViewportPageSize = React.useCallback(() => {
     const dimensions = gridDimensionsSelector(apiRef);
@@ -169,151 +171,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
   }, [apiRef, props.getRowHeight, rowHeight]);
 
-  const updateDimensions = React.useCallback(() => {
-    if (isFirstSizing.current) {
-      return;
-    }
-    // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
-    // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
-    // https://github.com/mui/mui-x/issues/15721
-    const scrollbarSize = measureScrollbarSize(
-      apiRef.current.mainElementRef.current,
-      props.scrollbarSize,
-    );
-
-    const rowsMeta = gridRowsMetaSelector(apiRef);
-    const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
-    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
-
-    const contentSize = {
-      width: columnsTotalWidth,
-      height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
-    };
-
-    let viewportOuterSize: ElementSize;
-    let viewportInnerSize: ElementSize;
-    let hasScrollX = false;
-    let hasScrollY = false;
-
-    if (props.autoHeight) {
-      hasScrollY = false;
-      hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootDimensionsRef.current.width);
-
-      viewportOuterSize = {
-        width: rootDimensionsRef.current.width,
-        height: topContainerHeight + bottomContainerHeight + contentSize.height,
-      };
-      viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
-        height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
-      };
-    } else {
-      viewportOuterSize = {
-        width: rootDimensionsRef.current.width,
-        height: rootDimensionsRef.current.height,
-      };
-      viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width),
-        height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
-      };
-
-      const content = contentSize;
-      const container = viewportInnerSize;
-
-      const hasScrollXIfNoYScrollBar = content.width > container.width;
-      const hasScrollYIfNoXScrollBar = content.height > container.height;
-
-      if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
-        hasScrollY = hasScrollYIfNoXScrollBar;
-        hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
-
-        // We recalculate the scroll y to consider the size of the x scrollbar.
-        if (hasScrollX) {
-          hasScrollY = content.height + scrollbarSize > container.height;
-        }
-      }
-
-      if (hasScrollY) {
-        viewportInnerSize.width -= scrollbarSize;
-      }
-      if (hasScrollX) {
-        viewportInnerSize.height -= scrollbarSize;
-      }
-    }
-
-    const rowWidth = Math.max(
-      viewportOuterSize.width,
-      columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
-    );
-
-    const minimumSize = {
-      width: columnsTotalWidth,
-      height: topContainerHeight + contentSize.height + bottomContainerHeight,
-    };
-
-    const newDimensions: GridDimensions = {
-      isReady: true,
-      root: rootDimensionsRef.current,
-      viewportOuterSize,
-      viewportInnerSize,
-      contentSize,
-      minimumSize,
-      hasScrollX,
-      hasScrollY,
-      scrollbarSize,
-      headerHeight,
-      groupHeaderHeight,
-      headerFilterHeight,
-      rowWidth,
-      rowHeight,
-      columnsTotalWidth,
-      leftPinnedWidth,
-      rightPinnedWidth,
-      headersTotalHeight,
-      topContainerHeight,
-      bottomContainerHeight,
-    };
-
-    const prevDimensions = apiRef.current.state.dimensions;
-
-    if (isDeepEqual(prevDimensions as any, newDimensions)) {
-      return;
-    }
-
-    setDimensions(newDimensions);
-
-    if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
-      apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
-    }
-
-    apiRef.current.updateRenderContext?.();
-  }, [
-    apiRef,
-    setDimensions,
-    props.scrollbarSize,
-    props.autoHeight,
-    rowHeight,
-    headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
-    columnsTotalWidth,
-    headersTotalHeight,
-    leftPinnedWidth,
-    rightPinnedWidth,
-  ]);
-
-  const updateDimensionCallback = useEventCallback(updateDimensions);
-  const debouncedUpdateDimensions = React.useMemo(
-    () =>
-      props.resizeThrottleMs > 0
-        ? throttle(() => {
-            updateDimensionCallback();
-            apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
-          }, props.resizeThrottleMs)
-        : undefined,
-    [apiRef, props.resizeThrottleMs, updateDimensionCallback],
-  );
-  React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+  const updateDimensions = virtualizer.dimensions.updateDimensions;
+  const debouncedUpdateDimensions = virtualizer.dimensions.debouncedUpdateDimensions;
 
   const apiPublic: GridDimensionsApi = {
     getRootDimensions,

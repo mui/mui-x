@@ -65,6 +65,7 @@ export type VirtualizerParams = {
   autoHeight: boolean;
   getRowHeight?: (params: any) => number | null | undefined | 'auto';
 
+  resizeThrottleMs: number;
   onResize?: (lastSize: Size) => void;
   onWheel?: (event: React.WheelEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;
