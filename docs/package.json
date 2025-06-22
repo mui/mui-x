@@ -75,7 +75,7 @@
     "lodash": "catalog:",
     "luxon": "catalog:",
     "lz-string": "^1.5.0",
-    "markdown-to-jsx": "^7.7.6",
+    "markdown-to-jsx": "^7.7.8",
     "moment": "catalog:",
     "moment-hijri": "catalog:",
     "moment-jalaali": "catalog:",
