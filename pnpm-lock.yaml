@@ -504,7 +504,7 @@ importers:
         specifier: ^5.6.3
         version: 5.6.3(webpack@5.99.9)
       inquirer:
-        specifier: ^9.2.15
+        specifier: ^9.3.7
         version: 9.3.7
       jsdom:
         specifier: 26.1.0
