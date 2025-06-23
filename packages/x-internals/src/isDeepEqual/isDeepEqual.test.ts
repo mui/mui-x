@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { isDeepEqual } from './isDeepEqual';
 
 const testValues: [unknown, unknown, boolean][] = [

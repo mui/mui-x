@@ -22,7 +22,14 @@
       "class": null
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiScatter-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiScatter",
   "filename": "/packages/x-charts/src/ScatterChart/Scatter.tsx",
   "inheritance": null,

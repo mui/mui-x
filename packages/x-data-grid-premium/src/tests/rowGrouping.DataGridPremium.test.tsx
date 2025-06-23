@@ -11,7 +11,6 @@ import {
   getRow,
   sleep,
 } from 'test/utils/helperFn';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,

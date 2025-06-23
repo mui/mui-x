@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Column spanning', () => {
   const { render } = createRenderer();
@@ -263,7 +262,7 @@ describe('<DataGrid /> - Column spanning', () => {
     });
 
     // needs virtualization
-    testSkipIf(isJSDOM)('should work with row virtualization', async () => {
+    it.skipIf(isJSDOM)('should work with row virtualization', async () => {
       const rows = [
         {
           id: 0,
@@ -319,7 +318,7 @@ describe('<DataGrid /> - Column spanning', () => {
     });
 
     // needs layout
-    testSkipIf(isJSDOM)('should work with column virtualization', async () => {
+    it.skipIf(isJSDOM)('should work with column virtualization', async () => {
       const { user } = render(
         <div style={{ width: 200, height: 200 }}>
           <DataGrid
@@ -421,7 +420,7 @@ describe('<DataGrid /> - Column spanning', () => {
     });
 
     // needs layout
-    testSkipIf(isJSDOM)('should scroll the whole cell into view when `colSpan` > 1', async () => {
+    it.skipIf(isJSDOM)('should scroll the whole cell into view when `colSpan` > 1', async () => {
       const { user } = render(
         <div style={{ width: 200, height: 200 }}>
           <DataGrid
@@ -698,7 +697,7 @@ describe('<DataGrid /> - Column spanning', () => {
   });
 
   // Need layout for column virtualization
-  testSkipIf(isJSDOM)('should work with column virtualization', async () => {
+  it.skipIf(isJSDOM)('should work with column virtualization', async () => {
     render(
       <div style={{ width: 390, height: 300 }}>
         <DataGrid
@@ -745,7 +744,7 @@ describe('<DataGrid /> - Column spanning', () => {
   });
 
   // Need layout for column virtualization
-  testSkipIf(isJSDOM)('should work with both column and row virtualization', async () => {
+  it.skipIf(isJSDOM)('should work with both column and row virtualization', async () => {
     const rowHeight = 50;
 
     render(
@@ -811,7 +810,7 @@ describe('<DataGrid /> - Column spanning', () => {
   });
 
   // Need layout for column virtualization
-  testSkipIf(isJSDOM)('should work with pagination and column virtualization', async () => {
+  it.skipIf(isJSDOM)('should work with pagination and column virtualization', async () => {
     const rowHeight = 50;
 
     function TestCase() {
