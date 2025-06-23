@@ -114,7 +114,8 @@ It works with any positive value and is properly applied to horizontal layouts, 
 
 You can customize the bar chart elements using CSS selectors.
 
-Each series renders a `g` element that contains a `data-series` attribute. You can use this attribute to target elements based on their series.
+Each series renders a `g` element that contains a `data-series` attribute.
+You can use this attribute to target elements based on their series.
 
 {{"demo": "BarGradient.js"}}
 
