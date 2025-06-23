@@ -1,6 +1,6 @@
 name: Bug report 🐛
 description: Create a bug report for MUI X.
-labels: ['status: waiting for maintainer', 'bug 🐛']
+labels: ['status: waiting for maintainer', 'type: bug']
 body:
   - type: markdown
     attributes:

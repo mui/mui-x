@@ -756,6 +756,10 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: vars.spacing(2),
     },
+    /* ScrollbarFiller styles */
+    [`& .${c.columnHeaders} .${c.scrollbarFiller}`]: {
+      backgroundColor: headerBackground,
+    },
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
@@ -771,6 +775,9 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
+    },
+    [`& .${c.columnHeaders} .${c.filler}`]: {
+      backgroundColor: headerBackground,
     },
 
     /* Used when skeleton/no columns overlay is visible */

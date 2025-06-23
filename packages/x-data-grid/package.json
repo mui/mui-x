@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "8.5.0",
+  "version": "8.5.3",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
   "main": "src/index.ts",
@@ -48,13 +48,12 @@
     "directory": "packages/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
-    "@mui/utils": "^7.0.2",
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
-    "clsx": "^2.1.1",
-    "prop-types": "^15.8.1",
-    "reselect": "^5.1.1",
-    "use-sync-external-store": "^1.5.0"
+    "clsx": "catalog:",
+    "prop-types": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -73,15 +72,15 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
-    "@mui/material": "^7.0.2",
-    "@mui/system": "^7.0.2",
-    "@mui/types": "^7.4.1",
-    "@types/prop-types": "^15.7.14",
-    "@types/use-sync-external-store": "^1.5.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "rimraf": "^6.0.1"
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@mui/types": "^7.4.3",
+    "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

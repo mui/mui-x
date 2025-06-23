@@ -21,6 +21,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in row layout"
     },
+    "item": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item around each series in the legend"
+    },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
     "root": { "description": "Styles applied to the root element." },

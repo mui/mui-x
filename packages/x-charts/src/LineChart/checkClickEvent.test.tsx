@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const config = {
   dataset: [
@@ -22,22 +21,9 @@ const config = {
 describe('LineChart - click event', () => {
   const { render } = createRenderer();
 
-  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-  beforeEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = spy();
       const { user } = render(
         <div
@@ -117,7 +103,7 @@ describe('LineChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onMarkClick = spy();
       const { user } = render(
         <div
@@ -185,7 +171,7 @@ describe('LineChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAreaClick = spy();
       const { user } = render(
         <div
@@ -244,7 +230,7 @@ describe('LineChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', async () => {
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onLineClick = spy();
       const { user } = render(
         <div
