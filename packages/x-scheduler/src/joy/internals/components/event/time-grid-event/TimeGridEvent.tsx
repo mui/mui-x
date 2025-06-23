@@ -3,15 +3,15 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Popover } from '@base-ui-components/react/popover';
 import { useId } from '@base-ui-components/react/utils';
-import { TimeGrid } from '../../primitives/time-grid';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { EventProps } from './Event.types';
-import { getColorClassName } from '../internals/utils/color-utils';
-import './Event.css';
+import { EventProps } from '../Event.types';
+import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
+import { TimeGrid } from '../../../../../primitives/time-grid';
+import { getColorClassName } from '../../../utils/color-utils';
+import './TimeGridEvent.css';
 
 const adapter = getAdapter();
 
-export const Event = React.forwardRef(function Event(
+export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: EventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {

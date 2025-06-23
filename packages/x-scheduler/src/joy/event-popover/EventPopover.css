@@ -21,6 +21,7 @@
 }
 
 .joy .EventPopoverCloseButton {
+  padding: var(--space-1);
   display: flex;
   border-radius: var(--radius-4);
   background-color: var(--event-color-3);
@@ -52,7 +53,7 @@
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-4);
   color: var(--event-color-12);
-  font-size: var(--font-size-5);
+  font-size: var(--font-size-3);
   line-height: var(--line-height-3);
   font-weight: var(--font-weight-2);
   background-color: rgba(var(--event-color-4-rgb), 0.5);

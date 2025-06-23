@@ -385,7 +385,7 @@ export const useGridDataSourceLazyLoader = (
       const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
         start: params.firstRowIndex,
-        end: params.lastRowIndex,
+        end: params.lastRowIndex - 1,
         sortModel,
         filterModel,
       };
@@ -409,7 +409,7 @@ export const useGridDataSourceLazyLoader = (
         visibleRows: currentVisibleRows.rows,
         range: {
           firstRowIndex: params.firstRowIndex,
-          lastRowIndex: params.lastRowIndex,
+          lastRowIndex: params.lastRowIndex - 1,
         },
       });
 

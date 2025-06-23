@@ -109,7 +109,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                   aria-label={translations.closeButtonAriaLabel}
                   className="EventPopoverCloseButton"
                 >
-                  <X size={24} strokeWidth={2} />
+                  <X size={18} strokeWidth={2} />
                 </Popover.Close>
               </header>
               <Separator className="EventPopoverSeparator" />
