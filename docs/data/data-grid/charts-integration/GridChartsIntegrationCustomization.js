@@ -5,17 +5,51 @@ import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   gridColumnGroupsUnwrappedModelSelector,
-  GridEventListener,
-  GridPivotModel,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
   configurationOptions,
 } from '@mui/x-charts-premium/ChartsRenderer';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function GridChartsIntegrationPivoting() {
+const hideColorsControl = (sections) =>
+  sections.map((section) => ({
+    ...section,
+    controls: {
+      ...section.controls,
+      colors: {
+        ...section.controls.colors,
+        isHidden: () => true,
+      },
+    },
+  }));
+
+const customConfiguration = {
+  bar: {
+    ...configurationOptions.bar,
+    customization: hideColorsControl(configurationOptions.bar.customization),
+  },
+  column: {
+    ...configurationOptions.column,
+    customization: hideColorsControl(configurationOptions.column.customization),
+  },
+  line: {
+    ...configurationOptions.line,
+    customization: hideColorsControl(configurationOptions.line.customization),
+  },
+  area: {
+    ...configurationOptions.area,
+    customization: hideColorsControl(configurationOptions.area.customization),
+  },
+  pie: {
+    ...configurationOptions.pie,
+    customization: hideColorsControl(configurationOptions.pie.customization),
+  },
+};
+
+export default function GridChartsIntegrationCustomization() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 1000,
@@ -23,7 +57,7 @@ export default function GridChartsIntegrationPivoting() {
   });
   const apiRef = useGridApiRef();
 
-  const pivotModel: GridPivotModel = {
+  const pivotModel = {
     rows: [{ field: 'commodity' }],
     columns: [
       { field: 'maturityDate-year', sort: 'asc' },
@@ -42,16 +76,20 @@ export default function GridChartsIntegrationPivoting() {
       enabled: true,
     },
     chartsIntegration: {
+      configurationPanel: {
+        open: true,
+      },
       categories: ['commodity'],
-      chartType: 'column',
+      chartType: 'line',
+      configuration: {
+        colors: 'mangoFusionPalette',
+      },
     },
   };
 
   const hasInitializedPivotingSeries = React.useRef(false);
   React.useEffect(() => {
-    const handleColumnVisibilityModelChange: GridEventListener<
-      'columnVisibilityModelChange'
-    > = () => {
+    const handleColumnVisibilityModelChange = () => {
       if (hasInitializedPivotingSeries.current) {
         return;
       }
@@ -80,6 +118,14 @@ export default function GridChartsIntegrationPivoting() {
     );
   }, [apiRef]);
 
+  const onRender = React.useCallback((type, props, Component) => {
+    if (type !== 'line') {
+      return <Component {...props} />;
+    }
+
+    return <LineChart {...props} grid={{ vertical: true, horizontal: true }} />;
+  }, []);
+
   return (
     <GridChartsIntegrationContextProvider>
       <div style={{ gap: 32, width: '100%' }}>
@@ -94,7 +140,7 @@ export default function GridChartsIntegrationPivoting() {
             }}
             slotProps={{
               chartsConfigurationPanel: {
-                schema: configurationOptions,
+                schema: customConfiguration,
               },
             }}
             initialState={initialState}
@@ -102,7 +148,7 @@ export default function GridChartsIntegrationPivoting() {
             columnGroupHeaderHeight={35}
           />
         </div>
-        <GridChartsRendererProxy renderer={ChartsRenderer} />
+        <GridChartsRendererProxy renderer={ChartsRenderer} onRender={onRender} />
       </div>
     </GridChartsIntegrationContextProvider>
   );

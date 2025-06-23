@@ -11,9 +11,20 @@ export interface ChartsRendererProps {
   series: { id: string; label: string; data: (number | null)[] }[];
   chartType: string;
   configuration: Record<string, any>;
+  onRender?: (
+    type: string,
+    props: Record<string, any>,
+    Component: React.ComponentType<any>,
+  ) => React.ReactNode;
 }
 
-function ChartsRenderer({ categories, series, chartType, configuration }: ChartsRendererProps) {
+function ChartsRenderer({
+  categories,
+  series,
+  chartType,
+  configuration,
+  onRender,
+}: ChartsRendererProps) {
   // TODO: support multiple categories
   const categoryDataRaw = categories[0]?.data || [];
 
@@ -59,23 +70,22 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
       ? series.map((ser) => ({ ...ser, stack: 'stack' }))
       : series;
 
-    return (
-      <BarChart
-        {...axisProp}
-        series={seriesProp}
-        hideLegend={chartConfiguration.hideLegend}
-        height={chartConfiguration.height}
-        layout={layout}
-        borderRadius={chartConfiguration.borderRadius}
-        colors={getColorPalette(chartConfiguration.colors)}
-        grid={{
-          vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
-          horizontal:
-            chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
-        }}
-        skipAnimation={chartConfiguration.skipAnimation}
-      />
-    );
+    const props = {
+      ...axisProp,
+      series: seriesProp,
+      hideLegend: chartConfiguration.hideLegend,
+      height: chartConfiguration.height,
+      layout: layout as 'horizontal' | 'vertical',
+      borderRadius: chartConfiguration.borderRadius,
+      colors: getColorPalette(chartConfiguration.colors),
+      grid: {
+        vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
+        horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
+      },
+      skipAnimation: chartConfiguration.skipAnimation,
+    };
+
+    return onRender ? onRender(chartType, props, BarChart) : <BarChart {...props} />;
   }
 
   if (chartType === 'line' || chartType === 'area') {
@@ -88,17 +98,17 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
       stack: chartConfiguration.stacked ? 'stack' : undefined,
     }));
 
-    return (
-      <LineChart
-        xAxis={[{ data: categoryData, scaleType: 'point' }]}
-        yAxis={[{ min: 0 }]}
-        series={seriesProp}
-        hideLegend={chartConfiguration.hideLegend}
-        height={chartConfiguration.height}
-        colors={getColorPalette(chartConfiguration.colors)}
-        skipAnimation={chartConfiguration.skipAnimation}
-      />
-    );
+    const props = {
+      xAxis: [{ data: categoryData, scaleType: 'point' as const }],
+      yAxis: [{ min: 0 }],
+      series: seriesProp,
+      hideLegend: chartConfiguration.hideLegend,
+      height: chartConfiguration.height,
+      colors: getColorPalette(chartConfiguration.colors),
+      skipAnimation: chartConfiguration.skipAnimation,
+    };
+
+    return onRender ? onRender(chartType, props, LineChart) : <LineChart {...props} />;
   }
 
   if (chartType === 'pie') {
@@ -135,24 +145,24 @@ function ChartsRenderer({ categories, series, chartType, configuration }: Charts
         chartConfiguration.seriesGap * seriesIndex,
     }));
 
-    return (
-      <PieChart
-        series={seriesProp}
-        height={chartConfiguration.height}
-        width={chartConfiguration.width}
-        hideLegend={chartConfiguration.hideLegend}
-        colors={getColorPalette(chartConfiguration.colors)}
-        slotProps={{
-          legend: {
-            sx: {
-              overflowY: 'scroll',
-              flexWrap: 'nowrap',
-              height: chartConfiguration.height,
-            },
+    const props = {
+      series: seriesProp,
+      height: chartConfiguration.height,
+      width: chartConfiguration.width,
+      hideLegend: chartConfiguration.hideLegend,
+      colors: getColorPalette(chartConfiguration.colors),
+      slotProps: {
+        legend: {
+          sx: {
+            overflowY: 'scroll',
+            flexWrap: 'nowrap',
+            height: chartConfiguration.height,
           },
-        }}
-      />
-    );
+        },
+      },
+    };
+
+    return onRender ? onRender(chartType, props, PieChart) : <PieChart {...props} />;
   }
 
   return null;

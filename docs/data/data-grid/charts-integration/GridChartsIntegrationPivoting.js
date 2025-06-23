@@ -40,9 +40,6 @@ export default function GridChartsIntegrationPivoting() {
       enabled: true,
     },
     chartsIntegration: {
-      configurationPanel: {
-        open: true,
-      },
       categories: ['commodity'],
       chartType: 'column',
     },

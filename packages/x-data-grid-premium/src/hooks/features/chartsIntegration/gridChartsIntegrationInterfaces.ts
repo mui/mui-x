@@ -1,4 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
+import type { GridChartsIntegrationContextValue } from '../../../models/gridChartsIntegration';
 
 export interface ChartsConfigurationPanelState {
   open: boolean;
@@ -21,7 +22,8 @@ export interface GridChartsIntegrationInitialState {
   configurationPanel?: Partial<ChartsConfigurationPanelState>;
   categories?: GridChartsIntegrationItem[] | GridColDef['field'][];
   series?: GridChartsIntegrationItem[] | GridColDef['field'][];
-  chartType?: string;
+  chartType?: GridChartsIntegrationContextValue['chartType'];
+  configuration?: GridChartsIntegrationContextValue['configuration'];
 }
 
 export interface GridChartsIntegrationApi {

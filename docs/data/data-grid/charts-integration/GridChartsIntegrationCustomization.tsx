@@ -12,10 +12,47 @@ import {
 import {
   ChartsRenderer,
   configurationOptions,
+  GridChartsConfigurationSection,
 } from '@mui/x-charts-premium/ChartsRenderer';
+import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function GridChartsIntegrationPivoting() {
+const hideColorsControl = (sections: GridChartsConfigurationSection[]) =>
+  sections.map((section) => ({
+    ...section,
+    controls: {
+      ...section.controls,
+      colors: {
+        ...section.controls.colors,
+        isHidden: () => true,
+      },
+    },
+  }));
+
+const customConfiguration = {
+  bar: {
+    ...configurationOptions.bar,
+    customization: hideColorsControl(configurationOptions.bar.customization),
+  },
+  column: {
+    ...configurationOptions.column,
+    customization: hideColorsControl(configurationOptions.column.customization),
+  },
+  line: {
+    ...configurationOptions.line,
+    customization: hideColorsControl(configurationOptions.line.customization),
+  },
+  area: {
+    ...configurationOptions.area,
+    customization: hideColorsControl(configurationOptions.area.customization),
+  },
+  pie: {
+    ...configurationOptions.pie,
+    customization: hideColorsControl(configurationOptions.pie.customization),
+  },
+};
+
+export default function GridChartsIntegrationCustomization() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 1000,
@@ -42,8 +79,14 @@ export default function GridChartsIntegrationPivoting() {
       enabled: true,
     },
     chartsIntegration: {
+      configurationPanel: {
+        open: true,
+      },
       categories: ['commodity'],
-      chartType: 'column',
+      chartType: 'line',
+      configuration: {
+        colors: 'mangoFusionPalette',
+      },
     },
   };
 
@@ -80,6 +123,26 @@ export default function GridChartsIntegrationPivoting() {
     );
   }, [apiRef]);
 
+  const onRender = React.useCallback(
+    (
+      type: string,
+      props: Record<string, any>,
+      Component: React.ComponentType<any>,
+    ) => {
+      if (type !== 'line') {
+        return <Component {...props} />;
+      }
+
+      return (
+        <LineChart
+          {...(props as LineChartProps)}
+          grid={{ vertical: true, horizontal: true }}
+        />
+      );
+    },
+    [],
+  );
+
   return (
     <GridChartsIntegrationContextProvider>
       <div style={{ gap: 32, width: '100%' }}>
@@ -94,7 +157,7 @@ export default function GridChartsIntegrationPivoting() {
             }}
             slotProps={{
               chartsConfigurationPanel: {
-                schema: configurationOptions,
+                schema: customConfiguration,
               },
             }}
             initialState={initialState}
@@ -102,7 +165,7 @@ export default function GridChartsIntegrationPivoting() {
             columnGroupHeaderHeight={35}
           />
         </div>
-        <GridChartsRendererProxy renderer={ChartsRenderer} />
+        <GridChartsRendererProxy renderer={ChartsRenderer} onRender={onRender} />
       </div>
     </GridChartsIntegrationContextProvider>
   );
