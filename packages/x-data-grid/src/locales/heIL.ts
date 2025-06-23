@@ -129,6 +129,7 @@ const heILGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'מיין בסדר עולה',
   columnMenuSortDesc: 'מיין בסדר יורד',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

@@ -136,6 +136,7 @@ const hyAMGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Աճման կարգով դասավորել',
   columnMenuSortDesc: 'Նվազման կարգով դասավորել',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
