@@ -28,6 +28,8 @@
       "@mui/x-charts/*": ["./packages/x-charts/src/*"],
       "@mui/x-charts-pro": ["./packages/x-charts-pro/src"],
       "@mui/x-charts-pro/*": ["./packages/x-charts-pro/src/*"],
+      "@mui/x-charts-premium": ["./packages/x-charts-premium/src"],
+      "@mui/x-charts-premium/*": ["./packages/x-charts-premium/src/*"],
       "@mui/x-charts-vendor": ["./packages/x-charts-vendor"],
       "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/*"],
       // There is no root import on this package

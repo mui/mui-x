@@ -7,7 +7,7 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Overview
 
-<p class="description">A collection of React UI components to schedule your events. </p>
+<p class="description">A collection of React UI components to schedule your events.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
@@ -37,4 +37,4 @@ TODO: Add a demo of a standalone `<MonthView />` when available.
 
 ### Agenda
 
-TODO: Add a demo of a standalone `<AgendaView />` when available.
+{{"demo": "StandaloneAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
