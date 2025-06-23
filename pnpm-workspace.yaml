@@ -24,9 +24,9 @@ catalog:
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.0
-  '@mui/icons-material': ^7.1.1
+  '@mui/icons-material': ^7.1.2
   '@mui/internal-test-utils': ^2.0.9
-  '@mui/material': ^7.1.1
+  '@mui/material': ^7.1.2
   '@mui/stylis-plugin-rtl': ^7.1.0
   '@mui/system': ^7.1.1
   '@mui/utils': ^7.1.1
