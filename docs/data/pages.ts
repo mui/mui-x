@@ -283,6 +283,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
               { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
               { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+              { pathname: '/x/api/data-grid/grid-render-context', title: 'GridRenderContext' },
               {
                 pathname: '/x/api/data-grid/grid-row-class-name-params',
                 title: 'GridRowClassNameParams',
