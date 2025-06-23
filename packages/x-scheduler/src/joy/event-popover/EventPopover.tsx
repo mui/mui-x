@@ -27,6 +27,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     calendarEvent,
     calendarEventResource,
     onEventEdit,
+    onEventDelete,
     onClose,
     ...other
   } = props;
@@ -71,6 +72,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
     });
     onClose();
   };
+
+  const handleDelete = React.useCallback(() => {
+    onEventDelete(calendarEvent.id);
+    onClose();
+  }, [onEventDelete, calendarEvent.id, onClose]);
 
   return (
     <div ref={forwardedRef} className={className} {...other}>
@@ -182,7 +188,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
               </div>
               <Separator className="EventPopoverSeparator" />
               <div className="EventPopoverActions">
-                <button className="SecondaryErrorButton" type="button" onClick={onClose}>
+                <button className="SecondaryErrorButton" type="button" onClick={handleDelete}>
                   {translations.deleteEvent}
                 </button>
                 <button className="PrimaryButton" type="submit">
