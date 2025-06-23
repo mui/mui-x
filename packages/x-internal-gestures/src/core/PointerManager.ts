@@ -263,7 +263,7 @@ export class PointerManager {
       this.pointers.set(pointerId, this.createPointerData(event));
     }
     // Remove pointer data on up or cancel
-    else if (type === 'pointerup' || type === 'pointercancel') {
+    else if (type === 'pointerup' || type === 'pointercancel' || type === 'forceCancel') {
       // Release pointer capture on up or cancel
       if (event.target instanceof Element) {
         try {
