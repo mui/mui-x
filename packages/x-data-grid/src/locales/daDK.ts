@@ -129,6 +129,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sortér stigende',
   columnMenuSortDesc: 'Sortér faldende',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

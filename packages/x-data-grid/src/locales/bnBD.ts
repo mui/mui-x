@@ -129,6 +129,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'ASC অনুযায়ী সাজান',
   columnMenuSortDesc: 'DESC অনুযায়ী সাজান',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

@@ -128,6 +128,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: '昇順ソート',
   columnMenuSortDesc: '降順ソート',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,

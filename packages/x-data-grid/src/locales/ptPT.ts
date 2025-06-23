@@ -129,6 +129,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Classificar por ordem crescente',
   columnMenuSortDesc: 'Classificar por ordem decrescente',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

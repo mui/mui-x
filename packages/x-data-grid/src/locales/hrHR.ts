@@ -136,6 +136,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Poredaj uzlazno',
   columnMenuSortDesc: 'Poredaj silazno',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {

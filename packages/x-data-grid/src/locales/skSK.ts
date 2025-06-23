@@ -136,6 +136,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Zoradiť vzostupne',
   columnMenuSortDesc: 'Zoradiť zostupne',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {

@@ -152,6 +152,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Сартыраваць па нарастанню',
   columnMenuSortDesc: 'Сартыраваць па спаданню',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

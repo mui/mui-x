@@ -14,6 +14,8 @@ import {
   runIf,
   getRowValue,
   gridPivotActiveSelector,
+  GridPipeProcessor,
+  useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -358,6 +360,16 @@ export const useGridChartsIntegration = (
     [apiRef, updateCategories, updateSeries],
   );
 
+  const addColumnMenuButton = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (menuItems) => {
+      if (isChartsIntegrationAvailable) {
+        return [...menuItems, 'columnMenuManagePanelItem'];
+      }
+      return menuItems;
+    },
+    [isChartsIntegrationAvailable],
+  );
+
   React.useEffect(() => {
     setChartType(props.initialState?.chartsIntegration?.chartType || '');
     setConfiguration(props.initialState?.chartsIntegration?.configuration || {});
@@ -367,6 +379,8 @@ export const useGridChartsIntegration = (
     setChartType,
     setConfiguration,
   ]);
+
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButton);
 
   useGridApiMethod(
     apiRef,

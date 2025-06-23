@@ -16,6 +16,10 @@ export function GridColumnMenuPivotItem(props: GridColumnMenuItemProps) {
     apiRef.current.showSidebar(GridSidebarValue.Pivot);
   };
 
+  if (rootProps.disablePivoting) {
+    return null;
+  }
+
   return (
     <rootProps.slots.baseMenuItem
       onClick={openPivotSettings}

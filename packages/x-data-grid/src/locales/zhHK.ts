@@ -129,6 +129,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: '按升序排序',
   columnMenuSortDesc: '按降序排序',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

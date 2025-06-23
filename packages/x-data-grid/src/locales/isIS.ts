@@ -129,6 +129,7 @@ const isISGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Raða hækkandi',
   columnMenuSortDesc: 'Raða lækkandi',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

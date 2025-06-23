@@ -130,6 +130,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sorter AUKANDE',
   columnMenuSortDesc: 'Sorter SYNKANDE',
   columnMenuManagePivot: 'Behandle pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
