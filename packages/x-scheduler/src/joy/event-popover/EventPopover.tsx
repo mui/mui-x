@@ -182,6 +182,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
               </div>
               <Separator className="EventPopoverSeparator" />
               <div className="EventPopoverActions">
+                <button className="SecondaryErrorButton" type="button" onClick={onClose}>
+                  {translations.deleteEvent}
+                </button>
                 <button className="PrimaryButton" type="submit">
                   {translations.saveChanges}
                 </button>

@@ -39,7 +39,8 @@
   outline-offset: var(--outline-focus-offset);
 }
 
-.joy .PopoverPositioner .PrimaryButton:focus-visible {
+.joy .PopoverPositioner .PrimaryButton:focus-visible,
+.joy .PopoverPositioner .SecondaryErrorButton:focus-visible {
   outline: 2px solid var(--event-color-5);
 }
 
@@ -116,19 +117,19 @@
 }
 
 .EventPopoverRequiredFieldError {
-  color: var(--red-9);
+  color: var(--error-9);
   font-size: var(--font-size-1);
   margin-block-start: var(--space-2);
 }
 
 .EventPopoverDateTimeFieldsError {
-  color: var(--red-9);
+  color: var(--error-9);
   font-size: var(--font-size-1);
   grid-column: span 2;
 }
 
 .EventPopoverActions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: var(--space-4);
 }
