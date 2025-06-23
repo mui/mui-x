@@ -130,6 +130,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnMenuSortAsc: 'Sort by ASC',
   columnMenuSortDesc: 'Sort by DESC',
   columnMenuManagePivot: 'Manage pivot',
+  columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
