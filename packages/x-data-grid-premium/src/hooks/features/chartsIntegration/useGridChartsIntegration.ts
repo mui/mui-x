@@ -96,6 +96,7 @@ const EMPTY_CHART_INTEGRATION_CONTEXT: Partial<GridChartsIntegrationContextValue
   setChartType: () => {},
   setCategories: () => {},
   setSeries: () => {},
+  setConfiguration: () => {},
 };
 
 export const useGridChartsIntegration = (
@@ -112,7 +113,8 @@ export const useGridChartsIntegration = (
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
 
-  const { setChartType, setCategories, setSeries } = context || EMPTY_CHART_INTEGRATION_CONTEXT;
+  const { setChartType, setCategories, setSeries, setConfiguration } =
+    context || EMPTY_CHART_INTEGRATION_CONTEXT;
 
   const getColumnName = React.useCallback(
     (field: string) => {
@@ -358,7 +360,13 @@ export const useGridChartsIntegration = (
 
   React.useEffect(() => {
     setChartType(props.initialState?.chartsIntegration?.chartType || '');
-  }, [props.initialState?.chartsIntegration?.chartType, setChartType]);
+    setConfiguration(props.initialState?.chartsIntegration?.configuration || {});
+  }, [
+    props.initialState?.chartsIntegration?.chartType,
+    props.initialState?.chartsIntegration?.configuration,
+    setChartType,
+    setConfiguration,
+  ]);
 
   useGridApiMethod(
     apiRef,
