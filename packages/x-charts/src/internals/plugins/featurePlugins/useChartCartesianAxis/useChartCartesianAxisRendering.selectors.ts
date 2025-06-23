@@ -1,4 +1,4 @@
-import { ChartDrawingArea } from '../../../../hooks';
+import type { ChartDrawingArea } from '../../../../hooks';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
