@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useBarSeries, useBarSeriesContext } from './useBarSeries';
 import { BarSeriesType, DefaultizedBarSeriesType } from '../models';
@@ -38,7 +37,6 @@ describe('useBarSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useBarSeries', () => {
   it('should return the specific bar series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useBarSeries('1'), options);

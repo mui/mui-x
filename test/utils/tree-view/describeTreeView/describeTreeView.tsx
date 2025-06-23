@@ -39,7 +39,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
         );
       }
 
-      const cleanItem = (item: TreeViewBaseItem) => {
+      const cleanItem = (item: TreeViewBaseItem): { id: any; children?: any } => {
         if (item.children) {
           return { id: item.id, children: item.children.map(cleanItem) };
         }

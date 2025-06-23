@@ -2,14 +2,14 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
-import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
+import { PickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import { OnErrorProps, PickersTimezone } from '../models';
 import type { PickerValueManager } from '../internals/models';
 import { PickerValidValue } from '../internals/models';
 
 export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
   (params: {
-    adapter: MuiPickersAdapterContextValue;
+    adapter: PickersAdapterContextValue;
     value: TValue;
     timezone: PickersTimezone;
     props: TValidationProps;
