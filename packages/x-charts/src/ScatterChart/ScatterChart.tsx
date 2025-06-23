@@ -83,11 +83,6 @@ export interface ScatterChartProps
    */
   hideLegend?: boolean;
   /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-  /**
    * Overridable component slots.
    * @default {}
    */
@@ -138,11 +133,12 @@ const ScatterChart = React.forwardRef(function ScatterChart(
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
+  const showToolbar = Toolbar != null;
 
   return (
     <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />

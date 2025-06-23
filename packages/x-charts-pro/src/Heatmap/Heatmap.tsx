@@ -40,7 +40,6 @@ import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -108,11 +107,6 @@ export interface HeatmapProps
    */
   hideLegend?: boolean;
   /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-  /**
    * Overridable component slots.
    * @default {}
    */
@@ -177,7 +171,6 @@ const Heatmap = React.forwardRef(function Heatmap(
     highlightedItem,
     onHighlightChange,
     hideLegend = true,
-    showToolbar = false,
   } = props;
 
   const id = useId();
@@ -226,7 +219,8 @@ const Heatmap = React.forwardRef(function Heatmap(
     legendDirection: props.slotProps?.legend?.direction,
   };
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
-  const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
+  const Toolbar = slots?.toolbar;
+  const showToolbar = Toolbar != null;
 
   return (
     <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>

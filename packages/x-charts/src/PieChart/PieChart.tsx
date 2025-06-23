@@ -63,11 +63,6 @@ export interface PieChartProps
    */
   onItemClick?: PiePlotProps['onItemClick'];
   /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-  /**
    * Overridable component slots.
    * @default {}
    */
@@ -111,7 +106,6 @@ const PieChart = React.forwardRef(function PieChart(
     highlightedItem,
     onHighlightChange,
     className,
-    showToolbar,
     ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
@@ -138,6 +132,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
+  const showToolbar = Toolbar != null;
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
@@ -146,7 +141,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
       >
-        {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
             direction={props?.slotProps?.legend?.direction ?? 'vertical'}

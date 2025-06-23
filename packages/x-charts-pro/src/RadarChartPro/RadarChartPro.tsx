@@ -19,7 +19,6 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginsSignatures } from './RadarChartPro.plugins';
-import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -79,7 +78,8 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
   } = useRadarChartProps(props);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const Toolbar = props.slots?.toolbar;
+  const showToolbar = Toolbar != null;
 
   const radarDataProviderProProps: RadarDataProviderProps<RadarChartProPluginsSignatures> = {
     ...radarDataProviderProps,
@@ -91,7 +91,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
   return (
     <RadarDataProvider<RadarChartProPluginsSignatures> {...radarDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />

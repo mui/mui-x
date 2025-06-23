@@ -10,7 +10,6 @@ import { PieChartProps, PieChartSlotProps, PieChartSlots, PiePlot } from '@mui/x
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsSlotsPro, ChartsSlotPropsPro } from '../internals/material';
-import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { PIE_CHART_PRO_PLUGINS, PieChartProPluginSignatures } from './PieChartPro.plugins';
 import {
@@ -65,7 +64,6 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
       highlightedItem,
       onHighlightChange,
       className,
-      showToolbar,
       ...other
     } = props;
     const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
@@ -91,7 +89,8 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
     );
 
     const Tooltip = slots?.tooltip ?? ChartsTooltip;
-    const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+    const Toolbar = props.slots?.toolbar;
+    const showToolbar = Toolbar != null;
 
     return (
       <ChartDataProviderPro<'pie', PieChartProPluginSignatures> {...chartDataProviderProProps}>
