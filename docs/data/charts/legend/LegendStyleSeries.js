@@ -7,25 +7,43 @@ import {
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 
-const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const xLabels = [
-  'Page A',
-  'Page B',
-  'Page C',
-  'Page D',
-  'Page E',
-  'Page F',
-  'Page G',
+const monthlySalesData = [
+  { month: 'Jan', productA: 120, productB: 90 },
+  { month: 'Feb', productA: 130, productB: 100 },
+  { month: 'Mar', productA: 125, productB: 110 },
+  { month: 'Apr', productA: 150, productB: 95 },
+  { month: 'May', productA: 160, productB: 105 },
+  { month: 'Jun', productA: 170, productB: 115 },
+  { month: 'Jul', productA: 165, productB: 120 },
+  { month: 'Aug', productA: 175, productB: 130 },
+  { month: 'Sep', productA: 180, productB: 125 },
+  { month: 'Oct', productA: 190, productB: 135 },
+  { month: 'Nov', productA: 200, productB: 140 },
+  { month: 'Dec', productA: 210, productB: 145 },
 ];
 
 const settings = {
   series: [
-    { data: pData, label: 'pv', id: 'pvId', labelMarkType: Line },
-    { data: uData, label: 'uv', id: 'uvId', labelMarkType: Line },
+    {
+      data: monthlySalesData.map((d) => d.productA),
+      label: 'Product A',
+      id: 'a',
+      labelMarkType: Line,
+    },
+    {
+      data: monthlySalesData.map((d) => d.productB),
+      label: 'Product B',
+      id: 'b',
+      labelMarkType: Line,
+    },
   ],
-  xAxis: [{ scaleType: 'point', data: xLabels }],
-  yAxis: [{ width: 50 }],
+  xAxis: [
+    {
+      scaleType: 'point',
+      data: monthlySalesData.map((d) => d.month),
+    },
+  ],
+  yAxis: [{ width: 50, label: 'Sales' }],
   height: 300,
   margin: { right: 24 },
 };
@@ -38,11 +56,11 @@ export default function LegendStyleSeries() {
         [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
           strokeWidth: 1,
         },
-        [`.MuiLineElement-series-pvId, .${legendClasses.item}[data-series="pvId"] .${labelMarkClasses.fill}`]:
+        [`.MuiLineElement-series-a, .${legendClasses.item}[data-series="a"] .${labelMarkClasses.fill}`]:
           {
             strokeDasharray: '5 5',
           },
-        [`.MuiLineElement-series-uvId, .${legendClasses.item}[data-series="uvId"] .${labelMarkClasses.fill}`]:
+        [`.MuiLineElement-series-b, .${legendClasses.item}[data-series="b"] .${labelMarkClasses.fill}`]:
           {
             strokeDasharray: '3 4 5 2',
           },
