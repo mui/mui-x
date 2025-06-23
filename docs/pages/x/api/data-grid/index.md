@@ -22,6 +22,7 @@
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)
 - [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)
+- [GridRenderContext](/x/api/data-grid/grid-render-context/)
 - [GridRowClassNameParams](/x/api/data-grid/grid-row-class-name-params/)
 - [GridRowParams](/x/api/data-grid/grid-row-params/)
 - [GridRowSpacingParams](/x/api/data-grid/grid-row-spacing-params/)
