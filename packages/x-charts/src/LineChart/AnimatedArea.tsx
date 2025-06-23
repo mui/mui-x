@@ -44,6 +44,8 @@ function AnimatedArea(props: AnimatedAreaProps) {
         opacity={ownerState.isFaded ? 0.3 : 1}
         stroke="none"
         data-series={ownerState.id}
+        data-highlighted={ownerState.isHighlighted || undefined}
+        data-faded={ownerState.isFaded || undefined}
         {...other}
         {...animatedProps}
       />
