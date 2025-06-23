@@ -82,7 +82,7 @@
     "moment-timezone": "catalog:",
     "next": "^15.3.4",
     "nprogress": "^0.2.0",
-    "postcss": "^8.5.5",
+    "postcss": "^8.5.6",
     "prop-types": "catalog:",
     "react": "catalog:",
     "react-docgen": "^5.4.3",
