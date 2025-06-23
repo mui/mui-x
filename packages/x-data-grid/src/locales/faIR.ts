@@ -129,6 +129,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'مرتب‌سازی صعودی',
   columnMenuSortDesc: 'مرتب‌سازی نزولی',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

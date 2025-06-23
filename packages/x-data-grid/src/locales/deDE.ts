@@ -130,6 +130,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',
   columnMenuManagePivot: 'Pivot verwalten',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

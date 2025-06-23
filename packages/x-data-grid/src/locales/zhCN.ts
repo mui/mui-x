@@ -128,6 +128,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
