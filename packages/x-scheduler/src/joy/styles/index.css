@@ -1,1 +1,26 @@
 @import './tokens.css';
+
+.joy .PrimaryButton {
+  background: var(--gray-9);
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  color: var(--gray-1);
+  border-radius: var(--radius-4);
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
+  line-height: var(--line-height-1);
+}
+
+.joy .PrimaryButton:hover {
+  background: var(--gray-11);
+}
+
+.joy .PrimaryButton:active {
+  background: var(--gray-13);
+}
+
+.joy .PrimaryButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}

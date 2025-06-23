@@ -5,12 +5,13 @@ import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
+import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import '../index.css';
 import './EventCalendar.css';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { getColorClassName } from '../internals/utils/color-utils';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { Store, useSelector } from '../../base-ui-copy/utils/store';
@@ -61,16 +62,18 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   let content: React.ReactNode;
   switch (currentView) {
     case 'week':
-      content = <WeekView onDayHeaderClick={handleDayHeaderClick} />;
+      content = (
+        <WeekView onDayHeaderClick={handleDayHeaderClick} onEventsChange={onEventsChange} />
+      );
       break;
     case 'day':
-      content = <DayView />;
+      content = <DayView onEventsChange={onEventsChange} />;
       break;
     case 'month':
       content = <div>TODO: Month view</div>;
       break;
     case 'agenda':
-      content = <div>TODO: Agenda view</div>;
+      content = <AgendaView onEventsChange={onEventsChange} />;
       break;
     default:
       content = null;
@@ -85,7 +88,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           {...other}
         >
           <aside className="EventCalendarSidePanel">
-            <span style={{ display: 'flex', alignItems: 'center', height: 42 }}>
+            <span style={{ display: 'flex', alignItems: 'center', height: 44 }}>
               TODO: Time nav
             </span>
             <section
