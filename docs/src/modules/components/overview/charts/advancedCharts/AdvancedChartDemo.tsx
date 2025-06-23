@@ -11,7 +11,7 @@ const advancedCharts = [
   },
   {
     title: 'Heatmap',
-    description: 'Highlight patterns on bidimentional data.',
+    description: 'Highlight patterns on bidimensional data.',
     iconLink: '/static/x/pro.svg',
   },
   {
