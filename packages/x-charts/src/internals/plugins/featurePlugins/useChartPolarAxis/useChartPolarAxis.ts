@@ -106,8 +106,20 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const cleanInteractionHandler = instance.addInteractionListener('moveEnd', (event) => {
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
       if (!event.detail.activeGestures.pan) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction?.();
+      }
+    });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction?.();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
         mousePosition.current.isInChart = false;
         instance.cleanInteraction?.();
       }
@@ -149,10 +161,12 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
-      cleanInteractionHandler.cleanup();
       moveHandler.cleanup();
+      moveEndHandler.cleanup();
       panHandler.cleanup();
+      panEndHandler.cleanup();
       pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [
     svgRef,

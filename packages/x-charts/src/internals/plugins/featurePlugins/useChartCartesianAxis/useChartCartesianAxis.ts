@@ -80,6 +80,16 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         instance.cleanInteraction?.();
       }
     });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        instance.cleanInteraction?.();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+      }
+    });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const srvEvent = event.detail.srcEvent;
@@ -95,7 +105,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       ) {
         target?.releasePointerCapture(event.detail.srcEvent.pointerId);
       }
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target as SVGElement)) {
         instance.cleanInteraction?.();
         return;
       }
@@ -107,10 +117,12 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
-      moveEndHandler.cleanup();
       moveHandler.cleanup();
-      pressHandler.cleanup();
+      moveEndHandler.cleanup();
       panHandler.cleanup();
+      panEndHandler.cleanup();
+      pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [
     svgRef,

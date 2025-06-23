@@ -77,6 +77,16 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         instance.cleanInteraction?.();
       }
     });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        instance.cleanInteraction?.();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+      }
+    });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const srvEvent = event.detail.srcEvent;
@@ -86,13 +96,11 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       // be locked to the first "section" it touches.
       if (
         event.detail.srcEvent.buttons >= 1 &&
-        target?.hasPointerCapture(event.detail.srcEvent.pointerId) &&
-        // Ensure we are not removing the capture from the zoom slider
-        !target.hasAttribute('data-charts-zoom-slider')
+        target?.hasPointerCapture(event.detail.srcEvent.pointerId)
       ) {
         target?.releasePointerCapture(event.detail.srcEvent.pointerId);
       }
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target as SVGElement)) {
         instance.cleanInteraction?.();
         return;
       }
@@ -104,10 +112,12 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
-      moveEndHandler.cleanup();
       moveHandler.cleanup();
-      pressHandler.cleanup();
+      moveEndHandler.cleanup();
       panHandler.cleanup();
+      panEndHandler.cleanup();
+      pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [svgRef, instance, params.disableAxisListener, isInteractionEnabled]);
 

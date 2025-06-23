@@ -170,6 +170,18 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         instance.clearHighlight?.();
       }
     });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
+      }
+    });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const closestPoint = getClosestPoint(event.detail.srcEvent);
@@ -208,11 +220,13 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
     const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
-      moveEndHandler.cleanup();
-      moveHandler.cleanup();
-      panHandler.cleanup();
-      pressHandler.cleanup();
       tapHandler.cleanup();
+      moveHandler.cleanup();
+      moveEndHandler.cleanup();
+      panHandler.cleanup();
+      panEndHandler.cleanup();
+      pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 

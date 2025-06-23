@@ -69,7 +69,7 @@ export function usePointerType(): null | PointerType {
         setPointerType(null);
       }
     });
-    const quickPressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (event.detail.srcEvent.pointerType !== 'mouse' && !event.detail.activeGestures.pan) {
         setPointerType(null);
       }
@@ -85,12 +85,12 @@ export function usePointerType(): null | PointerType {
     const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
     return () => {
-      moveEndHandler.cleanup();
-      panEndHandler.cleanup();
       moveStartHandler.cleanup();
+      moveEndHandler.cleanup();
       panStartHandler.cleanup();
+      panEndHandler.cleanup();
       pressHandler.cleanup();
-      quickPressEndHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [instance]);
 
