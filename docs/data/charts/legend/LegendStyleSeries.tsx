@@ -19,8 +19,6 @@ export default function LegendStyleSeries() {
   const [highlightedItem, setHighlightedItem] =
     React.useState<HighlightItemData | null>(null);
 
-  console.log(highlightedItem);
-
   return (
     <BarChart
       {...settings}
