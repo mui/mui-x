@@ -48,11 +48,6 @@ export interface RadarChartProps
    */
   hideLegend?: boolean;
   /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
-  /**
    * Overridable component slots.
    * @default {}
    */
@@ -91,11 +86,12 @@ const RadarChart = React.forwardRef(function RadarChart(
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
+  const showToolbar = Toolbar != null;
 
   return (
     <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
@@ -223,11 +219,6 @@ RadarChart.propTypes = {
    * @default 'sharp'
    */
   shape: PropTypes.oneOf(['circular', 'sharp']),
-  /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

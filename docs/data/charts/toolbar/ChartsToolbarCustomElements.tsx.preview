@@ -2,8 +2,7 @@
   {...params}
   xAxis={[{ zoom: true }]}
   yAxis={[{ zoom: true }]}
-  showToolbar
-  slots={{ baseIconButton: CustomIconButton }}
+  slots={{ baseIconButton: CustomIconButton, toolbar: ChartsToolbarPro }}
   sx={{
     [`& .${chartsToolbarClasses.root}`]: {
       gap: 1,

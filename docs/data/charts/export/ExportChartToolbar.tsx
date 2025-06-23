@@ -2,6 +2,7 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { inflationData } from '../dataset/inflationRates';
 
 const yAxisFormatter = new Intl.NumberFormat('en-US', {
@@ -62,7 +63,7 @@ const settings = {
 export default function ExportChartToolbar() {
   return (
     <Stack width="100%">
-      <LineChartPro {...settings} showToolbar />
+      <LineChartPro {...settings} slots={{ toolbar: ChartsToolbarPro }} />
       <Typography variant="caption">Source: World Bank</Typography>
     </Stack>
   );

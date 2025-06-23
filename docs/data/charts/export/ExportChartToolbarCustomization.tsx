@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { ScatterValueType } from '@mui/x-charts/models';
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import {
   continents,
   populationGdpPerCapitaData,
@@ -85,8 +86,8 @@ export default function ExportChartToolbarCustomization() {
             label: 'GDP per Capita',
           },
         ]}
-        showToolbar
         grid={{ horizontal: true }}
+        slots={{ toolbar: ChartsToolbarPro }}
         slotProps={{
           toolbar: {
             printOptions: { disableToolbarButton: !formats.print, fileName },

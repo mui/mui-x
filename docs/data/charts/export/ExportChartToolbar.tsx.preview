@@ -1,2 +1,2 @@
-<LineChartPro {...settings} showToolbar />
+<LineChartPro {...settings} slots={{ toolbar: ChartsToolbarPro }} />
 <Typography variant="caption">Source: World Bank</Typography>

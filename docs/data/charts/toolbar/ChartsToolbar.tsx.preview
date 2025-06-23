@@ -3,5 +3,5 @@
   yAxis={[{ zoom: true }]}
   height={300}
   series={series}
-  showToolbar
+  slots={{ toolbar: ChartsToolbarPro }}
 />

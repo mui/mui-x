@@ -30,9 +30,7 @@ describe('Charts Toolbar', () => {
 
   describe('Accessibility', () => {
     it('should move focus to the next item when pressing ArrowRight', async () => {
-      const { user } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
-      );
+      const { user } = render(<LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />);
 
       await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
       expect(screen.getByRole('button', { name: 'Item 1' })).toHaveFocus();
@@ -45,9 +43,7 @@ describe('Charts Toolbar', () => {
     });
 
     it('should move focus to the previous item when pressing ArrowLeft', async () => {
-      const { user } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
-      );
+      const { user } = render(<LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />);
 
       await act(async () => screen.getByRole('button', { name: 'Item 3' }).focus());
       expect(screen.getByRole('button', { name: 'Item 3' })).toHaveFocus();
@@ -60,9 +56,7 @@ describe('Charts Toolbar', () => {
     });
 
     it('should focus on the first item when pressing Home key', async () => {
-      const { user } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
-      );
+      const { user } = render(<LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />);
 
       await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
       await user.keyboard('{Home}');
@@ -70,9 +64,7 @@ describe('Charts Toolbar', () => {
     });
 
     it('should focus on the last item when pressing End key', async () => {
-      const { user } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
-      );
+      const { user } = render(<LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />);
 
       await act(async () => screen.getByRole('button', { name: 'Item 3' }).focus());
       await user.keyboard('{End}');
@@ -80,9 +72,7 @@ describe('Charts Toolbar', () => {
     });
 
     it('should wrap to first item when pressing ArrowRight on last item', async () => {
-      const { user } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
-      );
+      const { user } = render(<LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />);
 
       await act(async () => screen.getByRole('button', { name: 'Item 3' }).focus());
       await user.keyboard('{ArrowRight}');
@@ -90,9 +80,7 @@ describe('Charts Toolbar', () => {
     });
 
     it('should wrap to last item when pressing ArrowLeft on first item', async () => {
-      const { user } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
-      );
+      const { user } = render(<LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />);
 
       await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());
       await user.keyboard('{ArrowLeft}');
@@ -101,7 +89,7 @@ describe('Charts Toolbar', () => {
 
     it('should maintain focus position when an item is removed', async () => {
       const { setProps } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
+        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />,
       );
 
       await act(async () => screen.getByRole('button', { name: 'Item 2' }).focus());
@@ -117,7 +105,7 @@ describe('Charts Toolbar', () => {
 
     it('should maintain focus on the last item when the last item is removed', async () => {
       const { setProps } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
+        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />,
       );
 
       await act(async () => screen.getByRole('button', { name: 'Item 3' }).focus());
@@ -133,7 +121,7 @@ describe('Charts Toolbar', () => {
 
     it('should preserve arrow key navigation after item removal', async () => {
       const { user, setProps } = render(
-        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} showToolbar />,
+        <LineChart {...baselineProps} slots={{ toolbar: CustomToolbar }} />,
       );
 
       await act(async () => screen.getByRole('button', { name: 'Item 1' }).focus());

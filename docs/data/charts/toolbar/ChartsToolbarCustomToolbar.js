@@ -120,7 +120,6 @@ export default function ChartsToolbarCustomToolbar() {
       {...params}
       xAxis={[{ zoom: true }]}
       yAxis={[{ zoom: true }]}
-      showToolbar
       slots={{ toolbar: CustomToolbar }}
       sx={{
         [`& .${chartsToolbarClasses.root}`]: {

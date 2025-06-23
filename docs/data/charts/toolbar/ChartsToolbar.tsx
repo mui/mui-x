@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { data } from './randomData';
 
 const series = [
@@ -20,7 +21,7 @@ export default function ChartsToolbar() {
       yAxis={[{ zoom: true }]}
       height={300}
       series={series}
-      showToolbar
+      slots={{ toolbar: ChartsToolbarPro }}
     />
   );
 }

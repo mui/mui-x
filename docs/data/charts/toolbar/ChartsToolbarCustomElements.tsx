@@ -3,6 +3,7 @@ import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { ChartBaseIconButtonProps } from '@mui/x-charts/models';
 import Button from '@mui/material/Button';
 import { chartsToolbarClasses } from '@mui/x-charts/Toolbar';
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { data } from './randomData';
 
 const params = {
@@ -32,8 +33,7 @@ export default function ChartsToolbarCustomElements() {
       {...params}
       xAxis={[{ zoom: true }]}
       yAxis={[{ zoom: true }]}
-      showToolbar
-      slots={{ baseIconButton: CustomIconButton }}
+      slots={{ baseIconButton: CustomIconButton, toolbar: ChartsToolbarPro }}
       sx={{
         [`& .${chartsToolbarClasses.root}`]: {
           gap: 1,
