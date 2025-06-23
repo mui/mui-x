@@ -10,9 +10,8 @@ import {
 const colorOptions = {
   label: 'Color palette',
   type: 'select',
-  default: 'default',
+  default: 'rainbowSurgePalette',
   options: [
-    { label: 'Default', value: 'default' },
     { label: 'Blueberry Twilight', value: 'blueberryTwilightPalette' },
     { label: 'Mango Fusion', value: 'mangoFusionPalette' },
     { label: 'Cheerful Fiesta', value: 'cheerfulFiestaPalette' },
