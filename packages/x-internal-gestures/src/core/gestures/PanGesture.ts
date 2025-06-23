@@ -105,7 +105,7 @@ export type PanGestureState = GestureState & {
   totalDeltaY: number;
   /** Active horizontal delta since the start of the current gesture */
   activeDeltaX: number;
-  /** Active horizontal delta since the start of the current gesture */
+  /** Active vertical delta since the start of the current gesture */
   activeDeltaY: number;
   /** Map of pointers that initiated the gesture, used for tracking state */
   startPointers: Map<number, PointerData>;
