@@ -95,8 +95,6 @@ Make sure that the legend container has a fixed height or width to enable scroll
 You can use CSS to style the series in the legend.
 Each legend item has a `data-series` attribute where its value is the ID of the series it represents.
 
-In the example below, when a series is highlighted, all others are dimmed.
-
 {{"demo": "LegendStyleSeries.js"}}
 
 ### Custom component
