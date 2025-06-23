@@ -129,6 +129,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Ταξινόμηση σε αύξουσα σειρά',
   columnMenuSortDesc: 'Ταξινόμηση σε φθίνουσα σειρά',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
