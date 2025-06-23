@@ -26,8 +26,13 @@ export const validateTime: Validator<PickerValue, TimeValidationError, ValidateT
   adapter,
   value,
   timezone,
+  forcedError,
   props,
 }): TimeValidationError => {
+  if (forcedError != null) {
+    return forcedError;
+  }
+
   if (value === null) {
     return null;
   }

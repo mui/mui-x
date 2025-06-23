@@ -39,6 +39,7 @@ import {
   getSectionTypeGranularity,
 } from '../../utils/getDefaultReferenceDate';
 import { PickerValidValue } from '../../models';
+import { usePickerPrivateContext } from '../usePickerPrivateContext';
 
 const QUERY_LIFE_DURATION_MS = 5000;
 
@@ -59,6 +60,7 @@ export const useFieldState = <
 ): UseFieldStateReturnValue<TValue> => {
   const utils = useUtils();
   const translations = usePickerTranslations();
+  const { setForcedError } = usePickerPrivateContext();
   const adapter = useLocalizationContext();
   const isRtl = useRtl();
 
@@ -99,24 +101,6 @@ export const useFieldState = <
   React.useEffect(() => {
     valueRef.current = value;
   }, [value]);
-
-  const { hasValidationError } = useValidation({
-    props: internalPropsWithDefaults,
-    validator,
-    timezone,
-    value,
-    onError: internalPropsWithDefaults.onError,
-  });
-
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
 
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
@@ -210,12 +194,41 @@ export const useFieldState = <
     [state.sections],
   );
 
+  const forcedError = React.useMemo(
+    () => fieldValueManager.getPartiallyFilledError(state.sections),
+    [fieldValueManager, state.sections],
+  );
+
+  React.useEffect(() => {
+    setForcedError(forcedError);
+  }, [forcedError]);
+
+  const { hasValidationError } = useValidation({
+    props: internalPropsWithDefaults,
+    validator,
+    timezone,
+    value,
+    forcedError,
+    onError: internalPropsWithDefaults.onError,
+  });
+
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError;
+  }, [hasValidationError, errorProp]);
+
   const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {
       validationError: validator({
         adapter,
         value: newValue,
         timezone,
+        forcedError: fieldValueManager.getPartiallyFilledError(state.sections),
         props: internalPropsWithDefaults,
       }),
     };

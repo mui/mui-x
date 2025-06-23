@@ -97,7 +97,7 @@ export const usePicker = <
   const rootRefObject = React.useRef<HTMLDivElement>(null);
   const rootRef = useForkRef(ref, rootRefObject);
 
-  const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
+  const { timezone, state, setOpen, setValue, setValueFromView, setForcedError, value, viewValue } =
     useValueAndOpenStates<TValue, TView, TExternalProps>({
       props,
       valueManager,
@@ -324,7 +324,7 @@ export const usePicker = <
     ],
   );
 
-  const privateContextValue = React.useMemo<PickerPrivateContextValue>(
+  const privateContextValue = React.useMemo<PickerPrivateContextValue<TError>>(
     () => ({
       dismissViews,
       ownerState,
@@ -336,6 +336,7 @@ export const usePicker = <
       viewContainerRole,
       defaultActionBarActions,
       onPopperExited,
+      setForcedError,
     }),
     [
       dismissViews,
@@ -347,6 +348,7 @@ export const usePicker = <
       viewContainerRole,
       defaultActionBarActions,
       onPopperExited,
+      setForcedError,
     ],
   );
 
@@ -373,6 +375,7 @@ export const usePicker = <
       value: testedValue,
       timezone,
       props,
+      forcedError: valueManager.defaultErrorState,
     });
 
     return !valueManager.hasError(error);

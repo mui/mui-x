@@ -214,12 +214,15 @@ export type FieldChangeHandler<TValue extends PickerValidValue, TError> = (
 ) => void;
 
 export interface FieldChangeHandlerContext<TError> {
+  /**
+   * The validation error associated to the value passed to the `onChange` callback.
+   */
   validationError: TError;
 }
 
 export type FieldParsedSelectedSections = number | 'all' | null;
 
-export interface FieldValueManager<TValue extends PickerValidValue> {
+export interface FieldValueManager<TValue extends PickerValidValue, TError> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
@@ -321,6 +324,13 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
     sections: InferFieldSection<TValue>[],
     section: InferFieldSection<TValue>,
   ) => InferFieldSection<TValue>[];
+  /**
+   * Returns the error to associate with the value when some dates in it as partially filled.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {InferFieldSection<TValue>[]} sections The sections of the full value.
+   * @returns {TError | undefined} The explicit error.
+   */
+  getPartiallyFilledError: (sections: InferFieldSection<TValue>[]) => TError;
 }
 
 export interface UseFieldState<TValue extends PickerValidValue> {
