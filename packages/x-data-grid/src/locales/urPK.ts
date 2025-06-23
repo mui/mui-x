@@ -129,6 +129,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'ترتیب صعودی',
   columnMenuSortDesc: 'ترتیب نزولی',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

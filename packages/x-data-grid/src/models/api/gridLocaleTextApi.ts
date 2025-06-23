@@ -133,6 +133,7 @@ export interface GridLocaleText {
   columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuManagePivot: string;
+  columnMenuManageCharts: string;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
