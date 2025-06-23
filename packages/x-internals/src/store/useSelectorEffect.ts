@@ -36,7 +36,7 @@ function initialize<State, Value>(params?: {
 
   const instance = {
     effect: noop as (previous: Value, next: Value) => void,
-    dispose: noop as Function | null,
+    dispose: null as Function | null,
     onMount: () => {
       subscribe();
       return () => {
