@@ -1005,12 +1005,6 @@ async function main({ githubToken }) {
       console.log(`Changes pushed to origin/${branchName}`);
     }
 
-    // Wait for user confirmation
-    await confirm({
-      message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
-      default: true,
-    });
-
     // Create PR body with checklist
     const prBody = createPrBody(newVersion);
 
