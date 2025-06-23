@@ -9,9 +9,9 @@ import {
 const settings = {
   xAxis: [{ data: ['group A', 'group B', 'group C'] }],
   series: [
-    { id: 1, data: [4, 3, 5] },
-    { id: 2, data: [1, 6, 3] },
-    { id: 3, data: [2, 5, 6] },
+    { id: '1', data: [4, 3, 5] },
+    { id: '2', data: [1, 6, 3] },
+    { id: '3', data: [2, 5, 6] },
   ],
   height: 300,
   barLabel: 'value',
