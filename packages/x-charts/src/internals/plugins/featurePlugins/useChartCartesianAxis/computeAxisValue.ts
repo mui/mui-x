@@ -26,6 +26,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
+import { getAxisDomainLimit } from './getAxisDomainLimit';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -180,7 +181,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const domainLimit = axis.domainLimit ?? 'nice';
+    const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries);
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
 
