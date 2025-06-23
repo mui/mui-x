@@ -7,8 +7,8 @@
   ],
   "properties": {
     "firstColumnIndex": { "type": { "description": "number" }, "required": true },
-    "lastColumnIndex": { "type": { "description": "number" }, "required": true },
     "firstRowIndex": { "type": { "description": "number" }, "required": true },
+    "lastColumnIndex": { "type": { "description": "number" }, "required": true },
     "lastRowIndex": { "type": { "description": "number" }, "required": true }
   }
 }
