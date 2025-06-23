@@ -1,6 +1,5 @@
 {
   "props": {
-    "gap": { "type": { "name": "number" }, "default": "0" },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {

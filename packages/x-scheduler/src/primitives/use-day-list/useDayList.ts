@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { getAdapter } from '../utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../utils/adapter/types';
+import { SchedulerValidDate } from '../models';
 
 const adapter = getAdapter();
 

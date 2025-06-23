@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: Date and Time Pickers - Date format and localization
 components: LocalizationProvider
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 

@@ -1,6 +1,5 @@
-import { beforeAll, afterAll } from 'vitest';
+import { afterAll, beforeAll, beforeEach, afterEach } from 'vitest';
 import 'test/utils/addChaiAssertions';
-import 'test/utils/setupPickers';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
 import { configure } from '@mui/internal-test-utils';
@@ -12,7 +11,7 @@ import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridP
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
 import failOnConsole from 'vitest-fail-on-console';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { isJSDOM } from './utils/skipIf';
+import { hasTouchSupport, isJSDOM } from './utils/skipIf';
 
 // Core's setupVitest is causing issues with the test setup
 // import '@mui/internal-test-utils/setupVitest';
@@ -51,6 +50,7 @@ configure({
 
 failOnConsole();
 
+// This is necessary because core utils still use mocha global hooks
 if (!globalThis.before) {
   (globalThis as any).before = beforeAll;
 }
@@ -58,10 +58,8 @@ if (!globalThis.after) {
   (globalThis as any).after = afterAll;
 }
 
-const isJsdom = typeof window !== 'undefined' && window.navigator.userAgent.includes('jsdom');
-
 // Only necessary when not in browser mode.
-if (isJsdom) {
+if (!hasTouchSupport) {
   class Touch {
     instance: any;
 

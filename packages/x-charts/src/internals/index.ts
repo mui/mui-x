@@ -2,6 +2,7 @@
 export * from './components/ChartsAxesGradients';
 export * from './components/ChartsWrapper';
 export * from '../ChartsLabel/ChartsLabelMark';
+export * from './components/NotRendered';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -26,6 +27,8 @@ export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
 export * from './plugins/featurePlugins/useChartVoronoi';
 export * from './plugins/utils/selectors';
+export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
+export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -51,8 +54,11 @@ export * from './getCurve';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
+export * from './colorScale';
+export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';
+export * from './isBandScale';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';

@@ -155,28 +155,38 @@ jobs:
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.52.0-noble
+      - image: mcr.microsoft.com/playwright:v1.53.1-noble
     resource_class: medium+
     steps:
       - checkout
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
+
       - when:
           condition:
             not:
               equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
-                command: pnpm test:unit:browser
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 name: Test Browser + Coverage
-                command: pnpm test:unit:browser --coverage
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
+
             - run:
                 name: Check coverage generated
                 command: |
@@ -287,7 +297,7 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.52.0-noble
+      - image: mcr.microsoft.com/playwright:v1.53.1-noble
     steps:
       - checkout
       - install_js:
@@ -299,7 +309,7 @@ jobs:
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.52.0-noble
+      - image: mcr.microsoft.com/playwright:v1.53.1-noble
     steps:
       - checkout
       - install_js:
@@ -344,7 +354,7 @@ jobs:
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.52.0-noble
+      - image: mcr.microsoft.com/playwright:v1.53.1-noble
     steps:
       - checkout
       - install_js:

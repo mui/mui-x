@@ -123,6 +123,16 @@ The funnel colors can be customized in two ways.
 
 {{"demo": "FunnelColor.js"}}
 
+### CSS
+
+The funnel chart can be styled using CSS.
+
+Each section group has a `data-series` attribute that can be used to target specific series sections.
+
+In order to target specific sections, you can use the `:nth-child` or `:nth-child-of-type` selectors as shown in the example below.
+
+{{"demo": "FunnelDataAttributes.js"}}
+
 ## Multiple funnels
 
 By default, multiple series are displayed on top of each other.

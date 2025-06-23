@@ -16,7 +16,10 @@
   },
   "exports": {
     "./joy": "./src/joy/index.ts",
+    "./joy/day-view": "./src/joy/day-view/index.ts",
     "./joy/event-calendar": "./src/joy/event-calendar/index.ts",
+    "./joy/standalone-view": "./src/joy/standalone-view/index.ts",
+    "./joy/week-view": "./src/joy/week-view/index.ts",
     "./joy/locales/enUS": "./src/joy/locales/enUS.ts",
     "./joy/locales/frFR": "./src/joy/locales/frFR.ts",
     "./primitives": "./src/primitives/index.ts",
@@ -56,13 +59,15 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.4",
+    "@babel/runtime": "catalog:",
     "@base-ui-components/react": "1.0.0-beta.0",
-    "@floating-ui/react": "^0.27.11",
+    "@floating-ui/react": "^0.27.12",
     "@mui/x-internals": "workspace:*",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.511.0",
-    "prop-types": "^15.8.1"
+    "clsx": "catalog:",
+    "lucide-react": "^0.522.0",
+    "reselect": "catalog:",
+    "prop-types": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "luxon": "^3.0.2",
@@ -70,13 +75,14 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.9",
-    "@types/luxon": "^3.6.2",
-    "@types/prop-types": "^15.7.14",
-    "luxon": "^3.6.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "rimraf": "^6.0.1",
+    "@mui/internal-test-utils": "catalog:",
+    "@types/luxon": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
+    "luxon": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:",
     "use-isomorphic-layout-effect": "^1.2.1"
   },
   "engines": {

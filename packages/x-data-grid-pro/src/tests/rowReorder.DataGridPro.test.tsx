@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
