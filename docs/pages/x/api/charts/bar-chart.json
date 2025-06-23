@@ -67,7 +67,6 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
-    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {

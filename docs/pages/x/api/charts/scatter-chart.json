@@ -63,7 +63,6 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
-    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {

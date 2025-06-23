@@ -59,7 +59,6 @@
     },
     "onLineClick": { "type": { "name": "func" } },
     "onMarkClick": { "type": { "name": "func" } },
-    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {

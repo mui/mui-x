@@ -274,11 +274,6 @@ ScatterChart.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar: PropTypes.bool,
-  /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
