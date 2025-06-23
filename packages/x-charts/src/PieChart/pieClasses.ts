@@ -14,10 +14,10 @@ export interface PieClasses {
 export type PieClassKey = keyof PieClasses;
 
 export function getPieUtilityClass(slot: string) {
-  return generateUtilityClass('MuiPie', slot);
+  return generateUtilityClass('MuiPieChart', slot);
 }
 
-export const pieClasses: PieClasses = generateUtilityClasses('MuiPie', [
+export const pieClasses: PieClasses = generateUtilityClasses('MuiPieChart', [
   'root',
   'series',
   'seriesLabels',
