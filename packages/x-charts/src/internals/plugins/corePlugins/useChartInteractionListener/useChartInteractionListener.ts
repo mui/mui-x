@@ -31,7 +31,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       gestures: [
         new PanGesture({
           name: 'pan',
-          threshold: 5,
+          threshold: 0,
           maxPointers: 1,
         }),
         new MoveGesture({

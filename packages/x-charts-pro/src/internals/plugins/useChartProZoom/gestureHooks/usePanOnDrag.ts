@@ -22,6 +22,7 @@ export const usePanOnDrag = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const startRef = React.useRef<readonly ZoomData[]>(null);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
@@ -36,33 +37,36 @@ export const usePanOnDrag = (
       return () => {};
     }
 
-    const setZoomDataRafThrottle = rafThrottle(setZoomDataCallback);
+    const handlePanStart = () => {
+      startRef.current = store.value.zoom.zoomData;
+    };
 
-    const handlePan = (event: PanEvent) => {
+    const handlePanThrottled = rafThrottle((event: PanEvent) => {
       const target = event.detail.srcEvent.target as SVGElement | undefined;
-      if (target?.hasAttribute('data-charts-zoom-slider')) {
+      if (target?.hasAttribute('data-charts-zoom-slider') || !startRef.current) {
         return;
       }
 
-      setZoomDataRafThrottle((prev) => {
-        const newZoomData = translateZoom(
-          prev,
-          { x: event.detail.deltaX, y: -event.detail.deltaY },
-          {
-            width: drawingArea.width,
-            height: drawingArea.height,
-          },
-          optionsLookup,
-        );
-        return newZoomData;
-      });
-    };
+      const newZoomData = translateZoom(
+        startRef.current,
+        { x: event.detail.activeDeltaX, y: -event.detail.activeDeltaY },
+        {
+          width: drawingArea.width,
+          height: drawingArea.height,
+        },
+        optionsLookup,
+      );
 
-    const panHandler = instance.addInteractionListener('pan', handlePan);
+      setZoomDataCallback(newZoomData);
+    });
+
+    const panHandler = instance.addInteractionListener('pan', handlePanThrottled);
+    const panStartHandler = instance.addInteractionListener('panStart', handlePanStart);
 
     return () => {
       panHandler.cleanup();
-      setZoomDataRafThrottle.clear();
+      panStartHandler.cleanup();
+      handlePanThrottled.clear();
     };
   }, [
     instance,
@@ -73,5 +77,6 @@ export const usePanOnDrag = (
     drawingArea.height,
     setZoomDataCallback,
     store,
+    startRef,
   ]);
 };
