@@ -58,7 +58,7 @@ describe('<EventPopover />', () => {
         <EventPopover {...defaultProps} onEventEdit={onEventEdit} />
       </Popover.Root>,
     );
-    fireEvent.change(screen.getByRole('textbox', { name: /event title/i }), {
+    fireEvent.change(screen.getByLabelText(/event title/i), {
       target: { value: 'Updated title' },
     });
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
@@ -75,6 +75,20 @@ describe('<EventPopover />', () => {
     fireEvent.change(screen.getByLabelText(/start date/i), { target: { value: '2025-05-27' } });
     fireEvent.change(screen.getByLabelText(/end date/i), { target: { value: '2025-05-26' } });
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
-    expect(screen.getByRole('alert').textContent).to.match(/start.*before.*end/i);
+
+    const errorDiv = document.querySelector('.EventPopoverDateTimeFieldsError [data-invalid]');
+    expect(errorDiv?.textContent).to.match(/start.*before.*end/i);
+  });
+
+  it('should call onEventDelete with the event id when delete button is clicked', () => {
+    const onEventDelete = spy();
+    render(
+      <Popover.Root open>
+        <EventPopover {...defaultProps} onEventDelete={onEventDelete} />
+      </Popover.Root>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /delete event/i }));
+    expect(onEventDelete.calledOnce).to.equal(true);
+    expect(onEventDelete.firstCall.args[0]).to.equal('1');
   });
 });
