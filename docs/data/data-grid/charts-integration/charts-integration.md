@@ -29,3 +29,16 @@ Names of those columns are determined by the values used to generate them, which
 The demo below shows how to use column grouping state selector to get the dynamic names and select few of those columns on initial render.
 
 {{"demo": "GridChartsIntegrationPivoting.js", "bg": "inline"}}
+
+## Customization
+
+Use `initialState` to set different chart configuration defaults.
+Combine this with the configuration options override to force certain configuration values.
+
+Use `onRender()` prop of the `GridChartsRendererProxy` component to customize the way the charts are rendered.
+With this callback you can add support for the options that are not available in our default `configurationOptions`.
+
+In the demo below, `initialState` is used to set different default color scheme and the configuration options are updated to prevent color scheme change.
+Additionally, `onRender()` is used to add a grid to the line chart.
+
+{{"demo": "GridChartsIntegrationCustomization.js", "bg": "inline"}}
