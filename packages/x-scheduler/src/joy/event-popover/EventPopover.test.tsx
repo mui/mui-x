@@ -31,6 +31,7 @@ describe('<EventPopover />', () => {
     calendarEvent,
     calendarEventResource,
     onEventEdit: () => {},
+    onEventDelete: () => {},
     onClose: () => {},
   };
 
