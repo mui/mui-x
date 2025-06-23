@@ -26,7 +26,7 @@
     "@emotion/react": "catalog:",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "catalog:",
-    "@mui/docs": "7.1.1",
+    "@mui/docs": "7.1.2",
     "@mui/icons-material": "catalog:",
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/lab": "^7.0.0-beta.13",
