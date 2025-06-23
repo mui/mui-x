@@ -38,38 +38,39 @@ export const useZoomOnPinch = (
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
-      const newZoomData = store.getSnapshot().zoom.zoomData.map((zoom) => {
-        const option = optionsLookup[zoom.axisId];
-        if (!option) {
-          return zoom;
-        }
+      setZoomDataCallback((prev) => {
+        return prev.map((zoom) => {
+          const option = optionsLookup[zoom.axisId];
+          if (!option) {
+            return zoom;
+          }
 
-        const isZoomIn = event.detail.direction > 0;
-        const scaleRatio = 1 + event.detail.deltaScale;
+          const isZoomIn = event.detail.direction > 0;
+          const scaleRatio = 1 + event.detail.deltaScale;
 
-        // If the delta is 0, it means the pinch gesture is not valid.
-        if (event.detail.direction === 0) {
-          return zoom;
-        }
+          // If the delta is 0, it means the pinch gesture is not valid.
+          if (event.detail.direction === 0) {
+            return zoom;
+          }
 
-        const point = getSVGPoint(element, {
-          clientX: event.detail.centroid.x,
-          clientY: event.detail.centroid.y,
+          const point = getSVGPoint(element, {
+            clientX: event.detail.centroid.x,
+            clientY: event.detail.centroid.y,
+          });
+
+          const centerRatio =
+            option.axisDirection === 'x'
+              ? getHorizontalCenterRatio(point, drawingArea)
+              : getVerticalCenterRatio(point, drawingArea);
+
+          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
+
+          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
+            return zoom;
+          }
+          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
         });
-
-        const centerRatio =
-          option.axisDirection === 'x'
-            ? getHorizontalCenterRatio(point, drawingArea)
-            : getVerticalCenterRatio(point, drawingArea);
-
-        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
-
-        if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-          return zoom;
-        }
-        return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
       });
-      setZoomDataCallback(newZoomData);
     });
 
     const zoomHandler = instance.addInteractionListener('pinch', rafThrottledCallback);
