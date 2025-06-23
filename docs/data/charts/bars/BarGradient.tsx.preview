@@ -4,12 +4,13 @@
     [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
       fill: 'url(#gradient)',
     },
+    [`& .${barClasses.seriesLabels}[data-series="2"] .${barLabelClasses.root}`]:
+      {
+        fontWeight: 'bold',
+      },
   }}
 >
   <defs>
-    <linearGradient id="gradient" gradientTransform="rotate(90)">
-      <stop offset="5%" stopColor="gold" />
-      <stop offset="95%" stopColor="red" />
-    </linearGradient>
+    <Gradient id="gradient" />
   </defs>
 </BarChart>

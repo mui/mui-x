@@ -273,7 +273,7 @@ function BarPlot(props: BarPlotProps) {
               ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
                 const barElement = (
                   <BarElement
-                    key={`${seriesId}-${dataIndex}`}
+                    key={dataIndex}
                     id={seriesId}
                     dataIndex={dataIndex}
                     color={color}
@@ -300,7 +300,7 @@ function BarPlot(props: BarPlotProps) {
                 }
 
                 return (
-                  <g key={`${seriesId}-${dataIndex}`} clipPath={`url(#${maskId})`}>
+                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
                     {barElement}
                   </g>
                 );

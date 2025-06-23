@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { BarChart, barClasses, barElementClasses } from '@mui/x-charts/BarChart';
+import {
+  BarChart,
+  barClasses,
+  barElementClasses,
+  barLabelClasses,
+} from '@mui/x-charts/BarChart';
 
 const settings = {
   xAxis: [{ data: ['group A', 'group B', 'group C'] }],
@@ -9,6 +14,7 @@ const settings = {
     { id: 3, data: [2, 5, 6] },
   ],
   height: 300,
+  barLabel: 'value',
 };
 
 export default function BarGradient() {
@@ -19,14 +25,24 @@ export default function BarGradient() {
         [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
           fill: 'url(#gradient)',
         },
+        [`& .${barClasses.seriesLabels}[data-series="2"] .${barLabelClasses.root}`]:
+          {
+            fontWeight: 'bold',
+          },
       }}
     >
       <defs>
-        <linearGradient id="gradient" gradientTransform="rotate(90)">
-          <stop offset="5%" stopColor="gold" />
-          <stop offset="95%" stopColor="red" />
-        </linearGradient>
+        <Gradient id="gradient" />
       </defs>
     </BarChart>
+  );
+}
+
+function Gradient(props) {
+  return (
+    <linearGradient gradientTransform="rotate(90)" {...props}>
+      <stop offset="5%" stopColor="gold" />
+      <stop offset="95%" stopColor="red" />
+    </linearGradient>
   );
 }

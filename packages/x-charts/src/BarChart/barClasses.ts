@@ -7,6 +7,8 @@ export interface BarClasses {
   root: string;
   /** Styles applied to the group surrounding a series' bar elements. */
   series: string;
+  /** Styles applied to the group surrounding a series' labels. */
+  seriesLabels: string;
 }
 
 export type BarClassKey = keyof BarClasses;
@@ -15,12 +17,17 @@ export function getBarUtilityClass(slot: string) {
   return generateUtilityClass('MuiBar', slot);
 }
 
-export const barClasses: BarClasses = generateUtilityClasses('MuiBar', ['root', 'series']);
+export const barClasses: BarClasses = generateUtilityClasses('MuiBar', [
+  'root',
+  'series',
+  'seriesLabels',
+]);
 
 export const useUtilityClasses = (classes?: Partial<BarClasses>) => {
   const slots = {
     root: ['root'],
     series: ['series'],
+    seriesLabels: ['seriesLabels'],
   };
 
   return composeClasses(slots, getBarUtilityClass, classes);
