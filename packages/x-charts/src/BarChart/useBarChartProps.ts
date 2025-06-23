@@ -48,7 +48,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     barLabel,
     className,
     hideLegend,
-    showToolbar,
     ...rest
   } = props;
 
