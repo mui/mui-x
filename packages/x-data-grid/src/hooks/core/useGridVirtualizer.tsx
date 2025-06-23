@@ -93,12 +93,12 @@ export function useGridVirtualizer(
   // <DIMENSIONS>
   const density = useGridSelector(apiRef, gridDensityFactorSelector);
 
-  const validRowHeight = getValidRowHeight(
+  const baseRowHeight = getValidRowHeight(
     rootProps.rowHeight,
     DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
     rowHeightWarning,
   );
-  const rowHeight = Math.floor(validRowHeight * density);
+  const rowHeight = Math.floor(baseRowHeight * density);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * density);
   const groupHeaderHeight = Math.floor(
     (rootProps.columnGroupHeaderHeight ?? rootProps.columnHeaderHeight) * density,

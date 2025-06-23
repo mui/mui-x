@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import ownerDocument from '@mui/utils/ownerDocument';
 import { useSelectorEffect } from '@mui/x-internals/store';
 import { Dimensions } from '@mui/x-virtualizer';
 import { GridEventListener } from '../../../models/events';
@@ -20,7 +19,6 @@ import {
 import { gridDimensionsSelector } from './gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../density';
 import { gridRenderContextSelector } from '../virtualization';
-import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
@@ -111,33 +109,9 @@ const columnsTotalWidthSelector = createSelector(
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
-  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
-  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
 
   const virtualizer = apiRef.current.virtualizer;
-
-  useSelectorEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
-    if (apiRef.current.rootElementRef.current) {
-      setCSSVariables(apiRef.current.rootElementRef.current, gridDimensionsSelector(apiRef));
-    }
-
-    if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
-      apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
-    }
-
-    apiRef.current.updateRenderContext?.();
-    apiRef.current.publishEvent('debouncedResize', next.root);
-  });
-
-  const {
-    rowHeight,
-    headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
-    headersTotalHeight,
-    leftPinnedWidth,
-    rightPinnedWidth,
-  } = getStaticDimensions(props, apiRef, densityFactor, pinnedColumns);
+  const updateDimensions = virtualizer.dimensions.updateDimensions;
 
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
@@ -159,14 +133,11 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     }
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / rowHeight,
+      dimensions.viewportInnerSize.height / dimensions.rowHeight,
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, props.getRowHeight, rowHeight]);
-
-  const updateDimensions = virtualizer.dimensions.updateDimensions;
-  const debouncedUpdateDimensions = virtualizer.dimensions.debouncedUpdateDimensions;
+  }, [apiRef, props.getRowHeight]);
 
   const apiPublic: GridDimensionsApi = {
     getRootDimensions,
@@ -180,46 +151,53 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridApiMethod(apiRef, apiPublic, 'public');
   useGridApiMethod(apiRef, apiPrivate, 'private');
 
-  const handleRootMount = React.useCallback<GridEventListener<'rootMount'>>(
-    (root) => {
-      setCSSVariables(root, gridDimensionsSelector(apiRef));
-    },
-    [apiRef],
-  );
+  const handleRootMount: GridEventListener<'rootMount'> = (root) => {
+    setCSSVariables(root, gridDimensionsSelector(apiRef));
+  };
 
-  const handleResize = React.useCallback<GridEventListener<'resize'>>(
-    (size) => {
-      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
-        logger.error(
-          [
-            'The parent DOM element of the Data Grid has an empty height.',
-            'Please make sure that this element has an intrinsic height.',
-            'The grid displays with a height of 0px.',
-            '',
-            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-          ].join('\n'),
-        );
-        errorShown.current = true;
-      }
-      if (size.width === 0 && !errorShown.current && !isJSDOM) {
-        logger.error(
-          [
-            'The parent DOM element of the Data Grid has an empty width.',
-            'Please make sure that this element has an intrinsic width.',
-            'The grid displays with a width of 0px.',
-            '',
-            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-          ].join('\n'),
-        );
-        errorShown.current = true;
-      }
-    },
-    [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
-  );
+  const handleResize: GridEventListener<'resize'> = (size) => {
+    if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
+      logger.error(
+        [
+          'The parent DOM element of the Data Grid has an empty height.',
+          'Please make sure that this element has an intrinsic height.',
+          'The grid displays with a height of 0px.',
+          '',
+          'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+        ].join('\n'),
+      );
+      errorShown.current = true;
+    }
+    if (size.width === 0 && !errorShown.current && !isJSDOM) {
+      logger.error(
+        [
+          'The parent DOM element of the Data Grid has an empty width.',
+          'Please make sure that this element has an intrinsic width.',
+          'The grid displays with a width of 0px.',
+          '',
+          'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+        ].join('\n'),
+      );
+      errorShown.current = true;
+    }
+  };
 
   useGridEventPriority(apiRef, 'rootMount', handleRootMount);
   useGridEventPriority(apiRef, 'resize', handleResize);
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
+
+  useSelectorEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
+    if (apiRef.current.rootElementRef.current) {
+      setCSSVariables(apiRef.current.rootElementRef.current, next);
+    }
+
+    if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
+      apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
+    }
+
+    apiRef.current.updateRenderContext?.();
+    apiRef.current.publishEvent('debouncedResize', next.root);
+  });
 }
 
 function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
@@ -264,37 +242,6 @@ function getStaticDimensions(
     leftPinnedWidth: pinnedColumnns.left.reduce((w, col) => w + col.computedWidth, 0),
     rightPinnedWidth: pinnedColumnns.right.reduce((w, col) => w + col.computedWidth, 0),
   };
-}
-
-const scrollbarSizeCache = new WeakMap<Element, number>();
-function measureScrollbarSize(element: Element | null, scrollbarSize: number | undefined) {
-  if (scrollbarSize !== undefined) {
-    return scrollbarSize;
-  }
-
-  if (element === null) {
-    return 0;
-  }
-
-  const cachedSize = scrollbarSizeCache.get(element);
-  if (cachedSize !== undefined) {
-    return cachedSize;
-  }
-
-  const doc = ownerDocument(element);
-  const scrollDiv = doc.createElement('div');
-  scrollDiv.style.width = '99px';
-  scrollDiv.style.height = '99px';
-  scrollDiv.style.position = 'absolute';
-  scrollDiv.style.overflow = 'scroll';
-  scrollDiv.className = 'scrollDiv';
-  element.appendChild(scrollDiv);
-  const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  element.removeChild(scrollDiv);
-
-  scrollbarSizeCache.set(element, size);
-
-  return size;
 }
 
 function areElementSizesEqual(a: ElementSize, b: ElementSize) {
