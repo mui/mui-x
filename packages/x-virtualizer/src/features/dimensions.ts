@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
-import platform from '@mui/x-internals/platform';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
@@ -62,9 +62,7 @@ function initializeState(params: VirtualizerParams) {
 }
 
 function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
-  const errorShown = React.useRef(false);
   const isFirstSizing = React.useRef(true);
-  const rootDimensionsRef = React.useRef(EMPTY_SIZE);
 
   const {
     dimensions: {
@@ -83,6 +81,8 @@ function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
   // updateDimensions debounced
 
   const updateDimensions = React.useCallback(() => {
+    const rootSize = Virtualization.selectors.rootSize(store.state);
+
     if (isFirstSizing.current) {
       return;
     }
@@ -108,10 +108,10 @@ function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
 
     if (params.autoHeight) {
       hasScrollY = false;
-      hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootDimensionsRef.current.width);
+      hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
       viewportOuterSize = {
-        width: rootDimensionsRef.current.width,
+        width: rootSize.width,
         height: topContainerHeight + bottomContainerHeight + contentSize.height,
       };
       viewportInnerSize = {
@@ -120,8 +120,8 @@ function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
       };
     } else {
       viewportOuterSize = {
-        width: rootDimensionsRef.current.width,
-        height: rootDimensionsRef.current.height,
+        width: rootSize.width,
+        height: rootSize.height,
       };
       viewportInnerSize = {
         width: Math.max(0, viewportOuterSize.width),
@@ -164,7 +164,7 @@ function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
 
     const newDimensions: DimensionsState = {
       isReady: true,
-      root: rootDimensionsRef.current,
+      root: rootSize,
       viewportOuterSize,
       viewportInnerSize,
       contentSize,
@@ -193,7 +193,6 @@ function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
 
     store.update({ dimensions: newDimensions });
   }, [
-    // setDimensions,
     params.scrollbarSize,
     params.autoHeight,
     rowHeight,
@@ -212,53 +211,28 @@ function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
       params.resizeThrottleMs > 0
         ? throttle(() => {
             updateDimensionCallback();
-            params.onResize?.(rootDimensionsRef.current);
+            params.onResize?.(store.state.rootSize);
           }, params.resizeThrottleMs)
         : undefined,
-    [params.resizeThrottleMs, params.onResize, updateDimensionCallback],
+    [params.resizeThrottleMs, params.onResize, store, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  // useSelectorEffect(store, Virtualization.selectors.rootSize, (_, size) => {
-  //   if (size.height === 0 && !errorShown.current && !params.autoHeight && !platform.isJSDOM) {
-  //     console.error(
-  //       [
-  //         'The parent DOM element of the Data Grid has an empty height.',
-  //         'Please make sure that this element has an intrinsic height.',
-  //         'The grid displays with a height of 0px.',
-  //         '',
-  //         'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-  //       ].join('\n'),
-  //     );
-  //     errorShown.current = true;
-  //   }
-  //   if (size.width === 0 && !errorShown.current && !platform.isJSDOM) {
-  //     console.error(
-  //       [
-  //         'The parent DOM element of the Data Grid has an empty width.',
-  //         'Please make sure that this element has an intrinsic width.',
-  //         'The grid displays with a width of 0px.',
-  //         '',
-  //         'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-  //       ].join('\n'),
-  //     );
-  //     errorShown.current = true;
-  //   }
-  //
-  //   if (isFirstSizing.current || !debouncedUpdateDimensions) {
-  //     // We want to initialize the grid dimensions as soon as possible to avoid flickering
-  //     isFirstSizing.current = false;
-  //     updateDimensions();
-  //   } else {
-  //     debouncedUpdateDimensions();
-  //   }
-  // });
+  useEnhancedEffect(updateDimensions, [updateDimensions]);
+
+  useSelectorEffect(store, Virtualization.selectors.rootSize, () => {
+    if (isFirstSizing.current || !debouncedUpdateDimensions) {
+      // We want to initialize the grid dimensions as soon as possible to avoid flickering
+      isFirstSizing.current = false;
+      updateDimensions();
+    } else {
+      debouncedUpdateDimensions();
+    }
+  });
 
   return {
     updateDimensions,
     debouncedUpdateDimensions,
-    isFirstSizing,
-    rootDimensionsRef,
   };
 }
 

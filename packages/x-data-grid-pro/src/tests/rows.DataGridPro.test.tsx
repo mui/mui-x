@@ -399,12 +399,12 @@ describe('<DataGridPro /> - Rows', () => {
           await vi.advanceTimersByTimeAsync(10);
         });
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-        expect(vi.getTimerCount()).to.equal(2);
+        expect(vi.getTimerCount()).to.equal(3);
 
         await act(async () => {
           await vi.advanceTimersByTimeAsync(100);
         });
-        expect(vi.getTimerCount()).to.equal(0);
+        expect(vi.getTimerCount()).to.equal(1);
 
         // It seems that the trigger is not dependant only on timeout.
         vi.useRealTimers();

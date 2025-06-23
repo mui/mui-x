@@ -17,6 +17,7 @@ import {
   ColumnsRenderContext,
   RowId,
   RowEntry,
+  Size,
   ScrollPosition,
   ScrollDirection,
 } from '../models';
@@ -44,6 +45,7 @@ export const EMPTY_RENDER_CONTEXT = {
 };
 
 const selectors = {
+  rootSize: createSelector((state: CoreState) => state.rootSize),
   renderContext: createSelector((state: CoreState) => state.virtualization.renderContext),
   enabledForRows: createSelector((state: CoreState) => state.virtualization.enabledForRows),
   enabledForColumns: createSelector((state: CoreState) => state.virtualization.enabledForColumns),
@@ -56,6 +58,7 @@ export const Virtualization = {
 };
 export namespace Virtualization {
   export type State = {
+    rootSize: Size;
     virtualization: VirtualizationState;
     getters: ReturnType<typeof useVirtualization>['getters'];
   };
@@ -63,6 +66,7 @@ export namespace Virtualization {
 
 function initializeState(params: VirtualizerParams) {
   const state: Virtualization.State = {
+    rootSize: Size.EMPTY,
     virtualization: {
       enabled: !platform.isJSDOM,
       enabledForRows: !platform.isJSDOM,
@@ -113,8 +117,6 @@ function useVirtualization(store: Store<CoreState>, params: VirtualizerParams) {
 
   const isRenderContextReady = React.useRef(false);
 
-  const previousSize = React.useRef<{ width: number; height: number }>(null);
-
   const mainRefCallback = React.useCallback(
     (node: HTMLDivElement | null) => {
       refs.main.current = node;
@@ -123,19 +125,19 @@ function useVirtualization(store: Store<CoreState>, params: VirtualizerParams) {
         return undefined;
       }
 
-      const initialRect = node.getBoundingClientRect();
-      let lastSize = {
-        width: roundToDecimalPlaces(initialRect.width, 1),
-        height: roundToDecimalPlaces(initialRect.height, 1),
-      };
+      {
+        // Initialize root size
 
-      if (
-        !previousSize.current ||
-        (lastSize.width !== previousSize.current.width &&
-          lastSize.height !== previousSize.current.height)
-      ) {
-        previousSize.current = lastSize;
-        onResize?.(lastSize);
+        const initialRect = node.getBoundingClientRect();
+        const rootSize = {
+          width: roundToDecimalPlaces(initialRect.width, 1),
+          height: roundToDecimalPlaces(initialRect.height, 1),
+        };
+
+        if (store.state.rootSize === Size.EMPTY || !Size.equals(rootSize, store.state.rootSize)) {
+          store.update({ rootSize });
+          onResize?.(rootSize);
+        }
       }
 
       if (typeof ResizeObserver === 'undefined') {
@@ -148,17 +150,15 @@ function useVirtualization(store: Store<CoreState>, params: VirtualizerParams) {
           return;
         }
 
-        const newSize = {
+        const rootSize = {
           width: roundToDecimalPlaces(entry.contentRect.width, 1),
           height: roundToDecimalPlaces(entry.contentRect.height, 1),
         };
 
-        if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
-          return;
+        if (!Size.equals(rootSize, store.state.rootSize)) {
+          store.update({ rootSize: rootSize });
+          onResize?.(rootSize);
         }
-
-        onResize?.(newSize);
-        lastSize = newSize;
       });
 
       observer.observe(node);

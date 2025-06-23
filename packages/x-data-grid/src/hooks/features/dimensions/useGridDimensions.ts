@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { useSelectorEffect } from '@mui/x-internals/store';
 import { Dimensions } from '@mui/x-virtualizer';
@@ -116,8 +115,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
 
   const virtualizer = apiRef.current.virtualizer;
-  const isFirstSizing = virtualizer.dimensions.isFirstSizing;
-  const rootDimensionsRef = virtualizer.dimensions.rootDimensionsRef;
 
   useSelectorEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
     if (apiRef.current.rootElementRef.current) {
@@ -180,7 +177,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     getViewportPageSize,
   };
 
-  useEnhancedEffect(updateDimensions, [updateDimensions]);
   useGridApiMethod(apiRef, apiPublic, 'public');
   useGridApiMethod(apiRef, apiPrivate, 'private');
 
@@ -193,7 +189,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
-      rootDimensionsRef.current = size;
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(
           [
@@ -218,15 +213,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
         );
         errorShown.current = true;
       }
-
-      if (isFirstSizing.current || !debouncedUpdateDimensions) {
-        // We want to initialize the grid dimensions as soon as possible to avoid flickering
-        isFirstSizing.current = false;
-        updateDimensions();
-        return;
-      }
-
-      debouncedUpdateDimensions();
     },
     [updateDimensions, props.autoHeight, debouncedUpdateDimensions, logger],
   );
