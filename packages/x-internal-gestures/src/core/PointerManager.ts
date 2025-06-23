@@ -8,7 +8,6 @@
  * 4. Distributing events to registered gesture recognizers
  */
 
-import { InternalEvent } from './types/InternalEvent';
 import { TargetElement } from './types/TargetElement';
 
 /**
@@ -204,17 +203,11 @@ export class PointerManager {
     }
 
     // Force a reset even if there are no active pointers to ensure any lingering gesture state is cleared
-    // We'll create a synthetic event with a special forceReset flag that gesture handlers can check
-
     // Create a synthetic pointer cancel event
-    const cancelEvent = new PointerEvent('pointercancel', {
+    const cancelEvent = new PointerEvent('forceCancel', {
       bubbles: true,
       cancelable: true,
     });
-
-    // Add a special property to the event to signal a complete reset
-    // This will be used in gesture handlers to perform a more thorough cleanup
-    (cancelEvent as InternalEvent).forceReset = true;
 
     const firstPointer = this.pointers.values().next().value;
     if (this.pointers.size > 0 && firstPointer) {
@@ -228,9 +221,9 @@ export class PointerManager {
         pointerType: { value: firstPointer.pointerType },
       });
 
-      // Force update of all pointers to have type 'pointercancel'
+      // Force update of all pointers to have type 'forceCancel'
       for (const [pointerId, pointer] of this.pointers.entries()) {
-        const updatedPointer = { ...pointer, type: 'pointercancel' };
+        const updatedPointer = { ...pointer, type: 'forceCancel' };
         this.pointers.set(pointerId, updatedPointer);
       }
     }
