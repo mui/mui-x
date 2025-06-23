@@ -30,7 +30,13 @@ export const selectChartsInteractionAxisIndex = (
   value: number | null,
   axes: ComputeResult<ChartsAxisProps>,
   id?: AxisId,
-) => (value === null ? null : indexGetter(value, axes, id));
+) => {
+  if (value === null) {
+    return null;
+  }
+  const index = indexGetter(value, axes, id);
+  return index === -1 ? null : index;
+};
 
 export const selectorChartsInteractionXAxisIndex = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisId],

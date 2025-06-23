@@ -145,7 +145,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       let isSame = true;
 
       for (const axisId of newXAxisIds) {
-        const prevAxisIndex = selectorChartsInteractionXAxisIndex(prevStoreState, axisId);
+        const prevAxisIndex =
+          prevXAxis.axis[axisId] === undefined
+            ? null
+            : selectorChartsInteractionXAxisIndex(prevStoreState, axisId);
         const nextAxisIndex = selectorChartsInteractionXAxisIndex(newStoreState, axisId);
 
         if (prevAxisIndex !== nextAxisIndex) {
@@ -158,7 +161,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       }
 
       for (const axisId of newYAxisIds) {
-        const prevAxisIndex = selectorChartsInteractionYAxisIndex(prevStoreState, axisId);
+        const prevAxisIndex =
+          prevYAxis.axis[axisId] === undefined
+            ? null
+            : selectorChartsInteractionYAxisIndex(prevStoreState, axisId);
         const nextAxisIndex = selectorChartsInteractionYAxisIndex(newStoreState, axisId);
 
         if (prevAxisIndex !== nextAxisIndex) {
@@ -237,6 +243,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         (target as HTMLElement).hasPointerCapture(event.pointerId)
       ) {
         (target as HTMLElement).releasePointerCapture(event.pointerId);
+      }
+
+      const svgPoint = getSVGPoint(element, event);
+      if (instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
+        instance.setPointerCoordinate?.(svgPoint);
       }
     };
 
