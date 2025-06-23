@@ -56,11 +56,11 @@ export default function LegendStyleSeries() {
         [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
           strokeWidth: 1,
         },
-        [`.MuiLineElement-series-a, .${legendClasses.item}[data-series="a"] .${labelMarkClasses.fill}`]:
+        [`.${lineElementClasses.root}[data-series="a"], .${legendClasses.item}[data-series="a"] .${labelMarkClasses.fill}`]:
           {
             strokeDasharray: '5 5',
           },
-        [`.MuiLineElement-series-b, .${legendClasses.item}[data-series="b"] .${labelMarkClasses.fill}`]:
+        [`.${lineElementClasses.root}[data-series="b"], .${legendClasses.item}[data-series="b"] .${labelMarkClasses.fill}`]:
           {
             strokeDasharray: '3 4 5 2',
           },
