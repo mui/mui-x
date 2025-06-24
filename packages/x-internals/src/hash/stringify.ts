@@ -6,6 +6,9 @@
 export function stringify(input: object | string | number | null) {
   const seen = new WeakSet();
   return JSON.stringify(input, (_, v) => {
+    if (typeof window !== 'undefined' && v === window) {
+      return v.toString();
+    }
     if (v !== null && typeof v === 'object') {
       if (seen.has(v)) {
         return null;
