@@ -4,7 +4,7 @@ import { MuiPickersAdapter, PickerValidDate, TimeView } from '@mui/x-date-picker
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
 
 interface ViewHandler<TView> {
-  setViewValue: (utils: MuiPickersAdapter, viewValue: PickerValidDate, view?: TView) => void;
+  setViewValue: (adapter: MuiPickersAdapter, viewValue: PickerValidDate, view?: TView) => void;
 }
 
 export const timeClockHandler: ViewHandler<TimeView> = {
@@ -12,7 +12,7 @@ export const timeClockHandler: ViewHandler<TimeView> = {
     const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
 
     let valueInt;
-    let clockView;
+    let clockView: 'minutes' | '12hours' | '24hours';
 
     if (view === 'hours') {
       valueInt = adapter.getHours(value);

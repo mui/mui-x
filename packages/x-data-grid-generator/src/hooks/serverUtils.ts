@@ -512,6 +512,7 @@ export const processTreeDataRows = (
   queryOptions: ServerSideQueryOptions,
   serverOptions: ServerOptions,
   columnsWithDefaultColDef: GridColDef[],
+  nestedPagination: boolean,
 ): Promise<NestedDataRowsResponse> => {
   const { minDelay = 100, maxDelay = 300 } = serverOptions;
   const pathKey = 'path';
@@ -534,7 +535,10 @@ export const processTreeDataRows = (
   ) as GridValidRowModel[];
 
   // get root row count
-  const rootRowCount = findTreeDataRowChildren(filteredRows, []).length;
+  const rootRowCount = findTreeDataRowChildren(
+    filteredRows,
+    nestedPagination ? queryOptions.groupKeys : [],
+  ).length;
 
   // find direct children referring to the `parentPath`
   const childRows = findTreeDataRowChildren(filteredRows, queryOptions.groupKeys);
@@ -577,8 +581,9 @@ export const processTreeDataRows = (
     );
   }
 
-  if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
+  if (queryOptions.paginationModel && (queryOptions.groupKeys.length === 0 || nestedPagination)) {
     // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
+    // Except when nested pagination is enabled, in which case we paginate the children of the current group node
     const { pageSize, page } = queryOptions.paginationModel;
     if (pageSize < childRowsWithDescendantCounts.length) {
       childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(

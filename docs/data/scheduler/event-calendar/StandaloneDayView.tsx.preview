@@ -1,5 +1,3 @@
-<DayView
-  events={events}
-  className={classes.Container}
-  day={DateTime.fromISO('2025-05-26')}
-/>
+<StandaloneView events={events} resources={resources}>
+  <DayView className={classes.Container} onEventsChange={setEvents} />
+</StandaloneView>

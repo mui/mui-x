@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,

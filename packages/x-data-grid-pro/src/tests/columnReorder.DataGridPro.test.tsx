@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, createEvent, act } from '@mui/internal-test-utils';
 import {

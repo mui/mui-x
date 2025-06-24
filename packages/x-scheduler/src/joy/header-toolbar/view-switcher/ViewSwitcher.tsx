@@ -2,29 +2,33 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Menu } from '@base-ui-components/react/menu';
-import useForkRef from '@mui/utils/useForkRef';
+import { useForkRef } from '@base-ui-components/react/utils';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
-import { ViewSwitcherProps } from './ViewSwitcher.types';
 import { ViewType } from '../../models/views';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
+import { useEventCalendarStore } from '../../internals/hooks/useEventCalendarStore';
+import { useSelector } from '../../../base-ui-copy/utils/store';
+import { selectors } from '../../event-calendar/store';
 import './ViewSwitcher.css';
 
-export const DEFAULT_VIEWS = ['week', 'day', 'month', 'agenda'] as ViewType[];
-
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
-  props: ViewSwitcherProps,
+  props: React.HTMLAttributes<HTMLDivElement>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, views = DEFAULT_VIEWS, setSelectedView, selectedView, ...other } = props;
+  const { className, ...other } = props;
+
+  const store = useEventCalendarStore();
+  const views = useSelector(store, selectors.views);
+  const currentView = useSelector(store, selectors.currentView);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useForkRef(forwardedRef, containerRef);
   const translations = useTranslations();
 
   const handleSelectView = React.useCallback(
-    (view: ViewType) => setSelectedView(view),
-    [setSelectedView],
+    (view: ViewType) => store.set('currentView', view),
+    [store],
   );
 
   const handleClick = React.useCallback(
@@ -40,9 +44,9 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
-  const selectedOverflowView = dropdown.includes(selectedView) ? selectedView : null;
-  const dropdownLabel = selectedOverflowView
-    ? translations[selectedOverflowView]
+  const currentOverflowView = dropdown.includes(currentView) ? currentView : null;
+  const dropdownLabel = currentOverflowView
+    ? translations[currentOverflowView]
     : translations.other;
 
   return (
@@ -55,8 +59,8 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             onClick={handleClick}
             data-view={view}
             type="button"
-            data-pressed={selectedView === view || undefined}
-            aria-pressed={selectedView === view}
+            data-pressed={currentView === view || undefined}
+            aria-pressed={currentView === view}
           >
             {translations[view]}
           </button>
@@ -66,7 +70,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             <Menu.Trigger
               className="ViewSwitcherMainItem"
               data-view="other"
-              data-highlighted={dropdown.includes(selectedView) || undefined}
+              data-highlighted={dropdown.includes(currentView) || undefined}
             >
               {dropdownLabel} <ChevronDown size={16} strokeWidth={2} />
             </Menu.Trigger>
@@ -79,7 +83,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
               >
                 <Menu.Popup className="ViewSwitcherMenuPopup">
                   <Menu.RadioGroup
-                    value={selectedView}
+                    value={currentView}
                     onValueChange={handleSelectView}
                     className="ViewSwitcherRadioGroup"
                   >

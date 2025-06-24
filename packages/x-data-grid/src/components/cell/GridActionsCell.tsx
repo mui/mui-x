@@ -184,15 +184,6 @@ function GridActionsCell(props: GridActionsCellProps) {
     }
   };
 
-  const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-    }
-    if (['Tab', 'Escape'].includes(event.key)) {
-      hideMenu();
-    }
-  };
-
   return (
     <div
       role="menu"
@@ -235,7 +226,6 @@ function GridActionsCell(props: GridActionsCellProps) {
           <rootProps.slots.baseMenuList
             id={menuId}
             className={gridClasses.menuList}
-            onKeyDown={handleListKeyDown}
             aria-labelledby={buttonId}
             autoFocusItem
           >

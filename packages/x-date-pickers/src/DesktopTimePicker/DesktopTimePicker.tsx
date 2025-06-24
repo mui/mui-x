@@ -7,7 +7,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateTime } from '../validation';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
@@ -40,7 +40,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   inProps: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
@@ -80,7 +80,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     ampmInClock,
     timeSteps,
     viewRenderers,
-    format: resolveTimeFormat(utils, defaultizedProps),
+    format: resolveTimeFormat(adapter, defaultizedProps),
     // Setting only `hours` time view in case of single column time picker
     // Allows for easy view lifecycle management
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
@@ -125,7 +125,7 @@ DesktopTimePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { checkScaleErrors } from './checkScaleErrors';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 

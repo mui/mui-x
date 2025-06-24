@@ -1,1 +1,6 @@
-<EventCalendar events={events} className={classes.Container} />
+<EventCalendar
+  events={events}
+  onEventsChange={setEvents}
+  resources={resources}
+  className={classes.Container}
+/>

@@ -1,0 +1,136 @@
+@import '../styles/tokens.css';
+
+.PopoverPositioner {
+  max-width: 460px;
+  width: 100%;
+  background-color: var(--surface);
+  border: 1px solid var(--gray-2);
+  border-radius: var(--radius-4);
+  overflow: hidden;
+  z-index: 1300;
+  box-shadow: var(--shadow-6);
+}
+
+.EventPopoverHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background-color: var(--event-color-3);
+  padding: var(--space-6);
+}
+
+.joy .EventPopoverCloseButton {
+  padding: var(--space-1);
+  display: flex;
+  border-radius: var(--radius-4);
+  background-color: var(--event-color-3);
+}
+
+.joy .EventPopoverCloseButton:hover {
+  background-color: var(--event-color-4);
+}
+
+.joy .EventPopoverCloseButton:active {
+  background-color: var(--event-color-5);
+}
+
+.joy .EventPopoverCloseButton:focus-visible {
+  outline: 2px solid var(--event-color-5);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.joy .PopoverPositioner .PrimaryButton:focus-visible,
+.joy .PopoverPositioner .SecondaryErrorButton:focus-visible {
+  outline: 2px solid var(--event-color-5);
+}
+
+.EventPopoverTitle {
+  flex: 1;
+}
+
+.joy .EventPopoverTitleInput {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-4);
+  color: var(--event-color-12);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  font-weight: var(--font-weight-2);
+  background-color: rgba(var(--event-color-4-rgb), 0.5);
+}
+
+.EventPopoverMainContent {
+  padding: var(--space-6);
+}
+
+.EventPopoverMainContent > :not(:first-child):not(.EventPopoverSeparator) {
+  padding-block-start: var(--space-5);
+}
+
+.EventPopoverMainContent > :not(:last-child):not(.EventPopoverSeparator) {
+  padding-block-end: var(--space-5);
+}
+
+.EventPopoverSeparator {
+  height: 1px;
+  width: 100%;
+  background-color: var(--gray-2);
+}
+
+.EventPopoverFormLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--gray-9);
+  font-size: var(--font-size-1);
+}
+
+.joy .EventPopoverInput,
+.joy .EventPopoverTextarea {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--gray-2);
+  border-radius: var(--radius-4);
+  color: var(--gray-9);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+}
+
+.joy .EventPopoverInput {
+  max-height: var(--space-7);
+}
+
+.joy .EventPopoverTitleInput:focus-visible {
+  outline: 2px solid var(--event-color-5);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.joy .EventPopoverInput:focus-visible,
+.joy .EventPopoverTextarea:focus-visible {
+  outline: 2px solid var(--gray-2);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.EventPopoverDateTimeFields {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: auto;
+  grid-gap: var(--space-2);
+}
+
+.EventPopoverRequiredFieldError {
+  color: var(--error-9);
+  font-size: var(--font-size-1);
+  margin-block-start: var(--space-2);
+}
+
+.EventPopoverDateTimeFieldsError {
+  color: var(--error-9);
+  font-size: var(--font-size-1);
+  grid-column: span 2;
+}
+
+.EventPopoverActions {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-4);
+}
