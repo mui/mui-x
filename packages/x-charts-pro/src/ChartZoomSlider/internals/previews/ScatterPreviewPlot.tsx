@@ -9,6 +9,7 @@ import {
   ColorGetter,
   useScatterPlotData,
   scatterSeriesConfig,
+  ZoomMap,
 } from '@mui/x-charts/internals';
 import {
   ChartDrawingArea,
@@ -20,19 +21,23 @@ import {
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
 import { DefaultizedScatterSeriesType } from '@mui/x-charts/models';
 
+interface ScatterPreviewPlotProps {
+  axisId: AxisId;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+  zoomMap: ZoomMap;
+}
+
 export function ScatterPreviewPlot({
   axisId,
   x,
   y,
   height,
   width,
-}: {
-  axisId: AxisId;
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-}) {
+  zoomMap,
+}: ScatterPreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {
     left: x,
     top: y,
@@ -43,12 +48,8 @@ export function ScatterPreviewPlot({
   };
   const store = useStore();
   const seriesData = useScatterSeriesContext();
-  let xAxes = useSelector(store, selectorChartComputedXAxes, [
-    { drawingArea, zoomMap: undefined },
-  ]).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, [
-    { drawingArea, zoomMap: undefined },
-  ]).axis;
+  let xAxes = useSelector(store, selectorChartComputedXAxes, [{ drawingArea, zoomMap }]).axis;
+  let yAxes = useSelector(store, selectorChartComputedYAxes, [{ drawingArea, zoomMap }]).axis;
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const { zAxis: zAxes, zAxisIds } = useZAxes();

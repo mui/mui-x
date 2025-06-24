@@ -96,8 +96,6 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
 
   const backgroundRectOffset = (sliderSize - ZOOM_SLIDER_TRACK_SIZE) / 2;
 
-  const ZoomSliderTrack = ChartAxisZoomSliderTrack;
-
   const track = showPreview ? (
     <ChartAxisZoomSliderPreview
       axisId={axisId}
@@ -109,7 +107,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
       width={axisDirection === 'x' ? drawingArea.width : ZOOM_SLIDER_PREVIEW_SIZE}
     />
   ) : (
-    <ZoomSliderTrack
+    <ChartAxisZoomSliderTrack
       x={axisDirection === 'x' ? 0 : backgroundRectOffset}
       y={axisDirection === 'x' ? backgroundRectOffset : 0}
       height={axisDirection === 'x' ? ZOOM_SLIDER_TRACK_SIZE : drawingArea.height}

@@ -28,12 +28,6 @@ const xAxis = {
             : 'short',
       year: 'numeric',
     }),
-  zoom: {
-    filterMode: 'discard',
-    minSpan: 10,
-    panning: true,
-    slider: { enabled: true, preview: true },
-  },
 };
 
 const settings = {
@@ -64,7 +58,16 @@ export default function ZoomSliderPreview() {
       </Typography>
       <LineChartPro
         {...settings}
-        xAxis={[{ ...xAxis, zoom: { slider: { enabled: true, preview: true } } }]}
+        xAxis={[
+          {
+            ...xAxis,
+            zoom: {
+              minStart: 20,
+              maxEnd: 80,
+              slider: { enabled: true, preview: true },
+            },
+          },
+        ]}
       />
       <Typography variant="caption">
         Source: Federal Reserve Bank of St. Louis. Updated: Jun 6, 2025 7:46 AM CDT.

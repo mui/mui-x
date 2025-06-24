@@ -9,7 +9,7 @@ import { computeAxisValue } from './computeAxisValue';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
-import { ZoomAxisFilters, ZoomData } from './zoom.types';
+import { ZoomAxisFilters, ZoomData, ZoomMap } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
 import { AxisId } from '../../../../models/axis';
 import {
@@ -132,8 +132,7 @@ export const selectorChartComputedXAxes = createSelector(
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    (_, params: { drawingArea: ChartDrawingArea; zoomMap: Map<AxisId, ZoomData> | undefined }) =>
-      params,
+    (_, params: { drawingArea: ChartDrawingArea; zoomMap: ZoomMap | undefined }) => params,
   ],
   (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, { drawingArea, zoomMap }) =>
     computeAxisValue({
@@ -155,8 +154,7 @@ export const selectorChartComputedYAxes = createSelector(
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    (_, params: { drawingArea: ChartDrawingArea; zoomMap: Map<AxisId, ZoomData> | undefined }) =>
-      params,
+    (_, params: { drawingArea: ChartDrawingArea; zoomMap: ZoomMap | undefined }) => params,
   ],
   (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, { drawingArea, zoomMap }) =>
     computeAxisValue({
