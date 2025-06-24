@@ -42,7 +42,7 @@ export default function ChartDemoWrapper(
         </Box>
 
         {code && (
-          <HighlightedCode code={code} language="js" sx={{ overflowX: 'hidden', maxHeight: 250 }} />
+          <HighlightedCode code={code} language="js" sx={{ overflowX: 'hidden', maxHeight: 300 }} />
         )}
       </Stack>
     </DemoWrapper>
