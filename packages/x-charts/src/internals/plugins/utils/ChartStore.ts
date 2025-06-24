@@ -1,7 +1,7 @@
 import type { ChartState } from '../models/chart';
 import type { ChartAnyPluginSignature } from '../models/plugin';
 
-type Listener<T> = (value: T, prevValue: T) => void;
+type Listener<T> = (value: T) => void;
 
 export type StoreUpdater<
   TSignatures extends readonly ChartAnyPluginSignature[],
@@ -37,9 +37,8 @@ export class ChartStore<
   public update = (updater: StoreUpdater<TSignatures, TOptionalSignatures>) => {
     const newState = updater(this.value);
     if (newState !== this.value) {
-      const prevValue = this.value;
       this.value = newState;
-      this.listeners.forEach((l) => l(newState, prevValue));
+      this.listeners.forEach((l) => l(newState));
     }
   };
 }
