@@ -1,11 +1,5 @@
 <BarChartPro
   height={300}
-  xAxis={[
-    {
-      data: data.map((v, i) => i),
-      zoom: { slider: { enabled: true, preview: true } },
-    },
-  ]}
-  borderRadius={16}
+  xAxis={[{ data: data.map((v, i) => i), zoom: true }]}
   series={series}
 />
