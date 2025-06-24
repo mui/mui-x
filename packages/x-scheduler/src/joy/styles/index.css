@@ -17,7 +17,7 @@
 }
 
 .joy .PrimaryButton:active {
-  background: var(--gray-13);
+  background: var(--gray-12);
 }
 
 .joy .PrimaryButton:focus-visible {
