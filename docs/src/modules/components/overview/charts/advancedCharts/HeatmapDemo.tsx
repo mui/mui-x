@@ -1,21 +1,21 @@
 /* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
-import { interpolateBlues } from 'd3-scale-chromatic';
+import { interpolateReds } from 'd3-scale-chromatic';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { HeatmapValueType } from '@mui/x-charts-pro/models';
-import bikeData from './ParisBycicle.json';
+import bikeData from './ParisBicycle.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const days = [
-  '24/02/2025',
-  '25/02/2025',
-  '26/02/2025',
-  '27/02/2025',
-  '28/02/2025',
-  '01/03/2025',
-  '02/03/2025',
+  'Monday, Feb 24,2025',
+  'Tuesday, Feb 25,2025',
+  'Wednesday, Feb 26,2025',
+  'Thursday, Feb 27,2025',
+  'Friday, Feb 28,2025',
+  'Saturday, Mar 1,2025',
+  'Sunday, Mar 2,2025',
 ];
 const hours = [
   '00',
@@ -46,7 +46,7 @@ const hours = [
 function HeatmapDemoContent() {
   return (
     <Stack sx={{ height: '100%' }}>
-      <Typography>Bycicle count: Paris - Rivoli street (West-Est)</Typography>
+      <Typography>Bicycle count: Paris - Rivoli street (West-East)</Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <Heatmap
           margin={{ left: 2 }}
@@ -69,17 +69,25 @@ function HeatmapDemoContent() {
               width: 60,
             },
           ]}
-          series={[{ data: bikeData as unknown as HeatmapValueType[], label: 'Bycicle count' }]}
+          series={[{ data: bikeData as unknown as HeatmapValueType[], label: 'Bicycle count' }]}
           zAxis={[
             {
               colorMap: {
                 max: 700,
                 type: 'continuous',
 
-                color: (t: number) => interpolateBlues(Math.sqrt(t)),
+                color: (t: number) => interpolateReds(Math.sqrt(t)),
               },
             },
           ]}
+          hideLegend={false}
+          slotProps={{
+            legend: {
+              direction: 'vertical',
+              position: { vertical: 'top' },
+              sx: { height: 200 },
+            },
+          }}
         />
       </div>
       <Typography variant="caption" textAlign="end">
