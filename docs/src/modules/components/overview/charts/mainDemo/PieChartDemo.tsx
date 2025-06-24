@@ -4,9 +4,9 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import Typography from '@mui/material/Typography';
 
 const data = [
-  { label: 'Group A', value: 400 },
-  { label: 'Group B', value: 300 },
-  { label: 'Group C', value: 300 },
+  { label: 'v6', value: 43_988 },
+  { label: 'v7', value: 270_393 },
+  { label: 'v8', value: 67_849 },
 ];
 
 export default function PieChartDemo() {

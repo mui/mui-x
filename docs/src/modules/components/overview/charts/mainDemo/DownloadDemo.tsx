@@ -69,6 +69,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 }).format;
 
+const IntlNumber = new Intl.NumberFormat('en-US', { notation: 'compact' });
 const IntlPercent = new Intl.NumberFormat('en-US', { style: 'percent' });
 const percentValueFormatter = (value: number | null) => {
   if (value !== null) {
@@ -118,6 +119,7 @@ export default function DownloadDemo() {
           skipAnimation
           dataset={packages[selectedPackage]}
           series={versions[selectedPackage].map((v) => ({
+            id: v,
             dataKey: `${v}${selectedFormat === 'relative' ? '_percent' : ''}`,
             stack: 'v',
             area: true,
@@ -139,7 +141,12 @@ export default function DownloadDemo() {
             },
           ]}
           yAxis={[
-            { min: 0, width: 80, zoom: true, max: selectedFormat === 'relative' ? 100 : undefined },
+            {
+              min: 0,
+              zoom: true,
+              max: selectedFormat === 'relative' ? 100 : undefined,
+              valueFormatter: IntlNumber.format,
+            },
           ]}
           margin={{ left: 0 }}
           sx={{
