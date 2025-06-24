@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { getCell, getColumnValues, getRows, includeRowSelection } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnValues, getRows, includeRowSelection } from 'test/utils/helperFn';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
@@ -1353,6 +1353,34 @@ describe('<DataGridPro /> - Row selection', () => {
         type: 'exclude',
         ids: new Set(),
       });
+    });
+  });
+
+describe('prop: rowSelectionModel and onRowSelectionModelChange', () => {
+    it('should call onRowSelectionModelChange with the correct reason when clicking on a row', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          pagination
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await user.click(getCell(0, 0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('singleRowSelection');
+    });
+
+    it('should call onRowSelectionModelChange with the correct reason when clicking on the header checkbox', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          pagination
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+      await user.click(getColumnHeaderCell(0).querySelector('input')!);
+      expect(onRowSelectionModelChange.lastCall.args[1].reason).to.equal('multipleRowsSelection');
     });
   });
 });
