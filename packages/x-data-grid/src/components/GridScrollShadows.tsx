@@ -75,6 +75,9 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
         pinnedColumns?.right?.length > 0;
 
   const updateScrollShadowVisibility = (scrollPosition: number) => {
+    if (!ref.current) {
+      return;
+    }
     const scroll = Math.round(scrollPosition);
     const maxScroll = Math.round(
       dimensions.contentSize[position === 'vertical' ? 'height' : 'width'] -
@@ -88,11 +91,8 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
       position === 'vertical'
         ? pinnedRows?.bottom?.length > 0
         : pinnedColumns?.right?.length !== undefined && pinnedColumns?.right?.length > 0;
-    ref.current!.style.setProperty('--hasScrollStart', hasPinnedStart && scroll > 0 ? '1' : '0');
-    ref.current!.style.setProperty(
-      '--hasScrollEnd',
-      hasPinnedEnd && scroll < maxScroll ? '1' : '0',
-    );
+    ref.current.style.setProperty('--hasScrollStart', hasPinnedStart && scroll > 0 ? '1' : '0');
+    ref.current.style.setProperty('--hasScrollEnd', hasPinnedEnd && scroll < maxScroll ? '1' : '0');
   };
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = (scrollParams) => {
