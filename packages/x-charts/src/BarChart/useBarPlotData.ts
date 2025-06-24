@@ -24,6 +24,7 @@ export function useBarPlotData(
   const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
+  console.log(series);
 
   const masks: Record<string, MaskData> = {};
 
@@ -60,7 +61,7 @@ export function useBarPlotData(
       });
       const barOffset = groupIndex * (barWidth + offset);
 
-      const { stackedData, data: currentSeriesData, layout } = series[seriesId];
+      const { stackedData, data: currentSeriesData, layout, borderRadius = 0 } = series[seriesId];
 
       const seriesDataPoints = baseScaleConfig
         .data!.map((baseValue, dataIndex: number) => {
@@ -111,6 +112,7 @@ export function useBarPlotData(
               yOrigin: yScale(0)!,
               x: 0,
               y: 0,
+              borderRadius,
             };
           }
 

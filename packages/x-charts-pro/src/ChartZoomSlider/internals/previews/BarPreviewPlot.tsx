@@ -40,15 +40,16 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
   const borderRadius = 0; // TODO: How to obtain the border radius from props?
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const { completedData, masksData } = useBarPreviewData(props.axisId, drawingArea, props.zoomMap);
+  console.log({ completedData, masksData });
 
   return (
     <BarPlotRoot>
-      {!withoutBorderRadius &&
-        masksData.map(({ id, x, y, width, height, hasPositive, hasNegative, layout }) => {
+      {masksData.map(
+        ({ id, x, y, width, height, hasPositive, hasNegative, layout, borderRadius }) => {
           return (
             <BarClipPath
               key={id}
-              maskId={id}
+              maskId={`preview-${id}`}
               borderRadius={borderRadius}
               hasNegative={hasNegative}
               hasPositive={hasPositive}
@@ -60,9 +61,10 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
               skipAnimation
             />
           );
-        })}
+        },
+      )}
       {completedData.map(({ seriesId, data }) => (
-        <g key={seriesId}>
+        <g key={seriesId} data-debug>
           {data.map(
             ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
               const barElement = (
@@ -82,12 +84,8 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
                 />
               );
 
-              if (withoutBorderRadius) {
-                return barElement;
-              }
-
               return (
-                <g key={dataIndex} clipPath={`url(#${maskId})`}>
+                <g key={dataIndex} clipPath={`url(#preview-${maskId})`}>
                   {barElement}
                 </g>
               );

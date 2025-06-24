@@ -5,7 +5,13 @@ export default function ZoomBarChart() {
   return (
     <BarChartPro
       height={300}
-      xAxis={[{ data: data.map((v, i) => i), zoom: true }]}
+      xAxis={[
+        {
+          data: data.map((v, i) => i),
+          zoom: { slider: { enabled: true, preview: true } },
+        },
+      ]}
+      borderRadius={16}
       series={series}
     />
   );
@@ -110,9 +116,11 @@ const series = [
   {
     label: 'Series A',
     data: data.map((v) => v.y1),
+    borderRadius: 16,
   },
   {
     label: 'Series B',
     data: data.map((v) => v.y2),
+    borderRadius: 16,
   },
 ];
