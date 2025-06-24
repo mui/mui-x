@@ -89,7 +89,7 @@ export type PointerManagerOptions = {
    *
    * @default true
    */
-  preventInterruptEvents?: boolean;
+  preventEventInterruption?: boolean;
 };
 
 /**
@@ -114,7 +114,7 @@ export class PointerManager {
   private passive: boolean;
 
   /** Whether to prevent interrupt events like blur or contextmenu */
-  private preventInterruptEvents: boolean = true;
+  private preventEventInterruption: boolean = true;
 
   /** Map of all currently active pointers by their pointerId */
   private pointers: Map<number, PointerData> = new Map();
@@ -127,7 +127,7 @@ export class PointerManager {
     this.root = (options.root ?? document.documentElement) as HTMLElement;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive !== false;
-    this.preventInterruptEvents = options.preventInterruptEvents !== false;
+    this.preventEventInterruption = options.preventEventInterruption !== false;
 
     this.setupEventListeners();
   }
@@ -197,7 +197,7 @@ export class PointerManager {
    */
   private handleInterruptEvents = (event: Event): void => {
     if (
-      this.preventInterruptEvents &&
+      this.preventEventInterruption &&
       'pointerType' in event &&
       (event as PointerEvent).pointerType === 'touch'
     ) {
