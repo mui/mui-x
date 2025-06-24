@@ -260,6 +260,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
 
       case 'pointerup':
       case 'pointercancel':
+      case 'forceCancel':
         if (this.isActive) {
           const remainingPointers = relevantPointers.filter(
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',

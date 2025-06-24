@@ -24,3 +24,33 @@
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
+
+.joy .SecondaryErrorButton {
+  background: var(--gray-1);
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  color: var(--error-11);
+  border-radius: var(--radius-4);
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
+  line-height: var(--line-height-1);
+}
+
+.joy .SecondaryErrorButton:hover {
+  background:
+    linear-gradient(to bottom, var(--gray-2-rgba-20), var(--gray-2-rgba-20)),
+    linear-gradient(to bottom, var(--gray-1), var(--gray-1));
+}
+
+.joy .SecondaryErrorButton:active {
+  background:
+    linear-gradient(to bottom, var(--error-2-rgba-20), var(--error-2-rgba-20)),
+    linear-gradient(to bottom, var(--gray-2-rgba-40), var(--gray-2-rgba-40)),
+    linear-gradient(to bottom, var(--gray-1), var(--gray-1));
+}
+
+.joy .SecondaryErrorButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}

@@ -58,6 +58,7 @@
 
   --error-1: var(--red-1);
   --error-2: var(--red-2);
+  --error-2-rgba-20: rgba(var(--red-2-rgb), 0.2);
   --error-3: var(--red-3);
   --error-4: var(--red-4);
   --error-5: var(--red-5);

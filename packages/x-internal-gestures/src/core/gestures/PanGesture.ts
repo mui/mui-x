@@ -12,7 +12,6 @@
 import { GesturePhase, GestureState } from '../Gesture';
 import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
 import { PointerData } from '../PointerManager';
-import { InternalEvent } from '../types/InternalEvent';
 import { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
 
@@ -225,11 +224,9 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
     const pointersArray = Array.from(pointers.values());
 
-    // Check for our special forceReset flag to handle interrupted gestures (from contextmenu, blur)
-    if ((event as InternalEvent).forceReset) {
+    // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
+    if (event.type === 'forceCancel') {
       // Reset all active pan gestures when we get a force reset event
-      // Cancel any active gesture with a proper cancel event
-
       this.cancel(event.target as null, pointersArray, event);
       return;
     }
@@ -344,6 +341,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
 
       case 'pointerup':
       case 'pointercancel':
+      case 'forceCancel':
         // If the gesture was active (threshold was reached), emit end event
         if (this.isActive && this.state.movementThresholdReached) {
           // If we have less than the minimum required pointers, end the gesture
