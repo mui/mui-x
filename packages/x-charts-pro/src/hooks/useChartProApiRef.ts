@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { ChartProApi, ProPluginsPerSeriesType } from '../ChartContainerPro';
+import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '@mui/x-charts/internals';
 
 /**
  * Hook that instantiates a [[ChartProApiRef]].
- * The chart type can be passed as the generic parameter to narrow down the API to the specific chart type.
+ * The chart type needs to be given as the generic parameter to narrow down the API to the specific chart type.
  * @example
  * ```tsx
- * // Generic chart API ref
- * const apiRef = useChartProApiRef();
- * // Typed chart API ref for a specific chart type
  * const barApiRef = useChartProApiRef<'bar'>();
  * ```
  * @example
  * ```tsx
- * // The API can be used passed to the chart component and used to interact with the chart.
+ * // The API can be passed to the chart component and used to interact with the chart.
  * <BarChart apiRef={barApiRef} />
  * ```
  * @example
@@ -22,5 +21,10 @@ import { ChartProApi, ProPluginsPerSeriesType } from '../ChartContainerPro';
  * barApiRef.current?.getSeries();
  * ```
  */
-export const useChartProApiRef = <TSeries extends keyof ProPluginsPerSeriesType>() =>
-  React.useRef<ChartProApi<TSeries> | undefined>(undefined);
+export const useChartProApiRef = <
+  ChartType extends keyof ProPluginsPerSeriesType = never,
+  Signatures extends
+    readonly ChartAnyPluginSignature[] = ChartType extends keyof ProPluginsPerSeriesType
+    ? ProPluginsPerSeriesType[ChartType]
+    : AllPluginSignatures,
+>() => React.useRef<ChartProApi<ChartType, Signatures> | undefined>(undefined);

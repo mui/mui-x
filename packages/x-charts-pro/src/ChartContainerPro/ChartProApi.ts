@@ -28,9 +28,9 @@ export type ProPluginsPerSeriesType = {
  * @example ChartProApi<'composition'>
  */
 export type ChartProApi<
-  TSeries extends keyof ProPluginsPerSeriesType | undefined = undefined,
-  TSignatures extends
-    readonly ChartAnyPluginSignature[] = TSeries extends keyof ProPluginsPerSeriesType
-    ? ProPluginsPerSeriesType[TSeries]
+  ChartType extends keyof ProPluginsPerSeriesType | undefined = undefined,
+  Signatures extends
+    readonly ChartAnyPluginSignature[] = ChartType extends keyof ProPluginsPerSeriesType
+    ? ProPluginsPerSeriesType[ChartType]
     : AllPluginSignatures,
-> = ChartPublicAPI<TSignatures>;
+> = ChartPublicAPI<Signatures>;
