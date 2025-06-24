@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { GridRowId, GridGroupNode } from '@mui/x-data-grid-pro';
 import {
+  GridRowId,
+  GridGroupNode,
   gridRowTreeSelector,
   gridRowNodeSelector,
   gridSortedRowIdsSelector,
   GridLeafNode,
   gridRowsLookupSelector,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingModelSelector } from '../rowGrouping';
@@ -38,7 +39,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
        * | :--- | :---------- | :---------- | :------------------------ | :-------------------------------------------------------------------------- |
        * | A ✅ | Leaf        | Leaf        | Same parent               | Swap positions (similar to flat tree structure)                             |
        * | B ✅ | Group       | Group       | Same parent               | Swap positions (along with their descendants)                               |
-       * | C ✅ | Leaf        | Leaf        | Different parents         | Swap positions and update parent nodes in tree                              |
+       * | C ✅ | Leaf        | Leaf        | Different parents         | Make source node a child of target's parent and update parent nodes in tree |
        * | D ✅ | Leaf        | Group       | Different parents         | Make source a child of target, only allowed at same depth as source.parent  |
        * | E ❌ | Leaf        | Group       | Target is source's parent | Not allowed, will have no difference                                        |
        * | F ❌ | Group       | Leaf        | Any                       | Not allowed, will break the row grouping criteria                           |
@@ -91,7 +92,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           const sourceChildren = sourceGroup.children;
 
           const targetGroup = gridRowTreeSelector(apiRef)[target.parent] as GridGroupNode;
-          const targetChildren = targetGroup.children;
+          const targetChildren = [...targetGroup.children];
 
           const sourceIndex = sourceChildren.findIndex((row) => row === sourceRowId);
           const targetIndex = targetChildren.findIndex((row) => row === target.id);
@@ -99,35 +100,59 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
             return state;
           }
 
-          const updatedSourceChildren = [...sourceChildren];
-          updatedSourceChildren[sourceIndex] = target.id;
+          const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
 
-          const updatedTargetChildren = [...targetChildren];
-          updatedTargetChildren[targetIndex] = sourceRowId;
+          let sourceGroupRemoved = false;
+          const updatedTree = { ...state.rows.tree };
+          if (updatedSourceChildren.length === 0) {
+            delete updatedTree[sourceGroup.id];
+            sourceGroupRemoved = true;
+          }
+
+          const updatedTargetChildren = [
+            ...targetChildren.slice(0, targetIndex),
+            sourceRowId,
+            ...targetChildren.slice(targetIndex),
+          ];
 
           const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
           const rowGroupingModel = gridRowGroupingModelSelector(apiRef);
 
           const sourceRow = { ...dataRowIdToModelLookup[sourceRowId] };
-          const targetRow = { ...dataRowIdToModelLookup[target.id] };
+          const targetRow = dataRowIdToModelLookup[target.id];
 
           for (let i = 0; i < rowGroupingModel.length; i += 1) {
             const field = rowGroupingModel[i];
-            const sourceValue = sourceRow[field];
             sourceRow[field] = targetRow[field];
-            targetRow[field] = sourceValue;
           }
+
+          const sourceGroupParent = gridRowTreeSelector(apiRef)[
+            sourceGroup.parent!
+          ] as GridGroupNode;
 
           return {
             ...state,
             rows: {
               ...state.rows,
+              totalTopLevelRowCount:
+                state.rows.totalTopLevelRowCount - (sourceGroupRemoved ? 1 : 0),
               tree: {
-                ...state.rows.tree,
-                [source.parent]: {
-                  ...sourceGroup,
-                  children: updatedSourceChildren,
-                },
+                ...updatedTree,
+                ...(sourceGroupRemoved
+                  ? {
+                      [sourceGroupParent.id]: {
+                        ...sourceGroupParent,
+                        children: sourceGroupParent.children.filter(
+                          (childId) => childId !== sourceGroup.id,
+                        ),
+                      },
+                    }
+                  : {
+                      [source.parent!]: {
+                        ...sourceGroup,
+                        children: updatedSourceChildren,
+                      },
+                    }),
                 [target.parent]: {
                   ...targetGroup,
                   children: updatedTargetChildren,
@@ -136,15 +161,10 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
                   ...source,
                   parent: target.parent,
                 },
-                [target.id]: {
-                  ...target,
-                  parent: source.parent,
-                },
               },
               dataRowIdToModelLookup: {
                 ...dataRowIdToModelLookup,
                 [source.id]: sourceRow,
-                [target.id]: targetRow,
               },
             },
           };
@@ -159,7 +179,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           // Open the target node if on a lower depth than the source node
           apiRef.current.setState((state) => {
             const updatedTree = { ...state.rows.tree };
-            updatedTree[targetNode.id].childrenExpanded = true;
+            (updatedTree[targetNode.id] as GridGroupNode).childrenExpanded = true;
             return {
               ...state,
               rows: {
