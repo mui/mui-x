@@ -49,7 +49,7 @@ const Scrollbar = styled('div')({
 const ScrollbarVertical = styled(Scrollbar)({
   width: 'var(--size)',
   height:
-    'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-headerHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
+    'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-headersTotalHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
   overflowY: 'auto',
   overflowX: 'hidden',
   // Disable focus-visible style, it's a scrollbar.
@@ -57,7 +57,7 @@ const ScrollbarVertical = styled(Scrollbar)({
   '& > div': {
     width: 'var(--size)',
   },
-  top: 'var(--DataGrid-headerHeight)',
+  top: 'var(--DataGrid-headersTotalHeight)',
   right: 0,
 });
 
