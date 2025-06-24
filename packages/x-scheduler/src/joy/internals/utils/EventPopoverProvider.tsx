@@ -57,6 +57,18 @@ export function EventPopoverProvider({
     [store, onEventsChange],
   );
 
+  const handleEventDelete = React.useCallback(
+    (deletedEventId: string) => {
+      const prevEvents = store.state.events;
+      const updatedEvents = prevEvents.filter((ev) => ev.id !== deletedEventId);
+
+      if (onEventsChange) {
+        onEventsChange(updatedEvents);
+      }
+    },
+    [store, onEventsChange],
+  );
+
   return (
     <Popover.Root open={isPopoverOpen} onOpenChange={handleClose} modal>
       {children({ onEventClick: handleEventClick })}
@@ -67,6 +79,7 @@ export function EventPopoverProvider({
           calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
           container={containerRef.current}
           onEventEdit={handleEventEdit}
+          onEventDelete={handleEventDelete}
           onClose={handleClose}
         />
       )}
