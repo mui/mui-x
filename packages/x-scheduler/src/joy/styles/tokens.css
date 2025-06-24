@@ -6,6 +6,7 @@
 
   --gray-1: var(--mauve-1);
   --gray-2: var(--mauve-2);
+  --gray-2-rgba-20: rgba(var(--mauve-2-rgb), 0.2);
   --gray-2-rgba-30: rgba(var(--mauve-2-rgb), 0.3);
   --gray-2-rgba-40: rgba(var(--mauve-2-rgb), 0.4);
   --gray-2-rgba-50: rgba(var(--mauve-2-rgb), 0.5);
@@ -68,6 +69,7 @@
 
   --error-1: var(--red-1);
   --error-2: var(--red-2);
+  --error-2-rgba-20: rgba(var(--red-2-rgb), 0.2);
   --error-3: var(--red-3);
   --error-4: var(--red-4);
   --error-5: var(--red-5);
@@ -141,6 +143,7 @@
 
   --red-1: #fffcfc;
   --red-2: #fff7f7;
+  --red-2-rgb: 255, 247, 247;
   --red-3: #feebec;
   --red-4: #ffdbdc;
   --red-4-rgb: 255, 219, 220;
