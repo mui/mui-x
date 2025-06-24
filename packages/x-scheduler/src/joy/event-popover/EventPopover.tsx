@@ -34,7 +34,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const translations = useTranslations();
 
-  const [errors, setErrors] = React.useState({});
+  const [errors, setErrors] = React.useState<Form.Props['errors']>({});
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -124,6 +124,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         defaultValue={
                           adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''
                         }
+                        aria-describedby={errors?.startDate ? 'startDate-error' : undefined}
                         required
                       />
                     </Field.Label>
@@ -135,6 +136,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         className="EventPopoverInput"
                         type="time"
                         defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
+                        aria-describedby={errors?.startTime ? 'startTime-error' : undefined}
                         required
                       />
                     </Field.Label>
@@ -162,10 +164,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     </Field.Label>
                   </Field.Root>
                   <Field.Root name="startDate" className="EventPopoverDateTimeFieldsError">
-                    <Field.Error />
+                    <Field.Error id="startDate-error" />
                   </Field.Root>
                   <Field.Root name="startTime" className="EventPopoverDateTimeFieldsError">
-                    <Field.Error />
+                    <Field.Error id="startTime-error" />
                   </Field.Root>
                 </div>
                 <Separator className="EventPopoverSeparator" />
