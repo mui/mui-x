@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AxisValueFormatterContext } from '@mui/x-charts/internals';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function GroupedAxes() {
   return (
@@ -13,6 +12,8 @@ export default function GroupedAxes() {
           data: time,
           valueFormatter: formatShortMonth,
           height: 24,
+          disableTicks: (v, i) => i % 3 === 0,
+          groupId: 'quarters',
         },
         {
           scaleType: 'band',
@@ -20,16 +21,20 @@ export default function GroupedAxes() {
           valueFormatter: formatQuarterYear,
           position: 'bottom',
           tickLabelPlacement: 'middle',
-          height: 35,
-          disableLine: true,
-          disableTicks: true,
+          height: 24,
+          disableTicks: (v, i) => i % 4 === 0,
+          groupId: 'quarters',
+        },
+        {
+          scaleType: 'band',
+          data: [time[0]],
+          position: 'bottom',
+          tickLabelPlacement: 'middle',
+          height: 24,
+          groupId: 'quarters',
         },
       ]}
       {...chartConfig}
-      sx={{
-        [`& .${axisClasses.id}-months .${axisClasses.tickContainer}:nth-child(3n - 1) .${axisClasses.tick}`]:
-          { transform: 'scaleY(4)' },
-      }}
     />
   );
 }

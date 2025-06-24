@@ -94,6 +94,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     sx,
     offset,
+    groupStartOffset,
     height: axisHeight,
   } = defaultizedProps;
 
@@ -105,7 +106,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { instance } = useChartContext();
   const isHydrated = useIsHydrated();
 
-  const tickSize = disableTicks ? 4 : tickSizeProp;
+  const tickSize = disableTicks === true ? 4 : tickSizeProp;
 
   const positionSign = position === 'bottom' ? 1 : -1;
 
@@ -211,7 +212,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   return (
     <XAxisRoot
-      transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
+      transform={`translate(0, ${position === 'bottom' ? top + height + (groupStartOffset ?? offset) : top - (groupStartOffset ?? offset)})`}
       className={classes.root}
       sx={sx}
     >
@@ -222,11 +223,14 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       {xTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
+        const yTickLabel =
+          positionSign * (tickSize + TICK_LABEL_GAP) + offset - (groupStartOffset ?? 0);
 
         const showTick = instance.isXInside(tickOffset);
         const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
+        const isTickDisabledByFunction =
+          typeof disableTicks === 'function' && disableTicks(item.value, index);
 
         return (
           <g
@@ -234,9 +238,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
             transform={`translate(${tickOffset}, 0)`}
             className={classes.tickContainer}
           >
-            {!disableTicks && showTick && (
+            {disableTicks !== true && !isTickDisabledByFunction && showTick && (
               <Tick
-                y2={positionSign * tickSize}
+                y2={positionSign * tickSize + offset - (groupStartOffset ?? 0)}
                 className={classes.tick}
                 {...slotProps?.axisTick}
               />
