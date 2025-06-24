@@ -22,6 +22,7 @@ chai.use((chaiAPI, utils) => {
   chaiAPI.Assertion.addMethod('toEqualDateTime', function toEqualDateTime(expectedDate, message) {
     // eslint-disable-next-line no-underscore-dangle
     const actualDate = this._obj;
+    console.log(actualDate);
 
     // Luxon dates don't have a `toISOString` function, we need to convert to the JS date first
     const cleanActualDate =

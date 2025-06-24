@@ -6,6 +6,7 @@ import {
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
+  PickersTimezone,
 } from '../models';
 
 type DateFnsLocaleBase = {
@@ -146,7 +147,7 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
+export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase, TDate extends Date = Date>
   implements
     Pick<
       MuiPickersAdapter<DateFnsLocale>,
@@ -200,11 +201,11 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
 
   public getInvalidDate = () => new Date('Invalid Date');
 
-  public getTimezone = (): string => {
+  public getTimezone = (_: never): string => {
     return 'default';
   };
 
-  public setTimezone = (value: Date): Date => {
+  public setTimezone = (value: TDate, _: PickersTimezone): Date => {
     return value;
   };
 

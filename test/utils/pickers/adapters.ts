@@ -7,9 +7,11 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { AdapterDateFnsTz } from '@mui/x-date-pickers/AdapterDateFnsTz';
 
 export type AdapterName =
   | 'date-fns'
+  | 'date-fns-tz'
   | 'dayjs'
   | 'luxon'
   | 'moment'
@@ -22,6 +24,7 @@ export const availableAdapters: {
   [key in AdapterName]: new (...args: any) => MuiPickersAdapter;
 } = {
   'date-fns': AdapterDateFns,
+  'date-fns-tz': AdapterDateFnsTz,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
   moment: AdapterMoment,

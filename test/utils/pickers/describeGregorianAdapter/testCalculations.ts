@@ -735,7 +735,9 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: setMilliseconds', () => {
-    expect(adapter.setMilliseconds(testDateIso, 11)).toEqualDateTime('2018-10-30T11:44:00.011Z');
+    expect(adapter.setMilliseconds(testDateIso, 11)).toEqualDateTime(
+      '2018-10-30T11:44:00.011+00:00',
+    );
   });
 
   it('Method: getDaysInMonth', () => {
