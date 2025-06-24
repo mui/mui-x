@@ -62,31 +62,29 @@ export const useZoomOnWheel = (
         return;
       }
 
-      const zoomData = store.getSnapshot().zoom.zoomData;
-
-      const newZoomData = zoomData.map((zoom) => {
-        const option = optionsLookup[zoom.axisId];
-        if (!option) {
-          return zoom;
-        }
-        const centerRatio =
-          option.axisDirection === 'x'
-            ? getHorizontalCenterRatio(point, drawingArea)
-            : getVerticalCenterRatio(point, drawingArea);
-
-        const { scaleRatio, isZoomIn } = getWheelScaleRatio(event.detail.srcEvent, option.step);
-        const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
-
-        if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-          return zoom;
-        }
-
-        return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
-      });
-
       event.detail.srcEvent.preventDefault();
 
-      rafThrottledSetZoomData(newZoomData);
+      rafThrottledSetZoomData((prev) => {
+        return prev.map((zoom) => {
+          const option = optionsLookup[zoom.axisId];
+          if (!option) {
+            return zoom;
+          }
+          const centerRatio =
+            option.axisDirection === 'x'
+              ? getHorizontalCenterRatio(point, drawingArea)
+              : getVerticalCenterRatio(point, drawingArea);
+
+          const { scaleRatio, isZoomIn } = getWheelScaleRatio(event.detail.srcEvent, option.step);
+          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
+
+          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
+            return zoom;
+          }
+
+          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+        });
+      });
     });
 
     return () => {
