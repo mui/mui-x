@@ -10,7 +10,7 @@ import data from '../data/transistorCPU';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const chartSetting = {
-  yAxis: [{ label: 'processor density', width: 60, scaleType: 'log' as const }],
+  yAxis: [{ label: 'transistor/mm²', width: 50, scaleType: 'log' as const }],
   xAxis: [{ valueFormatter: (v: number | null) => (v ? v.toString() : '') }],
 };
 
@@ -54,7 +54,9 @@ function CustomTooltip() {
         <Divider sx={{ my: 1 }} />
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <Typography sx={{ mr: 3 }}>{item?.value.x}</Typography>
-          <Typography>{item?.value.y == null ? 'NaN' : numberFormatter(item?.value.y)}</Typography>
+          <Typography>
+            {item?.value.y == null ? 'NaN' : `${numberFormatter(item?.value.y)} transistor/mm²`}
+          </Typography>
         </Box>
       </Paper>
     </ChartsTooltipContainer>
@@ -63,13 +65,16 @@ function CustomTooltip() {
 
 function Scatter() {
   return (
-    <ScatterChart
-      series={series}
-      grid={{ horizontal: true, vertical: true }}
-      voronoiMaxRadius={20}
-      slots={{ tooltip: CustomTooltip }}
-      {...chartSetting}
-    />
+    <React.Fragment>
+      <Typography align="center">Transistor density over time</Typography>
+      <ScatterChart
+        series={series}
+        grid={{ horizontal: true, vertical: true }}
+        voronoiMaxRadius={20}
+        slots={{ tooltip: CustomTooltip }}
+        {...chartSetting}
+      />
+    </React.Fragment>
   );
 }
 
@@ -85,7 +90,7 @@ export default function ScatterChartDemo() {
     { label: 'Apple', data },
     { label: 'IBM', data },
   ]}
-  yAxis={[{ scaleType: 'log', label: 'processor density' }]}
+  yAxis={[{ scaleType: 'log', label: 'transistor/mm²' }]}
 />`}
     >
       <Scatter />

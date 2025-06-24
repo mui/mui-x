@@ -95,7 +95,7 @@ function valueFormatter(value: number | null) {
 }
 
 const chartSetting = {
-  yAxis: [{ label: 'rainfall (mm)', width: 60 }],
+  yAxis: [{ label: 'Rainfall (mm)', width: 60 }],
 };
 
 function Bar() {
@@ -116,7 +116,7 @@ function Bar() {
 export default function BareChartDemo() {
   return (
     <ChartDemoWrapper
-      link="/x/react-charts/bar/"
+      link="/x/react-charts/bars/"
       code={`
 <BarChart
   dataset={precipitationData}

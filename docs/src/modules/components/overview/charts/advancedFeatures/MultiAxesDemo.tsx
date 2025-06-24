@@ -11,24 +11,24 @@ import { BarSeriesType, LineSeriesType } from '@mui/x-charts/models';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const dataset = [
-  { min: -12, max: -4, precip: 79, month: 'Jan' },
-  { min: -11, max: -3, precip: 66, month: 'Feb' },
-  { min: -6, max: 2, precip: 76, month: 'Mar' },
-  { min: 1, max: 9, precip: 106, month: 'Apr' },
-  { min: 8, max: 17, precip: 105, month: 'Mai' },
-  { min: 15, max: 24, precip: 114, month: 'Jun' },
-  { min: 18, max: 26, precip: 106, month: 'Jul' },
-  { min: 17, max: 26, precip: 105, month: 'Aug' },
-  { min: 13, max: 21, precip: 100, month: 'Sept' },
-  { min: 6, max: 13, precip: 116, month: 'Oct' },
-  { min: 0, max: 6, precip: 93, month: 'Nov' },
-  { min: -8, max: -1, precip: 93, month: 'Dec' },
+  { min: -12, max: -4, precip: 79, month: 'January' },
+  { min: -11, max: -3, precip: 66, month: 'February' },
+  { min: -6, max: 2, precip: 76, month: 'March' },
+  { min: 1, max: 9, precip: 106, month: 'April' },
+  { min: 8, max: 17, precip: 105, month: 'May' },
+  { min: 15, max: 24, precip: 114, month: 'June' },
+  { min: 18, max: 26, precip: 106, month: 'July' },
+  { min: 17, max: 26, precip: 105, month: 'August' },
+  { min: 13, max: 21, precip: 100, month: 'September' },
+  { min: 6, max: 13, precip: 116, month: 'October' },
+  { min: 0, max: 6, precip: 93, month: 'November' },
+  { min: -8, max: -1, precip: 93, month: 'December' },
 ];
 
 const series: (BarSeriesType | LineSeriesType)[] = [
   {
     type: 'bar',
-    label: 'precipitation',
+    label: 'Precipitation',
     dataKey: 'precip',
     color: '#bfdbf7',
     yAxisId: 'rightAxis',
@@ -36,14 +36,14 @@ const series: (BarSeriesType | LineSeriesType)[] = [
   },
   {
     type: 'line',
-    label: 'temperature min',
+    label: 'Temperature min',
     dataKey: 'min',
     color: '#577399',
     valueFormatter: (value: number | null) => (value === null ? '' : `${value}°C`),
   },
   {
     type: 'line',
-    label: 'temperature max',
+    label: 'Temperature max',
     dataKey: 'max',
     color: '#fe5f55',
     valueFormatter: (value: number | null) => (value === null ? '' : `${value}°C`),
@@ -73,8 +73,8 @@ function MultiAxes() {
       <LinePlot />
       <LineHighlightPlot />
       <ChartsXAxis />
-      <ChartsYAxis axisId="leftAxis" label="temperature (°C)" />
-      <ChartsYAxis axisId="rightAxis" label="precipitation (mm)" />
+      <ChartsYAxis axisId="leftAxis" label="Temperature (°C)" />
+      <ChartsYAxis axisId="rightAxis" label="Precipitation (mm)" />
       <ChartsTooltip />
     </ChartContainer>
   );
@@ -93,8 +93,8 @@ export default function MultiAxesDemo() {
   <BarPlot />
   <LinePlot />
   <ChartsXAxis />
-  <ChartsYAxis axisId="leftAxis" label="temperature (°C)" />
-  <ChartsYAxis axisId="rightAxis" label="precipitation (mm)" />
+  <ChartsYAxis axisId="leftAxis" label="Temperature (°C)" />
+  <ChartsYAxis axisId="rightAxis" label="Precipitation (mm)" />
   <ChartsTooltip />
 </ChartContainer>`}
     >

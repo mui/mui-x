@@ -86,7 +86,7 @@ export default function ExportDemo() {
       link="/x/react-charts/export/"
       code={`
 const apiRef = React.useRef<ChartProApi<'line'>>(undefined);
-<LinChartPro
+<LineChartPro
   apiRef={apiRef}
 />
 <Button onClick={

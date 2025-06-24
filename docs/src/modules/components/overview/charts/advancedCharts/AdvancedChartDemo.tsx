@@ -7,11 +7,11 @@ import ChartDemoNavigator from '../ChartDemoNavigator';
 const advancedCharts = [
   {
     title: 'Radar',
-    description: 'Compare elements on multiple metrics',
+    description: 'Compare elements on multiple metrics.',
   },
   {
     title: 'Heatmap',
-    description: 'Highlight patterns on bidimentional data.',
+    description: 'Highlight patterns on bidimensional data.',
     iconLink: '/static/x/pro.svg',
   },
   {

@@ -8,16 +8,16 @@ const advancedFeatures = [
   {
     title: 'Multi axes and series',
     description:
-      'Support multiple axes and chart types to pick the visualization the matches your need.',
+      'Support multiple axes and chart types to pick the visualization that matches your need.',
   },
   {
     title: 'Zoom & Pan',
-    description: 'BUilt-in zoom features to explore the details of your chart.',
+    description: 'Built-in zoom features to explore the details of your chart.',
     iconLink: '/static/x/pro.svg',
   },
   {
     title: 'Export',
-    description: 'Save your charts in PDF, PNG, or JPEG format to share them outside of the web.',
+    description: 'Save your charts as PDF, PNG, or JPEG format to share them outside of the web.',
     iconLink: '/static/x/pro.svg',
   },
 ];

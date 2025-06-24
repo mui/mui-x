@@ -69,6 +69,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 }).format;
 
+const shortMonthYearFormatter = (date: Date) => {
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = `'${date.getFullYear().toString().slice(-2)}`;
+  return `${month}${year}`;
+};
+
 const IntlNumber = new Intl.NumberFormat('en-US', { notation: 'compact' });
 const IntlPercent = new Intl.NumberFormat('en-US', { style: 'percent' });
 const percentValueFormatter = (value: number | null) => {
@@ -136,7 +142,7 @@ export default function DownloadDemo() {
               zoom: true,
               valueFormatter: (value, context) =>
                 context.location === 'tick'
-                  ? context.scale.tickFormat()(value)
+                  ? shortMonthYearFormatter(new Date(value))
                   : dateFormatter(value),
             },
           ]}

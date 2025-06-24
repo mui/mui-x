@@ -1,4 +1,4 @@
-// Data from  https://www.kaggle.com/datasets/maryanalyze/tables-on-transistor-count-wikipedia-pagenullresource=download&select=Transistor_count_2.csv
+// Data from https://www.kaggle.com/datasets/maryanalyze/tables-on-transistor-count-wikipedia-page (Transistor_count_2.csv file)
 
 interface TransistorData {
   id: number;
