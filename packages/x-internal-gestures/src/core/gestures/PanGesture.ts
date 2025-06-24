@@ -341,6 +341,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
 
       case 'pointerup':
       case 'pointercancel':
+      case 'forceCancel':
         // If the gesture was active (threshold was reached), emit end event
         if (this.isActive && this.state.movementThresholdReached) {
           // If we have less than the minimum required pointers, end the gesture
