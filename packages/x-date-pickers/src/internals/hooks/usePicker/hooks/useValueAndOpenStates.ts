@@ -145,7 +145,7 @@ export function useValueAndOpenStates<
       ...prevState,
       // We reset the shallow value whenever we fire onChange.
       clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
-      lastCommittedValue: shouldFireOnAccept ? value : prevState.lastCommittedValue,
+      lastCommittedValue: shouldFireOnAccept ? newValue : prevState.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
     }));
 
