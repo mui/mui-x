@@ -59,6 +59,8 @@ function MultiAxes() {
           scaleType: 'band',
           dataKey: 'month',
           label: 'Month',
+          valueFormatter: (value, context) =>
+            context.location === 'tick' ? value.slice(0, 3) : value,
         },
       ]}
       yAxis={[
