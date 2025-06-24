@@ -46,7 +46,9 @@ const hours = [
 function HeatmapDemoContent() {
   return (
     <Stack sx={{ height: '100%' }}>
-      <Typography>Bicycle count: Paris - Rivoli street (West-East)</Typography>
+      <Typography align="center" sx={{ width: '100%', mb: 1 }}>
+        Bicycle count: Paris - Rivoli street (West-East)
+      </Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <Heatmap
           margin={{ left: 2 }}
@@ -55,7 +57,7 @@ function HeatmapDemoContent() {
               data: days,
               label: 'Day',
               valueFormatter: (value, context) =>
-                context.location === 'tick' ? value.slice(0, 5) : value,
+                context.location === 'tick' ? value.slice(0, 3) : value,
               tickLabelStyle: { angle: 45 },
               height: 70,
             },

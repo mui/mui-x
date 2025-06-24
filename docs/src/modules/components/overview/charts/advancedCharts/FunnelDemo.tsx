@@ -17,7 +17,9 @@ const commonSeries = {
 function Funnel() {
   return (
     <Stack sx={{ height: '100%' }}>
-      <Typography>World education enrollement in 2000 and 2020</Typography>
+      <Typography align="center" sx={{ width: '100%', mb: 1 }}>
+        World education enrollement in 2000 and 2020
+      </Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <FunnelChart
           sx={{ '.MuiFunnelSection-series-2020': { filter: 'brightness(0.7)' } }}
@@ -27,20 +29,20 @@ function Funnel() {
               id: '2020',
               data: [
                 {
-                  label: (location) => (location === 'legend' ? 'primary' : 'primary (2020)'),
+                  label: (location) => (location === 'legend' ? 'Primary' : 'Primary (2020)'),
                   value: 90,
                 },
                 {
                   label: (location) =>
-                    location === 'legend' ? 'lower secondary' : 'lower secondary (2020)',
+                    location === 'legend' ? 'Lower secondary' : 'Lower secondary (2020)',
                   value: 85,
                 },
                 {
-                  label: (location) => (location === 'legend' ? 'secondary' : 'secondary (2020)'),
+                  label: (location) => (location === 'legend' ? 'Secondary' : 'Secondary (2020)'),
                   value: 67,
                 },
                 {
-                  label: (location) => (location === 'legend' ? 'tertiary' : 'tertiary (2020)'),
+                  label: (location) => (location === 'legend' ? 'Tertiary' : 'Tertiary (2020)'),
                   value: 40,
                 },
               ],
@@ -55,20 +57,20 @@ function Funnel() {
               id: '2000',
               data: [
                 {
-                  label: (location) => (location === 'legend' ? undefined : 'primary (2000)'),
+                  label: (location) => (location === 'legend' ? undefined : 'Primary (2000)'),
                   value: 85,
                 },
                 {
                   label: (location) =>
-                    location === 'legend' ? undefined : 'lower secondary (2000)',
+                    location === 'legend' ? undefined : 'Lower secondary (2000)',
                   value: 74,
                 },
                 {
-                  label: (location) => (location === 'legend' ? undefined : 'secondary (2000)'),
+                  label: (location) => (location === 'legend' ? undefined : 'Secondary (2000)'),
                   value: 50,
                 },
                 {
-                  label: (location) => (location === 'legend' ? undefined : 'tertiary (2000)'),
+                  label: (location) => (location === 'legend' ? undefined : 'Tertiary (2000)'),
                   value: 19,
                 },
               ],

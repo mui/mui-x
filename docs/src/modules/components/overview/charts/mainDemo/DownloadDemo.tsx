@@ -69,6 +69,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 }).format;
 
+const shortMonthYearFormatter = (date: Date) => {
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = `'${date.getFullYear().toString().slice(-2)}`;
+  return `${month}${year}`;
+};
+
 const IntlPercent = new Intl.NumberFormat('en-US', { style: 'percent' });
 const percentValueFormatter = (value: number | null) => {
   if (value !== null) {
@@ -134,12 +140,29 @@ export default function DownloadDemo() {
               zoom: true,
               valueFormatter: (value, context) =>
                 context.location === 'tick'
-                  ? context.scale.tickFormat()(value)
+                  ? shortMonthYearFormatter(new Date(value))
                   : dateFormatter(value),
             },
           ]}
           yAxis={[
-            { min: 0, width: 80, zoom: true, max: selectedFormat === 'relative' ? 100 : undefined },
+            {
+              min: 0,
+              width: 60,
+              zoom: true,
+              max: selectedFormat === 'relative' ? 100 : undefined,
+              label: 'Package downloads',
+              valueFormatter:
+                selectedFormat === 'relative'
+                  ? percentValueFormatter
+                  : (value: number | null) => {
+                      if (value !== null) {
+                        return new Intl.NumberFormat('en-US', { notation: 'compact' }).format(
+                          value,
+                        );
+                      }
+                      return '';
+                    },
+            },
           ]}
           margin={{ left: 0 }}
           sx={{
