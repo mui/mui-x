@@ -107,6 +107,8 @@ export interface ZoomSliderOptions {
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
 
+export type ZoomMap = Map<AxisId, ZoomData>;
+
 export type GetZoomAxisFilters = (params: {
   currentAxisId: AxisId | undefined;
   seriesXAxisId?: AxisId;

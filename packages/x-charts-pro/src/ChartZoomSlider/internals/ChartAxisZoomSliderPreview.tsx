@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { AxisId, useSelector, useStore } from '@mui/x-charts/internals';
+import {
+  AxisId,
+  selectorChartAxisZoomOptionsLookup,
+  useSelector,
+  useStore,
+} from '@mui/x-charts/internals';
 import { alpha } from '@mui/system';
 import useId from '@mui/utils/useId';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
@@ -50,6 +55,7 @@ function PreviewRectangles(props: {
   const store = useStore();
 
   const zoomData = useSelector(store, selectorChartAxisZoomData, [axisId]);
+  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, [axisId]);
   const id = useId();
 
   if (!zoomData) {
@@ -63,16 +69,17 @@ function PreviewRectangles(props: {
   let width;
   let height;
 
+  const range = zoomOptions.maxEnd - zoomOptions.minStart;
   if (axisDirection === 'x') {
-    x = props.x + (zoomData.start / 100) * props.width;
+    x = props.x + ((zoomData.start - zoomOptions.minStart) / range) * props.width;
     y = props.y;
-    width = ((zoomData.end - zoomData.start) / 100) * props.width;
+    width = ((zoomData.end - zoomData.start) / range) * props.width;
     height = props.height;
   } else {
     x = props.x;
-    y = props.y + (1 - zoomData.end / 100) * props.height;
+    y = props.y + (1 - zoomData.end / range) * props.height;
     width = props.width;
-    height = ((zoomData.end - zoomData.start) / 100) * props.height;
+    height = ((zoomData.end - zoomData.start) / range) * props.height;
   }
 
   return (

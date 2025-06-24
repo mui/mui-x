@@ -8,6 +8,7 @@ import {
   useBarPlotData,
   useSelector,
   useStore,
+  ZoomMap,
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
@@ -17,13 +18,16 @@ const BarPlotRoot = styled('g', {
   slot: 'Root',
 })();
 
-export function BarPreviewPlot(props: {
+interface BarPreviewPlotProps {
   axisId: AxisId;
   x: number;
   y: number;
   height: number;
   width: number;
-}) {
+  zoomMap: ZoomMap;
+}
+
+export function BarPreviewPlot(props: BarPreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {
     left: props.x,
     top: props.y,
@@ -35,7 +39,7 @@ export function BarPreviewPlot(props: {
 
   const borderRadius = 0; // TODO: How to obtain the border radius from props?
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
-  const { completedData, masksData } = useBarPreviewData(props.axisId, drawingArea);
+  const { completedData, masksData } = useBarPreviewData(props.axisId, drawingArea, props.zoomMap);
 
   return (
     <BarPlotRoot>
@@ -95,15 +99,11 @@ export function BarPreviewPlot(props: {
   );
 }
 
-function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
+function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, zoomMap: ZoomMap) {
   const store = useStore();
 
-  let xAxes = useSelector(store, selectorChartComputedXAxes, [
-    { drawingArea, zoomMap: undefined },
-  ]).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, [
-    { drawingArea, zoomMap: undefined },
-  ]).axis;
+  let xAxes = useSelector(store, selectorChartComputedXAxes, [{ drawingArea, zoomMap }]).axis;
+  let yAxes = useSelector(store, selectorChartComputedYAxes, [{ drawingArea, zoomMap }]).axis;
 
   /* We only want to show the data represented in this axis. */
   if (axisId in xAxes) {
