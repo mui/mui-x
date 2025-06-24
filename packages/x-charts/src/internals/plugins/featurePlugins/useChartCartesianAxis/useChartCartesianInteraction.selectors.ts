@@ -48,6 +48,24 @@ export const selectorChartsInteractionYAxisIndex = createSelector(
   selectChartsInteractionAxisIndex,
 );
 
+export const selectorChartAxisInteraction = createSelector(
+  [
+    selectorChartsInteractionPointerX,
+    selectorChartsInteractionPointerY,
+    selectorChartXAxis,
+    selectorChartYAxis,
+  ],
+  (x, y, xAxis, yAxis) =>
+    [
+      ...(x === null
+        ? []
+        : xAxis.axisIds.map((axisId) => ({ axisId, dataIndex: indexGetter(x, xAxis, axisId) }))),
+      ...(y === null
+        ? []
+        : yAxis.axisIds.map((axisId) => ({ axisId, dataIndex: indexGetter(y, yAxis, axisId) }))),
+    ].filter((item) => item.dataIndex !== null && item.dataIndex >= 0),
+);
+
 /**
  * Get interaction values
  */

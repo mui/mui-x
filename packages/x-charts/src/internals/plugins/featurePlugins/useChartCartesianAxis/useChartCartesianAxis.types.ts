@@ -55,7 +55,7 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * And the parameter contains the identifier for all axes with a `data` property.
    * @param {AxisItemIdentifier[]} newAxisItems The array of axes item identifiers.
    */
-  onAxisInteraction?: (newAxisItems: AxisItemIdentifier[] | null) => void;
+  onAxisInteraction?: (newAxisItems: AxisItemIdentifier[]) => void;
   /**
    * The controlled axis highlighted.
    * Indicates the direction, axis id, and data index to highlight.

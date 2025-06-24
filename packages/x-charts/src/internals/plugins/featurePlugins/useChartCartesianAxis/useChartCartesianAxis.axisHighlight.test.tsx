@@ -68,7 +68,7 @@ describe('useChartCartesianAxis - axis highlight', () => {
       { axisId: 'y-axis', dataIndex: 0 },
     ]);
 
-    expect(onAxisInteraction.getCall(3).firstArg).to.deep.equal(null);
+    expect(onAxisInteraction.getCall(3).firstArg).to.deep.equal([]);
   });
 
   it.skipIf(isJSDOM)('should call onAxisInteraction when axis got modified', async () => {

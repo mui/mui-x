@@ -5,6 +5,7 @@ import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisR
 import {
   selectorChartsInteractionXAxisIndex,
   selectorChartsInteractionXAxisValue,
+  selectorChartsInteractionYAxisIndex,
   selectorChartsInteractionYAxisValue,
 } from './useChartCartesianInteraction.selectors';
 import { ChartState } from '../../models/chart';
@@ -42,7 +43,7 @@ export const selectorChartsHighlightXAxisIndex = createSelector(
 );
 
 export const selectorChartsHighlightYAxisIndex = createSelector(
-  [selectorChartsInteractionXAxisIndex, selectorChartsControlledIndex],
+  [selectorChartsInteractionYAxisIndex, selectorChartsControlledIndex],
   (computedIndex, controlledIndex) =>
     controlledIndex !== undefined ? controlledIndex : computedIndex,
 );

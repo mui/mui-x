@@ -70,7 +70,7 @@ export default function ControlledAxisHighlight() {
             {...barChartsProps}
             highlightedAxis={highlightedAxis}
             onAxisInteraction={(newState) =>
-              setHighlightedAxis(newState && newState[0])
+              setHighlightedAxis(newState.length ? newState[0] : null)
             }
           />
         ) : (
@@ -78,7 +78,7 @@ export default function ControlledAxisHighlight() {
             {...lineChartsProps}
             highlightedAxis={highlightedAxis}
             onAxisInteraction={(newState) =>
-              setHighlightedAxis(newState && newState[0])
+              setHighlightedAxis(newState.length ? newState[0] : null)
             }
           />
         )}
