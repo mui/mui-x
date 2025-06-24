@@ -246,6 +246,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
         break;
 
       case 'pointercancel':
+      case 'forceCancel':
         // Cancel the gesture
         this.cancelTap(targetElement, relevantPointers, event);
         break;
