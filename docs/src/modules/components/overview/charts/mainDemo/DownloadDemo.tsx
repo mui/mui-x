@@ -69,11 +69,10 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 }).format;
 
-const shortMonthYearFormatter = (date: Date) => {
-  const month = date.toLocaleString('en-US', { month: 'short' });
-  const year = `'${date.getFullYear().toString().slice(-2)}`;
-  return `${month}${year}`;
-};
+const shortMonthYearFormatter = new Intl.DateTimeFormat('en-US', {
+  year: '2-digit',
+  month: 'short',
+}).format;
 
 const IntlPercent = new Intl.NumberFormat('en-US', { style: 'percent' });
 const percentValueFormatter = (value: number | null) => {

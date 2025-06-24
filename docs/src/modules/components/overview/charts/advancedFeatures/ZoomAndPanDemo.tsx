@@ -18,6 +18,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   month: 'short',
   day: 'numeric',
 }).format;
+
+const shortMonthYearFormatter = new Intl.DateTimeFormat('en-US', {
+  year: '2-digit',
+  month: 'short',
+}).format;
+
 const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
   .format;
 
@@ -50,7 +56,7 @@ function ZoomAndPan() {
           domainLimit: 'strict',
           valueFormatter: (value, context) => {
             if (context.location === 'tick') {
-              return context.scale.tickFormat()(value);
+              return shortMonthYearFormatter(value);
             }
             return dateFormatter(value);
           },
