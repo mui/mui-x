@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { getCell, getColumnHeaderCell, getColumnValues, getRows, includeRowSelection } from 'test/utils/helperFn';
+import {
+  getCell,
+  getColumnHeaderCell,
+  getColumnValues,
+  getRows,
+  includeRowSelection,
+} from 'test/utils/helperFn';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
@@ -1356,7 +1362,7 @@ describe('<DataGridPro /> - Row selection', () => {
     });
   });
 
-describe('prop: rowSelectionModel and onRowSelectionModelChange', () => {
+  describe('prop: rowSelectionModel and onRowSelectionModelChange', () => {
     it('should call onRowSelectionModelChange with the correct reason when clicking on a row', async () => {
       const onRowSelectionModelChange = spy();
       const { user } = render(
