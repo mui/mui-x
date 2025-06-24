@@ -9,14 +9,15 @@ import bikeData from './ParisBicycle.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const days = [
-  'Monday, Feb 24,2025',
-  'Tuesday, Feb 25,2025',
-  'Wednesday, Feb 26,2025',
-  'Thursday, Feb 27,2025',
-  'Friday, Feb 28,2025',
-  'Saturday, Mar 1,2025',
-  'Sunday, Mar 2,2025',
+  new Date(2025, 1, 24),
+  new Date(2025, 1, 25),
+  new Date(2025, 1, 26),
+  new Date(2025, 1, 27),
+  new Date(2025, 1, 28),
+  new Date(2025, 2, 1),
+  new Date(2025, 2, 2),
 ];
+
 const hours = [
   '00',
   '01',
@@ -43,6 +44,15 @@ const hours = [
   '22',
   '23',
 ];
+
+const shortDayFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format;
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+}).format;
+
 function HeatmapDemoContent() {
   return (
     <Stack sx={{ height: '100%' }}>
@@ -56,8 +66,11 @@ function HeatmapDemoContent() {
             {
               data: days,
               label: 'Day',
-              valueFormatter: (value, context) =>
-                context.location === 'tick' ? value.slice(0, 3) : value,
+              valueFormatter: (value: Date, context) => {
+                return context.location === 'tick'
+                  ? shortDayFormatter(value)
+                  : dateFormatter(value);
+              },
               tickLabelStyle: { angle: 45 },
               height: 70,
             },
