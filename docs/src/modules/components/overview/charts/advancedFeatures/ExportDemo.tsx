@@ -8,6 +8,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import dataset from '../data/Goolge-Meta-stoks.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
+import Typography from '@mui/material/Typography';
 
 const base = {
   google: dataset[0].google!,
@@ -33,6 +34,7 @@ function Export() {
   return (
     <Stack sx={{ height: '100%' }}>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
+        <Typography align="center">Google Vs Meta stock price</Typography>
         <LineChartPro
           apiRef={apiRef}
           dataset={formattedDataset}

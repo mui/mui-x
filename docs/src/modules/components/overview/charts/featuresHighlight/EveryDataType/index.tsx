@@ -60,8 +60,8 @@ export default function EveryDataType() {
       <SelectChart selected={selected} setSelected={setSelected} />
       <Typography variant="subtitle2">A chart for every data type</Typography>
       <Typography variant="body2" color="text.secondary">
-        A wide variety of chart types to choose from, including bar, line, pie, scatter, and more,
-        to best visualize your data.
+        Effectively visualize your data from a wide variety of charts—bar, line, pie, scatter, and
+        more.
       </Typography>
     </Stack>
   );

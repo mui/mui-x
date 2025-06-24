@@ -29,8 +29,7 @@ export default function FeaturesHighlight() {
         Visualize your data with effortless elegance
       </Typography>
       <Typography sx={{ textAlign: 'center' }}>
-        A high-performance, customizable React component with the best possible developer
-        experience.
+        High-performance, customizable React charts with the best-in-class developer experience.
       </Typography>
       <Paper
         component="div"
@@ -90,8 +89,8 @@ export default function FeaturesHighlight() {
               >
                 <Typography variant="subtitle2">Data labeling</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Clearly and effectively communicate data points with labels, interactive tooltips,
-                  and informative legends.
+                  Deliver insights effectively through clear labels, interactive tooltips, and
+                  informative legends.
                 </Typography>
                 <Legends />
               </Box>
@@ -119,7 +118,7 @@ export default function FeaturesHighlight() {
             >
               <Typography variant="subtitle2">Composition</Typography>
               <Typography variant="body2" color="text.secondary">
-                Build complex charts by combining and configuring individual building blocks.
+                Build complex charts by composing individual building blocks.
               </Typography>
               <HighlightedCode
                 language="jsx"

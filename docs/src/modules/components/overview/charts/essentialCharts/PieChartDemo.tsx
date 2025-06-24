@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
+import Typography from '@mui/material/Typography';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 // Data derived from https://gs.statcounter.com/os-market-share/desktop/worldwide/2023
@@ -34,22 +35,25 @@ const valueFormatter = (item: { value: number }) => `${item.value}%`;
 
 function Pie() {
   return (
-    <PieChart
-      series={[
-        {
-          data: desktopOS,
-          valueFormatter,
-          arcLabel: 'label',
-          arcLabelMinAngle: 35,
-          arcLabelRadius: '60%',
-        },
-      ]}
-      sx={{
-        [`& .${pieArcLabelClasses.root}`]: {
-          fontWeight: 'bold',
-        },
-      }}
-    />
+    <React.Fragment>
+      <Typography align="center">Desktop OS market share</Typography>
+      <PieChart
+        series={[
+          {
+            data: desktopOS,
+            valueFormatter,
+            arcLabel: 'label',
+            arcLabelMinAngle: 35,
+            arcLabelRadius: '60%',
+          },
+        ]}
+        sx={{
+          [`& .${pieArcLabelClasses.root}`]: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+    </React.Fragment>
   );
 }
 

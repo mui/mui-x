@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import Typography from '@mui/material/Typography';
 
 export const dataset = [
   {
@@ -100,16 +101,19 @@ const chartSetting = {
 
 function Bar() {
   return (
-    <BarChart
-      dataset={dataset}
-      xAxis={[{ dataKey: 'month' }]}
-      series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
-      grid={{ horizontal: true }}
-      sx={{
-        [`& .${chartsGridClasses.line}`]: { strokeDasharray: '5 3', strokeWidth: 2 },
-      }}
-      {...chartSetting}
-    />
+    <React.Fragment>
+      <Typography align="center">Avg. annual rainfall in Seoul</Typography>
+      <BarChart
+        dataset={dataset}
+        xAxis={[{ dataKey: 'month' }]}
+        series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
+        grid={{ horizontal: true }}
+        sx={{
+          [`& .${chartsGridClasses.line}`]: { strokeDasharray: '5 3', strokeWidth: 2 },
+        }}
+        {...chartSetting}
+      />
+    </React.Fragment>
   );
 }
 

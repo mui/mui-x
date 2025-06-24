@@ -193,8 +193,8 @@ export function Funnel() {
           data: [
             { value: 100, label: 'Visitors' },
             { value: 68, label: 'Pick item' },
-            { value: 21, label: 'Start payment' },
-            { value: 5, label: 'Paid' },
+            { value: 41, label: 'Start payment' },
+            { value: 13, label: 'Paid' },
           ],
         },
       ]}

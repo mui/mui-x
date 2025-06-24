@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import Typography from '@mui/material/Typography';
 
 /* Source: https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG?end=2024&locations=DE&start=1960&view=chart */
 const years = [
@@ -87,16 +88,19 @@ const chartSetting = {
 
 function Line() {
   return (
-    <LineChart
-      dataset={inflationData}
-      series={[
-        { dataKey: 'rateDE', label: 'Germany', valueFormatter, showMark: false },
-        { dataKey: 'rateUK', label: 'United Kingdom', valueFormatter, showMark: false },
-        { dataKey: 'rateFR', label: 'France', valueFormatter, showMark: false },
-      ]}
-      grid={{ horizontal: true }}
-      {...chartSetting}
-    />
+    <React.Fragment>
+      <Typography align="center">Inflation rates</Typography>
+      <LineChart
+        dataset={inflationData}
+        series={[
+          { dataKey: 'rateDE', label: 'Germany', valueFormatter, showMark: false },
+          { dataKey: 'rateUK', label: 'United Kingdom', valueFormatter, showMark: false },
+          { dataKey: 'rateFR', label: 'France', valueFormatter, showMark: false },
+        ]}
+        grid={{ horizontal: true }}
+        {...chartSetting}
+      />
+    </React.Fragment>
   );
 }
 

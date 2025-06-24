@@ -9,6 +9,7 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { BarSeriesType, LineSeriesType } from '@mui/x-charts/models';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import Typography from '@mui/material/Typography';
 
 const dataset = [
   { min: -12, max: -4, precip: 79, month: 'January' },
@@ -52,33 +53,36 @@ const series: (BarSeriesType | LineSeriesType)[] = [
 
 function MultiAxes() {
   return (
-    <ChartContainer
-      series={series}
-      xAxis={[
-        {
-          scaleType: 'band',
-          dataKey: 'month',
-          label: 'Month',
-          valueFormatter: (value, context) =>
-            context.location === 'tick' ? value.slice(0, 3) : value,
-        },
-      ]}
-      yAxis={[
-        { id: 'leftAxis', width: 50 },
-        { id: 'rightAxis', position: 'right', width: 50 },
-      ]}
-      dataset={dataset}
-    >
-      <ChartsGrid horizontal />
-      <BarPlot />
-      <ChartsAxisHighlight x="band" />
-      <LinePlot />
-      <LineHighlightPlot />
-      <ChartsXAxis />
-      <ChartsYAxis axisId="leftAxis" label="Temperature (°C)" />
-      <ChartsYAxis axisId="rightAxis" label="Precipitation (mm)" />
-      <ChartsTooltip />
-    </ChartContainer>
+    <React.Fragment>
+      <Typography align="center">Weather stats for Quebec city</Typography>
+      <ChartContainer
+        series={series}
+        xAxis={[
+          {
+            scaleType: 'band',
+            dataKey: 'month',
+            label: 'Month',
+            valueFormatter: (value, context) =>
+              context.location === 'tick' ? value.slice(0, 3) : value,
+          },
+        ]}
+        yAxis={[
+          { id: 'leftAxis', width: 50 },
+          { id: 'rightAxis', position: 'right', width: 50 },
+        ]}
+        dataset={dataset}
+      >
+        <ChartsGrid horizontal />
+        <BarPlot />
+        <ChartsAxisHighlight x="band" />
+        <LinePlot />
+        <LineHighlightPlot />
+        <ChartsXAxis />
+        <ChartsYAxis axisId="leftAxis" label="Temperature (°C)" />
+        <ChartsYAxis axisId="rightAxis" label="Precipitation (mm)" />
+        <ChartsTooltip />
+      </ChartContainer>
+    </React.Fragment>
   );
 }
 

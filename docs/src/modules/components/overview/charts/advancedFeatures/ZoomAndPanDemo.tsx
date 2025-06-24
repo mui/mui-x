@@ -3,6 +3,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import dataset from '../data/Goolge-Meta-stoks.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
+import Typography from '@mui/material/Typography';
 
 const base = {
   google: dataset[0].google!,
@@ -25,43 +26,46 @@ const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', cu
 
 function ZoomAndPan() {
   return (
-    <LineChartPro
-      dataset={formattedDataset}
-      series={[
-        {
-          label: 'Google',
-          dataKey: 'google',
-          showMark: false,
-          valueFormatter: (value: number | null) =>
-            value === null ? '' : currencyFormatter(value),
-        },
-        {
-          label: 'Meta',
-          dataKey: 'meta',
-          showMark: false,
-          valueFormatter: (value: number | null) =>
-            value === null ? '' : currencyFormatter(value),
-        },
-      ]}
-      xAxis={[
-        {
-          id: 'x-axis',
-          scaleType: 'time',
-          dataKey: 'date',
-          zoom: { slider: { enabled: true }, filterMode: 'discard' },
-          domainLimit: 'strict',
-          tickNumber: 3,
-          valueFormatter: (value, context) => {
-            if (context.location === 'tick') {
-              return shortMonthYearFormatter(value);
-            }
-            return dateFormatter(value);
+    <React.Fragment>
+      <Typography align="center">Google Vs Meta stock price</Typography>
+      <LineChartPro
+        dataset={formattedDataset}
+        series={[
+          {
+            label: 'Google',
+            dataKey: 'google',
+            showMark: false,
+            valueFormatter: (value: number | null) =>
+              value === null ? '' : currencyFormatter(value),
           },
-        },
-      ]}
-      yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40 }]}
-      slotProps={{ tooltip: { disablePortal: true } }}
-    />
+          {
+            label: 'Meta',
+            dataKey: 'meta',
+            showMark: false,
+            valueFormatter: (value: number | null) =>
+              value === null ? '' : currencyFormatter(value),
+          },
+        ]}
+        xAxis={[
+          {
+            id: 'x-axis',
+            scaleType: 'time',
+            dataKey: 'date',
+            zoom: { slider: { enabled: true }, filterMode: 'discard' },
+            domainLimit: 'strict',
+            tickNumber: 3,
+            valueFormatter: (value, context) => {
+              if (context.location === 'tick') {
+                return shortMonthYearFormatter(value);
+              }
+              return dateFormatter(value);
+            },
+          },
+        ]}
+        yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40 }]}
+        slotProps={{ tooltip: { disablePortal: true } }}
+      />
+    </React.Fragment>
   );
 }
 
