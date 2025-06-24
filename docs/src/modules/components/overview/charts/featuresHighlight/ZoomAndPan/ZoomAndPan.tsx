@@ -7,6 +7,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { AxisValueFormatterContext, YAxis } from '@mui/x-charts/models';
 import { sxColors } from '../colors';
 import dataset from '../../data/Goolge-Meta-stoks.json';
+import { shortMonthYearFormatter } from '../../shortMonthYearFormatter';
 
 const base = {
   google: dataset[0].google!,
@@ -50,9 +51,10 @@ export default function ZoomAndPan() {
               dataKey: 'date',
               zoom: true,
               domainLimit: 'strict',
+              tickNumber: 3,
               valueFormatter: (value: Date, context: AxisValueFormatterContext<'time'>) => {
                 if (context.location === 'tick') {
-                  return context.scale.tickFormat()(value);
+                  return shortMonthYearFormatter(value);
                 }
                 return dateFormatter(value);
               },

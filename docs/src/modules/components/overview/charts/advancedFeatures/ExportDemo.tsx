@@ -7,6 +7,7 @@ import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import dataset from '../data/Goolge-Meta-stoks.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
 
 const base = {
   google: dataset[0].google!,
@@ -58,9 +59,10 @@ function Export() {
               dataKey: 'date',
               zoom: { filterMode: 'discard' },
               domainLimit: 'strict',
+              tickNumber: 3,
               valueFormatter: (value, context) => {
                 if (context.location === 'tick') {
-                  return context.scale.tickFormat()(value);
+                  return shortMonthYearFormatter(value);
                 }
                 return dateFormatter(value);
               },

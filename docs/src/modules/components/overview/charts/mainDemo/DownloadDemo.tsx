@@ -11,6 +11,7 @@ import dataMaterial from '../data/@mui-material.json';
 import dataCharts from '../data/@mui-x-charts.json';
 import dataDataGrid from '../data/@mui-x-data-grid.json';
 import dataPickers from '../data/@mui-x-date-pickers.json';
+import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
 
 type Versions = '5' | '6' | '7' | '8';
 
@@ -68,12 +69,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   month: 'short',
   day: 'numeric',
 }).format;
-
-const shortMonthYearFormatter = (date: Date) => {
-  const month = date.toLocaleString('en-US', { month: 'short' });
-  const year = `'${date.getFullYear().toString().slice(-2)}`;
-  return `${month}${year}`;
-};
 
 const IntlNumber = new Intl.NumberFormat('en-US', { notation: 'compact' });
 const IntlPercent = new Intl.NumberFormat('en-US', { style: 'percent' });
@@ -137,13 +132,11 @@ export default function DownloadDemo() {
             {
               dataKey: 'date',
               scaleType: 'time',
-              disableTicks: true,
               domainLimit: 'strict',
               zoom: true,
-              valueFormatter: (value, context) =>
-                context.location === 'tick'
-                  ? shortMonthYearFormatter(new Date(value))
-                  : dateFormatter(value),
+              tickNumber: 5,
+              valueFormatter: (value: Date, context) =>
+                context.location === 'tick' ? shortMonthYearFormatter(value) : dateFormatter(value),
             },
           ]}
           yAxis={[
