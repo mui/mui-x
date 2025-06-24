@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
   AxisId,
-  BarClipPath,
   selectorChartComputedXAxes,
   selectorChartComputedYAxes,
   useBarPlotData,
@@ -37,60 +36,30 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
     bottom: props.y + props.height,
   };
 
-  const borderRadius = 0; // TODO: How to obtain the border radius from props?
-  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
-  const { completedData, masksData } = useBarPreviewData(props.axisId, drawingArea, props.zoomMap);
-  console.log({ completedData, masksData });
+  const { completedData } = useBarPreviewData(props.axisId, drawingArea, props.zoomMap);
 
   return (
     <BarPlotRoot>
-      {masksData.map(
-        ({ id, x, y, width, height, hasPositive, hasNegative, layout, borderRadius }) => {
-          return (
-            <BarClipPath
-              key={id}
-              maskId={`preview-${id}`}
-              borderRadius={borderRadius}
-              hasNegative={hasNegative}
-              hasPositive={hasPositive}
-              layout={layout}
-              x={x}
-              y={y}
-              width={width}
-              height={height}
-              skipAnimation
-            />
-          );
-        },
-      )}
       {completedData.map(({ seriesId, data }) => (
         <g key={seriesId} data-debug>
-          {data.map(
-            ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-              const barElement = (
-                <BarElement
-                  key={dataIndex}
-                  id={seriesId}
-                  dataIndex={dataIndex}
-                  color={color}
-                  skipAnimation
-                  layout={layout ?? 'vertical'}
-                  x={x}
-                  xOrigin={xOrigin}
-                  y={y}
-                  yOrigin={yOrigin}
-                  width={width}
-                  height={height}
-                />
-              );
-
-              return (
-                <g key={dataIndex} clipPath={`url(#preview-${maskId})`}>
-                  {barElement}
-                </g>
-              );
-            },
-          )}
+          {data.map(({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height }) => {
+            return (
+              <BarElement
+                key={dataIndex}
+                id={seriesId}
+                dataIndex={dataIndex}
+                color={color}
+                skipAnimation
+                layout={layout ?? 'vertical'}
+                x={x}
+                xOrigin={xOrigin}
+                y={y}
+                yOrigin={yOrigin}
+                width={width}
+                height={height}
+              />
+            );
+          })}
         </g>
       ))}
     </BarPlotRoot>
