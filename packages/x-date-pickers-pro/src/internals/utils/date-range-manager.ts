@@ -3,7 +3,7 @@ import { mergeDateAndTime, PickerRangeValue } from '@mui/x-date-pickers/internal
 import { RangePosition } from '../../models';
 
 interface CalculateRangeChangeOptions {
-  utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
   range: PickerRangeValue;
   newDate: PickerValidDate | null;
   rangePosition: RangePosition;
@@ -23,7 +23,7 @@ interface CalculateRangeChangeResponse {
 }
 
 export function calculateRangeChange({
-  utils,
+  adapter,
   range,
   newDate: selectedDate,
   rangePosition,
@@ -31,29 +31,29 @@ export function calculateRangeChange({
   shouldMergeDateAndTime = false,
   referenceDate,
 }: CalculateRangeChangeOptions): CalculateRangeChangeResponse {
-  const start = !utils.isValid(range[0]) ? null : range[0];
-  const end = !utils.isValid(range[1]) ? null : range[1];
+  const start = !adapter.isValid(range[0]) ? null : range[0];
+  const end = !adapter.isValid(range[1]) ? null : range[1];
 
   if (shouldMergeDateAndTime && selectedDate) {
     // If there is a date already selected, then we want to keep its time
     if (start && rangePosition === 'start') {
-      selectedDate = mergeDateAndTime(utils, selectedDate, start);
+      selectedDate = mergeDateAndTime(adapter, selectedDate, start);
     }
     if (end && rangePosition === 'end') {
-      selectedDate = mergeDateAndTime(utils, selectedDate, end);
+      selectedDate = mergeDateAndTime(adapter, selectedDate, end);
     }
   }
 
   const newSelectedDate =
     referenceDate && selectedDate && shouldMergeDateAndTime
-      ? mergeDateAndTime(utils, selectedDate, referenceDate)
+      ? mergeDateAndTime(adapter, selectedDate, referenceDate)
       : selectedDate;
 
   if (rangePosition === 'start') {
     const truthyResult: CalculateRangeChangeResponse = allowRangeFlip
       ? { nextSelection: 'start', newRange: [end!, newSelectedDate] }
       : { nextSelection: 'end', newRange: [newSelectedDate, null] };
-    return Boolean(end) && utils.isAfter(newSelectedDate!, end!)
+    return Boolean(end) && adapter.isAfter(newSelectedDate!, end!)
       ? truthyResult
       : { nextSelection: 'end', newRange: [newSelectedDate, end] };
   }
@@ -61,7 +61,7 @@ export function calculateRangeChange({
   const truthyResult: CalculateRangeChangeResponse = allowRangeFlip
     ? { nextSelection: 'end', newRange: [newSelectedDate, start!] }
     : { nextSelection: 'end', newRange: [newSelectedDate, null] };
-  return Boolean(start) && utils.isBeforeDay(newSelectedDate!, start!)
+  return Boolean(start) && adapter.isBeforeDay(newSelectedDate!, start!)
     ? truthyResult
     : { nextSelection: 'start', newRange: [start, newSelectedDate] };
 }

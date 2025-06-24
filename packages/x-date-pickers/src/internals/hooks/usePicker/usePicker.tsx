@@ -15,7 +15,7 @@ import {
   PickerValidValue,
   PickerValue,
 } from '../../models';
-import { useLocalizationContext, useUtils } from '../useUtils';
+import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 import { useReduceAnimations } from '../useReduceAnimations';
 import { FieldRef, InferError, PickerOwnerState } from '../../../models';
 import {
@@ -82,8 +82,7 @@ export const usePicker = <
    * TODO: Improve how we generate the aria-label and aria-labelledby attributes.
    */
   const labelId = useId();
-  const utils = useUtils();
-  const adapter = useLocalizationContext();
+  const adapter = usePickerAdapter();
   const reduceAnimations = useReduceAnimations(reduceAnimationsProp);
   const orientation = useOrientation(views, orientationProp);
   const { current: initialView } = React.useRef<TView | null>(openTo ?? null);
@@ -127,7 +126,7 @@ export const usePicker = <
   const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
 
   const setValueToToday = useEventCallback(() =>
-    setValue(valueManager.getTodayValue(utils, timezone, valueType)),
+    setValue(valueManager.getTodayValue(adapter, timezone, valueType)),
   );
 
   const acceptValueChanges = useEventCallback(() => setValue(value));
@@ -218,14 +217,23 @@ export const usePicker = <
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
-      isPickerValueEmpty: valueManager.areValuesEqual(utils, value, valueManager.emptyValue),
+      isPickerValueEmpty: valueManager.areValuesEqual(adapter, value, valueManager.emptyValue),
       isPickerOpen: state.open,
       isPickerDisabled: props.disabled ?? false,
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
       pickerVariant: variant,
     }),
-    [utils, valueManager, value, state.open, orientation, variant, props.disabled, props.readOnly],
+    [
+      adapter,
+      valueManager,
+      value,
+      state.open,
+      orientation,
+      variant,
+      props.disabled,
+      props.readOnly,
+    ],
   );
 
   const triggerStatus = React.useMemo(() => {
