@@ -7,7 +7,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateTime } from '../validation';
 import { PickerOwnerState, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
@@ -35,7 +35,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   inProps: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
@@ -56,7 +56,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     ...defaultizedProps,
     ampmInClock,
     viewRenderers,
-    format: resolveTimeFormat(utils, defaultizedProps),
+    format: resolveTimeFormat(adapter, defaultizedProps),
     slots: {
       field: TimeField,
       ...defaultizedProps.slots,
@@ -98,7 +98,7 @@ MobileTimePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

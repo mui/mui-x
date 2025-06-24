@@ -268,7 +268,7 @@ function BarPlot(props: BarPlotProps) {
         })}
       {completedData.map(({ seriesId, data }) => {
         return (
-          <g data-series={seriesId} key={seriesId} className={classes.series}>
+          <g key={seriesId} data-series={seriesId} className={classes.series}>
             {data.map(
               ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
                 const barElement = (
