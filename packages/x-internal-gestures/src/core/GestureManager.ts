@@ -1,6 +1,6 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
 import { Gesture } from './Gesture';
-import { PointerManager } from './PointerManager';
+import { PointerManager, PointerManagerOptions } from './PointerManager';
 import { GestureElement } from './types/GestureElement';
 import { MergeUnions } from './types/MergeUnions';
 import { OmitNever } from './types/OmitNever';
@@ -13,35 +13,7 @@ import { TargetElement } from './types/TargetElement';
 export type GestureManagerOptions<
   GestureName extends string,
   Gestures extends Gesture<GestureName>,
-> = {
-  /**
-   * The root DOM element to which the PointerManager will attach its event listeners.
-   * All gesture detection will be limited to events within this element.
-   */
-  root?: TargetElement;
-
-  /**
-   * CSS touch-action property to apply to the root element.
-   * Controls how the browser responds to touch interactions.
-   *
-   * Common values:
-   * - "none": Disable browser handling of all panning/zooming gestures
-   * - "pan-x": Allow horizontal panning, disable vertical gestures
-   * - "pan-y": Allow vertical panning, disable horizontal gestures
-   * - "manipulation": Allow panning and pinch zoom, disable double-tap
-   *
-   * @see https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-   */
-  touchAction?: string;
-
-  /**
-   * Whether to use passive event listeners for improved scrolling performance.
-   * When true, gestures cannot use preventDefault() on touch events.
-   *
-   * @default false
-   */
-  passive?: boolean;
-
+> = PointerManagerOptions & {
   /**
    * Array of gesture templates to register with the manager.
    * These serve as prototypes that can be cloned for individual elements.
