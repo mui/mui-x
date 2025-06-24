@@ -61,11 +61,7 @@ export default function ZoomSliderPreview() {
         xAxis={[
           {
             ...xAxis,
-            zoom: {
-              minStart: 20,
-              maxEnd: 80,
-              slider: { enabled: true, preview: true },
-            },
+            zoom: { slider: { enabled: true, preview: true } },
           },
         ]}
       />
