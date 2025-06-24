@@ -132,6 +132,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
 
       // Params
       'GridCellParams',
+      'GridRenderContext',
       'GridRowParams',
       'GridRowClassNameParams',
       'GridRowSpacingParams',
@@ -170,6 +171,8 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'PieSeriesType',
       'ScatterSeriesType',
       'AxisConfig',
+      'ChartImageExportOptions',
+      'ChartPrintExportOptions',
     ],
   },
 ];

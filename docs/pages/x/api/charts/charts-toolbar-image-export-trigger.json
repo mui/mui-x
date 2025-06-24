@@ -1,0 +1,22 @@
+{
+  "props": {
+    "options": {
+      "type": {
+        "name": "shape",
+        "description": "{ fileName?: string, quality?: number, type: string }"
+      }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ChartsToolbarImageExportTrigger",
+  "imports": [
+    "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-pro/ChartsToolbarPro';",
+    "import { ChartsToolbarImageExportTrigger } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsToolbarImageExportTrigger",
+  "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarImageExportTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar 🧪</a></li></ul>",
+  "cssComponent": false
+}

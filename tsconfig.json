@@ -43,6 +43,7 @@
       "@mui/x-license/*": ["./packages/x-license/src/*"],
       "@mui/x-internals": ["./packages/x-internals/src"],
       "@mui/x-internals/*": ["./packages/x-internals/src/*"],
+      "@mui/x-internal-gestures/*": ["./packages/x-internal-gestures/src/*"],
       "@mui/x-telemetry": ["./packages/x-telemetry/src"],
       "@mui/x-telemetry/*": ["./packages/x-telemetry/src/*"],
       "@mui/x-virtualizer": ["./packages/x-virtualizer/src"],

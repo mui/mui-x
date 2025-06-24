@@ -5,6 +5,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.5.3
+
+_Jun 19, 2025_
+
+We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@alisasanib, @arminmeh, @sai6855
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @oliviertassinari
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.5.3`
+
+- [DataGrid] Fix export menu button tooltip being interactive when menu is open (#18327) @bernardobelchior
+- [DataGrid] Fix column menu scroll close (#18065) @alisasanib
+- [DataGrid] Fix page size issue with data source (#18419) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.5.3`, plus:
+
+- [DataGridPro] Ignore missing `rowCount` response when new children are fetched with the data source (#17711) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.5.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.5.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.5.3`
+
+- [pickers] Add `inputSizeSmall` to classes interface (#18242) @sai6855
+
+#### `@mui/x-date-pickers-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.5.3`.
+
+### Charts
+
+#### `@mui/x-charts@8.5.3`
+
+- [charts] Add item class to list item around each series in legend (#18411) @bernardobelchior
+- [charts] Allow `tabIndex` in surface and legend (#18344) @JCQuintas
+- [charts] Explore selector typing (#18362) @alexfauquette
+- [charts] Fix highlight with number ids (#18423) @alexfauquette
+- [charts] Make scatter chart use data attributes (#18048) @alexfauquette
+
+#### `@mui/x-charts-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.5.3`, plus:
+
+- [charts-pro] Add data-series to elements of funnel chart (#18067) @JCQuintas
+- [charts-pro] Hide values outside minStart and maxEnd in zoom slider (#18336) @bernardobelchior
+- [charts-pro] Fix `FunnelChart` label positioning with different curves (#18354) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.5.3`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.5.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.5.3`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.5.3`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix 404 in charts docs (#18440) @alexfauquette
+- [docs][pickers] Fix adapter version resolving when opening demo to edit (#18363) @LukasTy
+
+### Core
+
+- [core] Fix pnpm valelint error (#18420) @oliviertassinari
+
+### Miscellaneous
+
+- [code-infra] Add back a `Playwright` renovate group (#18397) @LukasTy
+- [code-infra] Setup `CODEOWNERS` for charts repositories (#18418) @JCQuintas
+- [code-infra] Strengthen `URL` usage for test config (#18444) @LukasTy
+- [code-infra] Use `vitest` bundled types (#17758) @JCQuintas
+- [infra] Stabilise tests by removing babel and plugins from vitest (#18341) @JCQuintas
+- [infra] Add automated release PR creation script (#18345) @michelengelen
+
 ## 8.5.2
 
 _Jun 12, 2025_
@@ -94,7 +189,7 @@ Same changes as in `@mui/x-tree-view@8.5.2`.
 - [code-infra] Revert `React` to `19.0.0` (#18265) @LukasTy
 - [code-infra] Use `catalog` for reused dependencies (#18302) @LukasTy
 - [infra] Remove unused karma/mocha deps and files (#18340) @JCQuintas
-- [infra] Update github label references to use 'scope' instead of 'component' (#18260) @michelengelen
+- [infra] Update GitHub label references to use 'scope' instead of 'component' (#18260) @michelengelen
 - [infra] Use a single browser server in CI (#18230) @JCQuintas
 
 ## 8.5.1
@@ -189,15 +284,6 @@ Same changes as in `@mui/x-tree-view@8.5.1`.
 
 ### Core
 
-- chore(deps): bump @next/eslint-plugin-next to 15.3.3 (#18155) @renovate[bot]
-- chore(deps): bump @types/lodash to ^4.17.17 (#17990) @renovate[bot]
-- chore(deps): bump babel (#18157) @renovate[bot]
-- chore(deps): bump eslint to ^9.28.0 (#17352) @renovate[bot]
-- chore(deps): bump material ui (#17802) @renovate[bot]
-- chore(deps): bump next to ^15.3.3 (#18159) @renovate[bot]
-- chore(deps): bump ossf/scorecard-action action to v2.4.2 (#18160) @renovate[bot]
-- chore(deps): bump react-router to ^7.6.1 (#18162) @renovate[bot]
-- chore(deps): bump yargs to ^18.0.0 (#18169) @renovate[bot]
 - [code-infra] Different approach to console testing for `processRowUpdate` (#18213) @JCQuintas
 - [code-infra] Fix act warnings in DataGrid/toolbar (#18207) @JCQuintas
 - [code-infra] Remove `istanbul` references (#18194) @JCQuintas
@@ -4641,7 +4727,6 @@ No changes since `@mui/x-charts@7.22.2`.
 - [docs] Add `next` version links (#15423) @LukasTy
 - [docs] Use the `loading` state in the demos (#15538) @cherniavskii
 - [docs] Add data caching to lazy loaded detail panel demo (#15506) @cherniavskii
-
 - [code-infra] Tentative fix for Argos flaky screenshot tests (#15399) @JCQuintas
 - [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
 - [core] Clarify release version bump strategy (#15536) @cherniavskii

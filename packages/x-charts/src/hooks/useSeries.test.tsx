@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { useSeries } from './useSeries';
 import { ChartProvider } from '../context/ChartProvider';
 
@@ -15,7 +14,7 @@ describe('useSeries', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  testSkipIf(!isJSDOM)('should throw an error when parent context not present', () => {
+  it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
     const errorMessage1 = 'MUI X Charts: Could not find the Chart context.';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -26,7 +25,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridProProps {
   rows: GridValidRowModel[];
@@ -430,7 +429,7 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   // Need layouting
-  describeSkipIf(isJSDOM)('virtualization', () => {
+  describe.skipIf(isJSDOM)('virtualization', () => {
     let apiRef: RefObject<GridApi | null>;
     function TestCaseVirtualization(
       props: Partial<DataGridProProps> & {

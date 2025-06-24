@@ -184,6 +184,9 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
                 plan: 'premium',
               },
+              {
+                pathname: '/x/react-data-grid/server-side-data/recipes',
+              },
             ],
           },
           {
@@ -283,6 +286,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
               { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
               { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+              { pathname: '/x/api/data-grid/grid-render-context', title: 'GridRenderContext' },
               {
                 pathname: '/x/api/data-grid/grid-row-class-name-params',
                 title: 'GridRowClassNameParams',
@@ -575,6 +579,14 @@ const pages: MuiPage[] = [
                       { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
                       { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
                       { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                      {
+                        pathname: '/x/api/charts/chart-image-export-options',
+                        title: 'ChartImageExportOptions',
+                      },
+                      {
+                        pathname: '/x/api/charts/chart-print-export-options',
+                        title: 'ChartPrintExportOptions',
+                      },
                     ],
                   },
                 ],
