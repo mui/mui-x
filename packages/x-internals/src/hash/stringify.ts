@@ -6,6 +6,9 @@
 export function stringify(input: object | string | number | null) {
   const seen = new WeakSet();
   return JSON.stringify(input, (_, v) => {
+    // Prevent stringify whole window object as this cause security error.
+    // Security error happens due to micro-frontend code used on different host.
+    // For more information check here https://github.com/mui/mui-x/issues/17855.
     if (typeof window !== 'undefined' && v === window) {
       return v.toString();
     }
