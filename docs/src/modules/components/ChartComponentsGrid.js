@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { Link } from '@mui/docs/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 function getComponents() {
   return [
@@ -94,6 +97,61 @@ function getComponents() {
 
 export default function ChartComponentsGrid() {
   return (
+    <List
+      component="ul"
+      sx={{
+        pl: 3,
+        '& li::marker': {
+          fontSize: '1.5em',
+        },
+      }}
+    >
+      {getComponents().map((component) => (
+        <ListItem
+          key={component.title}
+          component="li"
+          sx={{ display: 'list-item', listStyleType: 'disc', minHeight: 24, py: 0 }}
+        >
+          <ListItemText
+            primary={
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Link href={component.href} underline="hover" sx={{ fontWeight: 500 }}>
+                  {component.title}
+                </Link>
+                {component.pro && <span className="plan-pro" />}
+                {component.planned && (
+                  <Chip
+                    label="Planned"
+                    size="small"
+                    variant="outlined"
+                    color="grey"
+                    sx={(theme) => ({
+                      height: 20,
+                      backgroundColor: 'grey.50',
+                      borderColor: 'grey.200',
+                      '.MuiChip-label': {
+                        px: '6px',
+                        fontSize: '0.65rem',
+                        letterSpacing: '.04rem',
+                        textTransform: 'uppercase',
+                        color: 'text.primary',
+                      },
+                      ...theme.applyDarkStyles({
+                        backgroundColor: 'divider',
+                        borderColor: 'divider',
+                      }),
+                    })}
+                  />
+                )}
+              </Stack>
+            }
+          />
+        </ListItem>
+      ))}
+    </List>
+  );
+}
+/*
     <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
       {getComponents().map((component) => (
         <Grid size={{ xs: 12, sm: 4 }} sx={{ flexGrow: 1 }} key={component.title}>
@@ -171,5 +229,4 @@ export default function ChartComponentsGrid() {
         </Grid>
       ))}
     </Grid>
-  );
-}
+  */
