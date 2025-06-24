@@ -18,7 +18,7 @@ const dataset: Record<'x' | 'a' | 'b' | 'c', number>[] = [
 ].map((p) => ({ ...p, c: 40 - p.a - p.b }));
 
 const highlightScope: HighlightScope = {
-  highlight: 'series',
+  highlight: 'item',
   fade: 'global',
 };
 
