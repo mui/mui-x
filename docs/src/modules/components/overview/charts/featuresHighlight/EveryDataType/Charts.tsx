@@ -54,7 +54,15 @@ export function LineAndBar() {
       ]}
       dataset={dataset}
       margin={2}
-      xAxis={[{ height: 3, scaleType: 'band', dataKey: 'x', disableTicks: true }]}
+      xAxis={[
+        {
+          height: 3,
+          scaleType: 'band',
+          dataKey: 'x',
+          disableTicks: true,
+          valueFormatter: (value) => String(value),
+        },
+      ]}
       yAxis={[
         { width: 3, disableTicks: true },
         { id: 'ratio', position: 'none' },
@@ -133,7 +141,7 @@ function radarValueFormatter(v: number | null) {
   if (v === null) {
     return 'NaN';
   }
-  return `${v.toLocaleString()}t CO2eq/pers`;
+  return `${v.toLocaleString()}t CO2/pers`;
 }
 
 export function Radar() {
