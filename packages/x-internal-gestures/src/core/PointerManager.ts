@@ -127,6 +127,7 @@ export class PointerManager {
     this.root = (options.root ?? document.documentElement) as HTMLElement;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive !== false;
+    this.preventInterruptEvents = options.preventInterruptEvents !== false;
 
     this.setupEventListeners();
   }
@@ -180,6 +181,8 @@ export class PointerManager {
     this.root.addEventListener('pointermove', this.handlePointerEvent, { passive: this.passive });
     this.root.addEventListener('pointerup', this.handlePointerEvent, { passive: this.passive });
     this.root.addEventListener('pointercancel', this.handlePointerEvent, { passive: this.passive });
+    // @ts-expect-error, forceCancel is not a standard event, but used for custom handling
+    this.root.addEventListener('forceCancel', this.handlePointerEvent, { passive: this.passive });
 
     // Add blur and contextmenu event listeners to interrupt all gestures
     this.root.addEventListener('blur', this.handleInterruptEvents);
@@ -202,7 +205,6 @@ export class PointerManager {
       return;
     }
 
-    // Force a reset even if there are no active pointers to ensure any lingering gesture state is cleared
     // Create a synthetic pointer cancel event
     const cancelEvent = new PointerEvent('forceCancel', {
       bubbles: false,
@@ -263,7 +265,7 @@ export class PointerManager {
       this.pointers.set(pointerId, this.createPointerData(event));
     }
     // Remove pointer data on up or cancel
-    else if (type === 'pointerup' || type === 'pointercancel') {
+    else if (type === 'pointerup' || type === 'pointercancel' || type === 'forceCancel') {
       // Release pointer capture on up or cancel
       if (event.target instanceof Element) {
         try {
@@ -339,6 +341,8 @@ export class PointerManager {
     this.root.removeEventListener('pointermove', this.handlePointerEvent);
     this.root.removeEventListener('pointerup', this.handlePointerEvent);
     this.root.removeEventListener('pointercancel', this.handlePointerEvent);
+    // @ts-expect-error, forceCancel is not a standard event, but used for custom handling
+    this.root.removeEventListener('forceCancel', this.handlePointerEvent);
     this.root.removeEventListener('blur', this.handleInterruptEvents);
     this.root.removeEventListener('contextmenu', this.handleInterruptEvents);
 
