@@ -7,7 +7,7 @@ import ChartDemoNavigator from '../ChartDemoNavigator';
 const advancedCharts = [
   {
     title: 'Radar',
-    description: 'Compare elements on multiple metrics',
+    description: 'Compare elements on multiple metrics.',
   },
   {
     title: 'Heatmap',

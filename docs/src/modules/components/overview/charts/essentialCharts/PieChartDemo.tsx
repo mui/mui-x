@@ -39,6 +39,9 @@ function Pie() {
         {
           data: desktopOS,
           valueFormatter,
+          arcLabel: 'label',
+          arcLabelMinAngle: 35,
+          arcLabelRadius: '60%',
         },
       ]}
       sx={{

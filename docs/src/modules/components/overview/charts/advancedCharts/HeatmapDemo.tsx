@@ -63,10 +63,10 @@ function HeatmapDemoContent() {
           yAxis={[
             {
               data: hours,
-              label: 'hour',
+              label: 'Hour of the day',
               tickLabelInterval: (_, index) => index % 2 === 0,
               valueFormatter: (value) => `${value}h`,
-              width: 50,
+              width: 60,
             },
           ]}
           series={[{ data: bikeData as unknown as HeatmapValueType[], label: 'Bycicle count' }]}

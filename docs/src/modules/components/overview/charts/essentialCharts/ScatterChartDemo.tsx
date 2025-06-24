@@ -10,7 +10,7 @@ import data from '../data/transistorCPU';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const chartSetting = {
-  yAxis: [{ label: 'processor density', width: 60, scaleType: 'log' as const }],
+  yAxis: [{ label: 'Processor density in \ntransistor/mm²', width: 70, scaleType: 'log' as const }],
   xAxis: [{ valueFormatter: (v: number | null) => (v ? v.toString() : '') }],
 };
 
@@ -54,7 +54,7 @@ function CustomTooltip() {
         <Divider sx={{ my: 1 }} />
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <Typography sx={{ mr: 3 }}>{item?.value.x}</Typography>
-          <Typography>{item?.value.y == null ? 'NaN' : numberFormatter(item?.value.y)}</Typography>
+          <Typography>{item?.value.y == null ? 'NaN' : numberFormatter(item?.value.y)} transistor/mm²</Typography>
         </Box>
       </Paper>
     </ChartsTooltipContainer>
@@ -85,7 +85,7 @@ export default function ScatterChartDemo() {
     { label: 'Apple', data },
     { label: 'IBM', data },
   ]}
-  yAxis={[{ scaleType: 'log', label: 'processor density' }]}
+  yAxis={[{ scaleType: 'log', label: 'Processor density in transistor/mm²' }]}
 />`}
     >
       <Scatter />
