@@ -15,6 +15,15 @@ declare global {
     DEPLOY_ENV?: string;
     DOCS_STATS_ENABLED?: string;
     PULL_REQUEST?: string;
+    PICKERS_ADAPTERS_DEPS?: string;
+    LIB_VERSION?: string;
+    SOURCE_CODE_REPO?: string;
+    SOURCE_GITHUB_BRANCH?: string;
+    GITHUB_TEMPLATE_DOCS_FEEDBACK?: string;
+    DATA_GRID_VERSION?: string;
+    DATE_PICKERS_VERSION?: string;
+    CHARTS_VERSION?: string;
+    TREE_VIEW_VERSION?: string;
   }
 }
 
@@ -79,6 +88,7 @@ export default withDocsInfra({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
   },
   // @ts-ignore
   webpack: (config, options) => {
@@ -149,14 +159,6 @@ export default withDocsInfra({
             options: {
               search: 'LICENSE_DISABLE_CHECK',
               replace: 'true',
-            },
-          },
-          {
-            test: /postProcessImport.ts$/,
-            loader: 'string-replace-loader',
-            options: {
-              search: 'ADAPTER_DEPENDENCIES',
-              replace: JSON.stringify(pickersAdaptersDeps),
             },
           },
         ]),

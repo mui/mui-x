@@ -1,14 +1,19 @@
+import { vi } from 'vitest';
 import { getPickerAdapterDeps } from './getPickerAdapterDeps';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
 
 const adapterDependencies = getPickerAdapterDeps();
 
-// @ts-expect-error, ADAPTER_DEPENDENCIES is set on the global object. This will be automatically picked up the
-// postProcessImport function when testing, though in production we automatically replace this with the actual value.
-globalThis.ADAPTER_DEPENDENCIES = JSON.stringify(adapterDependencies);
-
 describe('postProcessImport', () => {
   const ADAPTERS = ['AdapterDateFns', 'AdapterDayjs', 'AdapterLuxon', 'AdapterMoment'];
+
+  beforeEach(() => {
+    vi.stubEnv('PICKERS_ADAPTERS_DEPS', JSON.stringify(adapterDependencies));
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
 
   describe('@mui/lab imports', () => {
     ADAPTERS.forEach((adapter) => {

@@ -34,8 +34,7 @@ export const postProcessImport = (importName: string): Record<string, string> | 
       );
     }
     return {
-      // @ts-expect-error, ADAPTER_DEPENDENCIES is replaced at run/build time
-      [packageName]: JSON.parse(ADAPTER_DEPENDENCIES)[packageName] ?? 'latest',
+      [packageName]: JSON.parse(process.env.PICKERS_ADAPTERS_DEPS!)[packageName] ?? 'latest',
     };
   }
   return null;
