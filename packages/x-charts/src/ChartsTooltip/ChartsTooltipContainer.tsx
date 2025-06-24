@@ -20,6 +20,7 @@ import {
 import { useChartContext } from '../context/ChartProvider';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
+import { useSvgRef } from '../hooks';
 
 const noAxis = () => false;
 
@@ -63,6 +64,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   });
   const { trigger = 'axis', classes: propClasses, children, ...other } = props;
   const { instance } = useChartContext();
+  const svgRef = useSvgRef();
   const classes = useUtilityClasses(propClasses);
 
   const pointerType = usePointerType();
@@ -84,25 +86,25 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   );
 
   React.useEffect(() => {
-    const update = rafThrottle(() => popperRef.current?.update());
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
 
-    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+    const handlePointerEvent = (event: PointerEvent) => {
       // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: event.detail.centroid.x, y: event.detail.centroid.y };
-      update();
+      positionRef.current = { x: event.clientX, y: event.clientY };
+      popperRef.current?.update();
     };
 
-    const moveHandler = instance.addInteractionListener('move', gestureHandler);
-    const panHandler = instance.addInteractionListener('pan', gestureHandler);
-    const quickPressHandler = instance.addInteractionListener('quickPress', gestureHandler);
+    element.addEventListener('pointerdown', handlePointerEvent);
+    element.addEventListener('pointermove', handlePointerEvent);
 
     return () => {
-      moveHandler.cleanup();
-      panHandler.cleanup();
-      quickPressHandler.cleanup();
-      update.clear();
+      element.removeEventListener('pointerdown', handlePointerEvent);
+      element.removeEventListener('pointermove', handlePointerEvent);
     };
-  }, [positionRef, instance]);
+  }, [svgRef, positionRef]);
 
   const anchorEl = React.useMemo(
     () => ({

@@ -205,8 +205,8 @@ export class PointerManager {
     // Force a reset even if there are no active pointers to ensure any lingering gesture state is cleared
     // Create a synthetic pointer cancel event
     const cancelEvent = new PointerEvent('forceCancel', {
-      bubbles: true,
-      cancelable: true,
+      bubbles: false,
+      cancelable: false,
     });
 
     const firstPointer = this.pointers.values().next().value;
@@ -263,7 +263,7 @@ export class PointerManager {
       this.pointers.set(pointerId, this.createPointerData(event));
     }
     // Remove pointer data on up or cancel
-    else if (type === 'pointerup' || type === 'pointercancel' || type === 'forceCancel') {
+    else if (type === 'pointerup' || type === 'pointercancel') {
       // Release pointer capture on up or cancel
       if (event.target instanceof Element) {
         try {

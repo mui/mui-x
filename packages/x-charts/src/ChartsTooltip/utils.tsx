@@ -3,6 +3,7 @@ import * as React from 'react';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useChartContext } from '../context/ChartProvider';
+import { useSvgRef } from '../hooks';
 
 type MousePosition = {
   x: number;
@@ -54,45 +55,36 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
 type PointerType = Pick<MousePosition, 'pointerType'>;
 
 export function usePointerType(): null | PointerType {
-  const { instance } = useChartContext();
+  const svgRef = useSvgRef();
 
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
-    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
-      if (event.detail.srcEvent.pointerType !== 'mouse' && !event.detail.activeGestures.pan) {
-        setPointerType(null);
-      }
-    });
-    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
-      if (event.detail.srcEvent.pointerType !== 'mouse') {
-        setPointerType(null);
-      }
-    });
-    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
-      if (event.detail.srcEvent.pointerType !== 'mouse' && !event.detail.activeGestures.pan) {
-        setPointerType(null);
-      }
-    });
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
 
-    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setPointerType(null);
+      }
+    };
+
+    const handleEnter = (event: PointerEvent) => {
       setPointerType({
-        pointerType: event.detail.srcEvent.pointerType as PointerType['pointerType'],
+        pointerType: event.pointerType as PointerType['pointerType'],
       });
     };
-    const moveStartHandler = instance.addInteractionListener('moveStart', gestureHandler);
-    const panStartHandler = instance.addInteractionListener('panStart', gestureHandler);
-    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
+
+    element.addEventListener('pointerenter', handleEnter);
+    element.addEventListener('pointerup', handleOut);
 
     return () => {
-      moveStartHandler.cleanup();
-      moveEndHandler.cleanup();
-      panStartHandler.cleanup();
-      panEndHandler.cleanup();
-      pressHandler.cleanup();
-      pressEndHandler.cleanup();
+      element.removeEventListener('pointerenter', handleEnter);
+      element.removeEventListener('pointerup', handleOut);
     };
-  }, [instance]);
+  }, [svgRef]);
 
   return pointerType;
 }
