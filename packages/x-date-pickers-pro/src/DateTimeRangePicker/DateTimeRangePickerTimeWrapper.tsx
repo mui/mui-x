@@ -2,13 +2,13 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickerSelectionState,
   PickerViewRenderer,
-  useUtils,
   TimeViewWithMeridiem,
   BaseClockProps,
   PickerRangeValue,
   PickerViewsRendererProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 import { usePickerRangePositionContext } from '../hooks';
@@ -45,7 +45,7 @@ function DateTimeRangePickerTimeWrapper<
     'views'
   >,
 >(props: DateTimeRangePickerTimeWrapperProps<TComponentProps>) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const { viewRenderer, value, onChange, defaultValue, onViewChange, views, className, ...other } =
     props;
@@ -69,11 +69,11 @@ function DateTimeRangePickerTimeWrapper<
     }
     const { newRange } = calculateRangeChange({
       newDate,
-      utils,
+      adapter,
       range: value,
       rangePosition,
     });
-    const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
+    const isFullRangeSelected = rangePosition === 'end' && isRangeValid(adapter, newRange);
     onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);
   };
 
