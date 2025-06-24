@@ -267,6 +267,7 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
         break;
 
       case 'pointercancel':
+      case 'forceCancel':
         // Cancel the gesture
         this.cancelPress(targetElement, relevantPointers, event);
         break;
