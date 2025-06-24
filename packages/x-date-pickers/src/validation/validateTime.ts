@@ -42,14 +42,11 @@ export const validateTime: Validator<PickerValue, TimeValidationError, ValidateT
     disableFuture,
   } = props;
 
-  const now = adapter.utils.date(undefined, timezone);
-  const isAfter = createIsAfterIgnoreDatePart(
-    disableIgnoringDatePartForTimeValidation,
-    adapter.utils,
-  );
+  const now = adapter.date(undefined, timezone);
+  const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, adapter);
 
   switch (true) {
-    case !adapter.utils.isValid(value):
+    case !adapter.isValid(value):
       return 'invalidDate';
 
     case Boolean(minTime && isAfter(minTime, value)):
@@ -58,10 +55,10 @@ export const validateTime: Validator<PickerValue, TimeValidationError, ValidateT
     case Boolean(maxTime && isAfter(value, maxTime)):
       return 'maxTime';
 
-    case Boolean(disableFuture && adapter.utils.isAfter(value, now)):
+    case Boolean(disableFuture && adapter.isAfter(value, now)):
       return 'disableFuture';
 
-    case Boolean(disablePast && adapter.utils.isBefore(value, now)):
+    case Boolean(disablePast && adapter.isBefore(value, now)):
       return 'disablePast';
 
     case Boolean(shouldDisableTime && shouldDisableTime(value, 'hours')):
@@ -73,7 +70,7 @@ export const validateTime: Validator<PickerValue, TimeValidationError, ValidateT
     case Boolean(shouldDisableTime && shouldDisableTime(value, 'seconds')):
       return 'shouldDisableTime-seconds';
 
-    case Boolean(minutesStep && adapter.utils.getMinutes(value) % minutesStep !== 0):
+    case Boolean(minutesStep && adapter.getMinutes(value) % minutesStep !== 0):
       return 'minutesStep';
 
     default:

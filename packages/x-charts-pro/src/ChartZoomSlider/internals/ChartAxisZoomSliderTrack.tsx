@@ -67,16 +67,15 @@ export function ChartAxisZoomSliderTrack({
     }
 
     const pointerDownPoint = getSVGPoint(element, event);
-    let zoomFromPointerDown = calculateZoomFromPoint(store.getSnapshot(), axisId, pointerDownPoint);
+    const zoomFromPointerDown = calculateZoomFromPoint(
+      store.getSnapshot(),
+      axisId,
+      pointerDownPoint,
+    );
 
     if (zoomFromPointerDown === null) {
       return;
     }
-
-    const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
-
-    // Ensure the zoomFromPointerDown is within the min and max range
-    zoomFromPointerDown = Math.max(Math.min(zoomFromPointerDown, maxEnd), minStart);
 
     const onPointerMove = rafThrottle(function onPointerMove(pointerMoveEvent: PointerEvent) {
       const pointerMovePoint = getSVGPoint(element, pointerMoveEvent);

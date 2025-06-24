@@ -47,14 +47,16 @@ In the example below, the action bar contains only one button, which resets the 
 
 #### Available actions
 
-The built-in `ActionBar` component supports four different actions:
+The built-in `<PickersActionBar />` component supports the following different actions:
 
-| Action   | Behavior                                                               |
-| :------- | :--------------------------------------------------------------------- |
-| `accept` | Accept the current value and close the picker view                     |
-| `cancel` | Reset to the last accepted date and close the picker view              |
-| `clear`  | Reset to the empty value and close the picker view                     |
-| `today`  | Reset to today's date (and time if relevant) and close the picker view |
+| Action         | Behavior                                                                         |
+| :------------- | :------------------------------------------------------------------------------- |
+| `accept`       | Accept the current value and close the picker view.                              |
+| `cancel`       | Reset to the last accepted date and close the picker view.                       |
+| `clear`        | Reset to the empty value and close the picker view.                              |
+| `next`         | Go to the next step in the value picking process.                                |
+| `nextOrAccept` | Shows the `accept` or `next` action depending on the value picking process step. |
+| `today`        | Reset to today's date (and time if relevant) and close the picker view.          |
 
 ### Component
 
@@ -250,6 +252,17 @@ You can pass props to the icons and buttons as shown below:
 You can pass custom components to replace the icons, as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
+
+## Access date adapter
+
+In case you are building a custom component that needs to work with multiple date libraries, you can access the date adapter instance by using the `usePickerAdapter` hook.
+This hook returns the date adapter instance used by the picker, which you can use to format dates, parse strings, and perform other date-related operations.
+
+:::success
+If your application uses a single date library, prefer using the date library directly in your components to avoid unnecessary complexity and possible breaking changes.
+:::
+
+{{"demo": "UsePickerAdapter.js", "defaultCodeOpen": false}}
 
 ## Shortcuts
 

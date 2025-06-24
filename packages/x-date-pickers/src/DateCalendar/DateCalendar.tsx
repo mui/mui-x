@@ -9,7 +9,6 @@ import useId from '@mui/utils/useId';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
-import { useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
@@ -27,6 +26,7 @@ import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
@@ -93,7 +93,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   inProps: DateCalendarProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const { ownerState } = usePickerPrivateContext();
   const id = useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
@@ -180,11 +180,11 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     disableFuture,
     timezone,
     getCurrentMonthFromVisibleDate: (visibleDate, prevMonth) => {
-      if (utils.isSameMonth(visibleDate, prevMonth)) {
+      if (adapter.isSameMonth(visibleDate, prevMonth)) {
         return prevMonth;
       }
 
-      return utils.startOfMonth(visibleDate);
+      return adapter.startOfMonth(visibleDate);
     },
   });
 
@@ -218,15 +218,15 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   });
 
   const handleDateMonthChange = useEventCallback((newDate: PickerValidDate) => {
-    const startOfMonth = utils.startOfMonth(newDate);
-    const endOfMonth = utils.endOfMonth(newDate);
+    const startOfMonth = adapter.startOfMonth(newDate);
+    const endOfMonth = adapter.endOfMonth(newDate);
 
     const closestEnabledDate = isDateDisabled(newDate)
       ? findClosestEnabledDate({
-          utils,
+          adapter,
           date: newDate,
-          minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-          maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+          minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+          maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
           disablePast,
           disableFuture,
           isDateDisabled,
@@ -244,15 +244,15 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   });
 
   const handleDateYearChange = useEventCallback((newDate: PickerValidDate) => {
-    const startOfYear = utils.startOfYear(newDate);
-    const endOfYear = utils.endOfYear(newDate);
+    const startOfYear = adapter.startOfYear(newDate);
+    const endOfYear = adapter.endOfYear(newDate);
 
     const closestEnabledDate = isDateDisabled(newDate)
       ? findClosestEnabledDate({
-          utils,
+          adapter,
           date: newDate,
-          minDate: utils.isBefore(minDate, startOfYear) ? startOfYear : minDate,
-          maxDate: utils.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
+          minDate: adapter.isBefore(minDate, startOfYear) ? startOfYear : minDate,
+          maxDate: adapter.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
           disablePast,
           disableFuture,
           isDateDisabled,
@@ -273,7 +273,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     if (day) {
       // If there is a date already selected, then we want to keep its time
       return handleValueChange(
-        mergeDateAndTime(utils, day, value ?? referenceDate),
+        mergeDateAndTime(adapter, day, value ?? referenceDate),
         'finish',
         view,
       );
@@ -283,7 +283,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   });
 
   React.useEffect(() => {
-    if (utils.isValid(value)) {
+    if (adapter.isValid(value)) {
       setVisibleDate({ target: value, reason: 'controlled-value-change' });
     }
   }, [value]); // eslint-disable-line

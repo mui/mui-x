@@ -41,8 +41,13 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "baseButton": "",
+    "baseDivider": "",
     "baseIconButton": "",
+    "baseMenuItem": "",
+    "baseMenuList": "",
+    "basePopper": "",
     "baseTooltip": "",
+    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",

@@ -2,14 +2,13 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
   PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
   useApplyDefaultValuesToDateTimeValidationProps,
-  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -44,12 +43,12 @@ export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure exten
 }
 
 function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
 
   return React.useMemo(() => {
-    return translations.openRangePickerDialogue(formatRange(utils, value, 'fullDate'));
-  }, [value, translations, utils]);
+    return translations.openRangePickerDialogue(formatRange(adapter, value, 'fullDate'));
+  }, [value, translations, adapter]);
 }
 
 function useApplyDefaultValuesToDateTimeRangeFieldInternalProps<
@@ -59,12 +58,12 @@ function useApplyDefaultValuesToDateTimeRangeFieldInternalProps<
 ): PickerManagerFieldInternalPropsWithDefaults<
   UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
 > {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToDateTimeValidationProps(internalProps);
 
   const ampm = React.useMemo(
-    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
-    [internalProps.ampm, utils],
+    () => internalProps.ampm ?? adapter.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, adapter],
   );
 
   return React.useMemo(
@@ -73,9 +72,9 @@ function useApplyDefaultValuesToDateTimeRangeFieldInternalProps<
       ...validationProps,
       format:
         internalProps.format ??
-        (ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h),
+        (ampm ? adapter.formats.keyboardDateTime12h : adapter.formats.keyboardDateTime24h),
     }),
-    [internalProps, validationProps, ampm, utils],
+    [internalProps, validationProps, ampm, adapter],
   );
 }
 

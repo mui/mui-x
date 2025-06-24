@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -24,7 +23,7 @@ import {
   getRows,
   microtasks,
 } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Row pinning', () => {
   const { render } = createRenderer();
@@ -122,7 +121,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // Needs layouting
-  testSkipIf(isJSDOM)('should keep rows pinned on rows scroll', async () => {
+  it.skipIf(isJSDOM)('should keep rows pinned on rows scroll', async () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
@@ -412,7 +411,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     });
 
     // Needs layouting
-    testSkipIf(isJSDOM)('should work with pinned columns', async () => {
+    it.skipIf(isJSDOM)('should work with pinned columns', async () => {
       function TestCase() {
         const data = getBasicGridData(5, 7);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -477,7 +476,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // Needs layouting
-  testSkipIf(isJSDOM)('should work with variable row height', () => {
+  it.skipIf(isJSDOM)('should work with variable row height', () => {
     function TestCase() {
       return (
         <BaselineTestCase
@@ -503,7 +502,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // Needs layouting
-  testSkipIf(isJSDOM)('should always update on `rowHeight` change', async () => {
+  it.skipIf(isJSDOM)('should always update on `rowHeight` change', async () => {
     const defaultRowHeight = 52;
 
     function TestCase({ rowHeight }: { rowHeight?: number }) {
@@ -529,7 +528,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // Needs layouting
-  testSkipIf(isJSDOM)('should work with `autoHeight`', () => {
+  it.skipIf(isJSDOM)('should work with `autoHeight`', () => {
     const columnHeaderHeight = 56;
     const rowHeight = 52;
     const rowCount = 10;
@@ -549,7 +548,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // Needs layouting
-  testSkipIf(isJSDOM)('should work with `autoPageSize`', () => {
+  it.skipIf(isJSDOM)('should work with `autoPageSize`', () => {
     render(
       <BaselineTestCase
         rowCount={10}
@@ -728,7 +727,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // flaky in JSDOM
-  testSkipIf(isJSDOM)('should support cell editing', async () => {
+  it.skipIf(isJSDOM)('should support cell editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     const { user } = render(
@@ -765,7 +764,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // flaky in JSDOM
-  testSkipIf(isJSDOM)('should support row editing', async () => {
+  it.skipIf(isJSDOM)('should support row editing', async () => {
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
     const { user } = render(

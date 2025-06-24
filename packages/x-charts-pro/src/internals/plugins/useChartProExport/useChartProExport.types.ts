@@ -15,12 +15,12 @@ export interface UseChartProExportState {
 /**
  * The options to apply on the Print export.
  * @demos
- *   - [Print export](/x/react-charts/export/#print-export-as-pdf)
+ *   - [Print export](https://mui.com/x/react-charts/export/#print-export-as-pdf)
  */
 export interface ChartPrintExportOptions {
   /**
-   * The value to be used as the print window title.
-   * @default The title of the page.
+   * The name of the file without the extension.
+   * @default The title of the document the chart belongs to
    */
   fileName?: string;
 }
@@ -28,18 +28,19 @@ export interface ChartPrintExportOptions {
 /**
  * The options to apply on the image export.
  * @demos
- *   - [Image export](/x/react-charts/export/#export-as-image)
+ *   - [Image export](https://mui.com/x/react-charts/export/#export-as-image)
  */
 export interface ChartImageExportOptions {
   /**
-   * The value to be used as the print window title.
-   * @default The title of the page.
+   * The name of the file without the extension.
+   * @default The title of the document the chart belongs to
    */
   fileName?: string;
 
   /**
    * The format of the image to be exported.
    * Browsers are required to support 'image/png'. Some browsers also support 'image/jpeg' and 'image/webp'.
+   * If the provided `type` is not supported by the browser, it will default to 'image/png'.
    * @default 'image/png'
    */
   type?: 'image/png' | string;

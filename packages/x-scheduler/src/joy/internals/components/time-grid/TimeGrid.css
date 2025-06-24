@@ -1,10 +1,7 @@
-@import '../../../styles/tokens.css';
-
 .TimeGridContainer {
   --weekend-background: var(--mauve-1);
   --text-strong: var(--mauve-9);
   --text-soft: var(--mauve-5);
-  --border-color: var(--mauve-2);
   --fixed-cell-width: 68px;
   --hour-height: 46px;
   --has-scroll: 1;
