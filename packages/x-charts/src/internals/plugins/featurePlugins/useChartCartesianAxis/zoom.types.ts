@@ -88,7 +88,7 @@ export interface ZoomSliderOptions {
    * increasing this value effectively increases the margin around the slider.
    * This means the height for the x-axis and the width for the y-axis.
    *
-   * @default 28 if preview is `false`, 48 if preview is `true`.
+   * @default 48 if preview is enabled, 28 otherwise.
    */
   size?: number;
   /**
