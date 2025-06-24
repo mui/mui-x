@@ -8,7 +8,7 @@
   border-radius: var(--radius-4);
   overflow: hidden;
   z-index: 1300;
-  box-shadow: var(--shadow-6);
+  box-shadow: var(--shadow-4);
 }
 
 .EventPopoverHeader {
@@ -106,7 +106,7 @@
 
 .joy .EventPopoverInput:focus-visible,
 .joy .EventPopoverTextarea:focus-visible {
-  outline: 2px solid var(--gray-2);
+  outline: 2px solid var(--gray-3);
   outline-offset: var(--outline-focus-offset);
 }
 

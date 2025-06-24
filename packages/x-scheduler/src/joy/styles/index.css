@@ -1,23 +1,39 @@
 @import './tokens.css';
 
-.joy .PrimaryButton {
-  background: var(--gray-9);
+.joy .Button {
   display: flex;
   align-items: center;
   padding: var(--space-2) var(--space-3);
-  color: var(--gray-1);
   border-radius: var(--radius-4);
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-2);
   line-height: var(--line-height-1);
 }
 
+.joy .NeutralButton {
+  background: var(--gray-3);
+  color: var(--gray-12);
+}
+
+.joy .NeutralButton:hover {
+  background: var(--gray-4);
+}
+
+.joy .NeutralButton:active {
+  background: var(--gray-5);
+}
+
+.joy .PrimaryButton {
+  background: var(--primary-9);
+  color: var(--primary-1);
+}
+
 .joy .PrimaryButton:hover {
-  background: var(--gray-11);
+  background: var(--primary-10);
 }
 
 .joy .PrimaryButton:active {
-  background: var(--gray-12);
+  background: var(--gray-11);
 }
 
 .joy .PrimaryButton:focus-visible {
@@ -27,27 +43,15 @@
 
 .joy .SecondaryErrorButton {
   background: var(--gray-1);
-  display: flex;
-  align-items: center;
-  padding: var(--space-2) var(--space-3);
   color: var(--error-11);
-  border-radius: var(--radius-4);
-  font-size: var(--font-size-2);
-  font-weight: var(--font-weight-2);
-  line-height: var(--line-height-1);
 }
 
 .joy .SecondaryErrorButton:hover {
-  background:
-    linear-gradient(to bottom, var(--gray-2-rgba-20), var(--gray-2-rgba-20)),
-    linear-gradient(to bottom, var(--gray-1), var(--gray-1));
+  background: var(--error-4);
 }
 
 .joy .SecondaryErrorButton:active {
-  background:
-    linear-gradient(to bottom, var(--error-2-rgba-20), var(--error-2-rgba-20)),
-    linear-gradient(to bottom, var(--gray-2-rgba-40), var(--gray-2-rgba-40)),
-    linear-gradient(to bottom, var(--gray-1), var(--gray-1));
+  background: var(--error-5);
 }
 
 .joy .SecondaryErrorButton:focus-visible {
