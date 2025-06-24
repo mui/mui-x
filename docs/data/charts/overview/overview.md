@@ -19,12 +19,12 @@ packageName: '@mui/x-charts'
 {{"component": "modules/components/overview/charts/advancedCharts/AdvancedChartDemo"}}
 {{"component": "modules/components/overview/charts/advancedFeatures/AdvancedFeatures"}}
 
-## Supported features
+## Shared Features
 
-Features shared across Chart components such as axes and legends are described in standalone documents:
+Features such as axes and legends are shared across Chart components and are described in their separate documents:
 
 {{"component": "modules/components/ChartFeaturesGrid.js"}}
 
-## All MUI X Charts
+## All MUI X Charts
 
 {{"component": "modules/components/ChartComponentsGrid.js"}}

@@ -110,7 +110,7 @@ export default function ChartComponentsGrid() {
         <ListItem
           key={component.title}
           component="li"
-          sx={{ display: 'list-item', listStyleType: 'disc', minHeight: 24, py: 0 }}
+          sx={{ display: 'list-item', listStyleType: 'disc', py: 0 }}
         >
           <ListItemText
             primary={

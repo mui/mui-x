@@ -44,7 +44,8 @@ function Pie() {
             valueFormatter,
             arcLabel: 'label',
             arcLabelMinAngle: 35,
-            arcLabelRadius: '60%',
+            arcLabelRadius: '50%',
+            outerRadius: '90%',
           },
         ]}
         sx={{

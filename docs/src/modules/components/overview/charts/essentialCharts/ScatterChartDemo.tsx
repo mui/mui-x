@@ -11,7 +11,7 @@ import data from '../data/transistorCPU';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const chartSetting = {
-  yAxis: [{ label: 'transistor/mm²', width: 50, scaleType: 'log' as const }],
+  yAxis: [{ width: 50, scaleType: 'log' as const }],
   xAxis: [{ valueFormatter: (v: number | null) => (v ? v.toString() : '') }],
 };
 
@@ -67,7 +67,7 @@ function CustomTooltip() {
 function Scatter() {
   return (
     <React.Fragment>
-      <Typography align="center">Transistor density over time</Typography>
+      <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         series={series}
         grid={{ horizontal: true, vertical: true }}

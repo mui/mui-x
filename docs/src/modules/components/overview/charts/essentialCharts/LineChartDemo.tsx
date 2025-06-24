@@ -76,7 +76,7 @@ function valueFormatter(value: number | null) {
 }
 
 const chartSetting = {
-  yAxis: [{ label: 'Inflation', width: 60, valueFormatter, min: -5 }],
+  yAxis: [{ width: 40, valueFormatter, min: -5 }],
   xAxis: [
     {
       dataKey: 'year',

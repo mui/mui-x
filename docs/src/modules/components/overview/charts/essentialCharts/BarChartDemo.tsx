@@ -96,13 +96,13 @@ function valueFormatter(value: number | null) {
 }
 
 const chartSetting = {
-  yAxis: [{ label: 'Rainfall (mm)', width: 60 }],
+  yAxis: [{ width: 30 }],
 };
 
 function Bar() {
   return (
     <React.Fragment>
-      <Typography align="center">Avg. annual rainfall in Seoul</Typography>
+      <Typography align="center">Avg. annual rainfall in Seoul (in mm)</Typography>
       <BarChart
         dataset={dataset}
         xAxis={[{ dataKey: 'month' }]}
