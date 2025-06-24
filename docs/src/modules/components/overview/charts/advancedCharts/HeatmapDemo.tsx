@@ -1,6 +1,6 @@
 /* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
-import { interpolateReds } from 'd3-scale-chromatic';
+import { interpolateBlues } from 'd3-scale-chromatic';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
@@ -91,7 +91,7 @@ function HeatmapDemoContent() {
                 max: 700,
                 type: 'continuous',
 
-                color: (t: number) => interpolateReds(Math.sqrt(t)),
+                color: (t: number) => interpolateBlues(Math.sqrt(t)),
               },
             },
           ]}
