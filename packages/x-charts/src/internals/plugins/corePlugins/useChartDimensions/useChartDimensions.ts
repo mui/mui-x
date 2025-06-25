@@ -8,6 +8,7 @@ import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDrawingArea } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
+import { getSVGPoint } from '../../../getSVGPoint';
 
 const MAX_COMPUTE_RUN = 10;
 
@@ -197,9 +198,13 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     [drawingArea.height, drawingArea.top],
   );
   const isPointInside = React.useCallback(
-    (x: number, y: number, targetElement?: Element) => {
+    (x: number, y: number, targetElement?: Element | EventTarget | null) => {
       // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
-      if (targetElement && targetElement.closest('[data-drawing-container]')) {
+      if (
+        targetElement &&
+        'closest' in targetElement &&
+        targetElement.closest('[data-drawing-container]')
+      ) {
         return true;
       }
 
@@ -207,8 +212,37 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     },
     [isXInside, isYInside],
   );
+  const isElementInside = React.useCallback(
+    (element: Element | EventTarget | null | undefined, partial = false) => {
+      const svgElement = svgRef.current;
+      if (!element || !(element instanceof Element) || !svgElement) {
+        return false;
+      }
+      // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
+      if (element && element.closest('[data-drawing-container]')) {
+        return true;
+      }
 
-  return { instance: { isPointInside, isXInside, isYInside } };
+      const rect = element.getBoundingClientRect();
+      const { x: left, y: top } = getSVGPoint(svgElement, {
+        clientX: rect.left,
+        clientY: rect.top,
+      });
+      const { x: right, y: bottom } = getSVGPoint(svgElement, {
+        clientX: rect.right,
+        clientY: rect.bottom,
+      });
+
+      if (partial) {
+        return isXInside(left) || isXInside(right) || isYInside(top) || isYInside(bottom);
+      }
+
+      return isXInside(left) && isXInside(right) && isYInside(top) && isYInside(bottom);
+    },
+    [isXInside, isYInside, svgRef],
+  );
+
+  return { instance: { isPointInside, isXInside, isYInside, isElementInside } };
 };
 
 useChartDimensions.params = {
