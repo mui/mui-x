@@ -24,14 +24,14 @@ jobs:
     name: Benchmarks Charts
     runs-on: ubuntu-latest
     # L1: Run the benchmarks for pushes to the master or next branch and if the changes are in the charts package based on on.push.paths
-    # L2: Run the benchmarks if we add the label 'component: charts' to the pull request
-    # L3: Run the benchmarks for pull requests with the label 'component: charts'
+    # L2: Run the benchmarks if we add the label 'scope: charts' to the pull request
+    # L3: Run the benchmarks for pull requests with the label 'scope: charts'
     # Yaml syntax looks a little weird, but it is correct.
     if: >-
       ${{
           (github.event_name == 'push') ||
-          (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts') ||
-          (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts'))
+          (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'scope: charts') ||
+          (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'scope: charts'))
       }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2

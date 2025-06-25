@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.5.0",
+  "version": "8.5.1",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
   "bin": "./codemod.js",
@@ -30,18 +30,18 @@
     "url": "https://opencollective.com/mui-org"
   },
   "dependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/runtime": "^7.27.1",
-    "@babel/traverse": "^7.27.1",
+    "@babel/core": "catalog:",
+    "@babel/runtime": "catalog:",
+    "@babel/traverse": "catalog:",
     "@mui/x-internals": "workspace:*",
-    "jscodeshift": "17.1.2",
-    "yargs": "^18.0.0"
+    "jscodeshift": "catalog:",
+    "yargs": "catalog:"
   },
   "devDependencies": {
     "@types/jscodeshift": "^0.12.0",
-    "dayjs": "^1.11.13",
-    "moment-timezone": "^0.6.0",
-    "rimraf": "^6.0.1"
+    "dayjs": "catalog:",
+    "moment-timezone": "catalog:",
+    "rimraf": "catalog:"
   },
   "sideEffects": false,
   "publishConfig": {
