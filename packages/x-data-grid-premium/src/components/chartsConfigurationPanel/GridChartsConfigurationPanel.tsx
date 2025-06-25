@@ -41,10 +41,10 @@ function GridChartsConfigurationPanel(_: GridChartsConfigurationPanelProps) {
   );
 
   const handleChartSyncChange = React.useCallback(
-    (sync: boolean) => {
-      setChartState(activeChartId, { synced: sync });
+    (newSyncState: boolean) => {
+      apiRef.current.setChartSynchronizationState(activeChartId, newSyncState);
     },
-    [activeChartId, setChartState],
+    [apiRef, activeChartId],
   );
 
   const handleChartTypeChange = React.useCallback(
