@@ -82,10 +82,14 @@ export default function GridChartsIntegrationCustomization() {
       configurationPanel: {
         open: true,
       },
-      categories: ['commodity'],
-      chartType: 'line',
-      configuration: {
-        colors: 'mangoFusionPalette',
+      charts: {
+        main: {
+          categories: ['commodity'],
+          chartType: 'line',
+          configuration: {
+            colors: 'mangoFusionPalette',
+          },
+        },
       },
     },
   };
@@ -110,6 +114,7 @@ export default function GridChartsIntegrationCustomization() {
       hasInitializedPivotingSeries.current = true;
       // pick up the first 5 dyamically created columns with quantity in the name and enable first 3
       apiRef.current?.updateSeries(
+        'main',
         unwrappedGroupingModel
           .filter((field) => field.endsWith('quantity'))
           .slice(0, 5)
@@ -165,7 +170,11 @@ export default function GridChartsIntegrationCustomization() {
             columnGroupHeaderHeight={35}
           />
         </div>
-        <GridChartsRendererProxy renderer={ChartsRenderer} onRender={onRender} />
+        <GridChartsRendererProxy
+          id="main"
+          renderer={ChartsRenderer}
+          onRender={onRender}
+        />
       </div>
     </GridChartsIntegrationContextProvider>
   );

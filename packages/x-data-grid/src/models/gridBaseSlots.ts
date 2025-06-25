@@ -288,6 +288,7 @@ export type SwitchProps = CommonProps & {
   size?: 'small' | 'medium';
   label?: React.ReactNode;
   disabled?: boolean;
+  title?: string;
 };
 
 export type TextFieldProps = CommonProps & {
