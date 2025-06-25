@@ -4,7 +4,8 @@ import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { getAdapter } from '../../utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../models';
+import { mergeDateAndTime } from '../../utils/date-utils';
 
 const adapter = getAdapter();
 
@@ -18,13 +19,19 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     render,
     // Internal props
     value,
+    startTime,
+    endTime,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
   const contextValue: TimeGridColumnContext = React.useMemo(
-    () => ({ start: adapter.startOfDay(value), end: adapter.endOfDay(value) }),
-    [value],
+    () => ({
+      start:
+        startTime == null ? adapter.startOfDay(value) : mergeDateAndTime(adapter, value, startTime),
+      end: endTime == null ? adapter.endOfDay(value) : mergeDateAndTime(adapter, value, endTime),
+    }),
+    [value, startTime, endTime],
   );
 
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
@@ -50,5 +57,17 @@ export namespace TimeGridColumn {
      * The value of the column.
      */
     value: SchedulerValidDate;
+    /**
+     * The start time of the column.
+     * The date part is ignored, only the time part is used.
+     * @defaultValue 00:00:00
+     */
+    startTime?: SchedulerValidDate;
+    /**
+     * The end time of the column.
+     * The date part is ignored, only the time part is used.
+     * @defaultValue 23:59:59
+     */
+    endTime?: SchedulerValidDate;
   }
 }

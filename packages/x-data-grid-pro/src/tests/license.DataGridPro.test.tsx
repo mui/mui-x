@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { LicenseInfo } from '@mui/x-license';

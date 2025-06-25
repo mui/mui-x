@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getAdapter } from './adapter/getAdapter';
 import { useOnEveryMinuteStart } from './useOnEveryMinuteStart';
-import { SchedulerValidDate } from './adapter/types';
+import { SchedulerValidDate } from '../models';
 
 const adapter = getAdapter();
 

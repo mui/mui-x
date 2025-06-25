@@ -14,7 +14,7 @@ interface GetHourNumbersOptions {
    * Should only be `undefined` on the server
    */
   selectedId: string | undefined;
-  utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
 }
 
 /**
@@ -26,9 +26,9 @@ export const getHourNumbers = ({
   getClockNumberText,
   isDisabled,
   selectedId,
-  utils,
+  adapter,
 }: GetHourNumbersOptions) => {
-  const currentHours = value ? utils.getHours(value) : null;
+  const currentHours = value ? adapter.getHours(value) : null;
 
   const hourNumbers: React.JSX.Element[] = [];
   const startHour = ampm ? 1 : 0;
@@ -58,7 +58,7 @@ export const getHourNumbers = ({
     }
 
     const inner = !ampm && (hour === 0 || hour > 12);
-    label = utils.formatNumber(label);
+    label = adapter.formatNumber(label);
 
     const selected = isSelected(hour);
 
@@ -80,13 +80,13 @@ export const getHourNumbers = ({
 };
 
 export const getMinutesNumbers = ({
-  utils,
+  adapter,
   value,
   isDisabled,
   getClockNumberText,
   selectedId,
 }: Omit<GetHourNumbersOptions, 'ampm' | 'value'> & { value: number }) => {
-  const f = utils.formatNumber;
+  const f = adapter.formatNumber;
 
   return (
     [

@@ -8,7 +8,7 @@ import { ComputedAxis } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './seriesConfig/getColor';
 import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { CompletedBarData, MaskData } from './types';
+import { ProcessedBarSeriesData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
@@ -17,6 +17,7 @@ import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { useUtilityClasses } from './barClasses';
 
 /**
  * Solution of the equations
@@ -86,7 +87,7 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
 }
 
 const useAggregatedData = (): {
-  completedData: CompletedBarData[];
+  completedData: ProcessedBarSeriesData[];
   masksData: MaskData[];
 } => {
   const seriesData =
@@ -104,14 +105,14 @@ const useAggregatedData = (): {
 
   const masks: Record<string, MaskData> = {};
 
-  const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
+  const data = stackingGroups.flatMap(({ ids: seriesIds }, groupIndex) => {
     const xMin = drawingArea.left;
     const xMax = drawingArea.left + drawingArea.width;
 
     const yMin = drawingArea.top;
     const yMax = drawingArea.top + drawingArea.height;
 
-    return groupIds.flatMap((seriesId) => {
+    return seriesIds.map((seriesId) => {
       const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
       const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
@@ -139,7 +140,7 @@ const useAggregatedData = (): {
 
       const { stackedData, data: currentSeriesData, layout } = series[seriesId];
 
-      return baseScaleConfig
+      const seriesDataPoints = baseScaleConfig
         .data!.map((baseValue, dataIndex: number) => {
           if (currentSeriesData[dataIndex] == null) {
             return null;
@@ -202,6 +203,11 @@ const useAggregatedData = (): {
           return result;
         })
         .filter((rectangle) => rectangle !== null);
+
+      return {
+        seriesId,
+        data: seriesDataPoints,
+      };
     });
   });
 
@@ -238,9 +244,10 @@ function BarPlot(props: BarPlotProps) {
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
+  const classes = useUtilityClasses();
 
   return (
-    <BarPlotRoot>
+    <BarPlotRoot className={classes.root}>
       {!withoutBorderRadius &&
         masksData.map(({ id, x, y, width, height, hasPositive, hasNegative, layout }) => {
           return (
@@ -259,43 +266,49 @@ function BarPlot(props: BarPlotProps) {
             />
           );
         })}
-      {completedData.map(
-        ({ seriesId, dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-          const barElement = (
-            <BarElement
-              key={`${seriesId}-${dataIndex}`}
-              id={seriesId}
-              dataIndex={dataIndex}
-              color={color}
-              skipAnimation={skipAnimation ?? false}
-              layout={layout ?? 'vertical'}
-              x={x}
-              xOrigin={xOrigin}
-              y={y}
-              yOrigin={yOrigin}
-              width={width}
-              height={height}
-              {...other}
-              onClick={
-                onItemClick &&
-                ((event) => {
-                  onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                })
-              }
-            />
-          );
+      {completedData.map(({ seriesId, data }) => {
+        return (
+          <g key={seriesId} data-series={seriesId} className={classes.series}>
+            {data.map(
+              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
+                const barElement = (
+                  <BarElement
+                    key={dataIndex}
+                    id={seriesId}
+                    dataIndex={dataIndex}
+                    color={color}
+                    skipAnimation={skipAnimation ?? false}
+                    layout={layout ?? 'vertical'}
+                    x={x}
+                    xOrigin={xOrigin}
+                    y={y}
+                    yOrigin={yOrigin}
+                    width={width}
+                    height={height}
+                    {...other}
+                    onClick={
+                      onItemClick &&
+                      ((event) => {
+                        onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                      })
+                    }
+                  />
+                );
 
-          if (withoutBorderRadius) {
-            return barElement;
-          }
+                if (withoutBorderRadius) {
+                  return barElement;
+                }
 
-          return (
-            <g key={`${seriesId}-${dataIndex}`} clipPath={`url(#${maskId})`}>
-              {barElement}
-            </g>
-          );
-        },
-      )}
+                return (
+                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
+                    {barElement}
+                  </g>
+                );
+              },
+            )}
+          </g>
+        );
+      })}
       {barLabel && (
         <BarLabelPlot
           bars={completedData}
