@@ -80,6 +80,14 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the sidebar is closed.
    */
   sidebarClose: { params: { value: GridSidebarValue } };
+  /**
+   * Fired when the active chart changes.
+   */
+  activeChartChange: { params: string };
+  /**
+   * Fired when the chart synchronization state changes.
+   */
+  chartSynchronizationStateChange: { params: { chartId: string; synced: boolean } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
