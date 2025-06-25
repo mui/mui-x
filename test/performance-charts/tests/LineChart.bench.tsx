@@ -1,7 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render, cleanup } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
@@ -19,7 +18,7 @@ describe('LineChart', () => {
   bench(
     'LineChart with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <LineChart
           xAxis={[{ data: xData }]}
           series={[
@@ -32,7 +31,7 @@ describe('LineChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
 
       cleanup();
     },

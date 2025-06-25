@@ -1,7 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render, cleanup } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
@@ -19,7 +18,7 @@ describe('LineChartPro', () => {
   bench(
     'LineChartPro with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <LineChartPro
           xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
@@ -33,7 +32,7 @@ describe('LineChartPro', () => {
         />,
       );
 
-      await findByText('60', { ignore: 'span' });
+      expect(page.getByText('60')).toBeInTheDocument();
 
       cleanup();
     },
