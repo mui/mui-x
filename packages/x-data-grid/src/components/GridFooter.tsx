@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
-import { gridRowSelectionCountSelector, gridRowSelectionStateSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
+import {
+  gridRowSelectionCountSelector,
+  gridRowSelectionStateSelector,
+} from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
@@ -21,8 +24,9 @@ const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
 
     // Show selected row count if there are any selected rows, even if the computed count might be 0 due to filtering
     const hasSelectedRows = selectionState.ids.size > 0;
-    const displaySelectedRowCount = selectedRowCount > 0 ? selectedRowCount : (hasSelectedRows ? selectionState.ids.size : 0);
-    
+    const displaySelectedRowCount =
+      selectedRowCount > 0 ? selectedRowCount : hasSelectedRows ? selectionState.ids.size : 0;
+
     const selectedRowCountElement =
       !rootProps.hideFooterSelectedRowCount && displaySelectedRowCount > 0 ? (
         <GridSelectedRowCount selectedRowCount={displaySelectedRowCount} />
