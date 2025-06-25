@@ -302,6 +302,11 @@
       "required": true,
       "isProPlan": true
     },
+    "setActiveChartId": {
+      "type": { "description": "(chartId: string) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "setAggregationModel": {
       "type": { "description": "(model: GridAggregationModel) =&gt; void" },
       "required": true,
@@ -318,6 +323,11 @@
     },
     "setChartsConfigurationPanelOpen": {
       "type": { "description": "(open: boolean | ((prev: boolean) =&gt; boolean)) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setChartSynchronizationState": {
+      "type": { "description": "(chartId: string, synced: boolean) =&gt; void" },
       "required": true,
       "isPremiumPlan": true
     },
@@ -533,7 +543,7 @@
     },
     "updateCategories": {
       "type": {
-        "description": "(categories: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
+        "description": "(chartId: string, categories: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
@@ -548,7 +558,7 @@
     },
     "updateSeries": {
       "type": {
-        "description": "(series: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
+        "description": "(chartId: string, series: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
