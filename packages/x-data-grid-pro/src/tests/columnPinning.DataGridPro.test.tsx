@@ -11,6 +11,7 @@ import {
   GridPinnedColumnPosition,
   GridColumnGroupingModel,
   GridColDef,
+  GridToolbar,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/internal-test-utils';
@@ -719,6 +720,112 @@ describe('<DataGridPro /> - Column pinning', () => {
         '[role="columnheader"][data-fields="|-age-|"]',
       )!;
       expect(ageCellColumnGroupHeader.textContent).to.equal('Basic info');
+    });
+  });
+
+  describe('pinned columns order in column management', () => {
+    it('should keep pinned column order in column management panel when toggling columns', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[{ id: 1, brand: 'Nike' }]}
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          initialState={{
+            pinnedColumns: {
+              left: ['brand'],
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'id');
+
+      await user.click(columnCheckboxes[1]);
+
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+      const checkboxesAfterToggle = screen.getAllByRole('checkbox');
+
+      expect(checkboxesAfterToggle[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterToggle[1]).to.have.attribute('name', 'id');
+    });
+
+    it('should keep pinned column order in column management panel when clicking show/hide all checkbox', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[{ id: 0, brand: 'Nike' }]}
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          initialState={{
+            pinnedColumns: {
+              left: ['brand'],
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'id');
+
+      await user.click(columnCheckboxes[columnCheckboxes.length - 1]);
+
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+      const checkboxesAfterToggle = screen.getAllByRole('checkbox');
+      expect(checkboxesAfterToggle[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterToggle[1]).to.have.attribute('name', 'id');
+    });
+
+    it('should update column order when pinned columns are updated', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[{ id: 0, brand: 'Nike', price: 100 }]}
+          columns={[{ field: 'id' }, { field: 'brand' }, { field: 'price' }]}
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          initialState={{
+            pinnedColumns: {},
+            columns: {
+              columnVisibilityModel: { id: false },
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'id');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[2]).to.have.attribute('name', 'price');
+
+      await act(() => {
+        apiRef.current?.pinColumn('brand', GridPinnedColumnPosition.LEFT);
+        apiRef.current?.pinColumn('id', GridPinnedColumnPosition.RIGHT);
+      });
+
+      const checkboxesAfterPinning = screen.getAllByRole('checkbox');
+
+      expect(checkboxesAfterPinning[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterPinning[1]).to.have.attribute('name', 'price');
+      expect(checkboxesAfterPinning[2]).to.have.attribute('name', 'id');
     });
   });
 });
