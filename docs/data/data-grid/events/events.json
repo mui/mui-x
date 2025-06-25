@@ -1,6 +1,13 @@
 [
   {
     "projects": ["x-data-grid-premium"],
+    "name": "activeChartChange",
+    "description": "Fired when the active chart changes.",
+    "params": "string",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
     "name": "aggregationModelChange",
     "description": "Fired when the aggregation model changes.",
     "params": "GridAggregationModel",
@@ -107,6 +114,13 @@
     "name": "chartsConfigurationPanelOpenChange",
     "description": "Fired when the charts configuration side panel open state changes.",
     "params": "boolean",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "chartSynchronizationStateChange",
+    "description": "Fired when the chart synchronization state changes.",
+    "params": "{ chartId: string; synced: boolean }",
     "event": "MuiEvent<{}>"
   },
   {
