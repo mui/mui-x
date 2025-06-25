@@ -57,13 +57,16 @@ export interface GridChartsConfigurationOptions {
   };
 }
 
-export interface GridChartsIntegrationContextValue {
+export type ChartState = {
+  label?: string;
+  synced: boolean;
   categories: Axis<string | number | null>;
   series: Axis<number | null>;
-  chartType: string;
+  type: string;
   configuration: Record<string, string | number | boolean | null>;
-  setCategories: (categories: Axis<string | number | null>) => void;
-  setSeries: (series: Axis<number | null>) => void;
-  setChartType: (type: string) => void;
-  setConfiguration: (configuration: Record<string, string | number | boolean | null>) => void;
+};
+
+export interface GridChartsIntegrationContextValue {
+  chartStateLookup: Record<string, ChartState>;
+  setChartState: (id: string, state: Partial<ChartState>) => void;
 }
