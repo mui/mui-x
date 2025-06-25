@@ -34,7 +34,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const translations = useTranslations();
 
-  const [errors, setErrors] = React.useState({});
+  const [errors, setErrors] = React.useState<Form.Props['errors']>({});
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -124,6 +124,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         defaultValue={
                           adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''
                         }
+                        aria-describedby="startDate-error"
                         required
                       />
                     </Field.Label>
@@ -135,6 +136,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         className="EventPopoverInput"
                         type="time"
                         defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
+                        aria-describedby="startTime-error"
                         required
                       />
                     </Field.Label>
@@ -161,10 +163,20 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       />
                     </Field.Label>
                   </Field.Root>
-                  <Field.Root name="startDate" className="EventPopoverDateTimeFieldsError">
+                  <Field.Root
+                    name="startDate"
+                    className="EventPopoverDateTimeFieldsError"
+                    id="startDate-error"
+                    aria-live="polite"
+                  >
                     <Field.Error />
                   </Field.Root>
-                  <Field.Root name="startTime" className="EventPopoverDateTimeFieldsError">
+                  <Field.Root
+                    name="startTime"
+                    className="EventPopoverDateTimeFieldsError"
+                    id="startTime-error"
+                    aria-live="polite"
+                  >
                     <Field.Error />
                   </Field.Root>
                 </div>
@@ -188,10 +200,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
               </div>
               <Separator className="EventPopoverSeparator" />
               <div className="EventPopoverActions">
-                <button className="SecondaryErrorButton" type="button" onClick={handleDelete}>
+                <button
+                  className={clsx('SecondaryErrorButton', 'Button')}
+                  type="button"
+                  onClick={handleDelete}
+                >
                   {translations.deleteEvent}
                 </button>
-                <button className="PrimaryButton" type="submit">
+                <button className={clsx('NeutralButton', 'Button')} type="submit">
                   {translations.saveChanges}
                 </button>
               </div>

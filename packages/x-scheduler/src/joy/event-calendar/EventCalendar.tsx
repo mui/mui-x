@@ -85,11 +85,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   return (
     <EventCalendarStoreContext.Provider value={store}>
       <TranslationsProvider translations={translations}>
-        <div
-          className={clsx(className, 'EventCalendarRoot', 'joy', 'light')}
-          ref={forwardedRef}
-          {...other}
-        >
+        <div className={clsx(className, 'EventCalendarRoot', 'joy')} ref={forwardedRef} {...other}>
           <aside className="EventCalendarSidePanel">
             <span style={{ display: 'flex', alignItems: 'center', height: 44 }}>
               TODO: Time nav
