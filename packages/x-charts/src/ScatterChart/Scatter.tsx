@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
 import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
-import { useInteractionAllItemProps } from '../hooks/useInteractionItemProps';
+import {
+  getInteractionItemProps,
+  useInteractionAllItemProps,
+} from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
@@ -18,6 +21,7 @@ import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
+import { UseChartHighlightSignature, UseChartInteractionSignature } from '../internals';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -66,7 +70,8 @@ function Scatter(props: ScatterProps) {
     slotProps,
   } = props;
 
-  const { instance } = useChartContext();
+  const { instance } =
+    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const store = useStore<[UseChartVoronoiSignature]>();
   const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
 
@@ -74,8 +79,6 @@ function Scatter(props: ScatterProps) {
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
-
-  const interactionItemProps = useInteractionAllItemProps(scatterPlotData, skipInteractionHandlers);
 
   const Marker = slots?.marker ?? ScatterMarker;
   const { ownerState, ...markerProps } = useSlotProps({
@@ -116,7 +119,9 @@ function Scatter(props: ScatterProps) {
             }
             data-highlighted={isItemHighlighted}
             data-faded={isItemFaded}
-            {...interactionItemProps[i]}
+            {...(skipInteractionHandlers
+              ? undefined
+              : getInteractionItemProps(instance, dataPoint))}
             {...markerProps}
           />
         );
@@ -125,13 +130,14 @@ function Scatter(props: ScatterProps) {
       Marker,
       color,
       colorGetter,
-      interactionItemProps,
+      instance,
       isFaded,
       isHighlighted,
       markerProps,
       onItemClick,
       scatterPlotData,
       series.id,
+      skipInteractionHandlers,
     ],
   );
 
