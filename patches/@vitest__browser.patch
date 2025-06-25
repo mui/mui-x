@@ -1,0 +1,41 @@
+diff --git a/dist/client/__vitest_browser__/tester-BYDMHqQ9.js b/dist/client/__vitest_browser__/tester-BYDMHqQ9.js
+index 9916c1f32e9af801b6d425d1ec785f23e830a236..c748ab51bb7c3f236334f4994bab6c0d76902d12 100644
+--- a/dist/client/__vitest_browser__/tester-BYDMHqQ9.js
++++ b/dist/client/__vitest_browser__/tester-BYDMHqQ9.js
+@@ -11,6 +11,27 @@ const assetsURL = function(dep) {
+   return "/" + dep;
+ };
+ const seen = {};
++async function getTestRunnerConstructor(
++    config,
++    executor,
++){
++  if (!config.runner) {
++    const { VitestTestRunner, NodeBenchmarkRunner }
++        = await executor.executeFile(runnersFile)
++    return (
++        config.mode === 'test' ? VitestTestRunner : NodeBenchmarkRunner
++    );
++  }
++  const mod = await executor.executeId(config.runner)
++  if (!mod.default && typeof mod.default !== 'function') {
++    throw new Error(
++        `Runner must export a default function, but got ${typeof mod.default} imported from ${
++            config.runner
++        }`,
++    )
++  }
++  return mod.default;
++}
+ const __vitePreload = function preload(baseModule, deps, importerUrl) {
+   let promise = Promise.resolve();
+   if (deps && deps.length > 0) {
+@@ -1660,7 +1681,7 @@ async function initiateRunner(state, mocker, config) {
+   if (cachedRunner) {
+     return cachedRunner;
+   }
+-  const runnerClass = config.mode === "test" ? VitestTestRunner : NodeBenchmarkRunner;
++  const runnerClass = await getTestRunnerConstructor(config, executor);
+   const BrowserRunner = createBrowserRunner(runnerClass, mocker, state, {
+     takeCoverage: () => takeCoverageInsideWorker(config.coverage, executor)
+   });
