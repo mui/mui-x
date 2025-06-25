@@ -395,6 +395,7 @@ export function computeRowsUpdates(
   getRowId: DataGridProcessedProps['getRowId'],
 ) {
   const nonPinnedRowsUpdates: GridRowModelUpdate[] = [];
+  const insertedNodes = new Set<GridRowId>();
 
   updates.forEach((update) => {
     const id = getRowIdFromRowModel(
@@ -416,9 +417,12 @@ export function computeRowsUpdates(
       }
     } else {
       nonPinnedRowsUpdates.push(update);
+      if (update._action !== 'delete') {
+        insertedNodes.add(id);
+      }
     }
   });
-  return nonPinnedRowsUpdates;
+  return { nonPinnedRowsUpdates, insertedNodes };
 }
 
 let warnedOnceInvalidRowHeight = false;
