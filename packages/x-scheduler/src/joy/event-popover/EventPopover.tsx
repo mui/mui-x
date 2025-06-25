@@ -124,7 +124,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         defaultValue={
                           adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''
                         }
-                        aria-describedby={errors?.startDate ? 'startDate-error' : undefined}
+                        aria-describedby="startDate-error"
                         required
                       />
                     </Field.Label>
@@ -136,7 +136,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         className="EventPopoverInput"
                         type="time"
                         defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
-                        aria-describedby={errors?.startTime ? 'startTime-error' : undefined}
+                        aria-describedby="startTime-error"
                         required
                       />
                     </Field.Label>
