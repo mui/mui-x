@@ -3,12 +3,29 @@ import * as fs from 'fs';
 import * as url from 'url';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// @ts-expect-error This expected error should be gone once we update the monorepo
 // eslint-disable-next-line no-restricted-imports
 import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra';
 import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
+import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
+
+declare global {
+  interface MUIEnv {
+    DEPLOY_ENV?: string;
+    DOCS_STATS_ENABLED?: string;
+    PULL_REQUEST?: string;
+    PICKERS_ADAPTERS_DEPS?: string;
+    LIB_VERSION?: string;
+    SOURCE_CODE_REPO?: string;
+    SOURCE_GITHUB_BRANCH?: string;
+    GITHUB_TEMPLATE_DOCS_FEEDBACK?: string;
+    DATA_GRID_VERSION?: string;
+    DATE_PICKERS_VERSION?: string;
+    CHARTS_VERSION?: string;
+    TREE_VIEW_VERSION?: string;
+  }
+}
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -33,6 +50,8 @@ const dataGridPkg = loadPkg('./packages/x-data-grid');
 const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
+
+const pickersAdaptersDeps = getPickerAdapterDeps();
 
 let localSettings = {};
 try {
@@ -69,6 +88,7 @@ export default withDocsInfra({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
   },
   // @ts-ignore
   webpack: (config, options) => {
