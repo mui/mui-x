@@ -9,6 +9,11 @@ import { Collapsible } from '../collapsible/Collapsible';
 import { CollapsibleTrigger } from '../collapsible/CollapsibleTrigger';
 import { CollapsiblePanel } from '../collapsible/CollapsiblePanel';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../hooks/features/chartsIntegration/useGridChartsIntegration';
+
+interface GridChartsConfigurationFormProps {
+  activeChartId: string;
+}
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -38,11 +43,18 @@ const GridChartsConfigurationFormPanelTitle = styled('div', {
   fontWeight: vars.typography.fontWeight.medium,
 });
 
-export function GridChartsConfigurationForm() {
+export function GridChartsConfigurationForm(props: GridChartsConfigurationFormProps) {
+  const { activeChartId } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const { chartType, configuration, categories, series, setConfiguration } =
-    useGridChartsIntegrationContext();
+  const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
+
+  const {
+    type: chartType,
+    configuration,
+    categories,
+    series,
+  } = chartStateLookup[activeChartId] ?? EMPTY_CHART_INTEGRATION_CONTEXT_STATE;
 
   const sections: GridChartsConfigurationSection[] = React.useMemo(() => {
     return rootProps.slotProps?.chartsConfigurationPanel?.schema?.[chartType]?.customization || [];
@@ -50,7 +62,10 @@ export function GridChartsConfigurationForm() {
 
   const handleChange = (field: string, value: any) => {
     // TODO: keep configuration per chart type but share color palette state
-    setConfiguration({ ...configuration, [field]: value });
+    setChartState(activeChartId, {
+      ...configuration,
+      configuration: { ...configuration, [field]: value },
+    });
   };
 
   if (chartType === '') {
