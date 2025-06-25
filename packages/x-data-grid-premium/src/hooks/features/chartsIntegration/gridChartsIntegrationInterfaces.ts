@@ -50,6 +50,12 @@ export interface GridChartsIntegrationApi {
    */
   setActiveChartId: (chartId: string) => void;
   /**
+   * Sets the synchronization state for a chart.
+   * @param {string} chartId - The id of the chart to set the synchronization state for.
+   * @param {boolean} synced - The new synchronization state.
+   */
+  setChartSynchronizationState: (chartId: string, synced: boolean) => void;
+  /**
    * Updates the categories selection for the charts integration.
    * @param {string} chartId - The id of the chart to update the categories for.
    * @param {GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[])} categories - The new categories selection or a function that returns the new categories selection.
