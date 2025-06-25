@@ -398,8 +398,21 @@ export const useGridChartsIntegration = (
           activeChartId: chartId,
         },
       }));
+      apiRef.current.publishEvent('activeChartChange', chartId);
     },
     [apiRef],
+  );
+
+  const setChartSynchronizationState = React.useCallback<
+    GridChartsIntegrationApi['setChartSynchronizationState']
+  >(
+    (chartId, synced) => {
+      setChartState(chartId, {
+        synced,
+      });
+      apiRef.current.publishEvent('chartSynchronizationStateChange', { chartId, synced });
+    },
+    [apiRef, setChartState],
   );
 
   const updateDataReference = React.useCallback<
@@ -472,7 +485,13 @@ export const useGridChartsIntegration = (
   );
   useGridApiMethod(
     apiRef,
-    { setChartsConfigurationPanelOpen, setActiveChartId, updateSeries, updateCategories },
+    {
+      setChartsConfigurationPanelOpen,
+      setActiveChartId,
+      setChartSynchronizationState,
+      updateSeries,
+      updateCategories,
+    },
     'public',
   );
 
