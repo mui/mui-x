@@ -29,7 +29,7 @@ export default function FeaturesHighlight() {
         Visualize your data with effortless elegance
       </Typography>
       <Typography sx={{ textAlign: 'center' }}>
-        High-performance, customizable React SVG-rendered charts powered by d3.js for data
+        High-performance and SVG-rendered customizable React charts with d3.js based data
         manipulation.
       </Typography>
       <Paper
@@ -95,9 +95,8 @@ export default function FeaturesHighlight() {
                 </Typography>
                 <Legends />
               </Box>
-
-              <Box flexBasis="70%" p={1}>
-                <BarChartToggle />
+              <Box p={1} flexBasis={{ xs: '65%', sm: '50%', md: '65%' }}>
+                <ZoomAndPan />
               </Box>
             </Stack>
           </Stack>
@@ -133,8 +132,8 @@ export default function FeaturesHighlight() {
 </ChartDataProvider>`}
               />
             </Stack>
-            <Box p={1} flexBasis={{ xs: '65%', sm: '50%', md: '65%' }}>
-              <ZoomAndPan />
+            <Box flexBasis="70%" p={1}>
+              <BarChartToggle />
             </Box>
           </Stack>
         </Stack>

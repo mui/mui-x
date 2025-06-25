@@ -64,6 +64,7 @@ function ZoomAndPan() {
         ]}
         yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40 }]}
         slotProps={{ tooltip: { disablePortal: true } }}
+        showToolbar
       />
     </React.Fragment>
   );

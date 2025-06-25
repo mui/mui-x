@@ -75,6 +75,7 @@ export default function ZoomAndPan() {
             { axisId: 'y-axis', start: 20, end: 89 },
           ]}
           slotProps={{ tooltip: { disablePortal: true } }}
+          showToolbar
         />
       </Box>
       <Typography variant="subtitle2" sx={{ pt: 2 }}>
