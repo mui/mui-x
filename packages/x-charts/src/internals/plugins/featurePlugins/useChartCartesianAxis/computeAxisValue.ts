@@ -56,6 +56,7 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   zoomMap?: Map<AxisId, ZoomData>;
   zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
+  experimental_strictDomainLimit?: boolean;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -79,6 +80,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   zoomOptions,
   getFilters,
+  experimental_strictDomainLimit,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -181,7 +183,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries);
+    const domainLimit = experimental_strictDomainLimit
+      ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
+      : (axis.domainLimit ?? 'nice');
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
 
