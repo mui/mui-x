@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
+import useId from '@mui/utils/useId';
+import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
-import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -44,15 +44,6 @@ const GridToolbarExportContainer = forwardRef<
 
   const handleMenuClose = () => setOpen(false);
 
-  const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-    }
-    if (isHideMenuKey(event.key)) {
-      handleMenuClose();
-    }
-  };
-
   if (children == null) {
     return null;
   }
@@ -91,7 +82,6 @@ const GridToolbarExportContainer = forwardRef<
           id={exportMenuId}
           className={gridClasses.menuList}
           aria-labelledby={exportButtonId}
-          onKeyDown={handleListKeyDown}
           autoFocusItem={open}
         >
           {React.Children.map(children, (child) => {

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
-import { useUtils } from './useUtils';
 import type { PickerValueManager } from '../models';
 import { PickersTimezone, PickerValidDate } from '../../models';
 import { PickerValidValue } from '../models';
+import { usePickerAdapter } from '../../hooks/usePickerAdapter';
 
 /**
  * Hooks controlling the value while making sure that:
@@ -23,7 +23,7 @@ export const useControlledValue = <
   onChange: onChangeProp,
   valueManager,
 }: UseControlledValueWithTimezoneParameters<TValue, TChange>) => {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const [valueWithInputTimezone, setValue] = useControlled({
     name,
@@ -33,8 +33,8 @@ export const useControlledValue = <
   });
 
   const inputTimezone = React.useMemo(
-    () => valueManager.getTimezone(utils, valueWithInputTimezone),
-    [utils, valueManager, valueWithInputTimezone],
+    () => valueManager.getTimezone(adapter, valueWithInputTimezone),
+    [adapter, valueManager, valueWithInputTimezone],
   );
 
   const setInputTimezone = useEventCallback((newValue: TValue) => {
@@ -42,7 +42,7 @@ export const useControlledValue = <
       return newValue;
     }
 
-    return valueManager.setTimezone(utils, inputTimezone, newValue);
+    return valueManager.setTimezone(adapter, inputTimezone, newValue);
   });
 
   const timezoneToRender = React.useMemo(() => {
@@ -53,14 +53,14 @@ export const useControlledValue = <
       return inputTimezone;
     }
     if (referenceDate) {
-      return utils.getTimezone(referenceDate);
+      return adapter.getTimezone(referenceDate);
     }
     return 'default';
-  }, [timezoneProp, inputTimezone, referenceDate, utils]);
+  }, [timezoneProp, inputTimezone, referenceDate, adapter]);
 
   const valueWithTimezoneToRender = React.useMemo(
-    () => valueManager.setTimezone(utils, timezoneToRender, valueWithInputTimezone),
-    [valueManager, utils, timezoneToRender, valueWithInputTimezone],
+    () => valueManager.setTimezone(adapter, timezoneToRender, valueWithInputTimezone),
+    [valueManager, adapter, timezoneToRender, valueWithInputTimezone],
   );
 
   const handleValueChange = useEventCallback((newValue: TValue, ...otherParams: any[]) => {

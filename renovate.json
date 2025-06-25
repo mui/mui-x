@@ -94,6 +94,10 @@
       "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
     },
     {
+      "groupName": "Playwright",
+      "matchPackageNames": ["@playwright/test", "mcr.microsoft.com/playwright"]
+    },
+    {
       "matchDepTypes": ["action"],
       "pinDigests": true,
       "automerge": true

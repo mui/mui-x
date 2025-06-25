@@ -46,8 +46,9 @@ import AssistantWithExamples from '../ai-assistant/AssistantWithExamples';
 export const featuresSet = [
   {
     id: 1,
-    name: 'Master detail',
-    description: 'A parent row with a collapsible child panel.',
+    name: 'Master-detail row panels',
+    description:
+      'Display parent rows with collapsible child panels (as seen in this demo).',
     plan: 'Pro',
     detailPage: '/master-detail/',
     demo: <BasicDetailPanels />,

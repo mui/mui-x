@@ -11,7 +11,12 @@ export type AnimationData = {
   layout: BarSeriesType['layout'];
 };
 
-export interface CompletedBarData extends AnimationData {
+export interface ProcessedBarSeriesData {
+  seriesId: SeriesId;
+  data: ProcessedBarData[];
+}
+
+export interface ProcessedBarData extends AnimationData {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;

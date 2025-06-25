@@ -60,18 +60,16 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
   return 'time';
 };
 
-interface DemoItemProps {
+interface DemoItemProps extends Omit<StackProps, 'component'> {
   label?: React.ReactNode;
   component?: string;
-  children: React.ReactNode;
-  sx?: SxProps<Theme>;
 }
 /**
  * WARNING: This is an internal component used in documentation to achieve a desired layout.
  * Please do not use it in your application.
  */
 export function DemoItem(props: DemoItemProps) {
-  const { label, children, component, sx: sxProp } = props;
+  const { label, children, component, sx: sxProp, alignItems = 'stretch' } = props;
 
   let spacing: StackProps['spacing'];
   let sx = sxProp;
@@ -89,7 +87,7 @@ export function DemoItem(props: DemoItemProps) {
   }
 
   return (
-    <Stack direction="column" alignItems="stretch" spacing={spacing} sx={sx}>
+    <Stack direction="column" alignItems={alignItems} spacing={spacing} sx={sx}>
       {label && <Typography variant="body2">{label}</Typography>}
       {children}
     </Stack>

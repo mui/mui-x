@@ -8,7 +8,7 @@ import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
 interface UseDragRangeParams {
   disableDragEditing?: boolean;
-  utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
   setRangeDragDay: (value: PickerValidDate | null) => void;
   setIsDragging: (value: boolean) => void;
   isDragging: boolean;
@@ -38,7 +38,7 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
 
 const resolveDateFromTarget = (
   target: EventTarget,
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   timezone: PickersTimezone,
 ) => {
   const timestampString = (target as HTMLElement).dataset.timestamp;
@@ -46,7 +46,7 @@ const resolveDateFromTarget = (
     return null;
   }
   const timestamp = +timestampString;
-  return utils.date(new Date(timestamp).toISOString(), timezone);
+  return adapter.date(new Date(timestamp).toISOString(), timezone);
 };
 
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
@@ -89,7 +89,7 @@ const resolveElementFromTouch = (
 };
 
 const useDragRangeEvents = ({
-  utils,
+  adapter,
   setRangeDragDay,
   setIsDragging,
   isDragging,
@@ -113,14 +113,14 @@ const useDragRangeEvents = ({
     }
 
     const shouldInitDragging = !disableDragEditing && !!dateRange[0] && !!dateRange[1];
-    const isSelectedStartDate = isStartOfRange(utils, day, dateRange);
-    const isSelectedEndDate = isEndOfRange(utils, day, dateRange);
+    const isSelectedStartDate = isStartOfRange(adapter, day, dateRange);
+    const isSelectedEndDate = isEndOfRange(adapter, day, dateRange);
 
     return shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
   };
 
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    const newDate = resolveDateFromTarget(event.target, utils, timezone);
+    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
     if (!isElementDraggable(newDate)) {
       return;
     }
@@ -147,7 +147,7 @@ const useDragRangeEvents = ({
       return;
     }
 
-    const newDate = resolveDateFromTarget(target, utils, timezone);
+    const newDate = resolveDateFromTarget(target, adapter, timezone);
     if (!isElementDraggable(newDate)) {
       return;
     }
@@ -163,7 +163,7 @@ const useDragRangeEvents = ({
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-    setRangeDragDay(resolveDateFromTarget(event.target, utils, timezone));
+    setRangeDragDay(resolveDateFromTarget(event.target, adapter, timezone));
   });
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
@@ -172,7 +172,7 @@ const useDragRangeEvents = ({
       return;
     }
 
-    const newDate = resolveDateFromTarget(target, utils, timezone);
+    const newDate = resolveDateFromTarget(target, adapter, timezone);
     if (newDate) {
       setRangeDragDay(newDate);
     }
@@ -227,7 +227,7 @@ const useDragRangeEvents = ({
 
     // make sure the focused element is the element where touch ended
     target.focus();
-    const newDate = resolveDateFromTarget(target, utils, timezone);
+    const newDate = resolveDateFromTarget(target, adapter, timezone);
     if (newDate) {
       onDrop(newDate);
     }
@@ -258,7 +258,7 @@ const useDragRangeEvents = ({
     if (isSameAsDraggingDate(event)) {
       return;
     }
-    const newDate = resolveDateFromTarget(event.target, utils, timezone);
+    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
     if (newDate) {
       onDrop(newDate);
     }
@@ -279,7 +279,7 @@ const useDragRangeEvents = ({
 
 export const useDragRange = ({
   disableDragEditing,
-  utils,
+  adapter,
   onDatePositionChange,
   onDrop,
   dateRange,
@@ -292,7 +292,7 @@ export const useDragRange = ({
   const [rangeDragDay, setRangeDragDay] = React.useState<PickerValidDate | null>(null);
 
   const handleRangeDragDayChange = useEventCallback((newValue: PickerValidDate | null) => {
-    if (!utils.isEqual(newValue, rangeDragDay)) {
+    if (!adapter.isEqual(newValue, rangeDragDay)) {
       setRangeDragDay(newValue);
     }
   });
@@ -300,18 +300,18 @@ export const useDragRange = ({
   const draggingDatePosition: RangePosition | null = React.useMemo(() => {
     const [start, end] = dateRange;
     if (rangeDragDay) {
-      if (start && utils.isBefore(rangeDragDay, start)) {
+      if (start && adapter.isBefore(rangeDragDay, start)) {
         return 'start';
       }
-      if (end && utils.isAfter(rangeDragDay, end)) {
+      if (end && adapter.isAfter(rangeDragDay, end)) {
         return 'end';
       }
     }
     return null;
-  }, [dateRange, rangeDragDay, utils]);
+  }, [dateRange, rangeDragDay, adapter]);
 
   const dragRangeEvents = useDragRangeEvents({
-    utils,
+    adapter,
     onDatePositionChange,
     onDrop,
     setIsDragging,

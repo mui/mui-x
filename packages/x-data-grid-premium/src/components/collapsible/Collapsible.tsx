@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { CollapsibleContext } from './CollapsibleContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
