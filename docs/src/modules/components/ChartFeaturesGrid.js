@@ -76,7 +76,7 @@ export default function ChartFeaturesGrid() {
     <Grid container spacing={2}>
       {content.map(({ icon, title, link }) => (
         <Grid key={title} size={{ xs: 12, sm: 6, lg: 3 }}>
-          <InfoCard dense classNameTitle="algolia-lvl3" link={link} title={title} icon={icon} />
+          <InfoCard classNameTitle="algolia-lvl3" link={link} title={title} icon={icon} />
         </Grid>
       ))}
     </Grid>
