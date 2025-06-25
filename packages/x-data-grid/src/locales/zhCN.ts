@@ -245,10 +245,11 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Charts configuration panel
   // chartsConfigurationNoCharts: 'There are no charts available',
   // chartsConfigurationChartNotSelected: 'Select a chart type to configure its options',
-  // chartsConfigurationTabChartType: 'Chart',
+  // chartsConfigurationTabChart: 'Chart',
   // chartsConfigurationTabFields: 'Fields',
   // chartsConfigurationTabConfig: 'Config',
   // chartsConfigurationCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
   // chartsConfigurationSearchPlaceholder: 'Search fields',
   // chartsConfigurationSearchLabel: 'Search fields',
   // chartsConfigurationSearchClear: 'Clear search',

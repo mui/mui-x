@@ -145,6 +145,7 @@
       "description": "Change the selection state of all the selectable rows in a range."
     },
     "selectRows": { "description": "Change the selection state of multiple rows." },
+    "setActiveChartId": { "description": "Sets the active chart id." },
     "setAggregationModel": {
       "description": "Sets the aggregation model to the one given by <code>model</code>."
     },
@@ -156,6 +157,9 @@
     },
     "setChartsConfigurationPanelOpen": {
       "description": "Sets whether the charts configuration side panel is open."
+    },
+    "setChartSynchronizationState": {
+      "description": "Sets the synchronization state for a chart."
     },
     "setColumnHeaderFilterFocus": {
       "description": "Sets the focus to the column header filter at the given <code>field</code>."
