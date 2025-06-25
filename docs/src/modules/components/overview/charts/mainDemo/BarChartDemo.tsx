@@ -24,7 +24,9 @@ const valueFormatter: AxisConfig['valueFormatter'] = (value, { location }) => {
 export default function BarChartDemo() {
   return (
     <React.Fragment>
-      <Typography>Issues opened daily</Typography>
+      <Typography variant="body2" color="text.secondary" fontWeight={500}>
+        Issues opened daily
+      </Typography>
       <BarChart
         dataset={dataset}
         series={[{ dataKey: 'value' }]}

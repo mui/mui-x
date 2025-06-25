@@ -10,6 +10,7 @@ import { Link } from '@mui/docs/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import CircleIcon from '@mui/icons-material/Circle';
 
 function getComponents() {
   return [
@@ -97,25 +98,14 @@ function getComponents() {
 
 export default function ChartComponentsGrid() {
   return (
-    <List
-      component="ul"
-      sx={{
-        pl: 3,
-        '& li::marker': {
-          fontSize: '1.5em',
-        },
-      }}
-    >
+    <List>
       {getComponents().map((component) => (
-        <ListItem
-          key={component.title}
-          component="li"
-          sx={{ display: 'list-item', listStyleType: 'disc', py: 0 }}
-        >
+        <ListItem key={component.title}>
           <ListItemText
             primary={
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Link href={component.href} underline="hover" sx={{ fontWeight: 500 }}>
+                <CircleIcon sx={{ fontSize: 10 }} />
+                <Link href={component.href} underline="hover" sx={{ fontWeight: 500 }} pl={0.5}>
                   {component.title}
                 </Link>
                 {component.pro && <span className="plan-pro" />}

@@ -24,9 +24,28 @@ export default function MainDemo() {
         background: theme.palette.gradients.linearSubtle,
       })}
     >
-      <Stack direction="row" height="100%" spacing={1}>
-        <Stack direction="column" spacing={1} flexBasis="65%" maxHeight="800px">
-          <Stack direction="row" spacing={1}>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        height="100%"
+        spacing={1}
+        sx={(theme) => ({
+          height: '100%',
+        })}
+      >
+        {/* Left/Main Section */}
+        <Stack
+          direction={{ xs: 'column' }}
+          spacing={1}
+          flexBasis={{ xs: '100%', md: '65%' }}
+          maxHeight="800px"
+          sx={(theme) => ({
+            borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
+            borderBottom: { md: 'none', xs: `1px solid ${theme.palette.divider}` },
+            pr: { md: 1, xs: 0 },
+            pb: { xs: 1, md: 0 },
+          })}
+        >
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
             {statCardData.map((card, index) => (
               <StatCard key={index} {...card} />
             ))}
@@ -35,7 +54,16 @@ export default function MainDemo() {
             <DownloadDemo />
           </Box>
         </Stack>
-        <Stack direction="column" spacing={1} flexBasis="35%">
+        {/* Right/Sidebar Section */}
+        <Stack
+          direction="column"
+          spacing={1}
+          flexBasis={{ xs: '100%', md: '35%' }}
+          sx={(theme) => ({
+            pl: { md: 1, xs: 0 },
+            pt: { xs: 1, md: 0 },
+          })}
+        >
           <Paper component="div" variant="outlined" sx={{ p: 1 }}>
             <PieChartDemo />
           </Paper>

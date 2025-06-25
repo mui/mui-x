@@ -31,7 +31,9 @@ const data = dateEntry
 export default function PieChartDemo() {
   return (
     <React.Fragment>
-      <Typography>@mui/material version split on 08-Jun-25</Typography>
+      <Typography variant="body2" color="text.secondary" fontWeight={500}>
+        @mui/material downloads on 08-Jun-25
+      </Typography>
       <PieChart
         series={[
           {

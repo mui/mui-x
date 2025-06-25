@@ -88,7 +88,9 @@ function CustomCell(props: any) {
 export default function HeatmapDemo() {
   return (
     <React.Fragment>
-      <Typography>Issues opening time</Typography>
+      <Typography variant="body2" color="text.secondary" fontWeight={500}>
+        Issues opening time
+      </Typography>
       <Heatmap
         series={[{ data }]}
         margin={5}
