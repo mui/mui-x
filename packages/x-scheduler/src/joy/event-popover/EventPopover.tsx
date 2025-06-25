@@ -188,10 +188,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
               </div>
               <Separator className="EventPopoverSeparator" />
               <div className="EventPopoverActions">
-                <button className="SecondaryErrorButton" type="button" onClick={handleDelete}>
+                <button
+                  className={clsx('SecondaryErrorButton', 'Button')}
+                  type="button"
+                  onClick={handleDelete}
+                >
                   {translations.deleteEvent}
                 </button>
-                <button className="PrimaryButton" type="submit">
+                <button className={clsx('NeutralButton', 'Button')} type="submit">
                   {translations.saveChanges}
                 </button>
               </div>
