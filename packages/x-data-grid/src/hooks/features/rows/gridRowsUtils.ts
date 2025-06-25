@@ -417,6 +417,7 @@ export function computeRowsUpdates(
       }
     } else {
       nonPinnedRowsUpdates.push(update);
+      // eslint-disable-next-line no-underscore-dangle
       if (update._action !== 'delete') {
         insertedNodes.add(id);
       }
