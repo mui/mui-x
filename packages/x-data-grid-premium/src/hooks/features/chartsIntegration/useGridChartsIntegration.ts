@@ -252,6 +252,11 @@ export const useGridChartsIntegration = (
       visibleSeries[chartId] = series[chartId]
         .filter((seriesItem) => seriesItem.hidden !== true)
         .map((seriesItem) => columns[seriesItem.field]);
+
+      if (visibleCategories[chartId].length === 0 || visibleSeries[chartId].length === 0) {
+        visibleCategories[chartId] = [];
+        visibleSeries[chartId] = [];
+      }
     });
 
     // keep only unique columns
