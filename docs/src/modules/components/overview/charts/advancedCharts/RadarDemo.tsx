@@ -1,8 +1,10 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import { RadarSeriesType } from '@mui/x-charts/models';
 import { RadarChart, radarSeriesPlotClasses } from '@mui/x-charts/RadarChart';
 import ChartDemoWrapper from '../ChartDemoWrapper';
-import Typography from '@mui/material/Typography';
 
 // Taken from https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats_in_Generation_I
 // Looking for a better idea
@@ -34,7 +36,7 @@ const series: RadarSeriesType[] = [
 
 function Radar() {
   return (
-    <React.Fragment>
+    <Stack height="100%">
       <Typography align="center">Pokémon base stats</Typography>
       <RadarChart
         series={series}
@@ -43,7 +45,7 @@ function Radar() {
         }}
         sx={{ [`& .${radarSeriesPlotClasses.area}`]: { strokeWidth: 2 } }}
       />
-    </React.Fragment>
+    </Stack>
   );
 }
 

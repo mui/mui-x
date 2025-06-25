@@ -16,9 +16,9 @@ const commonSeries = {
 
 function Funnel() {
   return (
-    <Stack sx={{ height: '100%' }}>
+    <Stack height="100%">
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
-        World education enrollement in 2000 and 2020
+        World education enrollment in 2000 and 2020
       </Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <FunnelChart

@@ -1,9 +1,11 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import dataset from '../data/Goolge-Meta-stoks.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
-import Typography from '@mui/material/Typography';
 
 const base = {
   google: dataset[0].google!,
@@ -26,7 +28,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', cu
 
 function ZoomAndPan() {
   return (
-    <React.Fragment>
+    <Stack height="100%">
       <Typography align="center">Google Vs Meta stock price</Typography>
       <LineChartPro
         dataset={formattedDataset}
@@ -63,10 +65,11 @@ function ZoomAndPan() {
           },
         ]}
         yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40 }]}
+        initialZoom={[{ axisId: 'x-axis', start: 60, end: 100 }]}
         slotProps={{ tooltip: { disablePortal: true } }}
         showToolbar
       />
-    </React.Fragment>
+    </Stack>
   );
 }
 

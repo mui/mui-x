@@ -1,4 +1,7 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
@@ -9,7 +12,6 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { BarSeriesType, LineSeriesType } from '@mui/x-charts/models';
 import ChartDemoWrapper from '../ChartDemoWrapper';
-import Typography from '@mui/material/Typography';
 
 const dataset = [
   { min: -12, max: -4, precip: 79, month: 'January' },
@@ -53,7 +55,7 @@ const series: (BarSeriesType | LineSeriesType)[] = [
 
 function MultiAxes() {
   return (
-    <React.Fragment>
+    <Stack height="100%">
       <Typography align="center">Weather stats for Quebec city</Typography>
       <ChartContainer
         series={series}
@@ -82,7 +84,7 @@ function MultiAxes() {
         <ChartsYAxis axisId="rightAxis" label="Precipitation (mm)" />
         <ChartsTooltip />
       </ChartContainer>
-    </React.Fragment>
+    </Stack>
   );
 }
 
@@ -91,11 +93,7 @@ export default function MultiAxesDemo() {
     <ChartDemoWrapper
       link="/x/react-charts/axis/"
       code={`
-<ChartContainer
-  series={[precipitations, minTemperature, maxTemperature]}
-  xAxis={[monthsAxis]}
-  yAxis={[temperatureAxis, precipitationsAxis]}
->
+<ChartContainer>
   <BarPlot />
   <LinePlot />
   <ChartsXAxis />

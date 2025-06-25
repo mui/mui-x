@@ -21,31 +21,28 @@ export default function MainDemo() {
         height: { md: 640 },
         overflow: 'hidden',
         p: 1,
+        border: 'none',
         background: theme.palette.gradients.linearSubtle,
       })}
     >
-      <Stack
-        direction={{ xs: 'column', md: 'row' }}
-        height="100%"
-        spacing={1}
-        sx={(theme) => ({
-          height: '100%',
-        })}
-      >
+      <Stack direction="row" height="100%" spacing={1}>
         {/* Left/Main Section */}
         <Stack
-          direction={{ xs: 'column' }}
+          direction="column"
           spacing={1}
           flexBasis={{ xs: '100%', md: '65%' }}
-          maxHeight="800px"
+          maxHeight={{ xs: 500, md: 580 }}
+          minWidth={0}
           sx={(theme) => ({
             borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
-            borderBottom: { md: 'none', xs: `1px solid ${theme.palette.divider}` },
             pr: { md: 1, xs: 0 },
-            pb: { xs: 1, md: 0 },
           })}
         >
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+          <Stack
+            display={{ xs: 'none', md: 'flex' }}
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ md: 1, xs: 0.5 }}
+          >
             {statCardData.map((card, index) => (
               <StatCard key={index} {...card} />
             ))}
@@ -59,10 +56,7 @@ export default function MainDemo() {
           direction="column"
           spacing={1}
           flexBasis={{ xs: '100%', md: '35%' }}
-          sx={(theme) => ({
-            pl: { md: 1, xs: 0 },
-            pt: { xs: 1, md: 0 },
-          })}
+          sx={{ display: { xs: 'none', md: 'flex' } }}
         >
           <Paper component="div" variant="outlined" sx={{ p: 1 }}>
             <PieChartDemo />

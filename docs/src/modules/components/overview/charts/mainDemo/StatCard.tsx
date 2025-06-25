@@ -27,7 +27,9 @@ function AreaGradient({ id }: { id: string }) {
 export default function StatCard({ title, value, data }: StatCardProps) {
   return (
     <Card variant="outlined" sx={{ height: 'fit-content', flexBasis: '33.3%' }}>
-      <CardContent sx={{ padding: 1.5, '&:last-child': { paddingBottom: 1.5 } }}>
+      <CardContent
+        sx={{ padding: { xs: 1, md: 1.5 }, '&:last-child': { paddingBottom: { xs: 1, md: 1.5 } } }}
+      >
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="caption" color="text.secondary" fontWeight={500}>
             {title}

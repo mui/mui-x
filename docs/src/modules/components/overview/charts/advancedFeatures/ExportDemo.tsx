@@ -3,12 +3,12 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import dataset from '../data/Goolge-Meta-stoks.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
-import Typography from '@mui/material/Typography';
 
 const base = {
   google: dataset[0].google!,
@@ -32,7 +32,7 @@ function Export() {
   const apiRef = React.useRef<ChartProApi<'line'>>(undefined);
 
   return (
-    <Stack sx={{ height: '100%' }}>
+    <Stack height="100%">
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <Typography align="center">Google Vs Meta stock price</Typography>
         <LineChartPro

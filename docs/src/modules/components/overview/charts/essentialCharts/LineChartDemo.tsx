@@ -1,7 +1,9 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
 import ChartDemoWrapper from '../ChartDemoWrapper';
-import Typography from '@mui/material/Typography';
 
 /* Source: https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG?end=2024&locations=DE&start=1960&view=chart */
 const years = [
@@ -88,7 +90,7 @@ const chartSetting = {
 
 function Line() {
   return (
-    <React.Fragment>
+    <Stack height="100%">
       <Typography align="center">Inflation rates</Typography>
       <LineChart
         dataset={inflationData}
@@ -100,7 +102,7 @@ function Line() {
         grid={{ horizontal: true }}
         {...chartSetting}
       />
-    </React.Fragment>
+    </Stack>
   );
 }
 

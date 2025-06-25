@@ -55,7 +55,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 
 function HeatmapDemoContent() {
   return (
-    <Stack sx={{ height: '100%' }}>
+    <Stack height="100%">
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
         Bicycle count: Paris - Rivoli street (West-East)
       </Typography>

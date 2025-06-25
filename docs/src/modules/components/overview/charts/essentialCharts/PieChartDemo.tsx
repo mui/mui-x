@@ -1,6 +1,8 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 // Data derived from https://gs.statcounter.com/os-market-share/desktop/worldwide/2023
@@ -35,7 +37,7 @@ const valueFormatter = (item: { value: number }) => `${item.value}%`;
 
 function Pie() {
   return (
-    <React.Fragment>
+    <Stack height="100%">
       <Typography align="center">Desktop OS market share</Typography>
       <PieChart
         series={[
@@ -54,7 +56,7 @@ function Pie() {
           },
         }}
       />
-    </React.Fragment>
+    </Stack>
   );
 }
 

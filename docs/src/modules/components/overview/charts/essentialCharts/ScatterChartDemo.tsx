@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
 import data from '../data/transistorCPU';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
@@ -66,7 +67,7 @@ function CustomTooltip() {
 
 function Scatter() {
   return (
-    <React.Fragment>
+    <Stack height="100%">
       <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         series={series}
@@ -75,7 +76,7 @@ function Scatter() {
         slots={{ tooltip: CustomTooltip }}
         {...chartSetting}
       />
-    </React.Fragment>
+    </Stack>
   );
 }
 

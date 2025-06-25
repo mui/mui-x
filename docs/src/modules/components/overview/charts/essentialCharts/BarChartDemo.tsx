@@ -1,8 +1,10 @@
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import ChartDemoWrapper from '../ChartDemoWrapper';
-import Typography from '@mui/material/Typography';
 
 export const dataset = [
   {
@@ -101,7 +103,7 @@ const chartSetting = {
 
 function Bar() {
   return (
-    <React.Fragment>
+    <Stack height="100%">
       <Typography align="center">Avg. annual rainfall in Seoul (in mm)</Typography>
       <BarChart
         dataset={dataset}
@@ -113,7 +115,7 @@ function Bar() {
         }}
         {...chartSetting}
       />
-    </React.Fragment>
+    </Stack>
   );
 }
 

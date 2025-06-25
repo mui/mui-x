@@ -112,7 +112,7 @@ export default function DownloadDemo() {
         </Select>
       </Stack>
 
-      <div style={{ flex: 1, minHeight: 0 }}>
+      <div style={{ flex: 1, minHeight: 300 }}>
         <LineChartPro
           colors={(mode) =>
             rainbowSurgePalette(mode).slice(selectedPackage === '@mui/x-charts' ? 1 : 0)
@@ -134,6 +134,7 @@ export default function DownloadDemo() {
               scaleType: 'time',
               domainLimit: 'strict',
               zoom: true,
+              height: 30,
               tickNumber: 5,
               valueFormatter: (value: Date, context) =>
                 context.location === 'tick' ? shortMonthYearFormatter(value) : dateFormatter(value),
@@ -147,7 +148,7 @@ export default function DownloadDemo() {
               valueFormatter: IntlNumber.format,
             },
           ]}
-          margin={{ left: 0 }}
+          margin={{ left: 0, bottom: 0 }}
           sx={{
             [`& .${lineElementClasses.root}`]: {
               display: 'none',
