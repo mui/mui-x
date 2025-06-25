@@ -57,7 +57,7 @@ export function defaultizeXAxis(
       position,
       height: axisConfig.height ?? defaultHeight,
       zoom: defaultizeZoom(axisConfig.zoom, id, 'x'),
-    };
+    } satisfies DefaultedXAxis;
 
     // Increment the offset for the next axis
     if (position !== 'none') {
