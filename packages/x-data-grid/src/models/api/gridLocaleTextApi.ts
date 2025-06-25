@@ -236,10 +236,11 @@ export interface GridLocaleText {
   // Charts configuration panel
   chartsConfigurationNoCharts: string;
   chartsConfigurationChartNotSelected: string;
-  chartsConfigurationTabChartType: string;
+  chartsConfigurationTabChart: string;
   chartsConfigurationTabFields: string;
   chartsConfigurationTabConfig: string;
   chartsConfigurationCloseButton: string;
+  chartsSyncButtonLabel: string;
   chartsConfigurationSearchPlaceholder: string;
   chartsConfigurationSearchLabel: string;
   chartsConfigurationSearchClear: string;

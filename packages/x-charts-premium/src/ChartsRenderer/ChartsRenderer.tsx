@@ -100,7 +100,6 @@ function ChartsRenderer({
 
     const props = {
       xAxis: [{ data: categoryData, scaleType: 'point' as const }],
-      yAxis: [{ min: 0 }],
       series: seriesProp,
       hideLegend: chartConfiguration.hideLegend,
       height: chartConfiguration.height,
