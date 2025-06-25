@@ -15,6 +15,7 @@ import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremium
 import { GridChartsDataPanelField } from './GridChartsDataPanelField';
 import {
   gridChartsCategoriesSelector,
+  gridChartsIntegrationActiveChartIdSelector,
   gridChartsSeriesSelector,
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -162,8 +163,9 @@ interface GridChartsDataPanelBodyProps {
 function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const categories = useGridSelector(apiRef, gridChartsCategoriesSelector);
-  const series = useGridSelector(apiRef, gridChartsSeriesSelector);
+  const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
+  const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
+  const series = useGridSelector(apiRef, gridChartsSeriesSelector, activeChartId);
   const classes = useUtilityClasses(rootProps);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -279,13 +281,13 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
     (field: string, section: GridChartsIntegrationSection) => {
       const apiMethod =
         section === 'categories' ? apiRef.current.updateCategories : apiRef.current.updateSeries;
-      apiMethod((currentItems) =>
+      apiMethod(activeChartId, (currentItems) =>
         currentItems.map((item) =>
           item.field === field ? { ...item, hidden: item.hidden !== true } : item,
         ),
       );
     },
-    [apiRef],
+    [apiRef, activeChartId],
   );
 
   return (

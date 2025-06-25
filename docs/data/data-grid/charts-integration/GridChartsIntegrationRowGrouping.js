@@ -41,9 +41,13 @@ export default function GridChartsIntegrationRowGrouping() {
         configurationPanel: {
           open: true,
         },
-        categories: ['commodity'],
-        series: ['filledQuantity', 'feeRate'],
-        chartType: 'column',
+        charts: {
+          main: {
+            categories: ['commodity'],
+            series: ['filledQuantity', 'feeRate'],
+            chartType: 'column',
+          },
+        },
       },
     },
   });
@@ -67,7 +71,7 @@ export default function GridChartsIntegrationRowGrouping() {
             initialState={initialState}
           />
         </div>
-        <GridChartsRendererProxy renderer={ChartsRenderer} />
+        <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
       </div>
     </GridChartsIntegrationContextProvider>
   );

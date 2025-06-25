@@ -13,6 +13,11 @@ const gridChartsIntegrationStateSelector = createRootSelector(
   (state: GridStatePremium) => state.chartsIntegration,
 );
 
+export const gridChartsIntegrationActiveChartIdSelector = createSelector(
+  gridChartsIntegrationStateSelector,
+  (chartsIntegration) => chartsIntegration.activeChartId,
+);
+
 export const gridChartsConfigurationPanelOpenSelector = createSelector(
   gridChartsIntegrationStateSelector,
   (chartsIntegration) => chartsIntegration.configurationPanel.open,
@@ -22,8 +27,8 @@ export const gridChartsCategoriesSelector = createSelectorMemoized(
   gridChartsIntegrationStateSelector,
   gridColumnFieldsSelector,
   gridRowGroupingSanitizedModelSelector,
-  (chartsIntegration, columns, rowGroupingModel) =>
-    chartsIntegration.categories.map((category) => ({
+  (chartsIntegration, columns, rowGroupingModel, chartId) =>
+    (chartsIntegration.charts[chartId]?.categories || []).map((category) => ({
       ...category,
       field: rowGroupingModel.includes(category.field)
         ? getRowGroupingFieldFromGroupingCriteria(
@@ -37,8 +42,8 @@ export const gridChartsSeriesSelector = createSelectorMemoized(
   gridChartsIntegrationStateSelector,
   gridColumnFieldsSelector,
   gridRowGroupingSanitizedModelSelector,
-  (chartsIntegration, columns, rowGroupingModel) =>
-    chartsIntegration.series.map((seriesItem) => ({
+  (chartsIntegration, columns, rowGroupingModel, chartId) =>
+    (chartsIntegration.charts[chartId]?.series || []).map((seriesItem) => ({
       ...seriesItem,
       field: rowGroupingModel.includes(seriesItem.field)
         ? getRowGroupingFieldFromGroupingCriteria(

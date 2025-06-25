@@ -39,14 +39,18 @@ export default function GridChartsIntegrationBasic() {
                 configurationPanel: {
                   open: true,
                 },
-                categories: ['name'],
-                series: ['salary'],
-                chartType: 'column',
+                charts: {
+                  main: {
+                    categories: ['name'],
+                    series: ['salary'],
+                    chartType: 'column',
+                  },
+                },
               },
             }}
           />
         </div>
-        <GridChartsRendererProxy renderer={ChartsRenderer} />
+        <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
       </div>
     </GridChartsIntegrationContextProvider>
   );

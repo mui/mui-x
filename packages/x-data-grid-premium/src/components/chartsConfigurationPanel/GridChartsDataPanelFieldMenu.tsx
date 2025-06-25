@@ -7,6 +7,7 @@ import type { FieldTransferObject, DropPosition } from './GridChartsDataPanelBod
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import {
   gridChartsCategoriesSelector,
+  gridChartsIntegrationActiveChartIdSelector,
   gridChartsSeriesSelector,
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
@@ -33,8 +34,9 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridPrivateApiContext();
-  const categories = useGridSelector(apiRef, gridChartsCategoriesSelector);
-  const series = useGridSelector(apiRef, gridChartsSeriesSelector);
+  const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
+  const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
+  const series = useGridSelector(apiRef, gridChartsSeriesSelector, activeChartId);
   const isAvailableField = section === null;
   const fieldIndexInModel = !isAvailableField
     ? (section === 'categories' ? categories : series).findIndex((item) => item.field === field)

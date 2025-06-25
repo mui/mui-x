@@ -1,6 +1,8 @@
+'use client';
 import * as React from 'react';
 import { useGridChartsIntegrationContext } from '../hooks/utils/useGridChartIntegration';
-import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
+import { ChartState } from '../models/gridChartsIntegration';
+import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 type GridChartsRendererProxyRendererCallback = (
   type: string,
@@ -9,28 +11,49 @@ type GridChartsRendererProxyRendererCallback = (
 ) => React.ReactNode;
 
 type GridChartsRendererProxyRenderer = React.ComponentType<{
-  categories: GridChartsIntegrationContextValue['categories'];
-  series: GridChartsIntegrationContextValue['series'];
-  chartType: GridChartsIntegrationContextValue['chartType'];
-  configuration: GridChartsIntegrationContextValue['configuration'];
+  categories: ChartState['categories'];
+  series: ChartState['series'];
+  chartType: ChartState['type'];
+  configuration: ChartState['configuration'];
   onRender?: GridChartsRendererProxyRendererCallback;
 }>;
 
 export interface GridChartsRendererProxyProps {
+  id: string;
+  label?: string;
   renderer: GridChartsRendererProxyRenderer;
   onRender?: GridChartsRendererProxyRendererCallback;
 }
 
 export function GridChartsRendererProxy({
   renderer: Renderer,
+  id,
+  label,
   onRender,
 }: GridChartsRendererProxyProps) {
-  const { categories, series, chartType, configuration } = useGridChartsIntegrationContext();
+  const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
+
+  React.useEffect(() => {
+    if (!chartStateLookup[id]) {
+      // With this, the proxy "registers" the chart to the context
+      setChartState(id, {
+        ...EMPTY_CHART_INTEGRATION_CONTEXT_STATE,
+        label,
+      });
+    }
+  }, [id, label, setChartState, chartStateLookup]);
+
+  if (!chartStateLookup[id]) {
+    return null;
+  }
+
+  const { categories, series, type, configuration } = chartStateLookup[id];
+
   return (
     <Renderer
       categories={categories}
       series={series}
-      chartType={chartType}
+      chartType={type}
       configuration={configuration}
       onRender={onRender}
     />

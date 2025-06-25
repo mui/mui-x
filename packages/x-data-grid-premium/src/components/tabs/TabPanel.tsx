@@ -32,6 +32,7 @@ const TabPanelRoot = styled('div', {
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
+  height: '100%',
 }));
 
 function TabPanel(props: TabPanelProps) {
