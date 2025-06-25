@@ -149,6 +149,51 @@ type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 
 Your resolver should return `Promise<PromptResponse>`.
 
+## FAQs
+
+<details>
+<summary>With MUI service, where are the AI Assistant queries processed?</summary>
+<div style="margin-left: 0.5em">
+ The queries are partially processed on MUI servers and partially processed by the third-party provider (currently Anthropic). That said, only the query itself is sent and customer data is anonymized.
+</div>
+</details>
+
+<details>
+<summary>Is any of the data sent through the assistant stored, logged, or reused in any way?</summary>
+<div style="margin-left: 0.5em">
+Yes, queries (the NLP prompts from an end user) are logged for billing verification, but they are stored in an anonymized format that cannot be linked back to individual users and are retained for 12 months.
+We don't use user data for training.
+</div>
+</details>
+
+<details>
+<summary>How is the data anonymized?</summary>
+<div style="margin-left: 0.5em">
+The Data Grid samples data from independent rows randomly. These anonymized samples of data are used to provide the AI model with a reference for the columns.
+</div>
+</details>
+
+<details>
+<summary>How can I avoid sharing any real data?</summary>
+<div style="margin-left: 0.5em">
+You can manually provide your own examples for each column using the examples property on items of the columns array, which allows you to avoid sharing any real data.
+</div>
+</details>
+
+<details>
+<summary>Is there an option to bring my own processing service?</summary>
+<div style="margin-left: 0.5em">
+We're exploring a "local-only" processing mode (customer-hosted models). Stay tuned for updates.
+</div>
+</details>
+
+<details>
+<summary>Is there a way to monitor the usage?</summary>
+<div style="margin-left: 0.5em">
+We do offer an API to check your remaining credits for a given period. A monitoring dashboard will be avialable in the future.
+</div>
+</details>
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
