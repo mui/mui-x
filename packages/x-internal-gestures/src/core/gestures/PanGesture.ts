@@ -12,7 +12,6 @@
 import { GesturePhase, GestureState } from '../Gesture';
 import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
 import { PointerData } from '../PointerManager';
-import { InternalEvent } from '../types/InternalEvent';
 import { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
 
@@ -61,14 +60,18 @@ export type PanGestureEventData<
 > = PointerGestureEventData<CustomData> & {
   /** The centroid position at the start of the gesture */
   initialCentroid: { x: number; y: number };
-  /** Horizontal distance moved in pixels from the start of the current gesture */
+  /** Horizontal distance moved in pixels from last event */
   deltaX: number;
-  /** Vertical distance moved in pixels from the start of the current gesture */
+  /** Vertical distance moved in pixels from last event */
   deltaY: number;
   /** Total accumulated horizontal movement in pixels */
   totalDeltaX: number;
   /** Total accumulated vertical movement in pixels */
   totalDeltaY: number;
+  /** Horizontal distance moved in pixels from the start of the current gesture */
+  activeDeltaX: number;
+  /** Vertical distance moved in pixels from the start of the current gesture */
+  activeDeltaY: number;
   /** The direction of movement with vertical and horizontal components */
   direction: Direction;
   /** Horizontal velocity in pixels per second */
@@ -99,6 +102,10 @@ export type PanGestureState = GestureState & {
   totalDeltaX: number;
   /** Total accumulated vertical delta since gesture tracking began */
   totalDeltaY: number;
+  /** Active horizontal delta since the start of the current gesture */
+  activeDeltaX: number;
+  /** Active vertical delta since the start of the current gesture */
+  activeDeltaY: number;
   /** Map of pointers that initiated the gesture, used for tracking state */
   startPointers: Map<number, PointerData>;
   /** The last direction of movement detected */
@@ -121,6 +128,8 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     movementThresholdReached: false,
     totalDeltaX: 0,
     totalDeltaY: 0,
+    activeDeltaX: 0,
+    activeDeltaY: 0,
     lastDirection: {
       vertical: null,
       horizontal: null,
@@ -198,6 +207,8 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       startCentroid: null,
       lastCentroid: null,
       lastDeltas: null,
+      activeDeltaX: 0,
+      activeDeltaY: 0,
       movementThresholdReached: false,
       lastDirection: {
         vertical: null,
@@ -213,11 +224,9 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
     const pointersArray = Array.from(pointers.values());
 
-    // Check for our special forceReset flag to handle interrupted gestures (from contextmenu, blur)
-    if ((event as InternalEvent).forceReset) {
+    // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
+    if (event.type === 'forceCancel') {
       // Reset all active pan gestures when we get a force reset event
-      // Cancel any active gesture with a proper cancel event
-
       this.cancel(event.target as null, pointersArray, event);
       return;
     }
@@ -301,9 +310,11 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
             this.isActive = true;
 
             // Update total accumulated delta
-            this.state.lastDeltas = { x: currentCentroid.x, y: currentCentroid.y };
+            this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
             this.state.totalDeltaX += lastDeltaX;
             this.state.totalDeltaY += lastDeltaY;
+            this.state.activeDeltaX += lastDeltaX;
+            this.state.activeDeltaY += lastDeltaY;
 
             // Emit start event
             this.emitPanEvent(targetElement, 'start', relevantPointers, event, currentCentroid);
@@ -315,6 +326,8 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
             this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
             this.state.totalDeltaX += lastDeltaX;
             this.state.totalDeltaY += lastDeltaY;
+            this.state.activeDeltaX += lastDeltaX;
+            this.state.activeDeltaY += lastDeltaY;
 
             // Emit ongoing event
             this.emitPanEvent(targetElement, 'ongoing', relevantPointers, event, currentCentroid);
@@ -328,6 +341,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
 
       case 'pointerup':
       case 'pointercancel':
+      case 'forceCancel':
         // If the gesture was active (threshold was reached), emit end event
         if (this.isActive && this.state.movementThresholdReached) {
           // If we have less than the minimum required pointers, end the gesture
@@ -398,6 +412,8 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       velocity,
       totalDeltaX: this.state.totalDeltaX,
       totalDeltaY: this.state.totalDeltaY,
+      activeDeltaX: this.state.activeDeltaX,
+      activeDeltaY: this.state.activeDeltaY,
       activeGestures,
       customData: this.customData,
     };
