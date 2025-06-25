@@ -8,7 +8,6 @@ import { RefObject } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
-import reactMajor from '@mui/x-internals/reactMajor';
 import { createSelector, useSelector, Store } from '@mui/x-internals/store';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 import {
@@ -17,7 +16,6 @@ import {
   ColumnsRenderContext,
   RowId,
   RowEntry,
-  Size,
   ScrollPosition,
   ScrollDirection,
 } from '../models';
@@ -45,7 +43,6 @@ export const EMPTY_RENDER_CONTEXT = {
 };
 
 const selectors = {
-  rootSize: createSelector((state: BaseState) => state.rootSize),
   renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
   enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
   enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
@@ -58,7 +55,6 @@ export const Virtualization = {
 };
 export namespace Virtualization {
   export type State = {
-    rootSize: Size;
     virtualization: VirtualizationState;
     getters: ReturnType<typeof useVirtualization>['getters'];
   };
@@ -66,7 +62,6 @@ export namespace Virtualization {
 
 function initializeState(params: VirtualizerParams) {
   const state: Virtualization.State = {
-    rootSize: Size.EMPTY,
     virtualization: {
       enabled: !platform.isJSDOM,
       enabledForRows: !platform.isJSDOM,
@@ -99,7 +94,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
     needsHorizontalScrollbar,
     autoHeight,
 
-    onResize,
     onWheel,
     onTouchMove,
 
@@ -116,60 +110,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRenderContextReady = React.useRef(false);
-
-  useEnhancedEffect(() => {
-    const node = params.refs.container.current;
-
-    if (!node) {
-      return undefined;
-    }
-
-    {
-      // Initialize root size
-
-      const initialRect = node.getBoundingClientRect();
-      const rootSize = {
-        width: roundToDecimalPlaces(initialRect.width, 1),
-        height: roundToDecimalPlaces(initialRect.height, 1),
-      };
-
-      if (store.state.rootSize === Size.EMPTY || !Size.equals(rootSize, store.state.rootSize)) {
-        store.update({ rootSize });
-        onResize?.(rootSize);
-      }
-    }
-
-    if (typeof ResizeObserver === 'undefined') {
-      return undefined;
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (!entry) {
-        return;
-      }
-
-      const rootSize = {
-        width: roundToDecimalPlaces(entry.contentRect.width, 1),
-        height: roundToDecimalPlaces(entry.contentRect.height, 1),
-      };
-
-      if (!Size.equals(rootSize, store.state.rootSize)) {
-        store.update({ rootSize: rootSize });
-        onResize?.(rootSize);
-      }
-    });
-
-    observer.observe(node);
-
-    if (reactMajor >= 19) {
-      return () => {
-        refs.container.current = null;
-        observer.disconnect();
-      };
-    }
-    return undefined;
-  }, [refs.container, onResize]);
 
   const renderContext = useSelector(store, selectors.renderContext);
   const enabledForRows = useSelector(store, selectors.enabledForRows);

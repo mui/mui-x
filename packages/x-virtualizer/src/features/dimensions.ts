@@ -1,7 +1,8 @@
 import * as React from 'react';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useLayoutEffect from '@mui/utils/useEnhancedEffect';
+import reactMajor from '@mui/x-internals/reactMajor';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
@@ -9,7 +10,6 @@ import { Store, useSelectorEffect } from '@mui/x-internals/store';
 import { Size, DimensionsState } from '../models';
 import type { VirtualizerParams } from '../useVirtualizer';
 import type { BaseState } from '../useVirtualizer';
-import { Virtualization } from './virtualization';
 
 const EMPTY_SIZE: Size = { width: 0, height: 0 };
 const EMPTY_DIMENSIONS: DimensionsState = {
@@ -36,6 +36,7 @@ const EMPTY_DIMENSIONS: DimensionsState = {
 };
 
 const selectors = {
+  rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
 };
 
@@ -46,14 +47,16 @@ export const Dimensions = {
 };
 export namespace Dimensions {
   export type State = {
+    rootSize: Size;
     dimensions: DimensionsState;
   };
 }
 
-function initializeState(params: VirtualizerParams) {
+function initializeState(params: VirtualizerParams): Dimensions.State {
   const dimensions = EMPTY_DIMENSIONS;
 
   return {
+    rootSize: Size.EMPTY,
     dimensions: {
       ...dimensions,
       ...params.dimensions,
@@ -65,6 +68,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
   const isFirstSizing = React.useRef(true);
 
   const {
+    refs,
     dimensions: {
       rowHeight,
       headerHeight,
@@ -77,15 +81,59 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
     },
   } = params;
 
-  // updateDimensions
-  // updateDimensions debounced
+  // Initialize & observe container node root size
+  useLayoutEffect(() => {
+    const node = refs.container.current;
+    if (!node) {
+      return undefined;
+    }
+    {
+      // Initialize root size
+      const initialRect = node.getBoundingClientRect();
+      const rootSize = {
+        width: roundToDecimalPlaces(initialRect.width, 1),
+        height: roundToDecimalPlaces(initialRect.height, 1),
+      };
+      if (store.state.rootSize === Size.EMPTY || !Size.equals(rootSize, store.state.rootSize)) {
+        store.update({ rootSize });
+      }
+    }
+
+    // prettier-ignore
+    if (typeof ResizeObserver === 'undefined') { return undefined; }
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) {
+        return;
+      }
+
+      const rootSize = {
+        width: roundToDecimalPlaces(entry.contentRect.width, 1),
+        height: roundToDecimalPlaces(entry.contentRect.height, 1),
+      };
+
+      if (!Size.equals(rootSize, store.state.rootSize)) {
+        store.update({ rootSize });
+      }
+    });
+
+    observer.observe(node);
+
+    if (reactMajor >= 19) {
+      return () => {
+        refs.container.current = null;
+        observer.disconnect();
+      };
+    }
+    return undefined;
+  }, [refs.container]);
 
   const updateDimensions = React.useCallback(() => {
-    const rootSize = Virtualization.selectors.rootSize(store.state);
-
     if (isFirstSizing.current) {
       return;
     }
+
+    const rootSize = selectors.rootSize(store.state);
+
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
@@ -218,9 +266,11 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useEnhancedEffect(updateDimensions, [updateDimensions]);
+  useLayoutEffect(updateDimensions, [updateDimensions]);
 
-  useSelectorEffect(store, Virtualization.selectors.rootSize, () => {
+  useSelectorEffect(store, selectors.rootSize, (_, size) => {
+    params.onResize?.(size);
+
     if (isFirstSizing.current || !debouncedUpdateDimensions) {
       // We want to initialize the grid dimensions as soon as possible to avoid flickering
       isFirstSizing.current = false;

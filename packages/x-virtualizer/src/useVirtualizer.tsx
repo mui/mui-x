@@ -121,8 +121,8 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     return new Store(state);
   }).current;
 
-  const virtualization = Virtualization.use(store, params);
   const dimensions = Dimensions.use(store, params);
+  const virtualization = Virtualization.use(store, params);
 
   return {
     store,
