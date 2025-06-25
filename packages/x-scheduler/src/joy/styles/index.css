@@ -1,1 +1,60 @@
 @import './tokens.css';
+
+.joy .Button {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-4);
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
+  line-height: var(--line-height-1);
+}
+
+.joy .NeutralButton {
+  background: var(--gray-3);
+  color: var(--gray-12);
+}
+
+.joy .NeutralButton:hover {
+  background: var(--gray-4);
+}
+
+.joy .NeutralButton:active {
+  background: var(--gray-5);
+}
+
+.joy .PrimaryButton {
+  background: var(--primary-9);
+  color: var(--primary-1);
+}
+
+.joy .PrimaryButton:hover {
+  background: var(--primary-10);
+}
+
+.joy .PrimaryButton:active {
+  background: var(--gray-11);
+}
+
+.joy .PrimaryButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.joy .SecondaryErrorButton {
+  background: var(--gray-1);
+  color: var(--error-11);
+}
+
+.joy .SecondaryErrorButton:hover {
+  background: var(--error-4);
+}
+
+.joy .SecondaryErrorButton:active {
+  background: var(--error-5);
+}
+
+.joy .SecondaryErrorButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}

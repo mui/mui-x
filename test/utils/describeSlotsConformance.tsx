@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 

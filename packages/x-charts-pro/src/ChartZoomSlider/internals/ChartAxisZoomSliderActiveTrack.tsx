@@ -1,16 +1,20 @@
 import { styled } from '@mui/material/styles';
 import {
   AxisId,
+  ComputedAxis,
   getSVGPoint,
+  invertScale,
+  selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
-  selectorChartDrawingArea,
   useChartContext,
   useDrawingArea,
+  useSelector,
   useStore,
   ZoomData,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -34,16 +38,12 @@ const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
   },
 }));
 
-const formatter = Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
-const zoomValueFormatter = (value: number) => formatter.format(value);
-
 export interface ChartAxisZoomSliderActiveTrackProps {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   axisPosition: 'top' | 'bottom' | 'left' | 'right';
   zoomData: ZoomData;
   reverse?: boolean;
-  valueFormatter?: (value: number) => string;
   showTooltip: boolean;
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -55,17 +55,18 @@ export function ChartAxisZoomSliderActiveTrack({
   axisPosition,
   zoomData,
   reverse,
-  valueFormatter = zoomValueFormatter,
   showTooltip,
   onPointerEnter,
   onPointerLeave,
 }: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
+  const axis = useSelector(store, selectorChartAxis, [axisId]);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
+  const { tooltipStart, tooltipEnd } = getZoomSliderTooltipsText(axis, drawingArea);
 
   const previewThumbWidth =
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_WIDTH : ZOOM_SLIDER_THUMB_HEIGHT;
@@ -79,9 +80,6 @@ export function ChartAxisZoomSliderActiveTrack({
       return;
     }
 
-    /* min and max values of zoom to ensure the pointer anchor in the slider is maintained  */
-    let pointerZoomMin: number;
-    let pointerZoomMax: number;
     let prevPointerZoom = 0;
 
     const onPointerMove = rafThrottle((event: PointerEvent) => {
@@ -92,13 +90,11 @@ export function ChartAxisZoomSliderActiveTrack({
       }
 
       const point = getSVGPoint(element, event);
-      let pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+      const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
       if (pointerZoom === null) {
         return;
       }
-
-      pointerZoom = Math.max(pointerZoomMin, Math.min(pointerZoomMax, pointerZoom));
 
       const deltaZoom = pointerZoom - prevPointerZoom;
       prevPointerZoom = pointerZoom;
@@ -131,8 +127,6 @@ export function ChartAxisZoomSliderActiveTrack({
       }
 
       prevPointerZoom = pointerDownZoom;
-      pointerZoomMin = pointerDownZoom - axisZoomData.start;
-      pointerZoomMax = 100 - (axisZoomData.end - pointerDownZoom);
 
       document.addEventListener('pointerup', onPointerUp);
       activePreviewRect.addEventListener('pointermove', onPointerMove);
@@ -188,21 +182,14 @@ export function ChartAxisZoomSliderActiveTrack({
     const point = getSVGPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
-      const { left, top, width, height } = selectorChartDrawingArea(store.getSnapshot());
       const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
 
       return prevZoomData.map((zoom) => {
         if (zoom.axisId === axisId) {
-          let newEnd: number;
+          const newEnd = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
 
-          if (axisDirection === 'x') {
-            newEnd = ((point.x - left) / width) * 100;
-          } else {
-            newEnd = ((top + height - point.y) / height) * 100;
-          }
-
-          if (reverse) {
-            newEnd = 100 - newEnd;
+          if (newEnd === null) {
+            return zoom;
           }
 
           return {
@@ -225,15 +212,20 @@ export function ChartAxisZoomSliderActiveTrack({
   let endThumbX: number;
   let endThumbY: number;
 
+  const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+  const range = maxEnd - minStart;
+  const zoomStart = Math.max(minStart, zoomData.start);
+  const zoomEnd = Math.min(zoomData.end, maxEnd);
+
   if (axisDirection === 'x') {
-    previewX = (zoomData.start / 100) * drawingArea.width;
+    previewX = ((zoomStart - minStart) / range) * drawingArea.width;
     previewY = 0;
-    previewWidth = (drawingArea.width * (zoomData.end - zoomData.start)) / 100;
+    previewWidth = (drawingArea.width * (zoomEnd - zoomStart)) / range;
     previewHeight = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
 
-    startThumbX = (zoomData.start / 100) * drawingArea.width;
+    startThumbX = ((zoomStart - minStart) / range) * drawingArea.width;
     startThumbY = 0;
-    endThumbX = (zoomData.end / 100) * drawingArea.width;
+    endThumbX = ((zoomEnd - minStart) / range) * drawingArea.width;
     endThumbY = 0;
 
     if (reverse) {
@@ -247,14 +239,14 @@ export function ChartAxisZoomSliderActiveTrack({
     endThumbX -= previewThumbWidth / 2;
   } else {
     previewX = 0;
-    previewY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
+    previewY = drawingArea.height - ((zoomEnd - minStart) / range) * drawingArea.height;
     previewWidth = ZOOM_SLIDER_ACTIVE_TRACK_SIZE;
-    previewHeight = (drawingArea.height * (zoomData.end - zoomData.start)) / 100;
+    previewHeight = (drawingArea.height * (zoomEnd - zoomStart)) / range;
 
     startThumbX = 0;
-    startThumbY = drawingArea.height - (zoomData.start / 100) * drawingArea.height;
+    startThumbY = drawingArea.height - ((zoomStart - minStart) / range) * drawingArea.height;
     endThumbX = 0;
-    endThumbY = drawingArea.height - (zoomData.end / 100) * drawingArea.height;
+    endThumbY = drawingArea.height - ((zoomEnd - minStart) / range) * drawingArea.height;
 
     if (reverse) {
       previewY = drawingArea.height - previewY - previewHeight;
@@ -306,18 +298,52 @@ export function ChartAxisZoomSliderActiveTrack({
       />
       <ChartsTooltipZoomSliderValue
         anchorEl={startThumbEl}
-        open={showTooltip}
+        open={showTooltip && tooltipStart !== ''}
         placement={axisPosition}
       >
-        {valueFormatter(zoomData.start)}
+        {tooltipStart}
       </ChartsTooltipZoomSliderValue>
       <ChartsTooltipZoomSliderValue
         anchorEl={endThumbEl}
-        open={showTooltip}
+        open={showTooltip && tooltipEnd !== ''}
         placement={axisPosition}
       >
-        {valueFormatter(zoomData.end)}
+        {tooltipEnd}
       </ChartsTooltipZoomSliderValue>
     </React.Fragment>
   );
+}
+
+/**
+ * Returns the text for the tooltips on the thumbs of the zoom slider.
+ */
+function getZoomSliderTooltipsText(axis: ComputedAxis, drawingArea: ChartDrawingArea) {
+  const formatValue = (value: Date | number | null) => {
+    if (axis.valueFormatter) {
+      return axis.valueFormatter(value, { location: 'zoom-slider-tooltip', scale: axis.scale });
+    }
+
+    return `${value}`;
+  };
+
+  const axisDirection = axis.position === 'top' || axis.position === 'bottom' ? 'x' : 'y';
+
+  let start = axisDirection === 'x' ? drawingArea.left : drawingArea.top;
+  const size = axisDirection === 'x' ? drawingArea.width : drawingArea.height;
+  let end = start + size;
+  if (axisDirection === 'y') {
+    [start, end] = [end, start]; // Invert for y-axis
+  }
+
+  if (axis.reverse) {
+    [start, end] = [end, start]; // Reverse the start and end if the axis is reversed
+  }
+
+  const startValue = invertScale(axis.scale, axis.data ?? [], start) ?? axis.data?.at(0);
+  const endValue = invertScale(axis.scale, axis.data ?? [], end) ?? axis.data?.at(-1);
+
+  const tooltipStart = formatValue(startValue);
+  const tooltipEnd = formatValue(endValue);
+
+  return { tooltipStart, tooltipEnd };
 }

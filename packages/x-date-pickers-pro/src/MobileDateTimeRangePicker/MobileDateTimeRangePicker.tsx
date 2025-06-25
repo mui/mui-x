@@ -10,7 +10,6 @@ import {
   PickerViewRenderer,
   TimeViewWithMeridiem,
   resolveDateTimeFormat,
-  useUtils,
   PickerRangeValue,
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
@@ -28,6 +27,7 @@ import {
   multiSectionDigitalClockSectionClasses,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -130,7 +130,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   inProps: MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
     MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
@@ -152,7 +152,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: resolveDateTimeFormat(utils, defaultizedProps, true),
+    format: resolveDateTimeFormat(adapter, defaultizedProps, true),
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     // force true to correctly handle `renderTimeViewClock` as a renderer
@@ -204,7 +204,7 @@ MobileDateTimeRangePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

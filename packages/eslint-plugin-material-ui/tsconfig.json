@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "target": "es5",
+    "module": "preserve",
+    "strict": true,
+    "esModuleInterop": true,
+    "lib": ["es2015", "es2017", "esnext"],
+    "experimentalDecorators": true,
+    "types": ["node"],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
+}

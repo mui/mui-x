@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { fireEvent } from '@mui/internal-test-utils';
@@ -61,11 +60,11 @@ describe(`RTL - test arrows navigation`, () => {
     adapterName: 'moment-jalaali',
   });
 
-  before(() => {
+  beforeAll(() => {
     jMoment.loadPersian();
   });
 
-  after(() => {
+  afterAll(() => {
     moment.locale('en');
   });
 

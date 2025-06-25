@@ -33,7 +33,7 @@ interface ChartZoomSliderProps {
 export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
-  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const zoomData = useSelector(store, selectorChartAxisZoomData, [axisId]);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();

@@ -138,6 +138,8 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
       strokeWidth={1}
       strokeLinejoin="round"
+      data-highlighted={ownerState.isHighlighted || undefined}
+      data-faded={ownerState.isFaded || undefined}
       {...other}
       {...interactionProps}
       {...animatedProps}
