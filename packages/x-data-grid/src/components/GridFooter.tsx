@@ -24,8 +24,12 @@ const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
 
     // Show selected row count if there are any selected rows, even if the computed count might be 0 due to filtering
     const hasSelectedRows = selectionState.ids.size > 0;
-    const displaySelectedRowCount =
-      selectedRowCount > 0 ? selectedRowCount : hasSelectedRows ? selectionState.ids.size : 0;
+    let displaySelectedRowCount = 0;
+    if (selectedRowCount > 0) {
+      displaySelectedRowCount = selectedRowCount;
+    } else if (hasSelectedRows) {
+      displaySelectedRowCount = selectionState.ids.size;
+    }
 
     const selectedRowCountElement =
       !rootProps.hideFooterSelectedRowCount && displaySelectedRowCount > 0 ? (
