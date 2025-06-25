@@ -1,13 +1,12 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('BarChartPro', () => {
-  const dataLength = 800;
+  const dataLength = 1_200;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -19,7 +18,7 @@ describe('BarChartPro', () => {
   bench(
     'BarChartPro with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <BarChartPro
           xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
@@ -33,9 +32,7 @@ describe('BarChartPro', () => {
         />,
       );
 
-      await findByText('60', { ignore: 'span' });
-
-      cleanup();
+      expect(page.getByText('60')).toBeInTheDocument();
     },
     options,
   );

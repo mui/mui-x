@@ -1,13 +1,12 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('LineChart', () => {
-  const dataLength = 1_400;
+  const dataLength = 5_000;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -19,7 +18,7 @@ describe('LineChart', () => {
   bench(
     'LineChart with big data amount (with marks)',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <LineChart
           xAxis={[{ data: xData }]}
           series={[{ data: yData, showMark: true }]}
@@ -28,9 +27,7 @@ describe('LineChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
-
-      cleanup();
+      expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
     },
     options,
   );
@@ -38,7 +35,7 @@ describe('LineChart', () => {
   bench(
     'Area chart with big data amount (no marks)',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <LineChart
           xAxis={[{ data: xData }]}
           series={[{ area: true, data: yData, showMark: false }]}
@@ -47,9 +44,7 @@ describe('LineChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
-
-      cleanup();
+      expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
     },
     options,
   );
