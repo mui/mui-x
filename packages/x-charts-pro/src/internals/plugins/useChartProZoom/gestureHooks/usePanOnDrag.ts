@@ -37,13 +37,17 @@ export const usePanOnDrag = (
       return () => {};
     }
 
-    const handlePanStart = () => {
-      startRef.current = store.value.zoom.zoomData;
+    const handlePanStart = (event: PanEvent) => {
+      if (event.detail.target === element || instance.isElementInside(event.detail.target)) {
+        startRef.current = store.value.zoom.zoomData;
+      }
+    };
+    const handlePanEnd = () => {
+      startRef.current = null;
     };
 
     const handlePanThrottled = rafThrottle((event: PanEvent) => {
-      const target = event.detail.srcEvent.target as SVGElement | undefined;
-      if (target?.hasAttribute('data-charts-zoom-slider') || !startRef.current) {
+      if (!startRef.current) {
         return;
       }
 
@@ -62,10 +66,12 @@ export const usePanOnDrag = (
 
     const panHandler = instance.addInteractionListener('pan', handlePanThrottled);
     const panStartHandler = instance.addInteractionListener('panStart', handlePanStart);
+    const panEndHandler = instance.addInteractionListener('panEnd', handlePanEnd);
 
     return () => {
-      panHandler.cleanup();
       panStartHandler.cleanup();
+      panHandler.cleanup();
+      panEndHandler.cleanup();
       handlePanThrottled.clear();
     };
   }, [

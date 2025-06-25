@@ -271,7 +271,6 @@ export function ChartAxisZoomSliderActiveTrack({
         height={previewHeight}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
-        data-charts-zoom-slider
       />
       <ChartAxisZoomSliderThumb
         ref={setStartThumbEl}

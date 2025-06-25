@@ -90,7 +90,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const srvEvent = event.detail.srcEvent;
-      const target = event.detail.srcEvent.target as SVGElement | undefined;
+      const target = event.detail.target as SVGElement | undefined;
       const svgPoint = getSVGPoint(element, srvEvent);
       // Release the pointer capture if we are panning, as this would cause the tooltip to
       // be locked to the first "section" it touches.
@@ -100,7 +100,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       ) {
         target?.releasePointerCapture(event.detail.srcEvent.pointerId);
       }
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target as SVGElement)) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target)) {
         instance.cleanInteraction?.();
         return;
       }

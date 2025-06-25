@@ -93,19 +93,20 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const srvEvent = event.detail.srcEvent;
-      const target = event.detail.srcEvent.target as SVGElement | undefined;
+      const target = event.detail.target as SVGElement | undefined;
       const svgPoint = getSVGPoint(element, srvEvent);
+
       // Release the pointer capture if we are panning, as this would cause the tooltip to
       // be locked to the first "section" it touches.
       if (
         event.detail.srcEvent.buttons >= 1 &&
         target?.hasPointerCapture(event.detail.srcEvent.pointerId) &&
         // Ensure we are not removing the capture from the zoom slider
-        !target.hasAttribute('data-charts-zoom-slider')
+        instance.isElementInside(target)
       ) {
         target?.releasePointerCapture(event.detail.srcEvent.pointerId);
       }
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target as SVGElement)) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target)) {
         instance.cleanInteraction?.();
         return;
       }

@@ -90,15 +90,6 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
       };
     }, [onMoveEvent, orientation]);
 
-    return (
-      <Rect
-        data-charts-zoom-slider
-        className={clsx(classes.root, className)}
-        ref={ref}
-        rx={rx}
-        ry={ry}
-        {...rest}
-      />
-    );
+    return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...rest} />;
   },
 );
