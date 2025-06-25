@@ -76,11 +76,9 @@ describe('<EventPopover />', () => {
     await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-    const input = screen.getByLabelText(/start date/i);
-    const errorId = input.getAttribute('aria-describedby');
-    expect(errorId).not.to.equal(null);
-    const errorDiv = document.getElementById(errorId!);
-    expect(errorDiv?.textContent).to.match(/start.*before.*end/i);
+    expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
+      /start.*before.*end/i,
+    );
   });
 
   it('should call "onEventDelete" with the event id when delete button is clicked', async () => {
