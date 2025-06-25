@@ -276,7 +276,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
 
   ```diff
-  -valueFormatter: ({ value }) => value,
+  -valueFormatter: ({ value, row, column, apiRef }) => value,
   +valueFormatter: (value, row, column, apiRef) => value,
   ```
 

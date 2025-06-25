@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { SinonSpy } from 'sinon';
 import {
   cleanText,
@@ -40,7 +39,7 @@ export function expectPickerChangeHandlerValue(
   expectedValue: any,
 ) {
   if (isPickerRangeType(type)) {
-    spyCallback.lastCall.firstArg.forEach((value, index) => {
+    spyCallback.lastCall.firstArg.forEach((value: any, index: number) => {
       expect(value).to.deep.equal(expectedValue[index]);
     });
   } else {

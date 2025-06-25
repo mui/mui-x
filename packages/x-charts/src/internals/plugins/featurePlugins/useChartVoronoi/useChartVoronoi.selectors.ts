@@ -4,6 +4,6 @@ import { UseChartVoronoiSignature } from './useChartVoronoi.types';
 const selectVoronoi: ChartRootSelector<UseChartVoronoiSignature> = (state) => state.voronoi;
 
 export const selectorChartsVoronoiIsVoronoiEnabled = createSelector(
-  selectVoronoi,
+  [selectVoronoi],
   (voronoi) => voronoi?.isVoronoiEnabled,
 );
