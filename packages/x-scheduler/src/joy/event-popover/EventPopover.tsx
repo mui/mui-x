@@ -163,11 +163,21 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       />
                     </Field.Label>
                   </Field.Root>
-                  <Field.Root name="startDate" className="EventPopoverDateTimeFieldsError">
-                    <Field.Error id="startDate-error" />
+                  <Field.Root
+                    name="startDate"
+                    className="EventPopoverDateTimeFieldsError"
+                    id="startDate-error"
+                    aria-live="polite"
+                  >
+                    <Field.Error />
                   </Field.Root>
-                  <Field.Root name="startTime" className="EventPopoverDateTimeFieldsError">
-                    <Field.Error id="startTime-error" />
+                  <Field.Root
+                    name="startTime"
+                    className="EventPopoverDateTimeFieldsError"
+                    id="startTime-error"
+                    aria-live="polite"
+                  >
+                    <Field.Error />
                   </Field.Root>
                 </div>
                 <Separator className="EventPopoverSeparator" />
