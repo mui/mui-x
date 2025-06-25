@@ -740,7 +740,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         />,
       );
 
-      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
 
       const columnCheckboxes = screen.getAllByRole('checkbox');
 
@@ -749,8 +749,8 @@ describe('<DataGridPro /> - Column pinning', () => {
 
       await user.click(columnCheckboxes[1]);
 
-      await user.click(screen.getByRole('button', { name: 'Columns' }));
-      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
 
       const checkboxesAfterToggle = screen.getAllByRole('checkbox');
 
@@ -774,7 +774,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         />,
       );
 
-      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
 
       const columnCheckboxes = screen.getAllByRole('checkbox');
 
@@ -783,8 +783,8 @@ describe('<DataGridPro /> - Column pinning', () => {
 
       await user.click(columnCheckboxes[columnCheckboxes.length - 1]);
 
-      await user.click(screen.getByRole('button', { name: 'Columns' }));
-      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
 
       const checkboxesAfterToggle = screen.getAllByRole('checkbox');
       expect(checkboxesAfterToggle[0]).to.have.attribute('name', 'brand');
@@ -808,7 +808,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         />,
       );
 
-      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Select columns' }));
 
       const columnCheckboxes = screen.getAllByRole('checkbox');
 
