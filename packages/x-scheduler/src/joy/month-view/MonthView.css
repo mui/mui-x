@@ -1,0 +1,80 @@
+.MonthViewContainer {
+  --fixed-cell-width: 28px;
+}
+
+.MonthViewContainer {
+  width: 100%;
+  border-radius: var(--radius-4);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.MonthViewRoot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+.MonthViewHeader {
+  display: grid;
+  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
+  border-block-end: 1px solid var(--border-color);
+}
+
+.MonthViewHeaderCell:not(:first-child) {
+  border-inline-start: 1px solid var(--border-color);
+}
+
+.MonthViewHeaderCell {
+  padding: var(--space-2);
+  text-align: center;
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+}
+
+.MonthViewWeekHeaderCell {
+  padding: var(--space-2) 0;
+  text-align: center;
+  font-size: var(--font-size-1);
+}
+
+.MonthViewBody {
+  flex: 1;
+  display: grid;
+  grid-auto-rows: 1fr;
+  max-height: 100%;
+}
+
+.MonthViewRow {
+  display: grid;
+  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
+}
+
+.MonthViewRow:not(:last-child) {
+  border-block-end: 1px solid var(--border-color);
+}
+
+.MonthViewWeekNumberCell {
+  padding: var(--space-2) 0;
+  text-align: center;
+  font-size: var(--font-size-1);
+}
+
+.MonthViewCell {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+}
+
+.MonthViewCell:not(:first-child) {
+  border-inline-start: 1px solid var(--border-color);
+}
+
+.MonthViewCellNumber {
+  align-self: end;
+}
