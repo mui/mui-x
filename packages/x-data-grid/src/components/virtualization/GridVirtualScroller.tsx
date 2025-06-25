@@ -145,7 +145,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
         </rootProps.slots.bottomContainer>
       </Scroller>
-      {hasScrollX && !rootProps.listView && (
+      {hasScrollX && (
         <React.Fragment>
           <ScrollShadows position="horizontal" />
           <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />

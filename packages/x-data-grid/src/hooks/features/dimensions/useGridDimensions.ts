@@ -46,6 +46,7 @@ type RootProps = Pick<
   | 'columnHeaderHeight'
   | 'columnGroupHeaderHeight'
   | 'headerFilterHeight'
+  | 'listView'
   | 'slotProps'
 >;
 
@@ -239,6 +240,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       if (hasScrollX) {
         viewportInnerSize.height -= scrollbarSize;
       }
+    }
+
+    if (props.listView) {
+      hasScrollX = false;
     }
 
     if (overlayType === 'noColumnsOverlay' || loadingOverlayVariant === 'skeleton') {
