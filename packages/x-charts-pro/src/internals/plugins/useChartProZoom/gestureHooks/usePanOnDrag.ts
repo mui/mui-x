@@ -46,13 +46,9 @@ export const usePanOnDrag = (
       startRef.current = null;
     };
 
-    const handlePanThrottled = rafThrottle((event: PanEvent) => {
-      if (!startRef.current) {
-        return;
-      }
-
+    const throttledCallback = rafThrottle((event: PanEvent, zoomData: readonly ZoomData[]) => {
       const newZoomData = translateZoom(
-        startRef.current,
+        zoomData,
         { x: event.detail.activeDeltaX, y: -event.detail.activeDeltaY },
         {
           width: drawingArea.width,
@@ -64,7 +60,15 @@ export const usePanOnDrag = (
       setZoomDataCallback(newZoomData);
     });
 
-    const panHandler = instance.addInteractionListener('pan', handlePanThrottled);
+    const handlePan = (event: PanEvent) => {
+      const zoomData = startRef.current;
+      if (!zoomData) {
+        return;
+      }
+      throttledCallback(event, zoomData);
+    };
+
+    const panHandler = instance.addInteractionListener('pan', handlePan);
     const panStartHandler = instance.addInteractionListener('panStart', handlePanStart);
     const panEndHandler = instance.addInteractionListener('panEnd', handlePanEnd);
 
@@ -72,7 +76,7 @@ export const usePanOnDrag = (
       panStartHandler.cleanup();
       panHandler.cleanup();
       panEndHandler.cleanup();
-      handlePanThrottled.clear();
+      throttledCallback.clear();
     };
   }, [
     instance,
