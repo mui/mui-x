@@ -51,29 +51,12 @@ const customConfigurationOptions = Object.fromEntries(
   Object.entries(configurationOptions).filter(([key]) => key === 'column'),
 );
 
-function getOnRender(max) {
-  return function onRender(type, props, Component) {
-    if (type !== 'column') {
-      return <Component {...props} />;
-    }
-
-    return <BarChart {...props} yAxis={[{ min: 0, max }]} />;
-  };
-}
-
 export default function GridChartsIntegrationLiveData() {
   const apiRef = useGridApiRef();
 
   React.useEffect(() => {
     const subscription = interval(1000).subscribe(() => {
-      apiRef.current?.updateRows(
-        processDefinitions.map((process, index) => ({
-          id: index,
-          process: process.name,
-          cpu: randomInt(process.minCpu, process.maxCpu),
-          memory: randomInt(process.minMemory, process.maxMemory),
-        })),
-      );
+      apiRef.current?.updateRows(generateRows());
     });
 
     return () => {
@@ -88,7 +71,7 @@ export default function GridChartsIntegrationLiveData() {
           <DataGridPremium
             apiRef={apiRef}
             columns={columns}
-            rows={[]}
+            rows={generateRows()}
             showToolbar
             chartsIntegration
             slots={{
@@ -150,4 +133,23 @@ export default function GridChartsIntegrationLiveData() {
       </div>
     </GridChartsIntegrationContextProvider>
   );
+}
+
+function generateRows() {
+  return processDefinitions.map((process, index) => ({
+    id: index,
+    process: process.name,
+    cpu: randomInt(process.minCpu, process.maxCpu),
+    memory: randomInt(process.minMemory, process.maxMemory),
+  }));
+}
+
+function getOnRender(max) {
+  return function onRender(type, props, Component) {
+    if (type !== 'column') {
+      return <Component {...props} />;
+    }
+
+    return <BarChart {...props} yAxis={[{ min: 0, max }]} />;
+  };
 }
