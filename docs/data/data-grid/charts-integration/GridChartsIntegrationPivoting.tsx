@@ -42,8 +42,12 @@ export default function GridChartsIntegrationPivoting() {
       enabled: true,
     },
     chartsIntegration: {
-      categories: ['commodity'],
-      chartType: 'column',
+      charts: {
+        main: {
+          categories: ['commodity'],
+          chartType: 'column',
+        },
+      },
     },
   };
 
@@ -67,6 +71,7 @@ export default function GridChartsIntegrationPivoting() {
       hasInitializedPivotingSeries.current = true;
       // pick up the first 5 dyamically created columns with quantity in the name and enable first 3
       apiRef.current?.updateSeries(
+        'main',
         unwrappedGroupingModel
           .filter((field) => field.endsWith('quantity'))
           .slice(0, 5)
@@ -102,7 +107,7 @@ export default function GridChartsIntegrationPivoting() {
             columnGroupHeaderHeight={35}
           />
         </div>
-        <GridChartsRendererProxy renderer={ChartsRenderer} />
+        <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
       </div>
     </GridChartsIntegrationContextProvider>
   );
