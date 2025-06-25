@@ -1,0 +1,153 @@
+import * as React from 'react';
+import { interval } from 'rxjs';
+import {
+  DataGridPremium,
+  GridChartsConfigurationPanel,
+  GridChartsIntegrationContextProvider,
+  GridChartsRendererProxy,
+  useGridApiRef,
+} from '@mui/x-data-grid-premium';
+import { randomInt } from '@mui/x-data-grid-generator';
+import {
+  ChartsRenderer,
+  configurationOptions,
+} from '@mui/x-charts-premium/ChartsRenderer';
+import { BarChart } from '@mui/x-charts/BarChart';
+
+const columns = [
+  { field: 'id' },
+  { field: 'process', headerName: 'Process', width: 150 },
+  {
+    field: 'cpu',
+    headerName: 'CPU',
+    width: 100,
+    type: 'number',
+    valueFormatter: (value) => `${value}%`,
+  },
+  {
+    field: 'memory',
+    headerName: 'Memory',
+    width: 100,
+    type: 'number',
+    valueFormatter: (value) => `${value} MB`,
+  },
+];
+
+const processDefinitions = [
+  { name: 'chrome', minCpu: 20, maxCpu: 80, minMemory: 950, maxMemory: 1000 },
+  { name: 'finder', minCpu: 0, maxCpu: 5, minMemory: 250, maxMemory: 300 },
+  { name: 'mail', minCpu: 0, maxCpu: 5, minMemory: 375, maxMemory: 400 },
+  { name: 'terminal', minCpu: 3, maxCpu: 10, minMemory: 120, maxMemory: 160 },
+  { name: 'adobe', minCpu: 50, maxCpu: 90, minMemory: 3700, maxMemory: 3900 },
+  { name: 'firefox', minCpu: 3, maxCpu: 20, minMemory: 670, maxMemory: 700 },
+  { name: 'slack', minCpu: 1, maxCpu: 10, minMemory: 480, maxMemory: 500 },
+  { name: 'chrome', minCpu: 3, maxCpu: 30, minMemory: 770, maxMemory: 790 },
+  { name: 'spotify', minCpu: 1, maxCpu: 10, minMemory: 220, maxMemory: 250 },
+  { name: 'chrome', minCpu: 12, maxCpu: 25, minMemory: 350, maxMemory: 400 },
+  { name: 'chrome', minCpu: 20, maxCpu: 30, minMemory: 550, maxMemory: 600 },
+];
+
+const customConfigurationOptions = Object.fromEntries(
+  Object.entries(configurationOptions).filter(([key]) => key === 'column'),
+);
+
+function getOnRender(max) {
+  return function onRender(type, props, Component) {
+    if (type !== 'column') {
+      return <Component {...props} />;
+    }
+
+    return <BarChart {...props} yAxis={[{ min: 0, max }]} />;
+  };
+}
+
+export default function GridChartsIntegrationLiveData() {
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    const subscription = interval(1000).subscribe(() => {
+      apiRef.current?.updateRows(
+        processDefinitions.map((process, index) => ({
+          id: index,
+          process: process.name,
+          cpu: randomInt(process.minCpu, process.maxCpu),
+          memory: randomInt(process.minMemory, process.maxMemory),
+        })),
+      );
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [apiRef]);
+
+  return (
+    <GridChartsIntegrationContextProvider>
+      <div style={{ gap: 32, width: '100%' }}>
+        <div style={{ height: 370 }}>
+          <DataGridPremium
+            apiRef={apiRef}
+            columns={columns}
+            rows={[]}
+            showToolbar
+            chartsIntegration
+            slots={{
+              chartsConfigurationPanel: GridChartsConfigurationPanel,
+            }}
+            slotProps={{
+              chartsConfigurationPanel: {
+                schema: customConfigurationOptions,
+              },
+            }}
+            initialState={{
+              columns: {
+                columnVisibilityModel: {
+                  id: false,
+                },
+              },
+              chartsIntegration: {
+                charts: {
+                  left: {
+                    categories: ['process'],
+                    series: ['cpu'],
+                    chartType: 'column',
+                    configuration: {
+                      grid: 'horizontal',
+                      colors: 'blueberryTwilightPalette',
+                    },
+                  },
+                  right: {
+                    categories: ['process'],
+                    series: ['memory'],
+                    chartType: 'column',
+                    configuration: {
+                      grid: 'horizontal',
+                      colors: 'mangoFusionPalette',
+                    },
+                  },
+                },
+              },
+              sorting: {
+                sortModel: [{ field: 'cpu', sort: 'desc' }],
+              },
+            }}
+          />
+        </div>
+        <div style={{ marginTop: 32, marginRight: 32, display: 'flex' }}>
+          <GridChartsRendererProxy
+            id="left"
+            label="CPU"
+            renderer={ChartsRenderer}
+            onRender={getOnRender(100)}
+          />
+          <GridChartsRendererProxy
+            id="right"
+            label="Memory"
+            renderer={ChartsRenderer}
+            onRender={getOnRender(4096)}
+          />
+        </div>
+      </div>
+    </GridChartsIntegrationContextProvider>
+  );
+}
