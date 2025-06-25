@@ -8,7 +8,7 @@ import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useSelectorEffect } from '@mui/x-internals/store';
 import { Size, DimensionsState } from '../models';
 import type { VirtualizerParams } from '../useVirtualizer';
-import type { CoreState } from '../useVirtualizer';
+import type { BaseState } from '../useVirtualizer';
 import { Virtualization } from './virtualization';
 
 const EMPTY_SIZE: Size = { width: 0, height: 0 };
@@ -36,7 +36,7 @@ const EMPTY_DIMENSIONS: DimensionsState = {
 };
 
 const selectors = {
-  dimensions: (state: CoreState) => state.dimensions,
+  dimensions: (state: BaseState) => state.dimensions,
 };
 
 export const Dimensions = {
@@ -61,7 +61,7 @@ function initializeState(params: VirtualizerParams) {
   };
 }
 
-function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
+function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
   const isFirstSizing = React.useRef(true);
 
   const {
@@ -89,7 +89,7 @@ function useDimensions(store: Store<CoreState>, params: VirtualizerParams) {
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
-    const scrollbarSize = measureScrollbarSize(params.refs.main.current, params.scrollbarSize);
+    const scrollbarSize = measureScrollbarSize(params.refs.container.current, params.scrollbarSize);
 
     const rowsMeta = params.fixme.rowsMeta();
 

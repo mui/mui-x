@@ -10,7 +10,7 @@ import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import reactMajor from '@mui/x-internals/reactMajor';
 import { createSelector, useSelector, Store } from '@mui/x-internals/store';
-import type { CoreState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -45,10 +45,10 @@ export const EMPTY_RENDER_CONTEXT = {
 };
 
 const selectors = {
-  rootSize: createSelector((state: CoreState) => state.rootSize),
-  renderContext: createSelector((state: CoreState) => state.virtualization.renderContext),
-  enabledForRows: createSelector((state: CoreState) => state.virtualization.enabledForRows),
-  enabledForColumns: createSelector((state: CoreState) => state.virtualization.enabledForColumns),
+  rootSize: createSelector((state: BaseState) => state.rootSize),
+  renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
+  enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
+  enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
 };
 
 export const Virtualization = {
@@ -80,7 +80,7 @@ function initializeState(params: VirtualizerParams) {
   return state;
 }
 
-function useVirtualization(store: Store<CoreState>, params: VirtualizerParams) {
+function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
   const {
     initialState,
     isRtl,
@@ -117,62 +117,59 @@ function useVirtualization(store: Store<CoreState>, params: VirtualizerParams) {
 
   const isRenderContextReady = React.useRef(false);
 
-  const mainRefCallback = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      refs.main.current = node;
+  useEnhancedEffect(() => {
+    const node = params.refs.container.current;
 
-      if (!node) {
-        return undefined;
-      }
-
-      {
-        // Initialize root size
-
-        const initialRect = node.getBoundingClientRect();
-        const rootSize = {
-          width: roundToDecimalPlaces(initialRect.width, 1),
-          height: roundToDecimalPlaces(initialRect.height, 1),
-        };
-
-        if (store.state.rootSize === Size.EMPTY || !Size.equals(rootSize, store.state.rootSize)) {
-          store.update({ rootSize });
-          onResize?.(rootSize);
-        }
-      }
-
-      if (typeof ResizeObserver === 'undefined') {
-        return undefined;
-      }
-
-      const observer = new ResizeObserver((entries) => {
-        const entry = entries[0];
-        if (!entry) {
-          return;
-        }
-
-        const rootSize = {
-          width: roundToDecimalPlaces(entry.contentRect.width, 1),
-          height: roundToDecimalPlaces(entry.contentRect.height, 1),
-        };
-
-        if (!Size.equals(rootSize, store.state.rootSize)) {
-          store.update({ rootSize: rootSize });
-          onResize?.(rootSize);
-        }
-      });
-
-      observer.observe(node);
-
-      if (reactMajor >= 19) {
-        return () => {
-          refs.main.current = null;
-          observer.disconnect();
-        };
-      }
+    if (!node) {
       return undefined;
-    },
-    [refs.main, onResize],
-  );
+    }
+
+    {
+      // Initialize root size
+
+      const initialRect = node.getBoundingClientRect();
+      const rootSize = {
+        width: roundToDecimalPlaces(initialRect.width, 1),
+        height: roundToDecimalPlaces(initialRect.height, 1),
+      };
+
+      if (store.state.rootSize === Size.EMPTY || !Size.equals(rootSize, store.state.rootSize)) {
+        store.update({ rootSize });
+        onResize?.(rootSize);
+      }
+    }
+
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) {
+        return;
+      }
+
+      const rootSize = {
+        width: roundToDecimalPlaces(entry.contentRect.width, 1),
+        height: roundToDecimalPlaces(entry.contentRect.height, 1),
+      };
+
+      if (!Size.equals(rootSize, store.state.rootSize)) {
+        store.update({ rootSize: rootSize });
+        onResize?.(rootSize);
+      }
+    });
+
+    observer.observe(node);
+
+    if (reactMajor >= 19) {
+      return () => {
+        refs.container.current = null;
+        observer.disconnect();
+      };
+    }
+    return undefined;
+  }, [refs.container, onResize]);
 
   const renderContext = useSelector(store, selectors.renderContext);
   const enabledForRows = useSelector(store, selectors.enabledForRows);
@@ -632,7 +629,7 @@ function useVirtualization(store: Store<CoreState>, params: VirtualizerParams) {
     setPanels,
     getRows,
     getContainerProps: () => ({
-      ref: mainRefCallback,
+      ref: params.refs.container,
     }),
     getScrollerProps: () => ({
       ref: refs.scroller,

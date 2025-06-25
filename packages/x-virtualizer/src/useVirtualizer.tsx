@@ -21,7 +21,7 @@ import {
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
 export type VirtualScrollerCompat = Virtualization.State['getters'];
 
-export type CoreState = Virtualization.State & Dimensions.State;
+export type BaseState = Virtualization.State & Dimensions.State;
 
 // FIXME
 type RenderContextInputs = any;
@@ -52,7 +52,7 @@ export type VirtualizerParams = {
   pinnedRows: PinnedRows;
   pinnedColumns: PinnedColumns;
   refs: {
-    main: RefObject<HTMLDivElement | null>;
+    container: RefObject<HTMLDivElement | null>;
     scroller: RefObject<HTMLDivElement | null>;
     scrollbarVertical: RefObject<HTMLDivElement | null>;
     scrollbarHorizontal: RefObject<HTMLDivElement | null>;

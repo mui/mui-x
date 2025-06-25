@@ -141,7 +141,7 @@ export function useGridVirtualizer(
     pinnedRows,
     pinnedColumns,
     refs: {
-      main: apiRef.current.mainElementRef,
+      container: apiRef.current.mainElementRef,
       scroller: apiRef.current.virtualScrollerRef,
       scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
       scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
