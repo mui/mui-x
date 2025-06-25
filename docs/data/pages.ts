@@ -532,7 +532,16 @@ const pages: MuiPage[] = [
             title: 'Heatmap',
             plan: 'pro',
           },
-          { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', unstable: true },
+          {
+            pathname: '/x/react-charts-funnel',
+            title: 'Funnel',
+            plan: 'pro',
+            unstable: true,
+            children: [
+              { pathname: '/x/react-charts/funnel', title: 'Funnel Overview' },
+              { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
+            ],
+          },
           {
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
