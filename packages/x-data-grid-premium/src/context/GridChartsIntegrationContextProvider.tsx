@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import { GridChartsIntegrationContext } from '../components/chartsIntegration/GridChartsIntegrationContext';
-import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
+import type {
+  ChartState,
+  GridChartsIntegrationContextValue,
+} from '../models/gridChartsIntegration';
+import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 export interface GridChartsIntegrationContextProviderProps {
   children: React.ReactNode;
@@ -10,27 +14,27 @@ export interface GridChartsIntegrationContextProviderProps {
 export function GridChartsIntegrationContextProvider({
   children,
 }: GridChartsIntegrationContextProviderProps) {
-  const [categories, setCategories] = React.useState<
-    GridChartsIntegrationContextValue['categories']
-  >([]);
-  const [series, setSeries] = React.useState<GridChartsIntegrationContextValue['series']>([]);
-  const [chartType, setChartType] = React.useState<string>('');
-  const [configuration, setConfiguration] = React.useState<
-    GridChartsIntegrationContextValue['configuration']
-  >({});
+  const [chartStateLookup, setChartStateLookup] = React.useState<Record<string, ChartState>>({});
+  const setChartState = React.useCallback((id: string, state: Partial<ChartState>) => {
+    if (id === '') {
+      return;
+    }
+
+    setChartStateLookup((prev) => ({
+      ...prev,
+      [id]: {
+        ...(prev[id] || EMPTY_CHART_INTEGRATION_CONTEXT_STATE),
+        ...state,
+      },
+    }));
+  }, []);
 
   const value = React.useMemo<GridChartsIntegrationContextValue>(
     () => ({
-      categories,
-      series,
-      chartType,
-      configuration,
-      setCategories,
-      setSeries,
-      setChartType,
-      setConfiguration,
+      chartStateLookup,
+      setChartState,
     }),
-    [categories, series, chartType, configuration],
+    [chartStateLookup, setChartState],
   );
 
   return (
