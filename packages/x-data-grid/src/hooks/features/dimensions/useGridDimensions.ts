@@ -301,6 +301,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     setDimensions,
     props.scrollbarSize,
     props.autoHeight,
+    props.listView,
     rowHeight,
     headerHeight,
     groupHeaderHeight,
