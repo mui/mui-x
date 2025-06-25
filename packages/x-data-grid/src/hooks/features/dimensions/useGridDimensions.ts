@@ -31,6 +31,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
+import { useGridOverlays } from '../overlays/useGridOverlays';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -45,6 +46,7 @@ type RootProps = Pick<
   | 'columnHeaderHeight'
   | 'columnGroupHeaderHeight'
   | 'headerFilterHeight'
+  | 'slotProps'
 >;
 
 export type GridDimensionsState = GridDimensions;
@@ -119,6 +121,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
   const isFirstSizing = React.useRef(true);
+  const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, props);
 
   const {
     rowHeight,
@@ -238,6 +241,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       }
     }
 
+    if (overlayType === 'noColumnsOverlay' || loadingOverlayVariant === 'skeleton') {
+      hasScrollY = false;
+    }
+
     const rowWidth = Math.max(
       viewportOuterSize.width,
       columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
@@ -297,6 +304,8 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
+    overlayType,
+    loadingOverlayVariant,
   ]);
 
   const updateDimensionCallback = useEventCallback(updateDimensions);

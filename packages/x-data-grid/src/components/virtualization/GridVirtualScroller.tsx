@@ -23,8 +23,11 @@ import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerF
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
 import { GridVirtualScrollbar as Scrollbar, ScrollbarCorner } from './GridVirtualScrollbar';
 import { GridScrollShadows as ScrollShadows } from '../GridScrollShadows';
-import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
-import { GridOverlayType } from '../base/GridOverlays';
+import { GridOverlayWrapper } from '../base/GridOverlays';
+import type {
+  GridOverlayType,
+  GridLoadingOverlayVariant,
+} from '../../hooks/features/overlays/gridOverlaysInterfaces';
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
@@ -86,12 +89,14 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
   const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
-  const { getOverlay, overlaysProps } = useGridOverlays();
+  const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, rootProps);
+  const Overlay = rootProps.slots?.[overlayType];
   const ownerState = {
     classes: rootProps.classes,
     hasScrollX,
     hasPinnedRight,
-    ...overlaysProps,
+    overlayType,
+    loadingOverlayVariant,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -119,7 +124,14 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
-        {getOverlay()}
+        {overlayType && (
+          <GridOverlayWrapper
+            overlayType={overlayType}
+            loadingOverlayVariant={loadingOverlayVariant}
+          >
+            <Overlay {...rootProps.slotProps?.[overlayType]} />
+          </GridOverlayWrapper>
+        )}
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>
