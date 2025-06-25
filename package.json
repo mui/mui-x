@@ -1,5 +1,5 @@
 {
-  "version": "7.29.4",
+  "version": "7.29.6",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -65,6 +65,7 @@
     "release:publish": "pnpm publish --recursive --tag latest-v7",
     "release:publish:dry-run": "pnpm publish --recursive --tag latest-v7 --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
+    "release:prepare": "node scripts/createReleasePR.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\""
   },
@@ -152,12 +153,14 @@
     "eslint-plugin-react-compiler": "0.0.0-experimental-9ed098e-20240725",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-testing-library": "^6.3.0",
+    "execa": "^9.4.0",
     "fast-glob": "^3.3.2",
     "format-util": "^1.0.5",
     "fs-extra": "^11.2.0",
     "glob-gitignore": "^1.0.15",
     "globby": "^14.0.2",
     "html-webpack-plugin": "^5.6.0",
+    "inquirer": "^9.2.15",
     "jsdom": "25.0.1",
     "jss": "^10.10.0",
     "jss-plugin-template": "^10.10.0",

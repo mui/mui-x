@@ -1,10 +1,16 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GridGroupingColDefOverride,
+  GridValidRowModel,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> = {
+  leafField: 'title',
+};
 
 // This demo is used in visual regression tests to spot regressions in the column menu
 export default function ColumnMenuGridPremiumSnap() {
@@ -44,7 +50,7 @@ export default function ColumnMenuGridPremiumSnap() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        groupingColDef={{ leafField: 'title' }}
+        groupingColDef={groupingColDef}
         initialState={initialState}
       />
     </div>

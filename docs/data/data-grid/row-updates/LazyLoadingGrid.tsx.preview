@@ -8,4 +8,6 @@
   filterMode="server"
   rowsLoadingMode="server"
   onFetchRows={debouncedHandleFetchRows}
+  onSortModelChange={handleModelChange}
+  onFilterModelChange={handleModelChange}
 />

@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.6
+
+_Jun 6, 2025_
+
+We'd like to extend a big thank you to @arminmeh, who made this release possible.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.6`
+
+- [DataGrid] Keep pipe pre-processors execution order when callback reference changes (#18217) @arminmeh
+
+#### `@mui/x-data-grid-pro@7.29.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.6`.
+
+#### `@mui/x-data-grid-premium@7.29.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.6`.
+
+### Docs
+
+- [docs] Keep `groupingColDef` reference stable in the grid demos (#17549) @arminmeh
+
+## 7.29.5
+
+_May 29, 2025_
+
+We'd like to extend a big thank you to @cherniavskii, who made this release possible.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.5`
+
+- [DataGrid] Avoid ResizeObserver loop error (@cherniavskii) (#18005) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@7.29.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.5`.
+
+#### `@mui/x-data-grid-premium@7.29.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.5`.
+
 ## 7.29.4
 
 _May 22, 2025_
