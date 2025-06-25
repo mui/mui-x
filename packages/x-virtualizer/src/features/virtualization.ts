@@ -8,7 +8,8 @@ import { RefObject } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
-import { createSelector, useSelector, Store } from '@mui/x-internals/store';
+import { createSelector, useSelector, useSelectorEffect, Store } from '@mui/x-internals/store';
+import { Dimensions } from './dimensions';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 import {
   PinnedRowPosition,
@@ -564,6 +565,8 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
 
     return undefined;
   });
+
+  useSelectorEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
   const getters = {
     setPanels,

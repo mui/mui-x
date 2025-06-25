@@ -195,7 +195,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
     }
 
-    apiRef.current.updateRenderContext?.();
     apiRef.current.publishEvent('debouncedResize', next.root);
   });
 }
