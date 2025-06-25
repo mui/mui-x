@@ -60,9 +60,6 @@ export type AddInteractionListener = {
 
 export interface UseChartInteractionListenerParameters {}
 
-export type UseChartInteractionListenerDefaultizedParameters =
-  UseChartInteractionListenerParameters & {};
-
 export interface UseChartInteractionListenerState {}
 
 export interface UseChartInteractionListenerInstance {
@@ -77,7 +74,7 @@ export interface UseChartInteractionListenerInstance {
 
 export type UseChartInteractionListenerSignature = ChartPluginSignature<{
   params: UseChartInteractionListenerParameters;
-  defaultizedParams: UseChartInteractionListenerDefaultizedParameters;
+  defaultizedParams: UseChartInteractionListenerParameters;
   state: UseChartInteractionListenerState;
   instance: UseChartInteractionListenerInstance;
 }>;

@@ -108,10 +108,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 
 useChartInteractionListener.params = {};
 
-useChartInteractionListener.getDefaultizedParams = ({ params }) => ({
-  ...params,
-});
-
 useChartInteractionListener.getInitialState = () => {
   return {};
 };
