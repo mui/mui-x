@@ -3,7 +3,7 @@ import { isTrace } from './env';
 
 const iterations = import.meta.env.BENCHMARK_ITERATIONS
   ? parseInt(import.meta.env.BENCHMARK_ITERATIONS, 10)
-  : 1;
+  : 100;
 
 const taskModes = new Map<string, 'run' | 'warmup'>();
 export function getTaskMode(taskName: string): 'run' | 'warmup' {
@@ -19,7 +19,11 @@ const traceOptions: BenchOptions = {
 };
 
 const benchOptions: BenchOptions = {
+  warmupIterations: 5,
+  warmupTime: 0,
   iterations,
+  throws: true,
+  time: 0,
 };
 
 export const options: BenchOptions = isTrace ? traceOptions : benchOptions;

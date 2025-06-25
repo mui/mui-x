@@ -1,0 +1,44 @@
+name: Update Charts Benchmark Baseline
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'next'
+    paths:
+      - 'packages/x-charts*/**'
+      - 'test/performance-charts/**'
+
+jobs:
+  performance-test:
+    name: Update Charts Benchmark Baseline
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          run_install: false
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install
+      - run: pnpm --filter "@mui/x-charts-premium..." build
+
+      - name: Run performance tests
+        run: pnpm --filter @mui-x-internal/performance-charts test:performance:ci
+      - run: jq '.commit = "${{ github.sha }}"' test/performance-charts/results.json > test/performance-charts/baseline-results.json
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: charts-benchmarks-results-${{ github.ref_name }}.json
+          path: ./test/performance-charts/baseline-results.json
+          if-no-files-found: error
