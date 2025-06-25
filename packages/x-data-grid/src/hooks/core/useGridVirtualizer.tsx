@@ -169,7 +169,6 @@ export function useGridVirtualizer(
 
     fixme: {
       rowsMeta: () => gridRowsMetaSelector(apiRef),
-      dimensions: () => apiRef.current.state.dimensions,
       onContextChange: (nextRenderContext) =>
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext),
       inputs: (enabledForRows, enabledForColumns) =>

@@ -159,7 +159,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
     // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
     // but only does something if we already have a render context, because
     // otherwise we would call an update directly on mount
-    const isReady = fixme.dimensions().isReady;
+    const isReady = Dimensions.selectors.dimensions(store.state).isReady;
     if (isReady && didRowsIntervalChange) {
       previousRowContext.current = nextRenderContext;
       fixme.onContextChange(nextRenderContext);
@@ -174,7 +174,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
       return undefined;
     }
 
-    const dimensions = fixme.dimensions();
+    const dimensions = Dimensions.selectors.dimensions(store.state);
     const maxScrollTop = Math.ceil(
       dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
     );
@@ -258,7 +258,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
 
   const forceUpdateRenderContext = () => {
     // skip update if dimensions are not ready and virtualization is enabled
-    if (!fixme.dimensions().isReady && (enabledForRows || enabledForColumns)) {
+    if (
+      !Dimensions.selectors.dimensions(store.state).isReady &&
+      (enabledForRows || enabledForColumns)
+    ) {
       return;
     }
     const inputs = fixme.inputs(enabledForRows, enabledForColumns);

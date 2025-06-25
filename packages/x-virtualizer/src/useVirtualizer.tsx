@@ -79,7 +79,6 @@ export type VirtualizerParams = {
 
   fixme: {
     rowsMeta: () => any;
-    dimensions: () => any;
     onContextChange: (c: RenderContext) => void;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
     onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;
