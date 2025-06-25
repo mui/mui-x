@@ -1,13 +1,12 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('BarChart', () => {
-  const dataLength = 800;
+  const dataLength = 1_200;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -19,13 +18,11 @@ describe('BarChart', () => {
   bench(
     'BarChart with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <BarChart xAxis={[{ data: xData }]} series={[{ data: yData }]} width={500} height={300} />,
       );
 
-      await findByText(dataLength.toString(), { ignore: 'span' });
-
-      cleanup();
+      expect(page.getByText('96')).toBeInTheDocument();
     },
     options,
   );

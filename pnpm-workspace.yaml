@@ -92,3 +92,6 @@ onlyBuiltDependencies:
   - nx
   - sharp
   - unrs-resolver
+
+patchedDependencies:
+  '@vitest/browser': patches/@vitest__browser.patch
