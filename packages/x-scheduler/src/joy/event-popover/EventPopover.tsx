@@ -3,7 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Popover } from '@base-ui-components/react/popover';
 import { Separator } from '@base-ui-components/react/separator';
+import { Field } from '@base-ui-components/react/field';
+import { Form } from '@base-ui-components/react/form';
 import { X } from 'lucide-react';
+import { Input } from '@base-ui-components/react/input';
 import { EventPopoverProps } from './EventPopover.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { getColorClassName } from '../internals/utils/color-utils';
@@ -24,22 +27,23 @@ export const EventPopover = React.forwardRef(function EventPopover(
     calendarEvent,
     calendarEventResource,
     onEventEdit,
+    onEventDelete,
     onClose,
     ...other
   } = props;
 
   const translations = useTranslations();
 
-  const [error, setError] = React.useState<string | null>(null);
+  const [errors, setErrors] = React.useState({});
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
+    const form = new FormData(event.currentTarget);
 
-    const startDateValue = (form.elements.namedItem('startDate') as HTMLInputElement).value;
-    const startTimeValue = (form.elements.namedItem('startTime') as HTMLInputElement).value;
-    const endDateValue = (form.elements.namedItem('endDate') as HTMLInputElement).value;
-    const endTimeValue = (form.elements.namedItem('endTime') as HTMLInputElement).value;
+    const startDateValue = form.get('startDate');
+    const startTimeValue = form.get('startTime');
+    const endDateValue = form.get('endDate');
+    const endTimeValue = form.get('endTime');
 
     const startISO = `${startDateValue}T${startTimeValue}`;
     const endISO = `${endDateValue}T${endTimeValue}`;
@@ -47,22 +51,32 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const start = adapter.date(startISO);
     const end = adapter.date(endISO);
 
+    setErrors({});
+
     if (adapter.isAfter(start, end) || adapter.isEqual(start, end)) {
-      setError(translations.startDateAfterEndDateError);
+      const isSameDay = adapter.isEqual(adapter.startOfDay(start), adapter.startOfDay(end));
+
+      setErrors({
+        [isSameDay ? 'startTime' : 'startDate']: translations.startDateAfterEndDateError,
+      });
+
       return;
     }
 
-    setError(null);
-
     onEventEdit({
       ...calendarEvent,
-      title: (form.elements.namedItem('title') as HTMLInputElement).value.trim(),
-      description: (form.elements.namedItem('description') as HTMLTextAreaElement).value.trim(),
+      title: (form.get('title') as string).trim(),
+      description: (form.get('description') as string).trim(),
       start,
       end,
     });
     onClose();
   };
+
+  const handleDelete = React.useCallback(() => {
+    onEventDelete(calendarEvent.id);
+    onClose();
+  }, [onEventDelete, calendarEvent.id, onClose]);
 
   return (
     <div ref={forwardedRef} className={className} {...other}>
@@ -70,24 +84,27 @@ export const EventPopover = React.forwardRef(function EventPopover(
         <Popover.Positioner
           sideOffset={8}
           anchor={anchor}
+          trackAnchor={false}
           className={clsx(
             'PopoverPositioner',
             getColorClassName({ resource: calendarEventResource }),
           )}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
-            <form onSubmit={handleSubmit}>
+            <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
               <header className="EventPopoverHeader">
-                <label className="EventPopoverTitle">
-                  <input
-                    className="EventPopoverTitleInput"
-                    type="text"
-                    name="title"
-                    defaultValue={calendarEvent.title}
-                    aria-label={translations.eventTitleAriaLabel}
-                    required
-                  />
-                </label>
+                <Field.Root name="title">
+                  <Field.Label className="EventPopoverTitle">
+                    <Input
+                      className="EventPopoverTitleInput"
+                      type="text"
+                      defaultValue={calendarEvent.title}
+                      aria-label={translations.eventTitleAriaLabel}
+                      required
+                    />
+                  </Field.Label>
+                  <Field.Error className="EventPopoverRequiredFieldError" />
+                </Field.Root>
                 <Popover.Close
                   aria-label={translations.closeButtonAriaLabel}
                   className="EventPopoverCloseButton"
@@ -98,72 +115,87 @@ export const EventPopover = React.forwardRef(function EventPopover(
               <Separator className="EventPopoverSeparator" />
               <div className="EventPopoverMainContent">
                 <div className="EventPopoverDateTimeFields">
-                  <label className="EventPopoverFormLabel">
-                    {translations.startDateLabel}
-                    <input
-                      className="EventPopoverInput"
-                      type="date"
-                      name="startDate"
-                      defaultValue={adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''} // Mejor que .toISODate()
-                      required
-                    />
-                  </label>
-                  <label className="EventPopoverFormLabel">
-                    {translations.startTimeLabel}
-                    <input
-                      className="EventPopoverInput"
-                      type="time"
-                      name="startTime"
-                      defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
-                      required
-                    />
-                  </label>
-                  <label className="EventPopoverFormLabel">
-                    {translations.endDateLabel}
-                    <input
-                      className="EventPopoverInput"
-                      type="date"
-                      name="endDate"
-                      defaultValue={adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''}
-                      required
-                    />
-                  </label>
-                  <label className="EventPopoverFormLabel">
-                    {translations.endTimeLabel}
-                    <input
-                      className="EventPopoverInput"
-                      type="time"
-                      name="endTime"
-                      defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
-                      required
-                    />
-                  </label>
-                  {error && (
-                    <div className="EventPopoverDateTimeFieldsError" role="alert">
-                      {error}
-                    </div>
-                  )}
+                  <Field.Root name="startDate">
+                    <Field.Label className="EventPopoverFormLabel">
+                      {translations.startDateLabel}
+                      <Input
+                        className="EventPopoverInput"
+                        type="date"
+                        defaultValue={
+                          adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''
+                        }
+                        required
+                      />
+                    </Field.Label>
+                  </Field.Root>
+                  <Field.Root name="startTime">
+                    <Field.Label className="EventPopoverFormLabel">
+                      {translations.startTimeLabel}
+                      <Input
+                        className="EventPopoverInput"
+                        type="time"
+                        defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
+                        required
+                      />
+                    </Field.Label>
+                  </Field.Root>
+                  <Field.Root name="endDate">
+                    <Field.Label className="EventPopoverFormLabel">
+                      {translations.endDateLabel}
+                      <Input
+                        className="EventPopoverInput"
+                        type="date"
+                        defaultValue={adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''}
+                        required
+                      />
+                    </Field.Label>
+                  </Field.Root>
+                  <Field.Root name="endTime">
+                    <Field.Label className="EventPopoverFormLabel">
+                      {translations.endTimeLabel}
+                      <Input
+                        className="EventPopoverInput"
+                        type="time"
+                        defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
+                        required
+                      />
+                    </Field.Label>
+                  </Field.Root>
+                  <Field.Root name="startDate" className="EventPopoverDateTimeFieldsError">
+                    <Field.Error />
+                  </Field.Root>
+                  <Field.Root name="startTime" className="EventPopoverDateTimeFieldsError">
+                    <Field.Error />
+                  </Field.Root>
                 </div>
                 <Separator className="EventPopoverSeparator" />
                 <div>
-                  <label className="EventPopoverFormLabel">
-                    {translations.descriptionLabel}
-                    <textarea
-                      className="EventPopoverTextarea"
-                      name="description"
-                      defaultValue={calendarEvent.description}
-                      rows={5}
-                    />
-                  </label>
+                  <Field.Root name="description">
+                    <Field.Label className="EventPopoverFormLabel">
+                      {translations.descriptionLabel}
+                      <Input
+                        render={
+                          <textarea
+                            className="EventPopoverTextarea"
+                            defaultValue={calendarEvent.description}
+                            rows={5}
+                          />
+                        }
+                      />
+                    </Field.Label>
+                  </Field.Root>
                 </div>
               </div>
               <Separator className="EventPopoverSeparator" />
               <div className="EventPopoverActions">
+                <button className="SecondaryErrorButton" type="button" onClick={handleDelete}>
+                  {translations.deleteEvent}
+                </button>
                 <button className="PrimaryButton" type="submit">
                   {translations.saveChanges}
                 </button>
               </div>
-            </form>
+            </Form>
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

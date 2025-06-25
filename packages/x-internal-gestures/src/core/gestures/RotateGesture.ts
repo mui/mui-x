@@ -230,6 +230,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
 
       case 'pointerup':
       case 'pointercancel':
+      case 'forceCancel':
         if (this.isActive) {
           const remainingPointers = relevantPointers.filter(
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
