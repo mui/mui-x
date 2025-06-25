@@ -1,0 +1,2 @@
+<LineChartPro {...settings} showToolbar />
+<Typography variant="caption">Source: World Bank</Typography>

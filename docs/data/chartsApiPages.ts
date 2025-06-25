@@ -101,18 +101,28 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-image-export-trigger',
+    title: 'ChartsToolbarImageExportTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-print-export-trigger',
+    title: 'ChartsToolbarPrintExportTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-toolbar-pro',
     title: 'ChartsToolbarPro',
     plan: 'pro',
   },
   {
-    pathname: '/x/api/charts/charts-toolbar-zoom-in-button',
-    title: 'ChartsToolbarZoomInButton',
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
+    title: 'ChartsToolbarZoomInTrigger',
     plan: 'pro',
   },
   {
-    pathname: '/x/api/charts/charts-toolbar-zoom-out-button',
-    title: 'ChartsToolbarZoomOutButton',
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-trigger',
+    title: 'ChartsToolbarZoomOutTrigger',
     plan: 'pro',
   },
   {

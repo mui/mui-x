@@ -78,7 +78,19 @@ You can configure the tooltip by setting the `zoom.slider.showTooltip` property 
 - `'hover'`: The tooltip is displayed on hover (default).
 - `false`: The tooltip is never displayed.
 
+#### Tooltip value formatting
+
+The value shown in the tooltip can also be customized by using the `valueFormatter` property of the respective axis.
+
+When formatting the zoom slider tooltip, the `valueFormatter` is called with `zoom-slider-tooltip` as its location.
+
 {{"demo": "ZoomSliderTooltip.js"}}
+
+### Limits
+
+The zoom slider uses the same limits as the zooming options. You can set the `minStart`, `maxEnd`, `minSpan`, and `maxSpan` properties on the axis config to restrict the zoom slider range.
+
+The zoom slider does not display values outside the range delimited by `minStart` and `maxEnd`.
 
 ### Composition
 

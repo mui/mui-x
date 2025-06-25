@@ -17,7 +17,7 @@
     "categoryAxis": {
       "type": {
         "name": "union",
-        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'point', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: number, tickLabelStyle?: object, tickSize?: number }"
+        "description": "{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'band', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'log', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'pow', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'sqrt', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'time', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'utc', size?: number, tickLabelStyle?: object, tickSize?: number }<br>&#124;&nbsp;{ categories?: Array&lt;string&gt;, disableLine?: bool, disableTicks?: bool, id?: number<br>&#124;&nbsp;string, position?: 'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top', scaleType?: 'linear', size?: number, tickLabelStyle?: object, tickSize?: number }"
       },
       "default": "{ position: 'none' }"
     },
@@ -104,8 +104,20 @@
       "default": "ChartsText",
       "class": null
     },
+    { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
-    { "name": "funnelSection", "description": "", "class": null },
+    {
+      "name": "funnelSection",
+      "description": "Custom component for funnel section.",
+      "default": "FunnelSection",
+      "class": null
+    },
+    {
+      "name": "funnelSectionLabel",
+      "description": "Custom component for funnel section label.",
+      "default": "FunnelSectionLabel",
+      "class": null
+    },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
@@ -138,7 +150,10 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
   "muiName": "MuiFunnelChart",
+  "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",

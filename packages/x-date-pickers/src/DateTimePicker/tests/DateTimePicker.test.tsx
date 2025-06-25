@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';

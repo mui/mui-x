@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { SxProps } from '@mui/system';
 
 export type RenderProp<Props, State = {}> =
   | ((props: Props, state: State) => React.ReactElement<unknown>)
@@ -34,9 +33,6 @@ export function useComponentRenderer<
     if (render.props.style || props.style) {
       props.style = { ...props.style, ...render.props.style };
     }
-    if ((render.props as any).sx || (props as any).sx) {
-      (props as any).sx = mergeSx((props as any).sx, (render.props as any).sx);
-    }
     return React.cloneElement(render, props);
   }
 
@@ -49,11 +45,4 @@ function mergeClassNames(className: string | undefined, otherClassName: string |
   }
 
   return `${className} ${otherClassName}`;
-}
-
-function mergeSx(sx1: SxProps, sx2: SxProps) {
-  if (!sx1 || !sx2) {
-    return sx1 || sx2;
-  }
-  return (Array.isArray(sx1) ? sx1 : [sx1]).concat(Array.isArray(sx2) ? sx2 : [sx2]);
 }
