@@ -11,6 +11,7 @@ import {
   GridPinnedColumnPosition,
   GridColumnGroupingModel,
   GridColDef,
+  GridToolbar,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/internal-test-utils';
@@ -728,7 +729,9 @@ describe('<DataGridPro /> - Column pinning', () => {
         <TestCase
           rows={[{ id: 1, brand: 'Nike' }]}
           columns={[{ field: 'id' }, { field: 'brand' }]}
-          showToolbar
+          slots={{
+            toolbar: GridToolbar,
+          }}
           initialState={{
             pinnedColumns: {
               left: ['brand'],
@@ -760,7 +763,9 @@ describe('<DataGridPro /> - Column pinning', () => {
         <TestCase
           rows={[{ id: 0, brand: 'Nike' }]}
           columns={[{ field: 'id' }, { field: 'brand' }]}
-          showToolbar
+          slots={{
+            toolbar: GridToolbar,
+          }}
           initialState={{
             pinnedColumns: {
               left: ['brand'],
@@ -791,7 +796,9 @@ describe('<DataGridPro /> - Column pinning', () => {
         <TestCase
           rows={[{ id: 0, brand: 'Nike', price: 100 }]}
           columns={[{ field: 'id' }, { field: 'brand' }, { field: 'price' }]}
-          showToolbar
+          slots={{
+            toolbar: GridToolbar,
+          }}
           initialState={{
             pinnedColumns: {},
             columns: {
