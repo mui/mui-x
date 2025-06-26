@@ -615,6 +615,9 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
 
     console.log(`Using release branch: ${releaseBranch}`);
     console.log(`New version: ${newVersion}`);
+    console.log(`Last version: ${lastVersion}`);
+
+    process.exit(1);
 
     return await generateChangelogFromModule({
       octokit,
