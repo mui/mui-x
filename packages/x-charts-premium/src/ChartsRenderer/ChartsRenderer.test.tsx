@@ -1,0 +1,103 @@
+import * as React from 'react';
+import { spy } from 'sinon';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
+import { screen } from '@mui/internal-test-utils';
+import { getColorPalette } from './colors';
+
+describe('<ChartsRenderer />', () => {
+  const { render } = createRenderer();
+
+  it('should not render anything if the chart type is not supported', () => {
+    render(
+      <div data-testid="container">
+        <ChartsRenderer categories={[]} series={[]} chartType="unsupported" configuration={{}} />
+      </div>,
+    );
+
+    expect(screen.queryByTestId('container')!.querySelector('svg')).to.equal(null);
+  });
+
+  it('should render a bar chart if the chart type is supported', () => {
+    render(
+      <div data-testid="container">
+        <ChartsRenderer categories={[]} series={[]} chartType="bar" configuration={{}} />
+      </div>,
+    );
+
+    expect(screen.queryByTestId('container')!.querySelector('svg')).not.to.equal(null);
+  });
+
+  it('should pass the rendering to the onRender callback', () => {
+    const onRenderSpy = spy();
+    render(
+      <div data-testid="container">
+        <ChartsRenderer
+          categories={[]}
+          series={[]}
+          chartType="line"
+          configuration={{}}
+          onRender={onRenderSpy}
+        />
+      </div>,
+    );
+
+    expect(onRenderSpy.lastCall.firstArg).to.equal('line');
+  });
+
+  it('should compute props for the chart', () => {
+    const onRenderSpy = spy();
+    render(
+      <div data-testid="container">
+        <ChartsRenderer
+          categories={[]}
+          series={[]}
+          chartType="line"
+          configuration={{}}
+          onRender={onRenderSpy}
+        />
+      </div>,
+    );
+
+    const props = onRenderSpy.lastCall.args[1];
+    expect(props.colors).to.equal(getColorPalette('rainbowSurgePalette'));
+  });
+
+  it('should override the props if the configuration has an updated value', () => {
+    const onRenderSpy = spy();
+    render(
+      <div data-testid="container">
+        <ChartsRenderer
+          categories={[]}
+          series={[]}
+          chartType="line"
+          configuration={{
+            colors: 'mangoFusionPalette',
+          }}
+          onRender={onRenderSpy}
+        />
+      </div>,
+    );
+
+    const props = onRenderSpy.lastCall.args[1];
+    expect(props.colors).to.equal(getColorPalette('mangoFusionPalette'));
+  });
+
+  it('should place categories and series to the correct place in the props', () => {
+    const onRenderSpy = spy();
+    render(
+      <div data-testid="container">
+        <ChartsRenderer
+          categories={[{ id: 'category', label: 'Category', data: ['A'] }]}
+          series={[{ id: 'series', label: 'Series', data: [1, 2, 3] }]}
+          chartType="line"
+          configuration={{}}
+          onRender={onRenderSpy}
+        />
+      </div>,
+    );
+
+    const props = onRenderSpy.lastCall.args[1];
+    expect(props.series[0].data).to.deep.equal([1, 2, 3]);
+  });
+});
