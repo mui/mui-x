@@ -56,3 +56,17 @@ Notice that using another shape than "circle" renders a `<path />` instead of th
 This modification implies a small drop of rendering performances (around +50ms to render 1.000 marks).
 
 {{"demo": "CustomLineMarks.js"}}
+
+## Larger interaction area
+
+The line highlight has a narrow interaction area.
+Before a proposer solution get implemented, it's possible to use a workaround with slots.
+
+The idea is to have two paths.
+A small one to display the line.
+And a larger one invisible that take cares od interaction.
+
+This hack suffers some drawback when lines cross each over.
+The highlight is not taken by the closest line, but by the last defined series.
+
+{{"demo": "LargerHighlightLineNoSnap.js"}}
