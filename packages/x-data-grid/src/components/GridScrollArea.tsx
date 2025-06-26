@@ -21,12 +21,13 @@ import { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
 import { createSelector } from '../utils/createSelector';
+import { gridRowsMetaSelector } from '../hooks/features/rows/gridRowsMetaSelector';
 
 const CLIFF = 1;
 const SLOP = 1.5;
 
 interface ScrollAreaProps {
-  scrollDirection: 'left' | 'right';
+  scrollDirection: 'left' | 'right' | 'up' | 'down';
   scrollPosition: RefObject<GridScrollParams>;
 }
 
@@ -48,19 +49,38 @@ const GridScrollAreaRawRoot = styled('div', {
   overridesResolver: (props, styles) => [
     { [`&.${gridClasses['scrollArea--left']}`]: styles['scrollArea--left'] },
     { [`&.${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
+    { [`&.${gridClasses['scrollArea--up']}`]: styles['scrollArea--up'] },
+    { [`&.${gridClasses['scrollArea--down']}`]: styles['scrollArea--down'] },
     styles.scrollArea,
   ],
 })<{ ownerState: OwnerState }>(() => ({
   position: 'absolute',
-  top: 0,
   zIndex: 101,
-  width: 20,
-  bottom: 0,
+  // Horizontal scroll areas
   [`&.${gridClasses['scrollArea--left']}`]: {
+    top: 0,
     left: 0,
+    width: 20,
+    bottom: 0,
   },
   [`&.${gridClasses['scrollArea--right']}`]: {
+    top: 0,
     right: 0,
+    width: 20,
+    bottom: 0,
+  },
+  // Vertical scroll areas
+  [`&.${gridClasses['scrollArea--up']}`]: {
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 20,
+  },
+  [`&.${gridClasses['scrollArea--down']}`]: {
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 20,
   },
 }));
 
@@ -73,6 +93,7 @@ const offsetSelector = createSelector(
     if (direction === 'right') {
       return dimensions.rightPinnedWidth + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
     }
+    // For vertical scroll areas, we don't need horizontal offset
     return 0;
   },
 );
@@ -81,8 +102,11 @@ function GridScrollAreaWrapper(props: ScrollAreaProps) {
   const apiRef = useGridApiContext();
   const [dragging, setDragging] = React.useState<boolean>(false);
 
+  // Listen for both column and row drag events
   useGridEvent(apiRef, 'columnHeaderDragStart', () => setDragging(true));
   useGridEvent(apiRef, 'columnHeaderDragEnd', () => setDragging(false));
+  useGridEvent(apiRef, 'rowDragStart', () => setDragging(true));
+  useGridEvent(apiRef, 'rowDragEnd', () => setDragging(false));
 
   if (!dragging) {
     return null;
@@ -98,6 +122,7 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
 
   const getCanScrollMore = () => {
@@ -113,6 +138,18 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
       return scrollPosition.current.left < maxScrollLeft;
     }
 
+    if (scrollDirection === 'up') {
+      // Only render if the user has not reached yet the top of the list
+      return scrollPosition.current.top > 0;
+    }
+
+    if (scrollDirection === 'down') {
+      // Only render if the user has not reached yet the bottom of the list
+      const totalRowsHeight = rowsMeta.positions[rowsMeta.positions.length - 1] || 0;
+      const maxScrollTop = totalRowsHeight - dimensions.viewportInnerSize.height;
+      return scrollPosition.current.top < maxScrollTop;
+    }
+
     return false;
   };
 
@@ -124,15 +161,24 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
-  const style: React.CSSProperties = {
-    height: headerHeight,
-    top: totalHeaderHeight - headerHeight,
-  };
+  const style: React.CSSProperties = {};
 
-  if (scrollDirection === 'left') {
-    style.left = sideOffset;
-  } else if (scrollDirection === 'right') {
-    style.right = sideOffset;
+  // Position horizontal scroll areas
+  if (scrollDirection === 'left' || scrollDirection === 'right') {
+    style.height = headerHeight;
+    style.top = totalHeaderHeight - headerHeight;
+
+    if (scrollDirection === 'left') {
+      style.left = sideOffset;
+    } else if (scrollDirection === 'right') {
+      style.right = sideOffset;
+    }
+  }
+
+  // Position vertical scroll areas
+  if (scrollDirection === 'up' || scrollDirection === 'down') {
+    style.top = scrollDirection === 'up' ? totalHeaderHeight : undefined;
+    style.bottom = scrollDirection === 'down' ? 0 : undefined;
   }
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = () => {
@@ -149,6 +195,10 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
       offset = event.clientX - rootRef.current!.getBoundingClientRect().right;
     } else if (scrollDirection === 'right') {
       offset = Math.max(1, event.clientX - rootRef.current!.getBoundingClientRect().left);
+    } else if (scrollDirection === 'up') {
+      offset = event.clientY - rootRef.current!.getBoundingClientRect().bottom;
+    } else if (scrollDirection === 'down') {
+      offset = Math.max(1, event.clientY - rootRef.current!.getBoundingClientRect().top);
     } else {
       throw new Error('MUI X: Wrong drag direction');
     }
@@ -157,10 +207,17 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
 
     // Avoid freeze and inertia.
     timeout.start(0, () => {
-      apiRef.current.scroll({
-        left: scrollPosition.current.left + offset,
-        top: scrollPosition.current.top,
-      });
+      if (scrollDirection === 'left' || scrollDirection === 'right') {
+        apiRef.current.scroll({
+          left: scrollPosition.current.left + offset,
+          top: scrollPosition.current.top,
+        });
+      } else {
+        apiRef.current.scroll({
+          left: scrollPosition.current.left,
+          top: scrollPosition.current.top + offset,
+        });
+      }
     });
   });
 

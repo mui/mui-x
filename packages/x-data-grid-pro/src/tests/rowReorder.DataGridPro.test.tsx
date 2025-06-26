@@ -227,4 +227,46 @@ describe('<DataGridPro /> - Row reorder', () => {
     fireEvent(targetCell, dragOverEvent);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
   });
+
+  it('should render vertical scroll areas when row reordering is active', () => {
+    // Create more rows to ensure scrolling is needed
+    const rows = Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      brand: `Brand ${i}`,
+    }));
+    const columns = [{ field: 'brand' }];
+
+    function Test() {
+      return (
+        <div style={{ width: 300, height: 200 }}>
+          {/* Smaller height to force scrolling */}
+          <DataGridPro rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    }
+
+    const { container } = render(<Test />);
+
+    // Initially, no scroll areas should be visible
+    expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+
+    // Start dragging a row
+    const rowReorderCell = getCell(0, 0).firstChild!;
+    fireEvent.dragStart(rowReorderCell);
+
+    // Check what scroll areas are rendered
+    const allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
+    const downScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--down']}`);
+
+    // At least the down scroll area should be rendered (since we're at the top and can scroll down)
+    expect(allScrollAreas.length).to.be.greaterThan(0);
+    expect(downScrollAreas).to.have.length(1);
+
+    // End dragging
+    const dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+
+    // Scroll areas should be hidden again
+    expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+  });
 });
