@@ -35,7 +35,7 @@ Same changes as in `@mui/x-data-grid-pro@7.29.7`.
 
 ### Docs
 
-- [docs][data grid] Revise the Row Grouping doc (#17494) @mapache-salvaje
+- [docs] Revise the Row Grouping doc (#17494) @mapache-salvaje
 - [docs] Document `GridRenderContext` (#18501) @arminmeh
 - [docs] Prevent stale rows from appearing on sort and filter change in the lazy loading demo (#18463) @arminmeh
 
