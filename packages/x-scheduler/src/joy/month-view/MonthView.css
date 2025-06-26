@@ -95,6 +95,56 @@
 }
 
 .MonthViewCell.Today .MonthViewCellNumber {
-  color: var(--primary-12);
-  background-color: var(--primary-5);
+  background: var(--interactive-selected-bg);
+  color: var(--interactive-selected-text);
+}
+
+.MonthViewCellNumberButton {
+  width: fit-content;
+  align-self: flex-end;
+  border-radius: var(--radius-4);
+}
+
+/* Hovered */
+.MonthViewCellNumberButton:hover {
+  background: var(--interactive-hover-bg);
+}
+
+/* Active */
+.MonthViewCellNumberButton:active {
+  background: var(--interactive-active-bg);
+}
+
+/* Focused */
+.MonthViewCellNumberButton:focus-visible {
+  background: var(--interactive-focused-bg);
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Focused and hovered */
+.MonthViewCellNumberButton:focus-visible:hover {
+  background: var(--interactive-focused-hover-bg);
+}
+
+/* Today (Highlighted) */
+.MonthViewCell.Today > .MonthViewCellNumberButton > .MonthViewCellNumber,
+.MonthViewCell.Today > .MonthViewCellNumberButton:hover > .MonthViewCellNumber,
+.MonthViewCell.Today > .MonthViewCellNumberButton:active > .MonthViewCellNumber {
+  background: transparent;
+}
+
+.MonthViewCell.Today > .MonthViewCellNumberButton {
+  background: var(--interactive-selected-bg);
+  color: var(--interactive-selected-text);
+}
+
+/* Today and hovered */
+.MonthViewCell.Today > .MonthViewCellNumberButton:hover {
+  background: var(--interactive-selected-hover-bg);
+}
+
+/* Today and active */
+.MonthViewCell.Today > .MonthViewCellNumberButton:active {
+  background: var(--interactive-selected-hover-focused-bg);
 }

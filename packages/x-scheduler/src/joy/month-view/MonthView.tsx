@@ -11,6 +11,7 @@ import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
+import { SchedulerValidDate } from '../../primitives/models';
 
 import './MonthView.css';
 
@@ -48,6 +49,24 @@ export const MonthView = React.memo(
       });
     }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);
 
+    const handleHeaderClick = React.useCallback(
+      (day: SchedulerValidDate) => (event: React.MouseEvent) => {
+        onDayHeaderClick?.(day, event);
+      },
+      [onDayHeaderClick],
+    );
+
+    const renderCellNumberContent = (day: SchedulerValidDate) => {
+      const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
+      return (
+        <span className="MonthViewCellNumber">
+          {isFirstDayOfMonth
+            ? adapter.formatByString(day, adapter.formats.shortDate)
+            : adapter.formatByString(day, adapter.formats.dayOfMonth)}
+        </span>
+      );
+    };
+
     return (
       <div ref={handleRef} className={clsx('MonthViewContainer', 'joy', className)} {...other}>
         <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
@@ -81,24 +100,28 @@ export const MonthView = React.memo(
                       </div>
                       {week.map((day) => {
                         const isCurrentMonth = adapter.isSameMonth(day.date, visibleDate);
-                        const isFirstDayOfMonth = adapter.isSameDay(
-                          day.date,
-                          adapter.startOfMonth(day.date),
-                        );
+                        const isToday = adapter.isSameDay(day.date, today);
                         return (
                           <DayGrid.Cell
                             key={day.date.toString()}
                             className={clsx(
                               'MonthViewCell',
                               !isCurrentMonth && 'OtherMonth',
-                              adapter.isSameDay(day.date, today) && 'Today',
+                              isToday && 'Today',
                             )}
                           >
-                            <span className="MonthViewCellNumber">
-                              {isFirstDayOfMonth
-                                ? adapter.formatByString(day.date, adapter.formats.shortDate)
-                                : adapter.formatByString(day.date, adapter.formats.dayOfMonth)}
-                            </span>
+                            {onDayHeaderClick ? (
+                              <button
+                                type="button"
+                                className="MonthViewCellNumberButton"
+                                onClick={handleHeaderClick(day.date)}
+                                tabIndex={0}
+                              >
+                                {renderCellNumberContent(day.date)}
+                              </button>
+                            ) : (
+                              renderCellNumberContent(day.date)
+                            )}
                             {day.events.map((eventProp) => (
                               <DayGrid.Event
                                 key={eventProp.id}
