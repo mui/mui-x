@@ -39,6 +39,9 @@
   padding: var(--space-2) 0;
   text-align: center;
   font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--secondary-text-color);
+  font-style: var(--em-font-style);
 }
 
 .MonthViewBody {
@@ -61,6 +64,8 @@
   padding: var(--space-2) 0;
   text-align: center;
   font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--disabled-text-color);
 }
 
 .MonthViewCell {
@@ -77,4 +82,19 @@
 
 .MonthViewCellNumber {
   align-self: end;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-4);
+}
+
+.MonthViewCell.OtherMonth {
+  color: var(--disabled-text-color);
+}
+
+.MonthViewCell.Today {
+  background-color: var(--primary-2);
+}
+
+.MonthViewCell.Today .MonthViewCellNumber {
+  color: var(--primary-12);
+  background-color: var(--primary-5);
 }

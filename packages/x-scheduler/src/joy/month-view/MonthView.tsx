@@ -27,10 +27,10 @@ export const MonthView = React.memo(
 
     const store = useEventCalendarStore();
     const visibleDate = useSelector(store, selectors.visibleDate);
+    const today = adapter.date();
 
     const getWeekList = useWeekList();
     const getDayList = useDayList();
-
     const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
 
     const weeks = React.useMemo(() => {
@@ -68,33 +68,54 @@ export const MonthView = React.memo(
                 ))}
               </div>
               <div className="MonthViewBody">
-                {weeks.map((week) => (
-                  <DayGrid.Row key={week[0].date.toString()} className="MonthViewRow">
-                    <div
-                      className="MonthViewWeekNumberCell"
-                      role="rowheader"
-                      aria-label={`Week ${week[0].date.weekNumber}`}
-                    >
-                      {week[0].date.weekNumber}
-                    </div>
-                    {week.map((day) => (
-                      <DayGrid.Cell key={day.date.toString()} className="MonthViewCell">
-                        <span className="MonthViewCellNumber">{day.date.toFormat('dd')}</span>
-                        {day.events.map((eventProp) => (
-                          <DayGrid.Event
-                            key={eventProp.id}
-                            start={eventProp.start}
-                            end={eventProp.end}
-                            onClick={(event) => onEventClick(event, eventProp)}
+                {weeks.map((week) => {
+                  const weekNumer = adapter.getWeekNumber(week[0].date);
+                  return (
+                    <DayGrid.Row key={weekNumer} className="MonthViewRow">
+                      <div
+                        className="MonthViewWeekNumberCell"
+                        role="rowheader"
+                        aria-label={`Week ${weekNumer}`}
+                      >
+                        {weekNumer}
+                      </div>
+                      {week.map((day) => {
+                        const isCurrentMonth = adapter.isSameMonth(day.date, visibleDate);
+                        const isFirstDayOfMonth = adapter.isSameDay(
+                          day.date,
+                          adapter.startOfMonth(day.date),
+                        );
+                        return (
+                          <DayGrid.Cell
+                            key={day.date.toString()}
+                            className={clsx(
+                              'MonthViewCell',
+                              !isCurrentMonth && 'OtherMonth',
+                              adapter.isSameDay(day.date, today) && 'Today',
+                            )}
                           >
-                            <span data-resource={eventProp.resource} />
-                            <span>{eventProp.title}</span>
-                          </DayGrid.Event>
-                        ))}
-                      </DayGrid.Cell>
-                    ))}
-                  </DayGrid.Row>
-                ))}
+                            <span className="MonthViewCellNumber">
+                              {isFirstDayOfMonth
+                                ? adapter.formatByString(day.date, adapter.formats.shortDate)
+                                : adapter.formatByString(day.date, adapter.formats.dayOfMonth)}
+                            </span>
+                            {day.events.map((eventProp) => (
+                              <DayGrid.Event
+                                key={eventProp.id}
+                                start={eventProp.start}
+                                end={eventProp.end}
+                                onClick={(event) => onEventClick(event, eventProp)}
+                              >
+                                <span data-resource={eventProp.resource} />
+                                <span>{eventProp.title}</span>
+                              </DayGrid.Event>
+                            ))}
+                          </DayGrid.Cell>
+                        );
+                      })}
+                    </DayGrid.Row>
+                  );
+                })}
               </div>
             </DayGrid.Root>
           )}

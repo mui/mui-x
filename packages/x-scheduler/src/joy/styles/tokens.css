@@ -184,6 +184,7 @@
   /* Text colors */
   --default-text-color: var(--gray-12);
   --secondary-text-color: var(--gray-11);
+  --disabled-text-color: var(--gray-8);
   color: var(--default-text-color);
 
   /* Font */
