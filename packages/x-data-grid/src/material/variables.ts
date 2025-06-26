@@ -17,7 +17,11 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.vars || t).palette.DataGrid;
 
-  const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
+  const backgroundBase =
+    dataGridPalette?.bg ??
+    (t.palette.mode === 'dark'
+      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 95%, #fff)`
+      : (t.vars || t).palette.background.default);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.vars
@@ -25,7 +29,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
   const backgroundOverlay =
     t.palette.mode === 'dark'
-      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 95%, #fff)`
+      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 90%, #fff)`
       : (t.vars || t).palette.background.paper;
 
   const selectedColor = t.vars
