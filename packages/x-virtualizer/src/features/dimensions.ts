@@ -80,43 +80,6 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
     },
   } = params;
 
-  function observeRootSize() {
-    const node = refs.container.current;
-    if (!node) {
-      return undefined;
-    }
-    const bounds = node.getBoundingClientRect();
-    const initialSize = {
-      width: roundToDecimalPlaces(bounds.width, 1),
-      height: roundToDecimalPlaces(bounds.height, 1),
-    };
-    if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
-      store.update({ rootSize: initialSize });
-    }
-
-    if (typeof ResizeObserver === 'undefined') {
-      return undefined;
-    }
-    const observer = new ResizeObserver(([entry]) => {
-      if (!entry) {
-        return;
-      }
-      const rootSize = {
-        width: roundToDecimalPlaces(entry.contentRect.width, 1),
-        height: roundToDecimalPlaces(entry.contentRect.height, 1),
-      };
-      if (!Size.equals(rootSize, store.state.rootSize)) {
-        store.update({ rootSize });
-      }
-    });
-
-    observer.observe(node);
-
-    return () => {
-      observer.disconnect();
-    };
-  }
-
   const updateDimensions = React.useCallback(() => {
     if (isFirstSizing.current) {
       return;
@@ -256,7 +219,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(observeRootSize, []);
+  useLayoutEffect(() => observeRootSize(refs.container.current, store), []);
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
@@ -275,6 +238,42 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
   return {
     updateDimensions,
     debouncedUpdateDimensions,
+  };
+}
+
+function observeRootSize(node: Element | null, store: Store<BaseState>) {
+  if (!node) {
+    return undefined;
+  }
+  const bounds = node.getBoundingClientRect();
+  const initialSize = {
+    width: roundToDecimalPlaces(bounds.width, 1),
+    height: roundToDecimalPlaces(bounds.height, 1),
+  };
+  if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
+    store.update({ rootSize: initialSize });
+  }
+
+  if (typeof ResizeObserver === 'undefined') {
+    return undefined;
+  }
+  const observer = new ResizeObserver(([entry]) => {
+    if (!entry) {
+      return;
+    }
+    const rootSize = {
+      width: roundToDecimalPlaces(entry.contentRect.width, 1),
+      height: roundToDecimalPlaces(entry.contentRect.height, 1),
+    };
+    if (!Size.equals(rootSize, store.state.rootSize)) {
+      store.update({ rootSize });
+    }
+  });
+
+  observer.observe(node);
+
+  return () => {
+    observer.disconnect();
   };
 }
 
