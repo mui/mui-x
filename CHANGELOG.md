@@ -12,7 +12,7 @@ _Jun 26, 2025_
 We'd like to extend a big thank you to the 4 contributors who made this release possible.
 
 Special thanks go out to the community members for their valuable contributions:
-@alisasanib,
+@alisasanib
 
 Following are all team members who have contributed to this release:
 @mapache-salvaje, @arminmeh, @michelengelen
@@ -21,13 +21,13 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.29.7`
 
-- [docs][data grid] Revise the Row Grouping doc (@mapache-salvaje) (#17494) @github-actions[bot]
+Internal changes.
 
 #### `@mui/x-data-grid-pro@7.29.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@7.29.7`, plus:
 
-- [DataGridPro] Fix pinned columns order in column management (@alisasanib) (#18053) @github-actions[bot]
+- [DataGridPro] Fix pinned columns order in column management (#18053) @alisasanib
 
 #### `@mui/x-data-grid-premium@7.29.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -35,12 +35,13 @@ Same changes as in `@mui/x-data-grid-pro@7.29.7`.
 
 ### Docs
 
-- [docs] Document `GridRenderContext` (@arminmeh) (#18501) @github-actions[bot]
-- [docs] Prevent stale rows to appear on sort and filter change in the lazy loading demo (@arminmeh) (#18463) @github-actions[bot]
+- [docs][data grid] Revise the Row Grouping doc (#17494) @mapache-salvaje
+- [docs] Document `GridRenderContext` (#18501) @arminmeh
+- [docs] Prevent stale rows from appearing on sort and filter change in the lazy loading demo (#18463) @arminmeh
 
 ### Miscellaneous
 
-- [infra] Add automated release PR creation script (@michelengelen) (#18450) @github-actions[bot]
+- [infra] Add automated release PR creation script (#18450) @michelengelen
 
 ## 7.29.6
 
