@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "activeChartId": { "type": { "name": "string" } },
     "aggregationFunctions": {
       "type": { "name": "object" },
       "default": "GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
@@ -270,6 +271,13 @@
       "default": "\"withModifierKey\""
     },
     "nonce": { "type": { "name": "string" } },
+    "onActiveChartIdChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(activeChartId: string) => void",
+        "describedArgs": ["activeChartId"]
+      }
+    },
     "onAggregationModelChange": {
       "type": { "name": "func" },
       "signature": {

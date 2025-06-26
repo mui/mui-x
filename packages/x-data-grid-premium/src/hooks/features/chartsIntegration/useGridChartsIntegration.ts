@@ -35,6 +35,7 @@ import {
   gridChartsCategoriesSelector,
   gridChartsSeriesSelector,
   gridChartsIntegrationActiveChartIdSelector,
+  gridChartableColumnsSelector,
 } from './gridChartsIntegrationSelectors';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
@@ -43,7 +44,7 @@ import { getBlockedSections } from './utils';
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    'chartsIntegration' | 'chartsConfigurationPanelOpen' | 'initialState'
+    'chartsIntegration' | 'chartsConfigurationPanelOpen' | 'initialState' | 'activeChartId'
   >
 > = (state, props) => {
   if (!props.chartsIntegration) {
@@ -60,8 +61,6 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   }
 
   const columnsLookup = state.columns?.lookup ?? {};
-  const activeChartId = props.initialState?.chartsIntegration?.activeChartId ?? '';
-
   const charts = Object.fromEntries(
     Object.entries(props.initialState?.chartsIntegration?.charts || {}).map(([chartId, chart]) => [
       chartId,
@@ -72,7 +71,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           )
           .filter(
             (category) =>
-              columnsLookup[category.field] &&
+              columnsLookup[category.field]?.chartable === true &&
               !getBlockedSections(columnsLookup[category.field] as GridColDef).includes(
                 'categories',
               ),
@@ -83,7 +82,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           )
           .filter(
             (seriesItem) =>
-              columnsLookup[seriesItem.field] &&
+              columnsLookup[seriesItem.field]?.chartable === true &&
               !getBlockedSections(columnsLookup[seriesItem.field] as GridColDef).includes('series'),
           ),
       },
@@ -93,7 +92,8 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   return {
     ...state,
     chartsIntegration: {
-      activeChartId,
+      activeChartId:
+        props.activeChartId ?? props.initialState?.chartsIntegration?.activeChartId ?? '',
       configurationPanel: {
         open:
           props.chartsConfigurationPanelOpen ??
@@ -125,6 +125,8 @@ export const useGridChartsIntegration = (
     | 'chartsIntegration'
     | 'chartsConfigurationPanelOpen'
     | 'onChartsConfigurationPanelOpenChange'
+    | 'activeChartId'
+    | 'onActiveChartIdChange'
     | 'initialState'
     | 'slotProps'
   >,
@@ -167,139 +169,150 @@ export const useGridChartsIntegration = (
     changeEvent: 'chartsConfigurationPanelOpenChange',
   });
 
-  const handleDataUpdate = React.useCallback(() => {
-    // if there are no charts, skip the data processing
-    if (chartIds.length === 0) {
-      return;
-    }
+  apiRef.current.registerControlState({
+    stateId: 'activeChartId',
+    propModel: props.activeChartId,
+    propOnChange: props.onActiveChartIdChange,
+    stateSelector: gridChartsIntegrationActiveChartIdSelector,
+    changeEvent: 'activeChartIdChange',
+  });
 
-    const availableCharts = chartIds.filter(
-      (chartId) => chartStateLookup[chartId].synced !== false,
-    );
-
-    if (availableCharts.length === 0) {
-      return;
-    }
-
-    const columns = gridColumnLookupSelector(apiRef);
-    const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
-
-    const selectedFields = availableCharts.reduce(
-      (acc, chartId) => {
-        const series = gridChartsSeriesSelector(apiRef, chartId);
-        const categories = gridChartsCategoriesSelector(apiRef, chartId);
-        return {
-          ...acc,
-          [chartId]: {
-            series,
-            categories,
-          },
-        };
-      },
-      {} as Record<
-        string,
-        { series: GridChartsIntegrationItem[]; categories: GridChartsIntegrationItem[] }
-      >,
-    );
-
-    const series: Record<string, GridChartsIntegrationItem[]> = {};
-    const categories: Record<string, GridChartsIntegrationItem[]> = {};
-    const visibleCategories: Record<string, GridColDef[]> = {};
-    const visibleSeries: Record<string, GridColDef[]> = {};
-
-    availableCharts.forEach((chartId) => {
-      categories[chartId] = [];
-      series[chartId] = [];
-
-      // Sanitize selectedSeries and selectedCategories while maintaining their order
-      for (let i = 0; i < selectedFields[chartId].series.length; i += 1) {
-        if (columns[selectedFields[chartId].series[i].field]) {
-          if (!series[chartId]) {
-            series[chartId] = [];
-          }
-          series[chartId].push(selectedFields[chartId].series[i]);
-        }
+  const handleDataUpdate = React.useCallback(
+    (onlyChartId?: string) => {
+      // if there are no charts, skip the data processing
+      if (chartIds.length === 0) {
+        return;
       }
 
-      // categories cannot contain fields that are already in series
-      for (let i = 0; i < selectedFields[chartId].categories.length; i += 1) {
-        const item = selectedFields[chartId].categories[i];
+      const availableCharts = chartIds.filter((chartId) =>
+        onlyChartId ? chartId === onlyChartId : chartStateLookup[chartId].synced !== false,
+      );
+
+      if (availableCharts.length === 0) {
+        return;
+      }
+
+      const chartableColumns = gridChartableColumnsSelector(apiRef);
+      const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
+
+      const selectedFields = availableCharts.reduce(
+        (acc, chartId) => {
+          const series = gridChartsSeriesSelector(apiRef, chartId);
+          const categories = gridChartsCategoriesSelector(apiRef, chartId);
+          return {
+            ...acc,
+            [chartId]: {
+              series,
+              categories,
+            },
+          };
+        },
+        {} as Record<
+          string,
+          { series: GridChartsIntegrationItem[]; categories: GridChartsIntegrationItem[] }
+        >,
+      );
+
+      const series: Record<string, GridChartsIntegrationItem[]> = {};
+      const categories: Record<string, GridChartsIntegrationItem[]> = {};
+      const visibleCategories: Record<string, GridColDef[]> = {};
+      const visibleSeries: Record<string, GridColDef[]> = {};
+
+      availableCharts.forEach((chartId) => {
+        categories[chartId] = [];
+        series[chartId] = [];
+
+        // Sanitize selectedSeries and selectedCategories while maintaining their order
+        for (let i = 0; i < selectedFields[chartId].series.length; i += 1) {
+          if (chartableColumns[selectedFields[chartId].series[i].field]) {
+            if (!series[chartId]) {
+              series[chartId] = [];
+            }
+            series[chartId].push(selectedFields[chartId].series[i]);
+          }
+        }
+
+        // categories cannot contain fields that are already in series
+        for (let i = 0; i < selectedFields[chartId].categories.length; i += 1) {
+          const item = selectedFields[chartId].categories[i];
+          if (
+            !selectedFields[chartId].series.some((seriesItem) => seriesItem.field === item.field) &&
+            chartableColumns[item.field]
+          ) {
+            if (!categories[chartId]) {
+              categories[chartId] = [];
+            }
+            categories[chartId].push(item);
+          }
+        }
+
         if (
-          !selectedFields[chartId].series.some((seriesItem) => seriesItem.field === item.field) &&
-          columns[item.field]
+          categories[chartId] &&
+          selectedFields[chartId].categories.length !== categories[chartId].length
         ) {
-          if (!categories[chartId]) {
-            categories[chartId] = [];
-          }
-          categories[chartId].push(item);
+          apiRef.current.updateCategories(chartId, categories[chartId]);
         }
-      }
 
-      if (
-        categories[chartId] &&
-        selectedFields[chartId].categories.length !== categories[chartId].length
-      ) {
-        apiRef.current.updateCategories(chartId, categories[chartId]);
-      }
-
-      if (series[chartId] && selectedFields[chartId].series.length !== series[chartId].length) {
-        apiRef.current.updateSeries(chartId, series[chartId]);
-      }
-
-      visibleCategories[chartId] = categories[chartId]
-        .filter((category) => category.hidden !== true)
-        .map((category) => columns[category.field]);
-      visibleSeries[chartId] = series[chartId]
-        .filter((seriesItem) => seriesItem.hidden !== true)
-        .map((seriesItem) => columns[seriesItem.field]);
-
-      if (visibleCategories[chartId].length === 0 || visibleSeries[chartId].length === 0) {
-        visibleCategories[chartId] = [];
-        visibleSeries[chartId] = [];
-      }
-    });
-
-    // keep only unique columns
-    const dataColumns = [
-      ...new Set([
-        ...Object.values(visibleCategories).flat(),
-        ...Object.values(visibleSeries).flat(),
-      ]),
-    ];
-
-    const data: Record<any, (string | number | null)[]> = Object.fromEntries(
-      dataColumns.map((column) => [column.field, []]),
-    );
-    for (let i = 0; i < rows.length; i += 1) {
-      for (let j = 0; j < dataColumns.length; j += 1) {
-        const value: string | { label: string } | null = getRowValue(
-          rows[i].model,
-          dataColumns[j],
-          apiRef,
-        );
-        if (value !== null) {
-          data[dataColumns[j].field].push(
-            typeof value === 'object' && 'label' in value ? value.label : value,
-          );
+        if (series[chartId] && selectedFields[chartId].series.length !== series[chartId].length) {
+          apiRef.current.updateSeries(chartId, series[chartId]);
         }
-      }
-    }
 
-    availableCharts.forEach((chartId) => {
-      setChartState(chartId, {
-        categories: visibleCategories[chartId].map((category) => ({
-          id: category.field,
-          label: getColumnName(category.field),
-          data: data[category.field] || [],
-        })),
-        series: visibleSeries[chartId].map((seriesItem) => ({
-          id: seriesItem.field,
-          label: getColumnName(seriesItem.field),
-          data: (data[seriesItem.field] || []) as (number | null)[],
-        })),
+        visibleCategories[chartId] = categories[chartId]
+          .filter((category) => category.hidden !== true)
+          .map((category) => chartableColumns[category.field]);
+        visibleSeries[chartId] = series[chartId]
+          .filter((seriesItem) => seriesItem.hidden !== true)
+          .map((seriesItem) => chartableColumns[seriesItem.field]);
+
+        if (visibleCategories[chartId].length === 0 || visibleSeries[chartId].length === 0) {
+          visibleCategories[chartId] = [];
+          visibleSeries[chartId] = [];
+        }
       });
-    });
-  }, [apiRef, getColumnName, setChartState, chartIds, chartStateLookup]);
+
+      // keep only unique columns
+      const dataColumns = [
+        ...new Set([
+          ...Object.values(visibleCategories).flat(),
+          ...Object.values(visibleSeries).flat(),
+        ]),
+      ];
+
+      const data: Record<any, (string | number | null)[]> = Object.fromEntries(
+        dataColumns.map((column) => [column.field, []]),
+      );
+      for (let i = 0; i < rows.length; i += 1) {
+        for (let j = 0; j < dataColumns.length; j += 1) {
+          const value: string | { label: string } | null = getRowValue(
+            rows[i].model,
+            dataColumns[j],
+            apiRef,
+          );
+          if (value !== null) {
+            data[dataColumns[j].field].push(
+              typeof value === 'object' && 'label' in value ? value.label : value,
+            );
+          }
+        }
+      }
+
+      availableCharts.forEach((chartId) => {
+        setChartState(chartId, {
+          categories: visibleCategories[chartId].map((category) => ({
+            id: category.field,
+            label: getColumnName(category.field),
+            data: data[category.field] || [],
+          })),
+          series: visibleSeries[chartId].map((seriesItem) => ({
+            id: seriesItem.field,
+            label: getColumnName(seriesItem.field),
+            data: (data[seriesItem.field] || []) as (number | null)[],
+          })),
+        });
+      });
+    },
+    [apiRef, getColumnName, setChartState, chartIds, chartStateLookup],
+  );
 
   const setChartsConfigurationPanelOpen = React.useCallback<
     GridChartsIntegrationApi['setChartsConfigurationPanelOpen']
@@ -403,7 +416,6 @@ export const useGridChartsIntegration = (
           activeChartId: chartId,
         },
       }));
-      apiRef.current.publishEvent('activeChartChange', chartId);
     },
     [apiRef],
   );
@@ -416,8 +428,11 @@ export const useGridChartsIntegration = (
         synced,
       });
       apiRef.current.publishEvent('chartSynchronizationStateChange', { chartId, synced });
+      if (synced) {
+        handleDataUpdate(chartId);
+      }
     },
-    [apiRef, setChartState],
+    [apiRef, setChartState, handleDataUpdate],
   );
 
   const updateDataReference = React.useCallback<
@@ -500,7 +515,6 @@ export const useGridChartsIntegration = (
     'public',
   );
 
-  useGridEvent(apiRef, 'rootMount', runIf(isChartsIntegrationAvailable, handleDataUpdate));
   useGridEvent(apiRef, 'columnsChange', runIf(isChartsIntegrationAvailable, handleDataUpdate));
   useGridEvent(apiRef, 'filteredRowsSet', runIf(isChartsIntegrationAvailable, handleDataUpdate));
   useGridEvent(apiRef, 'sortedRowsSet', runIf(isChartsIntegrationAvailable, handleDataUpdate));
@@ -519,8 +533,7 @@ export const useGridChartsIntegration = (
       return;
     }
 
-    const firstAvailableChartId = chartIds[0];
-    if (!firstAvailableChartId) {
+    if (chartIds.length === 0) {
       return;
     }
 
@@ -533,5 +546,7 @@ export const useGridChartsIntegration = (
           props.initialState?.chartsIntegration?.charts?.[chartId]?.configuration || {},
       });
     });
-  }, [chartIds, props.initialState?.chartsIntegration?.charts, setChartState]);
+
+    handleDataUpdate();
+  }, [chartIds, props.initialState?.chartsIntegration?.charts, setChartState, handleDataUpdate]);
 };

@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "activeChartId": { "description": "The id of the active chart." },
     "aggregationFunctions": { "description": "Aggregation functions available on the grid." },
     "aggregationModel": { "description": "Set the aggregation model of the grid." },
     "aggregationRowsScope": {
@@ -346,6 +347,10 @@
     },
     "nonce": {
       "description": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>."
+    },
+    "onActiveChartIdChange": {
+      "description": "Callback fired when the active chart changes.",
+      "typeDescriptions": { "activeChartId": "The new active chart id." }
     },
     "onAggregationModelChange": {
       "description": "Callback fired when the row grouping model changes.",

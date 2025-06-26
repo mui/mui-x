@@ -1,13 +1,16 @@
+import { GridColumnLookup } from '@mui/x-data-grid';
 import {
   createRootSelector,
   createSelector,
   createSelectorMemoized,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   gridColumnFieldsSelector,
+  gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
+import { gridPivotActiveSelector, gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 
 const gridChartsIntegrationStateSelector = createRootSelector(
   (state: GridStatePremium) => state.chartsIntegration,
@@ -21,6 +24,25 @@ export const gridChartsIntegrationActiveChartIdSelector = createSelector(
 export const gridChartsConfigurationPanelOpenSelector = createSelector(
   gridChartsIntegrationStateSelector,
   (chartsIntegration) => chartsIntegration.configurationPanel.open,
+);
+
+export const gridChartableColumnsSelector = createSelectorMemoized(
+  gridColumnLookupSelector,
+  gridRowGroupingSanitizedModelSelector,
+  gridPivotActiveSelector,
+  gridPivotModelSelector,
+  (columns, rowGroupingModel, pivotActive, pivotModel) =>
+    Object.values(columns)
+      .filter(
+        (column) =>
+          column.chartable &&
+          !rowGroupingModel.includes(column.field) &&
+          (!pivotActive || !pivotModel.values.map((value) => value.field).includes(column.field)),
+      )
+      .reduce((acc, column) => {
+        acc[column.field] = column;
+        return acc;
+      }, {} as GridColumnLookup),
 );
 
 export const gridChartsCategoriesSelector = createSelectorMemoized(

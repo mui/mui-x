@@ -1,8 +1,8 @@
 [
   {
     "projects": ["x-data-grid-premium"],
-    "name": "activeChartChange",
-    "description": "Fired when the active chart changes.",
+    "name": "activeChartIdChange",
+    "description": "Fired when the active chart id changes.",
     "params": "string",
     "event": "MuiEvent<{}>"
   },
