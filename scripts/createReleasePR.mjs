@@ -656,7 +656,7 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
     return await generateChangelogFromModule({
       octokit,
       nextVersion: newVersion,
-      lastVersion: `v${lastVersion}`,
+      lastRelease: `v${lastVersion}`,
       release: releaseBranch,
       returnEntry: true,
     });
