@@ -605,10 +605,11 @@ async function updatePackageJson(newVersion) {
 /**
  * Generate the changelog
  * @param {string} newVersion - The new version
+ * @param {string} lastVersion - The last version to compare against
  * @param {string} [releaseBranch='master'] - The branch to compare against (default is 'master')
  * @returns {Promise<string>} The changelog content
  */
-async function generateChangelog(newVersion, releaseBranch = 'master') {
+async function generateChangelog(newVersion, lastVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
 
@@ -618,7 +619,7 @@ async function generateChangelog(newVersion, releaseBranch = 'master') {
     return await generateChangelogFromModule({
       octokit,
       nextVersion: newVersion,
-      lastVersion: `v${newVersion}`,
+      lastVersion: `v${lastVersion}`,
       release: releaseBranch,
       returnEntry: true,
     });
@@ -1013,6 +1014,7 @@ async function main({ githubToken }) {
     // Generate the changelog
     const changelogContent = await generateChangelog(
       newVersion,
+      packageVersion,
       majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
     );
 
