@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ChartAnyPluginSignature } from '@mui/x-charts/internals';
-import { ChartProApi, ProPluginsPerSeriesType } from '../ChartContainerPro';
+import { ChartProApi } from '../ChartContainerPro';
 import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ProPluginsPerSeriesType } from '../ChartContainerPro/ChartProApi';
 
 /**
  * Hook that instantiates a [[ChartProApiRef]].
