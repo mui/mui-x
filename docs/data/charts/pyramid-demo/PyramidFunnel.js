@@ -4,16 +4,18 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
 
-const curveTypes = [
-  'pyramid',
-  'step-pyramid',
-];
+const curveTypes = ['pyramid', 'step-pyramid'];
 
 export default function FunnelCurves() {
   return (
     <ChartsUsageDemo
-      componentName="Funnel curve"
+      componentName="Pyramid Chart"
       data={{
+        direction: {
+          knob: 'radio',
+          options: ['vertical', 'horizontal'],
+          defaultValue: 'vertical',
+        },
         curveType: {
           knob: 'radio',
           options: curveTypes,
@@ -42,24 +44,10 @@ export default function FunnelCurves() {
           <FunnelChart
             series={[
               {
+                layout: props.direction,
                 curve: props.curveType,
-                borderRadius: props.borderRadius,
-                layout: 'vertical',
                 variant: props.variant,
-                ...populationByEducationLevelPercentageSeries,
-              },
-            ]}
-            gap={props.gap}
-            height={300}
-            slotProps={{ legend: { direction: 'vertical' } }}
-          />
-          <FunnelChart
-            series={[
-              {
-                curve: props.curveType,
                 borderRadius: props.borderRadius,
-                layout: 'horizontal',
-                variant: props.variant,
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -74,6 +62,7 @@ export default function FunnelCurves() {
 
 <FunnelChart
   series={[{ 
+    layout: '${props.direction}',
     curve: '${props.curveType}',
     variant: '${props.variant}',
     borderRadius: ${props.borderRadius},

@@ -14,4 +14,10 @@ The pyramid chart is a variation of the funnel chart.
 
 To create a pyramid chart, set the `curve` property to `pyramid` in the series.
 
+{{"demo": "Pyramid.js"}}
+
+### Styling
+
+A pyramid chart can be styled using `layout`, `gap`, `borderRadius`, `variant` and `curve` properties.
+
 {{"demo": "PyramidFunnel.js"}}
