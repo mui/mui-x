@@ -23,8 +23,7 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.6.0`
 
-- [data grid] Fix `label` type in  GridActionsCellItem type (#18175) @sai6855
-- [data grid][docs] Update indeterminate checkbox section in migration guide (#18229) @michelengelen
+- [DataGrid] Fix `label` type in `GridActionsCellItem` type (#18175) @sai6855
 - [DataGrid] Fix grid menu not closing when pressing escape/tab (#18300) @KenanYusuf
 - [l10n] Improve Danish (da-DK) locale (#18428) @ShahrazH
 
@@ -93,6 +92,7 @@ Internal changes.
 - [docs] Document `GridRenderContext` (#18492) @arminmeh
 - [docs] Prevent stale rows to appear on sort and filter change in the lazy loading demo (#18461) @arminmeh
 - [docs][pickers] Update action bar demo to use the `nextOrAccept` action (#18505) @LukasTy
+- [docs] Update indeterminate checkbox section in migration guide (#18229) @michelengelen
 
 ### Core
 
