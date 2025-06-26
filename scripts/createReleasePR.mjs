@@ -1113,7 +1113,6 @@ async function main({ githubToken }) {
       const versionLabel = `v${majorVersion}.x`;
       await addLabelsToPR(prNumber, ['release', versionLabel]);
 
-      process.exit(0);
       // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
       const teamMembers = await getTeamMembers(forkOwner);
 
