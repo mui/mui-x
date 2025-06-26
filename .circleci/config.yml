@@ -321,8 +321,9 @@ jobs:
   test_package:
     <<: *default-job
     steps:
-      - run: No-op
-        command: echo "This is a no-op"
+      - run:
+          name: No-op
+          command: echo "This is a no-op"
 
 workflows:
   pipeline:
@@ -363,7 +364,6 @@ workflows:
           <<: *default-context
           requires:
             - checkout
-            -
       - test_package:
           <<: *default-context
   e2e-website:
