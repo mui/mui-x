@@ -43,7 +43,7 @@ const baselineProps: BaselineProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Prompt', () => {
+describe('<DataGridPremium /> - AI Assistant', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
