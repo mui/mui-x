@@ -224,6 +224,42 @@ async function findLatestMajorVersion() {
 }
 
 /**
+ * Find the latest version for a specific major version
+ * @param majorVersion - The major version to search for (e.g., '7', '6', etc.)
+ * @returns {Promise<*|null>} - The latest tag for the specified major version, or null if not found
+ */
+async function findLastVersionForMajor(majorVersion) {
+  try {
+    const { stdout } = await execa('git', ['tag', '-l', `v${majorVersion}.*`]);
+    const tags = stdout
+      .split('\n')
+      .filter(Boolean)
+      .sort((a, b) => {
+        // Sort versions using semver logic
+        const aParts = a.substring(1).split('.').map(Number);
+        const bParts = b.substring(1).split('.').map(Number);
+
+        for (let i = 0; i < 3; i += 1) {
+          if (aParts[i] !== bParts[i]) {
+            return aParts[i] - bParts[i];
+          }
+        }
+
+        return 0;
+      });
+
+    if (tags.length === 0) {
+      console.warn(`Warning: No tags found for major version ${majorVersion}`);
+      return null;
+    }
+    return tags[tags.length - 1].substring(1); // Remove 'v' prefix
+  } catch (error) {
+    console.error('Error finding latest tag for major version:', error);
+    return null;
+  }
+}
+
+/**
  * Select the major version to update
  * @param {string} latestMajorVersion - The latest major version found from the upstream remote
  * @returns {Promise<string>} The selected major version
@@ -617,8 +653,6 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
     console.log(`New version: ${newVersion}`);
     console.log(`Last version: ${lastVersion}`);
 
-    process.exit(1);
-
     return await generateChangelogFromModule({
       octokit,
       nextVersion: newVersion,
@@ -922,6 +956,9 @@ async function main({ githubToken }) {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
+    const lastVersion = await findLastVersionForMajor(majorVersion);
+    console.log(`Latest tag for major version ${majorVersion}: ${lastVersion}`);
+
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
     let prereleaseType = '';
@@ -1017,7 +1054,7 @@ async function main({ githubToken }) {
     // Generate the changelog
     const changelogContent = await generateChangelog(
       newVersion,
-      packageVersion,
+      lastVersion,
       majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
     );
 
