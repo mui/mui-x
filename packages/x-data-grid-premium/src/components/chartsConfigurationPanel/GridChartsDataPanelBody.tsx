@@ -3,7 +3,6 @@ import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import {
   getDataGridUtilityClass,
-  gridColumnLookupSelector,
   GridShadowScrollArea,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
@@ -14,16 +13,12 @@ import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridChartsDataPanelField } from './GridChartsDataPanelField';
 import {
+  gridChartableColumnsSelector,
   gridChartsCategoriesSelector,
   gridChartsIntegrationActiveChartIdSelector,
   gridChartsSeriesSelector,
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { gridRowGroupingSanitizedModelSelector } from '../../hooks/features/rowGrouping/gridRowGroupingSelector';
-import {
-  gridPivotModelSelector,
-  gridPivotActiveSelector,
-} from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { getBlockedSections } from '../../hooks/features/chartsIntegration/utils';
 import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
@@ -167,32 +162,21 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
   const series = useGridSelector(apiRef, gridChartsSeriesSelector, activeChartId);
   const classes = useUtilityClasses(rootProps);
-  const columns = useGridSelector(apiRef, gridColumnLookupSelector);
-  const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
-  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
-  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const chartableColumns = useGridSelector(apiRef, gridChartableColumnsSelector);
 
   const blockedSectionsLookup = React.useMemo(
     () =>
       new Map<string, string[]>(
-        Object.keys(columns).map((field) => [field, getBlockedSections(columns[field])]),
+        Object.values(chartableColumns).map((column) => [column.field, getBlockedSections(column)]),
       ),
-    [columns],
-  );
-
-  const pivotingModelValues = React.useMemo(
-    () => pivotModel.values.map((value) => value.field),
-    [pivotModel.values],
+    [chartableColumns],
   );
 
   const availableFields = React.useMemo(() => {
-    const notUsedFields = Object.keys(columns).filter(
+    const notUsedFields = Object.keys(chartableColumns).filter(
       (field) =>
-        columns[field].chartable &&
         !categories.some((category) => category.field === field) &&
-        !series.some((seriesItem) => seriesItem.field === field) &&
-        !rowGroupingModel.includes(field) &&
-        (!pivotActive || !pivotingModelValues.includes(field)),
+        !series.some((seriesItem) => seriesItem.field === field),
     );
     if (searchValue) {
       return notUsedFields.filter((field) => {
@@ -201,16 +185,7 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
       });
     }
     return notUsedFields;
-  }, [
-    apiRef,
-    searchValue,
-    columns,
-    rowGroupingModel,
-    pivotActive,
-    pivotingModelValues,
-    categories,
-    series,
-  ]);
+  }, [apiRef, searchValue, chartableColumns, categories, series]);
 
   const [drag, setDrag] = React.useState<{
     active: boolean;
@@ -223,8 +198,8 @@ function GridChartsDataPanelBody({ searchValue }: GridChartsDataPanelBodyProps) 
     if (!drag.field) {
       return new Set<string>();
     }
-    return new Set<string>(getBlockedSections(columns[drag.field]));
-  }, [columns, drag.field]);
+    return new Set<string>(blockedSectionsLookup.get(drag.field));
+  }, [blockedSectionsLookup, drag.field]);
 
   const handleDragStart = (field: string, section: FieldTransferObject['section']) => {
     setDrag({ active: true, field, initialSection: section, dropSection: null });
