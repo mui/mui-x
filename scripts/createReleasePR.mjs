@@ -605,9 +605,10 @@ async function updatePackageJson(newVersion) {
 /**
  * Generate the changelog
  * @param {string} newVersion - The new version
+ * @param {string} [releaseBranch='master'] - The branch to compare against (default is 'master')
  * @returns {Promise<string>} The changelog content
  */
-async function generateChangelog(newVersion) {
+async function generateChangelog(newVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
 
@@ -615,7 +616,7 @@ async function generateChangelog(newVersion) {
       octokit,
       nextVersion: newVersion,
       lastVersion: `v${newVersion}`,
-      release: 'master',
+      release: releaseBranch,
       returnEntry: true,
     });
   } catch (error) {
@@ -1007,7 +1008,10 @@ async function main({ githubToken }) {
     console.log(`New version: ${newVersion}`);
 
     // Generate the changelog
-    const changelogContent = await generateChangelog(newVersion);
+    const changelogContent = await generateChangelog(
+      newVersion,
+      majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
+    );
 
     // Add the new changelog entry to the CHANGELOG.md file
     await updateChangelog(changelogContent);
