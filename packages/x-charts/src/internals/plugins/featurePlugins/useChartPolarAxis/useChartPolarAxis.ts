@@ -116,15 +116,38 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       instance.cleanInteraction?.();
     };
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
+    const handleMove = (event: PointerEvent) => {
+      const srcEvent = event;
 
-      mousePosition.current.x = svgPoint.x;
-      mousePosition.current.y = svgPoint.y;
+      // On touch, we want to allow user to interact with the entire svg area in
+      // order to better display the tooltip.
+      if (event.pointerType === 'touch') {
+        const svgRect = element.getBoundingClientRect();
+
+        if (
+          srcEvent.clientX < svgRect.left ||
+          srcEvent.clientX > svgRect.right ||
+          srcEvent.clientY < svgRect.top ||
+          srcEvent.clientY > svgRect.bottom
+        ) {
+          mousePosition.current.isInChart = false;
+          instance.cleanInteraction();
+          return;
+        }
+
+        const svgPoint = getSVGPoint(element, srcEvent);
+
+        mousePosition.current.isInChart = true;
+        instance.setPointerCoordinate(svgPoint);
+        return;
+      }
+
+      // On mouse, we want to restrict the interaction to the drawing area and radar circle.
+
+      const svgPoint = getSVGPoint(element, srcEvent);
 
       // Test if it's in the drawing area
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target)) {
         if (mousePosition.current.isInChart) {
           instance?.cleanInteraction();
           mousePosition.current.isInChart = false;

@@ -81,7 +81,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       const target = 'targetTouches' in event ? event.targetTouches[0] : event;
       const svgPoint = getSVGPoint(element, target);
 
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target)) {
         instance.cleanInteraction?.();
         return;
       }
