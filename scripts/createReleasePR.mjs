@@ -969,8 +969,7 @@ async function main({ githubToken }) {
     console.log(`New version: ${newVersion}`);
 
     // Determine which branch to update based on the selected major version
-    const currentMajorVersion = packageVersion.split('.')[0];
-    if (majorVersion === currentMajorVersion) {
+    if (majorVersion === latestMajorVersion) {
       console.log('Updating the upstream master branch for current major version...');
       await execa('git', ['fetch', upstreamRemote, 'master']);
     } else {
@@ -987,7 +986,7 @@ async function main({ githubToken }) {
 
     // Determine the source branch based on the selected major version
     let branchSource;
-    if (majorVersion === currentMajorVersion) {
+    if (majorVersion === latestMajorVersion) {
       branchSource = `${upstreamRemote}/master`;
       console.log(`Creating branch from master for current major version: ${branchSource}`);
     } else {
@@ -1057,7 +1056,7 @@ async function main({ githubToken }) {
     console.log('Opening a PR...');
     try {
       // Determine the base branch based on the selected major version
-      const baseBranch = majorVersion === currentMajorVersion ? 'master' : `v${majorVersion}.x`;
+      const baseBranch = majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`;
 
       // Get the origin owner (username or organization)
       const forkOwner = await findForkOwner();
