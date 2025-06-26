@@ -199,10 +199,49 @@ async function findForkRemote() {
 }
 
 /**
+ * Find the latest major version from the upstream remote
+ * @param {string} remote - The name of the remote (e.g., 'upstream')
+ * @returns {Promise<string>} The latest major version (e.g., '7', '6', etc.)
+ */
+async function findLatestMajorVersion(remote) {
+  try {
+    console.log(`Fetching latest major version from ${remote}/master branch...`);
+
+    // Fetch the latest tags from the upstream remote
+    await execa('git', ['fetch', remote, '--tags', '--force']);
+
+    // Get all tags from the upstream remote
+    const { stdout: tagsOutput } = await execa('git', ['tag', '-l', 'v*.*.*']);
+    const tags = tagsOutput.split('\n').filter(Boolean);
+
+    // Filter and sort tags to find the latest major version
+    const majorTags = tags
+      .map((tag) => tag.replace(/^v/, '')) // Remove 'v' prefix
+      .filter((tag) => /^\d+\.\d+\.\d+$/.test(tag)) // Keep only valid semver tags
+      .sort((a, b) => {
+        const aParts = a.split('.').map(Number);
+        const bParts = b.split('.').map(Number);
+        return aParts[0] - bParts[0] || aParts[1] - bParts[1] || aParts[2] - bParts[2];
+      });
+
+    if (majorTags.length === 0) {
+      console.error('Error: No valid major version tags found.');
+      process.exit(1);
+    }
+
+    return majorTags[majorTags.length - 1].split('.')[0];
+  } catch (error) {
+    console.error('Error finding latest major version:', error);
+    process.exit(1);
+  }
+}
+
+/**
  * Select the major version to update
+ * @param {string} latestMajorVersion - The latest major version found from the upstream remote
  * @returns {Promise<string>} The selected major version
  */
-async function selectMajorVersion() {
+async function selectMajorVersion(latestMajorVersion) {
   const currentMajorVersion = packageVersion.split('.')[0];
 
   const majorVersion = await input({
@@ -213,8 +252,8 @@ async function selectMajorVersion() {
         return 'Major version must be a number';
       }
 
-      if (parseInt(answer, 10) > parseInt(currentMajorVersion, 10)) {
-        return `Cannot select a major version (${answer}) higher than the current major version (${currentMajorVersion})`;
+      if (parseInt(answer, 10) > parseInt(latestMajorVersion, 10)) {
+        return `Cannot select a major version (${answer}) higher than the current major version (${latestMajorVersion})`;
       }
 
       return true;
@@ -857,6 +896,17 @@ async function main({ githubToken }) {
       auth: githubToken,
     });
 
+    // Find the upstream remote
+    const upstreamRemote = await findMuiXRemote();
+    console.log(`Found upstream remote: ${upstreamRemote}`);
+
+    // Find the fork remote
+    const forkRemote = await findForkRemote();
+    console.log(`Found fork remote: ${upstreamRemote}`);
+
+    const latestMajorVersion = await findLatestMajorVersion(upstreamRemote);
+    console.log(`Found latest major version: ${latestMajorVersion}`);
+
     // Initialize variables
     let versionType = '';
     let customVersion = '';
@@ -874,7 +924,7 @@ async function main({ githubToken }) {
     }
 
     // Always prompt for major version first
-    const majorVersion = await selectMajorVersion();
+    const majorVersion = await selectMajorVersion(latestMajorVersion);
 
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
@@ -917,10 +967,6 @@ async function main({ githubToken }) {
       prereleaseNumber,
     );
     console.log(`New version: ${newVersion}`);
-
-    // Find the upstream remote
-    const upstreamRemote = await findMuiXRemote();
-    console.log(`Found upstream remote: ${upstreamRemote}`);
 
     // Determine which branch to update based on the selected major version
     const currentMajorVersion = packageVersion.split('.')[0];
@@ -995,7 +1041,6 @@ async function main({ githubToken }) {
     // Push the committed changes to fork remote
     console.log('Pushing committed changes to fork remote...');
     try {
-      const forkRemote = await findForkRemote();
       await execa('git', ['push', forkRemote, branchName]);
       console.log(`Changes pushed to ${forkRemote}/${branchName}`);
     } catch (error) {
