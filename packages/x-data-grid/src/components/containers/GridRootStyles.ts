@@ -512,7 +512,7 @@ export const GridRootStyles = styled('div', {
     },
 
     [`& .${c.headerFilterRow}`]: {
-      [`& .${c.columnHeader}`]: {
+      [`& .${c.columnHeader}, & .${c.scrollbarFiller}`]: {
         boxSizing: 'border-box',
         borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
