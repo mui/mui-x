@@ -175,6 +175,7 @@
   { "name": "GridChartsIntegrationContextProviderProps", "kind": "Interface" },
   { "name": "GridChartsRendererProxy", "kind": "Function" },
   { "name": "GridChartsRendererProxyProps", "kind": "Interface" },
+  { "name": "GridChartsRendererProxyRendererCallback", "kind": "TypeAlias" },
   { "name": "GridCheckCircleIcon", "kind": "Variable" },
   { "name": "GridCheckIcon", "kind": "Variable" },
   { "name": "GridChildrenFromPathLookup", "kind": "TypeAlias" },
