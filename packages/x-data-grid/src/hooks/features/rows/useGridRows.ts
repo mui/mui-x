@@ -200,7 +200,7 @@ export const useGridRows = (
         return;
       }
 
-      const { nonPinnedRowsUpdates } = computeRowsUpdates(apiRef, updates, props.getRowId);
+      const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
       const cache = updateCacheWithNewRows({
         updates: nonPinnedRowsUpdates,
@@ -215,10 +215,12 @@ export const useGridRows = (
 
   const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
     (updates, groupKeys) => {
-      const { nonPinnedRowsUpdates, insertedNodes } = computeRowsUpdates(
+      const insertedNodes = new Set<GridRowId>();
+      const nonPinnedRowsUpdates = computeRowsUpdates(
         apiRef,
         updates,
         props.getRowId,
+        insertedNodes,
       );
 
       const tree = gridRowTreeSelector(apiRef);
