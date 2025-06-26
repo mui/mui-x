@@ -91,9 +91,9 @@ function Scatter(props: ScatterProps) {
 
   const classes = useUtilityClasses(inClasses);
 
-  const children = React.useMemo(
-    () =>
-      scatterPlotData.map((dataPoint, i) => {
+  return (
+    <g data-series={series.id} className={classes.root}>
+      {scatterPlotData.map((dataPoint, i) => {
         const isItemHighlighted = isHighlighted(dataPoint);
         const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
 
@@ -123,25 +123,7 @@ function Scatter(props: ScatterProps) {
             {...markerProps}
           />
         );
-      }),
-    [
-      Marker,
-      color,
-      colorGetter,
-      instance,
-      isFaded,
-      isHighlighted,
-      markerProps,
-      onItemClick,
-      scatterPlotData,
-      series.id,
-      skipInteractionHandlers,
-    ],
-  );
-
-  return (
-    <g data-series={series.id} className={classes.root}>
-      {children}
+      })}
     </g>
   );
 }
