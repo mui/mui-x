@@ -203,33 +203,20 @@ async function findForkRemote() {
  * @param {string} remote - The name of the remote (e.g., 'upstream')
  * @returns {Promise<string>} The latest major version (e.g., '7', '6', etc.)
  */
-async function findLatestMajorVersion(remote) {
+async function findLatestMajorVersion() {
   try {
-    console.log(`Fetching latest major version from ${remote}/master branch...`);
-
-    // Fetch the latest tags from the upstream remote
-    await execa('git', ['fetch', remote, '--tags', '--force']);
-
-    // Get all tags from the upstream remote
-    const { stdout: tagsOutput } = await execa('git', ['tag', '-l', 'v*.*.*']);
-    const tags = tagsOutput.split('\n').filter(Boolean);
-
-    // Filter and sort tags to find the latest major version
-    const majorTags = tags
-      .map((tag) => tag.replace(/^v/, '')) // Remove 'v' prefix
-      .filter((tag) => /^\d+\.\d+\.\d+$/.test(tag)) // Keep only valid semver tags
-      .sort((a, b) => {
-        const aParts = a.split('.').map(Number);
-        const bParts = b.split('.').map(Number);
-        return aParts[0] - bParts[0] || aParts[1] - bParts[1] || aParts[2] - bParts[2];
-      });
-
-    if (majorTags.length === 0) {
-      console.error('Error: No valid major version tags found.');
+    // fetch tags from the GitHub API and return the last one
+    const { data: tags } = await octokit.rest.repos.listTags({
+      owner: ORG,
+      repo: REPO,
+    });
+    const tagName = tags[0].name.trim();
+    const match = tagName.match(/^v(\d+)\.(\d+)\.(\d+)/);
+    if (!match) {
+      console.error(`Error: Unable to parse version from tag ${tagName}`);
       process.exit(1);
     }
-
-    return majorTags[majorTags.length - 1].split('.')[0];
+    return match[1];
   } catch (error) {
     console.error('Error finding latest major version:', error);
     process.exit(1);
@@ -627,7 +614,8 @@ async function generateChangelog(newVersion) {
     return await generateChangelogFromModule({
       octokit,
       nextVersion: newVersion,
-      release: 'master', // Default value from releaseChangelog.mjs
+      lastVersion: `v${newVersion}`,
+      release: 'master',
       returnEntry: true,
     });
   } catch (error) {
@@ -904,7 +892,7 @@ async function main({ githubToken }) {
     const forkRemote = await findForkRemote();
     console.log(`Found fork remote: ${upstreamRemote}`);
 
-    const latestMajorVersion = await findLatestMajorVersion(upstreamRemote);
+    const latestMajorVersion = await findLatestMajorVersion();
     console.log(`Found latest major version: ${latestMajorVersion}`);
 
     // Initialize variables
