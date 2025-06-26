@@ -2,7 +2,6 @@ import * as React from 'react';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useLayoutEffect from '@mui/utils/useEnhancedEffect';
-import reactMajor from '@mui/x-internals/reactMajor';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
