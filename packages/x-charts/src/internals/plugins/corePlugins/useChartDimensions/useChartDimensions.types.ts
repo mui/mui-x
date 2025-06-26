@@ -71,13 +71,9 @@ export interface UseChartDimensionsInstance {
   /**
    * Checks if an element is inside the drawing area.
    * @param {Element | EventTarget | null} element The element to check.
-   * @param {boolean} partial If `true`, the element only needs to be partially inside the drawing area.
    * @returns {boolean} `true` if the element is inside the drawing area, `false` otherwise.
    */
-  isElementInside: (
-    element: Element | EventTarget | null | undefined,
-    partial?: boolean,
-  ) => boolean;
+  isElementInside: (element: Element | EventTarget | null | undefined) => boolean;
   /**
    * Checks if a point is inside the drawing area.
    * @param {number} x The x coordinate of the point.
