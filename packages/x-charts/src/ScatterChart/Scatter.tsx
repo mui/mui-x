@@ -4,10 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
 import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
-import {
-  getInteractionItemProps,
-  useInteractionAllItemProps,
-} from '../hooks/useInteractionItemProps';
+import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
@@ -21,7 +18,8 @@ import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartHighlightSignature, UseChartInteractionSignature } from '../internals';
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
