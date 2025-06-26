@@ -21,7 +21,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     dataGridPalette?.bg ??
     (t.palette.mode === 'dark'
       ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 95%, #fff)`
-      : (t.vars || t).palette.background.default);
+      : (t.vars || t).palette.background.paper);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.vars
