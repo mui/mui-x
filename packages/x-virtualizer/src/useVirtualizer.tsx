@@ -123,9 +123,34 @@ export const useVirtualizer = (params: VirtualizerParams) => {
   const dimensions = Dimensions.use(store, params);
   const virtualization = Virtualization.use(store, params);
 
+  const getViewportPageSize = () => {
+    const dimensions = Dimensions.selectors.dimensions(store.state);
+    if (!dimensions.isReady) {
+      return 0;
+    }
+
+    // TODO: Use a combination of scrollTop, dimensions.viewportInnerSize.height and rowsMeta.possitions
+    // to find out the maximum number of rows that can fit in the visible part of the grid
+    if (params.getRowHeight) {
+      const renderContext = Virtualization.selectors.renderContext(store.state);
+      const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
+
+      return Math.min(viewportPageSize - 1, params.rows.length);
+    }
+
+    const maximumPageSizeWithoutScrollBar = Math.floor(
+      dimensions.viewportInnerSize.height / dimensions.rowHeight,
+    );
+
+    return Math.min(maximumPageSizeWithoutScrollBar, params.rows.length);
+  };
+
   return {
     store,
     dimensions,
     virtualization,
+    api: {
+      getViewportPageSize,
+    },
   };
 };

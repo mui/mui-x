@@ -112,32 +112,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   const virtualizer = apiRef.current.virtualizer;
   const updateDimensions = virtualizer.dimensions.updateDimensions;
+  const getViewportPageSize = virtualizer.api.getViewportPageSize;
 
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
-
-  const getViewportPageSize = React.useCallback(() => {
-    const dimensions = gridDimensionsSelector(apiRef);
-    if (!dimensions.isReady) {
-      return 0;
-    }
-
-    const currentPage = getVisibleRows(apiRef);
-
-    // TODO: Use a combination of scrollTop, dimensions.viewportInnerSize.height and rowsMeta.possitions
-    // to find out the maximum number of rows that can fit in the visible part of the grid
-    if (props.getRowHeight) {
-      const renderContext = gridRenderContextSelector(apiRef);
-      const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
-
-      return Math.min(viewportPageSize - 1, currentPage.rows.length);
-    }
-
-    const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / dimensions.rowHeight,
-    );
-
-    return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, props.getRowHeight]);
 
   const apiPublic: GridDimensionsApi = {
     getRootDimensions,
