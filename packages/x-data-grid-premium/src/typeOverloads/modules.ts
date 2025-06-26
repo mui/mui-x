@@ -53,6 +53,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the charts configuration side panel open state changes.
    */
   chartsConfigurationPanelOpenChange: { params: boolean };
+  /**
+   * Fired when the active chart id changes.
+   */
+  activeChartIdChange: { params: string };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
@@ -64,10 +68,6 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the clipboard paste operation ends.
    */
   clipboardPasteEnd: {};
-  /**
-   * Fired when the active chart changes.
-   */
-  activeChartChange: { params: string };
   /**
    * Fired when the chart synchronization state changes.
    */
