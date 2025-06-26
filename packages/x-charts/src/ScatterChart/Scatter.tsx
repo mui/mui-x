@@ -115,8 +115,8 @@ function Scatter(props: ScatterProps) {
                   dataIndex: dataPoint.dataIndex,
                 }))
             }
-            data-highlighted={isItemHighlighted}
-            data-faded={isItemFaded}
+            data-highlighted={isItemHighlighted || undefined}
+            data-faded={isItemFaded || undefined}
             {...(skipInteractionHandlers
               ? undefined
               : getInteractionItemProps(instance, dataPoint))}
