@@ -96,7 +96,7 @@ Internal changes.
 
 ### Core
 
-- [core] avoid json stringify whole window object (#18512) @vadimka123
+- [core] Avoid json stringify whole window object (#18512) @vadimka123
 
 ### Miscellaneous
 
