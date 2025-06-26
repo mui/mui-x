@@ -1,7 +1,6 @@
 import { createSelector } from '../../utils/selectors';
-import { AxisId, ChartsAxisProps } from '../../../../models/axis';
+import { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
-
 import {
   selectorChartsInteractionXAxisIndex,
   selectorChartsInteractionXAxisValue,
@@ -16,86 +15,72 @@ const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.controlledCartesianAxisHighlight;
 
-export const selectorChartsControlledIndex = createSelector(
-  [selectorChartControlledCartesianAxisHighlight],
-  (value) => {
-    if (value == null) {
-      return value;
-    }
-    return value.dataIndex;
-  },
-);
-
-export const selectorChartsControlledId = createSelector(
-  [selectorChartControlledCartesianAxisHighlight],
-  (value) => {
-    if (value == null) {
-      return value;
-    }
-    return value.axisId;
-  },
-);
+const selectAxisHighlight = (
+  computedIndex: number | null,
+  axis: ComputeResult<ChartsAxisProps>,
+  axisItems: AxisItemIdentifier[] | undefined,
+) => {
+  if (axisItems !== undefined) {
+    return axisItems.filter((item) => axis.axis[item.axisId] !== undefined).map((item) => item);
+  }
+  return computedIndex === null ? [] : [{ axisId: axis.axisIds[0], dataIndex: computedIndex }];
+};
 
 export const selectorChartsHighlightXAxisIndex = createSelector(
-  [selectorChartsInteractionXAxisIndex, selectorChartsControlledIndex],
-  (computedIndex, controlledIndex) =>
-    controlledIndex !== undefined ? controlledIndex : computedIndex,
+  [
+    selectorChartsInteractionXAxisIndex,
+    selectorChartXAxis,
+    selectorChartControlledCartesianAxisHighlight,
+  ],
+  selectAxisHighlight,
 );
 
 export const selectorChartsHighlightYAxisIndex = createSelector(
-  [selectorChartsInteractionYAxisIndex, selectorChartsControlledIndex],
-  (computedIndex, controlledIndex) =>
-    controlledIndex !== undefined ? controlledIndex : computedIndex,
+  [
+    selectorChartsInteractionYAxisIndex,
+    selectorChartYAxis,
+    selectorChartControlledCartesianAxisHighlight,
+  ],
+  selectAxisHighlight,
 );
+
+const selectAxisHighlightWithValue = (
+  computedIndex: number | null,
+  computedValue: number | Date | null,
+  axis: ComputeResult<ChartsAxisProps>,
+  axisItems: AxisItemIdentifier[] | undefined,
+) => {
+  if (axisItems !== undefined) {
+    return axisItems
+      .map((item) => ({
+        ...item,
+        value: axis.axis[item.axisId]?.data?.[item.dataIndex],
+      }))
+      .filter(({ value }) => value !== undefined);
+  }
+  return computedValue === null
+    ? []
+    : [{ axisId: axis.axisIds[0], dataIndex: computedIndex, value: computedValue }];
+};
 
 export const selectorChartsHighlightXAxisValue = createSelector(
   [
+    selectorChartsInteractionXAxisIndex,
     selectorChartsInteractionXAxisValue,
-    selectorChartsControlledId,
-    selectorChartsControlledIndex,
     selectorChartXAxis,
+    selectorChartControlledCartesianAxisHighlight,
   ],
-  (computedValue, controlledId, controlledIndex, axis) => {
-    if (controlledId === undefined) {
-      return computedValue;
-    }
-
-    if (controlledId === null || controlledIndex == null) {
-      return null;
-    }
-
-    if (axis.axis[controlledId]?.data === undefined) {
-      // The controlled id does not correspond to an x-axis.
-      // Or it has no data associated.
-      return null;
-    }
-    return axis.axis[controlledId].data[controlledIndex];
-  },
+  selectAxisHighlightWithValue,
 );
 
 export const selectorChartsHighlightYAxisValue = createSelector(
   [
+    selectorChartsInteractionYAxisIndex,
     selectorChartsInteractionYAxisValue,
-    selectorChartsControlledId,
-    selectorChartsControlledIndex,
     selectorChartYAxis,
+    selectorChartControlledCartesianAxisHighlight,
   ],
-  (computedValue, controlledId, controlledIndex, axis) => {
-    if (controlledId === undefined) {
-      return computedValue;
-    }
-
-    if (controlledId === null || controlledIndex == null) {
-      return null;
-    }
-
-    if (axis.axis[controlledId]?.data === undefined) {
-      // The controlled id does not correspond to an x-axis.
-      // Or it has no data associated.
-      return null;
-    }
-    return axis.axis[controlledId].data[controlledIndex];
-  },
+  selectAxisHighlightWithValue,
 );
 
 /**
@@ -104,22 +89,28 @@ export const selectorChartsHighlightYAxisValue = createSelector(
  * @param axis The axis state after all the processing
  * @returns axis state
  */
-const selectAxis = (axisId: AxisId | null | undefined, axis: ComputeResult<ChartsAxisProps>) => {
-  if (axisId === undefined) {
-    return axis.axis[axis.axisIds[0]];
+const selectAxis = (
+  axisItems: AxisItemIdentifier[] | undefined,
+  axis: ComputeResult<ChartsAxisProps>,
+) => {
+  if (axisItems === undefined) {
+    return [axis.axis[axis.axisIds[0]]];
   }
-  if (axisId !== null) {
-    return axis.axis[axisId];
+  const filteredAxes = axisItems
+    .map((item) => axis.axis[item.axisId] ?? null)
+    .filter((item) => item !== null);
+  if (filteredAxes.length > 0) {
+    return filteredAxes;
   }
-  return null;
+  return [];
 };
 
 export const selectorChartsHighlightXAxis = createSelector(
-  [selectorChartsControlledId, selectorChartXAxis],
+  [selectorChartControlledCartesianAxisHighlight, selectorChartXAxis],
   selectAxis,
 );
 
 export const selectorChartsHighlightYAxis = createSelector(
-  [selectorChartsControlledId, selectorChartYAxis],
+  [selectorChartControlledCartesianAxisHighlight, selectorChartYAxis],
   selectAxis,
 );

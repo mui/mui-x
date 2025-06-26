@@ -19,6 +19,7 @@ import {
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
+import { AxisId } from '../models/axis';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -74,7 +75,20 @@ function MarkPlot(props: MarkPlotProps) {
   const chartId = useChartId();
   const { instance, store } = useChartContext<[UseChartCartesianAxisSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
-  const xAxisHighlightIndex = useSelector(store, selectorChartsHighlightXAxisIndex);
+  const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+
+  const highlightedItems = React.useMemo(() => {
+    const rep: Record<AxisId, Set<number>> = {};
+
+    for (const { dataIndex, axisId } of xAxisHighlightIndexes) {
+      if (rep[axisId] === undefined) {
+        rep[axisId] = new Set([dataIndex]);
+      } else {
+        rep[axisId].add(dataIndex);
+      }
+    }
+    return rep;
+  }, [xAxisHighlightIndexes]);
 
   if (seriesData === undefined) {
     return null;
@@ -172,7 +186,7 @@ function MarkPlot(props: MarkPlotProps) {
                         ((event) =>
                           onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
                       }
-                      isHighlighted={xAxisHighlightIndex === index || isSeriesHighlighted}
+                      isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
                       isFaded={isSeriesFaded}
                       {...slotProps?.mark}
                     />

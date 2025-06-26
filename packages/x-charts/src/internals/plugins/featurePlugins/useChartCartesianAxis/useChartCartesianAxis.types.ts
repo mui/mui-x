@@ -60,7 +60,7 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * The controlled axis highlighted.
    * Indicates the direction, axis id, and data index to highlight.
    */
-  highlightedAxis?: AxisItemIdentifier | null;
+  highlightedAxis?: AxisItemIdentifier[];
   /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
@@ -101,7 +101,7 @@ export interface UseChartCartesianAxisState {
   /**
    * The controlled axis item highlighted.
    */
-  controlledCartesianAxisHighlight?: AxisItemIdentifier | null;
+  controlledCartesianAxisHighlight?: AxisItemIdentifier[];
 }
 
 export type ExtremumFilter = (
