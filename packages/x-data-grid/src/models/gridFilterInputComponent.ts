@@ -8,6 +8,7 @@ export type GridFilterInputSlotProps = {
   size?: 'small' | 'medium';
   label?: React.ReactNode;
   placeholder?: string;
+  variant?: 'standard' | 'outlined' | 'filled';
 };
 
 export type GridFilterInputValueProps<
