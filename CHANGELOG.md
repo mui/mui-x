@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.29.7
+
+<!-- generated comparing v7.29.6..v7.x -->
+
+_Jun 26, 2025_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible.
+
+Special thanks go out to the community members for their valuable contributions:
+@alisasanib
+
+Following are all team members who have contributed to this release:
+@mapache-salvaje, @arminmeh, @michelengelen
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.7`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@7.29.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.7`, plus:
+
+- [DataGridPro] Fix pinned columns order in column management (#18053) @alisasanib
+
+#### `@mui/x-data-grid-premium@7.29.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.7`.
+
+### Docs
+
+- [docs] Revise the Row Grouping doc (#17494) @mapache-salvaje
+- [docs] Document `GridRenderContext` (#18501) @arminmeh
+- [docs] Prevent stale rows from appearing on sort and filter change in the lazy loading demo (#18463) @arminmeh
+
+### Miscellaneous
+
+- [infra] Add automated release PR creation script (#18450) @michelengelen
+
 ## 7.29.6
 
 _Jun 6, 2025_
