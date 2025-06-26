@@ -81,36 +81,31 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
     },
   } = params;
 
-  // Initialize & observe container node root size
-  useLayoutEffect(() => {
+  function observeRootSize() {
     const node = refs.container.current;
     if (!node) {
       return undefined;
     }
-    {
-      // Initialize root size
-      const initialRect = node.getBoundingClientRect();
-      const rootSize = {
-        width: roundToDecimalPlaces(initialRect.width, 1),
-        height: roundToDecimalPlaces(initialRect.height, 1),
-      };
-      if (store.state.rootSize === Size.EMPTY || !Size.equals(rootSize, store.state.rootSize)) {
-        store.update({ rootSize });
-      }
+    const bounds = node.getBoundingClientRect();
+    const initialSize = {
+      width: roundToDecimalPlaces(bounds.width, 1),
+      height: roundToDecimalPlaces(bounds.height, 1),
+    };
+    if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
+      store.update({ rootSize: initialSize });
     }
 
-    // prettier-ignore
-    if (typeof ResizeObserver === 'undefined') { return undefined; }
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
     const observer = new ResizeObserver(([entry]) => {
       if (!entry) {
         return;
       }
-
       const rootSize = {
         width: roundToDecimalPlaces(entry.contentRect.width, 1),
         height: roundToDecimalPlaces(entry.contentRect.height, 1),
       };
-
       if (!Size.equals(rootSize, store.state.rootSize)) {
         store.update({ rootSize });
       }
@@ -118,14 +113,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
 
     observer.observe(node);
 
-    if (reactMajor >= 19) {
-      return () => {
-        refs.container.current = null;
-        observer.disconnect();
-      };
-    }
-    return undefined;
-  }, [refs.container]);
+    return () => {
+      observer.disconnect();
+    };
+  }
 
   const updateDimensions = React.useCallback(() => {
     if (isFirstSizing.current) {
@@ -265,6 +256,8 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
     [params.resizeThrottleMs, params.onResize, store, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
+
+  useLayoutEffect(observeRootSize, []);
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
