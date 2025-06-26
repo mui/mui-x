@@ -13,6 +13,7 @@ import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { SchedulerValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
+import { getColorClassName } from '../internals/utils/color-utils';
 
 import './MonthView.css';
 
@@ -29,7 +30,9 @@ export const MonthView = React.memo(
 
     const store = useEventCalendarStore();
     const visibleDate = useSelector(store, selectors.visibleDate);
-    const today = adapter.date();
+    const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+    // TODO: Temporary fake today until Issue 17698 is resolved.
+    const today = adapter.date('2025-05-26');
 
     const getWeekList = useWeekList();
     const getDayList = useDayList();
@@ -124,17 +127,30 @@ export const MonthView = React.memo(
                             ) : (
                               renderCellNumberContent(day.date)
                             )}
-                            {day.events.map((eventProp) => (
-                              <DayGrid.Event
-                                key={eventProp.id}
-                                start={eventProp.start}
-                                end={eventProp.end}
-                                onClick={(event) => onEventClick(event, eventProp)}
-                              >
-                                <span data-resource={eventProp.resource} />
-                                <span>{eventProp.title}</span>
-                              </DayGrid.Event>
-                            ))}
+                            {day.events.map((eventProp) => {
+                              const eventResource = resourcesByIdMap.get(eventProp.resource);
+                              return (
+                                // TODO: Issue 18554 - Style the event (compact variant)
+                                <DayGrid.Event
+                                  key={eventProp.id}
+                                  start={eventProp.start}
+                                  end={eventProp.end}
+                                  onClick={(event) => onEventClick(event, eventProp)}
+                                  className={clsx(
+                                    'MonthViewEvent',
+                                    className,
+                                    getColorClassName({ resource: eventResource }),
+                                  )}
+                                >
+                                  <span
+                                    className="LinesClamp"
+                                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                                  >
+                                    {eventProp.title}
+                                  </span>
+                                </DayGrid.Event>
+                              );
+                            })}
                           </DayGrid.Cell>
                         );
                       })}
