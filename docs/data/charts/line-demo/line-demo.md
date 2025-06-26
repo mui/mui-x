@@ -60,13 +60,12 @@ This modification implies a small drop of rendering performances (around +50ms t
 ## Larger interaction area
 
 The line highlight has a narrow interaction area.
-Before a proposer solution get implemented, it's possible to use a workaround with slots.
+Before a proper solution get implemented, it's possible to use a workaround with slots.
 
 The idea is to have two paths.
 A small one to display the line.
-And a larger one invisible that take cares od interaction.
+And a larger one invisible that take cares of interactions.
 
-This hack suffers some drawback when lines cross each over.
-The highlight is not taken by the closest line, but by the last defined series.
+This solution has an issue when lines cross over each other, as the highlight will not be on the line closest to the pointer, but by the last defined series.
 
 {{"demo": "LargerHighlightLineNoSnap.js"}}
