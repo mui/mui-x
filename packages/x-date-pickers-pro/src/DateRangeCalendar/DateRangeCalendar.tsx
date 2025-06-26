@@ -45,7 +45,11 @@ import {
   isStartOfRange,
   isWithinRange,
 } from '../internals/utils/date-utils';
-import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
+import {
+  calculateRangeChange,
+  calculateRangePreview,
+  resolveReferenceDate,
+} from '../internals/utils/date-range-manager';
 import { RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -341,7 +345,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
   const { calendarState, setVisibleDate, onMonthSwitchingAnimationEnd } = useCalendarState({
     value: value[0] || value[1],
-    referenceDate,
+    referenceDate: resolveReferenceDate(referenceDate, rangePosition),
     disableFuture,
     disablePast,
     maxDate,
