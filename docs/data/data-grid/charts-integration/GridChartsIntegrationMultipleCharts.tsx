@@ -46,7 +46,7 @@ export default function GridChartsIntegrationMultipleCharts() {
     chartsIntegration: {
       charts: {
         quantity: {
-          chartType: 'line',
+          chartType: 'bar',
         },
         feeRate: {
           chartType: 'line',
