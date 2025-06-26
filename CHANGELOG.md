@@ -11,6 +11,8 @@ _Jun 26, 2025_
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add export menu to charts toolbar
+- 📅 Add `usePickerAdapter` hook to access the date adapter.
+  You can use the adapter in your custom components if you need them to work with multiple date libraries — [Learn more](https://mui.com/x/react-date-pickers/custom-components/#access-date-adapter).
 - 🌎 Improve Danish (da-DK) locale
 
 Special thanks go out to the community members for their valuable contributions:
