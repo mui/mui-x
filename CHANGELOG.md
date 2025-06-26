@@ -12,6 +12,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 
 - 📊 Add export menu to charts toolbar
 - 📅 Add `usePickerAdapter` hook to access the date adapter.
+
   You can use the adapter in your custom components if you need them to work with multiple date libraries — [Learn more](https://mui.com/x/react-date-pickers/custom-components/#access-date-adapter).
 - 🌎 Improve Danish (da-DK) locale
 
@@ -62,6 +63,8 @@ Same changes as in `@mui/x-date-pickers@8.6.0`.
 - [charts] Add `data-series` to pie charts (#18432) @bernardobelchior
 - [charts] Fix missing key in bar plot (#18502) @bernardobelchior
 - [charts] Split axis utils from main file (#18517) @JCQuintas
+- [charts] Improve touch behavior for polar axis (#18531) @JCQuintas
+- [charts] Add `isElementInside` helper (#18530) @JCQuintas
 
 #### `@mui/x-charts-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
