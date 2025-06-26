@@ -123,6 +123,20 @@ function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
   return side;
 }
 
+function getPinnedWidthProperty(isRtl: boolean, pinnedPosition: GridPinnedColumnPosition) {
+  if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+    return isRtl ? '--DataGrid-rightPinnedWidth' : '--DataGrid-leftPinnedWidth';
+  }
+  return isRtl ? '--DataGrid-leftPinnedWidth' : '--DataGrid-rightPinnedWidth';
+}
+
+function getPinnedWidth(dimensions: any, isRtl: boolean, pinnedPosition: GridPinnedColumnPosition) {
+  if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+    return isRtl ? dimensions.rightPinnedWidth : dimensions.leftPinnedWidth;
+  }
+  return isRtl ? dimensions.leftPinnedWidth : dimensions.rightPinnedWidth;
+}
+
 function preventClick(event: MouseEvent) {
   event.preventDefault();
   event.stopImmediatePropagation();
@@ -369,8 +383,8 @@ export const useGridColumnResize = (
       });
 
       apiRef.current.rootElementRef?.current?.style.setProperty(
-        '--DataGrid-leftPinnedWidth',
-        `${dimensions.leftPinnedWidth + columnWidthDiff}px`,
+        getPinnedWidthProperty(isRtl, pinnedPosition),
+        `${getPinnedWidth(dimensions, isRtl, pinnedPosition) + columnWidthDiff}px`,
       );
     }
 
@@ -385,8 +399,8 @@ export const useGridColumnResize = (
       });
 
       apiRef.current.rootElementRef?.current?.style.setProperty(
-        '--DataGrid-rightPinnedWidth',
-        `${dimensions.rightPinnedWidth + columnWidthDiff}px`,
+        getPinnedWidthProperty(isRtl, pinnedPosition),
+        `${getPinnedWidth(dimensions, isRtl, pinnedPosition) + columnWidthDiff}px`,
       );
     }
   };

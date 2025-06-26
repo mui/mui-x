@@ -13,6 +13,7 @@ import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridEventListener } from '../models/events';
 import { vars } from '../constants/cssVariables';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+import { useRtl } from '@mui/system/RtlProvider';
 
 interface GridScrollShadowsProps {
   position: 'vertical' | 'horizontal';
@@ -73,12 +74,14 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
       : dimensions.hasScrollX &&
         pinnedColumns?.right?.length !== undefined &&
         pinnedColumns?.right?.length > 0;
+  const isRtl = useRtl();
 
   const updateScrollShadowVisibility = (scrollPosition: number) => {
     if (!ref.current) {
       return;
     }
-    const scroll = Math.round(scrollPosition);
+    // Math.abs to convert negative scroll position (RTL) to positive
+    const scroll = Math.abs(Math.round(scrollPosition));
     const maxScroll = Math.round(
       dimensions.contentSize[position === 'vertical' ? 'height' : 'width'] -
         dimensions.viewportInnerSize[position === 'vertical' ? 'height' : 'width'],
@@ -91,8 +94,13 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
       position === 'vertical'
         ? pinnedRows?.bottom?.length > 0
         : pinnedColumns?.right?.length !== undefined && pinnedColumns?.right?.length > 0;
-    ref.current.style.setProperty('--hasScrollStart', hasPinnedStart && scroll > 0 ? '1' : '0');
-    ref.current.style.setProperty('--hasScrollEnd', hasPinnedEnd && scroll < maxScroll ? '1' : '0');
+    const scrollIsNotAtStart = isRtl ? scroll < maxScroll : scroll > 0;
+    const scrollIsNotAtEnd = isRtl ? scroll > 0 : scroll < maxScroll;
+    ref.current.style.setProperty(
+      '--hasScrollStart',
+      hasPinnedStart && scrollIsNotAtStart ? '1' : '0',
+    );
+    ref.current.style.setProperty('--hasScrollEnd', hasPinnedEnd && scrollIsNotAtEnd ? '1' : '0');
   };
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = (scrollParams) => {
