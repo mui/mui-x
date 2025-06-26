@@ -6,12 +6,12 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.6.0
-<!-- generated comparing v8.5.3..master -->
 _Jun 26, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add export menu to charts toolbar
+- 🌎 Improve Danish (da-DK) locale
 
 Special thanks go out to the community members for their valuable contributions:
 @ShahrazH, @vadimka123
