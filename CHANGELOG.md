@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.7
+<!-- generated comparing v8.5.3..master -->
+_Jun 26, 2025_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community members for their valuable contributions:
+@ShahrazH, @vadimka123
+
+The following are all team members who have contributed to this release:
+@arminmeh, @bernardobelchior, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.7`
+
+- [data grid] Fix `label` type in  GridActionsCellItem type (#18175) @sai6855
+- [data grid][docs] Update indeterminate checkbox section in migration guide (#18229) @michelengelen
+- [DataGrid] Fix grid menu not closing when pressing escape/tab (#18300) @KenanYusuf
+- [l10n] Improve Danish (da-DK) locale (#18428) @ShahrazH
+
+#### `@mui/x-data-grid-pro@7.29.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.7`, plus:
+
+- [DataGridPro] Data source nested pagination recipe (#14777) @MBilalShafi
+- [DataGridPro] Fix lazy loading params calculated from rendering context (#18460) @arminmeh
+
+#### `@mui/x-data-grid-premium@7.29.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.7`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.4`
+
+- [pickers] Add `usePickerAdapter` hook (#18457) @LukasTy
+- [pickers] Fix to use latest `value` when updating `lastCommittedValue` in internal state (#18518) @LukasTy
+- [pickers] Use `usePickerAdapter` hook internally instead of `useUtils` (#18465) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@7.29.4`.
+
+### Charts
+
+#### `@mui/x-charts@7.29.1`
+
+- [charts] Add `data-series` to charts legend item (#18414) @bernardobelchior
+- [charts] Add `isElementInside` helper (#18530) @JCQuintas
+- [charts] Add data-series to bar charts (#18413) @bernardobelchior
+- [charts] Add data-series to elements of line chart (#18409) @bernardobelchior
+- [charts] Add data-series to pie charts (#18432) @bernardobelchior
+- [charts] Fix missing key in bar plot (#18502) @bernardobelchior
+- [charts] Improve `PanGesture` delta tracking and setup gesture infra (#18499) @JCQuintas
+- [charts] Improve touch behavior for polar axis (#18531) @JCQuintas
+- [charts] Split axis utils from main file (#18517) @JCQuintas
+- [charts][gestures] Improve cancel handler (#18513) @JCQuintas
+
+#### `@mui/x-charts-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@7.29.1`, plus:
+
+- [charts-pro] Add export menu to charts toolbar (#18210) @bernardobelchior
+- [charts-pro] Fix export docs mentioning tooltip instead of toolbar (#18490) @bernardobelchior
+- [charts-pro] Fix iframe not being removed after print export (#18500) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@7.29.1`, plus:
+
+- [tree view pro] Fix theme augmentation (#18437) @LukasTy
+
+### Codemod
+
+#### `@mui/x-codemod@7.23.6`
+
+Internal changes.
+
+### Docs
+
+- [docs] Document `GridRenderContext` (#18492) @arminmeh
+- [docs] Prevent stale rows to appear on sort and filter change in the lazy loading demo (#18461) @arminmeh
+- [docs][pickers] Update action bar demo to use the `nextOrAccept` action (#18505) @LukasTy
+
+### Core
+
+- [core] avoid json stringify whole window object (#18512) @vadimka123
+
+### Miscellaneous
+
+- [code-infra] Dynamically get pickers adapters dependencies versions (#18446) @JCQuintas
+- [infra] Adjust inquirer version and usage (#18495) @michelengelen
+- [infra] Use `String.raw` for creating the remote regex (#18462) @michelengelen
+
 ## 7.29.6
 
 _Jun 6, 2025_
