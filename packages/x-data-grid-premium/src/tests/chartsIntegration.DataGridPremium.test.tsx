@@ -16,7 +16,6 @@ import {
   GridValidRowModel,
   GridChartsIcon,
 } from '@mui/x-data-grid-premium';
-import { isJSDOM } from 'test/utils/skipIf';
 import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
 const rows: GridValidRowModel[] = [
@@ -459,7 +458,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     });
   });
 
-  describe.skipIf(isJSDOM)('GridChartsConfigurationPanel', () => {
+  describe('GridChartsConfigurationPanel', () => {
     it('should render all available chart types', async () => {
       const { user } = render(<Test initialState={baseInitialState} />);
 
@@ -489,6 +488,79 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       await user.click(chartTypeButtons[1]);
 
       expect(integrationContext!.chartStateLookup.test.type).to.equal('type2');
+    });
+
+    it('should allow categories and series selection', async () => {
+      const { user } = render(
+        <Test
+          initialState={{
+            ...baseInitialState,
+            chartsIntegration: {
+              ...baseInitialState.chartsIntegration,
+              configurationPanel: {
+                open: true,
+              },
+              charts: {
+                ...baseInitialState.chartsIntegration?.charts,
+                test: {
+                  ...baseInitialState.chartsIntegration?.charts?.test,
+                  chartType: 'type1',
+                },
+              },
+            },
+          }}
+        />,
+      );
+
+      const fieldsTab = screen.getAllByRole('tab')[1];
+      await user.click(fieldsTab);
+
+      const availableFields = screen
+        .getAllByRole('tabpanel')[0]
+        .querySelector('[data-drag-over="false"]')! // available fields section
+        .querySelectorAll('[draggable="true"]'); // the fields
+
+      // open the menu
+      const field1Menu = availableFields[0].querySelector('[data-testid="AddIcon"]')!;
+      const field2Menu = availableFields[1].querySelector('[data-testid="AddIcon"]')!;
+      await user.click(field1Menu);
+
+      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+
+      // click on the second menu item (Add to series)
+      await user.click(screen.getAllByRole('menuitem')[1]);
+
+      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(2);
+
+      // open the menu for the second field
+      await user.click(field2Menu);
+
+      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
+
+      // click on the first menu item (Add to categories)
+      await user.click(screen.getAllByRole('menuitem')[0]);
+
+      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(2);
+
+      // remaining column is not chartable so there should not be any other field menus
+      const remainingFields = screen
+        .getAllByRole('tabpanel')[0]
+        .querySelector('[data-drag-over="false"]')!
+        .querySelectorAll('[draggable="true"]');
+
+      expect(remainingFields.length).to.equal(0);
+
+      // hide one of the series
+      const draggableFields = screen
+        .getAllByRole('tabpanel')[0]
+        .querySelectorAll('[draggable="true"]');
+      const lastField = draggableFields[draggableFields.length - 1];
+      const hideCheckbox = lastField.querySelector('input[type="checkbox"]')!;
+
+      await user.click(hideCheckbox);
+
+      // series are back to 1
+      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
     });
 
     it('should allow configuration change', async () => {
