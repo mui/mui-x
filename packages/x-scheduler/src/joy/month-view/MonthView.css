@@ -90,6 +90,10 @@
   color: var(--disabled-text-color);
 }
 
+.MonthViewCell.Weekend {
+  background: var(--weekend-background);
+}
+
 .MonthViewCell.Today {
   background-color: var(--primary-2);
 }

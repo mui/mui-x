@@ -316,6 +316,7 @@
 
   /* Aliases */
   --border-color: var(--mauve-3);
+  --weekend-background: var(--mauve-2);
 
   --surface: white;
   --panel: white;
@@ -410,11 +411,12 @@
   --orange-12: #ffe0c2;
 
   /* Aliases */
+  --border-color: var(--mauve-4);
+  --weekend-background: var(--mauve-2);
 
   --surface: var(--mauve-1);
   --panel: var(--mauve-1);
   --shadow-tint: 0 0% 0%;
-  --border-color: var(--mauve-4);
 }
 
 body {

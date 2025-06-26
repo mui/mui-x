@@ -12,6 +12,7 @@ import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { SchedulerValidDate } from '../../primitives/models';
+import { isWeekend } from '../internals/utils/date-utils';
 
 import './MonthView.css';
 
@@ -108,6 +109,7 @@ export const MonthView = React.memo(
                               'MonthViewCell',
                               !isCurrentMonth && 'OtherMonth',
                               isToday && 'Today',
+                              isWeekend(adapter, day.date) && 'Weekend',
                             )}
                           >
                             {onDayHeaderClick ? (
