@@ -11,7 +11,7 @@ _Jun 26, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 📊 Add export menu to charts toolbar
 
 Special thanks go out to the community members for their valuable contributions:
 @ShahrazH, @vadimka123
@@ -56,13 +56,11 @@ Same changes as in `@mui/x-date-pickers@8.6.0`.
 #### `@mui/x-charts@8.6.0`
 
 - [charts] Add `data-series` to charts legend item (#18414) @bernardobelchior
-- [charts] Add data-series to bar charts (#18413) @bernardobelchior
-- [charts] Add data-series to elements of line chart (#18409) @bernardobelchior
-- [charts] Add data-series to pie charts (#18432) @bernardobelchior
+- [charts] Add `data-series` to bar charts (#18413) @bernardobelchior
+- [charts] Add `data-series` to elements of line chart (#18409) @bernardobelchior
+- [charts] Add `data-series` to pie charts (#18432) @bernardobelchior
 - [charts] Fix missing key in bar plot (#18502) @bernardobelchior
-- [charts] Improve `PanGesture` delta tracking and setup gesture infra (#18499) @JCQuintas
 - [charts] Split axis utils from main file (#18517) @JCQuintas
-- [charts][gestures] Improve cancel handler (#18513) @JCQuintas
 
 #### `@mui/x-charts-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
