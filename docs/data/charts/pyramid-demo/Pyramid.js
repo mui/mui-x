@@ -9,7 +9,7 @@ export default function PyramidFunnel() {
         series={[
           {
             curve: 'pyramid',
-            data: [{ value: 90 }, { value: 180 }, { value: 280 }, { value: 400 }],
+            data: [{ value: 400 }, { value: 280 }, { value: 180 }, { value: 90 }],
           },
         ]}
         height={300}

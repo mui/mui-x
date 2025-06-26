@@ -20,4 +20,4 @@ To create a pyramid chart, set the `curve` property to `pyramid` in the series.
 
 A pyramid chart can be styled using `layout`, `gap`, `borderRadius`, `variant` and `curve` properties.
 
-{{"demo": "PyramidFunnel.js"}}
+{{"demo": "PyramidPlayground.js"}}

@@ -6,7 +6,7 @@ import { populationByEducationLevelPercentageSeries } from './populationByEducat
 
 const curveTypes = ['pyramid', 'step-pyramid'];
 
-export default function FunnelCurves() {
+export default function PyramidPlayground() {
   return (
     <ChartsUsageDemo
       componentName="Pyramid Chart"
