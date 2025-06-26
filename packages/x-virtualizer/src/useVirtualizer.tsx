@@ -123,6 +123,8 @@ export const useVirtualizer = (params: VirtualizerParams) => {
   const dimensions = Dimensions.use(store, params);
   const virtualization = Virtualization.use(store, params);
 
+  /* Extra APIs moved here (could be reorganized in a separate file) */
+
   const getViewportPageSize = () => {
     const dimensions = Dimensions.selectors.dimensions(store.state);
     if (!dimensions.isReady) {
@@ -149,7 +151,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     store,
     dimensions,
     virtualization,
-    api: {
+    extra: {
       getViewportPageSize,
     },
   };

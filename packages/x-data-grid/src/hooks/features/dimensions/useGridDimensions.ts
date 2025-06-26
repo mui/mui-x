@@ -112,7 +112,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
 
   const virtualizer = apiRef.current.virtualizer;
   const updateDimensions = virtualizer.dimensions.updateDimensions;
-  const getViewportPageSize = virtualizer.api.getViewportPageSize;
+  const getViewportPageSize = virtualizer.extra.getViewportPageSize;
 
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
