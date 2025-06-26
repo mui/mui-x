@@ -29,7 +29,7 @@ const ScrollShadow = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
   transition: vars.transition(['box-shadow'], { duration: vars.transitions.duration.short }),
   '--length': theme.palette.mode === 'dark' ? '8px' : '6px',
   '--length-inverse': 'calc(var(--length) * -1)',
-  '--opacity': theme.palette.mode === 'dark' ? '0.6' : '0.12',
+  '--opacity': theme.palette.mode === 'dark' ? '0.7' : '0.18',
   '--blur': 'var(--length)',
   '--spread': 'calc(var(--length) * -1)',
   '--color-start': 'rgba(0, 0, 0, calc(var(--hasScrollStart) * var(--opacity)))',
