@@ -4,7 +4,7 @@ import { useGridChartsIntegrationContext } from '../hooks/utils/useGridChartInte
 import { ChartState } from '../models/gridChartsIntegration';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
-type GridChartsRendererProxyRendererCallback = (
+export type GridChartsRendererProxyRendererCallback = (
   type: string,
   props: Record<string, any>,
   Component: React.ComponentType<any>,

@@ -364,4 +364,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {boolean} chartsConfigurationPanelOpen Whether the charts configuration side panel is visible.
    */
   onChartsConfigurationPanelOpenChange?: (chartsConfigurationPanelOpen: boolean) => void;
+  /**
+   * The id of the active chart.
+   */
+  activeChartId?: string;
+  /**
+   * Callback fired when the active chart changes.
+   * @param {string} activeChartId The new active chart id.
+   */
+  onActiveChartIdChange?: (activeChartId: string) => void;
 }
