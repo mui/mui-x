@@ -61,6 +61,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the charts configuration side panel open state changes.
    */
   chartsConfigurationPanelOpenChange: { params: boolean };
+  /**
+   * Fired when the active chart id changes.
+   */
+  activeChartIdChange: { params: string };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
