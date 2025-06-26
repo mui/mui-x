@@ -612,6 +612,9 @@ async function generateChangelog(newVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
 
+    console.log(`Using release branch: ${releaseBranch}`);
+    console.log(`New version: ${newVersion}`);
+
     return await generateChangelogFromModule({
       octokit,
       nextVersion: newVersion,
