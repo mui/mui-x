@@ -82,6 +82,7 @@ interface GeneratedFile {
   originalMarkdownPath: string;
   category: string;
   orderIndex?: number; // Track the order for non-component folders
+  projectName: string; // Track which project generated this file
 }
 
 type CommandOptions = {
@@ -312,9 +313,71 @@ function toTitleCase(kebabCaseStr: string): string {
 }
 
 /**
- * Generate llms.txt content for a specific directory
+ * Get display name for a project based on its directory structure
  */
-function generateLlmsTxt(
+function getProjectDisplayName(firstDir: string): string {
+  const projectMap: Record<string, string> = {
+    x: 'MUI X',
+    'material-ui': 'Material UI',
+    system: 'MUI System',
+  };
+
+  return projectMap[firstDir] || firstDir.charAt(0).toUpperCase() + firstDir.slice(1);
+}
+
+/**
+ * Get project name from project settings based on TypeScript project names
+ */
+function getProjectNameFromSettings(projectSettings: ProjectSettings): string {
+  // Check TypeScript project names to determine the project
+  for (const project of projectSettings.typeScriptProjects) {
+    if (project.name.includes('data-grid')) return 'Data Grid';
+    if (project.name.includes('date-pickers')) return 'Date Pickers';
+    if (project.name.includes('charts')) return 'Charts';
+    if (project.name.includes('tree-view')) return 'Tree View';
+    if (project.name.includes('scheduler')) return 'Scheduler';
+  }
+
+  // Fallback - try to infer from first TypeScript project name
+  const firstProject = projectSettings.typeScriptProjects[0];
+  if (firstProject) {
+    return firstProject.name
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  return 'Unknown';
+}
+
+/**
+ * Extract project name from TypeScript project or file structure
+ */
+function inferProjectName(outputPath: string, projectSettings: ProjectSettings): string {
+  // Extract project name from output path structure
+  const pathParts = outputPath.split('/');
+
+  if (pathParts[0] === 'x') {
+    // For x/* paths, use the second part (react-data-grid, react-date-pickers, etc.)
+    const component = pathParts[1]?.replace('react-', '') || 'x';
+    const nameMap: Record<string, string> = {
+      'data-grid': 'Data Grid',
+      'date-pickers': 'Date Pickers',
+      charts: 'Charts',
+      'tree-view': 'Tree View',
+      scheduler: 'Scheduler',
+    };
+    return nameMap[component] || component;
+  }
+
+  // For other paths, use the project settings to determine the project name
+  return getProjectNameFromSettings(projectSettings);
+}
+
+/**
+ * Generate llms.txt content for a specific project directory
+ */
+function generateProjectLlmsTxt(
   generatedFiles: GeneratedFile[],
   projectName: string,
   baseDir: string,
@@ -391,6 +454,96 @@ function generateLlmsTxt(
 }
 
 /**
+ * Generate root llms.txt content that aggregates all projects
+ */
+function generateRootLlmsTxt(
+  allGeneratedFiles: GeneratedFile[],
+  projectSettingsArray: ProjectSettings[],
+): string {
+  // Group files by project
+  const groupedByProject: Record<string, GeneratedFile[]> = {};
+
+  for (const file of allGeneratedFiles) {
+    const projectName = file.projectName;
+    if (!groupedByProject[projectName]) {
+      groupedByProject[projectName] = [];
+    }
+    groupedByProject[projectName].push(file);
+  }
+
+  // Generate content
+  let content = '# MUI X Documentation\n\n';
+  content +=
+    'This documentation covers all MUI X packages including Data Grid, Date Pickers, Charts, Tree View, and other components.\n\n';
+
+  // Process projects in the order of projectSettingsArray
+  for (const projectSetting of projectSettingsArray) {
+    const projectName = getProjectNameFromSettings(projectSetting);
+    const projectFiles = groupedByProject[projectName];
+
+    if (!projectFiles || projectFiles.length === 0) {
+      continue;
+    }
+
+    content += `## ${projectName}\n\n`;
+
+    // Group files by category within this project
+    const groupedByCategory: Record<string, GeneratedFile[]> = {};
+    for (const file of projectFiles) {
+      const category = file.category;
+      if (!groupedByCategory[category]) {
+        groupedByCategory[category] = [];
+      }
+      groupedByCategory[category].push(file);
+    }
+
+    // Sort categories (components first, then by orderIndex)
+    const sortedCategories = Object.keys(groupedByCategory).sort((a, b) => {
+      if (a === 'components') return -1;
+      if (b === 'components') return 1;
+
+      const filesA = groupedByCategory[a];
+      const filesB = groupedByCategory[b];
+      const orderIndexA = filesA[0]?.orderIndex ?? Number.MAX_SAFE_INTEGER;
+      const orderIndexB = filesB[0]?.orderIndex ?? Number.MAX_SAFE_INTEGER;
+
+      if (orderIndexA !== orderIndexB) {
+        return orderIndexA - orderIndexB;
+      }
+
+      return a.localeCompare(b);
+    });
+
+    for (const category of sortedCategories) {
+      const files = groupedByCategory[category];
+      if (files.length === 0) {
+        continue;
+      }
+
+      const sectionTitle = toTitleCase(category);
+      content += `### ${sectionTitle}\n\n`;
+
+      // Sort files by title (components) or maintain original order (non-components)
+      if (category === 'components') {
+        files.sort((a, b) => a.title.localeCompare(b.title));
+      }
+
+      for (const file of files) {
+        const relativePath = `/${file.outputPath}`;
+        content += `- [${file.title}](${relativePath})`;
+        if (file.description) {
+          content += `: ${file.description}`;
+        }
+        content += '\n';
+      }
+      content += '\n';
+    }
+  }
+
+  return content.trim();
+}
+
+/**
  * Main build function
  */
 async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<void> {
@@ -414,10 +567,12 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
   // Track generated files for llms.txt
   const generatedFiles: GeneratedFile[] = [];
+  const projectGeneratedFiles: Map<ProjectSettings, GeneratedFile[]> = new Map();
   let processedCount = 0;
 
   // Process each project settings individually
   for (const currentProjectSettings of projectSettings) {
+    const currentProjectFiles: GeneratedFile[] = [];
     // Find all components for this project
     const components = await findComponentsToProcess(currentProjectSettings, grep);
 
@@ -426,12 +581,10 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     // Find non-component markdown files if specified in this project settings
     let nonComponentFiles: Array<{ markdownPath: string; outputPath: string }> = [];
     const nonComponentFolders = (currentProjectSettings as any).nonComponentFolders;
-    console.log('nonComponentFolders', nonComponentFolders);
     if (nonComponentFolders && nonComponentFolders.length > 0) {
       nonComponentFiles = findNonComponentMarkdownFiles(nonComponentFolders, grep);
       // Found ${nonComponentFiles.length} non-component markdown files to process for this project
     }
-    console.log('nonComponentFiles', nonComponentFiles);
 
     // Process each component
     for (const component of components) {
@@ -480,13 +633,17 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
           // Track this file for llms.txt
           if (component.markdownPath) {
             const { title, description } = extractMarkdownInfo(component.markdownPath);
-            generatedFiles.push({
+            const projectName = inferProjectName(outputFileName, currentProjectSettings);
+            const fileInfo = {
               outputPath: outputFileName,
               title,
               description,
               originalMarkdownPath: component.markdownPath,
               category: 'components',
-            });
+              projectName,
+            };
+            generatedFiles.push(fileInfo);
+            currentProjectFiles.push(fileInfo);
           }
         }
       } catch (error) {
@@ -534,55 +691,65 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
           }
         }
 
-        generatedFiles.push({
+        const projectName = inferProjectName(file.outputPath, currentProjectSettings);
+        const fileInfo = {
           outputPath: file.outputPath,
           title,
           description,
           originalMarkdownPath: file.markdownPath,
           category,
           orderIndex,
-        });
+          projectName,
+        };
+        generatedFiles.push(fileInfo);
+        currentProjectFiles.push(fileInfo);
       } catch (error) {
         console.error(`✗ Error processing ${file.markdownPath}:`, error);
       }
     }
+
+    // Store project files and generate project-specific llms.txt
+    projectGeneratedFiles.set(currentProjectSettings, currentProjectFiles);
+
+    if (currentProjectFiles.length > 0) {
+      // Group files by directory for this project
+      const groupedByFirstDir: Record<string, GeneratedFile[]> = {};
+
+      for (const file of currentProjectFiles) {
+        const firstDir = file.outputPath.split('/').slice(0, 2).join('/');
+        if (!groupedByFirstDir[firstDir]) {
+          groupedByFirstDir[firstDir] = [];
+        }
+        groupedByFirstDir[firstDir].push(file);
+      }
+
+      // Generate individual project llms.txt files for each directory
+      for (const [dirName, files] of Object.entries(groupedByFirstDir)) {
+        const projectDisplayName = getProjectDisplayName(dirName);
+        const llmsContent = generateProjectLlmsTxt(files, projectDisplayName, dirName);
+        const llmsPath = path.join(outputDir, dirName, 'llms.txt');
+
+        // Ensure directory exists
+        const llmsDirPath = path.dirname(llmsPath);
+        if (!fs.existsSync(llmsDirPath)) {
+          fs.mkdirSync(llmsDirPath, { recursive: true });
+        }
+
+        fs.writeFileSync(llmsPath, llmsContent, 'utf-8');
+        // ✓ Generated: ${dirName}/llms.txt
+        processedCount += 1;
+      }
+    }
   }
 
-  // Generate llms.txt files
+  // Generate root llms.txt file
   if (generatedFiles.length > 0) {
-    const groupedByFirstDir: Record<string, GeneratedFile[]> = {};
+    const rootLlmsContent = generateRootLlmsTxt(generatedFiles, projectSettings);
+    const rootLlmsPath = path.join(outputDir, 'x', 'llms.txt');
 
-    for (const file of generatedFiles) {
-      const firstDir = file.outputPath.split('/')[0];
-      if (!groupedByFirstDir[firstDir]) {
-        groupedByFirstDir[firstDir] = [];
-      }
-      groupedByFirstDir[firstDir].push(file);
-    }
-
-    for (const [dirName, files] of Object.entries(groupedByFirstDir)) {
-      let projectName;
-      if (dirName === 'material-ui') {
-        projectName = 'Material UI';
-      } else if (dirName === 'system') {
-        projectName = 'MUI System';
-      } else {
-        projectName = dirName.charAt(0).toUpperCase() + dirName.slice(1);
-      }
-
-      const llmsContent = generateLlmsTxt(files, projectName, dirName);
-      const llmsPath = path.join(outputDir, dirName, 'llms.txt');
-
-      // Ensure directory exists
-      const llmsDirPath = path.dirname(llmsPath);
-      if (!fs.existsSync(llmsDirPath)) {
-        fs.mkdirSync(llmsDirPath, { recursive: true });
-      }
-
-      fs.writeFileSync(llmsPath, llmsContent, 'utf-8');
-      // ✓ Generated: ${dirName}/llms.txt
-      processedCount += 1;
-    }
+    fs.writeFileSync(rootLlmsPath, rootLlmsContent, 'utf-8');
+    // ✓ Generated: llms.txt (root)
+    processedCount += 1;
   }
 
   // eslint-disable-next-line no-console
