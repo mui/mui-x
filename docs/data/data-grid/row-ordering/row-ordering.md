@@ -7,7 +7,7 @@ title: Data Grid - Drag-and-drop reordering
 <p class="description">The Data Grid Pro lets users drag and drop rows to reorder them.</p>
 
 By default, users cannot rearrange rows in the Data Grid.
-But with the Data Grid Pro, you can give users the ability to drag and drop rows to reorder them.
+With the Data Grid Pro, you can give them the ability to drag and drop rows to reorder them.
 
 ## Implementing row reordering
 
@@ -24,16 +24,16 @@ To enable drag-and-drop row reordering, pass the `rowReordering` prop to the Dat
 To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop.
 This callback is called with a `GridRowOrderChangeParams` object.
 
-In addition, you can import the following events to customize the row reordering experience:
+Row reordering emits the following events:
 
-- `rowDragStart`: emitted when dragging of a row starts.
-- `rowDragOver`: emitted when dragging a row over another row.
-- `rowDragEnd`: emitted when dragging of a row stops.
+- `rowDragStart`: emitted when the user starts dragging a row.
+- `rowDragOver`: emitted when the user drags a row over another row.
+- `rowDragEnd`: emitted when the user stops dragging a row.
 
-## Customizing the reorder value
+## Customizing the row reordering value
 
-By default, when you start dragging a row, the `id` is displayed in the draggable box.
-To change this, you can give a value to the `__reorder__` field for each row.
+By default, when the user starts dragging a row, its ID is displayed in the draggable box.
+To customize this, you can pass a value to the `__reorder__` field for each row, as shown below:
 
 ```tsx
 const columns: GridColDef[] = [{ field: 'brand' }];
@@ -49,7 +49,7 @@ const rows: GridRowsProp = [
 
 ## Customizing the row reordering icon
 
-To change the icon used for the row reordering, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons) as follow:
+To change the icon used for row reordering, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons):
 
 ```tsx
 <DataGridPro
@@ -59,11 +59,12 @@ To change the icon used for the row reordering, you can provide a different comp
 />
 ```
 
-Another way to customize is to add a column with `field: __reorder__` to your set of columns.
-That way, you can overwrite any of the properties from the `GRID_REORDER_COL_DEF` column.
-The grid will detect that there is already a reorder column defined and it will not add another one in the default position.
-If you only set the `field`, then it is up to you to configure the remaining options (for example disable the column menu, filtering, sorting).
-To start with our suggested configuration, spread `GRID_REORDER_COL_DEF` when defining the column.
+Alternatively, you can add a column with `field: __reorder__` to your set of columns.
+This enables you to override any of the properties from the `GRID_REORDER_COL_DEF` column.
+The Grid will detect that there's already a reordering column defined and so it won't add another one in the default position.
+If you only set the `field`, then you must configure the remaining options (such as disabling the column menu, filtering, and sorting).
+
+To get started with this configuration, spread `GRID_REORDER_COL_DEF` when defining the column:
 
 ```tsx
 <DataGridPro
