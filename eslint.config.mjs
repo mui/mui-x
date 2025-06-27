@@ -4,6 +4,7 @@ import {
   createTestConfig,
   createDocsConfig,
   baseSpecRules,
+  EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
 import { defineConfig } from 'eslint/config';
 import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
@@ -52,7 +53,7 @@ const addReactCompilerRule = (packagesNames, isEnabled) =>
   !isEnabled
     ? []
     : packagesNames.map((packageName) => ({
-        files: [`packages/${packageName}/src/**/*.?(c|m)[jt]s?(x)`],
+        files: [`packages/${packageName}/src/**/*.${EXTENSION_TS}`],
         rules: {
           'react-compiler/react-compiler': 'error',
         },
@@ -81,7 +82,7 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
  */
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
-    files: [`packages/${root}/src/**/*.?(c|m)[jt]s?(x)`],
+    files: [`packages/${root}/src/**/*.${EXTENSION_TS}`],
     ignores: [
       '**/*.d.ts',
       '**/*.spec{.ts,.tsx}',
@@ -116,8 +117,8 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
     : [
         {
           files: [
-            `packages/${root}/src/**/*.test.?(c|m)[jt]s?(x)`,
-            `packages/${root}/src/**/*.spec.?(c|m)[jt]s?(x)`,
+            `packages/${root}/src/**/*.test.${EXTENSION_TS}`,
+            `packages/${root}/src/**/*.spec.${EXTENSION_TS}`,
           ],
           ignores: ['**/*.d.ts'],
           rules: {
@@ -209,7 +210,7 @@ export default defineConfig(
   {
     files: [
       // matching the pattern of the test runner
-      '**/*.test.?(c|m)[jt]s?(x)',
+      `**/*.test.${EXTENSION_TS}`,
     ],
     extends: createTestConfig({ useMocha: false }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
@@ -220,7 +221,7 @@ export default defineConfig(
   baseSpecRules,
 
   {
-    files: ['**/*.test.?(c|m)[jt]s?(x)', 'test/**'],
+    files: [`**/*.test.${EXTENSION_TS}`, 'test/**'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -260,7 +261,7 @@ export default defineConfig(
   },
 
   {
-    files: ['packages/*/src/**/*.?(c|m)[jt]s?(x)'],
+    files: [`packages/*/src/**/*.${EXTENSION_TS}`],
     ignores: ['**/*.d.ts', '**/*.spec.*'],
     rules: {
       'material-ui/mui-name-matches-component-name': [
@@ -331,7 +332,7 @@ export default defineConfig(
   // Common config from core end
 
   {
-    files: ['docs/**/*.?(c|m)[jt]s?(x)'],
+    files: [`docs/**/*.${EXTENSION_TS}`],
     ignores: ['**/*.d.ts'],
     rules: {
       'no-restricted-imports': [
