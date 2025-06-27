@@ -1,15 +1,16 @@
-<Typography variant="h6" sx={{ alignSelf: 'center' }}>
-  Unemployment Rate in United States (1948-2025)
-</Typography>
-<LineChartPro
-  {...settings}
-  xAxis={[
-    {
-      ...xAxis,
-      zoom: { slider: { enabled: true, preview: true } },
-    },
-  ]}
-/>
-<Typography variant="caption">
-  Source: Federal Reserve Bank of St. Louis. Updated: Jun 6, 2025 7:46 AM CDT.
-</Typography>
+<ToggleButtonGroup
+  value={chartType}
+  exclusive
+  onChange={handleChartType}
+  aria-label="chart type"
+  fullWidth
+>
+  {['bar', 'line', 'scatter'].map((type) => (
+    <ToggleButton key={type} value={type} aria-label="left aligned">
+      {type}
+    </ToggleButton>
+  ))}
+</ToggleButtonGroup>
+{chartType === 'bar' && <BarChartPreview />}
+{chartType === 'line' && <LineChartPreview />}
+{chartType === 'scatter' && <ScatterChartPreview />}

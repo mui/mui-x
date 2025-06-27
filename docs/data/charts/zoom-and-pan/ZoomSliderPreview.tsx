@@ -9,7 +9,7 @@ import {
   ScatterChartPro,
   ScatterChartProProps,
 } from '@mui/x-charts-pro/ScatterChartPro';
-import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro';
+import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
 import { usUnemploymentRate } from '../dataset/usUnemploymentRate';
 import { globalGdpPerCapita } from '../dataset/globalGdpPerCapita';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';
