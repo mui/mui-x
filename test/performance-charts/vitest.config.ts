@@ -9,8 +9,7 @@ export default defineConfig({
   plugins: [...(isCI ? [codspeedPlugin()] : []), react()],
   test: {
     setupFiles: ['./setup.ts'],
-    // @ts-expect-error
-    env: process.env,
+    env: { TRACE: isTrace ? 'true' : 'false' },
     environment: isTrace ? 'node' : 'jsdom',
     browser: {
       enabled: isTrace,
