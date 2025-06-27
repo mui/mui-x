@@ -60,7 +60,7 @@ import * as path from 'path';
 import yargs, { ArgumentsCamelCase } from 'yargs';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
-import { processMarkdownFile, processApiFile } from '@mui-internal-scripts/generate-llms-txt';
+import { processMarkdownFile, processApiJson } from '@mui-internal-scripts/generate-llms-txt';
 import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
 import { fixPathname } from '@mui-internal/api-docs-builder/buildApiUtils';
@@ -69,6 +69,24 @@ import findComponents from '@mui-internal/api-docs-builder/utils/findComponents'
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
 import pages from 'docs/data/pages';
 import type { MuiPage } from 'docs/src/MuiPage';
+
+function processApiFile(filePath: string): string {
+  const content = fs.readFileSync(filePath, 'utf-8');
+
+  // Parse JSON content and replace "properties" key with "props"
+  try {
+    const jsonData = JSON.parse(content);
+    if (jsonData.properties) {
+      jsonData.props = jsonData.properties;
+      delete jsonData.properties;
+    }
+    const modifiedContent = JSON.stringify(jsonData, null, 2);
+    return processApiJson(modifiedContent);
+  } catch (error) {
+    console.warn(`Warning: Could not parse JSON for ${filePath}, using original content:`, error);
+    return processApiJson(content);
+  }
+}
 
 interface ComponentDocInfo {
   name: string;
@@ -360,6 +378,131 @@ function increaseHeaderLevels(content: string): string {
 }
 
 /**
+ * Recursively flatten API items from nested API sections
+ */
+function flattenApiItems(page: MuiPage): MuiPage[] {
+  const items: MuiPage[] = [];
+
+  if (page.children && page.children.length > 0) {
+    for (const child of page.children) {
+      if (child.children && child.children.length > 0) {
+        // This is a group (like Components or Interfaces), flatten its children
+        items.push(...flattenApiItems(child));
+      } else {
+        // This is a leaf item (actual API page)
+        items.push(child);
+      }
+    }
+  } else {
+    // This is already a leaf item
+    items.push(page);
+  }
+
+  return items;
+}
+
+/**
+ * Process API section to generate markdown files from JSON API data
+ */
+async function processApiSection(
+  apiPage: MuiPage,
+  outputDir: string,
+  projectName: string,
+): Promise<GeneratedFile[]> {
+  const generatedFiles: GeneratedFile[] = [];
+
+  // Check if this is an API section
+  if (!apiPage.pathname.includes('/api/')) {
+    return generatedFiles;
+  }
+
+  // Flatten all API items from nested structure
+  const apiItems = flattenApiItems(apiPage);
+
+  for (const apiItem of apiItems) {
+    try {
+      // Skip if no pathname or title
+      if (!apiItem.pathname || !apiItem.title) {
+        continue;
+      }
+
+      // Convert pathname to file paths
+      // e.g., "/x/api/data-grid/grid-api" -> "docs/pages/x/api/data-grid/grid-api.json"
+      // or with double lastSegment: "/x/api/data-grid/item" -> "docs/pages/x/api/data-grid/item/item.json"
+      const pathSegments = apiItem.pathname.split('/');
+      const lastSegment = pathSegments[pathSegments.length - 1];
+      const projectSegment = pathSegments[pathSegments.length - 2];
+
+      // Try both JSON patterns: direct and double lastSegment
+      const jsonFilePath = path.join(process.cwd(), 'docs/pages', apiItem.pathname + '.json');
+      const jsonFilePathDouble = path.join(process.cwd(), 'docs/pages', apiItem.pathname, lastSegment + '.json');
+
+      // Try both markdown patterns: docs/data and docs/pages with double lastSegment
+      const markdownFilePath = path.join(
+        process.cwd(),
+        'docs/data',
+        projectSegment.replace('react-', ''),
+        lastSegment,
+        lastSegment + '.md',
+      );
+      const markdownFilePathPages = path.join(process.cwd(), 'docs/pages', apiItem.pathname, lastSegment + '.md');
+
+      let apiMarkdown: string;
+
+      // Check all possible file paths in order of preference
+      if (fs.existsSync(jsonFilePath)) {
+        // Process the JSON file to markdown
+        apiMarkdown = processApiFile(jsonFilePath);
+      } else if (fs.existsSync(jsonFilePathDouble)) {
+        // Process the JSON file with double lastSegment pattern
+        apiMarkdown = processApiFile(jsonFilePathDouble);
+      } else if (fs.existsSync(markdownFilePath)) {
+        // Process the markdown file from docs/data
+        apiMarkdown = processMarkdownFile(markdownFilePath);
+      } else if (fs.existsSync(markdownFilePathPages)) {
+        // Process the markdown file from docs/pages
+        apiMarkdown = processMarkdownFile(markdownFilePathPages);
+      } else {
+        console.warn(
+          `Warning: API file not found (tried JSON and markdown in multiple patterns): ${apiItem.pathname}`,
+        );
+        continue;
+      }
+
+      // Create output path
+      // e.g., "/x/api/data-grid/grid-api" -> "x/api/data-grid/grid-api.md"
+      const outputPath = apiItem.pathname.replace(/^\//, '') + '.md';
+      const fullOutputPath = path.join(outputDir, outputPath);
+
+      // Ensure directory exists
+      const outputDirPath = path.dirname(fullOutputPath);
+      if (!fs.existsSync(outputDirPath)) {
+        fs.mkdirSync(outputDirPath, { recursive: true });
+      }
+
+      // Write the markdown file
+      fs.writeFileSync(fullOutputPath, apiMarkdown, 'utf-8');
+
+      // Create GeneratedFile info
+      const fileInfo: GeneratedFile = {
+        outputPath,
+        title: apiItem.title,
+        description: `API documentation for ${apiItem.title}`,
+        originalMarkdownPath: jsonFilePath,
+        category: 'api',
+        projectName,
+      };
+
+      generatedFiles.push(fileInfo);
+    } catch (error) {
+      console.error(`Error processing API item ${apiItem.pathname}:`, error);
+    }
+  }
+
+  return generatedFiles;
+}
+
+/**
  * Find the project section in pages.ts for a given project key
  */
 function findProjectPagesSection(projectKey: string): MuiPage | null {
@@ -404,6 +547,38 @@ function generateStructuredContent(
   depth: number = 0,
 ): string {
   let content = '';
+
+  // Special handling for API sections
+  if (page.pathname.includes('/api/') && page.children && page.children.length > 0) {
+    // Add section header
+    if (page.title && depth > 0) {
+      const headerLevel = depth === 1 ? '##' : '###';
+      content += `${headerLevel} ${page.title}\n\n`;
+    } else if (page.subheader) {
+      const headerLevel = depth === 1 ? '##' : '###';
+      content += `${headerLevel} ${page.subheader}\n\n`;
+    }
+
+    // For API sections, flatten and list all API items
+    const apiItems = flattenApiItems(page);
+    for (const apiItem of apiItems) {
+      const matchedApiFile = fileMap.get(apiItem.pathname);
+      if (matchedApiFile) {
+        const title = apiItem.title || matchedApiFile.title;
+        const planIndicator = apiItem.plan ? ` (${apiItem.plan})` : '';
+        const newFeatureIndicator = apiItem.newFeature ? ' 🆕' : '';
+        const plannedIndicator = apiItem.planned ? ' (planned)' : '';
+
+        content += `- [${title}](/${matchedApiFile.outputPath})`;
+        if (matchedApiFile.description) {
+          content += `: ${matchedApiFile.description}`;
+        }
+        content += `${planIndicator}${newFeatureIndicator}${plannedIndicator}\n`;
+      }
+    }
+    content += '\n';
+    return content;
+  }
 
   // Check if this page has a matching generated file
   const matchedFile = fileMap.get(page.pathname);
@@ -753,6 +928,41 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         currentProjectFiles.push(fileInfo);
       } catch (error) {
         console.error(`✗ Error processing ${file.markdownPath}:`, error);
+      }
+    }
+
+    // Process API sections for this project
+    const projectKey = (() => {
+      // Try to infer project key from TypeScript project names
+      for (const project of currentProjectSettings.typeScriptProjects) {
+        if (project.name.includes('data-grid')) return 'data-grid';
+        if (project.name.includes('date-pickers')) return 'date-pickers';
+        if (project.name.includes('charts')) return 'charts';
+        if (project.name.includes('tree-view')) return 'tree-view';
+        if (project.name.includes('scheduler')) return 'scheduler';
+      }
+      return 'unknown';
+    })();
+
+    const pagesSection = findProjectPagesSection(projectKey);
+    if (pagesSection && pagesSection.children) {
+      // Find API sections in the project pages
+      for (const child of pagesSection.children) {
+        if (child.pathname.includes('/api/')) {
+          try {
+            const projectName = getProjectNameFromSettings(currentProjectSettings);
+            const apiFiles = await processApiSection(child, outputDir, projectName);
+
+            // Add API files to current project files and overall list
+            currentProjectFiles.push(...apiFiles);
+            generatedFiles.push(...apiFiles);
+            processedCount += apiFiles.length;
+
+            console.log(`✓ Generated ${apiFiles.length} API files for ${projectName}`);
+          } catch (error) {
+            console.error(`✗ Error processing API section for ${projectKey}:`, error);
+          }
+        }
       }
     }
 
