@@ -204,7 +204,12 @@ function findNonComponentMarkdownFiles(
   grep: RegExp | null,
 ): Array<{ markdownPath: string; outputPath: string }> {
   // Get all markdown files using the existing findPagesMarkdown utility
-  const allMarkdownFiles = findPagesMarkdown();
+  const allMarkdownFiles = findPagesMarkdown(path.resolve(process.cwd(), 'docs/data')).map(
+    (page) => ({
+      ...page,
+      pathname: page.pathname.replace(/^-grid\//, '/data-grid/'),
+    }),
+  );
 
   const files: Array<{ markdownPath: string; outputPath: string }> = [];
 
@@ -224,8 +229,14 @@ function findNonComponentMarkdownFiles(
     }
 
     // Apply fixPathname first, then replaceUrl to get the proper output structure (like components)
-    const afterFixPathname = fixPathname(page.pathname);
-    const fixedPathname = replaceUrl(afterFixPathname, '/material-ui/');
+    const fixedPathname = page.pathname
+      .replace(/\/data-grid\//, '/x/react-data-grid/')
+      .replace(/\/date-pickers\//, '/x/react-date-pickers/')
+      .replace(/\/charts\//, '/x/react-charts/')
+      .replace(/\/tree-view\//, '/x/react-tree-view/')
+      .replace(/\/scheduler\//, '/x/react-scheduler/')
+      .replace(/\/migration\//, '/x/migration/')
+      .replace(/^\//, '');
     const outputPath = `${fixedPathname.replace(/^\//, '').replace(/\/$/, '')}.md`;
 
     files.push({
@@ -415,10 +426,12 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     // Find non-component markdown files if specified in this project settings
     let nonComponentFiles: Array<{ markdownPath: string; outputPath: string }> = [];
     const nonComponentFolders = (currentProjectSettings as any).nonComponentFolders;
+    console.log('nonComponentFolders', nonComponentFolders);
     if (nonComponentFolders && nonComponentFolders.length > 0) {
       nonComponentFiles = findNonComponentMarkdownFiles(nonComponentFolders, grep);
       // Found ${nonComponentFiles.length} non-component markdown files to process for this project
     }
+    console.log('nonComponentFiles', nonComponentFiles);
 
     // Process each component
     for (const component of components) {
@@ -437,13 +450,13 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
           let pathname = component.demos[0].demoPathname.replace(/^\//, '').replace(/\/$/, '');
           const pathParts = pathname.split('/');
           const lastPart = pathParts[pathParts.length - 1];
-          
+
           if (lastPart.includes('#')) {
             // Replace the last segment with 'usage' if it contains #
             pathParts[pathParts.length - 1] = 'usage';
             pathname = pathParts.join('/');
           }
-          
+
           outputFileName = `${pathname}.md`;
         } else {
           outputFileName = `${component.componentInfo.apiPathname.replace(/^\//, '').replace(/\/$/, '')}.md`;

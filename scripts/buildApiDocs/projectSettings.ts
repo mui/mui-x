@@ -5,8 +5,8 @@ import { projectGridSettings } from './gridSettings';
 import { projectTreeSettings } from './treeViewSettings';
 
 export const projectSettings: ProjectSettings[] = [
-  // projectPickersSettings,
-  // projectChartsSettings,
-  // projectTreeSettings,
+  projectPickersSettings,
+  projectChartsSettings,
+  projectTreeSettings,
   projectGridSettings,
 ];
