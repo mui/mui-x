@@ -1,4 +1,4 @@
 import '../typeOverloads';
 
 export * from './ChartContainerPro';
-export * from './ChartProApi';
+export type { ChartProApi } from './ChartProApi';

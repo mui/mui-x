@@ -463,6 +463,7 @@
   { "name": "useChartGradientId", "kind": "Function" },
   { "name": "useChartGradientIdObjectBound", "kind": "Function" },
   { "name": "useChartId", "kind": "Function" },
+  { "name": "useChartProApiRef", "kind": "Variable" },
   { "name": "useChartRootRef", "kind": "Function" },
   { "name": "useChartsLocalization", "kind": "Variable" },
   { "name": "useDrawingArea", "kind": "Function" },
