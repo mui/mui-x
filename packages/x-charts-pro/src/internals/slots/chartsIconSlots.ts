@@ -1,20 +1,24 @@
 import * as React from 'react';
-import { ChartBaseIconProps, ChartsIconSlots } from '@mui/x-charts/models';
+import { ChartBaseIconProps, ChartsIconSlotProps } from '@mui/x-charts/models';
 
-export interface ChartsIconSlotsPro extends ChartsIconSlots {
+export interface ChartsIconSlotPropsPro extends ChartsIconSlotProps {
   /**
    * Icon displayed on the toolbar's zoom in button.
    * @default ChartsZoomInIcon
    */
-  zoomInIcon: React.ComponentType<ChartBaseIconProps>;
+  zoomInIcon: ChartBaseIconProps;
   /**
    * Icon displayed on the toolbar's zoom out button.
    * @default ChartsZoomOutIcon
    */
-  zoomOutIcon: React.ComponentType<ChartBaseIconProps>;
+  zoomOutIcon: ChartBaseIconProps;
   /**
    * Icon displayed on the toolbar's export button.
    * @default ChartsExportIcon
    */
-  exportIcon: React.ComponentType<ChartBaseIconProps>;
+  exportIcon: ChartBaseIconProps;
 }
+
+export type ChartsIconSlotsPro = {
+  [key in keyof ChartsIconSlotPropsPro]: React.ComponentType<ChartsIconSlotPropsPro[key]>;
+};

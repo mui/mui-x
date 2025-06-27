@@ -1,20 +1,19 @@
-import type * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import { ChartsBaseSlots } from '../../models/slots/chartsBaseSlots';
-import { ChartsIconSlots } from '../../models/slots/chartsIconSlots';
+import { BaseButton } from './components/BaseButton';
+import { BaseIconButton } from './components/BaseIconButton';
+import { ChartsBaseSlotProps, ChartsBaseSlots } from '../../models/slots/chartsBaseSlots';
+import { ChartsIconSlotProps, ChartsIconSlots } from '../../models/slots/chartsIconSlots';
+
+import './augmentation';
 
 const baseSlots: ChartsBaseSlots = {
-  baseButton: Button,
-  baseIconButton: IconButton,
+  baseButton: BaseButton,
+  baseIconButton: BaseIconButton,
 };
 
 const iconSlots: ChartsIconSlots = {};
 
 export type ChartsSlots = ChartsBaseSlots & ChartsIconSlots;
 
-export type ChartsSlotProps = {
-  [key in keyof ChartsSlots]: React.ComponentProps<ChartsSlots[key]>;
-};
+export type ChartsSlotProps = ChartsBaseSlotProps & ChartsIconSlotProps;
 
 export const defaultSlotsMaterial: ChartsSlots = { ...baseSlots, ...iconSlots };

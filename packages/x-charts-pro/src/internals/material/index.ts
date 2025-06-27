@@ -1,21 +1,22 @@
-import * as React from 'react';
-import Tooltip from '@mui/material/Tooltip';
-import MenuList from '@mui/material/MenuList';
-import Divider from '@mui/material/Divider';
 import { ChartsBaseSlots, ChartsIconSlots } from '@mui/x-charts/models';
 import { defaultSlotsMaterial as communityDefaultSlotsMaterial } from '@mui/x-charts/internals';
+import { BaseDivider } from './components/BaseDivider';
 import { BaseMenuItem } from './components/BaseMenuItem';
+import { BaseMenuList } from './components/BaseMenuList';
 import { BasePopper } from './components/BasePopper';
-import { ChartsBaseSlotsPro } from '../slots/chartsBaseSlots';
+import { BaseTooltip } from './components/BaseTooltip';
+import { ChartsBaseSlotPropsPro, ChartsBaseSlotsPro } from '../slots/chartsBaseSlots';
 import { ChartsExportIcon, ChartsZoomInIcon, ChartsZoomOutIcon } from './icons';
-import { ChartsIconSlotsPro } from '../slots/chartsIconSlots';
+import { ChartsIconSlotPropsPro, ChartsIconSlotsPro } from '../slots/chartsIconSlots';
+
+import './augmentation';
 
 const baseSlots: Omit<ChartsBaseSlotsPro, keyof ChartsBaseSlots> = {
-  baseTooltip: Tooltip,
+  baseTooltip: BaseTooltip,
   basePopper: BasePopper,
-  baseMenuList: MenuList,
+  baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
-  baseDivider: Divider,
+  baseDivider: BaseDivider,
 };
 
 const iconSlots: Omit<ChartsIconSlotsPro, keyof ChartsIconSlots> = {
@@ -26,9 +27,7 @@ const iconSlots: Omit<ChartsIconSlotsPro, keyof ChartsIconSlots> = {
 
 export type ChartsSlotsPro = ChartsBaseSlotsPro & ChartsIconSlotsPro;
 
-export type ChartsSlotPropsPro = {
-  [key in keyof ChartsSlotsPro]: React.ComponentProps<ChartsSlotsPro[key]>;
-};
+export type ChartsSlotPropsPro = ChartsBaseSlotPropsPro & ChartsIconSlotPropsPro;
 
 export const defaultSlotsMaterial: ChartsSlotsPro = {
   ...communityDefaultSlotsMaterial,

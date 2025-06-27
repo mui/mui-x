@@ -1,4 +1,4 @@
-import { ChartsBaseSlots } from '@mui/x-charts/models';
+import { ChartsBaseSlotProps } from '@mui/x-charts/models';
 import * as React from 'react';
 import {
   ChartBaseDividerProps,
@@ -7,18 +7,22 @@ import {
   ChartBasePopperProps,
   ChartBaseTooltipProps,
 } from './chartBaseSlotProps';
+import {
+  ChartBaseDividerPropsOverrides,
+  ChartBaseMenuItemPropsOverrides,
+  ChartBaseMenuListPropsOverrides,
+  ChartBasePopperPropsOverrides,
+  ChartBaseTooltipPropsOverrides,
+} from './propOverrides';
 
-export interface ChartsBaseSlotsPro extends ChartsBaseSlots {
-  baseDivider: React.ComponentType<ChartBaseDividerProps & ChartBaseDividerPropsOverrides>;
-  baseMenuItem: React.ComponentType<ChartBaseMenuItemProps & ChartBaseMenuItemPropsOverrides>;
-  baseMenuList: React.ComponentType<ChartBaseMenuListProps & ChartBaseMenuListPropsOverrides>;
-  basePopper: React.ComponentType<ChartBasePopperProps & ChartBasePopperPropsOverrides>;
-  baseTooltip: React.ComponentType<ChartBaseTooltipProps & ChartBaseTooltipPropsOverrides>;
+export interface ChartsBaseSlotPropsPro extends ChartsBaseSlotProps {
+  baseDivider: ChartBaseDividerProps & ChartBaseDividerPropsOverrides;
+  baseMenuItem: ChartBaseMenuItemProps & ChartBaseMenuItemPropsOverrides;
+  baseMenuList: ChartBaseMenuListProps & ChartBaseMenuListPropsOverrides;
+  basePopper: ChartBasePopperProps & ChartBasePopperPropsOverrides;
+  baseTooltip: ChartBaseTooltipProps & ChartBaseTooltipPropsOverrides;
 }
 
-// Overrides for module augmentation
-export interface ChartBaseDividerPropsOverrides {}
-export interface ChartBaseMenuItemPropsOverrides {}
-export interface ChartBaseMenuListPropsOverrides {}
-export interface ChartBasePopperPropsOverrides {}
-export interface ChartBaseTooltipPropsOverrides {}
+export type ChartsBaseSlotsPro = {
+  [key in keyof ChartsBaseSlotPropsPro]: React.ComponentType<ChartsBaseSlotPropsPro[key]>;
+};

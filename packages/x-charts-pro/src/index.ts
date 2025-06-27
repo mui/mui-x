@@ -49,6 +49,8 @@ export * from './RadarChartPro';
 export * from './ChartZoomSlider';
 export * from './ChartsToolbarPro';
 
+export * from './internals/slots';
+
 export type {
   ChartImageExportOptions,
   ChartPrintExportOptions,

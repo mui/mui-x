@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { ChartBaseButtonProps, ChartBaseIconButtonProps } from './chartsBaseSlotProps';
+import { ChartBaseButtonPropsOverrides, ChartBaseIconButtonPropsOverrides } from './propOverrides';
 
-export interface ChartsBaseSlots {
-  baseButton: React.ComponentType<ChartBaseButtonProps & ChartBaseButtonPropsOverrides>;
-  baseIconButton: React.ComponentType<ChartBaseIconButtonProps & ChartBaseIconButtonPropsOverrides>;
+export interface ChartsBaseSlotProps {
+  baseButton: ChartBaseButtonProps & ChartBaseButtonPropsOverrides;
+  baseIconButton: ChartBaseIconButtonProps & ChartBaseIconButtonPropsOverrides;
 }
 
-// Overrides for module augmentation
-export interface ChartBaseButtonPropsOverrides {}
-export interface ChartBaseIconButtonPropsOverrides {}
+export type ChartsBaseSlots = {
+  [key in keyof ChartsBaseSlotProps]: React.ComponentType<ChartsBaseSlotProps[key]>;
+};
