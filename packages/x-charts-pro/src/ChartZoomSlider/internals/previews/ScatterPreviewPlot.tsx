@@ -121,13 +121,11 @@ function ScatterPreviewItems(props: ScatterPreviewItemsProps) {
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, isPointInside);
 
-  const Marker = ScatterMarker;
-
   return (
     <g data-series={series.id}>
       {scatterPlotData.map((dataPoint, i) => {
         return (
-          <Marker
+          <ScatterMarker
             key={dataPoint.id ?? dataPoint.dataIndex}
             dataIndex={dataPoint.dataIndex}
             color={colorGetter ? colorGetter(i) : color}

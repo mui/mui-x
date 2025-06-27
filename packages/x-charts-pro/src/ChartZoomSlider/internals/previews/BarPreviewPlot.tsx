@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import {
   AxisId,
   selectorChartComputedXAxes,
@@ -11,11 +10,6 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
-
-const BarPlotRoot = styled('g', {
-  name: 'MuiBarPlot',
-  slot: 'Root',
-})();
 
 interface BarPreviewPlotProps {
   axisId: AxisId;
@@ -39,9 +33,9 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
   const { completedData } = useBarPreviewData(props.axisId, drawingArea, props.zoomMap);
 
   return (
-    <BarPlotRoot>
+    <g>
       {completedData.map(({ seriesId, data }) => (
-        <g key={seriesId} data-debug>
+        <g key={seriesId}>
           {data.map(({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height }) => {
             return (
               <BarElement
@@ -62,7 +56,7 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
           })}
         </g>
       ))}
-    </BarPlotRoot>
+    </g>
   );
 }
 
