@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
