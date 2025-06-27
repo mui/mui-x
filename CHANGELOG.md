@@ -16,6 +16,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 
   You can use the adapter in your custom components if you need them to work with multiple date libraries — [Learn more](https://mui.com/x/react-date-pickers/custom-components/#access-date-adapter).
 - 🌎 Improve Danish (da-DK) locale
+- 🌎 Improve German (de-DE) locale
 
 Special thanks go out to the community members for their valuable contributions:
 @ShahrazH, @vadimka123
@@ -30,6 +31,7 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Fix `label` type in `GridActionsCellItem` type (#18175) @sai6855
 - [DataGrid] Fix grid menu not closing when pressing escape/tab (#18300) @KenanYusuf
 - [l10n] Improve Danish (da-DK) locale (#18428) @ShahrazH
+- [l10n] Improve German (de-DE) locale (#18388) @omalyutin
 
 #### `@mui/x-data-grid-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
