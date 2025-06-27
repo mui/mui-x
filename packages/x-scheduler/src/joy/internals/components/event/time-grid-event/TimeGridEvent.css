@@ -13,7 +13,7 @@
 
   /* All Day */
   --allDay-accepted-bg: var(--event-color-5);
-  --allDay-accepted-primary-text: var(--event-color-13);
+  --allDay-accepted-primary-text: var(--event-color-12);
 }
 
 .mode-dark .EventContainer {

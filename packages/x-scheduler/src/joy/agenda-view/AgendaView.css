@@ -20,13 +20,12 @@
   align-items: flex-start;
   border-right: 1px solid var(--border-color);
   padding: var(--space-4);
-  color: var(--gray-9);
   gap: var(--space-1);
 }
 
 .DayHeaderCell.Today {
   background-color: var(--primary-2);
-  color: var(--primary-13);
+  color: var(--primary-12);
 }
 
 .DayNumberCell {
@@ -35,6 +34,7 @@
   line-height: 1;
   min-width: 4ch;
   text-align: center;
+  color: var(--primary-text-color);
 }
 
 .WeekDayCell {
@@ -45,7 +45,6 @@
 
 .AgendaWeekDayNameLabel {
   font-size: var(--font-size-2);
-  font-weight: var(--font-weight-3);
   line-height: 1;
   /* TODO find a more robust way to make the header cells have the same width */
   min-width: 80px;
@@ -53,12 +52,12 @@
 
 .AgendaYearAndMonthLabel {
   font-size: var(--font-size-1);
-  color: var(--gray-8);
   line-height: 1;
+  color: var(--secondary-text-color);
 }
 
 .Today .AgendaYearAndMonthLabel {
-  color: var(--primary-13);
+  color: var(--primary-12);
 }
 
 .EventsList {

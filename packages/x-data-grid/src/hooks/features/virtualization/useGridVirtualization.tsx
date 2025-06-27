@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { Virtualization, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';

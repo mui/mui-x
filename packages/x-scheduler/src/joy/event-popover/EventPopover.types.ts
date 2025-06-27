@@ -25,6 +25,11 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
    */
   onEventEdit: (event: CalendarEvent) => void;
   /**
+   * Callback fired when an event is deleted.
+   * @param {string} id The deleted event id.
+   */
+  onEventDelete: (id: string) => void;
+  /**
    * Handles the close action of the popover.
    */
   onClose: () => void;

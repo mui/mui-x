@@ -3,10 +3,11 @@ import { spy } from 'sinon';
 import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { act, screen } from '@mui/internal-test-utils';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 
 describe('<DesktopDatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -248,6 +249,51 @@ describe('<DesktopDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onClose.callCount).to.equal(1);
+    });
+
+    // Ensures the case in https://github.com/mui/mui-x/issues/18491 works correctly
+    it('should call allow re-selecting the previous date when value binding is done in "onAccept"', async () => {
+      function TestCase(props: DesktopDatePickerProps) {
+        const [value, setValue] = React.useState<PickerValidDate | null>(
+          adapterToUse.date('2018-01-01'),
+        );
+
+        return (
+          <DesktopDatePicker
+            {...props}
+            value={value}
+            onAccept={(newValue, context) => {
+              setValue(newValue);
+              props.onAccept?.(newValue, context);
+            }}
+          />
+        );
+      }
+
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      const { user } = render(
+        <TestCase onChange={onChange} onAccept={onAccept} onClose={onClose} />,
+      );
+
+      await openPickerAsync(user, { type: 'date' });
+
+      // Change the day
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
+      expect(onChange.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
+      expect(onClose.callCount).to.equal(1);
+      await openPickerAsync(user, { type: 'date' });
+
+      // Change to the initial day
+      await user.click(screen.getByRole('gridcell', { name: '1' }));
+      expect(onChange.callCount).to.equal(2);
+      expect(onAccept.callCount).to.equal(2);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
+      expect(onClose.callCount).to.equal(2);
     });
   });
 
