@@ -211,7 +211,7 @@ export default defineConfig(
       // matching the pattern of the test runner
       '**/*.test.?(c|m)[jt]s?(x)',
     ],
-    extends: createTestConfig(),
+    extends: createTestConfig({ useMocha: false }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
     rules: {
       'testing-library/no-container': 'off',

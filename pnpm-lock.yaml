@@ -309,8 +309,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@swc/core@1.12.0)(@types/node@24.0.3)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)
       '@mui/internal-code-infra':
-        specifier: https://pkg.pr.new/@mui/internal-code-infra@e909514
-        version: https://pkg.pr.new/@mui/internal-code-infra@e909514(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)
+        specifier: https://pkg.pr.new/@mui/internal-code-infra@3c62849
+        version: https://pkg.pr.new/@mui/internal-code-infra@3c62849(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.6
@@ -4238,17 +4238,12 @@ packages:
     resolution: {integrity: sha512-JznE7TsF20iUEXe3v/AZVGInoQUm15uTTDxgepJ8crnwnk5gR0V4qpooXGQOEebyXbsIcOSvEsafEs01QCOb+w==}
     hasBin: true
 
-  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@e909514':
-    resolution: {tarball: https://pkg.pr.new/@mui/internal-code-infra@e909514}
+  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@3c62849':
+    resolution: {tarball: https://pkg.pr.new/@mui/internal-code-infra@3c62849}
     version: 0.0.1
     peerDependencies:
       eslint: ^9.0.0
       prettier: ^3.0.0
-    peerDependenciesMeta:
-      eslint:
-        optional: true
-      prettier:
-        optional: true
 
   '@mui/internal-docs-utils@2.0.1':
     resolution: {integrity: sha512-Rf5BpL4W8X1NAoKz9Alwe0mD+2vk9pdeLEaof3iGEB7Ghgj/x8DKUjLObQUfHv8reiQs7r0mz0qOyxAtPbB1Eg==}
@@ -15180,10 +15175,11 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@e909514(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)':
+  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@3c62849(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)':
     dependencies:
       '@eslint/eslintrc': 3.3.1
       '@next/eslint-plugin-next': 15.3.4
+      eslint: 9.29.0
       eslint-config-airbnb: 19.0.4(eslint-plugin-import@2.32.0)(eslint-plugin-jsx-a11y@6.10.2(eslint@9.29.0))(eslint-plugin-react-hooks@6.0.0-rc1(eslint@9.29.0))(eslint-plugin-react@7.37.5(eslint@9.29.0))(eslint@9.29.0)
       eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.32.0)(eslint@9.29.0)
       eslint-config-prettier: 10.1.5(eslint@9.29.0)
@@ -15198,10 +15194,8 @@ snapshots:
       eslint-plugin-testing-library: 7.5.3(eslint@9.29.0)(typescript@5.8.3)
       globals: 16.2.0
       minimatch: 10.0.3
-      typescript-eslint: 8.35.0(eslint@9.29.0)(typescript@5.8.3)
-    optionalDependencies:
-      eslint: 9.29.0
       prettier: 3.5.3
+      typescript-eslint: 8.35.0(eslint@9.29.0)(typescript@5.8.3)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
