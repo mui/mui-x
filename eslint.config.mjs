@@ -84,8 +84,8 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
     files: [`packages/${root}/src/**/*.?(c|m)[jt]s?(x)`],
     ignores: [
       '**/*.d.ts',
-      '**/*.spec.tsx?',
-      '**/*.test.tsx?',
+      '**/*.spec{.ts,.tsx}',
+      '**/*.test{.ts,.tsx}',
       `packages/${root}/src/index{.ts,.tsx,.js}`,
     ],
     rules: {
