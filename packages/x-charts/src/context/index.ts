@@ -5,4 +5,4 @@ export type {
   HighlightOptions,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 export * from './useChartApiContext';
-export type * from './ChartApi';
+export type { ChartApi } from './ChartApi';

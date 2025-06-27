@@ -2,7 +2,12 @@ import './typeOverloads/modules';
 
 // exports from MIT package
 export * from '@mui/x-charts/constants';
-export * from '@mui/x-charts/context';
+export type {
+  FadeOptions,
+  HighlightItemData,
+  HighlightOptions,
+  HighlightScope,
+} from '@mui/x-charts/context';
 export * from '@mui/x-charts/hooks';
 export * from '@mui/x-charts/colorPalettes';
 export * from '@mui/x-charts/models';
