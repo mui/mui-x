@@ -951,6 +951,9 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
+      '@mui/x-internal-gestures':
+        specifier: workspace:*
+        version: link:../x-internal-gestures/build
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1082,6 +1085,9 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
+      '@mui/x-internal-gestures':
+        specifier: workspace:*
+        version: link:../x-internal-gestures/build
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
