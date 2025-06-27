@@ -4,6 +4,8 @@ import { RefObject } from '@mui/x-internals/types';
 import { Store } from '@mui/x-internals/store';
 import { Dimensions } from './features/dimensions';
 import { Virtualization } from './features/virtualization';
+import type { RowId } from './models/core';
+import type { RowSpacing, RowVisibilityParams } from './models/dimensions';
 
 export * from './features/virtualization';
 
@@ -51,6 +53,7 @@ export type VirtualizerParams = {
   rows: RowEntry[];
   /** current page range */
   range: { firstRowIndex: integer; lastRowIndex: integer } | null;
+  rowIdToIndexMap: Map<RowId, number>;
   rowCount: integer;
   columns: Column[];
   pinnedRows: PinnedRows;
@@ -68,6 +71,19 @@ export type VirtualizerParams = {
   needsHorizontalScrollbar: boolean;
   autoHeight: boolean;
   getRowHeight?: (params: any) => number | null | undefined | 'auto';
+  /**
+   * Function that returns the estimated height for a row.
+   * Only works if dynamic row height is used.
+   * Once the row height is measured this value is discarded.
+   * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
+   */
+  getEstimatedRowHeight?: (rowEntry: RowEntry) => number | null;
+  /**
+   * Function that allows to specify the spacing between rows.
+   * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
+   * @returns {GridRowSpacing} The row spacing values.
+   */
+  getRowSpacing?: (rowEntry: RowEntry, visibility: RowVisibilityParams) => RowSpacing;
 
   resizeThrottleMs: number;
   onResize?: (lastSize: Size) => void;
@@ -82,6 +98,8 @@ export type VirtualizerParams = {
   scrollReset?: any;
 
   fixme: {
+    applyRowHeight: (entry: any, row: any) => void;
+    focusedVirtualCell: () => any;
     rowsMeta: () => any;
     onContextChange: (c: RenderContext) => void;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;

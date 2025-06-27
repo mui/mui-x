@@ -1,12 +1,13 @@
 import * as React from 'react';
 import ownerDocument from '@mui/utils/ownerDocument';
-import useEventCallback from '@mui/utils/useEventCallback';
+import useLazyRef from '@mui/utils/useLazyRef';
 import useLayoutEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useSelectorEffect } from '@mui/x-internals/store';
-import { Size, DimensionsState, RowsMetaState } from '../models';
+import { Store, useSelector, useSelectorEffect } from '@mui/x-internals/store';
+import { Size, DimensionsState, RowId, RowEntry, RowsMetaState } from '../models';
 import type { VirtualizerParams } from '../useVirtualizer';
 import type { BaseState } from '../useVirtualizer';
 
@@ -36,6 +37,7 @@ const EMPTY_DIMENSIONS: DimensionsState = {
 const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
+  rowHeight: (state: BaseState) => state.dimensions.rowHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
 };
 
@@ -251,9 +253,243 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
     }
   });
 
+  const rowsMeta = useRowsMeta(store, params, updateDimensions);
+
   return {
     updateDimensions,
     debouncedUpdateDimensions,
+    rowsMeta,
+  };
+}
+
+function useRowsMeta(
+  store: Store<BaseState>,
+  params: VirtualizerParams,
+  updateDimensions: Function,
+) {
+  const heightCache = store.state.rowHeights;
+
+  const { rows, getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = params;
+
+  const lastMeasuredRowIndex = React.useRef(-1);
+  const hasRowWithAutoHeight = React.useRef(false);
+  const isHeightMetaValid = React.useRef(false);
+
+  const pinnedRows = params.pinnedRows;
+  const rowHeight = useSelector(store, selectors.rowHeight);
+
+  const getRowHeightEntry = (rowId: RowId) => {
+    let entry = heightCache.get(rowId);
+    if (entry === undefined) {
+      entry = {
+        content: store.state.dimensions.rowHeight,
+        spacingTop: 0,
+        spacingBottom: 0,
+        detail: 0,
+        autoHeight: false,
+        needsFirstMeasurement: true,
+      };
+      heightCache.set(rowId, entry);
+    }
+    return entry;
+  };
+
+  const processHeightEntry = React.useCallback(
+    (row: RowEntry) => {
+      // HACK: rowHeight trails behind the most up-to-date value just enough to
+      // mess the initial rowsMeta hydration :/
+      eslintUseValue(rowHeight);
+      const dimensions = selectors.dimensions(store.state);
+      const baseRowHeight = dimensions.rowHeight;
+
+      const entry = getRowHeightEntry(row.id);
+
+      if (!getRowHeightProp) {
+        entry.content = baseRowHeight;
+        entry.needsFirstMeasurement = false;
+      } else {
+        const rowHeightFromUser = getRowHeightProp(row);
+
+        if (rowHeightFromUser === 'auto') {
+          if (entry.needsFirstMeasurement) {
+            const estimatedRowHeight = getEstimatedRowHeight
+              ? getEstimatedRowHeight(row)
+              : baseRowHeight;
+
+            // If the row was not measured yet use the estimated row height
+            entry.content = estimatedRowHeight ?? baseRowHeight;
+          }
+
+          hasRowWithAutoHeight.current = true;
+          entry.autoHeight = true;
+        } else {
+          // Default back to base rowHeight if getRowHeight returns null value.
+          entry.content = rowHeightFromUser ?? dimensions.rowHeight;
+          entry.needsFirstMeasurement = false;
+          entry.autoHeight = false;
+        }
+      }
+
+      if (getRowSpacing) {
+        const indexRelativeToCurrentPage = params.rowIdToIndexMap.get(row.id) ?? -1;
+
+        const spacing = getRowSpacing(row, {
+          isFirstVisible: indexRelativeToCurrentPage === 0,
+          isLastVisible: indexRelativeToCurrentPage === rows.length - 1,
+          indexRelativeToCurrentPage,
+        });
+
+        entry.spacingTop = spacing.top ?? 0;
+        entry.spacingBottom = spacing.bottom ?? 0;
+      } else {
+        entry.spacingTop = 0;
+        entry.spacingBottom = 0;
+      }
+
+      params.fixme.applyRowHeight(entry, row);
+
+      return entry;
+    },
+    [rows, getRowHeightProp, getEstimatedRowHeight, rowHeight, getRowSpacing],
+  );
+
+  const hydrateRowsMeta = React.useCallback(() => {
+    hasRowWithAutoHeight.current = false;
+
+    const pinnedTopRowsTotalHeight = pinnedRows.top.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
+
+    const pinnedBottomRowsTotalHeight = pinnedRows.bottom.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
+
+    const positions: number[] = [];
+    const currentPageTotalHeight = rows.reduce((acc, row) => {
+      positions.push(acc);
+
+      const entry = processHeightEntry(row);
+      const total = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+
+      return acc + total;
+    }, 0);
+
+    if (!hasRowWithAutoHeight.current) {
+      // No row has height=auto, so all rows are already measured
+      lastMeasuredRowIndex.current = Infinity;
+    }
+
+    const didHeightsChange =
+      pinnedTopRowsTotalHeight !== store.state.rowsMeta.pinnedTopRowsTotalHeight ||
+      pinnedBottomRowsTotalHeight !== store.state.rowsMeta.pinnedBottomRowsTotalHeight ||
+      currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
+
+    const rowsMeta = {
+      currentPageTotalHeight,
+      positions,
+      pinnedTopRowsTotalHeight,
+      pinnedBottomRowsTotalHeight,
+    };
+
+    store.set('rowsMeta', rowsMeta);
+
+    if (didHeightsChange) {
+      updateDimensions();
+    }
+
+    isHeightMetaValid.current = true;
+  }, [pinnedRows, rows, processHeightEntry]);
+  const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
+
+  const getRowHeight = (rowId: RowId) => {
+    return heightCache.get(rowId)?.content ?? rowHeight;
+  };
+
+  const storeRowHeightMeasurement = (id: RowId, height: number) => {
+    const entry = getRowHeightEntry(id);
+
+    const didChange = entry.content !== height;
+
+    entry.needsFirstMeasurement = false;
+    entry.content = height;
+
+    isHeightMetaValid.current &&= !didChange;
+  };
+
+  const rowHasAutoHeight = (id: RowId) => {
+    return heightCache.get(id)?.autoHeight ?? false;
+  };
+
+  const getLastMeasuredRowIndex = () => {
+    return lastMeasuredRowIndex.current;
+  };
+
+  const setLastMeasuredRowIndex = (index: number) => {
+    if (hasRowWithAutoHeight.current && index > lastMeasuredRowIndex.current) {
+      lastMeasuredRowIndex.current = index;
+    }
+  };
+
+  const resetRowHeights = () => {
+    heightCache.clear();
+    hydrateRowsMeta();
+  };
+
+  const resizeObserver = useLazyRef(() =>
+    typeof ResizeObserver === 'undefined'
+      ? undefined
+      : new ResizeObserver((entries) => {
+          for (let i = 0; i < entries.length; i += 1) {
+            const entry = entries[i];
+            const height =
+              entry.borderBoxSize && entry.borderBoxSize.length > 0
+                ? entry.borderBoxSize[0].blockSize
+                : entry.contentRect.height;
+            const rowId = (entry.target as any).__mui_id;
+            const focusedVirtualRowId = params.fixme.focusedVirtualCell()?.id;
+            if (focusedVirtualRowId === rowId && height === 0) {
+              // Focused virtual row has 0 height.
+              // We don't want to store it to avoid scroll jumping.
+              // https://github.com/mui/mui-x/issues/14726
+              return;
+            }
+            storeRowHeightMeasurement(rowId, height);
+          }
+          if (!isHeightMetaValid.current) {
+            // Avoids "ResizeObserver loop completed with undelivered notifications" error
+            requestAnimationFrame(() => {
+              hydrateRowsMetaLatest();
+            });
+          }
+        }),
+  ).current;
+
+  const observeRowHeight = (element: Element, rowId: RowId) => {
+    (element as any).__mui_id = rowId;
+
+    resizeObserver?.observe(element);
+
+    return () => resizeObserver?.unobserve(element);
+  };
+
+  // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
+  // Because of variable row height this is needed for the virtualization
+  useLayoutEffect(() => {
+    hydrateRowsMeta();
+  }, [hydrateRowsMeta]);
+
+  return {
+    getRowHeight,
+    setLastMeasuredRowIndex,
+    storeRowHeightMeasurement,
+    hydrateRowsMeta,
+    observeRowHeight,
+    rowHasAutoHeight,
+    getRowHeightEntry,
+    getLastMeasuredRowIndex,
+    resetRowHeights,
   };
 }
 
@@ -323,3 +559,5 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
 
   return size;
 }
+
+function eslintUseValue(_: any) {}

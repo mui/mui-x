@@ -105,3 +105,24 @@ export interface RowsMetaState {
    */
   pinnedBottomRowsTotalHeight: number;
 }
+
+export interface RowVisibilityParams {
+  /**
+   * Whether this row is the first visible or not.
+   */
+  isFirstVisible: boolean;
+  /**
+   * Whether this row is the last visible or not.
+   */
+  isLastVisible: boolean;
+  /**
+   * Index of the row in the current page.
+   * If the pagination is disabled, it will be the index relative to all filtered rows.
+   */
+  indexRelativeToCurrentPage: number;
+}
+
+export interface RowSpacing {
+  top?: number;
+  bottom?: number;
+}

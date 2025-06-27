@@ -137,6 +137,7 @@ export function useGridVirtualizer(
     pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
     dataRowCount,
   );
+  const { getRowHeight, getEstimatedRowHeight, getRowSpacing } = rootProps;
   // </ROWS_META>
 
   const virtualizer = useVirtualizer({
@@ -151,6 +152,7 @@ export function useGridVirtualizer(
     isRtl,
     rows: currentPage.rows,
     range: currentPage.range,
+    rowIdToIndexMap: currentPage.rowIdToIndexMap,
     rowCount,
     columns: visibleColumns,
     pinnedRows,
@@ -167,6 +169,28 @@ export function useGridVirtualizer(
     minimalContentHeight,
     needsHorizontalScrollbar: needsHorizontalScrollbar && !listView,
     autoHeight,
+    getRowHeight,
+    getEstimatedRowHeight: React.useMemo(
+      () =>
+        getEstimatedRowHeight
+          ? (rowEntry) => getEstimatedRowHeight({ ...rowEntry, densityFactor: density })
+          : undefined,
+      [getEstimatedRowHeight],
+    ),
+    getRowSpacing: React.useMemo(
+      () =>
+        getRowSpacing
+          ? (rowEntry, visibility) =>
+              getRowSpacing({
+                ...rowEntry,
+                ...visibility,
+                indexRelativeToCurrentPage: apiRef.current.getRowIndexRelativeToVisibleRows(
+                  rowEntry.id,
+                ),
+              })
+          : undefined,
+      [getRowSpacing],
+    ),
 
     focusedCell: focusedVirtualCell,
     rowBufferPx: rootProps.rowBufferPx,
@@ -184,6 +208,9 @@ export function useGridVirtualizer(
     scrollReset,
 
     fixme: {
+      applyRowHeight: (entry, row) =>
+        apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
+      focusedVirtualCell: () => gridFocusedVirtualCellSelector(apiRef),
       rowsMeta: () => gridRowsMetaSelector(apiRef),
       onContextChange: (nextRenderContext) =>
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext),
