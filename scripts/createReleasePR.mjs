@@ -976,8 +976,8 @@ async function main({ githubToken }) {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const previousMajorVersion = await findLastVersionForMajor(majorVersion);
-    console.log(`Latest tag for major version ${majorVersion}: ${previousMajorVersion}`);
+    const previousVersion = await findLastVersionForMajor(majorVersion);
+    console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
@@ -985,7 +985,7 @@ async function main({ githubToken }) {
     let prereleaseNumber = 0;
 
     if (!versionType && !customVersion) {
-      const result = await selectVersionType(previousMajorVersion);
+      const result = await selectVersionType(previousVersion);
       versionType = result.versionType;
       calculatedVersion = result.calculatedVersion;
       customVersion = result.customVersion;
@@ -994,7 +994,7 @@ async function main({ githubToken }) {
     } else {
       // Command-line arguments provided, calculate versions from tags
       const { success, nextPatch, nextMinor, nextMajor } =
-        await getNextSemanticVersions(previousMajorVersion);
+        await getNextSemanticVersions(previousVersion);
 
       // If a version type was specified, set the calculated version
       if (versionType && success) {
@@ -1074,7 +1074,7 @@ async function main({ githubToken }) {
     // Generate the changelog
     const changelogContent = await generateChangelog(
       newVersion,
-      previousMajorVersion,
+      previousVersion,
       majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
     );
 
