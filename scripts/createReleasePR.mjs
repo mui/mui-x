@@ -250,12 +250,12 @@ function sortVersionsFromTags(a, b) {
 
   // If version parts are equal, handle prerelease parts
 
-  // If one has prerelease and the other doesn't, the one with prerelease is greater
+  // If one has prerelease and the other doesn't, the one without prerelease is greater
   if (!aPrereleasePart && bPrereleasePart) {
-    return -1;
+    return 1;
   }
   if (aPrereleasePart && !bPrereleasePart) {
-    return 1;
+    return -1;
   }
   if (!aPrereleasePart && !bPrereleasePart) {
     return 0;
