@@ -17,13 +17,18 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
 
 export const useZoomOnPinch = (
   {
     store,
     instance,
     svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+    params,
+  }: Pick<
+    Parameters<ChartPlugin<UseChartProZoomSignature>>[0],
+    'store' | 'instance' | 'svgRef' | 'params'
+  >,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
@@ -33,11 +38,17 @@ export const useZoomOnPinch = (
   // Zoom on pinch
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomEnabled || !params.zoomConfig.zoom.onPinch) {
       return () => {};
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
+      if (
+        !isGestureEnabledForPointer(event.detail.srcEvent, params.zoomConfig.zoom.onPinch!.mode)
+      ) {
+        return;
+      }
+
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];

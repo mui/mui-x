@@ -23,7 +23,11 @@ export const useZoomOnWheel = (
     store,
     instance,
     svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+    params,
+  }: Pick<
+    Parameters<ChartPlugin<UseChartProZoomSignature>>[0],
+    'store' | 'instance' | 'svgRef' | 'params'
+  >,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
@@ -35,7 +39,7 @@ export const useZoomOnWheel = (
   // Add event for chart zoom in/out
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomEnabled || !params.zoomConfig.zoom.onWheel) {
       return () => {};
     }
 

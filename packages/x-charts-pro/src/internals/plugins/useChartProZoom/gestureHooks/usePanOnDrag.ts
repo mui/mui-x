@@ -11,13 +11,18 @@ import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { PanEvent } from '@mui/x-internal-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
+import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
 
 export const usePanOnDrag = (
   {
     store,
     instance,
     svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+    params,
+  }: Pick<
+    Parameters<ChartPlugin<UseChartProZoomSignature>>[0],
+    'store' | 'instance' | 'svgRef' | 'params'
+  >,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
@@ -26,7 +31,9 @@ export const usePanOnDrag = (
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
-    () => Object.values(optionsLookup).some((v) => v.panning) || false,
+    () =>
+      (Object.values(optionsLookup).some((v) => v.panning) && params.zoomConfig.pan.onDrag) ||
+      false,
     [optionsLookup],
   );
 
@@ -38,6 +45,9 @@ export const usePanOnDrag = (
     }
 
     const handlePanStart = (event: PanEvent) => {
+      if (!isGestureEnabledForPointer(event.detail.srcEvent, params.zoomConfig.pan.onDrag!.mode)) {
+        return;
+      }
       if (event.detail.target === element || instance.isElementInside(event.detail.target)) {
         startRef.current = store.value.zoom.zoomData;
       }
