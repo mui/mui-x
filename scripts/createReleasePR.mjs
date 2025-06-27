@@ -200,7 +200,6 @@ async function findForkRemote() {
 
 /**
  * Find the latest major version from the upstream remote
- * @param {string} remote - The name of the remote (e.g., 'upstream')
  * @returns {Promise<string>} The latest major version (e.g., '7', '6', etc.)
  */
 async function findLatestMajorVersion() {
@@ -703,7 +702,11 @@ async function updateChangelog(changelogContent) {
     const firstVersionLineIndex = lines.findIndex((line) => /^## [0-9]/.test(line));
 
     if (firstVersionLineIndex === -1) {
-      throw new Error('Could not find the first version entry in CHANGELOG.md');
+      console.error(
+        'Error updating changelog:',
+        'Could not find the first version entry in CHANGELOG.md',
+      );
+      process.exit(1);
     }
 
     // Create a new changelog with the new content
