@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.6.0
 
-_Jun 26, 2025_
+_Jun 27, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
@@ -35,7 +35,6 @@ The following are all team members who have contributed to this release:
 
 Same changes as in `@mui/x-data-grid@8.6.0`, plus:
 
-- [DataGridPro] Data source nested pagination recipe (#14777) @MBilalShafi
 - [DataGridPro] Fix lazy loading params calculated from rendering context (#18460) @arminmeh
 
 #### `@mui/x-data-grid-premium@8.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
@@ -99,6 +98,8 @@ Internal changes.
 - [docs] Prevent stale rows to appear on sort and filter change in the lazy loading demo (#18461) @arminmeh
 - [docs][pickers] Update action bar demo to use the `nextOrAccept` action (#18505) @LukasTy
 - [docs] Update indeterminate checkbox section in migration guide (#18229) @michelengelen
+- [docs] Data source nested pagination recipe (#14777) @MBilalShafi
+
 
 ### Core
 
