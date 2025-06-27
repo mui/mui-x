@@ -52,6 +52,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         const componentDemos = allMarkdowns
           .filter((page) => page.components?.includes(name))
           .map((page) => ({
+            filePath: page.filename,
             demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
             demoPathname: `/x/react-data-grid/components/${path.basename(page.pathname)}`,
           }));
@@ -62,9 +63,21 @@ export function getComponentInfo(filename: string): ComponentInfo {
       }
 
       return [
-        { demoPathname: '/x/react-data-grid/#mit-version-free-forever', demoPageTitle: 'DataGrid' },
-        { demoPathname: '/x/react-data-grid/#pro-version', demoPageTitle: 'DataGridPro' },
-        { demoPathname: '/x/react-data-grid/#premium-version', demoPageTitle: 'DataGridPremium' },
+        {
+          demoPathname: '/x/react-data-grid/#mit-version-free-forever',
+          demoPageTitle: 'DataGrid',
+          filePath: '',
+        },
+        {
+          demoPathname: '/x/react-data-grid/#pro-version',
+          demoPageTitle: 'DataGridPro',
+          filePath: '',
+        },
+        {
+          demoPathname: '/x/react-data-grid/#premium-version',
+          demoPageTitle: 'DataGridPremium',
+          filePath: '',
+        },
       ];
     },
     layoutConfigPath: 'docsx/src/modules/utils/dataGridLayoutConfig',
