@@ -5,7 +5,7 @@ import { Store } from '@mui/x-internals/store';
 import { Dimensions } from './features/dimensions';
 import { Virtualization } from './features/virtualization';
 import type { RowId } from './models/core';
-import type { RowSpacing, RowVisibilityParams } from './models/dimensions';
+import type { HeightEntry, RowSpacing, RowVisibilityParams } from './models/dimensions';
 
 export * from './features/virtualization';
 
@@ -84,11 +84,15 @@ export type VirtualizerParams = {
    * @returns {GridRowSpacing} The row spacing values.
    */
   getRowSpacing?: (rowEntry: RowEntry, visibility: RowVisibilityParams) => RowSpacing;
+  /** Update the row height values before they're used.
+   * Used to add detail panel heights. */
+  applyRowHeight?: (entry: HeightEntry, rowEntry: RowEntry) => void;
 
   resizeThrottleMs: number;
   onResize?: (lastSize: Size) => void;
   onWheel?: (event: React.WheelEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;
+  onRenderContextChange: (c: RenderContext) => void;
 
   focusedCell: FocusedCell | null;
 
@@ -98,9 +102,7 @@ export type VirtualizerParams = {
   scrollReset?: any;
 
   fixme: {
-    applyRowHeight: (entry: any, row: any) => void;
     focusedVirtualCell: () => any;
-    onContextChange: (c: RenderContext) => void;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
     onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;
     rowTree: () => any;

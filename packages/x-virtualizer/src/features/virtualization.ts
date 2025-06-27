@@ -103,6 +103,7 @@ function useVirtualization(
 
     onWheel,
     onTouchMove,
+    onRenderContextChange,
 
     focusedCell,
     rowBufferPx,
@@ -148,31 +149,34 @@ function useVirtualization(
     createScrollCache(isRtl, rowBufferPx, columnBufferPx, rowHeight * 15, MINIMUM_COLUMN_WIDTH * 6),
   ).current;
 
-  const updateRenderContext = React.useCallback((nextRenderContext: RenderContext) => {
-    if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
-      return;
-    }
+  const updateRenderContext = React.useCallback(
+    (nextRenderContext: RenderContext) => {
+      if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+        return;
+      }
 
-    const didRowsIntervalChange =
-      nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
-      nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
+      const didRowsIntervalChange =
+        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
+        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
 
-    store.set('virtualization', {
-      ...store.state.virtualization,
-      renderContext: nextRenderContext,
-    });
+      store.set('virtualization', {
+        ...store.state.virtualization,
+        renderContext: nextRenderContext,
+      });
 
-    // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
-    // but only does something if we already have a render context, because
-    // otherwise we would call an update directly on mount
-    const isReady = Dimensions.selectors.dimensions(store.state).isReady;
-    if (isReady && didRowsIntervalChange) {
-      previousRowContext.current = nextRenderContext;
-      fixme.onContextChange(nextRenderContext);
-    }
+      // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
+      // but only does something if we already have a render context, because
+      // otherwise we would call an update directly on mount
+      const isReady = Dimensions.selectors.dimensions(store.state).isReady;
+      if (isReady && didRowsIntervalChange) {
+        previousRowContext.current = nextRenderContext;
+        onRenderContextChange(nextRenderContext);
+      }
 
-    previousContextScrollPosition.current = scrollPosition.current;
-  }, []);
+      previousContextScrollPosition.current = scrollPosition.current;
+    },
+    [onRenderContextChange],
+  );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
     const scroller = refs.scroller.current;

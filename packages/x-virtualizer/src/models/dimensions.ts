@@ -126,3 +126,13 @@ export interface RowSpacing {
   top?: number;
   bottom?: number;
 }
+
+export type HeightEntry = {
+  content: number;
+  spacingTop: number;
+  spacingBottom: number;
+  detail: number;
+
+  autoHeight: boolean;
+  needsFirstMeasurement: boolean;
+};

@@ -348,7 +348,7 @@ function useRowsMeta(
         entry.spacingBottom = 0;
       }
 
-      params.fixme.applyRowHeight(entry, row);
+      params.applyRowHeight?.(entry, row);
 
       return entry;
     },

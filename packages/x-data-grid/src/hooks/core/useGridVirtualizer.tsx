@@ -191,6 +191,8 @@ export function useGridVirtualizer(
           : undefined,
       [getRowSpacing],
     ),
+    applyRowHeight: (entry, row) =>
+      apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
 
     focusedCell: focusedVirtualCell,
     rowBufferPx: rootProps.rowBufferPx,
@@ -204,15 +206,14 @@ export function useGridVirtualizer(
     onTouchMove: useEventCallback((event: React.TouchEvent) => {
       apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
     }),
+    onRenderContextChange: useEventCallback((nextRenderContext) => {
+      apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
+    }),
 
     scrollReset,
 
     fixme: {
-      applyRowHeight: (entry, row) =>
-        apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
       focusedVirtualCell: () => gridFocusedVirtualCellSelector(apiRef),
-      onContextChange: (nextRenderContext) =>
-        apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext),
       inputs: (enabledForRows, enabledForColumns) =>
         inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
       onScrollChange: (scrollPosition, nextRenderContext) => {
