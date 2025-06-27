@@ -256,13 +256,12 @@ export const useGridRows = (
         }
       }
 
-      const cacheUpdates = [
-        ...nonPinnedRowsUpdates,
-        ...Array.from(removedNodes).map((rowId) => ({
+      const cacheUpdates = nonPinnedRowsUpdates.concat(
+        Array.from(removedNodes).map((rowId) => ({
           id: rowId,
           _action: 'delete' as const,
-        })),
-      ];
+        }))
+      )
 
       const cache = updateCacheWithNewRows({
         updates: cacheUpdates,
