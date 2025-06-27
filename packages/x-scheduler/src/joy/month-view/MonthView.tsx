@@ -14,7 +14,7 @@ import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { SchedulerValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
 import { getColorClassName } from '../internals/utils/color-utils';
-
+import { useTranslations } from '../internals/utils/TranslationsContext';
 import './MonthView.css';
 
 const adapter = getAdapter();
@@ -33,6 +33,7 @@ export const MonthView = React.memo(
     const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
     // TODO: Temporary fake today until Issue 17698 is resolved.
     const today = adapter.date('2025-05-26');
+    const translations = useTranslations();
 
     const getWeekList = useWeekList();
     const getDayList = useDayList();
@@ -77,14 +78,14 @@ export const MonthView = React.memo(
           {({ onEventClick }) => (
             <DayGrid.Root className="MonthViewRoot">
               <div className="MonthViewHeader">
-                <div className="MonthViewWeekHeaderCell">W</div>
+                <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
                 {weeks[0].map((day) => (
                   <div
                     key={day.date.toString()}
                     id={`MonthViewHeaderCell-${day.date.toString()}`}
                     role="columnheader"
                     className="MonthViewHeaderCell"
-                    aria-label={`${adapter.format(day.date, 'weekday')}`}
+                    aria-label={adapter.format(day.date, 'weekday')}
                   >
                     {adapter.formatByString(day.date, 'ccc')}
                   </div>
@@ -98,7 +99,7 @@ export const MonthView = React.memo(
                       <div
                         className="MonthViewWeekNumberCell"
                         role="rowheader"
-                        aria-label={`Week ${weekNumer}`}
+                        aria-label={`${translations.weekNumberAriaLabel}: ${weekNumer}`}
                       >
                         {weekNumer}
                       </div>
