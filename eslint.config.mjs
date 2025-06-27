@@ -175,8 +175,6 @@ export default defineConfig(
           })),
         },
       ],
-      // TODO move rule into the main repo once it has upgraded
-      '@typescript-eslint/return-await': 'off',
       'no-restricted-imports': 'off',
       // TODO move to @mui/monorepo/.eslintrc
       'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
