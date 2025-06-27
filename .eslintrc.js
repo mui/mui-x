@@ -263,7 +263,7 @@ module.exports = {
     },
     {
       files: ['packages/*/src/**/*.?(c|m)[jt]s?(x)'],
-      excludedFiles: ['*.d.ts', '*.spec.*'],
+      excludedFiles: ['*.d.ts', '*.spec.*', '*.test.*'],
       rules: {
         'material-ui/mui-name-matches-component-name': [
           'error',
@@ -283,6 +283,7 @@ module.exports = {
             ],
           },
         ],
+        'material-ui/disallow-react-api-in-server-components': 'error',
       },
     },
     {
