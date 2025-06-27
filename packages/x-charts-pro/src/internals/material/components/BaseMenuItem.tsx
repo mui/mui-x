@@ -2,7 +2,7 @@ import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { ChartBaseMenuItemProps } from '../../slots/chartBaseSlotProps';
+import { ChartBaseMenuItemProps } from '@mui/x-charts/models';
 
 export function BaseMenuItem(props: ChartBaseMenuItemProps) {
   const { inert, iconStart, iconEnd, children, ...other } = props;

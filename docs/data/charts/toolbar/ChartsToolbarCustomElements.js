@@ -31,6 +31,13 @@ export default function ChartsToolbarCustomElements() {
       yAxis={[{ zoom: true }]}
       showToolbar
       slots={{ baseIconButton: CustomIconButton }}
+      slotProps={{
+        baseIconButton: {
+          material: {
+            loading: true,
+          },
+        },
+      }}
       sx={{
         [`& .${chartsToolbarClasses.root}`]: {
           gap: 1,
