@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
