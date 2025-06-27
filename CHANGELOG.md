@@ -100,7 +100,6 @@ Internal changes.
 - [docs] Update indeterminate checkbox section in migration guide (#18229) @michelengelen
 - [docs] Data source nested pagination recipe (#14777) @MBilalShafi
 
-
 ### Core
 
 - [core] Avoid json stringify whole window object (#18512) @vadimka123
