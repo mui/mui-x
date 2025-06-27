@@ -1,6 +1,6 @@
-'use client';
-import { styled } from '@mui/system';
 import * as React from 'react';
+import { styled } from '@mui/system';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   gridDimensionsSelector,
   gridPinnedColumnsSelector,
@@ -13,7 +13,6 @@ import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridEventListener } from '../models/events';
 import { vars } from '../constants/cssVariables';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { useRtl } from '@mui/system/RtlProvider';
 
 interface GridScrollShadowsProps {
   position: 'vertical' | 'horizontal';
