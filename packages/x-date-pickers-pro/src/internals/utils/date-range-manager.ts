@@ -25,7 +25,7 @@ interface CalculateRangeChangeResponse {
 export function resolveReferenceDate(
   referenceDate: PickerValidDate | [PickerValidDate, PickerValidDate] | undefined,
   rangePosition: RangePosition,
-) {
+): PickerValidDate | undefined {
   if (Array.isArray(referenceDate)) {
     return rangePosition === 'start' ? referenceDate[0] : referenceDate[1];
   }
