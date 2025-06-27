@@ -100,7 +100,6 @@ export type VirtualizerParams = {
   fixme: {
     applyRowHeight: (entry: any, row: any) => void;
     focusedVirtualCell: () => any;
-    rowsMeta: () => any;
     onContextChange: (c: RenderContext) => void;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
     onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;

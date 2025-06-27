@@ -211,7 +211,6 @@ export function useGridVirtualizer(
       applyRowHeight: (entry, row) =>
         apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
       focusedVirtualCell: () => gridFocusedVirtualCellSelector(apiRef),
-      rowsMeta: () => gridRowsMetaSelector(apiRef),
       onContextChange: (nextRenderContext) =>
         apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext),
       inputs: (enabledForRows, enabledForColumns) =>
