@@ -157,6 +157,8 @@ export default defineConfig(
       },
     },
     rules: {
+      // turn off global react compiler plugin as it's controlled per package on this repo
+      'react-compiler/react-compiler': 'off',
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',
