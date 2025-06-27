@@ -435,7 +435,12 @@ async function processApiSection(
 
       // Try both JSON patterns: direct and double lastSegment
       const jsonFilePath = path.join(process.cwd(), 'docs/pages', apiItem.pathname + '.json');
-      const jsonFilePathDouble = path.join(process.cwd(), 'docs/pages', apiItem.pathname, lastSegment + '.json');
+      const jsonFilePathDouble = path.join(
+        process.cwd(),
+        'docs/pages',
+        apiItem.pathname,
+        lastSegment + '.json',
+      );
 
       // Try both markdown patterns: docs/data and docs/pages with double lastSegment
       const markdownFilePath = path.join(
@@ -445,7 +450,12 @@ async function processApiSection(
         lastSegment,
         lastSegment + '.md',
       );
-      const markdownFilePathPages = path.join(process.cwd(), 'docs/pages', apiItem.pathname, lastSegment + '.md');
+      const markdownFilePathPages = path.join(
+        process.cwd(),
+        'docs/pages',
+        apiItem.pathname,
+        lastSegment + '.md',
+      );
 
       let apiMarkdown: string;
 
@@ -500,6 +510,26 @@ async function processApiSection(
   }
 
   return generatedFiles;
+}
+
+/**
+ * Recursively find children of an item with the specified subheader
+ */
+function findChildrenBySubheader(page: MuiPage, targetSubheader: string): MuiPage[] {
+  if (page.subheader === targetSubheader && page.children) {
+    return page.children;
+  }
+  
+  if (page.children) {
+    for (const child of page.children) {
+      const result = findChildrenBySubheader(child, targetSubheader);
+      if (result.length > 0) {
+        return result;
+      }
+    }
+  }
+  
+  return [];
 }
 
 /**
@@ -945,9 +975,11 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     })();
 
     const pagesSection = findProjectPagesSection(projectKey);
-    if (pagesSection && pagesSection.children) {
+    if (pagesSection) {
+      // Find children of an item with subheader "Resources"
+      const resourcesChildren = findChildrenBySubheader(pagesSection, "Resources");
       // Find API sections in the project pages
-      for (const child of pagesSection.children) {
+      for (const child of resourcesChildren) {
         if (child.pathname.includes('/api/')) {
           try {
             const projectName = getProjectNameFromSettings(currentProjectSettings);
