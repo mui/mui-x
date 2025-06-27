@@ -19,7 +19,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 - 🌎 Improve German (de-DE) locale
 
 Special thanks go out to the community members for their valuable contributions:
-@ShahrazH, @vadimka123
+@omalyutin, @ShahrazH, @vadimka123
 
 The following are all team members who have contributed to this release:
 @arminmeh, @bernardobelchior, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855
