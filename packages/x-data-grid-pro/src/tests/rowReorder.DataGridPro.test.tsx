@@ -250,20 +250,46 @@ describe('<DataGridPro /> - Row reorder', () => {
     // Initially, no scroll areas should be visible
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
 
-    // Start dragging a row
+    // Start dragging a row at the top (scroll = 0)
     const rowReorderCell = getCell(0, 0).firstChild!;
     fireEvent.dragStart(rowReorderCell);
 
-    // Check what scroll areas are rendered
-    const allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
-    const downScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--down']}`);
+    // Check what scroll areas are rendered when at the top
+    let allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
+    let upScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--up']}`);
+    let downScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--down']}`);
 
-    // At least the down scroll area should be rendered (since we're at the top and can scroll down)
-    expect(allScrollAreas.length).to.be.greaterThan(0);
-    expect(downScrollAreas).to.have.length(1);
+    // At the top: only down scroll area should be rendered (up should NOT exist)
+    expect(allScrollAreas.length).to.equal(1);
+    expect(upScrollAreas).to.have.length(0); // No up scroll area when at top
+    expect(downScrollAreas).to.have.length(1); // Down scroll area available
+
+    // End dragging to reset state
+    let dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+
+    // Scroll areas should be hidden again
+    expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+
+    // Now scroll down to enable both up and down scrolling
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+    fireEvent.scroll(virtualScroller, { target: { scrollTop: 100 } });
+
+    // Start dragging again after scrolling down
+    fireEvent.dragStart(rowReorderCell);
+
+    // Check scroll areas after scrolling down
+    allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
+    upScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--up']}`);
+    downScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--down']}`);
+
+    // After scrolling down: both up and down scroll areas should be rendered
+    expect(allScrollAreas.length).to.equal(2);
+    expect(upScrollAreas).to.have.length(1); // Up scroll area now available
+    expect(downScrollAreas).to.have.length(1); // Down scroll area still available
 
     // End dragging
-    const dragEndEvent = createDragEndEvent(rowReorderCell);
+    dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
 
     // Scroll areas should be hidden again
