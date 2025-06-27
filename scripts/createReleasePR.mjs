@@ -64,6 +64,7 @@ const getRemoteRegex = (owner) =>
  * @property {boolean} [major] - Create a major release
  * @property {string} [custom] - Create a release with a custom version number
  * @property {string} [githubToken] - GitHub token for authentication
+ * @property {boolean} [dryRun] - Run in dry run mode (no actual changes)
  */
 
 /**
@@ -86,6 +87,11 @@ const argv = yargs(hideBin(process.argv))
   .option('custom', {
     type: 'string',
     description: 'Create a release with a custom version number',
+  })
+  .option('dryRun', {
+    type: 'boolean',
+    description: 'Run in dry run mode (no actual changes)',
+    alias: 'd',
   })
   .help()
   .alias('help', 'h')
@@ -200,7 +206,6 @@ async function findForkRemote() {
 
 /**
  * Find the latest major version from the upstream remote
- * @param {string} remote - The name of the remote (e.g., 'upstream')
  * @returns {Promise<string>} The latest major version (e.g., '7', '6', etc.)
  */
 async function findLatestMajorVersion() {
@@ -350,7 +355,7 @@ async function selectMajorVersion(latestMajorVersion) {
 async function getNextSemanticVersions(lastVersion) {
   try {
     // Split into version parts and prerelease parts
-    const [versionPart, prereleasePart] = lastVersion.split('-');
+    const [versionPart] = lastVersion.split('-');
 
     // Split the version part into components
     const [tagMajor, tagMinor, tagPatch] = versionPart.split('.').map(Number);
@@ -703,7 +708,8 @@ async function updateChangelog(changelogContent) {
     const firstVersionLineIndex = lines.findIndex((line) => /^## [0-9]/.test(line));
 
     if (firstVersionLineIndex === -1) {
-      throw new Error('Could not find the first version entry in CHANGELOG.md');
+      console.error('Error updating changelog:', 'Could not find the first version entry in CHANGELOG.md');
+      process.exit(1);
     }
 
     // Create a new changelog with the new content
@@ -918,7 +924,7 @@ async function createPullRequest(title, body, head, base) {
 /**
  * Main function
  */
-async function main({ githubToken }) {
+async function main({ githubToken, dryRun }) {
   try {
     // Check if we're in the repository root
     try {
@@ -933,6 +939,10 @@ async function main({ githubToken }) {
 
     console.log('package.json and CHANGELOG.md found, proceeding...');
     console.log(`Current package version: ${packageVersion}`);
+
+    if (dryRun) {
+      console.log('\n🔍 DRY RUN MODE: No actual changes will be made\n');
+    }
 
     // If no token is provided, throw an error
     if (!githubToken) {
@@ -1034,9 +1044,6 @@ async function main({ githubToken }) {
     const branchName = `release/v${newVersion}-${new Date().toISOString().slice(0, 10)}`;
     console.log(`Creating new branch: ${branchName}`);
 
-    // Check for uncommitted changes
-    await checkUncommittedChanges();
-
     // Determine the source branch based on the selected major version
     let branchSource;
     if (majorVersion === latestMajorVersion) {
@@ -1047,63 +1054,83 @@ async function main({ githubToken }) {
       console.log(`Creating branch from version branch: ${branchSource}`);
     }
 
-    await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
+    if (!dryRun) {
+      // Check for uncommitted changes
+      await checkUncommittedChanges();
 
-    // Update package.json
-    await updatePackageJson(newVersion);
+      // Create the branch
+      await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
 
-    // Run lerna version script
-    console.log('Running lerna version script...');
-    await execa(
-      'npx',
-      [
-        'lerna',
-        'version',
-        '--exact',
-        '--no-changelog',
-        '--no-push',
-        '--no-git-tag-version',
-        '--no-private',
-      ],
-      { stdio: 'inherit' },
-    );
+      // Update package.json
+      await updatePackageJson(newVersion);
+
+      // Run lerna version script
+      console.log('Running lerna version script...');
+      await execa(
+        'npx',
+        [
+          'lerna',
+          'version',
+          '--exact',
+          '--no-changelog',
+          '--no-push',
+          '--no-git-tag-version',
+          '--no-private',
+        ],
+        { stdio: 'inherit' },
+      );
+    } else {
+      console.log(`[DRY RUN] Would create branch: ${branchName} from ${branchSource}`);
+      console.log(`[DRY RUN] Would update package.json version to: ${newVersion}`);
+      console.log(`[DRY RUN] Would run lerna version script to update all package versions`);
+    }
 
     console.log('Version update completed successfully!');
     console.log(`New version: ${newVersion}`);
 
     // Generate the changelog
-    const changelogContent = await generateChangelog(
-      newVersion,
-      previousMajorVersion,
-      majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
-    );
+    let changelogContent;
+    const releaseBranch = majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`;
 
-    // Add the new changelog entry to the CHANGELOG.md file
-    await updateChangelog(changelogContent);
+    if (!dryRun) {
+      changelogContent = await generateChangelog(
+        newVersion,
+        previousMajorVersion,
+        releaseBranch,
+      );
 
-    // Wait for user confirmation
-    await confirm({
-      message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
-      default: true,
-    });
+      // Add the new changelog entry to the CHANGELOG.md file
+      await updateChangelog(changelogContent);
 
-    // Commit the changes
-    console.log('Committing changes...');
-    await execa('git', ['add', 'package.json', 'CHANGELOG.md', 'packages/*/package.json']);
-    await execa('git', ['commit', '-m', `[release] v${newVersion}`]);
+      // Wait for user confirmation
+      await confirm({
+        message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
+        default: true,
+      });
 
-    console.log(`Changes committed to branch ${branchName}`);
+      // Commit the changes
+      console.log('Committing changes...');
+      await execa('git', ['add', 'package.json', 'CHANGELOG.md', 'packages/*/package.json']);
+      await execa('git', ['commit', '-m', `[release] v${newVersion}`]);
 
-    // Push the committed changes to fork remote
-    console.log('Pushing committed changes to fork remote...');
-    try {
-      await execa('git', ['push', forkRemote, branchName]);
-      console.log(`Changes pushed to ${forkRemote}/${branchName}`);
-    } catch (error) {
-      console.error('Error pushing to fork remote:', error);
-      console.error('Falling back to pushing to origin...');
-      await execa('git', ['push', 'origin', branchName]);
-      console.log(`Changes pushed to origin/${branchName}`);
+      console.log(`Changes committed to branch ${branchName}`);
+
+      // Push the committed changes to fork remote
+      console.log('Pushing committed changes to fork remote...');
+      try {
+        await execa('git', ['push', forkRemote, branchName]);
+        console.log(`Changes pushed to ${forkRemote}/${branchName}`);
+      } catch (error) {
+        console.error('Error pushing to fork remote:', error);
+        console.error('Falling back to pushing to origin...');
+        await execa('git', ['push', 'origin', branchName]);
+        console.log(`Changes pushed to origin/${branchName}`);
+      }
+    } else {
+      console.log(`[DRY RUN] Would generate changelog for version ${newVersion} from ${releaseBranch}`);
+      console.log(`[DRY RUN] Would update CHANGELOG.md with the new entry`);
+      console.log(`[DRY RUN] Would commit changes to package.json, CHANGELOG.md, and packages/*/package.json`);
+      console.log(`[DRY RUN] Would push changes to ${forkRemote}/${branchName}`);
     }
 
     // Create PR body with checklist
@@ -1111,52 +1138,72 @@ async function main({ githubToken }) {
 
     // Open a PR
     console.log('Opening a PR...');
-    try {
-      // Determine the base branch based on the selected major version
-      const baseBranch = majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`;
 
-      // Get the origin owner (username or organization)
-      const forkOwner = await findForkOwner();
+    // Determine the base branch based on the selected major version
+    const baseBranch = majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`;
 
-      // Create the PR using Octokit
-      const { url: prUrl, number: prNumber } = await createPullRequest(
-        `[release] v${newVersion}`,
-        prBody,
-        `${forkOwner}:${branchName}`,
-        baseBranch,
-      );
+    if (!dryRun) {
+      try {
+        // Get the origin owner (username or organization)
+        const forkOwner = await findForkOwner();
 
-      console.log(`PR created successfully: ${prUrl}`);
+        // Create the PR using Octokit
+        const { url: prUrl, number: prNumber } = await createPullRequest(
+          `[release] v${newVersion}`,
+          prBody,
+          `${forkOwner}:${branchName}`,
+          baseBranch,
+        );
 
-      // Step 1: Apply labels to the PR
-      // Add 'release' label and a version label in the format 'v8.x'
-      const versionLabel = `v${majorVersion}.x`;
-      await addLabelsToPR(prNumber, ['release', versionLabel]);
+        console.log(`PR created successfully: ${prUrl}`);
 
-      // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
-      const teamMembers = await getTeamMembers(forkOwner);
+        // Step 1: Apply labels to the PR
+        // Add 'release' label and a version label in the format 'v8.x'
+        const versionLabel = `v${majorVersion}.x`;
+        await addLabelsToPR(prNumber, ['release', versionLabel]);
 
-      if (teamMembers.length > 0) {
-        // Randomly select up to 15 team members as reviewers
-        const shuffledMembers = [...teamMembers].sort(() => 0.5 - Math.random());
-        const selectedReviewers = shuffledMembers.slice(0, Math.min(15, shuffledMembers.length));
+        // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
+        const teamMembers = await getTeamMembers(forkOwner);
 
-        console.log(`Randomly selected ${selectedReviewers.length} team members as reviewers.`);
+        if (teamMembers.length > 0) {
+          // Randomly select up to 15 team members as reviewers
+          const shuffledMembers = [...teamMembers].sort(() => 0.5 - Math.random());
+          const selectedReviewers = shuffledMembers.slice(0, Math.min(15, shuffledMembers.length));
 
-        // Assign the selected reviewers to the PR
-        await assignReviewers(prNumber, selectedReviewers);
+          console.log(`Randomly selected ${selectedReviewers.length} team members as reviewers.`);
+
+          // Assign the selected reviewers to the PR
+          await assignReviewers(prNumber, selectedReviewers);
+        }
+      } catch (error) {
+        console.error('Failed to create PR with Octokit or assign reviewers.');
+        console.error(
+          `You can manually create a PR with title: [release] v${newVersion} and label: release`,
+        );
+        console.error(`Branch: ${branchName}`);
+        console.error('Use the following checklist in the PR body:');
+        console.error(prBody);
       }
-    } catch (error) {
-      console.error('Failed to create PR with Octokit or assign reviewers.');
-      console.error(
-        `You can manually create a PR with title: [release] v${newVersion} and label: release`,
-      );
-      console.error(`Branch: ${branchName}`);
-      console.error('Use the following checklist in the PR body:');
-      console.error(prBody);
+    } else {
+      // In dry run mode, just show what would happen
+      const forkOwner = 'YOUR_USERNAME'; // Placeholder in dry run mode
+      console.log(`[DRY RUN] Would create PR with title: [release] v${newVersion}`);
+      console.log(`[DRY RUN] Would set base branch to: ${baseBranch}`);
+      console.log(`[DRY RUN] Would set head branch to: ${forkOwner}:${branchName}`);
+      console.log(`[DRY RUN] Would add labels: 'release', 'v${majorVersion}.x'`);
+      console.log(`[DRY RUN] Would assign random team members as reviewers`);
+      console.log(`[DRY RUN] PR body would contain the following checklist:`);
+      console.log('-------------------------------------------');
+      console.log(prBody);
+      console.log('-------------------------------------------');
     }
 
-    console.log('Release preparation completed!');
+    if (dryRun) {
+      console.log('\n🔍 DRY RUN COMPLETED: No actual changes were made');
+      console.log('To perform the actual release, run the script without the --dryRun flag');
+    } else {
+      console.log('Release preparation completed!');
+    }
   } catch (error) {
     console.error('Error:', error);
     process.exit(1);
@@ -1168,12 +1215,18 @@ yargs(hideBin(process.argv))
     command: '$0',
     description: 'Prepares a release PR for MUI X',
     builder: (command) => {
-      return command.option('githubToken', {
-        default: process.env.GITHUB_TOKEN,
-        describe:
-          'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
-        type: 'string',
-      });
+      return command
+        .option('githubToken', {
+          default: process.env.GITHUB_TOKEN,
+          describe:
+            'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
+          type: 'string',
+        })
+        .option('dryRun', {
+          type: 'boolean',
+          describe: 'Run in dry run mode (no actual changes)',
+          alias: 'd',
+        });
     },
     handler: main,
   })
