@@ -11,6 +11,8 @@ import { Size, DimensionsState, RowId, RowEntry, RowsMetaState } from '../models
 import type { VirtualizerParams } from '../useVirtualizer';
 import type { BaseState } from '../useVirtualizer';
 
+/* eslint-disable no-underscore-dangle */
+
 const EMPTY_DIMENSIONS: DimensionsState = {
   isReady: false,
   root: Size.EMPTY,
