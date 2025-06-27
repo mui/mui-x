@@ -59,6 +59,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import yargs, { ArgumentsCamelCase } from 'yargs';
 import kebabCase from 'lodash/kebabCase';
+import * as prettier from 'prettier';
 import { processMarkdownFile, processApiFile } from '@mui-internal-scripts/generate-llms-txt';
 import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
@@ -330,6 +331,35 @@ function toTitleCase(kebabCaseStr: string): string {
 }
 
 /**
+ * Format markdown content using prettier
+ */
+async function formatMarkdown(content: string): Promise<string> {
+  try {
+    const prettierConfigPath = path.join(process.cwd(), 'prettier.config.js');
+    const prettierConfig = await prettier.resolveConfig(prettierConfigPath, {
+      config: prettierConfigPath,
+    });
+
+    return await prettier.format(content, {
+      ...prettierConfig,
+      parser: 'markdown',
+    });
+  } catch (error) {
+    console.warn('Warning: Could not format markdown with prettier:', error);
+    return content;
+  }
+}
+
+/**
+ * Increase header levels by one (add one # to each header)
+ */
+function increaseHeaderLevels(content: string): string {
+  // Replace headers with one additional #
+  // # becomes ##, ## becomes ###, ### becomes ####, etc.
+  return content.replace(/^(#{1,5})\s/gm, '#$1 ');
+}
+
+/**
  * Find the project section in pages.ts for a given project key
  */
 function findProjectPagesSection(projectKey: string): MuiPage | null {
@@ -374,7 +404,6 @@ function generateStructuredContent(
   depth: number = 0,
 ): string {
   let content = '';
-  const indent = '  '.repeat(depth);
 
   // Check if this page has a matching generated file
   const matchedFile = fileMap.get(page.pathname);
@@ -401,7 +430,8 @@ function generateStructuredContent(
     const newFeatureIndicator = page.newFeature ? ' 🆕' : '';
     const plannedIndicator = page.planned ? ' (planned)' : '';
 
-    content += `${indent}- [${title}](/${matchedFile.outputPath})`;
+    // Don't add indentation for markdown list items - they should start at column 0
+    content += `- [${title}](/${matchedFile.outputPath})`;
     if (matchedFile.description) {
       content += `: ${matchedFile.description}`;
     }
@@ -750,6 +780,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         const projectDisplayName = getProjectDisplayNameFromKey(projectKey);
         if (projectDisplayName !== projectKey) {
           const llmsContent = generateProjectLlmsTxt(files, projectDisplayName, dirName);
+          const formattedLlmsContent = await formatMarkdown(llmsContent);
           const llmsPath = path.join(outputDir, dirName, 'llms.txt');
 
           // Ensure directory exists
@@ -758,12 +789,13 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
             fs.mkdirSync(llmsDirPath, { recursive: true });
           }
 
-          fs.writeFileSync(llmsPath, llmsContent, 'utf-8');
+          fs.writeFileSync(llmsPath, formattedLlmsContent, 'utf-8');
           // ✓ Generated: ${dirName}/llms.txt
           processedCount += 1;
 
-          // Store content for root llms.txt
-          projectLlmsContents.push(llmsContent);
+          // Store formatted content with increased header levels for root llms.txt
+          const contentWithIncreasedHeaders = increaseHeaderLevels(formattedLlmsContent);
+          projectLlmsContents.push(contentWithIncreasedHeaders);
         }
       }
     }
@@ -771,10 +803,12 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
   // Generate root llms.txt file by concatenating all project content
   if (projectLlmsContents.length > 0) {
-    const rootHeader = '# MUI X Documentation\n\n' +
+    const rootHeader =
+      '# MUI X Documentation\n\n' +
       'This documentation covers all MUI X packages including Data Grid, Date Pickers, Charts, Tree View, and other components.\n\n' +
       '---\n\n';
     const rootLlmsContent = rootHeader + projectLlmsContents.join('\n\n---\n\n');
+    const formattedRootLlmsContent = await formatMarkdown(rootLlmsContent);
     const rootLlmsPath = path.join(outputDir, 'x', 'llms.txt');
 
     // Ensure directory exists
@@ -783,7 +817,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
       fs.mkdirSync(rootLlmsDirPath, { recursive: true });
     }
 
-    fs.writeFileSync(rootLlmsPath, rootLlmsContent, 'utf-8');
+    fs.writeFileSync(rootLlmsPath, formattedRootLlmsContent, 'utf-8');
     // ✓ Generated: llms.txt (root)
     processedCount += 1;
   }
