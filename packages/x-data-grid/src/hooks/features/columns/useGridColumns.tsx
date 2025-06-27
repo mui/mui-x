@@ -338,10 +338,10 @@ export function useGridColumns(
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
-      const columnVisibilityModelToImport = context.stateToRestore.columns?.columnVisibilityModel;
       const initialState = context.stateToRestore.columns;
+      const columnVisibilityModelToImport = initialState?.columnVisibilityModel;
 
-      if (columnVisibilityModelToImport == null && initialState == null) {
+      if (initialState == null) {
         return params;
       }
 
@@ -352,7 +352,30 @@ export function useGridColumns(
         columnVisibilityModel: columnVisibilityModelToImport,
         keepOnlyColumnsToUpsert: false,
       });
-      apiRef.current.setState(mergeColumnsState(columnsState));
+
+      if (initialState != null) {
+        apiRef.current.setState((prevState) => ({
+          ...prevState,
+          columns: {
+            ...prevState.columns,
+            lookup: columnsState.lookup,
+            orderedFields: columnsState.orderedFields,
+            initialColumnVisibilityModel: columnsState.initialColumnVisibilityModel,
+          },
+        }));
+      }
+
+      // separate column visibility model state update as it can be controlled
+      // https://github.com/mui/mui-x/issues/17681#issuecomment-3012528602
+      if (columnVisibilityModelToImport != null) {
+        apiRef.current.setState((prevState) => ({
+          ...prevState,
+          columns: {
+            ...prevState.columns,
+            columnVisibilityModel: columnVisibilityModelToImport,
+          },
+        }));
+      }
 
       if (initialState != null) {
         apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
