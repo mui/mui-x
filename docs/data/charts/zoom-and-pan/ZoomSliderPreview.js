@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { BarChartPro } from '@mui/x-charts-pro';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { usUnemploymentRate } from '../dataset/usUnemploymentRate';
 import { globalGdpPerCapita } from '../dataset/globalGdpPerCapita';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';
