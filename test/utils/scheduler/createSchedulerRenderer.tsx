@@ -10,7 +10,6 @@ export function createSchedulerRenderer({
   ...createRendererOptions
 }: CreateSchedulerRendererOptions = {}) {
   const { render: clientRender } = createRenderer(createRendererOptions);
-
   beforeEach(() => {
     if (clockConfig) {
       vi.setSystemTime(clockConfig);
