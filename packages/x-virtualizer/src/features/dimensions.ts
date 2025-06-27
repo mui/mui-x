@@ -55,6 +55,7 @@ export namespace Dimensions {
     rowsMeta: RowsMetaState;
     rowHeights: Map<any, any>; // FIXME: typing
   };
+  export type API = ReturnType<typeof useDimensions>;
 }
 
 function initializeState(params: VirtualizerParams): Dimensions.State {
@@ -83,7 +84,7 @@ function initializeState(params: VirtualizerParams): Dimensions.State {
   };
 }
 
-function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
+function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
   const {
@@ -405,7 +406,7 @@ function useRowsMeta(
   const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
 
   const getRowHeight = (rowId: RowId) => {
-    return heightCache.get(rowId)?.content ?? rowHeight;
+    return heightCache.get(rowId)?.content ?? selectors.rowHeight(store.state);
   };
 
   const storeRowHeightMeasurement = (id: RowId, height: number) => {

@@ -60,6 +60,7 @@ export namespace Virtualization {
     virtualization: VirtualizationState;
     getters: ReturnType<typeof useVirtualization>['getters'];
   };
+  export type API = ReturnType<typeof useVirtualization>;
 }
 
 function initializeState(params: VirtualizerParams) {
@@ -77,7 +78,11 @@ function initializeState(params: VirtualizerParams) {
   return state;
 }
 
-function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
+function useVirtualization(
+  store: Store<BaseState>,
+  params: VirtualizerParams,
+  api: { dimensions: Dimensions.API },
+) {
   const {
     initialState,
     isRtl,
@@ -392,7 +397,9 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams) {
         }
       }
 
-      const baseRowHeight = fixme.getRowHeight(id);
+      const baseRowHeight = !api.dimensions.rowsMeta.rowHasAutoHeight(id)
+        ? api.dimensions.rowsMeta.getRowHeight(id)
+        : 'auto';
 
       let isFirstVisible = false;
       if (params.position === undefined) {

@@ -111,7 +111,6 @@ export type VirtualizerParams = {
       maxLastColumn: number;
       columns: Column[];
     }) => void;
-    getRowHeight: (id: any) => number | 'auto';
     renderRow: (params: {
       id: any;
       model: Row;
@@ -141,8 +140,12 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     return new Store(state);
   }).current;
 
-  const dimensions = Dimensions.use(store, params);
-  const virtualization = Virtualization.use(store, params);
+  const api = {} as {
+    dimensions: Dimensions.API;
+    virtualization: Virtualization.API;
+  };
+  api.dimensions = Dimensions.use(store, params, api);
+  api.virtualization = Virtualization.use(store, params, api);
 
   /* Extra APIs moved here (could be reorganized in a separate file) */
 
@@ -170,8 +173,8 @@ export const useVirtualizer = (params: VirtualizerParams) => {
 
   return {
     store,
-    dimensions,
-    virtualization,
+    dimensions: api.dimensions,
+    virtualization: api.virtualization,
     extra: {
       getViewportPageSize,
     },

@@ -228,9 +228,6 @@ export function useGridVirtualizer(
 
       calculateColSpan: (params) => apiRef.current.calculateColSpan(params),
 
-      getRowHeight: (id) =>
-        !apiRef.current.rowHasAutoHeight(id) ? apiRef.current.unstable_getRowHeight(id) : 'auto',
-
       renderRow: (params) => (
         <rootProps.slots.row
           key={params.id}
