@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import {
   AxisId,
   selectorChartComputedXAxes,
@@ -11,11 +10,6 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { LineElement } from '@mui/x-charts/LineChart';
-
-const LinePlotRoot = styled('g', {
-  name: 'MuiLinePlot',
-  slot: 'Root',
-})();
 
 interface LinePreviewPlotProps {
   axisId: AxisId;
@@ -38,7 +32,7 @@ export function LinePreviewPlot({ axisId, x, y, height, width, zoomMap }: LinePr
 
   const completedData = useLinePreviewData(axisId, drawingArea, zoomMap);
   return (
-    <LinePlotRoot>
+    <g>
       {completedData.map(({ d, seriesId, color, gradientId }) => {
         return (
           <LineElement
@@ -51,7 +45,7 @@ export function LinePreviewPlot({ axisId, x, y, height, width, zoomMap }: LinePr
           />
         );
       })}
-    </LinePlotRoot>
+    </g>
   );
 }
 
