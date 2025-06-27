@@ -1,4 +1,5 @@
 import { SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
+import type { FunnelCurveType } from '../curves';
 
 const createPoint = ({
   main,
@@ -19,10 +20,14 @@ const createPoint = ({
 
 const getDataDirection = (
   dataDirection: 'increasing' | 'decreasing' | 'auto' | undefined,
+  curve: FunnelCurveType | undefined,
   firstValue: number | undefined | null,
   lastValue: number | undefined | null,
 ): 'increasing' | 'decreasing' => {
-  if (dataDirection === 'increasing' || dataDirection === 'decreasing') {
+  if (
+    curve?.includes('pyramid') &&
+    (dataDirection === 'increasing' || dataDirection === 'decreasing')
+  ) {
     return dataDirection;
   }
 
@@ -46,6 +51,7 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
     const lastDataPoint = currentSeries.data.at(-1);
     const dataDirection = getDataDirection(
       currentSeries.dataDirection,
+      currentSeries.curve,
       firstDataPoint?.value,
       lastDataPoint?.value,
     );
