@@ -262,7 +262,7 @@ export default defineConfig(
 
   {
     files: [`packages/*/src/**/*.${EXTENSION_TS}`],
-    ignores: ['**/*.d.ts', '**/*.spec.*'],
+    ignores: ['**/*.d.ts', `**/*.spec.${EXTENSION_TS}`, `**/*.test.${EXTENSION_TS}`],
     rules: {
       'material-ui/mui-name-matches-component-name': [
         'error',
@@ -282,6 +282,7 @@ export default defineConfig(
           ],
         },
       ],
+      'material-ui/disallow-react-api-in-server-components': 'error',
     },
   },
 
