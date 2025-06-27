@@ -224,6 +224,71 @@ async function findLatestMajorVersion() {
 }
 
 /**
+ * Compares and sorts version strings extracted from tags following semantic versioning logic.
+ * @param {string} a The first tag string prefixed with 'v' (e.g., 'v1.2.3-alpha.1').
+ * @param {string} b The second tag string prefixed with 'v' (e.g., 'v1.2.3').
+ * @return {number} A negative number if `a` is less than `b`, a positive number if `a` is greater than `b`, or 0 if they are equal.
+ */
+function sortVersionsFromTags(a, b) {
+  // Sort versions using semver logic
+  // Remove 'v' prefix
+  const aVersion = a.substring(1);
+  const bVersion = b.substring(1);
+
+  // Split into version parts and prerelease parts
+  const [aVersionPart, aPrereleasePart] = aVersion.split('-');
+  const [bVersionPart, bPrereleasePart] = bVersion.split('-');
+
+  // Compare version parts (major.minor.patch)
+  const aParts = aVersionPart.split('.').map(Number);
+  const bParts = bVersionPart.split('.').map(Number);
+
+  for (let i = 0; i < 3; i += 1) {
+    if (aParts[i] !== bParts[i]) {
+      return aParts[i] - bParts[i];
+    }
+  }
+
+  // If version parts are equal, handle prerelease parts
+
+  // If one has prerelease and the other doesn't, the one with prerelease is greater
+  if (!aPrereleasePart && bPrereleasePart) {
+    return -1;
+  }
+  if (aPrereleasePart && !bPrereleasePart) {
+    return 1;
+  }
+  if (!aPrereleasePart && !bPrereleasePart) {
+    return 0;
+  }
+
+  // Both have prerelease parts, compare them
+  const aPrereleaseParts = aPrereleasePart.split('.');
+  const bPrereleaseParts = bPrereleasePart.split('.');
+
+  // Compare prerelease identifiers (alpha, beta, etc.)
+  if (aPrereleaseParts[0] !== bPrereleaseParts[0]) {
+    // alpha comes before beta
+    if (aPrereleaseParts[0] === 'alpha' && bPrereleaseParts[0] === 'beta') {
+      return -1;
+    }
+    if (aPrereleaseParts[0] === 'beta' && bPrereleaseParts[0] === 'alpha') {
+      return 1;
+    }
+    // alphabetical order for other identifiers
+    return aPrereleaseParts[0].localeCompare(bPrereleaseParts[0]);
+  }
+
+  // Same prerelease identifier, compare the version number
+  if (aPrereleaseParts.length > 1 && bPrereleaseParts.length > 1) {
+    return Number(aPrereleaseParts[1]) - Number(bPrereleaseParts[1]);
+  }
+
+  // If one has a version number and the other doesn't, the one with version is greater
+  return aPrereleaseParts.length - bPrereleaseParts.length;
+}
+
+/**
  * Find the latest version for a specific major version
  * @param majorVersion - The major version to search for (e.g., '7', '6', etc.)
  * @returns {Promise<*|null>} - The latest tag for the specified major version, or null if not found
@@ -231,22 +296,7 @@ async function findLatestMajorVersion() {
 async function findLastVersionForMajor(majorVersion) {
   try {
     const { stdout } = await execa('git', ['tag', '-l', `v${majorVersion}.*`]);
-    const tags = stdout
-      .split('\n')
-      .filter(Boolean)
-      .sort((a, b) => {
-        // Sort versions using semver logic
-        const aParts = a.substring(1).split('.').map(Number);
-        const bParts = b.substring(1).split('.').map(Number);
-
-        for (let i = 0; i < 3; i += 1) {
-          if (aParts[i] !== bParts[i]) {
-            return aParts[i] - bParts[i];
-          }
-        }
-
-        return 0;
-      });
+    const tags = stdout.split('\n').filter(Boolean).sort(sortVersionsFromTags);
 
     if (tags.length === 0) {
       console.warn(`Warning: No tags found for major version ${majorVersion}`);
@@ -289,7 +339,7 @@ async function selectMajorVersion(latestMajorVersion) {
 
 /**
  * Calculate versions from git tags
- * @param {string} majorVersion - The selected major version
+ * @param {string} lastVersion - The selected major version
  * @returns {Promise<{
  *   success: boolean,
  *   nextPatch?: string,
@@ -297,42 +347,13 @@ async function selectMajorVersion(latestMajorVersion) {
  *   nextMajor?: string
  * }>}
  */
-async function calculateVersionsFromTags(majorVersion) {
+async function getNextSemanticVersions(lastVersion) {
   try {
-    // Get all tags matching the selected major version
-    const { stdout: tagsOutput } = await execa('git', ['tag', '-l', `v${majorVersion}.*`]);
-    const tags = tagsOutput
-      .split('\n')
-      .filter(Boolean)
-      .sort((a, b) => {
-        // Sort versions using semver logic
-        const aParts = a.substring(1).split('.').map(Number);
-        const bParts = b.substring(1).split('.').map(Number);
+    // Split into version parts and prerelease parts
+    const [versionPart, prereleasePart] = lastVersion.split('-');
 
-        for (let i = 0; i < 3; i += 1) {
-          if (aParts[i] !== bParts[i]) {
-            return aParts[i] - bParts[i];
-          }
-        }
-
-        return 0;
-      });
-
-    const latestTag = tags[tags.length - 1];
-
-    if (!latestTag) {
-      console.warn(`Warning: No tags found for major version ${majorVersion}`);
-      console.warn('Will calculate versions from package.json instead');
-      return { success: false };
-    }
-
-    console.log(`Latest tag: ${latestTag}`);
-
-    // Remove the 'v' prefix
-    const versionWithoutV = latestTag.substring(1);
-
-    // Split the version into components
-    const [tagMajor, tagMinor, tagPatch] = versionWithoutV.split('.').map(Number);
+    // Split the version part into components
+    const [tagMajor, tagMinor, tagPatch] = versionPart.split('.').map(Number);
 
     // Calculate next versions
     const nextPatchVersion = `${tagMajor}.${tagMinor}.${tagPatch + 1}`;
@@ -365,8 +386,7 @@ async function calculateVersionsFromTags(majorVersion) {
 async function selectVersionType(majorVersion) {
   console.log(`Fetching latest tag for major version ${majorVersion}...`);
 
-  const { success, nextPatch, nextMinor, nextMajor } =
-    await calculateVersionsFromTags(majorVersion);
+  const { success, nextPatch, nextMinor, nextMajor } = await getNextSemanticVersions(majorVersion);
 
   let nextPatchDisplay = nextPatch;
   let nextMinorDisplay = nextMinor;
@@ -956,8 +976,8 @@ async function main({ githubToken }) {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const lastVersion = await findLastVersionForMajor(majorVersion);
-    console.log(`Latest tag for major version ${majorVersion}: ${lastVersion}`);
+    const previousMajorVersion = await findLastVersionForMajor(majorVersion);
+    console.log(`Latest tag for major version ${majorVersion}: ${previousMajorVersion}`);
 
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
@@ -965,7 +985,7 @@ async function main({ githubToken }) {
     let prereleaseNumber = 0;
 
     if (!versionType && !customVersion) {
-      const result = await selectVersionType(majorVersion);
+      const result = await selectVersionType(previousMajorVersion);
       versionType = result.versionType;
       calculatedVersion = result.calculatedVersion;
       customVersion = result.customVersion;
@@ -974,7 +994,7 @@ async function main({ githubToken }) {
     } else {
       // Command-line arguments provided, calculate versions from tags
       const { success, nextPatch, nextMinor, nextMajor } =
-        await calculateVersionsFromTags(majorVersion);
+        await getNextSemanticVersions(previousMajorVersion);
 
       // If a version type was specified, set the calculated version
       if (versionType && success) {
@@ -1054,7 +1074,7 @@ async function main({ githubToken }) {
     // Generate the changelog
     const changelogContent = await generateChangelog(
       newVersion,
-      lastVersion,
+      previousMajorVersion,
       majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
     );
 
