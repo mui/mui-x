@@ -66,7 +66,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         {
           demoPathname: '/x/react-data-grid/#mit-version-free-forever',
           demoPageTitle: 'DataGrid',
-          filePath: '',
+          filePath: path.join(process.cwd(), 'docs/data/data-grid/components/usage.md'),
         },
         {
           demoPathname: '/x/react-data-grid/#pro-version',

@@ -431,9 +431,23 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
         // Use the component's demo pathname to create the output structure
         // e.g., /material-ui/react-accordion/ -> material-ui/react-accordion.md
-        const outputFileName = component.demos[0]
-          ? `${component.demos[0].demoPathname.replace(/^\//, '').replace(/\/$/, '')}.md`
-          : `${component.componentInfo.apiPathname.replace(/^\//, '').replace(/\/$/, '')}.md`;
+        // Replace paths containing # in the last segment with /usage.md
+        let outputFileName;
+        if (component.demos[0]) {
+          let pathname = component.demos[0].demoPathname.replace(/^\//, '').replace(/\/$/, '');
+          const pathParts = pathname.split('/');
+          const lastPart = pathParts[pathParts.length - 1];
+          
+          if (lastPart.includes('#')) {
+            // Replace the last segment with 'usage' if it contains #
+            pathParts[pathParts.length - 1] = 'usage';
+            pathname = pathParts.join('/');
+          }
+          
+          outputFileName = `${pathname}.md`;
+        } else {
+          outputFileName = `${component.componentInfo.apiPathname.replace(/^\//, '').replace(/\/$/, '')}.md`;
+        }
 
         const outputPath = path.join(outputDir, outputFileName);
 
