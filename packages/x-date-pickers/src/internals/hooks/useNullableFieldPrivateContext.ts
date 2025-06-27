@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import type { UseFieldInternalProps } from './useField';
 import { FieldRef } from '../../models';

@@ -4,15 +4,17 @@ import { SeriesItemIdentifier } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
+import { ChartInstance } from '../internals/plugins/models';
 
-const onPointerDown = (event: React.PointerEvent) => {
+function onPointerDown(event: React.PointerEvent) {
   if (
     'hasPointerCapture' in event.currentTarget &&
     event.currentTarget.hasPointerCapture(event.pointerId)
   ) {
     event.currentTarget.releasePointerCapture(event.pointerId);
   }
-};
+}
 
 export const useInteractionItemProps = (
   data: SeriesItemIdentifier,
@@ -75,36 +77,43 @@ export const useInteractionAllItemProps = (data: SeriesItemIdentifier[], skip?: 
 
   const results = React.useMemo(() => {
     return data.map((item) => {
-      if (skip) {
-        return {};
-      }
-
-      const onPointerEnter = () => {
-        if (!item) {
-          return;
-        }
-        instance.setItemInteraction(item);
-        instance.setHighlight({
-          seriesId: item.seriesId,
-          dataIndex: item.dataIndex,
-        });
-      };
-
-      const onPointerLeave = () => {
-        if (!item) {
-          return;
-        }
-        instance.removeItemInteraction(item);
-        instance.clearHighlight();
-      };
-
-      return {
-        onPointerEnter,
-        onPointerLeave,
-        onPointerDown,
-      };
+      return skip ? {} : getInteractionItemProps(instance, item);
     });
   }, [data, instance, skip]);
 
   return results;
 };
+
+export function getInteractionItemProps(
+  instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
+  item: ChartItemIdentifier<ChartSeriesType>,
+): {
+  onPointerEnter?: () => void;
+  onPointerLeave?: () => void;
+  onPointerDown?: (event: React.PointerEvent) => void;
+} {
+  function onPointerEnter() {
+    if (!item) {
+      return;
+    }
+    instance.setItemInteraction(item);
+    instance.setHighlight({
+      seriesId: item.seriesId,
+      dataIndex: item.dataIndex,
+    });
+  }
+
+  function onPointerLeave() {
+    if (!item) {
+      return;
+    }
+    instance.removeItemInteraction(item);
+    instance.clearHighlight();
+  }
+
+  return {
+    onPointerEnter,
+    onPointerLeave,
+    onPointerDown,
+  };
+}

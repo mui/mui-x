@@ -6,7 +6,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
-import { useSvgRef } from '../hooks/useSvgRef';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
@@ -18,6 +18,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
+import { useSvgRef } from '../hooks';
 
 const noAxis = () => false;
 
@@ -60,9 +61,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     name: 'MuiChartsTooltipContainer',
   });
   const { trigger = 'axis', classes: propClasses, children, ...other } = props;
+  const svgRef = useSvgRef();
   const classes = useUtilityClasses(propClasses);
 
-  const svgRef = useSvgRef();
   const pointerType = usePointerType();
   const isFineMainPointer = useIsFineMainPointer();
 
@@ -87,10 +88,12 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       return () => {};
     }
 
+    const update = rafThrottle(() => popperRef.current?.update());
+
     const handlePointerEvent = (event: PointerEvent) => {
       // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x: event.clientX, y: event.clientY };
-      popperRef.current?.update();
+      update();
     };
 
     element.addEventListener('pointerdown', handlePointerEvent);
@@ -99,6 +102,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     return () => {
       element.removeEventListener('pointerdown', handlePointerEvent);
       element.removeEventListener('pointermove', handlePointerEvent);
+      update.clear();
     };
   }, [svgRef, positionRef]);
 

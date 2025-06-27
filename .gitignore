@@ -16,6 +16,7 @@ __diff_output__
 /docs/.env.local
 /docs/export
 /test/regressions/screenshots
+/test/performance-charts/traces
 build
 dist
 node_modules

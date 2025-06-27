@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';

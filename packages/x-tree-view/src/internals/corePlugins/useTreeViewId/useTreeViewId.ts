@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';

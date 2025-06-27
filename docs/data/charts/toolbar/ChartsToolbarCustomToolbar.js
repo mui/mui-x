@@ -11,11 +11,10 @@ import {
   ChartsToolbarImageExportTrigger,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { chartsToolbarClasses, Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
-import { useChartApiContext } from '@mui/x-charts-pro/context';
+import { useChartProApiContext } from '@mui/x-charts-pro/context';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -44,7 +43,7 @@ const params = {
 };
 
 const ResetZoomButton = React.forwardRef(function ResetZoomButton(props, ref) {
-  const apiRef = useChartApiContext();
+  const apiRef = useChartProApiContext();
 
   return (
     <ToolbarButton

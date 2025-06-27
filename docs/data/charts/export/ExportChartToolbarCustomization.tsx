@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
+import { ChartProApi } from '@mui/x-charts-pro/context';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';

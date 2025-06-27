@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';

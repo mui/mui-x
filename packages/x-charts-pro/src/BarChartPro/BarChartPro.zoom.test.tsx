@@ -1,7 +1,7 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
-import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from './BarChartPro';
@@ -154,23 +154,16 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     });
   });
 
-  // Technically it should work, but it's not working in the test environment
-  // https://github.com/pmndrs/use-gesture/discussions/430
-  it.skipIf(true)('should zoom on pinch', async () => {
-    const { user } = render(<BarChartPro {...barChartProps} />, options);
+  it('should zoom on pinch', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <BarChartPro {...barChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
 
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
     const svg = document.querySelector('svg')!;
-
-    await user.pointer({
-      keys: '[TouchA]',
-      target: svg,
-      coords: { x: 50, y: 50 },
-    });
 
     await user.pointer([
       {
@@ -204,10 +197,9 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
         coords: { x: 25, y: 75 },
       },
     ]);
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(screen.queryByText('A')?.textContent).to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).to.equal(null);
+    expect(onZoomChange.callCount).to.be.above(0);
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
 });

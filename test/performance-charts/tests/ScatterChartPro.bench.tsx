@@ -1,9 +1,10 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('ScatterChartPro', () => {
   const dataLength = 50;

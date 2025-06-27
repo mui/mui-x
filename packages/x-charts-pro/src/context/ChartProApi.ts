@@ -8,7 +8,7 @@ import { FunnelChartPluginsSignatures } from '../FunnelChart/FunnelChart.plugins
 import { RadarChartProPluginsSignatures } from '../RadarChartPro/RadarChartPro.plugins';
 import { PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
 
-type PluginsPerSeriesType = {
+export type ProPluginsPerSeriesType = {
   heatmap: HeatmapPluginsSignatures;
   line: LineChartProPluginsSignatures;
   scatter: ScatterChartProPluginsSignatures;
@@ -28,9 +28,9 @@ type PluginsPerSeriesType = {
  * @example ChartProApi<'composition'>
  */
 export type ChartProApi<
-  TSeries extends keyof PluginsPerSeriesType | undefined = undefined,
-  TSignatures extends
-    readonly ChartAnyPluginSignature[] = TSeries extends keyof PluginsPerSeriesType
-    ? PluginsPerSeriesType[TSeries]
+  ChartType extends keyof ProPluginsPerSeriesType | undefined = undefined,
+  Signatures extends
+    readonly ChartAnyPluginSignature[] = ChartType extends keyof ProPluginsPerSeriesType
+    ? ProPluginsPerSeriesType[ChartType]
     : AllPluginSignatures,
-> = ChartPublicAPI<TSignatures>;
+> = ChartPublicAPI<Signatures>;

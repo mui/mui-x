@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
