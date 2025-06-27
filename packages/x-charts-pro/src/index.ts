@@ -30,6 +30,7 @@ export * from '@mui/x-charts/ChartsLabel';
 export type {
   ZoomData,
   ZoomFilterMode,
+  ZoomSliderShowTooltip,
   ZoomOptions,
   ZoomSliderOptions,
 } from '@mui/x-charts/internals';
@@ -42,6 +43,13 @@ export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
 export * from './LineChartPro';
+export * from './PieChartPro';
 export * from './FunnelChart';
+export * from './RadarChartPro';
 export * from './ChartZoomSlider';
 export * from './ChartsToolbarPro';
+
+export type {
+  ChartImageExportOptions,
+  ChartPrintExportOptions,
+} from './internals/plugins/useChartProExport';

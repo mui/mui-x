@@ -11,6 +11,9 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
+import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
+import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -29,11 +32,11 @@ const series = [
   { label: 'Series B', data: data.map((p) => p.y2) },
 ];
 
-type ChartType = 'scatter' | 'line' | 'bar' | 'heatmap' | 'funnel';
+type ChartType = 'scatter' | 'line' | 'bar' | 'pie' | 'heatmap' | 'funnel' | 'radar';
 
 export default function PrintChart() {
   const [chartType, setChartType] = React.useState<ChartType>('scatter');
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = useChartProApiRef<ChartType>();
 
   const handleChange = (event: SelectChangeEvent) =>
     setChartType(event.target.value as ChartType);
@@ -59,8 +62,10 @@ export default function PrintChart() {
             <MenuItem value="scatter">Scatter</MenuItem>
             <MenuItem value="line">Line</MenuItem>
             <MenuItem value="bar">Bar</MenuItem>
+            <MenuItem value="pie">Pie</MenuItem>
             <MenuItem value="heatmap">Heatmap</MenuItem>
             <MenuItem value="funnel">Funnel</MenuItem>
+            <MenuItem value="radar">Radar</MenuItem>
           </Select>
         </FormControl>
         <Button onClick={() => apiRef.current!.exportAsPrint()} variant="contained">
@@ -108,6 +113,24 @@ function Chart<T extends ChartType = ChartType>({
           series={series}
         />
       );
+    case 'pie':
+      return (
+        <PieChartPro
+          apiRef={apiRef as React.RefObject<ChartProApi<'pie'> | undefined>}
+          series={[
+            {
+              arcLabel: 'value',
+              data: [
+                { id: 0, value: 10, label: 'series A' },
+                { id: 1, value: 15, label: 'series B' },
+                { id: 2, value: 20, label: 'series C' },
+              ],
+            },
+          ]}
+          height={300}
+          hideLegend={false}
+        />
+      );
     case 'heatmap':
       return (
         <Heatmap
@@ -135,6 +158,25 @@ function Chart<T extends ChartType = ChartType>({
               ],
             },
           ]}
+        />
+      );
+    case 'radar':
+      return (
+        <RadarChartPro
+          apiRef={apiRef as React.RefObject<ChartProApi<'radar'> | undefined>}
+          height={300}
+          series={[{ label: 'Lisa', data: [120, 98, 86, 99, 85, 65] }]}
+          radar={{
+            max: 120,
+            metrics: [
+              'Math',
+              'Chinese',
+              'English',
+              'Geography',
+              'Physics',
+              'History',
+            ],
+          }}
         />
       );
     default:

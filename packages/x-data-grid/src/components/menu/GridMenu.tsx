@@ -1,12 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  HTMLElementType,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import HTMLElementType from '@mui/utils/HTMLElementType';
 import { styled } from '@mui/material/styles';
+import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { PopperProps } from '../../models/gridBaseSlots';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { vars } from '../../constants/cssVariables';
@@ -57,7 +56,7 @@ const GridMenuRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
 export interface GridMenuProps extends Pick<PopperProps, 'className' | 'onExited'> {
   open: boolean;
   target: HTMLElement | null;
-  onClose: (event?: Event) => void;
+  onClose: (event?: React.KeyboardEvent | MouseEvent | TouchEvent) => void;
   position?: MenuPosition;
   children: React.ReactNode;
 }
@@ -93,6 +92,12 @@ function GridMenu(props: GridMenuProps) {
     onClose(event);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (isHideMenuKey(event.key)) {
+      onClose(event);
+    }
+  };
+
   return (
     <GridMenuRoot
       as={rootProps.slots.basePopper}
@@ -105,6 +110,7 @@ function GridMenu(props: GridMenuProps) {
       onClickAway={handleClickAway}
       onExited={onExited}
       clickAwayMouseEvent="onMouseDown"
+      onKeyDown={handleKeyDown}
       {...other}
       {...rootProps.slotProps?.basePopper}
     >

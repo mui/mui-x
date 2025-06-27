@@ -1,7 +1,7 @@
 ---
 title: React Pie chart
 productId: x-charts
-components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot, PieChartPro
 ---
 
 # Charts - Pie
@@ -104,6 +104,14 @@ const onItemClick = (
 ```
 
 {{"demo": "PieClick.js"}}
+
+## CSS
+
+You can customize the different elements rendered by a pie chart using CSS.
+
+In the example below, the outer series is selected using the `data-series` attribute to reduce its opacity.
+
+{{"demo": "PieCSSStyling.js"}}
 
 ## Animation
 

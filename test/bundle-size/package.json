@@ -5,7 +5,7 @@
     "check": "NODE_OPTIONS=\"--max-old-space-size=4096\" bundle-size-checker --output ../size-snapshot.json"
   },
   "devDependencies": {
-    "fast-glob": "^3.3.3",
+    "fast-glob": "catalog:",
     "path": "^0.12.7"
   },
   "dependencies": {
@@ -14,6 +14,7 @@
     "@mui/x-data-grid-premium": "workspace:*",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
+    "@mui/x-charts-premium": "workspace:*",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-tree-view": "workspace:*",

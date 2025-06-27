@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
+import useId from '@mui/utils/useId';
+import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
-import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
@@ -83,15 +83,6 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
       setOpen(false);
     };
 
-    const handleListKeyDown = (event: React.KeyboardEvent) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();
-      }
-      if (isHideMenuKey(event.key)) {
-        setOpen(false);
-      }
-    };
-
     // Disable the button if the corresponding is disabled
     if (rootProps.disableDensitySelector) {
       return null;
@@ -142,7 +133,6 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
             id={densityMenuId}
             className={gridClasses.menuList}
             aria-labelledby={densityButtonId}
-            onKeyDown={handleListKeyDown}
             autoFocusItem={open}
           >
             {densityElements}
