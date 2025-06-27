@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { RefObject } from '@mui/x-internals/types';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
@@ -100,29 +101,34 @@ const offsetSelector = createSelector(
 
 function GridScrollAreaWrapper(props: ScrollAreaProps) {
   const apiRef = useGridApiContext();
-  const [dragging, setDragging] = React.useState<boolean>(false);
+  const [dragDirection, setDragDirection] = React.useState<'horizontal' | 'vertical' | 'none'>(
+    'none',
+  );
 
   // Listen for both column and row drag events
-  useGridEvent(apiRef, 'columnHeaderDragStart', () => setDragging(true));
-  useGridEvent(apiRef, 'columnHeaderDragEnd', () => setDragging(false));
-  useGridEvent(apiRef, 'rowDragStart', () => setDragging(true));
-  useGridEvent(apiRef, 'rowDragEnd', () => setDragging(false));
+  useGridEvent(apiRef, 'columnHeaderDragStart', () => setDragDirection('horizontal'));
+  useGridEvent(apiRef, 'columnHeaderDragEnd', () => setDragDirection('none'));
+  useGridEvent(apiRef, 'rowDragStart', () => setDragDirection('vertical'));
+  useGridEvent(apiRef, 'rowDragEnd', () => setDragDirection('none'));
 
-  if (!dragging) {
+  if (dragDirection === 'none') {
     return null;
   }
 
-  return <GridScrollAreaContent {...props} />;
+  if (dragDirection === 'horizontal') {
+    return <GridHorizontalScrollAreaContent {...props} />;
+  }
+
+  return <GridVerticalScrollAreaContent {...props} />;
 }
 
-function GridScrollAreaContent(props: ScrollAreaProps) {
+function GridHorizontalScrollAreaContent(props: ScrollAreaProps) {
   const { scrollDirection, scrollPosition } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
   const timeout = useTimeout();
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const sideOffset = useGridSelector(apiRef, offsetSelector, scrollDirection);
 
   const getCanScrollMore = () => {
@@ -138,51 +144,18 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
       return scrollPosition.current.left < maxScrollLeft;
     }
 
-    if (scrollDirection === 'up') {
-      // Only render if the user has not reached yet the top of the list
-      return scrollPosition.current.top > 0;
-    }
-
-    if (scrollDirection === 'down') {
-      // Only render if the user has not reached yet the bottom of the list
-      const totalRowsHeight = rowsMeta.positions[rowsMeta.positions.length - 1] || 0;
-      const maxScrollTop = totalRowsHeight - dimensions.viewportInnerSize.height;
-      return scrollPosition.current.top < maxScrollTop;
-    }
-
     return false;
   };
 
-  const [canScrollMore, setCanScrollMore] = React.useState<boolean>(getCanScrollMore);
-
   const rootProps = useGridRootProps();
-  const ownerState = { ...rootProps, scrollDirection };
-  const classes = useUtilityClasses(ownerState);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
-  const style: React.CSSProperties = {};
-
-  // Position horizontal scroll areas
-  if (scrollDirection === 'left' || scrollDirection === 'right') {
-    style.height = headerHeight;
-    style.top = totalHeaderHeight - headerHeight;
-
-    if (scrollDirection === 'left') {
-      style.left = sideOffset;
-    } else if (scrollDirection === 'right') {
-      style.right = sideOffset;
-    }
-  }
-
-  // Position vertical scroll areas
-  if (scrollDirection === 'up' || scrollDirection === 'down') {
-    style.top = scrollDirection === 'up' ? totalHeaderHeight : undefined;
-    style.bottom = scrollDirection === 'down' ? 0 : undefined;
-  }
-
-  const handleScrolling: GridEventListener<'scrollPositionChange'> = () => {
-    setCanScrollMore(getCanScrollMore);
+  const style: React.CSSProperties = {
+    height: headerHeight,
+    top: totalHeaderHeight - headerHeight,
+    ...(scrollDirection === 'left' ? { left: sideOffset } : {}),
+    ...(scrollDirection === 'right' ? { right: sideOffset } : {}),
   };
 
   const handleDragOver = useEventCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -195,7 +168,71 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
       offset = event.clientX - rootRef.current!.getBoundingClientRect().right;
     } else if (scrollDirection === 'right') {
       offset = Math.max(1, event.clientX - rootRef.current!.getBoundingClientRect().left);
-    } else if (scrollDirection === 'up') {
+    } else {
+      throw new Error('MUI X: Wrong drag direction');
+    }
+
+    offset = (offset - CLIFF) * SLOP + CLIFF;
+
+    // Avoid freeze and inertia.
+    timeout.start(0, () => {
+      apiRef.current.scroll({
+        left: scrollPosition.current.left + offset,
+        top: scrollPosition.current.top,
+      });
+    });
+  });
+
+  return (
+    <GridScrollAreaContent
+      {...props}
+      ref={rootRef}
+      getCanScrollMore={getCanScrollMore}
+      style={style}
+      handleDragOver={handleDragOver}
+    />
+  );
+}
+
+function GridVerticalScrollAreaContent(props: ScrollAreaProps) {
+  const { scrollDirection, scrollPosition } = props;
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const apiRef = useGridApiContext();
+  const timeout = useTimeout();
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
+
+  const getCanScrollMore = () => {
+    const dimensions = gridDimensionsSelector(apiRef);
+    if (scrollDirection === 'up') {
+      // Only render if the user has not reached yet the top of the list
+      return scrollPosition.current.top > 0;
+    }
+
+    if (scrollDirection === 'down') {
+      // Only render if the user has not reached yet the bottom of the list
+      const totalRowsHeight = rowsMeta.currentPageTotalHeight || 0;
+      const maxScrollTop = totalRowsHeight - dimensions.viewportInnerSize.height;
+      return scrollPosition.current.top < maxScrollTop;
+    }
+
+    return false;
+  };
+
+  const rootProps = useGridRootProps();
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps);
+
+  const style: React.CSSProperties = {
+    top: scrollDirection === 'up' ? totalHeaderHeight : undefined,
+    bottom: scrollDirection === 'down' ? 0 : undefined,
+  };
+
+  const handleDragOver = useEventCallback((event: React.DragEvent<HTMLDivElement>) => {
+    let offset: number;
+
+    // Prevents showing the forbidden cursor
+    event.preventDefault();
+
+    if (scrollDirection === 'up') {
       offset = event.clientY - rootRef.current!.getBoundingClientRect().bottom;
     } else if (scrollDirection === 'down') {
       offset = Math.max(1, event.clientY - rootRef.current!.getBoundingClientRect().top);
@@ -207,19 +244,46 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
 
     // Avoid freeze and inertia.
     timeout.start(0, () => {
-      if (scrollDirection === 'left' || scrollDirection === 'right') {
-        apiRef.current.scroll({
-          left: scrollPosition.current.left + offset,
-          top: scrollPosition.current.top,
-        });
-      } else {
-        apiRef.current.scroll({
-          left: scrollPosition.current.left,
-          top: scrollPosition.current.top + offset,
-        });
-      }
+      apiRef.current.scroll({
+        left: scrollPosition.current.left,
+        top: scrollPosition.current.top + offset,
+      });
     });
   });
+
+  return (
+    <GridScrollAreaContent
+      {...props}
+      ref={rootRef}
+      getCanScrollMore={getCanScrollMore}
+      style={style}
+      handleDragOver={handleDragOver}
+    />
+  );
+}
+
+interface GridScrollAreaContentProps extends ScrollAreaProps {
+  getCanScrollMore: () => boolean;
+  style: React.CSSProperties;
+  handleDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
+}
+
+const GridScrollAreaContent = forwardRef(function GridScrollAreaContent(
+  props: GridScrollAreaContentProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const { scrollDirection, getCanScrollMore, style, handleDragOver } = props;
+  const apiRef = useGridApiContext();
+
+  const [canScrollMore, setCanScrollMore] = React.useState<boolean>(getCanScrollMore);
+
+  const rootProps = useGridRootProps();
+  const ownerState = { ...rootProps, scrollDirection };
+  const classes = useUtilityClasses(ownerState);
+
+  const handleScrolling: GridEventListener<'scrollPositionChange'> = () => {
+    setCanScrollMore(getCanScrollMore);
+  };
 
   useGridEvent(apiRef, 'scrollPositionChange', handleScrolling);
 
@@ -229,13 +293,13 @@ function GridScrollAreaContent(props: ScrollAreaProps) {
 
   return (
     <GridScrollAreaRawRoot
-      ref={rootRef}
+      ref={ref}
       className={classes.root}
       ownerState={ownerState}
       onDragOver={handleDragOver}
       style={style}
     />
   );
-}
+});
 
 export const GridScrollArea = fastMemo(GridScrollAreaWrapper);
