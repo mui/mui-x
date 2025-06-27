@@ -83,3 +83,25 @@ export interface DimensionsState {
    */
   bottomContainerHeight: number;
 }
+
+/**
+ * The rows total height and positions.
+ */
+export interface RowsMetaState {
+  /**
+   * The grid rows positions.
+   */
+  positions: number[];
+  /**
+   * The sum of all visible grid rows in the current rows.
+   */
+  currentPageTotalHeight: number;
+  /**
+   * The total height of the pinned top rows.
+   */
+  pinnedTopRowsTotalHeight: number;
+  /**
+   * The total height of the pinned bottom rows.
+   */
+  pinnedBottomRowsTotalHeight: number;
+}

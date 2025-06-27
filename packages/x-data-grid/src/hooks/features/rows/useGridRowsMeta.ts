@@ -26,9 +26,8 @@ import { gridFocusedVirtualCellSelector } from '../virtualization/gridFocusedVir
 /* eslint-disable no-underscore-dangle */
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state, props, apiRef) => {
-  apiRef.current.caches.rowsMeta = {
-    heights: new Map(),
-  };
+  // FIXME: This should be handled in the virtualizer eventually, but there are interdependencies
+  // between state initializers that need to be untangled carefully.
 
   const baseRowHeight = gridRowHeightSelector(apiRef);
   const dataRowCount = gridRowCountSelector(apiRef);
@@ -65,8 +64,10 @@ export const useGridRowsMeta = (
     | 'rowHeight'
   >,
 ): void => {
+  const virtualizer = apiRef.current.virtualizer;
+  const heightCache = virtualizer.store.state.rowHeights;
+
   const { getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = props;
-  const heightCache = apiRef.current.caches.rowsMeta.heights;
 
   const lastMeasuredRowIndex = React.useRef(-1);
   const hasRowWithAutoHeight = React.useRef(false);
@@ -200,12 +201,7 @@ export const useGridRowsMeta = (
       pinnedBottomRowsTotalHeight,
     };
 
-    apiRef.current.setState((state) => {
-      return {
-        ...state,
-        rowsMeta,
-      };
-    });
+    virtualizer.store.set('rowsMeta', rowsMeta);
 
     if (didHeightsChange) {
       apiRef.current.updateDimensions();

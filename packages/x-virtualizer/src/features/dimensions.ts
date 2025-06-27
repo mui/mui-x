@@ -6,18 +6,17 @@ import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useSelectorEffect } from '@mui/x-internals/store';
-import { Size, DimensionsState } from '../models';
+import { Size, DimensionsState, RowsMetaState } from '../models';
 import type { VirtualizerParams } from '../useVirtualizer';
 import type { BaseState } from '../useVirtualizer';
 
-const EMPTY_SIZE: Size = { width: 0, height: 0 };
 const EMPTY_DIMENSIONS: DimensionsState = {
   isReady: false,
-  root: EMPTY_SIZE,
-  viewportOuterSize: EMPTY_SIZE,
-  viewportInnerSize: EMPTY_SIZE,
-  contentSize: EMPTY_SIZE,
-  minimumSize: EMPTY_SIZE,
+  root: Size.EMPTY,
+  viewportOuterSize: Size.EMPTY,
+  viewportInnerSize: Size.EMPTY,
+  contentSize: Size.EMPTY,
+  minimumSize: Size.EMPTY,
   hasScrollX: false,
   hasScrollY: false,
   scrollbarSize: 0,
@@ -37,6 +36,7 @@ const EMPTY_DIMENSIONS: DimensionsState = {
 const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
+  rowsMeta: (state: BaseState) => state.rowsMeta,
 };
 
 export const Dimensions = {
@@ -48,18 +48,34 @@ export namespace Dimensions {
   export type State = {
     rootSize: Size;
     dimensions: DimensionsState;
+    rowsMeta: RowsMetaState;
+    rowHeights: Map<any, any>; // FIXME: typing
   };
 }
 
 function initializeState(params: VirtualizerParams): Dimensions.State {
-  const dimensions = EMPTY_DIMENSIONS;
+  const dimensions = {
+    ...EMPTY_DIMENSIONS,
+    ...params.dimensions,
+  };
+
+  const { rowCount } = params;
+  const { rowHeight } = dimensions;
+
+  const rowsMeta = {
+    currentPageTotalHeight: rowCount * rowHeight,
+    positions: Array.from({ length: rowCount }, (_, i) => i * rowHeight),
+    pinnedTopRowsTotalHeight: 0,
+    pinnedBottomRowsTotalHeight: 0,
+  };
+
+  const rowHeights = new Map();
 
   return {
     rootSize: Size.EMPTY,
-    dimensions: {
-      ...dimensions,
-      ...params.dimensions,
-    },
+    dimensions,
+    rowsMeta,
+    rowHeights,
   };
 }
 
@@ -219,7 +235,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => observeRootSize(refs.container.current, store), []);
+  useLayoutEffect(() => observeRootNode(refs.container.current, store), [refs, store]);
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
@@ -241,7 +257,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams) {
   };
 }
 
-function observeRootSize(node: Element | null, store: Store<BaseState>) {
+function observeRootNode(node: Element | null, store: Store<BaseState>) {
   if (!node) {
     return undefined;
   }

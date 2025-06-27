@@ -23,6 +23,8 @@ export type VirtualScrollerCompat = Virtualization.State['getters'];
 
 export type BaseState = Virtualization.State & Dimensions.State;
 
+type integer = number;
+
 // FIXME
 type RenderContextInputs = any;
 
@@ -45,9 +47,11 @@ export type VirtualizerParams = {
     virtualization?: Partial<Virtualization.State['virtualization']>;
   };
   isRtl: boolean;
+  /** current page rows */
   rows: RowEntry[];
   /** current page range */
-  range: { firstRowIndex: number; lastRowIndex: number } | null;
+  range: { firstRowIndex: integer; lastRowIndex: integer } | null;
+  rowCount: integer;
   columns: Column[];
   pinnedRows: PinnedRows;
   pinnedColumns: PinnedColumns;

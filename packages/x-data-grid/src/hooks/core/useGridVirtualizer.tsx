@@ -22,9 +22,14 @@ import {
   gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../features/columns/gridColumnsSelector';
-import { gridPinnedRowsSelector, gridRowTreeSelector } from '../features/rows/gridRowsSelector';
+import {
+  gridPinnedRowsSelector,
+  gridRowCountSelector,
+  gridRowTreeSelector,
+} from '../features/rows/gridRowsSelector';
 import { useGridVisibleRows, getVisibleRows } from '../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { gridPaginationSelector } from '../features/pagination';
 import { gridRowsMetaSelector } from '../features/rows/gridRowsMetaSelector';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../features/rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../features/listView/gridListViewSelectors';
@@ -125,6 +130,15 @@ export function useGridVirtualizer(
 
   // </DIMENSIONS>
 
+  // <ROWS_META>
+  const dataRowCount = useGridSelector(apiRef, gridRowCountSelector);
+  const pagination = useGridSelector(apiRef, gridPaginationSelector);
+  const rowCount = Math.min(
+    pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
+    dataRowCount,
+  );
+  // </ROWS_META>
+
   const virtualizer = useVirtualizer({
     scrollbarSize: rootProps.scrollbarSize,
     dimensions,
@@ -137,6 +151,7 @@ export function useGridVirtualizer(
     isRtl,
     rows: currentPage.rows,
     range: currentPage.range,
+    rowCount,
     columns: visibleColumns,
     pinnedRows,
     pinnedColumns,
@@ -147,6 +162,7 @@ export function useGridVirtualizer(
       scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
     },
     hasColSpan,
+
     contentHeight,
     minimalContentHeight,
     needsHorizontalScrollbar: needsHorizontalScrollbar && !listView,
@@ -225,19 +241,27 @@ export function useGridVirtualizer(
   // TODO(v9): Remove this
   const disposeRef = React.useRef<Function>(null);
   useFirstRender(() => {
-    apiRef.current.store.set('virtualization', virtualizer.store.state.virtualization);
+    apiRef.current.store.state = virtualizer.store.state.dimensions;
+    apiRef.current.store.state = virtualizer.store.state.rowsMeta;
+    apiRef.current.store.state = virtualizer.store.state.virtualization;
 
     disposeRef.current = virtualizer.store.subscribe((state) => {
-      if (state.virtualization !== apiRef.current.state.virtualization) {
-        apiRef.current.setState((gridState) => ({
-          ...gridState,
-          virtualization: state.virtualization,
-        }));
-      }
       if (state.dimensions !== apiRef.current.state.dimensions) {
         apiRef.current.setState((gridState) => ({
           ...gridState,
           dimensions: state.dimensions,
+        }));
+      }
+      if (state.rowsMeta !== apiRef.current.state.rowsMeta) {
+        apiRef.current.setState((gridState) => ({
+          ...gridState,
+          rowsMeta: state.rowsMeta,
+        }));
+      }
+      if (state.virtualization !== apiRef.current.state.virtualization) {
+        apiRef.current.setState((gridState) => ({
+          ...gridState,
+          virtualization: state.virtualization,
         }));
       }
     });
