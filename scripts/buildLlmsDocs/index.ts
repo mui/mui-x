@@ -67,6 +67,7 @@ import replaceUrl from '@mui-internal/api-docs-builder/utils/replaceUrl';
 import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
 import pages from 'docs/data/pages';
+import type { MuiPage } from 'docs/src/MuiPage';
 
 interface ComponentDocInfo {
   name: string;
@@ -329,6 +330,88 @@ function toTitleCase(kebabCaseStr: string): string {
 }
 
 /**
+ * Find the project section in pages.ts for a given project key
+ */
+function findProjectPagesSection(projectKey: string): MuiPage | null {
+  const projectPathMap: Record<string, string> = {
+    'data-grid': '/x/react-data-grid-group',
+    'date-pickers': '/x/react-date-pickers-group',
+    charts: '/x/react-charts-group',
+    'tree-view': '/x/react-tree-view-group',
+  };
+
+  const targetPathname = projectPathMap[projectKey];
+  if (!targetPathname) return null;
+
+  return pages.find((page) => page.pathname === targetPathname) || null;
+}
+
+/**
+ * Match generated files with pages structure using pathname
+ */
+function matchGeneratedFilesWithPages(
+  generatedFiles: GeneratedFile[],
+  pagesSection: MuiPage,
+): Map<string, GeneratedFile> {
+  const fileMap = new Map<string, GeneratedFile>();
+
+  for (const file of generatedFiles) {
+    // Convert output path to expected pathname format
+    // e.g., "x/react-data-grid/components/usage.md" -> "/x/react-data-grid/components/usage"
+    const pathname = '/' + file.outputPath.replace(/\.md$/, '');
+    fileMap.set(pathname, file);
+  }
+
+  return fileMap;
+}
+
+/**
+ * Generate structured content based on pages hierarchy
+ */
+function generateStructuredContent(
+  page: MuiPage,
+  fileMap: Map<string, GeneratedFile>,
+  depth: number = 0,
+): string {
+  let content = '';
+  const indent = '  '.repeat(depth);
+
+  // Check if this page has a matching generated file
+  const matchedFile = fileMap.get(page.pathname);
+
+  // If this page has children, it's a section
+  if (page.children && page.children.length > 0) {
+    // Add section header if it has a title or subheader
+    if (page.title && depth > 0) {
+      const headerLevel = depth === 1 ? '##' : '###';
+      content += `${headerLevel} ${page.title}\n\n`;
+    } else if (page.subheader) {
+      const headerLevel = depth === 1 ? '##' : '###';
+      content += `${headerLevel} ${page.subheader}\n\n`;
+    }
+
+    // Process children
+    for (const child of page.children) {
+      content += generateStructuredContent(child, fileMap, depth + 1);
+    }
+  } else if (matchedFile) {
+    // This is a leaf page with a matching file
+    const title = page.title || matchedFile.title;
+    const planIndicator = page.plan ? ` (${page.plan})` : '';
+    const newFeatureIndicator = page.newFeature ? ' 🆕' : '';
+    const plannedIndicator = page.planned ? ' (planned)' : '';
+
+    content += `${indent}- [${title}](/${matchedFile.outputPath})`;
+    if (matchedFile.description) {
+      content += `: ${matchedFile.description}`;
+    }
+    content += `${planIndicator}${newFeatureIndicator}${plannedIndicator}\n`;
+  }
+
+  return content;
+}
+
+/**
  * Get project display name from project key
  */
 function getProjectDisplayNameFromKey(projectKey: string): string {
@@ -344,7 +427,7 @@ function getProjectDisplayNameFromKey(projectKey: string): string {
     scheduler:
       pages.find((page) => page.pathname.startsWith('/x/react-scheduler'))?.title || 'Scheduler',
   };
-  return nameMap[projectKey];
+  return nameMap[projectKey] || projectKey;
 }
 
 /**
@@ -390,12 +473,46 @@ function inferProjectName(outputPath: string, projectSettings: ProjectSettings):
 }
 
 /**
- * Generate llms.txt content for a specific project directory
+ * Generate llms.txt content for a specific project directory using pages.ts structure
  */
 function generateProjectLlmsTxt(
   generatedFiles: GeneratedFile[],
   projectName: string,
   baseDir: string,
+): string {
+  // Extract project key from baseDir (e.g., "x/react-data-grid" -> "data-grid")
+  const pathParts = baseDir.split('/');
+  const projectKey = pathParts[0] === 'x' ? pathParts[1]?.replace('react-', '') || 'x' : baseDir;
+
+  // Find the corresponding section in pages.ts
+  const pagesSection = findProjectPagesSection(projectKey);
+  if (!pagesSection || !pagesSection.children) {
+    // Fallback to simple structure if no pages section found
+    return generateSimpleProjectLlmsTxt(generatedFiles, projectName);
+  }
+
+  // Match generated files with pages structure
+  const fileMap = matchGeneratedFilesWithPages(generatedFiles, pagesSection);
+
+  // Generate content using pages.ts structure
+  let content = `# ${projectName}\n\n`;
+  content += `This is the documentation for the ${projectName} package.\n`;
+  content += `It contains comprehensive guides, components, and utilities for building user interfaces.\n\n`;
+
+  // Process the pages structure to generate organized content
+  for (const child of pagesSection.children) {
+    content += generateStructuredContent(child, fileMap, 1);
+  }
+
+  return content.trim();
+}
+
+/**
+ * Fallback function for simple llms.txt generation when pages.ts structure is not available
+ */
+function generateSimpleProjectLlmsTxt(
+  generatedFiles: GeneratedFile[],
+  projectName: string,
 ): string {
   // Group files by category
   const groupedByCategory: Record<string, GeneratedFile[]> = {};
@@ -413,146 +530,32 @@ function generateProjectLlmsTxt(
   content += `This is the documentation for the ${projectName} package.\n`;
   content += `It contains comprehensive guides, components, and utilities for building user interfaces.\n\n`;
 
-  // Add sections for each category
-  // Sort categories to ensure components appear first, then by orderIndex for non-component folders
+  // Sort categories
   const sortedCategories = Object.keys(groupedByCategory).sort((a, b) => {
-    if (a === 'components') {
-      return -1;
-    }
-    if (b === 'components') {
-      return 1;
-    }
-
-    // For non-component categories, check if they have orderIndex
-    const filesA = groupedByCategory[a];
-    const filesB = groupedByCategory[b];
-    const orderIndexA = filesA[0]?.orderIndex ?? Number.MAX_SAFE_INTEGER;
-    const orderIndexB = filesB[0]?.orderIndex ?? Number.MAX_SAFE_INTEGER;
-
-    if (orderIndexA !== orderIndexB) {
-      return orderIndexA - orderIndexB;
-    }
-
+    if (a === 'components') return -1;
+    if (b === 'components') return 1;
     return a.localeCompare(b);
   });
 
   for (const category of sortedCategories) {
     const files = groupedByCategory[category];
-    if (files.length === 0) {
-      continue;
-    }
+    if (files.length === 0) continue;
 
     const sectionTitle = toTitleCase(category);
     content += `## ${sectionTitle}\n\n`;
 
-    // Sort files by title (components) or maintain original order (non-components)
     if (category === 'components') {
       files.sort((a, b) => a.title.localeCompare(b.title));
     }
-    // Non-component files are already in the order they were discovered
 
     for (const file of files) {
-      // Calculate relative path from the baseDir to the file
-      const relativePath = file.outputPath.startsWith(`${baseDir}/`)
-        ? `/${baseDir}/${file.outputPath.substring(baseDir.length + 1)}`
-        : `/${file.outputPath}`;
-      content += `- [${file.title}](${relativePath})`;
+      content += `- [${file.title}](/${file.outputPath})`;
       if (file.description) {
         content += `: ${file.description}`;
       }
       content += '\n';
     }
     content += '\n';
-  }
-
-  return content.trim();
-}
-
-/**
- * Generate root llms.txt content that aggregates all projects
- */
-function generateRootLlmsTxt(
-  allGeneratedFiles: GeneratedFile[],
-  projectSettingsArray: ProjectSettings[],
-): string {
-  // Group files by project
-  const groupedByProject: Record<string, GeneratedFile[]> = {};
-
-  for (const file of allGeneratedFiles) {
-    const projectName = file.projectName;
-    if (!groupedByProject[projectName]) {
-      groupedByProject[projectName] = [];
-    }
-    groupedByProject[projectName].push(file);
-  }
-
-  // Generate content
-  let content = '# MUI X Documentation\n\n';
-  content +=
-    'This documentation covers all MUI X packages including Data Grid, Date Pickers, Charts, Tree View, and other components.\n\n';
-
-  // Process projects in the order of projectSettingsArray
-  for (const projectSetting of projectSettingsArray) {
-    const projectName = getProjectNameFromSettings(projectSetting);
-    const projectFiles = groupedByProject[projectName];
-
-    if (!projectFiles || projectFiles.length === 0) {
-      continue;
-    }
-
-    content += `## ${projectName}\n\n`;
-
-    // Group files by category within this project
-    const groupedByCategory: Record<string, GeneratedFile[]> = {};
-    for (const file of projectFiles) {
-      const category = file.category;
-      if (!groupedByCategory[category]) {
-        groupedByCategory[category] = [];
-      }
-      groupedByCategory[category].push(file);
-    }
-
-    // Sort categories (components first, then by orderIndex)
-    const sortedCategories = Object.keys(groupedByCategory).sort((a, b) => {
-      if (a === 'components') return -1;
-      if (b === 'components') return 1;
-
-      const filesA = groupedByCategory[a];
-      const filesB = groupedByCategory[b];
-      const orderIndexA = filesA[0]?.orderIndex ?? Number.MAX_SAFE_INTEGER;
-      const orderIndexB = filesB[0]?.orderIndex ?? Number.MAX_SAFE_INTEGER;
-
-      if (orderIndexA !== orderIndexB) {
-        return orderIndexA - orderIndexB;
-      }
-
-      return a.localeCompare(b);
-    });
-
-    for (const category of sortedCategories) {
-      const files = groupedByCategory[category];
-      if (files.length === 0) {
-        continue;
-      }
-
-      const sectionTitle = toTitleCase(category);
-      content += `### ${sectionTitle}\n\n`;
-
-      // Sort files by title (components) or maintain original order (non-components)
-      if (category === 'components') {
-        files.sort((a, b) => a.title.localeCompare(b.title));
-      }
-
-      for (const file of files) {
-        const relativePath = `/${file.outputPath}`;
-        content += `- [${file.title}](${relativePath})`;
-        if (file.description) {
-          content += `: ${file.description}`;
-        }
-        content += '\n';
-      }
-      content += '\n';
-    }
   }
 
   return content.trim();
@@ -583,6 +586,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
   // Track generated files for llms.txt
   const generatedFiles: GeneratedFile[] = [];
   const projectGeneratedFiles: Map<ProjectSettings, GeneratedFile[]> = new Map();
+  const projectLlmsContents: string[] = []; // Store individual project llms.txt content
   let processedCount = 0;
 
   // Process each project settings individually
@@ -744,7 +748,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         const projectKey =
           pathParts[0] === 'x' ? pathParts[1]?.replace('react-', '') || 'x' : dirName;
         const projectDisplayName = getProjectDisplayNameFromKey(projectKey);
-        if (projectDisplayName) {
+        if (projectDisplayName !== projectKey) {
           const llmsContent = generateProjectLlmsTxt(files, projectDisplayName, dirName);
           const llmsPath = path.join(outputDir, dirName, 'llms.txt');
 
@@ -757,15 +761,27 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
           fs.writeFileSync(llmsPath, llmsContent, 'utf-8');
           // ✓ Generated: ${dirName}/llms.txt
           processedCount += 1;
+
+          // Store content for root llms.txt
+          projectLlmsContents.push(llmsContent);
         }
       }
     }
   }
 
-  // Generate root llms.txt file
-  if (generatedFiles.length > 0) {
-    const rootLlmsContent = generateRootLlmsTxt(generatedFiles, projectSettings);
+  // Generate root llms.txt file by concatenating all project content
+  if (projectLlmsContents.length > 0) {
+    const rootHeader = '# MUI X Documentation\n\n' +
+      'This documentation covers all MUI X packages including Data Grid, Date Pickers, Charts, Tree View, and other components.\n\n' +
+      '---\n\n';
+    const rootLlmsContent = rootHeader + projectLlmsContents.join('\n\n---\n\n');
     const rootLlmsPath = path.join(outputDir, 'x', 'llms.txt');
+
+    // Ensure directory exists
+    const rootLlmsDirPath = path.dirname(rootLlmsPath);
+    if (!fs.existsSync(rootLlmsDirPath)) {
+      fs.mkdirSync(rootLlmsDirPath, { recursive: true });
+    }
 
     fs.writeFileSync(rootLlmsPath, rootLlmsContent, 'utf-8');
     // ✓ Generated: llms.txt (root)
