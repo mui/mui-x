@@ -5,16 +5,6 @@ import { vi } from 'vitest';
 interface CreateSchedulerRendererOptions
   extends Omit<CreateRendererOptions, 'clock' | 'clockOptions'> {}
 
-function BodyClassWrapper({ children }: { children?: React.ReactNode }) {
-  React.useEffect(() => {
-    document.body.classList.add('mode-light');
-    return () => {
-      document.body.classList.remove('mode-light');
-    };
-  }, []);
-  return <React.Fragment>{children}</React.Fragment>;
-}
-
 export function createSchedulerRenderer({
   clockConfig,
   ...createRendererOptions
@@ -34,7 +24,7 @@ export function createSchedulerRenderer({
 
   return {
     render(node: React.ReactElement<any>, options?: RenderOptions) {
-      return clientRender(<BodyClassWrapper>{node}</BodyClassWrapper>, options);
+      return clientRender(node, options);
     },
   };
 }
