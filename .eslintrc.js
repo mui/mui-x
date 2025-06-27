@@ -125,6 +125,7 @@ module.exports = {
   plugins: [
     ...baseline.plugins,
     'eslint-plugin-jsdoc',
+    'eslint-plugin-mui-x',
     ...(isAnyReactCompilerPluginEnabled ? ['eslint-plugin-react-compiler'] : []),
   ],
   settings: {
@@ -242,7 +243,7 @@ module.exports = {
         'docs/src/pages/**/*.tsx',
       ],
       rules: {
-        'material-ui/no-direct-state-access': 'error',
+        'mui-x/no-direct-state-access': 'error',
       },
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
     },
