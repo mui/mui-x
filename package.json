@@ -92,7 +92,7 @@
     "@mui/internal-babel-plugin-display-name": "^1.0.2",
     "@mui/internal-babel-plugin-resolve-imports": "^2.0.5",
     "@mui/internal-bundle-size-checker": "^1.0.7",
-    "@mui/internal-code-infra": "https://pkg.pr.new/@mui/internal-code-infra@3c62849",
+    "@mui/internal-code-infra": "https://pkg.pr.new/@mui/internal-code-infra@86e349a",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",

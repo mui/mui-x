@@ -309,8 +309,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@swc/core@1.12.0)(@types/node@24.0.3)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)
       '@mui/internal-code-infra':
-        specifier: https://pkg.pr.new/@mui/internal-code-infra@3c62849
-        version: https://pkg.pr.new/@mui/internal-code-infra@3c62849(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)
+        specifier: https://pkg.pr.new/@mui/internal-code-infra@86e349a
+        version: https://pkg.pr.new/@mui/internal-code-infra@86e349a(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.6
@@ -4238,8 +4238,8 @@ packages:
     resolution: {integrity: sha512-JznE7TsF20iUEXe3v/AZVGInoQUm15uTTDxgepJ8crnwnk5gR0V4qpooXGQOEebyXbsIcOSvEsafEs01QCOb+w==}
     hasBin: true
 
-  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@3c62849':
-    resolution: {tarball: https://pkg.pr.new/@mui/internal-code-infra@3c62849}
+  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@86e349a':
+    resolution: {tarball: https://pkg.pr.new/@mui/internal-code-infra@86e349a}
     version: 0.0.1
     peerDependencies:
       eslint: ^9.0.0
@@ -15175,7 +15175,7 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@3c62849(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)':
+  '@mui/internal-code-infra@https://pkg.pr.new/@mui/internal-code-infra@86e349a(@typescript-eslint/parser@8.34.1(eslint@9.29.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.29.0)(prettier@3.5.3)(typescript@5.8.3)':
     dependencies:
       '@eslint/eslintrc': 3.3.1
       '@next/eslint-plugin-next': 15.3.4
