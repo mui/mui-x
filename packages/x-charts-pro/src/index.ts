@@ -36,9 +36,11 @@ export type {
 } from '@mui/x-charts/internals';
 
 // Pro components
+export * from './context';
 export * from './hooks';
 export * from './Heatmap';
-export * from './ChartContainerPro';
+export { ChartContainerPro } from './ChartContainerPro';
+export type { ChartContainerProProps } from './ChartContainerPro';
 export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
 export * from './BarChartPro';
