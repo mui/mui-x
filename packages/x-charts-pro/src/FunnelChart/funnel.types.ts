@@ -88,6 +88,15 @@ export interface FunnelSeriesType
    * @default 'filled'
    */
   variant?: 'filled' | 'outlined';
+  /**
+   * Denotes if the data is increasing or decreasing.
+   * - `increasing`, first data point is smaller than the last data point.
+   * - `decreasing`, first data point is greater than the last data point.
+   * - `auto`, the data direction is determined automatically based on the first and last data points.
+   *
+   * @default 'auto'
+   */
+  dataDirection?: 'increasing' | 'decreasing' | 'auto';
 }
 
 /**
@@ -122,15 +131,12 @@ export type FunnelItem = {
 };
 
 export interface DefaultizedFunnelSeriesType
-  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
+  extends Omit<
+    DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'>,
+    'dataDirection'
+  > {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
-  /**
-   * Denotes if the data is increasing, first data point is less than the last data point.
-   * While the data is decreasing if the first data point is greater than the last data point.
-   *
-   * This is used to determine the direction of the funnel.
-   */
   dataDirection: 'increasing' | 'decreasing';
 }
 

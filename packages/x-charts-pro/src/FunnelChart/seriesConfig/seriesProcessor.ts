@@ -17,6 +17,21 @@ const createPoint = ({
     ? { x: other, y: main, useBandWidth, stackOffset }
     : { x: main, y: other, useBandWidth, stackOffset };
 
+const getDataDirection = (
+  dataDirection: 'increasing' | 'decreasing' | 'auto' | undefined,
+  firstValue: number | undefined | null,
+  lastValue: number | undefined | null,
+): 'increasing' | 'decreasing' => {
+  if (dataDirection === 'increasing' || dataDirection === 'decreasing') {
+    return dataDirection;
+  }
+
+  // Implicit check for null or undefined values
+  return firstValue != null && lastValue != null && firstValue < lastValue
+    ? 'increasing'
+    : 'decreasing';
+};
+
 const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
   const { seriesOrder, series } = params;
 
@@ -29,12 +44,11 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
 
     const firstDataPoint = currentSeries.data.at(0);
     const lastDataPoint = currentSeries.data.at(-1);
-    const dataDirection =
-      firstDataPoint !== undefined &&
-      lastDataPoint !== undefined &&
-      firstDataPoint.value < lastDataPoint.value
-        ? 'increasing'
-        : 'decreasing';
+    const dataDirection = getDataDirection(
+      currentSeries.dataDirection,
+      firstDataPoint?.value,
+      lastDataPoint?.value,
+    );
 
     completedSeries[seriesId] = {
       labelMarkType: 'square',
