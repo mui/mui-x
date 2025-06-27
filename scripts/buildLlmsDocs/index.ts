@@ -66,6 +66,7 @@ import { fixPathname } from '@mui-internal/api-docs-builder/buildApiUtils';
 import replaceUrl from '@mui-internal/api-docs-builder/utils/replaceUrl';
 import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
+import pages from 'docs/data/pages';
 
 interface ComponentDocInfo {
   name: string;
@@ -328,16 +329,22 @@ function toTitleCase(kebabCaseStr: string): string {
 }
 
 /**
- * Get display name for a project based on its directory structure
+ * Get project display name from project key
  */
-function getProjectDisplayName(firstDir: string): string {
-  const projectMap: Record<string, string> = {
-    x: 'MUI X',
-    'material-ui': 'Material UI',
-    system: 'MUI System',
+function getProjectDisplayNameFromKey(projectKey: string): string {
+  const nameMap: Record<string, string> = {
+    'data-grid':
+      pages.find((page) => page.pathname.startsWith('/x/react-data-grid'))?.title || 'Data Grid',
+    'date-pickers':
+      pages.find((page) => page.pathname.startsWith('/x/react-date-pickers'))?.title ||
+      'Date Pickers',
+    charts: pages.find((page) => page.pathname.startsWith('/x/react-charts'))?.title || 'Charts',
+    'tree-view':
+      pages.find((page) => page.pathname.startsWith('/x/react-tree-view'))?.title || 'Tree View',
+    scheduler:
+      pages.find((page) => page.pathname.startsWith('/x/react-scheduler'))?.title || 'Scheduler',
   };
-
-  return projectMap[firstDir] || firstDir.charAt(0).toUpperCase() + firstDir.slice(1);
+  return nameMap[projectKey];
 }
 
 /**
@@ -346,11 +353,11 @@ function getProjectDisplayName(firstDir: string): string {
 function getProjectNameFromSettings(projectSettings: ProjectSettings): string {
   // Check TypeScript project names to determine the project
   for (const project of projectSettings.typeScriptProjects) {
-    if (project.name.includes('data-grid')) return 'Data Grid';
-    if (project.name.includes('date-pickers')) return 'Date Pickers';
-    if (project.name.includes('charts')) return 'Charts';
-    if (project.name.includes('tree-view')) return 'Tree View';
-    if (project.name.includes('scheduler')) return 'Scheduler';
+    if (project.name.includes('data-grid')) return getProjectDisplayNameFromKey('data-grid');
+    if (project.name.includes('date-pickers')) return getProjectDisplayNameFromKey('date-pickers');
+    if (project.name.includes('charts')) return getProjectDisplayNameFromKey('charts');
+    if (project.name.includes('tree-view')) return getProjectDisplayNameFromKey('tree-view');
+    if (project.name.includes('scheduler')) return getProjectDisplayNameFromKey('scheduler');
   }
 
   // Fallback - try to infer from first TypeScript project name
@@ -375,14 +382,7 @@ function inferProjectName(outputPath: string, projectSettings: ProjectSettings):
   if (pathParts[0] === 'x') {
     // For x/* paths, use the second part (react-data-grid, react-date-pickers, etc.)
     const component = pathParts[1]?.replace('react-', '') || 'x';
-    const nameMap: Record<string, string> = {
-      'data-grid': 'Data Grid',
-      'date-pickers': 'Date Pickers',
-      charts: 'Charts',
-      'tree-view': 'Tree View',
-      scheduler: 'Scheduler',
-    };
-    return nameMap[component] || component;
+    return getProjectDisplayNameFromKey(component);
   }
 
   // For other paths, use the project settings to determine the project name
@@ -739,19 +739,25 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
       // Generate individual project llms.txt files for each directory
       for (const [dirName, files] of Object.entries(groupedByFirstDir)) {
-        const projectDisplayName = getProjectDisplayName(dirName);
-        const llmsContent = generateProjectLlmsTxt(files, projectDisplayName, dirName);
-        const llmsPath = path.join(outputDir, dirName, 'llms.txt');
+        // Extract project key from directory path (e.g., "x/react-data-grid" -> "data-grid")
+        const pathParts = dirName.split('/');
+        const projectKey =
+          pathParts[0] === 'x' ? pathParts[1]?.replace('react-', '') || 'x' : dirName;
+        const projectDisplayName = getProjectDisplayNameFromKey(projectKey);
+        if (projectDisplayName) {
+          const llmsContent = generateProjectLlmsTxt(files, projectDisplayName, dirName);
+          const llmsPath = path.join(outputDir, dirName, 'llms.txt');
 
-        // Ensure directory exists
-        const llmsDirPath = path.dirname(llmsPath);
-        if (!fs.existsSync(llmsDirPath)) {
-          fs.mkdirSync(llmsDirPath, { recursive: true });
+          // Ensure directory exists
+          const llmsDirPath = path.dirname(llmsPath);
+          if (!fs.existsSync(llmsDirPath)) {
+            fs.mkdirSync(llmsDirPath, { recursive: true });
+          }
+
+          fs.writeFileSync(llmsPath, llmsContent, 'utf-8');
+          // ✓ Generated: ${dirName}/llms.txt
+          processedCount += 1;
         }
-
-        fs.writeFileSync(llmsPath, llmsContent, 'utf-8');
-        // ✓ Generated: ${dirName}/llms.txt
-        processedCount += 1;
       }
     }
   }
