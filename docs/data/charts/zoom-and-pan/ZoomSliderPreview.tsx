@@ -9,6 +9,7 @@ import {
   ScatterChartPro,
   ScatterChartProProps,
 } from '@mui/x-charts-pro/ScatterChartPro';
+import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro';
 import { usUnemploymentRate } from '../dataset/usUnemploymentRate';
 import { globalGdpPerCapita } from '../dataset/globalGdpPerCapita';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';
@@ -17,6 +18,7 @@ import {
   countriesInContinent,
   countryData,
 } from '../dataset/countryData';
+import { shareOfRenewables } from '../dataset/shareOfRenewables';
 
 const lineData = usUnemploymentRate.map((d) => d.rate / 100);
 
@@ -98,6 +100,21 @@ const scatterSettings = {
   height: 400,
 } satisfies Partial<ScatterChartProProps>;
 
+const sortedShareOfRenewables = shareOfRenewables.toSorted(
+  (a, b) => a.renewablesPercentage - b.renewablesPercentage,
+);
+const barXAxis = {
+  data: sortedShareOfRenewables.map((d) => countryData[d.code].country),
+  tickLabelStyle: { angle: -45 },
+  height: 90,
+} satisfies XAxis<'band'>;
+const barSettings = {
+  series: [
+    { data: sortedShareOfRenewables.map((d) => d.renewablesPercentage / 100) },
+  ],
+  height: 400,
+} satisfies Partial<BarChartProProps>;
+
 export default function ZoomSliderPreview() {
   const [chartType, setChartType] = React.useState('bar');
 
@@ -122,6 +139,7 @@ export default function ZoomSliderPreview() {
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
+      {chartType === 'bar' && <BarChartPreview />}
       {chartType === 'line' && <LineChartPreview />}
       {chartType === 'scatter' && <ScatterChartPreview />}
     </Stack>
@@ -152,9 +170,18 @@ function LineChartPreview() {
 
 function BarChartPreview() {
   return (
-    <Typography variant="body2" sx={{ alignSelf: 'center' }}>
-      Bar chart preview is not implemented yet.
-    </Typography>
+    <React.Fragment>
+      <Typography variant="h6" sx={{ alignSelf: 'center' }}>
+        Share of Primary Energy Consumption from Renewables (2023)
+      </Typography>
+      <BarChartPro
+        {...barSettings}
+        xAxis={[{ ...barXAxis, zoom: { slider: { enabled: true, preview: true } } }]}
+      />
+      <Typography variant="caption">
+        Source: Our World in Data. Updated: 2023.
+      </Typography>
+    </React.Fragment>
   );
 }
 
@@ -172,7 +199,7 @@ function ScatterChartPreview() {
       />
       <Typography variant="caption">
         GDP per capita is expressed in international dollars at 2021 prices. <br />
-        Source: Our World in Data, World Bank. Updated: 2023.
+        Source: Our World in Data. Updated: 2023.
       </Typography>
     </React.Fragment>
   );
