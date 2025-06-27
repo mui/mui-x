@@ -215,8 +215,21 @@ function findNonComponentMarkdownFiles(
   const files: Array<{ markdownPath: string; outputPath: string }> = [];
 
   for (const page of allMarkdownFiles) {
-    // Check if the page belongs to one of the specified folders
-    const belongsToFolder = folders.some((folder) => page.pathname.startsWith(`/${folder}`));
+    let extensionMatched = false;
+    // Check if the page belongs to one of the specified folders or matches specific file paths
+    const belongsToFolder = folders.some((folder) => {
+      if (folder.endsWith('.md')) {
+        // Handle specific file paths with extensions
+        const matches = page.filename.endsWith(folder);
+        if (matches) {
+          extensionMatched = true;
+        }
+        return matches;
+      } else {
+        // Handle folder paths
+        return page.pathname.startsWith(`/${folder}`);
+      }
+    });
     if (!belongsToFolder) {
       continue;
     }
@@ -230,7 +243,9 @@ function findNonComponentMarkdownFiles(
     }
 
     // Apply fixPathname first, then replaceUrl to get the proper output structure (like components)
-    const fixedPathname = page.pathname
+    const fixedPathname = (
+      extensionMatched ? page.filename.replace(/^.*\/data\//, '/') : page.pathname
+    )
       .replace(/\/data-grid\//, '/x/react-data-grid/')
       .replace(/\/date-pickers\//, '/x/react-date-pickers/')
       .replace(/\/charts\//, '/x/react-charts/')
@@ -597,7 +612,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
         // Use the component's demo pathname to create the output structure
         // e.g., /material-ui/react-accordion/ -> material-ui/react-accordion.md
-        // Replace paths containing # in the last segment with /usage.md
+        // Skip paths containing # in the last segment
         let outputFileName;
         if (component.demos[0]) {
           let pathname = component.demos[0].demoPathname.replace(/^\//, '').replace(/\/$/, '');
@@ -605,9 +620,8 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
           const lastPart = pathParts[pathParts.length - 1];
 
           if (lastPart.includes('#')) {
-            // Replace the last segment with 'usage' if it contains #
-            pathParts[pathParts.length - 1] = 'usage';
-            pathname = pathParts.join('/');
+            // Skip generating markdown file if last segment contains #
+            continue;
           }
 
           outputFileName = `${pathname}.md`;
