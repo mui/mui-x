@@ -110,7 +110,10 @@ const barXAxis = {
 } satisfies XAxis<'band'>;
 const barSettings = {
   series: [
-    { data: sortedShareOfRenewables.map((d) => d.renewablesPercentage / 100) },
+    {
+      data: sortedShareOfRenewables.map((d) => d.renewablesPercentage / 100),
+      valueFormatter: (v: number | null) => percentageFormatter.format(v!),
+    },
   ],
   height: 400,
 } satisfies Partial<BarChartProProps>;
