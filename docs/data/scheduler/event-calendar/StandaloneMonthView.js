@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 
-import { MonthView } from '@mui/x-scheduler/joy/month-view';
 import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
+import { MonthView } from '@mui/x-scheduler/joy/month-view';
 import classes from './StandaloneMonthView.module.css';
 
 const initialEvents = [
