@@ -224,7 +224,6 @@ export function useGridVirtualizer(
         });
       },
 
-      rowTree: () => gridRowTreeSelector(apiRef),
       columnPositions: () => gridColumnPositionsSelector(apiRef),
 
       calculateColSpan: (params) => apiRef.current.calculateColSpan(params),

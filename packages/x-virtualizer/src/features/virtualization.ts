@@ -292,17 +292,22 @@ function useVirtualization(
     fixme.onScrollChange(scrollPosition, nextRenderContext);
   });
 
+  /**
+   * HACK: unstable_rowTree fixes the issue described below, but does it by tightly coupling this
+   * section of code to the DataGrid's rowTree model. The `unstable_rowTree` param is a temporary
+   * solution to decouple the code.
+   */
   const getRows = (
     params: {
       rows?: RowEntry[];
       position?: PinnedRowPosition;
       renderContext?: RenderContext;
     } = {},
+    unstable_rowTree: Record<RowId, any>,
   ) => {
     if (!params.rows && !range) {
       return [];
     }
-    const rowTree = fixme.rowTree();
 
     let baseRenderContext = renderContext;
     if (params.renderContext) {
@@ -364,7 +369,7 @@ function useVirtualization(
       // See:
       // - https://github.com/mui/mui-x/issues/16638
       // - https://github.com/mui/mui-x/issues/17022
-      if (!rowTree[id]) {
+      if (!unstable_rowTree[id]) {
         return;
       }
 

@@ -105,7 +105,6 @@ export type VirtualizerParams = {
     focusedVirtualCell: () => any;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
     onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;
-    rowTree: () => any;
     columnPositions: () => any;
     calculateColSpan: (params: {
       rowId: any;

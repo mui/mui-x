@@ -7,6 +7,7 @@ import {
   gridHasScrollXSelector,
   gridHasScrollYSelector,
 } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import { gridRowTreeSelector } from '../../hooks/features/rows';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -106,7 +107,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getScrollAreaProps,
   } = virtualScroller;
 
-  const rows = getRows();
+  const rows = getRows(undefined, gridRowTreeSelector(apiRef));
 
   return (
     <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>
