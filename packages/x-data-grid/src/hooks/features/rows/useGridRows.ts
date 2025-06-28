@@ -260,8 +260,8 @@ export const useGridRows = (
         Array.from(removedNodes).map((rowId) => ({
           id: rowId,
           _action: 'delete' as const,
-        }))
-      )
+        })),
+      );
 
       const cache = updateCacheWithNewRows({
         updates: cacheUpdates,
