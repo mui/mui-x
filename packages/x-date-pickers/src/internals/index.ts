@@ -109,7 +109,8 @@ export type {
 } from './hooks/useStaticPicker';
 export { useToolbarOwnerState } from './hooks/useToolbarOwnerState';
 export type { PickerToolbarOwnerState } from './hooks/useToolbarOwnerState';
-export { useLocalizationContext, useDefaultDates, useUtils, useNow } from './hooks/useUtils';
+export { useDefaultDates, useNow } from './hooks/useUtils';
+export { useLocalizationContext } from '../hooks/usePickerAdapter';
 export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews';
 export { useViews } from './hooks/useViews';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';

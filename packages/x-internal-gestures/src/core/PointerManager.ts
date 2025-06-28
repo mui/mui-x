@@ -8,9 +8,7 @@
  * 4. Distributing events to registered gesture recognizers
  */
 
-import { InternalEvent } from './types/InternalEvent';
 import { TargetElement } from './types/TargetElement';
-import { isOS } from './utils/isOS';
 
 /**
  * Normalized representation of a pointer, containing all relevant information
@@ -55,20 +53,23 @@ export type PointerData = {
  */
 export type PointerManagerOptions = {
   /**
-   * Root element to attach pointer event listeners to.
-   * Events within this element's bounds will be tracked.
+   * The root DOM element to which the PointerManager will attach its event listeners.
+   * All gesture detection will be limited to events within this element.
    */
   root?: TargetElement;
 
   /**
    * CSS touch-action property to apply to the root element.
-   * Controls how the browser responds to touch input.
+   * Controls how the browser responds to touch interactions.
    *
    * Common values:
-   * - "none": Disable browser handling of all gestures
-   * - "pan-x": Allow horizontal panning only
-   * - "pan-y": Allow vertical panning only
-   * - "auto": Default browser behavior
+   * - "none": Disable browser handling of all panning/zooming gestures
+   * - "pan-x": Allow horizontal panning, disable vertical gestures
+   * - "pan-y": Allow vertical panning, disable horizontal gestures
+   * - "manipulation": Allow panning and pinch zoom, disable double-tap
+   * - "auto": Default behavior, allows browser to handle gestures
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
    *
    * @default "auto"
    */
@@ -76,11 +77,19 @@ export type PointerManagerOptions = {
 
   /**
    * Whether to use passive event listeners for better scrolling performance.
-   * When true, listeners cannot call preventDefault() on touch events.
+   * When true, listeners cannot call preventDefault() on events.
    *
    * @default true
    */
   passive?: boolean;
+
+  /**
+   * Whether to prevent interrupt events like blur or contextmenu from affecting gestures.
+   * If true, these events will not interrupt ongoing gestures.
+   *
+   * @default true
+   */
+  preventEventInterruption?: boolean;
 };
 
 /**
@@ -104,6 +113,9 @@ export class PointerManager {
   /** Whether to use passive event listeners */
   private passive: boolean;
 
+  /** Whether to prevent interrupt events like blur or contextmenu */
+  private preventEventInterruption: boolean = true;
+
   /** Map of all currently active pointers by their pointerId */
   private pointers: Map<number, PointerData> = new Map();
 
@@ -115,6 +127,7 @@ export class PointerManager {
     this.root = (options.root ?? document.documentElement) as HTMLElement;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive !== false;
+    this.preventEventInterruption = options.preventEventInterruption !== false;
 
     this.setupEventListeners();
   }
@@ -168,6 +181,8 @@ export class PointerManager {
     this.root.addEventListener('pointermove', this.handlePointerEvent, { passive: this.passive });
     this.root.addEventListener('pointerup', this.handlePointerEvent, { passive: this.passive });
     this.root.addEventListener('pointercancel', this.handlePointerEvent, { passive: this.passive });
+    // @ts-expect-error, forceCancel is not a standard event, but used for custom handling
+    this.root.addEventListener('forceCancel', this.handlePointerEvent, { passive: this.passive });
 
     // Add blur and contextmenu event listeners to interrupt all gestures
     this.root.addEventListener('blur', this.handleInterruptEvents);
@@ -181,23 +196,20 @@ export class PointerManager {
    * @param event - The event that triggered the interruption (blur or contextmenu)
    */
   private handleInterruptEvents = (event: Event): void => {
-    // Ignore contextmenu events on Android to prevent interference with long-press actions
-    if (event.type === 'contextmenu' && isOS(['Android'])) {
+    if (
+      this.preventEventInterruption &&
+      'pointerType' in event &&
+      (event as PointerEvent).pointerType === 'touch'
+    ) {
+      event.preventDefault();
       return;
     }
 
-    // Force a reset even if there are no active pointers to ensure any lingering gesture state is cleared
-    // We'll create a synthetic event with a special forceReset flag that gesture handlers can check
-
     // Create a synthetic pointer cancel event
-    const cancelEvent = new PointerEvent('pointercancel', {
-      bubbles: true,
-      cancelable: true,
+    const cancelEvent = new PointerEvent('forceCancel', {
+      bubbles: false,
+      cancelable: false,
     });
-
-    // Add a special property to the event to signal a complete reset
-    // This will be used in gesture handlers to perform a more thorough cleanup
-    (cancelEvent as InternalEvent).forceReset = true;
 
     const firstPointer = this.pointers.values().next().value;
     if (this.pointers.size > 0 && firstPointer) {
@@ -211,9 +223,9 @@ export class PointerManager {
         pointerType: { value: firstPointer.pointerType },
       });
 
-      // Force update of all pointers to have type 'pointercancel'
+      // Force update of all pointers to have type 'forceCancel'
       for (const [pointerId, pointer] of this.pointers.entries()) {
-        const updatedPointer = { ...pointer, type: 'pointercancel' };
+        const updatedPointer = { ...pointer, type: 'forceCancel' };
         this.pointers.set(pointerId, updatedPointer);
       }
     }
@@ -253,7 +265,7 @@ export class PointerManager {
       this.pointers.set(pointerId, this.createPointerData(event));
     }
     // Remove pointer data on up or cancel
-    else if (type === 'pointerup' || type === 'pointercancel') {
+    else if (type === 'pointerup' || type === 'pointercancel' || type === 'forceCancel') {
       // Release pointer capture on up or cancel
       if (event.target instanceof Element) {
         try {
@@ -329,6 +341,8 @@ export class PointerManager {
     this.root.removeEventListener('pointermove', this.handlePointerEvent);
     this.root.removeEventListener('pointerup', this.handlePointerEvent);
     this.root.removeEventListener('pointercancel', this.handlePointerEvent);
+    // @ts-expect-error, forceCancel is not a standard event, but used for custom handling
+    this.root.removeEventListener('forceCancel', this.handlePointerEvent);
     this.root.removeEventListener('blur', this.handleInterruptEvents);
     this.root.removeEventListener('contextmenu', this.handleInterruptEvents);
 

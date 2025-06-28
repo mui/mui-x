@@ -56,7 +56,7 @@ yarn add rasterizehtml
 
 Export behavior can be modified with [print](/x/api/charts/chart-print-export-options/) and [image export](/x/api/charts/chart-image-export-options/) options.
 
-Options can be passed to the built-in Tooltip with `slotProps.tooltip`.
+Options can be passed to the built-in Toolbar with `slotProps.toolbar`.
 In that case, the `imageExportOptions` must be an array of objects, each representing an image type to export.
 
 Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
