@@ -92,7 +92,11 @@ export type VirtualizerParams = {
   onResize?: (lastSize: Size) => void;
   onWheel?: (event: React.WheelEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;
-  onRenderContextChange: (c: RenderContext) => void;
+  onRenderContextChange?: (c: RenderContext) => void;
+  onScrollChange?: (
+    scrollPosition: { top: number; left: number },
+    nextRenderContext: RenderContext,
+  ) => void;
 
   focusedCell: FocusedCell | null;
 
@@ -104,7 +108,6 @@ export type VirtualizerParams = {
   fixme: {
     focusedVirtualCell: () => any;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
-    onScrollChange: (scrollPosition: any, nextRenderContext: any) => void;
     columnPositions: () => any;
     calculateColSpan: (params: {
       rowId: any;

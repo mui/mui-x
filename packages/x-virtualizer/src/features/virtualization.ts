@@ -104,6 +104,7 @@ function useVirtualization(
     onWheel,
     onTouchMove,
     onRenderContextChange,
+    onScrollChange,
 
     focusedCell,
     rowBufferPx,
@@ -170,7 +171,7 @@ function useVirtualization(
       const isReady = Dimensions.selectors.dimensions(store.state).isReady;
       if (isReady && didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
-        onRenderContextChange(nextRenderContext);
+        onRenderContextChange?.(nextRenderContext);
       }
 
       previousContextScrollPosition.current = scrollPosition.current;
@@ -288,8 +289,9 @@ function useVirtualization(
     }
 
     const nextRenderContext = triggerUpdateRenderContext();
-
-    fixme.onScrollChange(scrollPosition, nextRenderContext);
+    if (nextRenderContext) {
+      onScrollChange?.(scrollPosition.current, nextRenderContext);
+    }
   });
 
   /**
@@ -534,7 +536,7 @@ function useVirtualization(
   }, [refs.scroller, scrollReset]);
 
   useRunOnce(renderContext !== EMPTY_RENDER_CONTEXT, () => {
-    fixme.onScrollChange(scrollPosition, renderContext);
+    onScrollChange?.(scrollPosition.current, renderContext);
 
     isRenderContextReady.current = true;
 
@@ -582,8 +584,6 @@ function useVirtualization(
         };
       }
     }
-
-    return undefined;
   });
 
   useSelectorEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);

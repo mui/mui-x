@@ -209,6 +209,13 @@ export function useGridVirtualizer(
     onRenderContextChange: useEventCallback((nextRenderContext) => {
       apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
     }),
+    onScrollChange: (scrollPosition, nextRenderContext) => {
+      apiRef.current.publishEvent('scrollPositionChange', {
+        top: scrollPosition.top,
+        left: scrollPosition.left,
+        renderContext: nextRenderContext,
+      });
+    },
 
     scrollReset,
 
@@ -216,13 +223,6 @@ export function useGridVirtualizer(
       focusedVirtualCell: () => gridFocusedVirtualCellSelector(apiRef),
       inputs: (enabledForRows, enabledForColumns) =>
         inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
-      onScrollChange: (scrollPosition, nextRenderContext) => {
-        apiRef.current.publishEvent('scrollPositionChange', {
-          top: scrollPosition.current.top,
-          left: scrollPosition.current.left,
-          renderContext: nextRenderContext,
-        });
-      },
 
       columnPositions: () => gridColumnPositionsSelector(apiRef),
 
