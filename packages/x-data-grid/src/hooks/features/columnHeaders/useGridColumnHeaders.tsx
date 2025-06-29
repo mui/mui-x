@@ -201,14 +201,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             )}
           />
         )}
-        {hasScrollbarFiller && (
-          <ScrollbarFiller
-            header
-            pinnedRight={isPinnedRight}
-            borderBottom={borderBottom}
-            borderTop={false}
-          />
-        )}
+        {hasScrollbarFiller && <ScrollbarFiller pinnedRight={isPinnedRight} />}
       </React.Fragment>
     );
   };
@@ -248,13 +241,15 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         ? columnHeaderFocus !== null &&
           columnHeaderFocus.field === siblingWithBorderingSeparator.field
         : false;
-      const isLastUnpinned =
-        columnIndex + 1 === columnPositions.length - pinnedColumns.right.length;
 
       const indexInSection = i;
       const sectionLength = renderedColumns.length;
 
-      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showLeftBorder = shouldCellShowLeftBorder(
+        pinnedPosition,
+        indexInSection,
+        rootProps.showCellVerticalBorder,
+      );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
         indexInSection,
@@ -281,7 +276,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
           pinnedOffset={pinnedOffset}
-          isLastUnpinned={isLastUnpinned}
           isSiblingFocused={isSiblingFocused}
           showLeftBorder={showLeftBorder}
           showRightBorder={showRightBorder}
@@ -438,7 +432,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
           pinnedOffset={pinnedOffset}
-          showLeftBorder={shouldCellShowLeftBorder(pinnedPosition, indexInSection)}
+          showLeftBorder={shouldCellShowLeftBorder(
+            pinnedPosition,
+            indexInSection,
+            rootProps.showCellVerticalBorder,
+          )}
           showRightBorder={shouldCellShowRightBorder(
             pinnedPosition,
             indexInSection,

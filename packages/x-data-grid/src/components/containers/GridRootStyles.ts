@@ -82,7 +82,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['columnHeader--filledGroup']}`]: styles['columnHeader--filledGroup'] },
     { [`& .${c['columnHeader--filtered']}`]: styles['columnHeader--filtered'] },
     { [`& .${c['columnHeader--last']}`]: styles['columnHeader--last'] },
-    { [`& .${c['columnHeader--lastUnpinned']}`]: styles['columnHeader--lastUnpinned'] },
     { [`& .${c['columnHeader--moving']}`]: styles['columnHeader--moving'] },
     { [`& .${c['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
     { [`& .${c['columnHeader--pinnedLeft']}`]: styles['columnHeader--pinnedLeft'] },
@@ -143,9 +142,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['scrollbar--horizontal']}`]: styles['scrollbar--horizontal'] },
     { [`& .${c['scrollbar--vertical']}`]: styles['scrollbar--vertical'] },
     { [`& .${c.scrollbarFiller}`]: styles.scrollbarFiller },
-    { [`& .${c['scrollbarFiller--borderBottom']}`]: styles['scrollbarFiller--borderBottom'] },
-    { [`& .${c['scrollbarFiller--borderTop']}`]: styles['scrollbarFiller--borderTop'] },
-    { [`& .${c['scrollbarFiller--header']}`]: styles['scrollbarFiller--header'] },
     { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
     { [`& .${c.sortIcon}`]: styles.sortIcon },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -312,9 +308,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeader}:focus,
       & .${c['columnHeader--withLeftBorder']},
       & .${c['columnHeader--withRightBorder']},
-      & .${c['columnHeader--siblingFocused']},
-      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--lastUnpinned']},
-      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
+      & .${c['columnHeader--siblingFocused']}
       `]: {
       [`& .${c.columnSeparator}`]: {
         opacity: 0,
@@ -518,7 +512,7 @@ export const GridRootStyles = styled('div', {
     },
 
     [`& .${c.headerFilterRow}`]: {
-      [`& .${c.columnHeader}`]: {
+      [`& .${c.columnHeader}, & .${c.scrollbarFiller}`]: {
         boxSizing: 'border-box',
         borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
@@ -762,7 +756,6 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: vars.spacing(2),
     },
-
     /* ScrollbarFiller styles */
     [`& .${c.columnHeaders} .${c.scrollbarFiller}`]: {
       backgroundColor: headerBackground,
@@ -770,19 +763,13 @@ export const GridRootStyles = styled('div', {
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
-      [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-      },
-      [`&.${c['scrollbarFiller--borderBottom']}`]: {
-        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
-      },
+      backgroundColor: headerBackground,
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: vars.cell.background.pinned,
         position: 'sticky',
         right: 0,
+        zIndex: 30,
       },
     },
-
     [`& .${c.filler}`]: {
       flex: '1 0 auto',
     },
@@ -793,7 +780,7 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
 
-    /* Hide grid rows, row filler, and vertical scrollbar. Used when skeleton/no columns overlay is visible */
+    /* Used when skeleton/no columns overlay is visible */
     [`& .${c['main--hiddenContent']}`]: {
       [`& .${c.virtualScrollerContent}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
@@ -802,10 +789,10 @@ export const GridRootStyles = styled('div', {
         position: 'fixed',
         visibility: 'hidden',
       },
-      [`& .${c['scrollbar--vertical']}, & .${c.pinnedRows}, & .${c.virtualScroller} > .${c.filler}`]:
-        {
-          display: 'none',
-        },
+      // Hide grid content
+      [`& .${c.pinnedRows}`]: {
+        display: 'none',
+      },
     },
   };
 
