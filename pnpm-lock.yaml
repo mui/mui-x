@@ -58,8 +58,8 @@ catalogs:
       specifier: ^10.0.1
       version: 10.0.1
     '@types/chance':
-      specifier: ^1.1.6
-      version: 1.1.6
+      specifier: ^1.1.7
+      version: 1.1.7
     '@types/d3-scale':
       specifier: ^4.0.9
       version: 4.0.9
@@ -869,7 +869,7 @@ importers:
         version: 2.0.9
       '@types/chance':
         specifier: 'catalog:'
-        version: 1.1.6
+        version: 1.1.7
       '@types/d3-scale':
         specifier: 'catalog:'
         version: 4.0.9
@@ -1351,7 +1351,7 @@ importers:
         version: 7.1.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/chance':
         specifier: 'catalog:'
-        version: 1.1.6
+        version: 1.1.7
       react:
         specifier: 'catalog:'
         version: 19.0.0
@@ -5543,8 +5543,8 @@ packages:
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
-  '@types/chance@1.1.6':
-    resolution: {integrity: sha512-V+pm3stv1Mvz8fSKJJod6CglNGVqEQ6OyuqitoDkWywEODM/eJd1eSuIp9xt6DrX8BWZ2eDSIzbw1tPCUTvGbQ==}
+  '@types/chance@1.1.7':
+    resolution: {integrity: sha512-40you9610GTQPJyvjMBgmj9wiDO6qXhbfjizNYod/fmvLSfUUxURAJMTD8tjmbcZSsyYE5iEUox61AAcCjW/wQ==}
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
@@ -16558,7 +16558,7 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
 
-  '@types/chance@1.1.6': {}
+  '@types/chance@1.1.7': {}
 
   '@types/connect@3.4.38':
     dependencies:
