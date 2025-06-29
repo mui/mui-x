@@ -169,7 +169,7 @@
     "moment-timezone": "catalog:",
     "null-loader": "^4.0.1",
     "nyc": "^17.1.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "pretty-quick": "^4.2.2",
     "process": "^0.11.10",
     "react": "catalog:",
