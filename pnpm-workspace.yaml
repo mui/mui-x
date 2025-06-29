@@ -32,7 +32,7 @@ catalog:
   '@mui/utils': ^7.1.1
   '@playwright/test': ^1.53.1
   '@react-spring/web': ^10.0.1
-  '@types/chance': ^1.1.6
+  '@types/chance': ^1.1.7
   '@types/d3-scale': ^4.0.9
   '@types/format-util': ^1.0.4
   '@types/karma': ^6.3.9
