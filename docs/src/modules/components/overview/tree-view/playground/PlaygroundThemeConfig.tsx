@@ -84,7 +84,6 @@ export default function ThemesConfig({
       })}
     >
       <Stack spacing={1.5}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
           Color
         </Typography>
@@ -98,7 +97,6 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
           Border radius
         </Typography>
@@ -122,7 +120,6 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography fontSize="0.8rem" gutterBottom color="hsl(220, 25%, 45%)">
           Density
         </Typography>
@@ -146,7 +143,6 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
           Layout
         </Typography>
@@ -167,7 +163,6 @@ export default function ThemesConfig({
         />
       </Stack>
       <Stack spacing={1.5}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
           Behavior
         </Typography>
@@ -189,7 +184,6 @@ export default function ThemesConfig({
       </Stack>
 
       <Stack spacing={1.5}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography gutterBottom fontSize="0.8rem" color="hsl(220, 25%, 45%)">
           Selection behavior
         </Typography>

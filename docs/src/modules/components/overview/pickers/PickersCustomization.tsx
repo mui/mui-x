@@ -180,7 +180,6 @@ function ThemesConfig({
     >
       {/* Theme */}
       <Stack spacing={1}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="caption" color="text.secondary" gutterBottom>
           Select Theme
         </Typography>
@@ -196,7 +195,6 @@ function ThemesConfig({
       </Stack>
       {/* Color */}
       <Stack spacing={1}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="caption" color="text.secondary" gutterBottom>
           Color
         </Typography>
@@ -211,7 +209,6 @@ function ThemesConfig({
       </Stack>
       {/* Typography */}
       <Stack spacing={1}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="caption" color="text.secondary" gutterBottom>
           Typography
         </Typography>
@@ -236,7 +233,6 @@ function ThemesConfig({
       </Stack>
       {/* Density */}
       <Stack spacing={1}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="caption" color="text.secondary" gutterBottom>
           Density
         </Typography>
@@ -262,7 +258,6 @@ function ThemesConfig({
       {/* Corners */}
       {styleConfig.selectedTheme !== 'default' && (
         <Stack spacing={1}>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="caption" color="text.secondary" gutterBottom>
             Corners
           </Typography>
@@ -289,7 +284,6 @@ function ThemesConfig({
       {/* Layout */}
       {styleConfig.selectedTheme !== 'md3' && (
         <Stack spacing={1}>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="caption" color="text.secondary" gutterBottom>
             Layout
           </Typography>
@@ -336,7 +330,6 @@ export default function Customization() {
       <Divider />
       <Stack spacing={4} py={8} alignItems="center">
         <Stack gap={1} sx={{ maxWidth: { xs: '500px', md: '100%' }, width: '100%' }}>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
             Customization
           </Typography>
@@ -346,11 +339,9 @@ export default function Customization() {
             fontWeight="semiBold"
             color="text.primary"
             textAlign="center"
-            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             Highly customizable components
           </Typography>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary" textAlign="center">
             Easily adaptable to any style, our components leverage Material Design for
             out-of-the-box elegance and support extensive customization to perfectly align with your
@@ -390,7 +381,6 @@ export default function Customization() {
                   variant="contained"
                   onClick={toggleDrawer(true)}
                   startIcon={<SettingsSuggestIcon />}
-                  /* eslint-disable-next-line material-ui/no-hardcoded-labels */
                 >
                   Customize
                 </Button>

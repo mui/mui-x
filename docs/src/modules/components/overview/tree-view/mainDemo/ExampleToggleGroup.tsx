@@ -43,7 +43,6 @@ export default function ExampleToggleGroup({ selected, onToggleChange }: Example
       >
         <ToggleButton value="figma" title="Figma" sx={{ flexGrow: 1, gap: 1, flexWrap: 'wrap' }}>
           <img src="/static/x/overview/figma.svg" height={24} alt="figma logo" />
-          {/* eslint-disable material-ui/no-hardcoded-labels */}
           Figma example
         </ToggleButton>
         <ToggleButton value="github" title="GitHub" sx={{ flexGrow: 1, gap: 1, flexWrap: 'wrap' }}>

@@ -52,7 +52,6 @@ const ORG = 'mui';
 const REPO = 'mui-x';
 
 // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-// eslint-disable-next-line no-useless-escape
 const getRemoteRegex = (owner) =>
   new RegExp(String.raw`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
 
@@ -100,7 +99,6 @@ async function findMuiXRemote() {
     const { stdout } = await execa('git', ['remote', '-v']);
     const remotes = stdout.split('\n');
     // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-    // eslint-disable-next-line no-useless-escape
     const rx = getRemoteRegex(ORG);
 
     console.log('Checking for MUI-X remote...', stdout);
@@ -174,7 +172,6 @@ async function findForkRemote() {
     let forkRemote = '';
     for (const line of remotes) {
       // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-      // eslint-disable-next-line no-useless-escape
       const rx = getRemoteRegex(forkOwner);
 
       if (line.match(rx)) {
