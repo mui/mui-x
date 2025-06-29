@@ -45,6 +45,9 @@ export interface GridLocaleText {
   // Toolbar pivot button
   toolbarPivot: string;
 
+  // Toolbar charts button
+  toolbarCharts: string;
+
   // Toolbar AI Assistant button
   toolbarAssistant: React.ReactNode;
 
@@ -130,6 +133,7 @@ export interface GridLocaleText {
   columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuManagePivot: string;
+  columnMenuManageCharts: string;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
@@ -228,6 +232,27 @@ export interface GridLocaleText {
   pivotDragToValues: string;
   pivotYearColumnHeaderName: string;
   pivotQuarterColumnHeaderName: string;
+
+  // Charts configuration panel
+  chartsConfigurationNoCharts: string;
+  chartsConfigurationChartNotSelected: string;
+  chartsConfigurationTabChart: string;
+  chartsConfigurationTabFields: string;
+  chartsConfigurationTabConfig: string;
+  chartsConfigurationCloseButton: string;
+  chartsSyncButtonLabel: string;
+  chartsConfigurationSearchPlaceholder: string;
+  chartsConfigurationSearchLabel: string;
+  chartsConfigurationSearchClear: string;
+  chartsConfigurationNoFields: string;
+  chartsConfigurationCategories: string;
+  chartsConfigurationSeries: string;
+  chartsConfigurationMenuMoveUp: string;
+  chartsConfigurationMenuMoveDown: string;
+  chartsConfigurationMenuMoveToTop: string;
+  chartsConfigurationMenuMoveToBottom: string;
+  chartsConfigurationMenuOptions: string;
+  chartsConfigurationMenuRemove: string;
 
   // AI Assistant panel
   aiAssistantPanelTitle: string;

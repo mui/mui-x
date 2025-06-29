@@ -41,6 +41,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   toolbarPivot: '피벗',
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI 어시스턴트',
@@ -127,6 +128,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: '오름차순 정렬',
   columnMenuSortDesc: '내림차순 정렬',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
@@ -239,6 +241,27 @@ const koKRGrid: Partial<GridLocaleText> = {
   pivotDragToValues: '값 생성',
   pivotYearColumnHeaderName: '(년)',
   pivotQuarterColumnHeaderName: '(분기)',
+
+  // Charts configuration panel
+  // chartsConfigurationNoCharts: 'There are no charts available',
+  // chartsConfigurationChartNotSelected: 'Select a chart type to configure its options',
+  // chartsConfigurationTabChart: 'Chart',
+  // chartsConfigurationTabFields: 'Fields',
+  // chartsConfigurationTabConfig: 'Config',
+  // chartsConfigurationCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsConfigurationSearchPlaceholder: 'Search fields',
+  // chartsConfigurationSearchLabel: 'Search fields',
+  // chartsConfigurationSearchClear: 'Clear search',
+  // chartsConfigurationNoFields: 'No fields',
+  // chartsConfigurationCategories: 'Categories',
+  // chartsConfigurationSeries: 'Series',
+  // chartsConfigurationMenuMoveUp: 'Move up',
+  // chartsConfigurationMenuMoveDown: 'Move down',
+  // chartsConfigurationMenuMoveToTop: 'Move to top',
+  // chartsConfigurationMenuMoveToBottom: 'Move to bottom',
+  // chartsConfigurationMenuOptions: 'Field options',
+  // chartsConfigurationMenuRemove: 'Remove',
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'AI 어시스턴트',

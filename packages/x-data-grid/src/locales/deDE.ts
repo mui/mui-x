@@ -43,6 +43,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'KI-Assistent',
@@ -129,6 +130,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',
   columnMenuManagePivot: 'Pivot verwalten',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -245,6 +247,27 @@ const deDEGrid: Partial<GridLocaleText> = {
   pivotDragToValues: 'Hier hinziehen, um Werte zu erstellen',
   pivotYearColumnHeaderName: '(Jahr)',
   pivotQuarterColumnHeaderName: '(Quartal)',
+
+  // Charts configuration panel
+  // chartsConfigurationNoCharts: 'There are no charts available',
+  // chartsConfigurationChartNotSelected: 'Select a chart type to configure its options',
+  // chartsConfigurationTabChart: 'Chart',
+  // chartsConfigurationTabFields: 'Fields',
+  // chartsConfigurationTabConfig: 'Config',
+  // chartsConfigurationCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsConfigurationSearchPlaceholder: 'Search fields',
+  // chartsConfigurationSearchLabel: 'Search fields',
+  // chartsConfigurationSearchClear: 'Clear search',
+  // chartsConfigurationNoFields: 'No fields',
+  // chartsConfigurationCategories: 'Categories',
+  // chartsConfigurationSeries: 'Series',
+  // chartsConfigurationMenuMoveUp: 'Move up',
+  // chartsConfigurationMenuMoveDown: 'Move down',
+  // chartsConfigurationMenuMoveToTop: 'Move to top',
+  // chartsConfigurationMenuMoveToBottom: 'Move to bottom',
+  // chartsConfigurationMenuOptions: 'Field options',
+  // chartsConfigurationMenuRemove: 'Remove',
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'KI-Assistent',
