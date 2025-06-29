@@ -728,10 +728,13 @@ export const useGridRowSelection = (
         applyAutoSelection &&
         !hasFilters
       ) {
-        apiRef.current.setRowSelectionModel({
-          type: value ? 'exclude' : 'include',
-          ids: new Set(),
-        });
+        apiRef.current.setRowSelectionModel(
+          {
+            type: value ? 'exclude' : 'include',
+            ids: new Set(),
+          },
+          'multipleRowsSelection',
+        );
       } else {
         apiRef.current.selectRows(getRowsToBeSelected(), value);
       }
