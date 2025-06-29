@@ -6,6 +6,7 @@ import {
   ZoomData,
   AxisId,
 } from '@mui/x-charts/internals';
+import { ZoomConfig, DefaultizedZoomConfig } from './ZoomConfig.types';
 
 export interface UseChartProZoomParameters {
   /**
@@ -23,10 +24,16 @@ export interface UseChartProZoomParameters {
    * The list of zoom data related to each axis.
    */
   zoomData?: readonly ZoomData[];
+  /**
+   * Configuration for zoom interactions.
+   */
+  zoomConfig?: ZoomConfig;
 }
 
-export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
-  UseChartCartesianAxisDefaultizedParameters;
+export type UseChartProZoomDefaultizedParameters = Omit<UseChartProZoomParameters, 'zoomConfig'> &
+  UseChartCartesianAxisDefaultizedParameters & {
+    zoomConfig: DefaultizedZoomConfig;
+  };
 
 export interface UseChartProZoomState {
   zoom: {

@@ -17,6 +17,7 @@ import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
+import { defaultizeZoomConfig } from './defaultizeZoomConfig';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 export function initializeZoomData(
@@ -200,7 +201,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   }, [removeIsInteracting]);
 
   // Add events
-  const pluginData = { store, instance, svgRef };
+  const pluginData = { store, instance, svgRef, params };
 
   usePanOnDrag(pluginData, setZoomDataCallback);
 
@@ -248,11 +249,13 @@ useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
   zoomData: true,
+  zoomConfig: true,
 };
 
 useChartProZoom.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
+    zoomConfig: defaultizeZoomConfig(params.zoomConfig),
   };
 };
 
