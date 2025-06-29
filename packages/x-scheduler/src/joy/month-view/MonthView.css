@@ -1,0 +1,166 @@
+.MonthViewContainer {
+  --fixed-cell-width: 28px;
+}
+
+.MonthViewContainer {
+  width: 100%;
+  border-radius: var(--radius-4);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.MonthViewRoot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+.MonthViewHeader {
+  display: grid;
+  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
+  border-block-end: 1px solid var(--border-color);
+}
+
+.MonthViewHeaderCell:not(:first-child) {
+  border-inline-start: 1px solid var(--border-color);
+}
+
+.MonthViewHeaderCell {
+  padding: var(--space-2);
+  text-align: center;
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+}
+
+.MonthViewWeekHeaderCell {
+  padding: var(--space-2) 0;
+  text-align: center;
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--secondary-text-color);
+  font-style: var(--em-font-style);
+}
+
+.MonthViewBody {
+  flex: 1;
+  display: grid;
+  grid-auto-rows: 1fr;
+  max-height: 100%;
+}
+
+.MonthViewRow {
+  display: grid;
+  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
+}
+
+.MonthViewRow:not(:last-child) {
+  border-block-end: 1px solid var(--border-color);
+}
+
+.MonthViewWeekNumberCell {
+  padding: var(--space-2) 0;
+  text-align: center;
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--secondary-text-color);
+}
+
+.MonthViewCell {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  color: var(--secondary-text-color);
+}
+
+.MonthViewCell:not(:first-child) {
+  border-inline-start: 1px solid var(--border-color);
+}
+
+.MonthViewCellNumber {
+  align-self: end;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-4);
+}
+
+.MonthViewCell.Weekend {
+  background: var(--weekend-background);
+  color: var(--primary-text-color);
+}
+
+.MonthViewCell.Today {
+  background-color: var(--primary-2);
+}
+
+.MonthViewCell.Today .MonthViewCellNumber {
+  background: var(--primary-5);
+  color: var(--interactive-selected-text);
+}
+
+.MonthViewCell.OtherMonth {
+  color: var(--disabled-text-color);
+}
+
+.MonthViewCellNumberButton {
+  width: fit-content;
+  align-self: flex-end;
+  border-radius: var(--radius-4);
+}
+
+/* Hovered */
+.MonthViewCellNumberButton:hover {
+  background: var(--interactive-hover-bg);
+}
+
+/* Active */
+.MonthViewCellNumberButton:active {
+  background: var(--interactive-active-bg);
+}
+
+/* Focused */
+.MonthViewCellNumberButton:focus-visible {
+  background: var(--interactive-focused-bg);
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Focused and hovered */
+.MonthViewCellNumberButton:focus-visible:hover {
+  background: var(--interactive-focused-hover-bg);
+}
+
+/* Today (Highlighted) */
+.MonthViewCell.Today > .MonthViewCellNumberButton > .MonthViewCellNumber,
+.MonthViewCell.Today > .MonthViewCellNumberButton:hover > .MonthViewCellNumber,
+.MonthViewCell.Today > .MonthViewCellNumberButton:active > .MonthViewCellNumber {
+  background: transparent;
+}
+
+.MonthViewCell.Today > .MonthViewCellNumberButton {
+  background: var(--primary-5);
+  color: var(--interactive-selected-text);
+}
+
+/* Today and hovered */
+.MonthViewCell.Today > .MonthViewCellNumberButton:hover {
+  background: var(--primary-6);
+}
+
+/* Today and active */
+.MonthViewCell.Today > .MonthViewCellNumberButton:active {
+  background: var(--primary-7);
+}
+
+/* TODO: Temporary class for event styling, remove when Issue 18554 is resolved */
+.MonthViewEvent {
+  flex: 0;
+  font-size: 10px;
+  border-radius: var(--radius-4);
+  background-color: var(--event-color-3);
+  margin-block-start: var(--space-1);
+  padding: 2px var(--space-1);
+}

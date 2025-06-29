@@ -10,14 +10,15 @@ import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import '../index.css';
-import './EventCalendar.css';
 import { getColorClassName } from '../internals/utils/color-utils';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { Store, useSelector } from '../../base-ui-copy/utils/store';
 import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
 import { selectors, State } from './store';
 import { EventCalendarStoreContext } from '../internals/hooks/useEventCalendarStore';
+import { MonthView } from '../month-view';
+import '../index.css';
+import './EventCalendar.css';
 
 const adapter = getAdapter();
 
@@ -70,7 +71,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       content = <DayView onEventsChange={onEventsChange} />;
       break;
     case 'month':
-      content = <div>TODO: Month view</div>;
+      content = (
+        <MonthView onDayHeaderClick={handleDayHeaderClick} onEventsChange={onEventsChange} />
+      );
       break;
     case 'agenda':
       content = <AgendaView onEventsChange={onEventsChange} />;
@@ -114,7 +117,12 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
               </section>
             )}
           </aside>
-          <div className="EventCalendarMainPanel">
+          <div
+            className={clsx(
+              'EventCalendarMainPanel',
+              currentView === 'month' && 'EventCalendarMainPanel--month',
+            )}
+          >
             <HeaderToolbar onTodayClick={() => {}} />
             <section
               // TODO: Add localization

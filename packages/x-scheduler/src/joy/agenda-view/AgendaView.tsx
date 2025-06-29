@@ -33,7 +33,7 @@ export const AgendaView = React.memo(
     const getDayList = useDayList();
 
     const days = React.useMemo(
-      () => getDayList({ date: visibleDate.startOf('week'), amount: 12 }),
+      () => getDayList({ date: adapter.startOfWeek(visibleDate), amount: 12 }),
       [getDayList, visibleDate],
     );
 
