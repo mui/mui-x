@@ -23,7 +23,7 @@ export type FunnelValueType = {
   /**
    * The label to display on the tooltip, funnel section, or the legend. It can be a string or a function.
    */
-  label?: string | ((location: 'tooltip' | 'legend' | 'section') => string);
+  label?: string | ((location: 'tooltip' | 'legend' | 'section') => string | undefined);
   /**
    * The color of the funnel section
    */
