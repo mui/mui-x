@@ -1,0 +1,16 @@
+<DataGrid
+  {...data}
+  sx={(theme) => ({
+    '& .MuiDataGrid-columnHeader': {
+      paddingLeft: 3,
+      paddingRight: 3,
+    },
+    '& .MuiDataGrid-cell': {
+      backgroundColor: alpha(theme.palette.primary.main, 0.1),
+      '&:not(.MuiDataGrid-cellEmpty)': {
+        paddingLeft: 3,
+        paddingRight: 3,
+      },
+    },
+  })}
+/>
