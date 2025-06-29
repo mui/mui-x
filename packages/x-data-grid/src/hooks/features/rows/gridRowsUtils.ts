@@ -393,6 +393,7 @@ export function computeRowsUpdates(
   apiRef: RefObject<GridApiCommunity>,
   updates: GridRowModelUpdate[],
   getRowId: DataGridProcessedProps['getRowId'],
+  insertedNodes?: Set<GridRowId>,
 ) {
   const nonPinnedRowsUpdates: GridRowModelUpdate[] = [];
 
@@ -416,6 +417,10 @@ export function computeRowsUpdates(
       }
     } else {
       nonPinnedRowsUpdates.push(update);
+      // eslint-disable-next-line no-underscore-dangle
+      if (update._action !== 'delete') {
+        insertedNodes?.add(id);
+      }
     }
   });
   return nonPinnedRowsUpdates;
