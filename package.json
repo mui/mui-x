@@ -129,7 +129,7 @@
     "babel-plugin-transform-replace-expressions": "^0.2.0",
     "chai-dom": "^1.12.1",
     "compression-webpack-plugin": "^11.1.0",
-    "concurrently": "^9.1.2",
+    "concurrently": "^9.2.0",
     "cpy-cli": "^5.0.0",
     "cross-env": "catalog:",
     "danger": "^13.0.4",
