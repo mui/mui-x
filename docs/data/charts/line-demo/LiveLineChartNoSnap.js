@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from 'node_modules/@mui/material/Button';
+import Button from '@mui/material/Button';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 const dateFormatter = Intl.DateTimeFormat(undefined, {
