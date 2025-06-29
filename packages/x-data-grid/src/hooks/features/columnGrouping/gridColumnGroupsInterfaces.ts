@@ -1,4 +1,4 @@
-import { GridColumnGroup } from '../../../models/gridColumnGrouping';
+import { GridColumnGroup, GridColumnGroupingModel } from '../../../models/gridColumnGrouping';
 
 export type GridColumnGroupLookup = {
   [groupId: string]: Omit<GridColumnGroup, 'children'>;
@@ -14,4 +14,8 @@ export interface GridColumnsGroupingState {
   headerStructure: GridGroupingStructure[][];
   unwrappedGroupingModel: { [columnField: string]: GridColumnGroup['groupId'][] };
   maxDepth: number;
+}
+
+export interface GridColumnGroupingInternalCache {
+  lastColumnGroupingModel?: GridColumnGroupingModel;
 }

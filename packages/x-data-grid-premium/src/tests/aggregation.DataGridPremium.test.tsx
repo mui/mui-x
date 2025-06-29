@@ -556,7 +556,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       const customMax: GridAggregationFunction = {
         ...GRID_AGGREGATION_FUNCTIONS.max,
-        apply: (params) => `Agg: ${GRID_AGGREGATION_FUNCTIONS.max.apply(params) as number}`,
+        apply: (params) =>
+          `Agg: ${GRID_AGGREGATION_FUNCTIONS.max.apply(params, apiRef.current!) as number}`,
       };
       setProps({ aggregationFunctions: { min: GRID_AGGREGATION_FUNCTIONS.min, max: customMax } });
       // 'max' is in props.aggregationFunctions but has changed
@@ -873,21 +874,27 @@ describe('<DataGridPremium /> - Aggregation', () => {
     describe('`sum`', () => {
       it('should work with numbers', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.sum.apply({
-            values: [0, 10, 12, 23],
-            field: 'value',
-            groupId: 0,
-          }),
+          GRID_AGGREGATION_FUNCTIONS.sum.apply(
+            {
+              values: [0, 10, 12, 23],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
         ).to.equal(45);
       });
 
       it('should ignore non-numbers', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.sum.apply({
-            values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
-            field: 'value',
-            groupId: 0,
-          }),
+          GRID_AGGREGATION_FUNCTIONS.sum.apply(
+            {
+              values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
         ).to.equal(45);
       });
     });
@@ -895,21 +902,27 @@ describe('<DataGridPremium /> - Aggregation', () => {
     describe('`avg`', () => {
       it('should work with numbers', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply({
-            values: [0, 10, 12, 23],
-            field: 'value',
-            groupId: 0,
-          }),
+          GRID_AGGREGATION_FUNCTIONS.avg.apply(
+            {
+              values: [0, 10, 12, 23],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
         ).to.equal(11.25);
       });
 
       it('should ignore non-numbers', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply({
-            values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
-            field: 'value',
-            groupId: 0,
-          }),
+          GRID_AGGREGATION_FUNCTIONS.avg.apply(
+            {
+              values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
         ).to.equal(11.25);
       });
     });
@@ -917,21 +930,27 @@ describe('<DataGridPremium /> - Aggregation', () => {
     describe('`size`', () => {
       it('should work with any value types', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.size.apply({
-            values: [23, '', 'a', NaN, {}, false, true],
-            field: 'value',
-            groupId: 0,
-          }),
+          GRID_AGGREGATION_FUNCTIONS.size.apply(
+            {
+              values: [23, '', 'a', NaN, {}, false, true],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
         ).to.equal(7);
       });
 
       it('should ignore undefined values', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.size.apply({
-            values: [23, '', 'a', NaN, {}, false, true, undefined],
-            field: 'value',
-            groupId: 0,
-          }),
+          GRID_AGGREGATION_FUNCTIONS.size.apply(
+            {
+              values: [23, '', 'a', NaN, {}, false, true, undefined],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
         ).to.equal(7);
       });
     });

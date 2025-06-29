@@ -1,4 +1,5 @@
 import { GridRowId, GridRowModel, GridColDef, GridValueFormatter } from '@mui/x-data-grid-pro';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface GridAggregationState {
   model: GridAggregationModel;
@@ -34,6 +35,10 @@ export interface GridAggregationGetCellValueParams {
    * The row model of the row that the current cell belongs to.
    */
   row: GridRowModel;
+  /**
+   * The field of the cell that the aggregation function is applied to.
+   */
+  field: GridColDef['field'];
 }
 
 /**
@@ -46,9 +51,10 @@ export interface GridAggregationFunction<V = any, AV = V> {
    * Function that takes the current cell values and generates the aggregated value.
    * @template V, AV
    * @param {GridAggregationParams<V>} params The params of the current aggregated cell.
+   * @param {GridApiPremium} api The grid API.
    * @returns {AV} The aggregated value.
    */
-  apply: (params: GridAggregationParams<V>) => AV | null | undefined;
+  apply: (params: GridAggregationParams<V>, api: GridApiPremium) => AV | null | undefined;
   /**
    * Label of the aggregation function.
    * Used for adding a label to the footer of the grouping column when this aggregation function is the only one being used.
@@ -79,6 +85,12 @@ export interface GridAggregationFunction<V = any, AV = V> {
    * @returns {V} The value of the cell that will be passed to the aggregation `apply` function
    */
   getCellValue?: (params: GridAggregationGetCellValueParams) => V;
+  /**
+   * Indicates if the aggregation function depends on rows being in a sorted order.
+   * If `true`, the values provided to `apply` will be sorted.
+   * @default false
+   */
+  applySorting?: boolean;
 }
 
 /**
