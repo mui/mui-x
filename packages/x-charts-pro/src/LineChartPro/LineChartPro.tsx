@@ -404,6 +404,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -495,6 +496,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -577,6 +579,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -659,6 +662,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -741,6 +745,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -823,6 +828,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -905,6 +911,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -987,6 +994,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1088,6 +1096,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1178,6 +1187,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1259,6 +1269,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1340,6 +1351,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1421,6 +1433,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1502,6 +1515,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1583,6 +1597,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1664,6 +1679,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
