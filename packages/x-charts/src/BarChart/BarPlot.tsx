@@ -6,13 +6,13 @@ import { barElementClasses } from './barElementClasses';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
-import { useBarPlotData } from './useBarPlotData';
+import { BarStackMap, useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -75,37 +75,24 @@ function BarPlot(props: BarPlotProps) {
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
   const { yAxis: yAxes } = useYAxes();
-  const { completedData, masksData } = useBarPlotData(useDrawingArea(), xAxes, yAxes);
-
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
+  const { completedData, positiveStacks, negativeStacks } = useBarPlotData(
+    useDrawingArea(),
+    xAxes,
+    yAxes,
+    withoutBorderRadius,
+  );
+
   const classes = useUtilityClasses();
 
   return (
     <BarPlotRoot className={classes.root}>
-      {!withoutBorderRadius &&
-        masksData.map(({ id, x, y, width, height, hasPositive, hasNegative, layout }) => {
-          return (
-            <BarClipPath
-              key={id}
-              maskId={id}
-              borderRadius={borderRadius}
-              hasNegative={hasNegative}
-              hasPositive={hasPositive}
-              layout={layout}
-              x={x}
-              y={y}
-              width={width}
-              height={height}
-              skipAnimation={skipAnimation ?? false}
-            />
-          );
-        })}
       {completedData.map(({ seriesId, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
             {data.map(
-              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-                const barElement = (
+              ({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height, stackId }) => {
+                return (
                   <BarElement
                     key={dataIndex}
                     id={seriesId}
@@ -119,6 +106,21 @@ function BarPlot(props: BarPlotProps) {
                     yOrigin={yOrigin}
                     width={width}
                     height={height}
+                    clipPath={
+                      withoutBorderRadius
+                        ? undefined
+                        : generateClipPath(
+                            positiveStacks,
+                            negativeStacks,
+                            layout ?? 'vertical',
+                            stackId,
+                            seriesId,
+                            dataIndex,
+                            borderRadius,
+                            width,
+                            height,
+                          )
+                    }
                     {...other}
                     onClick={
                       onItemClick &&
@@ -127,16 +129,6 @@ function BarPlot(props: BarPlotProps) {
                       })
                     }
                   />
-                );
-
-                if (withoutBorderRadius) {
-                  return barElement;
-                }
-
-                return (
-                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
-                    {barElement}
-                  </g>
                 );
               },
             )}
@@ -196,3 +188,42 @@ BarPlot.propTypes = {
 } as any;
 
 export { BarPlot };
+
+function generateClipPath(
+  positiveStacks: BarStackMap,
+  negativeStacks: BarStackMap,
+  layout: 'vertical' | 'horizontal',
+  stackId: string | undefined,
+  seriesId: SeriesId,
+  dataIndex: number,
+  borderRadius: number,
+  width: number,
+  height: number,
+) {
+  const id = `${stackId ?? seriesId}-${dataIndex}`;
+  if (layout === 'vertical') {
+    const positiveStack = positiveStacks.get(id);
+
+    if (positiveStack && positiveStack.seriesId === seriesId) {
+      return `path("M0,${height} v-${height - borderRadius} a${borderRadius},${borderRadius} 0 0 1 ${borderRadius},-${borderRadius} h${width - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 1 ${borderRadius},${borderRadius} v${height - borderRadius} Z")`;
+    }
+
+    const negativeStack = negativeStacks.get(id);
+    if (negativeStack && negativeStack.seriesId === seriesId) {
+      return `path("M0,0 v${height - borderRadius} a${borderRadius},${borderRadius} 0 0 0 ${borderRadius},${borderRadius} h${width - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 0 ${borderRadius},-${borderRadius} v-${height - borderRadius} Z")`;
+    }
+  } else if (layout === 'horizontal') {
+    const positiveStack = positiveStacks.get(id);
+
+    if (positiveStack && positiveStack.seriesId === seriesId) {
+      return `path("M0,0 h${width - borderRadius} a${borderRadius},${borderRadius} 0 0 1 ${borderRadius},${borderRadius} v${height - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 1 -${borderRadius},${borderRadius} h-${width - borderRadius} Z")`;
+    }
+
+    const negativeStack = negativeStacks.get(id);
+    if (negativeStack && negativeStack.seriesId === seriesId) {
+      return `path("M${width},0 h-${width - borderRadius} a${borderRadius},${borderRadius} 0 0 0 -${borderRadius},${borderRadius} v${height - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 0 ${borderRadius},${borderRadius} h${width - borderRadius} Z")`;
+    }
+  }
+
+  return undefined;
+}
