@@ -22,11 +22,12 @@ export function defaultizeXAxis(
     bottom: 0,
     none: 0,
   };
-
   const inputAxes =
     inAxes && inAxes.length > 0
       ? inAxes
       : [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' as const }];
+
+  const groupStart: Record<string, number> = {};
 
   const parsedAxes = inputAxes.map((axisConfig, index) => {
     const dataKey = axisConfig.dataKey;
@@ -38,14 +39,25 @@ export function defaultizeXAxis(
       DEFAULT_AXIS_SIZE_HEIGHT + (axisConfig.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
 
     const id = axisConfig.id ?? `defaultized-x-axis-${index}`;
+
+    const axisOffset = offsets[position];
+    if (axisConfig.groupId) {
+      if (groupStart[axisConfig.groupId] === undefined) {
+        groupStart[axisConfig.groupId] = axisOffset;
+      }
+    }
+    const groupStartOffset = groupStart[axisConfig.groupId ?? ''];
+
     const sharedConfig = {
-      offset: offsets[position],
+      offset: axisOffset,
+      groupStartOffset,
+      ...(axisOffset !== groupStartOffset && { disableLine: true }),
       ...axisConfig,
       id,
       position,
       height: axisConfig.height ?? defaultHeight,
       zoom: defaultizeZoom(axisConfig.zoom, id, 'x'),
-    };
+    } satisfies DefaultedXAxis;
 
     // Increment the offset for the next axis
     if (position !== 'none') {
