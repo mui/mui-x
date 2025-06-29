@@ -28,8 +28,8 @@ export const useClockReferenceDate = <TProps extends {}>({
         granularity: SECTION_TYPE_GRANULARITY.day,
         timezone,
         getTodayDate: () => getTodayDate(adapter, timezone, 'date'),
-      }), // We only want to compute the reference date on mount.
-    [], // eslint-disable-line react-hooks/exhaustive-deps
+      }), // We want the `referenceDate` to update on prop and `timezone` change (https://github.com/mui/mui-x/issues/10804)
+    [referenceDateProp, timezone], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return value ?? referenceDate;
