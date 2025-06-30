@@ -270,9 +270,9 @@ export function useGridVirtualizer(
   // TODO(v9): Remove this
   const disposeRef = React.useRef<Function>(null);
   useFirstRender(() => {
-    apiRef.current.store.state = virtualizer.store.state.dimensions;
-    apiRef.current.store.state = virtualizer.store.state.rowsMeta;
-    apiRef.current.store.state = virtualizer.store.state.virtualization;
+    apiRef.current.store.state.dimensions = virtualizer.store.state.dimensions;
+    apiRef.current.store.state.rowsMeta = virtualizer.store.state.rowsMeta;
+    apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
 
     disposeRef.current = virtualizer.store.subscribe((state) => {
       if (state.dimensions !== apiRef.current.state.dimensions) {
