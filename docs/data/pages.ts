@@ -73,7 +73,7 @@ const pages: MuiPage[] = [
                 plan: 'pro',
                 title: 'Master-detail row panels',
               },
-              { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
+              { pathname: '/x/react-data-grid/row-ordering', plan: 'pro', title: 'Row reordering' },
               { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
             ],
