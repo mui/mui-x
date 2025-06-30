@@ -10,7 +10,7 @@ import type { HeightEntry, RowSpacing, RowVisibilityParams } from './models/dime
 export * from './features/virtualization';
 
 import {
-  Column,
+  ColumnWithWidth,
   FocusedCell,
   Size,
   PinnedRows,
@@ -55,7 +55,7 @@ export type VirtualizerParams = {
   range: { firstRowIndex: integer; lastRowIndex: integer } | null;
   rowIdToIndexMap: Map<RowId, number>;
   rowCount: integer;
-  columns: Column[];
+  columns: ColumnWithWidth[];
   pinnedRows: PinnedRows;
   pinnedColumns: PinnedColumns;
   refs: {
@@ -108,12 +108,11 @@ export type VirtualizerParams = {
   fixme: {
     focusedVirtualCell: () => any;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
-    columnPositions: () => any;
     calculateColSpan: (params: {
       rowId: any;
       minFirstColumn: number;
       maxLastColumn: number;
-      columns: Column[];
+      columns: ColumnWithWidth[];
     }) => void;
     renderRow: (params: {
       id: any;
@@ -122,7 +121,7 @@ export type VirtualizerParams = {
       offsetLeft: number;
       columnsTotalWidth: number;
       baseRowHeight: number | 'auto';
-      columns: Column[];
+      columns: ColumnWithWidth[];
       firstColumnIndex: number;
       lastColumnIndex: number;
       focusedColumnIndex: number | undefined;

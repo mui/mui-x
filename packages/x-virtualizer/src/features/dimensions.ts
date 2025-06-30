@@ -6,8 +6,13 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useSelector, useSelectorEffect } from '@mui/x-internals/store';
-import { Size, DimensionsState, RowId, RowEntry, RowsMetaState } from '../models';
+import {
+  Store,
+  useSelector,
+  useSelectorEffect,
+  createSelectorMemoized,
+} from '@mui/x-internals/store';
+import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
 import type { VirtualizerParams } from '../useVirtualizer';
 import type { BaseState } from '../useVirtualizer';
 
@@ -41,6 +46,17 @@ const selectors = {
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
+  columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
+    const positions: number[] = [];
+    let currentPosition = 0;
+
+    for (let i = 0; i < columns.length; i += 1) {
+      positions.push(currentPosition);
+      currentPosition += columns[i].computedWidth;
+    }
+
+    return positions;
+  }),
 };
 
 export const Dimensions = {

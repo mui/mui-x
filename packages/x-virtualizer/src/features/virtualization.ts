@@ -360,7 +360,7 @@ function useVirtualization(
     }
 
     const rowElements: React.ReactNode[] = [];
-    const columnPositions = fixme.columnPositions();
+    const columnPositions = Dimensions.selectors.columnPositions(store.state, columns);
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];

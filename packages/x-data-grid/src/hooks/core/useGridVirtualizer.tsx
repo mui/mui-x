@@ -63,9 +63,13 @@ export function useGridVirtualizer(
 ): void {
   const isRtl = useRtl();
   const { listView } = rootProps;
-  const visibleColumns = useGridSelector(apiRef, () =>
-    listView ? [gridListColumnSelector(apiRef)!] : gridVisibleColumnDefinitionsSelector(apiRef),
-  );
+  const visibleColumns = useGridSelector(apiRef, () => {
+    if (listView) {
+      const column = gridListColumnSelector(apiRef);
+      return column ? [column] : [];
+    }
+    return gridVisibleColumnDefinitionsSelector(apiRef);
+  });
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = listView
@@ -220,9 +224,7 @@ export function useGridVirtualizer(
       inputs: (enabledForRows, enabledForColumns) =>
         inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
 
-      columnPositions: () => gridColumnPositionsSelector(apiRef),
-
-      calculateColSpan: (params) => apiRef.current.calculateColSpan(params),
+      calculateColSpan: (params) => apiRef.current.calculateColSpan(params as any),
 
       renderRow: (params) => (
         <rootProps.slots.row
@@ -235,7 +237,7 @@ export function useGridVirtualizer(
           columnsTotalWidth={columnsTotalWidth}
           rowHeight={params.baseRowHeight}
           pinnedColumns={pinnedColumns}
-          visibleColumns={params.columns}
+          visibleColumns={params.columns as any}
           firstColumnIndex={params.firstColumnIndex}
           lastColumnIndex={params.lastColumnIndex}
           focusedColumnIndex={params.focusedColumnIndex}

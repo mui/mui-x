@@ -7,8 +7,11 @@ export namespace Size {
   }
 }
 
-export type Row = any; // TODO
-export type Column = any; // TODO
+export type Row = { [key: string | symbol]: any };
+export type Column = { [key: string | symbol]: any };
+export type ColumnWithWidth = {
+  computedWidth: number;
+} & Column;
 
 export type RowId = any; // TODO
 
@@ -18,8 +21,8 @@ export type RowEntry = {
 };
 
 export type PinnedRows = {
-  top: Row[];
-  bottom: Row[];
+  top: RowEntry[];
+  bottom: RowEntry[];
 };
 
 export type PinnedColumns = {
