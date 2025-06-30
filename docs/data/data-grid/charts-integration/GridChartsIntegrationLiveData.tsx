@@ -2,7 +2,7 @@ import * as React from 'react';
 import { interval } from 'rxjs';
 import {
   DataGridPremium,
-  GridChartsConfigurationPanel,
+  GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   GridColDef,
@@ -76,10 +76,10 @@ export default function GridChartsIntegrationLiveData() {
             showToolbar
             chartsIntegration
             slots={{
-              chartsConfigurationPanel: GridChartsConfigurationPanel,
+              chartsPanel: GridChartsPanel,
             }}
             slotProps={{
-              chartsConfigurationPanel: {
+              chartsPanel: {
                 schema: customConfigurationOptions,
               },
             }}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import {
   DataGridPremium,
-  GridChartsConfigurationPanel,
+  GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
 } from '@mui/x-data-grid-premium';
@@ -27,10 +27,10 @@ export default function GridChartsIntegrationBasic() {
             showToolbar
             chartsIntegration
             slots={{
-              chartsConfigurationPanel: GridChartsConfigurationPanel,
+              chartsPanel: GridChartsPanel,
             }}
             slotProps={{
-              chartsConfigurationPanel: {
+              chartsPanel: {
                 schema: configurationOptions,
               },
             }}
