@@ -6,12 +6,11 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
 import { GridChartsPanelChart } from './chart/GridChartsPanelChart';
-import { GridChartsPanelDataHeader } from './data/GridChartsPanelDataHeader';
-import { GridChartsPanelDataBody } from './data/GridChartsPanelDataBody';
 import { GridChartsPanelCustomize } from './customize/GridChartsPanelCustomize';
 import { Tab, TabList, TabPanel, Tabs } from '../tabs';
 import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
+import { GridChartsPanelData } from './data/GridChartsPanelData';
 
 export interface GridChartsPanelProps {
   /**
@@ -28,7 +27,6 @@ export interface GridChartsPanelProps {
 }
 
 function GridChartsPanel(_: GridChartsPanelProps) {
-  const [searchValue, setSearchValue] = React.useState<string>('');
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
@@ -84,8 +82,7 @@ function GridChartsPanel(_: GridChartsPanelProps) {
         />
       </TabPanel>
       <TabPanel value="data">
-        <GridChartsPanelDataHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
-        <GridChartsPanelDataBody searchValue={searchValue} />
+        <GridChartsPanelData />
       </TabPanel>
       <TabPanel value="customize">
         <GridChartsPanelCustomize activeChartId={activeChartId} />
