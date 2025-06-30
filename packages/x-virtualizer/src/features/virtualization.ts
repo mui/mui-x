@@ -5,7 +5,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { RefObject } from '@mui/x-internals/types';
+import type { integer, RefObject } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
@@ -16,6 +16,7 @@ import {
   PinnedRowPosition,
   RenderContext,
   ColumnsRenderContext,
+  ColumnWithWidth,
   RowId,
   RowEntry,
   ScrollPosition,
@@ -81,7 +82,7 @@ function initializeState(params: VirtualizerParams) {
 function useVirtualization(
   store: Store<BaseState>,
   params: VirtualizerParams,
-  api: { dimensions: Dimensions.API },
+  api: { dimensions: Dimensions.API; virtualization: Virtualization.API },
 ) {
   const {
     initialState,
@@ -382,29 +383,19 @@ function useVirtualization(
         const minFirstColumn = pinnedColumns.left.length;
         const maxLastColumn = columns.length - pinnedColumns.right.length;
 
-        fixme.calculateColSpan({
-          rowId: id,
-          minFirstColumn,
-          maxLastColumn,
-          columns: columns,
-        });
+        api.virtualization.calculateColSpan(id, minFirstColumn, maxLastColumn, columns);
 
         if (pinnedColumns.left.length > 0) {
-          fixme.calculateColSpan({
-            rowId: id,
-            minFirstColumn: 0,
-            maxLastColumn: pinnedColumns.left.length,
-            columns: columns,
-          });
+          api.virtualization.calculateColSpan(id, 0, pinnedColumns.left.length, columns);
         }
 
         if (pinnedColumns.right.length > 0) {
-          fixme.calculateColSpan({
-            rowId: id,
-            minFirstColumn: columns.length - pinnedColumns.right.length,
-            maxLastColumn: columns.length,
-            columns: columns,
-          });
+          api.virtualization.calculateColSpan(
+            id,
+            columns.length - pinnedColumns.right.length,
+            columns.length,
+            columns,
+          );
         }
       }
 
@@ -521,6 +512,19 @@ function useVirtualization(
     },
     [columnsTotalWidth, contentHeight],
   );
+
+  /**
+   * Calculate `colSpan` for each cell in the row.
+   * Placeholder API for colspan to re-implement.
+   */
+  const calculateColSpan = (
+    _rowId: RowId,
+    _minFirstColumn: integer,
+    _maxLastColumn: integer,
+    _columns: ColumnWithWidth[],
+  ): void => {
+    throw new Error('Unimplemented: colspan feature is required');
+  };
 
   useEnhancedEffect(() => {
     if (!isRenderContextReady.current) {
@@ -639,6 +643,7 @@ function useVirtualization(
     use: () => useSelector(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
+    calculateColSpan,
   };
 }
 

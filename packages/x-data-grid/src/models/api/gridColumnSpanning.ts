@@ -30,10 +30,10 @@ export interface GridColumnSpanningPrivateApi {
    * @param {number} options.maxLastColumn Last visible column index
    * @param {GridStateColDef[]} options.columns List of columns to calculate colSpan for
    */
-  calculateColSpan: (options: {
-    rowId: GridRowId;
-    minFirstColumn: number;
-    maxLastColumn: number;
-    columns: GridStateColDef[];
-  }) => void;
+  calculateColSpan: (
+    rowId: GridRowId,
+    minFirstColumn: number,
+    maxLastColumn: number,
+    columns: GridStateColDef[],
+  ) => void;
 }

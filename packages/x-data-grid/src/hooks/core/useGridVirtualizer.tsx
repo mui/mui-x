@@ -6,6 +6,7 @@ import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { useVirtualizer } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
+import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridRootProps } from '../utils/useGridRootProps';
 import { useGridSelector } from '../utils/useGridSelector';
@@ -219,12 +220,19 @@ export function useGridVirtualizer(
 
     scrollReset,
 
+    getColspan: (rowId, column) => {
+      if (typeof column.colSpan === 'function') {
+        const row = apiRef.current.getRow(rowId);
+        const value = apiRef.current.getRowValue(row, column as GridStateColDef);
+        return column.colSpan(value, row, column, apiRef) ?? 0;
+      }
+      return column.colSpan ?? 0;
+    },
+
     fixme: {
       focusedVirtualCell: () => gridFocusedVirtualCellSelector(apiRef),
       inputs: (enabledForRows, enabledForColumns) =>
         inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
-
-      calculateColSpan: (params) => apiRef.current.calculateColSpan(params as any),
 
       renderRow: (params) => (
         <rootProps.slots.row

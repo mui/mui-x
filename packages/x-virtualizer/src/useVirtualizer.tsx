@@ -2,6 +2,7 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { RefObject } from '@mui/x-internals/types';
 import { Store } from '@mui/x-internals/store';
+import { Colspan } from './features/colspan';
 import { Dimensions } from './features/dimensions';
 import { Virtualization } from './features/virtualization';
 import type { RowId } from './models/core';
@@ -105,15 +106,11 @@ export type VirtualizerParams = {
 
   scrollReset?: any;
 
+  getColspan: (rowId: RowId, column: ColumnWithWidth, columnIndex: integer) => number;
+
   fixme: {
     focusedVirtualCell: () => any;
     inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
-    calculateColSpan: (params: {
-      rowId: any;
-      minFirstColumn: number;
-      maxLastColumn: number;
-      columns: ColumnWithWidth[];
-    }) => void;
     renderRow: (params: {
       id: any;
       model: Row;
@@ -139,6 +136,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     const state = {
       ...Dimensions.initialize(params),
       ...Virtualization.initialize(params),
+      ...Colspan.initialize(params),
     };
     return new Store(state);
   }).current;
@@ -146,9 +144,11 @@ export const useVirtualizer = (params: VirtualizerParams) => {
   const api = {} as {
     dimensions: Dimensions.API;
     virtualization: Virtualization.API;
+    colspan: Colspan.API;
   };
   api.dimensions = Dimensions.use(store, params, api);
   api.virtualization = Virtualization.use(store, params, api);
+  api.colspan = Colspan.use(store, params, api);
 
   /* Extra APIs moved here (could be reorganized in a separate file) */
 
@@ -176,6 +176,7 @@ export const useVirtualizer = (params: VirtualizerParams) => {
 
   return {
     store,
+    colspan: api.colspan,
     dimensions: api.dimensions,
     virtualization: api.virtualization,
     extra: {
