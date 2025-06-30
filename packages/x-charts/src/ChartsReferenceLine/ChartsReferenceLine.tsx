@@ -85,4 +85,9 @@ ChartsReferenceLine.propTypes = {
   y: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
 } as any;
 
-export { type ChartsReferenceLineProps, ChartsReferenceLine };
+export {
+  ChartsReferenceLine,
+  type ChartsReferenceLineProps,
+  type ChartsXReferenceLineProps,
+  type ChartsYReferenceLineProps,
+};
