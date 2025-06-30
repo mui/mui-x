@@ -9,16 +9,16 @@ import {
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridPivotActiveSelector, NotRendered, vars } from '@mui/x-data-grid-pro/internals';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { FieldTransferObject, DropPosition } from './GridChartsPanelDataBody';
 import { GridChartsPanelDataFieldMenu } from './GridChartsPanelDataFieldMenu';
-import { gridAggregationModelSelector } from '../../hooks/features/aggregation';
-import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
-import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
-import { COLUMN_GROUP_ID_SEPARATOR } from '../../constants/columnGroups';
+import { gridAggregationModelSelector } from '../../../hooks/features/aggregation';
+import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
+import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 
 type GridChartsPanelDataFieldProps = {
   children: React.ReactNode;

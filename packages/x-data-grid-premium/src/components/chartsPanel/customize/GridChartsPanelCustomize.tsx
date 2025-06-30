@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
-import { GridChartsConfigurationSection } from '../../models/gridChartsIntegration';
-import { Collapsible } from '../collapsible/Collapsible';
-import { CollapsibleTrigger } from '../collapsible/CollapsibleTrigger';
-import { CollapsiblePanel } from '../collapsible/CollapsiblePanel';
-import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../hooks/features/chartsIntegration/useGridChartsIntegration';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
+import { GridChartsConfigurationSection } from '../../../models/gridChartsIntegration';
+import { Collapsible } from '../../collapsible/Collapsible';
+import { CollapsibleTrigger } from '../../collapsible/CollapsibleTrigger';
+import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../../hooks/features/chartsIntegration/useGridChartsIntegration';
 
-interface GridChartsPanelConfigurationProps {
+interface GridChartsPanelCustomizeProps {
   activeChartId: string;
 }
 
 type OwnerState = DataGridPremiumProcessedProps;
 
-const GridChartsPanelConfigurationRoot = styled('div')({
+const GridChartsPanelCustomizeRoot = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
@@ -25,7 +25,7 @@ const GridChartsPanelConfigurationRoot = styled('div')({
   overflowY: 'auto',
 });
 
-const GridChartsPanelConfigurationPanel = styled(CollapsiblePanel, {
+const GridChartsPanelCustomizePanel = styled(CollapsiblePanel, {
   name: 'MuiDataGrid',
   slot: 'chartsPanelSection',
 })<{ ownerState: OwnerState }>({
@@ -35,15 +35,15 @@ const GridChartsPanelConfigurationPanel = styled(CollapsiblePanel, {
   gap: 24,
 });
 
-const GridChartsPanelConfigurationPanelTitle = styled('div', {
+const GridChartsPanelCustomizePanelTitle = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsPanelConfigurationPanelTitle',
+  slot: 'ChartsPanelCustomizePanelTitle',
 })<{ ownerState: OwnerState }>({
   font: vars.typography.font.body,
   fontWeight: vars.typography.fontWeight.medium,
 });
 
-export function GridChartsPanelConfiguration(props: GridChartsPanelConfigurationProps) {
+export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   const { activeChartId } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -74,15 +74,15 @@ export function GridChartsPanelConfiguration(props: GridChartsPanelConfiguration
   }
 
   return (
-    <GridChartsPanelConfigurationRoot>
+    <GridChartsPanelCustomizeRoot>
       {sections.map((section, index) => (
         <Collapsible key={section.id} initiallyOpen={index === 0}>
           <CollapsibleTrigger>
-            <GridChartsPanelConfigurationPanelTitle ownerState={rootProps}>
+            <GridChartsPanelCustomizePanelTitle ownerState={rootProps}>
               {section.label}
-            </GridChartsPanelConfigurationPanelTitle>
+            </GridChartsPanelCustomizePanelTitle>
           </CollapsibleTrigger>
-          <GridChartsPanelConfigurationPanel ownerState={rootProps}>
+          <GridChartsPanelCustomizePanel ownerState={rootProps}>
             {Object.entries(section.controls).map(([key, optRaw]) => {
               const opt = optRaw as any;
               const context = { configuration, categories, series };
@@ -164,9 +164,9 @@ export function GridChartsPanelConfiguration(props: GridChartsPanelConfiguration
                 />
               );
             })}
-          </GridChartsPanelConfigurationPanel>
+          </GridChartsPanelCustomizePanel>
         </Collapsible>
       ))}
-    </GridChartsPanelConfigurationRoot>
+    </GridChartsPanelCustomizeRoot>
   );
 }
