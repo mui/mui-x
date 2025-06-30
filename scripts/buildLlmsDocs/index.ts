@@ -302,7 +302,6 @@ function findNonComponentMarkdownFiles(
  * Process a single component by combining its markdown and API documentation
  */
 function processComponent(component: ComponentDocInfo): string | null {
-
   // Skip if no markdown file found
   if (!component.markdownPath) {
     console.error(`Warning: No markdown file found for component: ${component.name}`);
@@ -381,12 +380,18 @@ async function formatMarkdown(content: string): Promise<string> {
 }
 
 /**
- * Increase header levels by one (add one # to each header)
+ * Increase header levels by one (add one # to each header) and remove project prefixes from titles
  */
 function increaseHeaderLevels(content: string): string {
   // Replace headers with one additional #
   // # becomes ##, ## becomes ###, ### becomes ####, etc.
-  return content.replace(/^(#{1,5})\s/gm, '#$1 ');
+  let processedContent = content.replace(/^(#{1,5})\s/gm, '#$1 ');
+
+  // Remove project prefixes from markdown link titles for root llms.txt
+  // e.g., "Date and Time Pickers - Custom layout" -> "Custom layout"
+  processedContent = processedContent.replace(/\[([^[\]]*?)\s*-\s*([^[\]]*?)\]/g, '[$2]');
+
+  return processedContent;
 }
 
 /**
@@ -852,7 +857,6 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     // Process non-component markdown files for this project
     for (const file of nonComponentFiles) {
       try {
-
         // Process the markdown file with demo replacement
         const processedMarkdown = processMarkdownFile(file.markdownPath);
 
