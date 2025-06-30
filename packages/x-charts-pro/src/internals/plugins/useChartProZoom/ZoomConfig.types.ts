@@ -37,6 +37,10 @@ export type InteractionMode = 'touch' | 'mouse' | 'all';
 export type OnWheelInteraction = {
   type: 'onWheel';
   mode?: 'all';
+  /**
+   * The keys that must be pressed to trigger the interaction.
+   */
+  keys?: AllKeys[];
 };
 export type OnPinchInteraction = {
   type: 'onPinch';
@@ -49,6 +53,10 @@ export type OnTapAndDragInteraction = {
 export type OnDragInteraction = {
   type: 'onDrag';
   mode?: InteractionMode;
+  /**
+   * The keys that must be pressed to trigger the interaction.
+   */
+  keys?: AllKeys[];
 };
 export type OnDoubleDragInteraction = {
   type: 'onDoubleDrag';
@@ -58,3 +66,33 @@ export type OnPressAndDragInteraction = {
   type: 'onPressAndDrag';
   mode?: InteractionMode;
 };
+
+type AllLetters =
+  | 'a'
+  | 'b'
+  | 'c'
+  | 'd'
+  | 'e'
+  | 'f'
+  | 'g'
+  | 'h'
+  | 'i'
+  | 'j'
+  | 'k'
+  | 'l'
+  | 'm'
+  | 'n'
+  | 'o'
+  | 'p'
+  | 'q'
+  | 'r'
+  | 's'
+  | 't'
+  | 'u'
+  | 'v'
+  | 'w'
+  | 'x'
+  | 'y'
+  | 'z';
+type AllMeta = 'Shift' | 'Control' | 'Alt' | 'Meta' | 'ControlOrMeta';
+type AllKeys = AllLetters | AllMeta;
