@@ -1,6 +1,6 @@
 'use client';
-import { warnOnce } from '../../../../../x-internals/src/warning';
-import type { ZoomConfig, DefaultizedZoomConfig, InteractionMode } from './ZoomConfig.types';
+import { warnOnce } from '@mui/x-internals/warning';
+import type { ZoomConfig, DefaultizedZoomConfig } from './ZoomConfig.types';
 
 export const defaultizeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomConfig => {
   const defaultizedConfig: DefaultizedZoomConfig = { zoom: {}, pan: {} };
@@ -17,6 +17,7 @@ export const defaultizeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
         defaultizedConfig.zoom[interaction.type as string] = {
           type: interaction.type,
           mode: interaction.mode ?? 'all',
+          keys: 'keys' in interaction ? interaction.keys : undefined,
         };
       }
     });
@@ -32,6 +33,7 @@ export const defaultizeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
         defaultizedConfig.pan[interaction.type as string] = {
           type: interaction.type,
           mode: interaction.mode ?? 'all',
+          keys: 'keys' in interaction ? interaction.keys : undefined,
         };
       }
     });

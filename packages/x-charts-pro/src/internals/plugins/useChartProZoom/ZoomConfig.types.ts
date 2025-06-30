@@ -19,7 +19,7 @@ export type ZoomConfig = {
   pan?: (PanInteraction | PanInteraction['type'])[];
 };
 
-type Entry<T extends { type: string; mode?: InteractionMode }> = {
+type Entry<T extends AnyInteraction> = {
   [K in T['type']]?: T;
 };
 export type DefaultizedZoomConfig = {
@@ -96,3 +96,9 @@ type AllLetters =
   | 'z';
 type AllMeta = 'Shift' | 'Control' | 'Alt' | 'Meta' | 'ControlOrMeta';
 type AllKeys = AllLetters | AllMeta;
+
+export type AnyInteraction = {
+  type: string;
+  mode?: InteractionMode;
+  keys?: AllKeys[];
+};
