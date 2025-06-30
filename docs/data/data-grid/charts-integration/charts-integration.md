@@ -13,7 +13,7 @@ This integration is possible via the `<GridChartsIntegrationContextProvider />`
 Based on its internal models, the Grid calculates and stores the data in a format that is easy to use for chart rendering.
 `<ChartRenderer />` reads that data and renders an appropriate chart component with props that depend on the configuration stored in the context.
 
-## Set up
+## Setup
 
 To enable chart integration, pass the `chartsIntegration` prop to the Grid and `<GridChartsPanel />` to the `chartsPanel` slot.
 This will enable the charts panel and allow updates to the charts integration context provider state.
@@ -48,7 +48,7 @@ Use `initialState` to set the initial configuration for the chart renderer.
 
 {{"demo": "GridChartsIntegrationBasic.js", "bg": "inline"}}
 
-## Row Grouping
+## Row grouping
 
 You can integrate charts with grouped and aggregated data.
 The Grid's grouping and aggregation state will be reflected in the chart.
@@ -88,7 +88,7 @@ React.useEffect(() => {
 
 {{"demo": "GridChartsIntegrationPivoting.js", "bg": "inline"}}
 
-## Multiple Charts
+## Multiple charts
 
 Control multiple charts with one grid by adding more `<GridChartsRendererProxy />` components with unique `id`s.
 Each chart can have its own configuration and state.
@@ -119,7 +119,7 @@ const onRender = (type, props, Component) => {
 
 {{"demo": "GridChartsIntegrationCustomization.js", "bg": "inline"}}
 
-## Live Data
+## Live data
 
 The demo below shows charts' responsiveness to live data updates in the Grid.
 
