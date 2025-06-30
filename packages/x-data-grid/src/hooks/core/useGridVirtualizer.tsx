@@ -22,11 +22,7 @@ import {
   gridColumnPositionsSelector,
   gridHasColSpanSelector,
 } from '../features/columns/gridColumnsSelector';
-import {
-  gridPinnedRowsSelector,
-  gridRowCountSelector,
-  gridRowTreeSelector,
-} from '../features/rows/gridRowsSelector';
+import { gridPinnedRowsSelector, gridRowCountSelector } from '../features/rows/gridRowsSelector';
 import { useGridVisibleRows, getVisibleRows } from '../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../features/pagination';
