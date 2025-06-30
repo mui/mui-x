@@ -194,7 +194,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/charts-integration',
             plan: 'premium',
             newFeature: true,
-            title: 'Charts Integration',
+            title: 'Charts integration',
           },
           {
             pathname: '/x/react-data-grid/ai-assistant',
@@ -231,6 +231,12 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/components/pivot-panel',
             title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/charts-panel',
+            title: 'Charts Panel',
             planned: true,
             plan: 'premium',
           },
@@ -566,6 +572,12 @@ const pages: MuiPage[] = [
                 plan: 'pro',
               },
               { pathname: '/x/react-charts/toolbar', title: 'Toolbar', unstable: true },
+              {
+                pathname: '/x/react-charts/data-grid-integration',
+                title: 'Data Grid integration',
+                plan: 'premium',
+                newFeature: true,
+              },
             ],
           },
           {
