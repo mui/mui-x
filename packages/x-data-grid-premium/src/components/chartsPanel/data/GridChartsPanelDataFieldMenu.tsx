@@ -3,15 +3,15 @@ import * as React from 'react';
 
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { FieldTransferObject, DropPosition } from './GridChartsPanelDataBody';
-import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
 import {
   gridChartsCategoriesSelector,
   gridChartsIntegrationActiveChartIdSelector,
   gridChartsSeriesSelector,
-} from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
-import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+} from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
+import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 interface GridChartsPanelDataFieldMenuProps {
   field: string;

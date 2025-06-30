@@ -4,11 +4,11 @@ import { styled } from '@mui/system';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
-import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { ChartState } from '../../models/gridChartsIntegration';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { ChartState } from '../../../models/gridChartsIntegration';
 
-export interface GridChartsPanelManagementProps {
+export interface GridChartsPanelChartProps {
   charts: Record<string, ChartState>;
   activeChartId: string;
   selectedChartType: string;
@@ -107,7 +107,7 @@ const GridChartsManagementLabel = styled('div', {
   alignItems: 'center',
 });
 
-function GridChartsPanelManagement(props: GridChartsPanelManagementProps) {
+function GridChartsPanelChart(props: GridChartsPanelChartProps) {
   const {
     charts,
     activeChartId,
@@ -173,7 +173,7 @@ function GridChartsPanelManagement(props: GridChartsPanelManagementProps) {
   );
 }
 
-GridChartsPanelManagement.propTypes = {
+GridChartsPanelChart.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -181,4 +181,4 @@ GridChartsPanelManagement.propTypes = {
   schema: PropTypes.object,
 } as any;
 
-export { GridChartsPanelManagement };
+export { GridChartsPanelChart };

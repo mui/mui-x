@@ -5,10 +5,10 @@ import { useGridSelector } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
-import { GridChartsPanelManagement } from './GridChartsPanelManagement';
-import { GridChartsPanelDataHeader } from './GridChartsPanelDataHeader';
-import { GridChartsPanelDataBody } from './GridChartsPanelDataBody';
-import { GridChartsPanelConfiguration } from './GridChartsPanelConfiguration';
+import { GridChartsPanelChart } from './chart/GridChartsPanelChart';
+import { GridChartsPanelDataHeader } from './data/GridChartsPanelDataHeader';
+import { GridChartsPanelDataBody } from './data/GridChartsPanelDataBody';
+import { GridChartsPanelCustomize } from './customize/GridChartsPanelCustomize';
 import { Tab, TabList, TabPanel, Tabs } from '../tabs';
 import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
@@ -58,13 +58,11 @@ function GridChartsPanel(_: GridChartsPanelProps) {
   // TODO: render a placeholder if there are no charts available - use the locale text `chartsConfigurationNoCharts`
 
   return (
-    <Tabs initialTab="charts">
+    <Tabs initialTab="chart">
       <TabList>
-        <Tab value="charts">{apiRef.current.getLocaleText('chartsConfigurationTabChart')}</Tab>
-        <Tab value="fields">{apiRef.current.getLocaleText('chartsConfigurationTabFields')}</Tab>
-        <Tab value="configuration">
-          {apiRef.current.getLocaleText('chartsConfigurationTabConfig')}
-        </Tab>
+        <Tab value="chart">{apiRef.current.getLocaleText('chartsConfigurationTabChart')}</Tab>
+        <Tab value="data">{apiRef.current.getLocaleText('chartsConfigurationTabFields')}</Tab>
+        <Tab value="customize">{apiRef.current.getLocaleText('chartsConfigurationTabConfig')}</Tab>
         <rootProps.slots.baseIconButton
           onClick={() => {
             apiRef.current.setChartsPanelOpen(false);
@@ -75,8 +73,8 @@ function GridChartsPanel(_: GridChartsPanelProps) {
           <rootProps.slots.sidebarCloseIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
       </TabList>
-      <TabPanel value="charts">
-        <GridChartsPanelManagement
+      <TabPanel value="chart">
+        <GridChartsPanelChart
           charts={chartStateLookup}
           activeChartId={activeChartId}
           selectedChartType={chartStateLookup[activeChartId]?.type}
@@ -85,12 +83,12 @@ function GridChartsPanel(_: GridChartsPanelProps) {
           onChartTypeChange={handleChartTypeChange}
         />
       </TabPanel>
-      <TabPanel value="fields">
+      <TabPanel value="data">
         <GridChartsPanelDataHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
         <GridChartsPanelDataBody searchValue={searchValue} />
       </TabPanel>
-      <TabPanel value="configuration">
-        <GridChartsPanelConfiguration activeChartId={activeChartId} />
+      <TabPanel value="customize">
+        <GridChartsPanelCustomize activeChartId={activeChartId} />
       </TabPanel>
     </Tabs>
   );
