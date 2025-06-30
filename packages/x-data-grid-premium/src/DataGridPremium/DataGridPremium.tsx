@@ -34,7 +34,7 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPre
 import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 import { gridChartsConfigurationPanelOpenSelector } from '../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
-import { GridChartsConfigurationPanel } from '../components/chartsConfigurationPanel/GridChartsConfigurationPanel';
+import { GridChartsConfigurationPanel } from '../components/chartsPanel/GridChartsConfigurationPanel';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
