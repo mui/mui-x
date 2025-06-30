@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useEffectEvent } from '@floating-ui/react/utils';
 import { useTimeout } from '../../base-ui-copy/utils/useTimeout';

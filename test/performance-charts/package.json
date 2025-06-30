@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test:performance": "vitest bench",
+    "test:performance:trace": "TRACE=true vitest bench --run",
     "build": "pnpm --filter=\"@mui/x-charts-premium...\" build",
     "test:performance:browser": "vitest bench --browser"
   },
