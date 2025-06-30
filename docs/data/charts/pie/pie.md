@@ -140,7 +140,10 @@ In addition to the common chart components available for [composition](/x/react-
 Here's how the Pie Chart is composed:
 
 ```jsx
-<ChartDataProvider>
+// Disable the default axis behavior
+const noAxis = [{ position: 'none'}];
+
+<ChartDataProvider xAxis={noAxis} yAxis={noAxis}>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -151,3 +154,9 @@ Here's how the Pie Chart is composed:
   </ChartsWrapper>
 </ChartDataProvider>
 ```
+
+:::info
+The code defines `noAxis` for the x and y-axis to override the default axes created by the  `<ChartDataProvider />`.
+
+This is a workaround the time to build a proper data provider for the pie chart.
+:::
