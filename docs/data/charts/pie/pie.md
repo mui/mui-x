@@ -156,7 +156,6 @@ const noAxis = [{ position: 'none'}];
 ```
 
 :::info
-The code defines `noAxis` for the x and y-axis to override the default axes created by the  `<ChartDataProvider />`.
-
-This is a workaround the time to build a proper data provider for the pie chart.
+The code defines `noAxis` for the x and y-axes to override the default axes created by the  `<ChartDataProvider />`.
+This ensures that the pie is centered.
 :::
