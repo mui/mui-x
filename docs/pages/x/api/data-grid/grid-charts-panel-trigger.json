@@ -1,0 +1,18 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "GridChartsPanelTrigger",
+  "imports": [
+    "import { GridChartsPanelTrigger } from '@mui/x-data-grid-premium/components';",
+    "import { GridChartsPanelTrigger } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiGridChartsPanelTrigger",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/chartsPanel/GridChartsPanelTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/grid-charts-panel\">Data Grid - Charts Panel component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🚧</a></li></ul>",
+  "cssComponent": false
+}
