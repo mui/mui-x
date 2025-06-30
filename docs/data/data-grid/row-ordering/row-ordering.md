@@ -6,7 +6,7 @@ title: Data Grid - Drag-and-drop reordering
 
 <p class="description">The Data Grid Pro lets users drag and drop rows to reorder them.</p>
 
-By default, users cannot rearrange rows in the Data Grid.
+By default, users cannot manually rearrange rows in the Data Grid.
 With the Data Grid Pro, you can give them the ability to drag and drop rows to reorder them.
 
 ## Implementing row reordering
@@ -16,6 +16,8 @@ To enable drag-and-drop row reordering, pass the `rowReordering` prop to the Dat
 ```tsx
 <DataGridPro rowReordering />
 ```
+
+This generates a new column for drag indicators at the start of each row:
 
 {{"demo": "RowOrderingGrid.js", "bg": "inline"}}
 
@@ -47,9 +49,9 @@ const rows: GridRowsProp = [
 <DataGridPro rows={rows} columns={columns} rowReordering />;
 ```
 
-## Customizing the row reordering icon
+## Customizing the drag indicator
 
-To change the icon used for row reordering, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons):
+To change the icon used in the drag indicator column, you can provide a different component for the [icon slot](/x/react-data-grid/components/#icons):
 
 ```tsx
 <DataGridPro
@@ -83,7 +85,7 @@ This approach can also be used to change the location of the toggle column.
 For now, row reordering is disabled if sorting is applied to the Data Grid.
 :::
 
-## Reordering with tree data and grouping 🚧
+## Row reordering with tree data and grouping 🚧
 
 :::warning
 This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/4821) to help us prioritize it.

@@ -35,7 +35,7 @@ Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-defini
 
 :::warning
 As with the `rows` prop, `pinnedRows` should keep the same reference between two renders.
-Otherwise, the Data Grid will reapply heavy work like sorting and filtering.
+Otherwise the Data Grid will reapply heavy work like sorting and filtering.
 :::
 
 ## Controlling pinned rows
