@@ -60,14 +60,14 @@ function GridChartsPanel(_: GridChartsPanelProps) {
   return (
     <Tabs initialTab="chart">
       <TabList>
-        <Tab value="chart">{apiRef.current.getLocaleText('chartsConfigurationTabChart')}</Tab>
-        <Tab value="data">{apiRef.current.getLocaleText('chartsConfigurationTabFields')}</Tab>
-        <Tab value="customize">{apiRef.current.getLocaleText('chartsConfigurationTabConfig')}</Tab>
+        <Tab value="chart">{apiRef.current.getLocaleText('chartsTabChart')}</Tab>
+        <Tab value="data">{apiRef.current.getLocaleText('chartsTabFields')}</Tab>
+        <Tab value="customize">{apiRef.current.getLocaleText('chartsTabCustomize')}</Tab>
         <rootProps.slots.baseIconButton
           onClick={() => {
             apiRef.current.setChartsPanelOpen(false);
           }}
-          aria-label={apiRef.current.getLocaleText('chartsConfigurationCloseButton')}
+          aria-label={apiRef.current.getLocaleText('chartsCloseButton')}
           {...rootProps.slotProps?.baseIconButton}
         >
           <rootProps.slots.sidebarCloseIcon fontSize="small" />

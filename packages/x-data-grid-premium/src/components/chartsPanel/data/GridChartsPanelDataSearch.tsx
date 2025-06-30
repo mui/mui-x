@@ -49,8 +49,8 @@ function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
     <GridChartsPanelDataSearchContainer ownerState={rootProps} className={classes.container}>
       <rootProps.slots.baseTextField
         size="small"
-        aria-label={apiRef.current.getLocaleText('chartsConfigurationSearchLabel')}
-        placeholder={apiRef.current.getLocaleText('chartsConfigurationSearchPlaceholder')}
+        aria-label={apiRef.current.getLocaleText('chartsSearchLabel')}
+        placeholder={apiRef.current.getLocaleText('chartsSearchPlaceholder')}
         onKeyDown={handleKeyDown}
         fullWidth
         slotProps={{
@@ -61,7 +61,7 @@ function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
                 edge="end"
                 size="small"
                 onClick={onClear}
-                aria-label={apiRef.current.getLocaleText('chartsConfigurationSearchClear')}
+                aria-label={apiRef.current.getLocaleText('chartsSearchClear')}
               >
                 <rootProps.slots.chartsSearchClearIcon fontSize="small" />
               </rootProps.slots.baseIconButton>

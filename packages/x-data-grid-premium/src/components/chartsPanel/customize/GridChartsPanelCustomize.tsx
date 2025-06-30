@@ -70,7 +70,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
 
   if (chartType === '') {
     // TODO: make it prettier
-    return apiRef.current.getLocaleText('chartsConfigurationChartNotSelected');
+    return apiRef.current.getLocaleText('chartsChartNotSelected');
   }
 
   return (

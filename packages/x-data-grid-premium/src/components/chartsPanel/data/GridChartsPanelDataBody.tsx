@@ -284,7 +284,7 @@ function GridChartsPanelDataBody({ searchValue }: GridChartsPanelDataBodyProps) 
       >
         {availableFields.length === 0 && (
           <GridChartsPanelDataPlaceholder ownerState={rootProps} className={classes.placeholder}>
-            {apiRef.current.getLocaleText('chartsConfigurationNoFields')}
+            {apiRef.current.getLocaleText('chartsNoFields')}
           </GridChartsPanelDataPlaceholder>
         )}
         {availableFields.length > 0 && (
@@ -323,14 +323,12 @@ function GridChartsPanelDataBody({ searchValue }: GridChartsPanelDataBodyProps) 
               !disabledSections.has('categories') && drag.dropSection === 'categories'
             }
           >
-            <CollapsibleTrigger
-              aria-label={apiRef.current.getLocaleText('chartsConfigurationCategories')}
-            >
+            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('chartsCategories')}>
               <GridChartsPanelDataSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
-                {apiRef.current.getLocaleText('chartsConfigurationCategories')}
+                {apiRef.current.getLocaleText('chartsCategories')}
                 {categories.length > 0 && (
                   <rootProps.slots.baseBadge badgeContent={categories.length} />
                 )}
@@ -377,14 +375,12 @@ function GridChartsPanelDataBody({ searchValue }: GridChartsPanelDataBodyProps) 
             data-section="series"
             data-drag-over={!disabledSections.has('series') && drag.dropSection === 'series'}
           >
-            <CollapsibleTrigger
-              aria-label={apiRef.current.getLocaleText('chartsConfigurationSeries')}
-            >
+            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('chartsSeries')}>
               <GridChartsPanelDataSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
-                {apiRef.current.getLocaleText('chartsConfigurationSeries')}
+                {apiRef.current.getLocaleText('chartsSeries')}
                 {series.length > 0 && <rootProps.slots.baseBadge badgeContent={series.length} />}
               </GridChartsPanelDataSectionTitle>
             </CollapsibleTrigger>
