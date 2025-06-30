@@ -11,13 +11,13 @@ import { CollapsiblePanel } from '../collapsible/CollapsiblePanel';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../hooks/features/chartsIntegration/useGridChartsIntegration';
 
-interface GridChartsConfigurationFormProps {
+interface GridChartsPanelConfigurationProps {
   activeChartId: string;
 }
 
 type OwnerState = DataGridPremiumProcessedProps;
 
-const GridChartsConfigurationFormRoot = styled('div')({
+const GridChartsPanelConfigurationRoot = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
@@ -25,9 +25,9 @@ const GridChartsConfigurationFormRoot = styled('div')({
   overflowY: 'auto',
 });
 
-const GridChartsConfigurationFormPanel = styled(CollapsiblePanel, {
+const GridChartsPanelConfigurationPanel = styled(CollapsiblePanel, {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationPanelSection',
+  slot: 'chartsPanelSection',
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -35,15 +35,15 @@ const GridChartsConfigurationFormPanel = styled(CollapsiblePanel, {
   gap: 24,
 });
 
-const GridChartsConfigurationFormPanelTitle = styled('div', {
+const GridChartsPanelConfigurationPanelTitle = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsConfigurationFormPanelTitle',
+  slot: 'ChartsPanelConfigurationPanelTitle',
 })<{ ownerState: OwnerState }>({
   font: vars.typography.font.body,
   fontWeight: vars.typography.fontWeight.medium,
 });
 
-export function GridChartsConfigurationForm(props: GridChartsConfigurationFormProps) {
+export function GridChartsPanelConfiguration(props: GridChartsPanelConfigurationProps) {
   const { activeChartId } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -57,8 +57,8 @@ export function GridChartsConfigurationForm(props: GridChartsConfigurationFormPr
   } = chartStateLookup[activeChartId] ?? EMPTY_CHART_INTEGRATION_CONTEXT_STATE;
 
   const sections: GridChartsConfigurationSection[] = React.useMemo(() => {
-    return rootProps.slotProps?.chartsConfigurationPanel?.schema?.[chartType]?.customization || [];
-  }, [rootProps.slotProps?.chartsConfigurationPanel?.schema, chartType]);
+    return rootProps.slotProps?.chartsPanel?.schema?.[chartType]?.customization || [];
+  }, [rootProps.slotProps?.chartsPanel?.schema, chartType]);
 
   const handleChange = (field: string, value: any) => {
     // TODO: keep configuration per chart type but share color palette state
@@ -74,15 +74,15 @@ export function GridChartsConfigurationForm(props: GridChartsConfigurationFormPr
   }
 
   return (
-    <GridChartsConfigurationFormRoot>
+    <GridChartsPanelConfigurationRoot>
       {sections.map((section, index) => (
         <Collapsible key={section.id} initiallyOpen={index === 0}>
           <CollapsibleTrigger>
-            <GridChartsConfigurationFormPanelTitle ownerState={rootProps}>
+            <GridChartsPanelConfigurationPanelTitle ownerState={rootProps}>
               {section.label}
-            </GridChartsConfigurationFormPanelTitle>
+            </GridChartsPanelConfigurationPanelTitle>
           </CollapsibleTrigger>
-          <GridChartsConfigurationFormPanel ownerState={rootProps}>
+          <GridChartsPanelConfigurationPanel ownerState={rootProps}>
             {Object.entries(section.controls).map(([key, optRaw]) => {
               const opt = optRaw as any;
               const context = { configuration, categories, series };
@@ -164,9 +164,9 @@ export function GridChartsConfigurationForm(props: GridChartsConfigurationFormPr
                 />
               );
             })}
-          </GridChartsConfigurationFormPanel>
+          </GridChartsPanelConfigurationPanel>
         </Collapsible>
       ))}
-    </GridChartsConfigurationFormRoot>
+    </GridChartsPanelConfigurationRoot>
   );
 }
