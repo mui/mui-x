@@ -7,6 +7,11 @@ const dataGridApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/data-grid/charts-panel-trigger',
+    title: 'ChartsPanelTrigger',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/data-grid/columns-panel-trigger',
     title: 'ColumnsPanelTrigger',
   },
