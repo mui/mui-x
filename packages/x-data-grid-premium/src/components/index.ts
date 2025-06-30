@@ -7,4 +7,4 @@ export * from './export';
 export * from './GridEmptyPivotOverlay';
 export * from './pivotPanel';
 export * from './aiAssistantPanel';
-export * from './chartsConfigurationPanel';
+export * from './chartsPanel';
