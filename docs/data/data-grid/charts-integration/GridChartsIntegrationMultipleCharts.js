@@ -33,8 +33,6 @@ export default function GridChartsIntegrationMultipleCharts() {
     ],
   };
 
-  console.log(data.columns);
-
   const initialState = {
     ...data.initialState,
     pivoting: {

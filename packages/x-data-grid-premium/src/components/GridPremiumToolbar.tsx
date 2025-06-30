@@ -7,7 +7,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
 import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
-import { ChartsPanelTrigger } from './chartsPanel/GridChartsPanelTrigger';
+import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();

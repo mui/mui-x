@@ -1,60 +1,132 @@
 ---
-title: Data Grid & Charts Integration
+title: Data Grid & Charts integration
 ---
 
-# Data Grid & Charts Integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Charts integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Visualize the grid data.</p>
+<p class="description">Visualize grid data with charts.</p>
 
-This page demonstrates how to integrate the Data Grid with MUI X Charts using the `GridChartsIntegrationContextProvider` and the `ChartsRenderer` component from `@mui/x-charts-premium`.
+Data Grid integrates seamlessly with MUI X Charts, allowing data visualization and enabling dynamic chart updates based on Grid state changes, either through the Grid API or user interaction.
 
-By combining these components, you can visualize grid data as charts and enable dynamic chart updates based on grid state or user interaction.
+This integration is possible via the `<GridChartsIntegrationContextProvider />` and `<GridChartsRendererProxy />` components from `@mui/x-data-grid-premium` and the `<ChartRenderer />` component from the `@mui/x-charts-premium` package.
 
-## Basic Integration
+Based on its internal models, the Grid calculates and stores the data in a format that is easy to use for chart rendering.
+`<ChartRenderer />` reads that data and renders an appropriate chart component with props that depend on the configuration stored in the context.
 
-The following example shows how to wrap a Data Grid and a chart in the same context provider. The grid provides categories and series to the chart, which renders the chosen chart type.
+## Set up
+
+To enable chart integration, pass the `chartsIntegration` prop to the Grid and `<GridChartsPanel />` to the `chartsPanel` slot.
+This will enable the charts panel and allow updates to the charts integration context provider state.
+
+```tsx
+<DataGridPremium
+  chartsIntegration
+  slots={{
+    chartsPanel: GridChartsPanel,
+    // ...other slots
+  }}
+  // ...other props
+/>
+```
+
+Wrap your Grid and chart renderer in a `<GridChartsIntegrationContextProvider />`.
+Use `<GridChartsRendererProxy />` to connect the chart renderer to the Grid's state updates.
+
+```tsx
+<GridChartsIntegrationContextProvider>
+  <DataGridPremium
+  // ...props
+  />
+  <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
+</GridChartsIntegrationContextProvider>
+```
+
+## Basic integration
+
+The demo below shows all the basic elements needed to get the charts integration working.
+Use `initialState` to set the initial configuration for the chart renderer.
 
 {{"demo": "GridChartsIntegrationBasic.js", "bg": "inline"}}
 
 ## Row Grouping
 
-The following example shows chart integration with grouped and aggregated data
+You can integrate charts with grouped and aggregated data.
+The Grid's grouping and aggregation state will be reflected in the chart.
 
 {{"demo": "GridChartsIntegrationRowGrouping.js", "bg": "inline"}}
 
 ## Pivoting
 
-Pivoting creates columns dynamically, based on the pivoting model.
-Names of those columns are determined by the values used to generate them, which makes it impossible to initialize `series` with those values.
-The demo below shows how to use column grouping state selector to get the dynamic names and select few of those columns on initial render.
+[Pivoting](/x/react-data-grid/pivoting/) creates columns dynamically, based on the pivoting model.
+The names of those columns are determined by the values used to generate them, which makes it impossible to initialize `series` with those values.
+Use the [`updateSeries()`](/x/api/data-grid/grid-api/#grid-api-prop-updateSeries) to update the chart's series after the columns are created.
+
+```tsx
+const apiRef = useGridApiRef();
+
+React.useEffect(() => {
+  const handleColumnVisibilityModelChange = () => {
+    // Get dynamically created columns
+    const unwrappedGroupingModel = Object.keys(
+      gridColumnGroupsUnwrappedModelSelector(apiRef),
+    );
+    // Update chart series
+    apiRef.current?.updateSeries(
+      'main',
+      unwrappedGroupingModel
+        .filter((field) => field.endsWith('quantity'))
+        .slice(0, 5)
+        .map((field, index) => ({ field, hidden: index >= 3 })),
+    );
+  };
+  return apiRef.current?.subscribeEvent(
+    'columnVisibilityModelChange',
+    handleColumnVisibilityModelChange,
+  );
+}, [apiRef]);
+```
 
 {{"demo": "GridChartsIntegrationPivoting.js", "bg": "inline"}}
 
-## Multiple charts
+## Multiple Charts
 
-It is possible to control multiple charts with one grid.
-Simply add more `GridChartsRendererProxy` components with the unique `id` and optionally provide additional `initialState` record for that chart.
+Control multiple charts with one grid by adding more `<GridChartsRendererProxy />` components with unique `id`s.
+Each chart can have its own configuration and state.
 
-When there are multiple charts to be controlled, grid adds a dropdown in the charts panel that allows the selection of the active chart.
-All setting changes inside the panel are then applied to that chart.
+```tsx
+<GridChartsRendererProxy id="quantity" label="Quantity" renderer={ChartsRenderer} />
+<GridChartsRendererProxy id="feeRate" label="Fee Rate" renderer={ChartsRenderer} />
+```
 
 {{"demo": "GridChartsIntegrationMultipleCharts.js", "bg": "inline"}}
 
 ## Customization
 
-Use `initialState` to set different chart configuration defaults.
-Combine this with the configuration options override to force certain configuration values.
+Customize the chart configuration and rendering by:
 
-Use `onRender()` prop of the `GridChartsRendererProxy` component to customize the way the charts are rendered.
-With this callback you can add support for the options that are not available in our default `configurationOptions`.
+- Overriding configuration options to force certain values.
+  Use it to hide or lock configuration controls in the panel.
+- Using `onRender()` prop on `<GridChartsRendererProxy />` to customize chart rendering for a single or all chart types.
 
-In the demo below, `initialState` is used to set different default color scheme and the configuration options are updated to prevent color scheme change.
-Additionally, `onRender()` is used to add a grid to the line chart.
+```tsx
+const onRender = (type, props, Component) => {
+  if (type !== 'line') return <Component {...props} />;
+  return <LineChart {...props} grid={{ vertical: true, horizontal: true }} />;
+};
+
+<GridChartsRendererProxy id="main" renderer={ChartsRenderer} onRender={onRender} />;
+```
 
 {{"demo": "GridChartsIntegrationCustomization.js", "bg": "inline"}}
 
-## Live data
+## Live Data
 
-The following demo combines the features explained above and shows two charts for two columns for which the data updates frequently.
+The demo below shows charts' responsiveness to live data updates in the Grid.
 
 {{"demo": "GridChartsIntegrationLiveData.js", "bg": "inline"}}
+
+## API
+
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

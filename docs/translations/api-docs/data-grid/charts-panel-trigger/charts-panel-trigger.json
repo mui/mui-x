@@ -1,0 +1,5 @@
+{
+  "componentDescription": "A button that opens and closes the charts integration panel.\nIt renders the `baseButton` slot.",
+  "propDescriptions": {},
+  "classDescriptions": {}
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridSelector } from '@mui/x-data-grid-pro/internals';
