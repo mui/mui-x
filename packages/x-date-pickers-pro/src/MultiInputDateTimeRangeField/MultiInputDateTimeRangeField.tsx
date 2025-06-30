@@ -193,7 +193,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   /**
    * The currently selected sections.
    * This prop accepts four formats:
