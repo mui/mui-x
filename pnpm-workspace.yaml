@@ -41,13 +41,13 @@ catalog:
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
   '@types/prop-types': ^15.7.15
-  '@types/react': 19.0.12
-  '@types/react-dom': 19.0.4
+  '@types/react': 19.1.8
+  '@types/react-dom': 19.1.6
   '@types/react-router': ^5.1.20
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.0
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.34.1
+  '@typescript-eslint/parser': ^8.35.1
   autoprefixer: ^10.4.21
   babel-plugin-module-resolver: ^5.0.2
   babel-plugin-optimize-clsx: ^2.6.2
@@ -70,9 +70,9 @@ catalog:
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.0
   prop-types: ^15.8.1
-  react: 19.0.0
-  react-dom: 19.0.0
-  react-router: ^7.6.2
+  react: 19.1.0
+  react-dom: 19.1.0
+  react-router: ^7.6.3
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.0.1
