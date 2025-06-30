@@ -234,25 +234,25 @@ export interface GridLocaleText {
   pivotQuarterColumnHeaderName: string;
 
   // Charts configuration panel
-  chartsConfigurationNoCharts: string;
-  chartsConfigurationChartNotSelected: string;
-  chartsConfigurationTabChart: string;
-  chartsConfigurationTabFields: string;
-  chartsConfigurationTabConfig: string;
-  chartsConfigurationCloseButton: string;
+  chartsNoCharts: string;
+  chartsChartNotSelected: string;
+  chartsTabChart: string;
+  chartsTabFields: string;
+  chartsTabCustomize: string;
+  chartsCloseButton: string;
   chartsSyncButtonLabel: string;
-  chartsConfigurationSearchPlaceholder: string;
-  chartsConfigurationSearchLabel: string;
-  chartsConfigurationSearchClear: string;
-  chartsConfigurationNoFields: string;
-  chartsConfigurationCategories: string;
-  chartsConfigurationSeries: string;
-  chartsConfigurationMenuMoveUp: string;
-  chartsConfigurationMenuMoveDown: string;
-  chartsConfigurationMenuMoveToTop: string;
-  chartsConfigurationMenuMoveToBottom: string;
-  chartsConfigurationMenuOptions: string;
-  chartsConfigurationMenuRemove: string;
+  chartsSearchPlaceholder: string;
+  chartsSearchLabel: string;
+  chartsSearchClear: string;
+  chartsNoFields: string;
+  chartsCategories: string;
+  chartsSeries: string;
+  chartsMenuMoveUp: string;
+  chartsMenuMoveDown: string;
+  chartsMenuMoveToTop: string;
+  chartsMenuMoveToBottom: string;
+  chartsMenuOptions: string;
+  chartsMenuRemove: string;
 
   // AI Assistant panel
   aiAssistantPanelTitle: string;

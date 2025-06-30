@@ -62,26 +62,26 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
     const moveMenuItems: (MenuAction | MenuDivider)[] = [
       {
         key: 'up',
-        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveUp'),
+        label: apiRef.current.getLocaleText('chartsMenuMoveUp'),
         icon: <rootProps.slots.chartsMenuMoveUpIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'down',
-        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveDown'),
+        label: apiRef.current.getLocaleText('chartsMenuMoveDown'),
         icon: <rootProps.slots.chartsMenuMoveDownIcon />,
         disabled: !canMoveDown,
       },
       { divider: true },
       {
         key: 'top',
-        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveToTop'),
+        label: apiRef.current.getLocaleText('chartsMenuMoveToTop'),
         icon: <rootProps.slots.chartsMenuMoveToTopIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'bottom',
-        label: apiRef.current.getLocaleText('chartsConfigurationMenuMoveToBottom'),
+        label: apiRef.current.getLocaleText('chartsMenuMoveToBottom'),
         icon: <rootProps.slots.chartsMenuMoveToBottomIcon />,
         disabled: !canMoveDown,
       },
@@ -91,7 +91,7 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
     const removeMenuItem = [
       {
         key: null,
-        label: apiRef.current.getLocaleText('chartsConfigurationMenuRemove'),
+        label: apiRef.current.getLocaleText('chartsMenuRemove'),
         icon: <rootProps.slots.chartsMenuRemoveIcon />,
       },
     ];
@@ -184,7 +184,7 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
         aria-haspopup="true"
         aria-controls={open ? menuId : undefined}
         aria-expanded={open ? 'true' : undefined}
-        aria-label={apiRef.current.getLocaleText('chartsConfigurationMenuOptions')}
+        aria-label={apiRef.current.getLocaleText('chartsMenuOptions')}
         onClick={handleClick}
         ref={triggerRef}
       >
