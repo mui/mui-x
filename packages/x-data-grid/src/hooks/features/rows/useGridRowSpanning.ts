@@ -68,8 +68,8 @@ const DEFAULT_ROWS_TO_PROCESS = 20;
 
 const computeRowSpanningState = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  colDefs: GridColDef[],
-  visibleRows: GridRowEntry<GridValidRowModel>[],
+  columns: GridColDef[],
+  rows: GridRowEntry<GridValidRowModel>[],
   range: RowRange,
   rangeToProcess: RowRange,
   state: GridRowSpanningState,
@@ -79,7 +79,7 @@ const computeRowSpanningState = (
   const hiddenCellOriginMap = state.hiddenCellOriginMap;
   let processedRange = state.processedRange;
 
-  colDefs.forEach((colDef, columnIndex) => {
+  columns.forEach((colDef, columnIndex) => {
     if (skippedFields.has(colDef.field)) {
       return;
     }
@@ -89,7 +89,7 @@ const computeRowSpanningState = (
       index < rangeToProcess.lastRowIndex;
       index += 1
     ) {
-      const row = visibleRows[index];
+      const row = rows[index];
 
       if (hiddenCells[row.id]?.[columnIndex]) {
         continue;
@@ -108,13 +108,13 @@ const computeRowSpanningState = (
       const backwardsHiddenCells: number[] = [];
       if (index === rangeToProcess.firstRowIndex) {
         let prevIndex = index - 1;
-        let prevRowEntry = visibleRows[prevIndex];
+        let prevRowEntry = rows[prevIndex];
         while (
           prevIndex >= range.firstRowIndex &&
           prevRowEntry &&
           getCellValue(prevRowEntry.model, colDef, apiRef) === cellValue
         ) {
-          const currentRow = visibleRows[prevIndex + 1];
+          const currentRow = rows[prevIndex + 1];
           if (hiddenCells[currentRow.id]) {
             hiddenCells[currentRow.id][columnIndex] = true;
           } else {
@@ -126,7 +126,7 @@ const computeRowSpanningState = (
           spannedRowIndex = prevIndex;
           prevIndex -= 1;
 
-          prevRowEntry = visibleRows[prevIndex];
+          prevRowEntry = rows[prevIndex];
         }
       }
 
@@ -142,10 +142,10 @@ const computeRowSpanningState = (
       let relativeIndex = index + 1;
       while (
         relativeIndex <= range.lastRowIndex &&
-        visibleRows[relativeIndex] &&
-        getCellValue(visibleRows[relativeIndex].model, colDef, apiRef) === cellValue
+        rows[relativeIndex] &&
+        getCellValue(rows[relativeIndex].model, colDef, apiRef) === cellValue
       ) {
-        const currentRow = visibleRows[relativeIndex];
+        const currentRow = rows[relativeIndex];
         if (hiddenCells[currentRow.id]) {
           hiddenCells[currentRow.id][columnIndex] = true;
         } else {
@@ -241,11 +241,11 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
     id,
     model: dataRowIdToModelLookup[id!],
   })) as GridRowEntry<GridValidRowModel>[];
-  const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
+  const columns = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
 
   const rowSpanning = computeRowSpanningState(
     apiRef,
-    colDefs,
+    columns,
     rows,
     rangeToProcess,
     rangeToProcess,
@@ -264,7 +264,7 @@ export const useGridRowSpanning = (
 ): void => {
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {
-      const { range, rows: visibleRows } = getVisibleRows(apiRef, {
+      const { range, rows } = getVisibleRows(apiRef, {
         pagination: props.pagination,
         paginationMode: props.paginationMode,
       });
@@ -290,12 +290,12 @@ export const useGridRowSpanning = (
         return;
       }
 
-      const colDefs = gridVisibleColumnDefinitionsSelector(apiRef);
+      const columns = gridVisibleColumnDefinitionsSelector(apiRef);
 
       rowSpanning = computeRowSpanningState(
         apiRef,
-        colDefs,
-        visibleRows,
+        columns,
+        rows,
         range,
         rangeToProcess,
         rowSpanning,
