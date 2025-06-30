@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -179,14 +180,14 @@ export const useGridChartsIntegration = (
   });
 
   const handleDataUpdate = React.useCallback(
-    (onlyChartId?: string) => {
+    (forceChartId?: string) => {
       // if there are no charts, skip the data processing
       if (chartIds.length === 0) {
         return;
       }
 
       const availableCharts = chartIds.filter((chartId) =>
-        onlyChartId ? chartId === onlyChartId : chartStateLookup[chartId].synced !== false,
+        forceChartId ? chartId === forceChartId : chartStateLookup[chartId].synced !== false,
       );
 
       if (availableCharts.length === 0) {
@@ -279,6 +280,7 @@ export const useGridChartsIntegration = (
         ]),
       ];
 
+      // go through data only once and collect everything that will be needed
       const data: Record<any, (string | number | null)[]> = Object.fromEntries(
         dataColumns.map((column) => [column.field, []]),
       );
@@ -313,6 +315,11 @@ export const useGridChartsIntegration = (
       });
     },
     [apiRef, getColumnName, setChartState, chartIds, chartStateLookup],
+  );
+
+  const debouncedHandleDataUpdate = React.useMemo(
+    () => debounce(handleDataUpdate, 0),
+    [handleDataUpdate],
   );
 
   const setChartsPanelOpen = React.useCallback<GridChartsIntegrationApi['setChartsPanelOpen']>(
@@ -369,9 +376,9 @@ export const useGridChartsIntegration = (
           },
         };
       });
-      handleDataUpdate();
+      debouncedHandleDataUpdate();
     },
-    [apiRef, handleDataUpdate],
+    [apiRef, debouncedHandleDataUpdate],
   );
 
   const updateSeries = React.useCallback(
@@ -401,9 +408,9 @@ export const useGridChartsIntegration = (
           },
         };
       });
-      handleDataUpdate();
+      debouncedHandleDataUpdate();
     },
-    [apiRef, handleDataUpdate],
+    [apiRef, debouncedHandleDataUpdate],
   );
 
   const setActiveChartId = React.useCallback<GridChartsIntegrationApi['setActiveChartId']>(
@@ -428,10 +435,10 @@ export const useGridChartsIntegration = (
       });
       apiRef.current.publishEvent('chartSynchronizationStateChange', { chartId, synced });
       if (synced) {
-        handleDataUpdate(chartId);
+        debouncedHandleDataUpdate(chartId);
       }
     },
-    [apiRef, setChartState, handleDataUpdate],
+    [apiRef, setChartState, debouncedHandleDataUpdate],
   );
 
   const updateDataReference = React.useCallback<
@@ -514,11 +521,26 @@ export const useGridChartsIntegration = (
     'public',
   );
 
-  useGridEvent(apiRef, 'columnsChange', runIf(isChartsIntegrationAvailable, handleDataUpdate));
-  useGridEvent(apiRef, 'filteredRowsSet', runIf(isChartsIntegrationAvailable, handleDataUpdate));
-  useGridEvent(apiRef, 'sortedRowsSet', runIf(isChartsIntegrationAvailable, handleDataUpdate));
-  useGridEvent(apiRef, 'pivotModeChange', runIf(isChartsIntegrationAvailable, handleDataUpdate));
-  useGridEvent(apiRef, 'pivotModelChange', runIf(isChartsIntegrationAvailable, handleDataUpdate));
+  useGridEvent(
+    apiRef,
+    'columnsChange',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
+  );
+  useGridEvent(
+    apiRef,
+    'filteredRowsSet',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
+  );
+  useGridEvent(
+    apiRef,
+    'sortedRowsSet',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
+  );
+  useGridEvent(
+    apiRef,
+    'pivotModeChange',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
+  );
 
   React.useEffect(() => {
     if (!activeChartId && chartIds.length > 0) {
@@ -546,6 +568,11 @@ export const useGridChartsIntegration = (
       });
     });
 
-    handleDataUpdate();
-  }, [chartIds, props.initialState?.chartsIntegration?.charts, setChartState, handleDataUpdate]);
+    debouncedHandleDataUpdate();
+  }, [
+    chartIds,
+    props.initialState?.chartsIntegration?.charts,
+    setChartState,
+    debouncedHandleDataUpdate,
+  ]);
 };
