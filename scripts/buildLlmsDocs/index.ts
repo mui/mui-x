@@ -554,24 +554,6 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
   return pages.find((page) => page.pathname === targetPathname) || null;
 }
 
-/**
- * Match generated files with pages structure using pathname
- */
-function matchGeneratedFilesWithPages(
-  generatedFiles: GeneratedFile[],
-  pagesSection: MuiPage,
-): Map<string, GeneratedFile> {
-  const fileMap = new Map<string, GeneratedFile>();
-
-  for (const file of generatedFiles) {
-    // Convert output path to expected pathname format
-    // e.g., "x/react-data-grid/components/usage.md" -> "/x/react-data-grid/components/usage"
-    const pathname = '/' + file.outputPath.replace(/\.md$/, '');
-    fileMap.set(pathname, file);
-  }
-
-  return fileMap;
-}
 
 /**
  * Generate structured content based on pages hierarchy
@@ -727,12 +709,17 @@ function generateProjectLlmsTxt(
   // Find the corresponding section in pages.ts
   const pagesSection = findProjectPagesSection(projectKey);
   if (!pagesSection || !pagesSection.children) {
-    // Fallback to simple structure if no pages section found
-    return generateSimpleProjectLlmsTxt(generatedFiles, projectName);
+    throw new Error(`No pages section found for project key: ${projectKey}`);
   }
 
-  // Match generated files with pages structure
-  const fileMap = matchGeneratedFilesWithPages(generatedFiles, pagesSection);
+  // Create file map inline
+  const fileMap = new Map<string, GeneratedFile>();
+  for (const file of generatedFiles) {
+    // Convert output path to expected pathname format
+    // e.g., "x/react-data-grid/components/usage.md" -> "/x/react-data-grid/components/usage"
+    const pathname = '/' + file.outputPath.replace(/\.md$/, '');
+    fileMap.set(pathname, file);
+  }
 
   // Generate content using pages.ts structure
   let content = `# ${projectName}\n\n`;
@@ -747,59 +734,6 @@ function generateProjectLlmsTxt(
   return content.trim();
 }
 
-/**
- * Fallback function for simple llms.txt generation when pages.ts structure is not available
- */
-function generateSimpleProjectLlmsTxt(
-  generatedFiles: GeneratedFile[],
-  projectName: string,
-): string {
-  // Group files by category
-  const groupedByCategory: Record<string, GeneratedFile[]> = {};
-
-  for (const file of generatedFiles) {
-    const category = file.category;
-    if (!groupedByCategory[category]) {
-      groupedByCategory[category] = [];
-    }
-    groupedByCategory[category].push(file);
-  }
-
-  // Generate content
-  let content = `# ${projectName}\n\n`;
-  content += `This is the documentation for the ${projectName} package.\n`;
-  content += `It contains comprehensive guides, components, and utilities for building user interfaces.\n\n`;
-
-  // Sort categories
-  const sortedCategories = Object.keys(groupedByCategory).sort((a, b) => {
-    if (a === 'components') return -1;
-    if (b === 'components') return 1;
-    return a.localeCompare(b);
-  });
-
-  for (const category of sortedCategories) {
-    const files = groupedByCategory[category];
-    if (files.length === 0) continue;
-
-    const sectionTitle = toTitleCase(category);
-    content += `## ${sectionTitle}\n\n`;
-
-    if (category === 'components') {
-      files.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    for (const file of files) {
-      content += `- [${file.title}](/${file.outputPath})`;
-      if (file.description) {
-        content += `: ${file.description}`;
-      }
-      content += '\n';
-    }
-    content += '\n';
-  }
-
-  return content.trim();
-}
 
 /**
  * Main build function
@@ -1000,8 +934,6 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
       }
       console.log(`✓ Generated ${processedCount} API files for ${projectName}`);
     }
-
-    console.log('currentProjectFiles', currentProjectFiles);
 
     // Store project files and generate project-specific llms.txt
     projectGeneratedFiles.set(currentProjectSettings, currentProjectFiles);
