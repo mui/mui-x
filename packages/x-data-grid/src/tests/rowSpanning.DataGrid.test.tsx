@@ -124,9 +124,9 @@ describe('<DataGrid /> - Row spanning', () => {
     const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
     expect(rowIndex).to.equal(3);
     const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
-    expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+    expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
     const spannedCell = getCell(rowIndex, 0);
-    expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+    expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
   });
 
   describe('sorting', () => {
@@ -146,9 +146,9 @@ describe('<DataGrid /> - Row spanning', () => {
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
-      expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+      expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
 
     it.skipIf(isJSDOM)('should work with sorting when controlling sorting', () => {
@@ -163,9 +163,9 @@ describe('<DataGrid /> - Row spanning', () => {
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
-      expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+      expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
   });
 
@@ -192,9 +192,9 @@ describe('<DataGrid /> - Row spanning', () => {
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
-      expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
+      expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
 
     it.skipIf(isJSDOM)('should work with filtering when controlling filter', () => {
@@ -215,9 +215,9 @@ describe('<DataGrid /> - Row spanning', () => {
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
       const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
-      expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
+      expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
   });
 

@@ -53,11 +53,11 @@ export const getRightColumnIndex = ({
 export function findNonRowSpannedCell(
   apiRef: RefObject<GridApiCommunity>,
   rowId: GridRowId,
-  field: GridColDef['field'],
+  colIndex: number,
   rowSpanScanDirection: 'up' | 'down',
 ) {
   const rowSpanHiddenCells = gridRowSpanningHiddenCellsSelector(apiRef);
-  if (!rowSpanHiddenCells[rowId]?.[field]) {
+  if (!rowSpanHiddenCells[rowId]?.[colIndex]) {
     return rowId;
   }
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
@@ -66,7 +66,7 @@ export function findNonRowSpannedCell(
     filteredSortedRowIds.indexOf(rowId) + (rowSpanScanDirection === 'down' ? 1 : -1);
   while (nextRowIndex >= 0 && nextRowIndex < filteredSortedRowIds.length) {
     const nextRowId = filteredSortedRowIds[nextRowIndex];
-    if (!rowSpanHiddenCells[nextRowId]?.[field]) {
+    if (!rowSpanHiddenCells[nextRowId]?.[colIndex]) {
       return nextRowId;
     }
     nextRowIndex += rowSpanScanDirection === 'down' ? 1 : -1;

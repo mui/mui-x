@@ -314,8 +314,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     [apiRef, field, rowId],
   );
 
-  const isCellRowSpanned = hiddenCells[rowId]?.[field] ?? false;
-  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
+  const isCellRowSpanned = hiddenCells[rowId]?.[colIndex] ?? false;
+  const rowSpan = spannedCells[rowId]?.[colIndex] ?? 1;
 
   const style = React.useMemo(() => {
     if (isNotVisible) {

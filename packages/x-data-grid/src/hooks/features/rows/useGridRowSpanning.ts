@@ -20,14 +20,14 @@ import { gridPageSizeSelector } from '../pagination';
 import { gridDataRowIdsSelector } from './gridRowsSelector';
 
 export interface GridRowSpanningState {
-  spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
-  hiddenCells: Record<GridRowId, Record<GridColDef['field'], boolean>>;
+  spannedCells: Record<GridRowId, Record<number, number>>;
+  hiddenCells: Record<GridRowId, Record<number, boolean>>;
   /**
    * For each hidden cell, it contains the row index corresponding to the cell that is
    * the origin of the hidden cell. i.e. the cell which is spanned.
    * Used by the virtualization to properly keep the spanned cells in view.
    */
-  hiddenCellOriginMap: Record<number, Record<GridColDef['field'], number>>;
+  hiddenCellOriginMap: Record<number, Record<number, number>>;
 }
 
 export type RowRange = { firstRowIndex: number; lastRowIndex: number };
@@ -65,7 +65,7 @@ const computeRowSpanningState = (
     processedRange = EMPTY_RANGE;
   }
 
-  colDefs.forEach((colDef) => {
+  colDefs.forEach((colDef, columnIndex) => {
     if (skippedFields.has(colDef.field)) {
       return;
     }
@@ -77,7 +77,7 @@ const computeRowSpanningState = (
     ) {
       const row = visibleRows[index];
 
-      if (hiddenCells[row.id]?.[colDef.field]) {
+      if (hiddenCells[row.id]?.[columnIndex]) {
         continue;
       }
       const cellValue = getCellValue(row.model, colDef, apiRef);
@@ -102,9 +102,9 @@ const computeRowSpanningState = (
         ) {
           const currentRow = visibleRows[prevIndex + 1];
           if (hiddenCells[currentRow.id]) {
-            hiddenCells[currentRow.id][colDef.field] = true;
+            hiddenCells[currentRow.id][columnIndex] = true;
           } else {
-            hiddenCells[currentRow.id] = { [colDef.field]: true };
+            hiddenCells[currentRow.id] = { [columnIndex]: true };
           }
           backwardsHiddenCells.push(index);
           rowSpan += 1;
@@ -118,9 +118,9 @@ const computeRowSpanningState = (
 
       backwardsHiddenCells.forEach((hiddenCellIndex) => {
         if (hiddenCellOriginMap[hiddenCellIndex]) {
-          hiddenCellOriginMap[hiddenCellIndex][colDef.field] = spannedRowIndex;
+          hiddenCellOriginMap[hiddenCellIndex][columnIndex] = spannedRowIndex;
         } else {
-          hiddenCellOriginMap[hiddenCellIndex] = { [colDef.field]: spannedRowIndex };
+          hiddenCellOriginMap[hiddenCellIndex] = { [columnIndex]: spannedRowIndex };
         }
       });
 
@@ -133,14 +133,14 @@ const computeRowSpanningState = (
       ) {
         const currentRow = visibleRows[relativeIndex];
         if (hiddenCells[currentRow.id]) {
-          hiddenCells[currentRow.id][colDef.field] = true;
+          hiddenCells[currentRow.id][columnIndex] = true;
         } else {
-          hiddenCells[currentRow.id] = { [colDef.field]: true };
+          hiddenCells[currentRow.id] = { [columnIndex]: true };
         }
         if (hiddenCellOriginMap[relativeIndex]) {
-          hiddenCellOriginMap[relativeIndex][colDef.field] = spannedRowIndex;
+          hiddenCellOriginMap[relativeIndex][columnIndex] = spannedRowIndex;
         } else {
-          hiddenCellOriginMap[relativeIndex] = { [colDef.field]: spannedRowIndex };
+          hiddenCellOriginMap[relativeIndex] = { [columnIndex]: spannedRowIndex };
         }
         relativeIndex += 1;
         rowSpan += 1;
@@ -148,9 +148,9 @@ const computeRowSpanningState = (
 
       if (rowSpan > 0) {
         if (spannedCells[spannedRowId]) {
-          spannedCells[spannedRowId][colDef.field] = rowSpan + 1;
+          spannedCells[spannedRowId][columnIndex] = rowSpan + 1;
         } else {
-          spannedCells[spannedRowId] = { [colDef.field]: rowSpan + 1 };
+          spannedCells[spannedRowId] = { [columnIndex]: rowSpan + 1 };
         }
       }
     }
@@ -219,12 +219,14 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
       rowSpanning: EMPTY_STATE,
     };
   }
+
   const rangeToProcess = getInitialRangeToProcess(props, apiRef);
   const rows = rowIds.map((id) => ({
     id,
     model: dataRowIdToModelLookup[id!],
   })) as GridRowEntry<GridValidRowModel>[];
   const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
+
   const { spannedCells, hiddenCells, hiddenCellOriginMap } = computeRowSpanningState(
     apiRef,
     colDefs,
@@ -339,12 +341,18 @@ export const useGridRowSpanning = (
   // - The `paginationModel` is updated
   // - The rows are updated
   const resetRowSpanningState = React.useCallback(() => {
-    const renderContext = gridRenderContextSelector(apiRef);
-    if (!isRowContextInitialized(renderContext)) {
-      return;
+    if (!props.rowSpanning) {
+      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
+        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
+      }
+    } else {
+      const renderContext = gridRenderContextSelector(apiRef);
+      if (!isRowContextInitialized(renderContext)) {
+        return;
+      }
+      updateRowSpanningState(renderContext, true);
     }
-    updateRowSpanningState(renderContext, true);
-  }, [apiRef, updateRowSpanningState]);
+  }, [apiRef, props.rowSpanning, updateRowSpanningState]);
 
   useGridEvent(
     apiRef,
@@ -352,18 +360,12 @@ export const useGridRowSpanning = (
     runIf(props.rowSpanning, updateRowSpanningState),
   );
 
-  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'sortedRowsSet', resetRowSpanningState);
+  useGridEvent(apiRef, 'paginationModelChange', resetRowSpanningState);
+  useGridEvent(apiRef, 'filteredRowsSet', resetRowSpanningState);
+  useGridEvent(apiRef, 'columnsChange', resetRowSpanningState);
 
   React.useEffect(() => {
-    if (!props.rowSpanning) {
-      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
-        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
-      }
-    } else if (apiRef.current.state.rowSpanning === EMPTY_STATE) {
-      resetRowSpanningState();
-    }
-  }, [apiRef, resetRowSpanningState, props.rowSpanning]);
+    resetRowSpanningState();
+  }, [resetRowSpanningState]);
 };

@@ -96,7 +96,12 @@ export const useGridKeyboardNavigation = (
       const field = listView
         ? gridListColumnSelector(apiRef)!.field
         : gridVisibleColumnFieldsSelector(apiRef)[colIndex];
-      const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
+      const nonRowSpannedRowId = findNonRowSpannedCell(
+        apiRef,
+        rowId,
+        colIndex,
+        rowSpanScanDirection,
+      );
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
       // Those rows do not include pinned rows, but pinned rows do not need scroll anyway.
       const rowIndexRelativeToAllRows = visibleSortedRows.findIndex(
