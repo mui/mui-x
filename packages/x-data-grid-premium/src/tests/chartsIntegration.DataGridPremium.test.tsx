@@ -9,7 +9,7 @@ import {
   DataGridPremiumProps,
   useGridApiRef,
   useGridChartsIntegrationContext,
-  GridChartsConfigurationPanel,
+  GridChartsPanel,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridInitialState,
   GridApiPremium,
@@ -116,10 +116,10 @@ describe('<DataGridPremium /> - Charts Integration', () => {
             chartsIntegration
             showToolbar
             slots={{
-              chartsConfigurationPanel: GridChartsConfigurationPanel,
+              chartsPanel: GridChartsPanel,
             }}
             slotProps={{
-              chartsConfigurationPanel: {
+              chartsPanel: {
                 schema: configurationOptions,
               },
             }}
@@ -458,7 +458,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     });
   });
 
-  describe('GridChartsConfigurationPanel', () => {
+  describe('GridChartsPanel', () => {
     it('should render all available chart types', async () => {
       const { user } = render(<Test initialState={baseInitialState} />);
 

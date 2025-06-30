@@ -155,9 +155,7 @@
     "setCellSelectionModel": {
       "description": "Updates the cell selection model according to the value passed to the <code>newModel</code> argument.<br />Any cell already selected will be unselected."
     },
-    "setChartsConfigurationPanelOpen": {
-      "description": "Sets whether the charts configuration side panel is open."
-    },
+    "setChartsPanelOpen": { "description": "Sets whether the charts side panel is open." },
     "setChartSynchronizationState": {
       "description": "Sets the synchronization state for a chart."
     },
