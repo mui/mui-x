@@ -1,3 +1,4 @@
+/* eslint-disable import/export */
 export * from '@mui/x-data-grid/internals';
 
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
