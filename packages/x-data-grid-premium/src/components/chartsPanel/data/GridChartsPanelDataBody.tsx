@@ -8,20 +8,20 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../collapsible';
-import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
-import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../../collapsible';
+import { ResizablePanel, ResizablePanelHandle } from '../../resizablePanel';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridChartsPanelDataField } from './GridChartsPanelDataField';
 import {
   gridChartableColumnsSelector,
   gridChartsCategoriesSelector,
   gridChartsIntegrationActiveChartIdSelector,
   gridChartsSeriesSelector,
-} from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
-import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { getBlockedSections } from '../../hooks/features/chartsIntegration/utils';
-import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+} from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
+import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
+import { getBlockedSections } from '../../../hooks/features/chartsIntegration/utils';
+import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
