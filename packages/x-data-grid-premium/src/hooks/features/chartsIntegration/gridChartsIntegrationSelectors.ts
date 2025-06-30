@@ -21,7 +21,7 @@ export const gridChartsIntegrationActiveChartIdSelector = createSelector(
   (chartsIntegration) => chartsIntegration.activeChartId,
 );
 
-export const gridChartsConfigurationPanelOpenSelector = createSelector(
+export const gridChartsPanelOpenSelector = createSelector(
   gridChartsIntegrationStateSelector,
   (chartsIntegration) => chartsIntegration.configurationPanel.open,
 );

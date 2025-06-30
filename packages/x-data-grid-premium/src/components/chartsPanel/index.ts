@@ -1,2 +1,2 @@
-export * from './GridChartsConfigurationPanel';
-export * from './GridChartsConfigurationPanelTrigger';
+export * from './GridChartsPanel';
+export * from './GridChartsPanelTrigger';
