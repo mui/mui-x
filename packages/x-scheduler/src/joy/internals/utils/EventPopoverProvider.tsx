@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
 import { CalendarEvent } from '../../models/events';
