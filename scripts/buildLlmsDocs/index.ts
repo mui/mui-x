@@ -1,8 +1,8 @@
 /**
  * LLM Documentation Generator
  *
- * This script generates LLM-optimized documentation by processing MUI component markdown files
- * and non-component documentation files to create comprehensive, standalone documentation.
+ * This script generates LLM-optimized documentation by processing MUI component markdown files,
+ * API documentation, and non-component documentation files to create comprehensive, standalone documentation.
  *
  * ## Main Workflow:
  *
@@ -11,48 +11,60 @@
  *    - For each component, finds its markdown documentation and API JSON
  *    - Processes markdown by replacing `{{"demo": "filename.js"}}` syntax with actual code snippets
  *    - Appends API documentation (props, slots, CSS classes) to the markdown
- *    - Outputs to files like `material-ui/react-accordion.md`
+ *    - Outputs to files like `x/react-{project}/react-{component}.md`
  *
  * 2. **Non-Component Processing** (optional):
- *    - Processes markdown files from specified folders (e.g., `system`, `material/customization`)
+ *    - Processes markdown files from specified folders (e.g., `charts/getting-started`)
  *    - Applies the same demo replacement logic
  *    - Uses URL transformation logic to maintain consistent paths with components
- *    - Outputs to files like `system/borders.md`, `material-ui/customization/color.md`
+ *    - Outputs to project-specific paths like `x/react-charts/getting-started/installation.md`
  *
- * 3. **Index Generation** (llms.txt):
- *    - Generates `llms.txt` index files for each top-level directory
- *    - Groups files by category (components, customization, getting-started, etc.)
- *    - Creates markdown-formatted lists with relative paths and descriptions
- *    - Outputs to files like `material-ui/llms.txt`, `system/llms.txt`
+ * 3. **API Section Processing**:
+ *    - Finds API sections in pages.ts structure under "API reference" items
+ *    - Processes both JSON API files and markdown API files
+ *    - Handles various file path patterns for API documentation
+ *    - Outputs to files like `x/api/charts/{component}.md`
+ *
+ * 4. **Index Generation** (llms.txt):
+ *    - Generates project-specific `llms.txt` files using pages.ts structure
+ *    - Organizes all files (components, docs, and APIs) according to navigation hierarchy
+ *    - Includes API files in the Resources section of each project
+ *    - Creates a root `x/llms.txt` that concatenates all project indexes
  *
  * ## Key Features:
  *
  * - **Demo Replacement**: Converts `{{"demo": "filename.js"}}` to actual JSX/TSX code snippets
  * - **API Integration**: Automatically includes component API documentation (props, slots, CSS)
- * - **Reusable**: Accepts project settings via CLI to work across different repositories
+ * - **Project Settings**: Accepts project settings via CLI to work across different MUI X projects
  * - **Filtering**: Supports grep patterns to process specific components/files
- * - **Path Consistency**: Uses existing URL transformation logic for consistent output structure
- * - **Auto-indexing**: Generates llms.txt files with categorized documentation listings
+ * - **Pages.ts Integration**: Uses the existing navigation structure for organizing documentation
+ * - **Unified Processing**: Processes all project files together for proper cross-referencing
+ * - **Regex Support**: findChildrenByTitle supports regex patterns for flexible matching
  *
  * ## Usage Examples:
  *
  * ```bash
- * # Process all Material UI components
- * pnpm tsx scripts/buildLlmsDocs/index.ts --projectSettings ./packages/api-docs-builder-core/materialUi/projectSettings.ts
+ * # Process all MUI X components and docs
+ * pnpm tsx scripts/buildLlmsDocs/index.ts --projectSettings ./scripts/buildApiDocs/projectSettings.ts
  *
- * # Process specific components with non-component docs
+ * # Process specific components with grep filter
  * pnpm tsx scripts/buildLlmsDocs/index.ts \
- *   --projectSettings ./packages/api-docs-builder-core/materialUi/projectSettings.ts \
- *   --nonComponentFolders system material/customization \
- *   --grep "Button|borders"
+ *   --projectSettings ./scripts/buildApiDocs/projectSettings.ts \
+ *   --grep "BarChart|LineChart"
+ *
+ * # Custom output directory
+ * pnpm tsx scripts/buildLlmsDocs/index.ts \
+ *   --projectSettings ./scripts/buildApiDocs/projectSettings.ts \
+ *   --outputDir ./custom-output
  * ```
  *
  * ## Output Structure:
  *
- * - **Components**: `material-ui/react-{component}.md` (e.g., `material-ui/react-button.md`)
- * - **Customization**: `material-ui/customization/{topic}.md` (e.g., `material-ui/customization/color.md`)
- * - **Getting Started**: `material-ui/getting-started/{topic}.md` (e.g., `material-ui/getting-started/installation.md`)
- * - **Index Files**: `{directory}/llms.txt` (e.g., `material-ui/llms.txt`, `system/llms.txt`)
+ * - **Components**: `x/react-{project}/react-{component}.md` (e.g., `x/react-charts/react-bar-chart.md`)
+ * - **API Documentation**: `x/api/{project}/{api-item}.md` (e.g., `x/api/charts/bar-chart.md`)
+ * - **Non-Component Docs**: `x/react-{project}/{category}/{topic}.md` (e.g., `x/react-charts/getting-started/installation.md`)
+ * - **Project Index**: `x/react-{project}/llms.txt` (e.g., `x/react-charts/llms.txt`)
+ * - **Root Index**: `x/llms.txt` (concatenates all project indexes)
  */
 
 import * as fs from 'fs';
@@ -74,6 +86,7 @@ function processApiFile(filePath: string): string {
   const content = fs.readFileSync(filePath, 'utf-8');
 
   // Parse JSON content and replace "properties" key with "props"
+  // Some API JSON files use `properties` key instead of `props`
   try {
     const jsonData = JSON.parse(content);
     if (jsonData.properties) {
@@ -103,7 +116,7 @@ interface GeneratedFile {
   originalMarkdownPath: string;
   category: string;
   orderIndex?: number; // Track the order for non-component folders
-  projectName: string; // Track which project generated this file
+  projectName: string; // Project that generated this file
 }
 
 type CommandOptions = {
@@ -113,7 +126,7 @@ type CommandOptions = {
 };
 
 /**
- * Find all components using the API docs builder infrastructure
+ * Find all components for a project using the API docs builder infrastructure
  */
 async function findComponentsToProcess(
   projectSettings: ProjectSettings,
@@ -121,7 +134,7 @@ async function findComponentsToProcess(
 ): Promise<ComponentDocInfo[]> {
   const components: ComponentDocInfo[] = [];
 
-  // Iterate through TypeScript projects, using the same logic as buildApi.ts
+  // Iterate through TypeScript projects to find components
   for (const project of projectSettings.typeScriptProjects) {
     const projectComponents = findComponents(path.join(project.rootPath, 'src')).filter(
       (component) => {
@@ -139,7 +152,7 @@ async function findComponentsToProcess(
 
     for (const component of projectComponents) {
       try {
-        // Get component info using the API docs builder
+        // Get component info from project settings
         const componentInfo = projectSettings.getComponentInfo(component.filename);
 
         // Skip if component should be skipped (internal, etc.)
@@ -286,10 +299,9 @@ function findNonComponentMarkdownFiles(
 }
 
 /**
- * Process a single component
+ * Process a single component by combining its markdown and API documentation
  */
 function processComponent(component: ComponentDocInfo): string | null {
-  // Processing component: ${component.name}
 
   // Skip if no markdown file found
   if (!component.markdownPath) {
@@ -308,7 +320,7 @@ function processComponent(component: ComponentDocInfo): string | null {
   // Add API sections for all components listed in the frontmatter
   if (componentsInPage.length > 0) {
     for (const componentName of componentsInPage) {
-      // Construct the API JSON path based on the project settings
+      // Construct the API JSON path for each component
       const apiJsonPath = path.join(
         component.componentInfo.apiPagesDirectory,
         `${kebabCase(componentName)}.json`,
@@ -513,7 +525,7 @@ async function processApiSection(
 }
 
 /**
- * Recursively find children of an item with the specified title
+ * Recursively find children of an item with the specified title (supports regex)
  */
 function findChildrenByTitle(page: MuiPage, targetTitle: string | RegExp): MuiPage[] {
   const titleMatches =
@@ -553,7 +565,6 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
 
   return pages.find((page) => page.pathname === targetPathname) || null;
 }
-
 
 /**
  * Generate structured content based on pages hierarchy
@@ -695,7 +706,7 @@ function inferProjectName(outputPath: string, projectSettings: ProjectSettings):
 }
 
 /**
- * Generate llms.txt content for a specific project directory using pages.ts structure
+ * Generate llms.txt content for a project using pages.ts structure for organization
  */
 function generateProjectLlmsTxt(
   generatedFiles: GeneratedFile[],
@@ -712,7 +723,7 @@ function generateProjectLlmsTxt(
     throw new Error(`No pages section found for project key: ${projectKey}`);
   }
 
-  // Create file map inline
+  // Create file map to link pathnames to generated files
   const fileMap = new Map<string, GeneratedFile>();
   for (const file of generatedFiles) {
     // Convert output path to expected pathname format
@@ -733,7 +744,6 @@ function generateProjectLlmsTxt(
 
   return content.trim();
 }
-
 
 /**
  * Main build function
@@ -760,7 +770,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
   // Track generated files for llms.txt
   const generatedFiles: GeneratedFile[] = [];
   const projectGeneratedFiles: Map<ProjectSettings, GeneratedFile[]> = new Map();
-  const projectLlmsContents: string[] = []; // Store individual project llms.txt content
+  const projectLlmsContents: string[] = [];
   let processedCount = 0;
 
   // Process each project settings individually
@@ -769,14 +779,11 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     // Find all components for this project
     const components = await findComponentsToProcess(currentProjectSettings, grep);
 
-    // Found ${components.length} components to process for this project
-
-    // Find non-component markdown files if specified in this project settings
+    // Find non-component markdown files if specified in project settings
     let nonComponentFiles: Array<{ markdownPath: string; outputPath: string }> = [];
     const nonComponentFolders = (currentProjectSettings as any).nonComponentFolders;
     if (nonComponentFolders && nonComponentFolders.length > 0) {
       nonComponentFiles = findNonComponentMarkdownFiles(nonComponentFolders, grep);
-      // Found ${nonComponentFiles.length} non-component markdown files to process for this project
     }
 
     // Process each component
@@ -789,7 +796,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         }
 
         // Use the component's demo pathname to create the output structure
-        // e.g., /material-ui/react-accordion/ -> material-ui/react-accordion.md
+        // e.g., /x/react-charts/bar-chart/ -> x/react-charts/bar-chart.md
         // Skip paths containing # in the last segment
         let outputFileName;
         if (component.demos[0]) {
@@ -809,7 +816,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
         const outputPath = path.join(outputDir, outputFileName);
 
-        // Check if this file has already been generated (avoid duplicates for components that share the same markdown file)
+        // Check if this file has already been generated (avoid duplicates)
         const existingFile = generatedFiles.find((f) => f.outputPath === outputFileName);
         if (!existingFile) {
           // Ensure the directory exists
@@ -819,7 +826,6 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
           }
 
           fs.writeFileSync(outputPath, processedMarkdown, 'utf-8');
-          // ✓ Generated: ${outputFileName}
           processedCount += 1;
 
           // Track this file for llms.txt
@@ -846,7 +852,6 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     // Process non-component markdown files for this project
     for (const file of nonComponentFiles) {
       try {
-        // Processing non-component file: ${path.relative(process.cwd(), file.markdownPath)}
 
         // Process the markdown file with demo replacement
         const processedMarkdown = processMarkdownFile(file.markdownPath);
@@ -860,15 +865,13 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         }
 
         fs.writeFileSync(outputPath, processedMarkdown, 'utf-8');
-        // ✓ Generated: ${file.outputPath}
         processedCount += 1;
 
         // Track this file for llms.txt
         const { title, description } = extractMarkdownInfo(file.markdownPath);
 
         // Extract category from the file path
-        // e.g., "material-ui/customization/color.md" -> "customization"
-        // e.g., "getting-started/installation.md" -> "getting-started"
+        // e.g., "x/react-charts/getting-started/installation.md" -> "getting-started"
         const pathParts = file.outputPath.split('/');
         const category = pathParts.reverse()[1];
 
@@ -916,7 +919,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     const pagesSection = findProjectPagesSection(projectKey);
     if (pagesSection) {
       const projectName = getProjectNameFromSettings(currentProjectSettings);
-      // Find children of an item with title "API reference"
+      // Find children of items matching "API reference" (using regex)
       const resourcesChildren = findChildrenByTitle(pagesSection, /api\s*reference/i);
       // Find API sections in the project pages
       for (const child of resourcesChildren) {
@@ -942,7 +945,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
       // Determine the main project directory from the project key
       const projectDisplayName = getProjectNameFromSettings(currentProjectSettings);
       const baseDir = `x/react-${projectKey}`;
-      
+
       // Generate llms.txt for this project with all files (including API files)
       const llmsContent = generateProjectLlmsTxt(currentProjectFiles, projectDisplayName, baseDir);
       const formattedLlmsContent = await formatMarkdown(llmsContent);
@@ -981,7 +984,6 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     }
 
     fs.writeFileSync(rootLlmsPath, formattedRootLlmsContent, 'utf-8');
-    // ✓ Generated: llms.txt (root)
     processedCount += 1;
   }
 
@@ -995,7 +997,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 yargs(process.argv.slice(2))
   .command({
     command: '$0',
-    describe: 'Generates LLM-optimized documentation for MUI components.',
+    describe: 'Generates LLM-optimized documentation for MUI X components.',
     builder: (command: any) => {
       return command
         .option('grep', {

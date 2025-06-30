@@ -6,7 +6,7 @@ import { projectTreeSettings } from './treeViewSettings';
 
 export const projectSettings: ProjectSettings[] = [
   projectPickersSettings,
-  // projectChartsSettings,
-  // projectTreeSettings,
-  // projectGridSettings,
+  projectChartsSettings,
+  projectTreeSettings,
+  projectGridSettings,
 ];
