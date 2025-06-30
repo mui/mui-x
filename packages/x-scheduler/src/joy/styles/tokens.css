@@ -222,10 +222,10 @@
   --code-padding-bottom: 0.12em;
   --code-padding-left: 0.24em;
   --code-padding-right: 0.24em;
-}
 
-.mode-light {
-  --mauve-1: #fdfcfd;
+
+  /* Mode-light */
+    --mauve-1: #fdfcfd;
   --mauve-2: #faf9fb;
   --mauve-2-rgb: 250, 249, 251;
   --mauve-3: #f2eff3;
