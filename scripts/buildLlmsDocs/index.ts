@@ -1007,46 +1007,28 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     projectGeneratedFiles.set(currentProjectSettings, currentProjectFiles);
 
     if (currentProjectFiles.length > 0) {
-      // Group files by directory for this project
-      const groupedByFirstDir: Record<string, GeneratedFile[]> = {};
+      // Determine the main project directory from the project key
+      const projectDisplayName = getProjectNameFromSettings(currentProjectSettings);
+      const baseDir = `x/react-${projectKey}`;
+      
+      // Generate llms.txt for this project with all files (including API files)
+      const llmsContent = generateProjectLlmsTxt(currentProjectFiles, projectDisplayName, baseDir);
+      const formattedLlmsContent = await formatMarkdown(llmsContent);
+      const llmsPath = path.join(outputDir, baseDir, 'llms.txt');
 
-      for (const file of currentProjectFiles) {
-        const firstDir = file.outputPath.split('/').slice(0, 2).join('/');
-        if (!groupedByFirstDir[firstDir]) {
-          groupedByFirstDir[firstDir] = [];
-        }
-        groupedByFirstDir[firstDir].push(file);
+      // Ensure directory exists
+      const llmsDirPath = path.dirname(llmsPath);
+      if (!fs.existsSync(llmsDirPath)) {
+        fs.mkdirSync(llmsDirPath, { recursive: true });
       }
 
-      // console.log('groupedByFirstDir', groupedByFirstDir);
+      fs.writeFileSync(llmsPath, formattedLlmsContent, 'utf-8');
+      console.log(`✓ Generated: ${baseDir}/llms.txt`);
+      processedCount += 1;
 
-      // Generate individual project llms.txt files for each directory
-      for (const [dirName, files] of Object.entries(groupedByFirstDir)) {
-        // Extract project key from directory path (e.g., "x/react-data-grid" -> "data-grid")
-        const pathParts = dirName.split('/');
-        const projectKey =
-          pathParts[0] === 'x' ? pathParts[1]?.replace('react-', '') || 'x' : dirName;
-        const projectDisplayName = getProjectDisplayNameFromKey(projectKey);
-        if (projectDisplayName !== projectKey) {
-          const llmsContent = generateProjectLlmsTxt(files, projectDisplayName, dirName);
-          const formattedLlmsContent = await formatMarkdown(llmsContent);
-          const llmsPath = path.join(outputDir, dirName, 'llms.txt');
-
-          // Ensure directory exists
-          const llmsDirPath = path.dirname(llmsPath);
-          if (!fs.existsSync(llmsDirPath)) {
-            fs.mkdirSync(llmsDirPath, { recursive: true });
-          }
-
-          fs.writeFileSync(llmsPath, formattedLlmsContent, 'utf-8');
-          // ✓ Generated: ${dirName}/llms.txt
-          processedCount += 1;
-
-          // Store formatted content with increased header levels for root llms.txt
-          const contentWithIncreasedHeaders = increaseHeaderLevels(formattedLlmsContent);
-          projectLlmsContents.push(contentWithIncreasedHeaders);
-        }
-      }
+      // Store formatted content with increased header levels for root llms.txt
+      const contentWithIncreasedHeaders = increaseHeaderLevels(formattedLlmsContent);
+      projectLlmsContents.push(contentWithIncreasedHeaders);
     }
   }
 
