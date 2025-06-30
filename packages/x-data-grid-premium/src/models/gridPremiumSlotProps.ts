@@ -1,14 +1,11 @@
 import { GridProSlotProps } from '@mui/x-data-grid-pro/internals';
-import type { GridChartsConfigurationPanelProps } from '../components/chartsPanel/GridChartsConfigurationPanel';
+import type { GridChartsPanelProps } from '../components/chartsPanel/GridChartsPanel';
 
 // Overrides for module augmentation
-export interface GridChartsConfigurationPanelPropsOverrides {}
+export interface GridChartsPanelPropsOverrides {}
 
 type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
 
 export interface GridPremiumSlotProps extends GridProSlotProps {
-  chartsConfigurationPanel?: SlotProps<
-    GridChartsConfigurationPanelProps,
-    GridChartsConfigurationPanelPropsOverrides
-  >;
+  chartsPanel?: SlotProps<GridChartsPanelProps, GridChartsPanelPropsOverrides>;
 }
