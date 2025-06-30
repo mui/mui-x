@@ -11,7 +11,7 @@ import { BaseTooltip } from './components/BaseTooltip';
 
 // Ensures the module augmentation is applied correctly
 // eslint-disable-next-line no-restricted-imports
-import {} from '@mui/x-charts';
+import type {} from '@mui/x-charts';
 
 const baseSlots: Omit<ChartsBaseSlots, keyof ChartsBaseSlots> = {
   baseTooltip: BaseTooltip,
