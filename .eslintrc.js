@@ -1,7 +1,7 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
-const CHARTS_PACKAGES = ['x-charts', 'x-charts-pro'];
+const CHARTS_PACKAGES = ['x-charts', 'x-charts-pro', 'x-charts-premium'];
 const GRID_PACKAGES = [
   'x-data-grid',
   'x-data-grid-pro',
@@ -48,6 +48,7 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/utils',
   '@mui/x-charts',
   '@mui/x-charts-pro',
+  '@mui/x-charts-premium',
   '@mui/x-codemod',
   '@mui/x-date-pickers',
   '@mui/x-date-pickers-pro',
@@ -114,6 +115,10 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
         },
       ]),
 ];
+
+const mochaPluginOverride = baseline.overrides.find((override) =>
+  override.extends?.includes('plugin:mocha/recommended'),
+);
 
 module.exports = {
   ...baseline,
@@ -186,7 +191,19 @@ module.exports = {
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
-    ...baseline.overrides,
+    ...baseline.overrides.filter(
+      (override) => !override.extends?.includes('plugin:mocha/recommended'),
+    ),
+    {
+      ...mochaPluginOverride,
+      extends: [],
+      rules: Object.entries(mochaPluginOverride.rules).reduce((acc, [key, value]) => {
+        if (!key.includes('mocha')) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {}),
+    },
     {
       files: [
         // matching the pattern of the test runner
@@ -246,7 +263,7 @@ module.exports = {
     },
     {
       files: ['packages/*/src/**/*.?(c|m)[jt]s?(x)'],
-      excludedFiles: ['*.d.ts', '*.spec.*'],
+      excludedFiles: ['*.d.ts', '*.spec.*', '*.test.*'],
       rules: {
         'material-ui/mui-name-matches-component-name': [
           'error',
@@ -266,6 +283,7 @@ module.exports = {
             ],
           },
         ],
+        'material-ui/disallow-react-api-in-server-components': 'error',
       },
     },
     {
@@ -322,6 +340,7 @@ module.exports = {
     },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
+    ...buildPackageRestrictedImports('@mui/x-charts-premium', 'x-charts-premium', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
     ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
     ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),

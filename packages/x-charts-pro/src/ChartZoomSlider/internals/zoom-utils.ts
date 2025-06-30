@@ -1,31 +1,54 @@
 import {
   AxisId,
   ChartState,
+  DefaultedXAxis,
+  DefaultedYAxis,
   DefaultizedZoomOptions,
+  selectorChartAxisZoomOptionsLookup,
   selectorChartDrawingArea,
   selectorChartRawAxis,
   ZoomData,
 } from '@mui/x-charts/internals';
+import { ChartDrawingArea } from '@mui/x-charts/hooks';
 
 export function calculateZoomFromPoint(state: ChartState<any>, axisId: AxisId, point: DOMPoint) {
-  const { left, top, height, width } = selectorChartDrawingArea(state);
   const axis = selectorChartRawAxis(state, axisId);
 
   if (!axis) {
     return null;
   }
 
+  return calculateZoomFromPointImpl(
+    selectorChartDrawingArea(state),
+    axis,
+    selectorChartAxisZoomOptionsLookup(state, axisId),
+    point,
+  );
+}
+
+export function calculateZoomFromPointImpl(
+  drawingArea: ChartDrawingArea,
+  axis: Pick<DefaultedXAxis | DefaultedYAxis, 'position' | 'reverse'>,
+  zoomOptions: Pick<DefaultizedZoomOptions, 'minStart' | 'maxEnd'>,
+  point: Pick<DOMPoint, 'x' | 'y'>,
+) {
+  const { left, top, height, width } = drawingArea;
+  const { minStart, maxEnd } = zoomOptions;
+
   const axisDirection = axis.position === 'right' || axis.position === 'left' ? 'y' : 'x';
+  const range = maxEnd - minStart;
 
   let pointerZoom: number;
   if (axisDirection === 'x') {
-    pointerZoom = ((point.x - left) / width) * 100;
+    pointerZoom = ((point.x - left) / width) * range;
   } else {
-    pointerZoom = ((top + height - point.y) / height) * 100;
+    pointerZoom = ((top + height - point.y) / height) * range;
   }
 
   if (axis.reverse) {
-    pointerZoom = 100 - pointerZoom;
+    pointerZoom = maxEnd - pointerZoom;
+  } else {
+    pointerZoom += minStart;
   }
 
   return pointerZoom;

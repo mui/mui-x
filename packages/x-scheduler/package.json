@@ -16,7 +16,10 @@
   },
   "exports": {
     "./joy": "./src/joy/index.ts",
+    "./joy/day-view": "./src/joy/day-view/index.ts",
     "./joy/event-calendar": "./src/joy/event-calendar/index.ts",
+    "./joy/standalone-view": "./src/joy/standalone-view/index.ts",
+    "./joy/week-view": "./src/joy/week-view/index.ts",
     "./joy/locales/enUS": "./src/joy/locales/enUS.ts",
     "./joy/locales/frFR": "./src/joy/locales/frFR.ts",
     "./primitives": "./src/primitives/index.ts",
@@ -58,11 +61,13 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@base-ui-components/react": "1.0.0-beta.0",
-    "@floating-ui/react": "^0.27.12",
+    "@floating-ui/react": "^0.27.13",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "lucide-react": "^0.513.0",
-    "prop-types": "catalog:"
+    "lucide-react": "^0.525.0",
+    "reselect": "catalog:",
+    "prop-types": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "luxon": "^3.0.2",
@@ -73,6 +78,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@types/luxon": "catalog:",
     "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
     "luxon": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

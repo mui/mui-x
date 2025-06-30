@@ -1,9 +1,8 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
 
@@ -19,7 +18,7 @@ const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   return axisData as string[];
 };
 
-describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
+describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   const { render } = createRenderer();
 
   const lineChartProps = {
@@ -154,5 +153,54 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       expect(onZoomChange.callCount).to.equal(2);
       expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
+  });
+
+  it('should zoom on pinch', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+    const svg = document.querySelector('svg')!;
+
+    await user.pointer([
+      {
+        keys: '[TouchA>]',
+        target: svg,
+        coords: { x: 55, y: 45 },
+      },
+      {
+        keys: '[TouchB>]',
+        target: svg,
+        coords: { x: 45, y: 55 },
+      },
+      {
+        pointerName: 'TouchA',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        pointerName: 'TouchB',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+      {
+        keys: '[/TouchA]',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        keys: '[/TouchB]',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+    ]);
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.be.above(0);
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
 });

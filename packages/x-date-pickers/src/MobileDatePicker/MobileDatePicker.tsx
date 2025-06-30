@@ -6,7 +6,7 @@ import refType from '@mui/utils/refType';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { extractValidationProps, validateDate } from '../validation';
 import { DateView, PickerOwnerState } from '../models';
 import { DateField } from '../DateField';
@@ -35,7 +35,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   inProps: MobileDatePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<
@@ -53,7 +53,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: resolveDateFormat(utils, defaultizedProps, false),
+    format: resolveDateFormat(adapter, defaultizedProps, false),
     slots: {
       field: DateField,
       ...defaultizedProps.slots,

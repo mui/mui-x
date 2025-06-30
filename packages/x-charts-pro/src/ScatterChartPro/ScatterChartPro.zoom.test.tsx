@@ -1,9 +1,8 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { ScatterChartPro } from './ScatterChartPro';
 
@@ -19,7 +18,7 @@ const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   return axisData as string[];
 };
 
-describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
+describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
   const { render } = createRenderer();
 
   const scatterChartProps = {
@@ -189,5 +188,56 @@ describeSkipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       expect(getAxisTickValues('x')).to.deep.equal(['1.0', '1.2', '1.4']);
       expect(getAxisTickValues('y')).to.deep.equal(['10', '12', '14']);
     });
+  });
+
+  it('should zoom on pinch', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <ScatterChartPro {...scatterChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
+    expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
+
+    const svg = document.querySelector('svg')!;
+
+    await user.pointer([
+      {
+        keys: '[TouchA>]',
+        target: svg,
+        coords: { x: 55, y: 45 },
+      },
+      {
+        keys: '[TouchB>]',
+        target: svg,
+        coords: { x: 45, y: 55 },
+      },
+      {
+        pointerName: 'TouchA',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        pointerName: 'TouchB',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+      {
+        keys: '[/TouchA]',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        keys: '[/TouchB]',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+    ]);
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.be.above(0);
+    expect(getAxisTickValues('x')).to.deep.equal(['2.0']);
+    expect(getAxisTickValues('y')).to.deep.equal(['20']);
   });
 });
