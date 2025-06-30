@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { isJSDOM } from '../../utils/isJSDOM';
 
 export function useRunOncePerLoop<T extends (...args: any[]) => void>(
   callback: T,
