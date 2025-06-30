@@ -46,9 +46,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
   const { render: originalRender } = createRenderer();
 
   const render = async (...args: Parameters<typeof originalRender>) => {
-    const output = originalRender(...args);
+    const utils = originalRender(...args);
     await microtasks();
-    return output;
+    return utils;
   };
 
   let apiRef: RefObject<GridApi | null>;

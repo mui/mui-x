@@ -3,7 +3,6 @@ import {
   GridColDef,
   GridRowId,
   GridRowModel,
-  gridColumnDefinitionsSelector,
   gridDataRowIdsSelector,
   gridRowIdSelector,
   gridRowsLoadingSelector,
@@ -155,7 +154,13 @@ export const useGridPivoting = (
     );
 
     return { rows, columns: initialColumns, originalRowsProp };
-  }, [apiRef, props.getPivotDerivedColumns, originalColumnsProp, originalRowsProp]);
+  }, [
+    apiRef,
+    props.getPivotDerivedColumns,
+    originalColumnsProp,
+    originalRowsProp,
+    exportedStateRef,
+  ]);
 
   const computePivotingState = React.useCallback(
     ({ active, model: pivotModel }: Pick<GridPivotingState, 'active' | 'model'>) => {
@@ -177,7 +182,7 @@ export const useGridPivoting = (
 
       return undefined;
     },
-    [apiRef, props.pivotingColDef],
+    [apiRef, props.pivotingColDef, nonPivotDataRef],
   );
 
   useOnMount(() => {
@@ -220,7 +225,7 @@ export const useGridPivoting = (
         exportedStateRef.current = null;
       }
     }
-  }, [isPivotActive, apiRef, isPivotingAvailable]);
+  }, [isPivotActive, apiRef, isPivotingAvailable, nonPivotDataRef, exportedStateRef]);
 
   const setPivotModel = React.useCallback<GridPivotingApi['setPivotModel']>(
     (callback) => {
@@ -351,7 +356,7 @@ export const useGridPivoting = (
       });
       apiRef.current.selectRows([], false, true);
     },
-    [apiRef, computePivotingState, getInitialData, isPivotingAvailable],
+    [apiRef, computePivotingState, getInitialData, isPivotingAvailable, nonPivotDataRef],
   );
 
   const setPivotPanelOpen = React.useCallback<GridPivotingApi['setPivotPanelOpen']>(
@@ -416,7 +421,13 @@ export const useGridPivoting = (
         };
       });
     },
-    [isPivotingAvailable, apiRef, props.getPivotDerivedColumns, computePivotingState],
+    [
+      isPivotingAvailable,
+      apiRef,
+      props.getPivotDerivedColumns,
+      computePivotingState,
+      nonPivotDataRef,
+    ],
   );
 
   const updateNonPivotRows = React.useCallback<GridPivotingPrivateApi['updateNonPivotRows']>(
@@ -455,7 +466,7 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState, isPivotingAvailable],
+    [apiRef, computePivotingState, isPivotingAvailable, nonPivotDataRef],
   );
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
@@ -474,7 +485,7 @@ export const useGridPivoting = (
     if (nonPivotDataRef.current) {
       nonPivotDataRef.current.originalRowsProp = originalRowsProp;
     }
-  }, [originalRowsProp, apiRef]);
+  }, [originalRowsProp, apiRef, nonPivotDataRef]);
 
   useEnhancedEffect(() => {
     if (props.pivotModel !== undefined) {
@@ -497,7 +508,7 @@ export const useGridPivoting = (
 
 export const useGridPivotingExportState = (apiRef: RefObject<GridPrivateApiPremium>) => {
   const stateExportPreProcessing: GridPipeProcessor<'exportState'> = React.useCallback(
-    (state: GridInitialStatePremium, context) => {
+    (state: GridInitialStatePremium) => {
       const isPivotActive = gridPivotActiveSelector(apiRef);
       if (!isPivotActive) {
         return state;

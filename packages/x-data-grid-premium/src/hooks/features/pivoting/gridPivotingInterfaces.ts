@@ -3,8 +3,8 @@ import type {
   GridPivotingPrivateApiCommunity,
   GridPivotingStatePartial,
 } from '@mui/x-data-grid/internals';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { RefObject } from '@mui/x-internals/types';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export type GridPivotingPropsOverrides = {

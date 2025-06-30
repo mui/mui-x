@@ -174,7 +174,8 @@ export const useGridAggregation = (
         chunkIndex += 1;
 
         if (performance.now() - chunkStartTime < timeLimit) {
-          return processChunk();
+          processChunk();
+          return;
         }
 
         setTimeout(() => {
