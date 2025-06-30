@@ -263,6 +263,10 @@ This approach can be more appropriate for deeper changes.
 
 #### Migrate the theme
 
+:::success
+Be sure to [import the `@mui/x-date-pickers` types](/x/react-date-pickers/quickstart/#theme-augmentation) for the following theme entry keys to work in TypeScript environment.
+:::
+
 If you are using the theme to customize `MuiTextField`,
 you need to pass the same config to `MuiPickersTextField`:
 
