@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /**
  * LLM Documentation Generator
  *
@@ -75,11 +76,9 @@ import * as prettier from 'prettier';
 import { processMarkdownFile, processApiJson } from '@mui-internal-scripts/generate-llms-txt';
 import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
-import { fixPathname } from '@mui-internal/api-docs-builder/buildApiUtils';
-import replaceUrl from '@mui-internal/api-docs-builder/utils/replaceUrl';
 import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
-import pages from 'docs/data/pages';
+import pages from 'docsx/data/pages';
 import type { MuiPage } from 'docs/src/MuiPage';
 
 function processApiFile(filePath: string): string {
@@ -259,10 +258,9 @@ function findNonComponentMarkdownFiles(
           extensionMatched = true;
         }
         return matches;
-      } else {
-        // Handle folder paths
-        return page.pathname.startsWith(`/${folder}`);
       }
+      // Handle folder paths
+      return page.pathname.startsWith(`/${folder}`);
     });
     if (!belongsToFolder) {
       continue;
@@ -347,16 +345,6 @@ function processComponent(component: ComponentDocInfo): string | null {
   }
 
   return processedMarkdown;
-}
-
-/**
- * Convert kebab-case to Title Case
- */
-function toTitleCase(kebabCaseStr: string): string {
-  return kebabCaseStr
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
 }
 
 /**
@@ -451,12 +439,12 @@ async function processApiSection(
       const projectSegment = pathSegments[pathSegments.length - 2];
 
       // Try both JSON patterns: direct and double lastSegment
-      const jsonFilePath = path.join(process.cwd(), 'docs/pages', apiItem.pathname + '.json');
+      const jsonFilePath = path.join(process.cwd(), 'docs/pages', `${apiItem.pathname}.json`);
       const jsonFilePathDouble = path.join(
         process.cwd(),
         'docs/pages',
         apiItem.pathname,
-        lastSegment + '.json',
+        `${lastSegment}.json`,
       );
 
       // Try both markdown patterns: docs/data and docs/pages with double lastSegment
@@ -465,13 +453,13 @@ async function processApiSection(
         'docs/data',
         projectSegment.replace('react-', ''),
         lastSegment,
-        lastSegment + '.md',
+        `${lastSegment}.md`,
       );
       const markdownFilePathPages = path.join(
         process.cwd(),
         'docs/pages',
         apiItem.pathname,
-        lastSegment + '.md',
+        `${lastSegment}.md`,
       );
 
       let apiMarkdown: string;
@@ -498,7 +486,7 @@ async function processApiSection(
 
       // Create output path
       // e.g., "/x/api/data-grid/grid-api" -> "x/api/data-grid/grid-api.md"
-      const outputPath = apiItem.pathname.replace(/^\//, '') + '.md';
+      const outputPath = `${apiItem.pathname.replace(/^\//, '')}.md`;
       const fullOutputPath = path.join(outputDir, outputPath);
 
       // Ensure directory exists
@@ -566,7 +554,9 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
   };
 
   const targetPathname = projectPathMap[projectKey];
-  if (!targetPathname) return null;
+  if (!targetPathname) {
+    return null;
+  }
 
   return pages.find((page) => page.pathname === targetPathname) || null;
 }
@@ -674,11 +664,21 @@ function getProjectDisplayNameFromKey(projectKey: string): string {
 function getProjectNameFromSettings(projectSettings: ProjectSettings): string {
   // Check TypeScript project names to determine the project
   for (const project of projectSettings.typeScriptProjects) {
-    if (project.name.includes('data-grid')) return getProjectDisplayNameFromKey('data-grid');
-    if (project.name.includes('date-pickers')) return getProjectDisplayNameFromKey('date-pickers');
-    if (project.name.includes('charts')) return getProjectDisplayNameFromKey('charts');
-    if (project.name.includes('tree-view')) return getProjectDisplayNameFromKey('tree-view');
-    if (project.name.includes('scheduler')) return getProjectDisplayNameFromKey('scheduler');
+    if (project.name.includes('data-grid')) {
+      return getProjectDisplayNameFromKey('data-grid');
+    }
+    if (project.name.includes('date-pickers')) {
+      return getProjectDisplayNameFromKey('date-pickers');
+    }
+    if (project.name.includes('charts')) {
+      return getProjectDisplayNameFromKey('charts');
+    }
+    if (project.name.includes('tree-view')) {
+      return getProjectDisplayNameFromKey('tree-view');
+    }
+    if (project.name.includes('scheduler')) {
+      return getProjectDisplayNameFromKey('scheduler');
+    }
   }
 
   // Fallback - try to infer from first TypeScript project name
@@ -733,7 +733,7 @@ function generateProjectLlmsTxt(
   for (const file of generatedFiles) {
     // Convert output path to expected pathname format
     // e.g., "x/react-data-grid/components/usage.md" -> "/x/react-data-grid/components/usage"
-    const pathname = '/' + file.outputPath.replace(/\.md$/, '');
+    const pathname = `/${file.outputPath.replace(/\.md$/, '')}`;
     fileMap.set(pathname, file);
   }
 
@@ -805,7 +805,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         // Skip paths containing # in the last segment
         let outputFileName;
         if (component.demos[0]) {
-          let pathname = component.demos[0].demoPathname.replace(/^\//, '').replace(/\/$/, '');
+          const pathname = component.demos[0].demoPathname.replace(/^\//, '').replace(/\/$/, '');
           const pathParts = pathname.split('/');
           const lastPart = pathParts[pathParts.length - 1];
 
@@ -911,11 +911,21 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
     const projectKey = (() => {
       // Try to infer project key from TypeScript project names
       for (const project of currentProjectSettings.typeScriptProjects) {
-        if (project.name.includes('data-grid')) return 'data-grid';
-        if (project.name.includes('date-pickers')) return 'date-pickers';
-        if (project.name.includes('charts')) return 'charts';
-        if (project.name.includes('tree-view')) return 'tree-view';
-        if (project.name.includes('scheduler')) return 'scheduler';
+        if (project.name.includes('data-grid')) {
+          return 'data-grid';
+        }
+        if (project.name.includes('date-pickers')) {
+          return 'date-pickers';
+        }
+        if (project.name.includes('charts')) {
+          return 'charts';
+        }
+        if (project.name.includes('tree-view')) {
+          return 'tree-view';
+        }
+        if (project.name.includes('scheduler')) {
+          return 'scheduler';
+        }
       }
       return 'unknown';
     })();
@@ -939,6 +949,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
           }
         }
       }
+      // eslint-disable-next-line no-console
       console.log(`✓ Generated ${processedCount} API files for ${projectName}`);
     }
 
@@ -962,6 +973,7 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
       }
 
       fs.writeFileSync(llmsPath, formattedLlmsContent, 'utf-8');
+      // eslint-disable-next-line no-console
       console.log(`✓ Generated: ${baseDir}/llms.txt`);
       processedCount += 1;
 
