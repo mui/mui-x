@@ -26,9 +26,7 @@ export function useRunOncePerLoop<T extends (...args: any[]) => void>(
         return;
       }
 
-      if (isJSDOM) {
-        runner();
-      } else if (typeof queueMicrotask === 'function') {
+      if (typeof queueMicrotask === 'function') {
         queueMicrotask(runner);
       } else {
         Promise.resolve().then(runner);
