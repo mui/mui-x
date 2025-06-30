@@ -1,7 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import type { ChartState } from '../../../models/gridChartsIntegration';
 
-export interface ChartsConfigurationPanelState {
+export interface chartsPanelState {
   open: boolean;
 }
 
@@ -14,7 +14,7 @@ export type GridChartsIntegrationItem = {
 
 export interface GridChartsIntegrationState {
   activeChartId: string;
-  configurationPanel: ChartsConfigurationPanelState;
+  configurationPanel: chartsPanelState;
   charts: Record<
     string,
     {
@@ -25,7 +25,7 @@ export interface GridChartsIntegrationState {
 }
 
 export interface GridChartsIntegrationInitialState {
-  configurationPanel?: Partial<ChartsConfigurationPanelState>;
+  configurationPanel?: Partial<chartsPanelState>;
   activeChartId?: string;
   charts?: Record<
     string,
@@ -40,10 +40,10 @@ export interface GridChartsIntegrationInitialState {
 
 export interface GridChartsIntegrationApi {
   /**
-   * Sets whether the charts configuration side panel is open.
-   * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the charts configuration side panel open state.
+   * Sets whether the charts side panel is open.
+   * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the charts side panel open state.
    */
-  setChartsConfigurationPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
+  setChartsPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   /**
    * Sets the active chart id.
    * @param {string} chartId - The id of the chart to set as active.

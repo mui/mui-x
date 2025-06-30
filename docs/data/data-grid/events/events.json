@@ -111,7 +111,7 @@
   },
   {
     "projects": ["x-data-grid-premium"],
-    "name": "chartsConfigurationPanelOpenChange",
+    "name": "chartsPanelOpenChange",
     "description": "Fired when the charts configuration side panel open state changes.",
     "params": "boolean",
     "event": "MuiEvent<{}>"
