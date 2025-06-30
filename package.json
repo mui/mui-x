@@ -72,7 +72,7 @@
     "@babel/cli": "^7.27.2",
     "@babel/core": "catalog:",
     "@babel/plugin-transform-class-properties": "^7.27.1",
-    "@babel/plugin-transform-object-rest-spread": "^7.27.3",
+    "@babel/plugin-transform-object-rest-spread": "^7.27.7",
     "@babel/plugin-transform-private-methods": "^7.27.1",
     "@babel/plugin-transform-private-property-in-object": "^7.27.1",
     "@babel/plugin-transform-react-constant-elements": "catalog:",
@@ -82,7 +82,7 @@
     "@babel/preset-typescript": "catalog:",
     "@babel/register": "^7.27.1",
     "@babel/traverse": "catalog:",
-    "@babel/types": "^7.27.6",
+    "@babel/types": "^7.27.7",
     "@eslint/compat": "^1.3.1",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
@@ -160,7 +160,7 @@
     "moment-timezone": "catalog:",
     "null-loader": "^4.0.1",
     "nyc": "^17.1.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "pretty-quick": "^4.2.2",
     "process": "^0.11.10",
     "react": "catalog:",
@@ -187,8 +187,8 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.12.4",
   "engines": {
-    "pnpm": "10.12.1"
+    "pnpm": "10.12.4"
   }
 }
