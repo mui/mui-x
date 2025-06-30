@@ -12,7 +12,7 @@
     "docs:api:buildX": "tsx ./docs/scripts/api/buildApi.ts",
     "docs:llms:build": "rimraf --glob ./docs/public/x/ && tsx ./scripts/buildLlmsDocs/index.ts --projectSettings scripts/buildApiDocs/projectSettings.ts",
     "docs:link-check": "tsx ./docs/scripts/reportBrokenLinks.js",
-    "docs:build": "pnpm run release:build && pnpm --filter docs build",
+    "docs:build": "pnpm run release:build && pnpm docs:llms:build && pnpm --filter docs build",
     "docs:typescript:formatted": "pnpm --filter docs typescript:transpile",
     "docs:populate:demos": "pnpm --filter docs populate:demos",
     "docs:importDocsStatic": "node scripts/importDocsStatic.mjs",
