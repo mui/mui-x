@@ -6,7 +6,7 @@ import type { MenuListProps } from '@mui/material/MenuList';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TooltipProps } from '@mui/material/Tooltip';
 
-declare module '@mui/x-charts/models' {
+declare module '@mui/x-charts' {
   interface ChartBaseButtonPropsOverrides {
     material?: Partial<ButtonProps>;
   }
