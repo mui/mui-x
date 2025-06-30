@@ -513,22 +513,27 @@ async function processApiSection(
 }
 
 /**
- * Recursively find children of an item with the specified subheader
+ * Recursively find children of an item with the specified title
  */
-function findChildrenBySubheader(page: MuiPage, targetSubheader: string): MuiPage[] {
-  if (page.subheader === targetSubheader && page.children) {
+function findChildrenByTitle(page: MuiPage, targetTitle: string | RegExp): MuiPage[] {
+  const titleMatches =
+    typeof targetTitle === 'string'
+      ? page.title === targetTitle
+      : targetTitle.test(page.title || '');
+
+  if (titleMatches && page.children) {
     return page.children;
   }
-  
+
   if (page.children) {
     for (const child of page.children) {
-      const result = findChildrenBySubheader(child, targetSubheader);
+      const result = findChildrenByTitle(child, targetTitle);
       if (result.length > 0) {
         return result;
       }
     }
   }
-  
+
   return [];
 }
 
@@ -976,27 +981,27 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
     const pagesSection = findProjectPagesSection(projectKey);
     if (pagesSection) {
-      // Find children of an item with subheader "Resources"
-      const resourcesChildren = findChildrenBySubheader(pagesSection, "Resources");
+      const projectName = getProjectNameFromSettings(currentProjectSettings);
+      // Find children of an item with title "API reference"
+      const resourcesChildren = findChildrenByTitle(pagesSection, /api\s*reference/i);
       // Find API sections in the project pages
       for (const child of resourcesChildren) {
         if (child.pathname.includes('/api/')) {
           try {
-            const projectName = getProjectNameFromSettings(currentProjectSettings);
             const apiFiles = await processApiSection(child, outputDir, projectName);
-
             // Add API files to current project files and overall list
             currentProjectFiles.push(...apiFiles);
             generatedFiles.push(...apiFiles);
             processedCount += apiFiles.length;
-
-            console.log(`✓ Generated ${apiFiles.length} API files for ${projectName}`);
           } catch (error) {
             console.error(`✗ Error processing API section for ${projectKey}:`, error);
           }
         }
       }
+      console.log(`✓ Generated ${processedCount} API files for ${projectName}`);
     }
+
+    console.log('currentProjectFiles', currentProjectFiles);
 
     // Store project files and generate project-specific llms.txt
     projectGeneratedFiles.set(currentProjectSettings, currentProjectFiles);
@@ -1012,6 +1017,8 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         }
         groupedByFirstDir[firstDir].push(file);
       }
+
+      // console.log('groupedByFirstDir', groupedByFirstDir);
 
       // Generate individual project llms.txt files for each directory
       for (const [dirName, files] of Object.entries(groupedByFirstDir)) {
