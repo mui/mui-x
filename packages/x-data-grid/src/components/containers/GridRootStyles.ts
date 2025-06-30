@@ -154,6 +154,9 @@ export const GridRootStyles = styled('div', {
     },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
+    { [`& .${c['row--dropAbove']}`]: styles['row--dropAbove'] },
+    { [`& .${c['row--dropBelow']}`]: styles['row--dropBelow'] },
+    { [`& .${c['row--beingDragged']}`]: styles['row--beingDragged'] },
   ],
 })<{ ownerState: OwnerState }>(() => {
   const apiRef = useGridPrivateApiContext();
@@ -806,6 +809,20 @@ export const GridRootStyles = styled('div', {
         {
           display: 'none',
         },
+    },
+    [`& .${c['row--dropAbove']}`]: {
+      borderTopWidth: '1px',
+      borderTopStyle: 'solid',
+      borderTopColor: vars.colors.interactive.selected,
+    },
+    [`& .${c['row--dropBelow']}`]: {
+      borderBottomWidth: '1px',
+      borderBottomStyle: 'solid',
+      borderBottomColor: vars.colors.interactive.selected,
+    },
+    [`& .${c['row--beingDragged']}`]: {
+      opacity: vars.colors.interactive.disabledOpacity,
+      backgroundColor: vars.colors.background.overlay,
     },
   };
 

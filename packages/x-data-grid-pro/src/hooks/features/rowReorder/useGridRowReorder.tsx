@@ -35,7 +35,11 @@ interface ReorderStateProps {
   dragDirection: Direction | null;
 }
 
-let previousMousePosition: { x: number; y: number } | null = null;
+interface DropTarget {
+  targetRowId: GridRowId | null;
+  targetRowIndex: number | null;
+  dropPosition: 'above' | 'below' | null;
+}
 
 let previousReorderState: ReorderStateProps = {
   previousTargetId: null,
@@ -47,6 +51,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     rowDragging: ['row--dragging'],
+    rowDropAbove: ['row--dropAbove'],
+    rowDropBelow: ['row--dropBelow'],
+    rowBeingDragged: ['row--beingDragged'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -71,6 +78,12 @@ export const useGridRowReorder = (
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
   const sortedRowIndexLookup = useGridSelector(apiRef, gridSortedRowIndexLookupSelector);
 
+  const [dropTarget, setDropTarget] = React.useState<DropTarget>({
+    targetRowId: null,
+    targetRowIndex: null,
+    dropPosition: null,
+  });
+
   React.useEffect(() => {
     return () => {
       clearTimeout(removeDnDStylesTimeout.current);
@@ -82,6 +95,123 @@ export const useGridRowReorder = (
   const isRowReorderDisabled = React.useMemo((): boolean => {
     return !props.rowReordering || !!sortModel.length || treeDepth !== 1;
   }, [props.rowReordering, sortModel, treeDepth]);
+
+  const applyDropIndicator = React.useCallback(
+    (targetRowId: GridRowId | null, position: 'above' | 'below' | null) => {
+      // Remove existing drop indicators
+      const allRows = apiRef.current.rootElementRef?.current?.querySelectorAll('[data-id]');
+      allRows?.forEach((row) => {
+        row.classList.remove(classes.rowDropAbove, classes.rowDropBelow);
+      });
+
+      // Apply new drop indicator
+      if (targetRowId && position) {
+        const targetRow = apiRef.current.rootElementRef?.current?.querySelector(
+          `[data-id="${targetRowId}"]`,
+        );
+        if (targetRow) {
+          targetRow.classList.add(
+            position === 'above' ? classes.rowDropAbove : classes.rowDropBelow,
+          );
+        }
+      }
+    },
+    [apiRef, classes],
+  );
+
+  const applyDraggedState = React.useCallback(
+    (rowId: GridRowId | null, isDragged: boolean) => {
+      if (rowId) {
+        const draggedRow = apiRef.current.rootElementRef?.current?.querySelector(
+          `[data-id="${rowId}"]`,
+        );
+        if (draggedRow) {
+          if (isDragged) {
+            draggedRow.classList.add(classes.rowBeingDragged);
+          } else {
+            draggedRow.classList.remove(classes.rowBeingDragged);
+          }
+        }
+      }
+    },
+    [apiRef, classes.rowBeingDragged],
+  );
+
+  const applyRowAnimation = React.useCallback(
+    (draggedRowId: GridRowId, reorderCallback: () => void) => {
+      // TODO: Test performance implication
+      // Should be good because of the virtualization
+      const rootElement = apiRef.current.rootElementRef?.current;
+      if (!rootElement) {
+        return;
+      }
+
+      const allRows = rootElement.querySelectorAll('[data-id]');
+      if (!allRows.length) {
+        return;
+      }
+
+      const rowsArray = Array.from(allRows) as HTMLElement[];
+
+      const initialPositions = new Map<string, DOMRect>();
+      rowsArray.forEach((row) => {
+        const rowId = row.getAttribute('data-id');
+        if (rowId) {
+          initialPositions.set(rowId, row.getBoundingClientRect());
+        }
+      });
+
+      reorderCallback();
+
+      // Use `requestAnimationFrame` to ensure DOM has updated
+      requestAnimationFrame(() => {
+        const newRows = rootElement.querySelectorAll('[data-id]') as NodeListOf<HTMLElement>;
+
+        newRows.forEach((row) => {
+          const rowId = row.getAttribute('data-id');
+          if (!rowId) {
+            return;
+          }
+
+          const prevRect = initialPositions.get(rowId);
+          if (!prevRect) {
+            return;
+          }
+
+          const currentRect = row.getBoundingClientRect();
+
+          const deltaY = prevRect.top - currentRect.top;
+
+          // Only animate if there's actual movement
+          if (Math.abs(deltaY) > 1) {
+            // Apply the inverted transform immediately (without transition)
+            row.style.transition = 'none';
+            row.style.transform = `translateY(${deltaY}px)`;
+
+            // Force a repaint by accessing a property that triggers layout recalculation
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            row.offsetHeight;
+
+            // Apply transition
+            row.style.transition = 'transform 0.2s ease-in-out';
+            row.style.transform = 'translateY(0)';
+
+            if (rowId !== String(draggedRowId)) {
+              row.style.backgroundColor = 'var(--unstable_DataGrid-overlayBackground)';
+            }
+
+            // Clean up after animation
+            setTimeout(() => {
+              row.style.transition = '';
+              row.style.transform = '';
+              row.style.backgroundColor = '';
+            }, 200);
+          }
+        });
+      });
+    },
+    [apiRef],
+  );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {
@@ -97,8 +227,12 @@ export const useGridRowReorder = (
       event.stopPropagation();
 
       dragRowNode.current = event.currentTarget;
+      // Apply cell-level dragging class to the drag handle
       dragRowNode.current.classList.add(classes.rowDragging);
       setDragRowId(params.id);
+
+      // Apply the dragged state to the entire row
+      applyDraggedState(params.id, true);
 
       removeDnDStylesTimeout.current = setTimeout(() => {
         dragRowNode.current!.classList.remove(classes.rowDragging);
@@ -107,7 +241,14 @@ export const useGridRowReorder = (
       originRowIndex.current = sortedRowIndexLookup[params.id];
       apiRef.current.setCellFocus(params.id, GRID_REORDER_COL_DEF.field);
     },
-    [apiRef, isRowReorderDisabled, logger, classes.rowDragging, sortedRowIndexLookup],
+    [
+      apiRef,
+      isRowReorderDisabled,
+      logger,
+      classes.rowDragging,
+      sortedRowIndexLookup,
+      applyDraggedState,
+    ],
   );
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
@@ -128,34 +269,61 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
-      const mouseMovementDiff = previousMousePosition
-        ? previousMousePosition.y - event.clientY
-        : event.clientY;
-
       if (params.id !== dragRowId) {
         const targetRowIndex = sortedRowIndexLookup[params.id];
+        const sourceRowIndex = sortedRowIndexLookup[dragRowId];
 
-        const dragDirection = mouseMovementDiff > 0 ? Direction.DOWN : Direction.UP;
+        // Determine drop position based on source and target row relationship
+        // If target is before source, place border above target (row will go above target)
+        // If source is before target, place border below target (row will go below target)
+        const dropPosition = targetRowIndex < sourceRowIndex ? 'above' : 'below';
+
+        // Check if this drop would result in no actual movement
+        const wouldResultInNoMovement =
+          (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) || // dragging to immediately below (above next row)
+          (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1); // dragging to immediately above (below previous row)
+
         const currentReorderState: ReorderStateProps = {
-          dragDirection,
+          dragDirection: dropPosition === 'above' ? Direction.UP : Direction.DOWN,
           previousTargetId: params.id,
         };
-        const isStateChanged =
-          currentReorderState.dragDirection !== previousReorderState.dragDirection ||
-          currentReorderState.previousTargetId !== previousReorderState.previousTargetId;
 
-        if (
-          previousReorderState.dragDirection === null ||
-          (Math.abs(mouseMovementDiff) >= 1 && isStateChanged)
-        ) {
-          apiRef.current.setRowIndex(dragRowId, targetRowIndex);
+        // Only update visual indicator:
+        // 1. When dragging over a different row
+        // 2. When it would result in actual movement
+        if (previousReorderState.previousTargetId !== params.id) {
+          if (wouldResultInNoMovement) {
+            // Clear any existing indicators since this wouldn't result in movement
+            setDropTarget({
+              targetRowId: null,
+              targetRowIndex: null,
+              dropPosition: null,
+            });
+            applyDropIndicator(null, null);
+          } else {
+            setDropTarget({
+              targetRowId: params.id,
+              targetRowIndex,
+              dropPosition,
+            });
+            applyDropIndicator(params.id, dropPosition);
+          }
           previousReorderState = currentReorderState;
         }
+      } else if (previousReorderState.previousTargetId !== null) {
+        setDropTarget({
+          targetRowId: null,
+          targetRowIndex: null,
+          dropPosition: null,
+        });
+        applyDropIndicator(null, null);
+        previousReorderState = {
+          previousTargetId: null,
+          dragDirection: null,
+        };
       }
-
-      previousMousePosition = { x: event.clientX, y: event.clientY };
     },
-    [dragRowId, apiRef, logger, sortedRowIndexLookup],
+    [dragRowId, apiRef, logger, sortedRowIndexLookup, applyDropIndicator],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
@@ -176,25 +344,66 @@ export const useGridRowReorder = (
       dragRowNode.current = null;
       previousReorderState.dragDirection = null;
 
+      // Clear visual indicators and dragged state
+      applyDropIndicator(null, null);
+      applyDraggedState(dragRowId, false);
+
       // Check if the row was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {
-        // Accessing params.field may contain the wrong field as header elements are reused
-        apiRef.current.setRowIndex(dragRowId, originRowIndex.current!);
+        // Reset drop target state
+        setDropTarget({
+          targetRowId: null,
+          targetRowIndex: null,
+          dropPosition: null,
+        });
         originRowIndex.current = null;
       } else {
-        // Emit the rowOrderChange event only once when the reordering stops.
-        const rowOrderChangeParams: GridRowOrderChangeParams = {
-          row: apiRef.current.getRow(dragRowId)!,
-          targetIndex: sortedRowIndexLookup[params.id],
-          oldIndex: originRowIndex.current!,
-        };
+        if (dropTarget.targetRowIndex !== null && dropTarget.targetRowId !== null) {
+          const sourceRowIndex = originRowIndex.current!;
+          const targetRowIndex = dropTarget.targetRowIndex;
+          const dropPosition = dropTarget.dropPosition;
 
-        apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
+          const isReorderInvalid =
+            (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) || // dragging to immediately below (above next row)
+            (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1) || // dragging to immediately above (below previous row)
+            dropTarget.targetRowId === dragRowId; // dragging to the same row
+
+          if (!isReorderInvalid) {
+            applyRowAnimation(dragRowId, () => {
+              apiRef.current.setRowIndex(dragRowId, targetRowIndex);
+
+              // Emit the rowOrderChange event only once when the reordering stops.
+              const rowOrderChangeParams: GridRowOrderChangeParams = {
+                row: apiRef.current.getRow(dragRowId)!,
+                targetIndex: targetRowIndex,
+                oldIndex: sourceRowIndex,
+              };
+
+              apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
+            });
+          }
+        }
+
+        // Reset drop target state
+        setDropTarget({
+          targetRowId: null,
+          targetRowIndex: null,
+          dropPosition: null,
+        });
       }
 
       setDragRowId('');
     },
-    [apiRef, dragRowId, isRowReorderDisabled, logger, sortedRowIndexLookup],
+    [
+      apiRef,
+      dragRowId,
+      isRowReorderDisabled,
+      logger,
+      dropTarget,
+      applyDropIndicator,
+      applyDraggedState,
+      applyRowAnimation,
+    ],
   );
 
   useGridEvent(apiRef, 'rowDragStart', handleDragStart);
