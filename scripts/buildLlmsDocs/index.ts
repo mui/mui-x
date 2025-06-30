@@ -352,12 +352,16 @@ function processComponent(component: ComponentDocInfo): string | null {
  */
 async function formatMarkdown(content: string): Promise<string> {
   try {
+    // Remove project prefixes from markdown link titles
+    // e.g., "Date and Time Pickers - Custom layout" -> "Custom layout"
+    const processedContent = content.replace(/\[([^[\]]*?)\s*-\s*([^[\]]*?)\]/g, '[$2]');
+
     const prettierConfigPath = path.join(process.cwd(), 'prettier.config.js');
     const prettierConfig = await prettier.resolveConfig(prettierConfigPath, {
       config: prettierConfigPath,
     });
 
-    return await prettier.format(content, {
+    return await prettier.format(processedContent, {
       ...prettierConfig,
       parser: 'markdown',
     });
@@ -368,18 +372,12 @@ async function formatMarkdown(content: string): Promise<string> {
 }
 
 /**
- * Increase header levels by one (add one # to each header) and remove project prefixes from titles
+ * Increase header levels by one (add one # to each header)
  */
 function increaseHeaderLevels(content: string): string {
   // Replace headers with one additional #
   // # becomes ##, ## becomes ###, ### becomes ####, etc.
-  let processedContent = content.replace(/^(#{1,5})\s/gm, '#$1 ');
-
-  // Remove project prefixes from markdown link titles for root llms.txt
-  // e.g., "Date and Time Pickers - Custom layout" -> "Custom layout"
-  processedContent = processedContent.replace(/\[([^[\]]*?)\s*-\s*([^[\]]*?)\]/g, '[$2]');
-
-  return processedContent;
+  return content.replace(/^(#{1,5})\s/gm, '#$1 ');
 }
 
 /**
