@@ -46,8 +46,8 @@
     "cellModesModel": { "type": { "name": "object" } },
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionModel": { "type": { "name": "object" } },
-    "chartsConfigurationPanelOpen": { "type": { "name": "bool" }, "default": "false" },
     "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
+    "chartsPanelOpen": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -352,11 +352,11 @@
         "describedArgs": ["cellSelectionModel", "details"]
       }
     },
-    "onChartsConfigurationPanelOpenChange": {
+    "onChartsPanelOpenChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(chartsConfigurationPanelOpen: boolean) => void",
-        "describedArgs": ["chartsConfigurationPanelOpen"]
+        "type": "function(chartsPanelOpen: boolean) => void",
+        "describedArgs": ["chartsPanelOpen"]
       }
     },
     "onClipboardCopy": {
@@ -807,8 +807,8 @@
       "class": "MuiDataGridPremium-aiAssistantPanel"
     },
     {
-      "name": "chartsConfigurationPanel",
-      "description": "Component rendered when charts configuration panel is open. Only needed when `chartsIntegration` prop is passed to the grid.\nPass `GridChartsConfigurationPanel` to render the default charts configuration panel.",
+      "name": "chartsPanel",
+      "description": "Component rendered when charts panel is open. Only needed when `chartsIntegration` prop is passed to the grid.\nPass `GridChartsPanel` to render the default charts panel.",
       "default": "null",
       "class": null
     },

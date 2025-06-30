@@ -228,15 +228,15 @@ DataGridPremiumRaw.propTypes = {
    */
   cellSelectionModel: PropTypes.object,
   /**
-   * If `true`, the charts configuration side panel is visible.
-   * @default false
-   */
-  chartsConfigurationPanelOpen: PropTypes.bool,
-  /**
    * If `true`, the charts integration feature is enabled.
    * @default false
    */
   chartsIntegration: PropTypes.bool,
+  /**
+   * If `true`, the charts side panel is visible.
+   * @default false
+   */
+  chartsPanelOpen: PropTypes.bool,
   /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
@@ -788,10 +788,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onCellSelectionModelChange: PropTypes.func,
   /**
-   * Callback fired when the charts configuration side panel open state changes.
-   * @param {boolean} chartsConfigurationPanelOpen Whether the charts configuration side panel is visible.
+   * Callback fired when the charts side panel open state changes.
+   * @param {boolean} chartsPanelOpen Whether the charts side panel is visible.
    */
-  onChartsConfigurationPanelOpenChange: PropTypes.func,
+  onChartsPanelOpenChange: PropTypes.func,
   /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.

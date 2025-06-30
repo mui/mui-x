@@ -8,7 +8,7 @@ import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremium
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { ChartState } from '../../models/gridChartsIntegration';
 
-export interface GridChartsManagementProps {
+export interface GridChartsPanelManagementProps {
   charts: Record<string, ChartState>;
   activeChartId: string;
   selectedChartType: string;
@@ -107,7 +107,7 @@ const GridChartsManagementLabel = styled('div', {
   alignItems: 'center',
 });
 
-function GridChartsManagement(props: GridChartsManagementProps) {
+function GridChartsPanelManagement(props: GridChartsPanelManagementProps) {
   const {
     charts,
     activeChartId,
@@ -118,7 +118,7 @@ function GridChartsManagement(props: GridChartsManagementProps) {
   } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const chartConfig = rootProps.slotProps?.chartsConfigurationPanel?.schema || {};
+  const chartConfig = rootProps.slotProps?.chartsPanel?.schema || {};
   const chartEntries = Object.entries(charts);
 
   return (
@@ -173,7 +173,7 @@ function GridChartsManagement(props: GridChartsManagementProps) {
   );
 }
 
-GridChartsManagement.propTypes = {
+GridChartsPanelManagement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -181,4 +181,4 @@ GridChartsManagement.propTypes = {
   schema: PropTypes.object,
 } as any;
 
-export { GridChartsManagement };
+export { GridChartsPanelManagement };

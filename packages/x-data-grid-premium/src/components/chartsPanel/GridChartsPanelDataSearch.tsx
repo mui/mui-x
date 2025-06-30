@@ -7,7 +7,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
-export type GridChartsDataPanelSearchProps = Pick<
+export type GridChartsPanelDataSearchProps = Pick<
   GridSlotProps['baseTextField'],
   'value' | 'onChange'
 > & {
@@ -20,20 +20,20 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    container: ['chartsDataPanelSearchContainer'],
+    container: ['chartsPanelDataSearchContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridChartsDataPanelSearchContainer = styled('div', {
+const GridChartsPanelDataSearchContainer = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ChartsDataPanelSearchContainer',
+  slot: 'ChartsPanelDataSearchContainer',
 })<{ ownerState: OwnerState }>({
   padding: vars.spacing(1),
 });
 
-function GridChartsDataPanelSearch(props: GridChartsDataPanelSearchProps) {
+function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
   const { onClear, value, onChange } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -46,7 +46,7 @@ function GridChartsDataPanelSearch(props: GridChartsDataPanelSearchProps) {
   };
 
   return (
-    <GridChartsDataPanelSearchContainer ownerState={rootProps} className={classes.container}>
+    <GridChartsPanelDataSearchContainer ownerState={rootProps} className={classes.container}>
       <rootProps.slots.baseTextField
         size="small"
         aria-label={apiRef.current.getLocaleText('chartsConfigurationSearchLabel')}
@@ -75,8 +75,8 @@ function GridChartsDataPanelSearch(props: GridChartsDataPanelSearchProps) {
         value={value}
         onChange={onChange}
       />
-    </GridChartsDataPanelSearchContainer>
+    </GridChartsPanelDataSearchContainer>
   );
 }
 
-export { GridChartsDataPanelSearch };
+export { GridChartsPanelDataSearch };

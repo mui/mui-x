@@ -3,7 +3,7 @@ import * as React from 'react';
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { FieldTransferObject, DropPosition } from './GridChartsDataPanelBody';
+import type { FieldTransferObject, DropPosition } from './GridChartsPanelDataBody';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import {
   gridChartsCategoriesSelector,
@@ -12,7 +12,7 @@ import {
 } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
-interface GridChartsDataPanelFieldMenuProps {
+interface GridChartsPanelDataFieldMenuProps {
   field: string;
   section: FieldTransferObject['section'];
   blockedSections?: string[];
@@ -29,7 +29,7 @@ type MenuDivider = {
   divider: true;
 };
 
-function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) {
+function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) {
   const { field, section, blockedSections } = props;
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
@@ -227,4 +227,4 @@ function GridChartsDataPanelFieldMenu(props: GridChartsDataPanelFieldMenuProps) 
   );
 }
 
-export { GridChartsDataPanelFieldMenu };
+export { GridChartsPanelDataFieldMenu };

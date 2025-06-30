@@ -36,12 +36,10 @@
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
-    "chartsConfigurationPanelOpen": {
-      "description": "If <code>true</code>, the charts configuration side panel is visible."
-    },
     "chartsIntegration": {
       "description": "If <code>true</code>, the charts integration feature is enabled."
     },
+    "chartsPanelOpen": { "description": "If <code>true</code>, the charts side panel is visible." },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },
@@ -456,11 +454,9 @@
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
-    "onChartsConfigurationPanelOpenChange": {
-      "description": "Callback fired when the charts configuration side panel open state changes.",
-      "typeDescriptions": {
-        "chartsConfigurationPanelOpen": "Whether the charts configuration side panel is visible."
-      }
+    "onChartsPanelOpenChange": {
+      "description": "Callback fired when the charts side panel open state changes.",
+      "typeDescriptions": { "chartsPanelOpen": "Whether the charts side panel is visible." }
     },
     "onClipboardCopy": {
       "description": "Callback called when the data is copied to the clipboard.",
@@ -1836,7 +1832,6 @@
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
     "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
-    "chartsConfigurationPanel": "Component rendered when charts configuration panel is open. Only needed when <code>chartsIntegration</code> prop is passed to the grid. Pass <code>GridChartsConfigurationPanel</code> to render the default charts configuration panel.",
     "chartsIcon": "Icon used for the charts configuration button",
     "chartsMenuAddIcon": "Icon used for the add button in the charts configuration panel menu",
     "chartsMenuMoveDownIcon": "Icon used for the move down button in the charts configuration panel menu",
@@ -1844,6 +1839,7 @@
     "chartsMenuMoveToTopIcon": "Icon used for the move to top button in the charts configuration panel menu",
     "chartsMenuMoveUpIcon": "Icon used for the move up button in the charts configuration panel menu",
     "chartsMenuRemoveIcon": "Icon used for the remove button in the charts configuration panel menu",
+    "chartsPanel": "Component rendered when charts panel is open. Only needed when <code>chartsIntegration</code> prop is passed to the grid. Pass <code>GridChartsPanel</code> to render the default charts panel.",
     "chartsSearchClearIcon": "Icon used for the clear button in the sidebar search field in the charts configuration panel",
     "chartsSearchIcon": "Icon used for the search icon in the sidebar search field in the charts configuration panel",
     "collapsibleIcon": "Icon displayed in the collapsible to indicate if it is open or closed.",

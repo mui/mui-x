@@ -31,7 +31,7 @@ import {
   GridChartsIntegrationState,
 } from './gridChartsIntegrationInterfaces';
 import {
-  gridChartsConfigurationPanelOpenSelector,
+  gridChartsPanelOpenSelector,
   gridChartsCategoriesSelector,
   gridChartsSeriesSelector,
   gridChartsIntegrationActiveChartIdSelector,
@@ -44,7 +44,7 @@ import { getBlockedSections } from './utils';
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    'chartsIntegration' | 'chartsConfigurationPanelOpen' | 'initialState' | 'activeChartId'
+    'chartsIntegration' | 'chartsPanelOpen' | 'initialState' | 'activeChartId'
   >
 > = (state, props) => {
   if (!props.chartsIntegration) {
@@ -96,7 +96,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
         props.activeChartId ?? props.initialState?.chartsIntegration?.activeChartId ?? '',
       configurationPanel: {
         open:
-          props.chartsConfigurationPanelOpen ??
+          props.chartsPanelOpen ??
           props.initialState?.chartsIntegration?.configurationPanel?.open ??
           false,
       },
@@ -123,8 +123,8 @@ export const useGridChartsIntegration = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'chartsIntegration'
-    | 'chartsConfigurationPanelOpen'
-    | 'onChartsConfigurationPanelOpenChange'
+    | 'chartsPanelOpen'
+    | 'onChartsPanelOpenChange'
     | 'activeChartId'
     | 'onActiveChartIdChange'
     | 'initialState'
@@ -140,8 +140,8 @@ export const useGridChartsIntegration = (
 
   const getColumnName = React.useCallback(
     (field: string) => {
-      if (props.slotProps?.chartsConfigurationPanel?.getColumnName) {
-        return props.slotProps.chartsConfigurationPanel.getColumnName(field);
+      if (props.slotProps?.chartsPanel?.getColumnName) {
+        return props.slotProps.chartsPanel.getColumnName(field);
       }
 
       const columns = gridColumnLookupSelector(apiRef);
@@ -158,15 +158,15 @@ export const useGridChartsIntegration = (
       const groupPath = unwrappedColumnGroupingModel[field].slice(-1)[0];
       return [columnName, ...groupPath.split(COLUMN_GROUP_ID_SEPARATOR)].join(' - ');
     },
-    [apiRef, props.slotProps?.chartsConfigurationPanel],
+    [apiRef, props.slotProps?.chartsPanel],
   );
 
   apiRef.current.registerControlState({
-    stateId: 'chartsConfigurationPanelOpen',
-    propModel: props.chartsConfigurationPanelOpen,
-    propOnChange: props.onChartsConfigurationPanelOpenChange,
-    stateSelector: gridChartsConfigurationPanelOpenSelector,
-    changeEvent: 'chartsConfigurationPanelOpenChange',
+    stateId: 'chartsPanelOpen',
+    propModel: props.chartsPanelOpen,
+    propOnChange: props.onChartsPanelOpenChange,
+    stateSelector: gridChartsPanelOpenSelector,
+    changeEvent: 'chartsPanelOpenChange',
   });
 
   apiRef.current.registerControlState({
@@ -314,9 +314,7 @@ export const useGridChartsIntegration = (
     [apiRef, getColumnName, setChartState, chartIds, chartStateLookup],
   );
 
-  const setChartsConfigurationPanelOpen = React.useCallback<
-    GridChartsIntegrationApi['setChartsConfigurationPanelOpen']
-  >(
+  const setChartsPanelOpen = React.useCallback<GridChartsIntegrationApi['setChartsPanelOpen']>(
     (callback) => {
       if (!isChartsIntegrationAvailable) {
         return;
@@ -339,10 +337,10 @@ export const useGridChartsIntegration = (
   );
 
   useEnhancedEffect(() => {
-    if (props.chartsConfigurationPanelOpen !== undefined) {
-      apiRef.current.setChartsConfigurationPanelOpen(props.chartsConfigurationPanelOpen);
+    if (props.chartsPanelOpen !== undefined) {
+      apiRef.current.setChartsPanelOpen(props.chartsPanelOpen);
     }
-  }, [apiRef, props.chartsConfigurationPanelOpen]);
+  }, [apiRef, props.chartsPanelOpen]);
 
   const updateCategories = React.useCallback(
     (
@@ -506,7 +504,7 @@ export const useGridChartsIntegration = (
   useGridApiMethod(
     apiRef,
     {
-      setChartsConfigurationPanelOpen,
+      setChartsPanelOpen,
       setActiveChartId,
       setChartSynchronizationState,
       updateSeries,

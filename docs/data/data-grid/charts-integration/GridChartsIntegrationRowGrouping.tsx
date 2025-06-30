@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridChartsConfigurationPanel,
+  GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   useGridApiRef,
@@ -61,10 +61,10 @@ export default function GridChartsIntegrationRowGrouping() {
             showToolbar
             chartsIntegration
             slots={{
-              chartsConfigurationPanel: GridChartsConfigurationPanel,
+              chartsPanel: GridChartsPanel,
             }}
             slotProps={{
-              chartsConfigurationPanel: {
+              chartsPanel: {
                 schema: configurationOptions,
               },
             }}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
-import { gridChartsConfigurationPanelOpenSelector } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
+import { gridChartsPanelOpenSelector } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
@@ -8,11 +8,11 @@ export function GridColumnMenuChartsItem(props: GridColumnMenuItemProps) {
   const { onClick } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const isChartsPanelOpen = useGridSelector(apiRef, gridChartsConfigurationPanelOpenSelector);
+  const isChartsPanelOpen = useGridSelector(apiRef, gridChartsPanelOpenSelector);
 
   const openChartsSettings = (event: React.MouseEvent<HTMLElement>) => {
     onClick(event);
-    apiRef.current.setChartsConfigurationPanelOpen(true);
+    apiRef.current.setChartsPanelOpen(true);
   };
 
   if (!rootProps.chartsIntegration) {

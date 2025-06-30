@@ -358,12 +358,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * If `true`, the charts configuration side panel is visible.
    * @default false
    */
-  chartsConfigurationPanelOpen?: boolean;
+  chartsPanelOpen?: boolean;
   /**
-   * Callback fired when the charts configuration side panel open state changes.
-   * @param {boolean} chartsConfigurationPanelOpen Whether the charts configuration side panel is visible.
+   * Callback fired when the charts side panel open state changes.
+   * @param {boolean} chartsPanelOpen Whether the charts side panel is visible.
    */
-  onChartsConfigurationPanelOpenChange?: (chartsConfigurationPanelOpen: boolean) => void;
+  onChartsPanelOpenChange?: (chartsPanelOpen: boolean) => void;
   /**
    * The id of the active chart.
    */

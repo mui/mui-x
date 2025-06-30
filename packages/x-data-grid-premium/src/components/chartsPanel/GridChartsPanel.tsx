@@ -4,15 +4,15 @@ import { useGridSelector } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
-import { GridChartsManagement } from './GridChartsManagement';
-import { GridChartsDataPanelHeader } from './GridChartsDataPanelHeader';
-import { GridChartsDataPanelBody } from './GridChartsDataPanelBody';
-import { GridChartsConfigurationForm } from './GridChartsConfigurationForm';
+import { GridChartsPanelManagement } from './GridChartsPanelManagement';
+import { GridChartsPanelDataHeader } from './GridChartsPanelDataHeader';
+import { GridChartsPanelDataBody } from './GridChartsPanelDataBody';
+import { GridChartsPanelConfiguration } from './GridChartsPanelConfiguration';
 import { Tab, TabList, TabPanel, Tabs } from '../tabs';
 import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 
-export interface GridChartsConfigurationPanelProps {
+export interface GridChartsPanelProps {
   /**
    * The schema of the charts configuration.
    * @type {GridChartsConfigurationOptions}
@@ -26,7 +26,7 @@ export interface GridChartsConfigurationPanelProps {
   getColumnName?: (field: string) => string;
 }
 
-function GridChartsConfigurationPanel(_: GridChartsConfigurationPanelProps) {
+function GridChartsPanel(_: GridChartsPanelProps) {
   const [searchValue, setSearchValue] = React.useState<string>('');
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -66,7 +66,7 @@ function GridChartsConfigurationPanel(_: GridChartsConfigurationPanelProps) {
         </Tab>
         <rootProps.slots.baseIconButton
           onClick={() => {
-            apiRef.current.setChartsConfigurationPanelOpen(false);
+            apiRef.current.setChartsPanelOpen(false);
           }}
           aria-label={apiRef.current.getLocaleText('chartsConfigurationCloseButton')}
           {...rootProps.slotProps?.baseIconButton}
@@ -75,7 +75,7 @@ function GridChartsConfigurationPanel(_: GridChartsConfigurationPanelProps) {
         </rootProps.slots.baseIconButton>
       </TabList>
       <TabPanel value="charts">
-        <GridChartsManagement
+        <GridChartsPanelManagement
           charts={chartStateLookup}
           activeChartId={activeChartId}
           selectedChartType={chartStateLookup[activeChartId]?.type}
@@ -85,17 +85,17 @@ function GridChartsConfigurationPanel(_: GridChartsConfigurationPanelProps) {
         />
       </TabPanel>
       <TabPanel value="fields">
-        <GridChartsDataPanelHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
-        <GridChartsDataPanelBody searchValue={searchValue} />
+        <GridChartsPanelDataHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
+        <GridChartsPanelDataBody searchValue={searchValue} />
       </TabPanel>
       <TabPanel value="configuration">
-        <GridChartsConfigurationForm activeChartId={activeChartId} />
+        <GridChartsPanelConfiguration activeChartId={activeChartId} />
       </TabPanel>
     </Tabs>
   );
 }
 
-GridChartsConfigurationPanel.propTypes = {
+GridChartsPanel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -113,4 +113,4 @@ GridChartsConfigurationPanel.propTypes = {
   schema: PropTypes.object,
 } as any;
 
-export { GridChartsConfigurationPanel };
+export { GridChartsPanel };
