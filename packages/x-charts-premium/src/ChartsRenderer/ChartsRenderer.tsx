@@ -116,7 +116,7 @@ function ChartsRenderer({
     //   between the series from that number (`chartConfiguration.seriesGap * series.length - 1` - there is always
     //   one gap less than the number of series)
     // - then we divide the result by the number of series to get the radius for each series
-    const radiusPerSerie =
+    const radiusPerSeries =
       (chartConfiguration.outerRadius -
         chartConfiguration.innerRadius -
         chartConfiguration.seriesGap * series.length -
@@ -135,12 +135,12 @@ function ChartsRenderer({
       // - plus the gap between the series
       innerRadius:
         chartConfiguration.innerRadius +
-        seriesIndex * radiusPerSerie +
+        seriesIndex * radiusPerSeries +
         chartConfiguration.seriesGap * seriesIndex,
       // each series ends at the radius that is the same as start plus the radius of one series
       outerRadius:
         chartConfiguration.innerRadius +
-        (seriesIndex + 1) * radiusPerSerie +
+        (seriesIndex + 1) * radiusPerSeries +
         chartConfiguration.seriesGap * seriesIndex,
     }));
 
