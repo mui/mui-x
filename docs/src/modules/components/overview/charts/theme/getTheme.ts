@@ -47,25 +47,11 @@ export const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
       },
       MuiChartsLegend: {
         styleOverrides: {
-          root: ({ theme }) => ({
-            fontWeight: 400,
-          }),
+          root: { fontWeight: 400 },
         },
       },
-      MuiChartsXAxis: {
-        defaultProps: {
-          tickLabelStyle: {
-            fontWeight: 400,
-          },
-        },
-      },
-      MuiChartsYAxis: {
-        defaultProps: {
-          tickLabelStyle: {
-            fontWeight: 400,
-          },
-        },
-      },
+      MuiChartsXAxis: { defaultProps: { tickLabelStyle: { fontWeight: 400 } } },
+      MuiChartsYAxis: { defaultProps: { tickLabelStyle: { fontWeight: 400 } } },
       MuiChartsAxis: {
         styleOverrides: {
           root: ({ theme }) => ({

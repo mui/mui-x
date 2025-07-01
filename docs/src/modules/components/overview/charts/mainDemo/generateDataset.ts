@@ -42,9 +42,6 @@ export function generateDataset(data: DataFileContent): DataItem[] {
         typeof entry[1] === 'number' && versions.has(entry[0] as Versions),
     );
 
-    if (data.package === '@mui/x-data-grid') {
-      console.log(versionEntries);
-    }
     const total = versionEntries.reduce((a, [, b]) => a + b, 0);
 
     return {

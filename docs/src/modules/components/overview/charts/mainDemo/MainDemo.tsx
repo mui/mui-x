@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ThemeOptions, createTheme, useTheme } from '@mui/material/styles';
+import { ThemeOptions, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -10,7 +10,6 @@ import BarChartDemo from './BarChartDemo';
 import HeatmapDemo from './HeatmapDemo';
 import DownloadDemo from './DownloadDemo';
 import { getTheme } from '../theme/getTheme';
-import { ThemeProvider } from '@mui/material/styles';
 
 export default function MainDemo() {
   const currentTheme = useTheme();
@@ -43,9 +42,7 @@ export default function MainDemo() {
             flexBasis={{ xs: '100%', md: '65%' }}
             maxHeight={{ xs: 500, md: 580 }}
             minWidth={0}
-            sx={(theme) => ({
-              pr: { md: 1, xs: 0 },
-            })}
+            sx={{ pr: { md: 1, xs: 0 } }}
           >
             <Stack
               display={{ xs: 'none', md: 'flex' }}

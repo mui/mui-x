@@ -84,14 +84,14 @@ function CustomCell(props: any) {
   return (
     <React.Fragment>
       <rect
-        {...other}
-        x={x + 1}
-        y={y + 1}
-        width={width - 1 * 2}
-        height={height - 1 * 2}
+        x={ownerState.isHighlighted ? x : x + 1}
+        y={ownerState.isHighlighted ? y : y + 1}
+        width={width - (ownerState.isHighlighted ? 0 : 2)}
+        height={height - (ownerState.isHighlighted ? 0 : 2)}
         fill={ownerState.color}
         clipPath={ownerState.isHighlighted ? undefined : 'inset(0px round 4px)'}
       />
+      <rect {...other} x={x} y={y} width={width} height={height} fill="transparent" stroke="none" />
     </React.Fragment>
   );
 }
@@ -103,7 +103,7 @@ export default function HeatmapDemo() {
         Issues opening time
       </Typography>
       <Heatmap
-        series={[{ data }]}
+        series={[{ data, highlightScope: { highlight: 'item' } }]}
         margin={5}
         height={180}
         xAxis={[
