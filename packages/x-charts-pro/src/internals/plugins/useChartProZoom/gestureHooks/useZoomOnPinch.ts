@@ -89,5 +89,14 @@ export const useZoomOnPinch = (
       zoomHandler.cleanup();
       rafThrottledCallback.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, store, instance, setZoomDataCallback]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomEnabled,
+    optionsLookup,
+    store,
+    instance,
+    setZoomDataCallback,
+    config,
+  ]);
 };

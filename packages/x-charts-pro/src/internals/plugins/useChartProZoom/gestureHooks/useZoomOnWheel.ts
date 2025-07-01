@@ -122,5 +122,14 @@ export const useZoomOnWheel = (
       startedOutsideRef.current = false;
       rafThrottledSetZoomData.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback, store]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomEnabled,
+    optionsLookup,
+    instance,
+    setZoomDataCallback,
+    store,
+    config,
+  ]);
 };

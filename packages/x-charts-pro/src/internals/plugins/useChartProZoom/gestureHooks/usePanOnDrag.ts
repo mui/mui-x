@@ -49,10 +49,8 @@ export const usePanOnDrag = (
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
-    () =>
-      (Object.values(optionsLookup).some((v) => v.panning) && params.zoomConfig.pan.onDrag) ||
-      false,
-    [optionsLookup],
+    () => (Object.values(optionsLookup).some((v) => v.panning) && config) || false,
+    [optionsLookup, config],
   );
 
   React.useEffect(() => {
@@ -65,7 +63,7 @@ export const usePanOnDrag = (
     const handlePanStart = (event: PanEvent) => {
       if (
         !isKeyPressed(pressedKeysRef.current, config.keys) ||
-        !isGestureEnabledForPointer(event.detail.srcEvent, params.zoomConfig.pan.onDrag!.mode)
+        !isGestureEnabledForPointer(event.detail.srcEvent, config!.mode)
       ) {
         return;
       }
@@ -119,5 +117,6 @@ export const usePanOnDrag = (
     setZoomDataCallback,
     store,
     startRef,
+    config,
   ]);
 };

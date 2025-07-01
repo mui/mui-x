@@ -49,13 +49,10 @@ export const defaultizeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
   return defaultizedConfig;
 };
 
-const isModeConflict = <
+function isModeConflict<
   T1 extends { type: string; mode?: any } | undefined,
   T2 extends { type: string; mode?: any } | undefined,
->(
-  a: T1,
-  b: T2,
-): void => {
+>(a: T1, b: T2): void {
   const hasIssue = a && b && (a.mode === 'all' || b.mode === 'all' || a.mode === b.mode);
 
   if (hasIssue) {
@@ -64,4 +61,4 @@ const isModeConflict = <
       `It can lead to unexpected behavior when both interactions are enabled with the same mode.`,
     ]);
   }
-};
+}
