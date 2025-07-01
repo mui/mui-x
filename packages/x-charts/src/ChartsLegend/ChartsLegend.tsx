@@ -108,7 +108,7 @@ const ChartsLegend = consumeSlots(
       >
         {data.items.map((item, i) => {
           return (
-            <li key={item.id} className={classes?.item}>
+            <li key={item.id} className={classes?.item} data-series={item.id}>
               <Element
                 className={classes?.series}
                 role={onItemClick ? 'button' : undefined}

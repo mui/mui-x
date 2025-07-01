@@ -51,18 +51,17 @@ describe('<EventPopover />', () => {
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
   });
 
-  it('should call onEventEdit with updated values on submit', async () => {
+  it('should call "onEventEdit" with updated values on submit', async () => {
     const onEventEdit = spy();
     const { user } = render(
       <Popover.Root open>
         <EventPopover {...defaultProps} onEventEdit={onEventEdit} />
       </Popover.Root>,
     );
-    await user.clear(screen.getByLabelText(/event title/i));
-    await user.type(screen.getByLabelText(/event title/i), 'Updated title');
+    await user.type(screen.getByLabelText(/event title/i), ' test');
     await user.click(screen.getByRole('button', { name: /save changes/i }));
     expect(onEventEdit.calledOnce).to.equal(true);
-    expect(onEventEdit.firstCall.args[0].title).to.equal('Updated title');
+    expect(onEventEdit.firstCall.args[0].title).to.equal('Footing test');
   });
 
   it('should show error if start date is after end date', async () => {
@@ -77,11 +76,12 @@ describe('<EventPopover />', () => {
     await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-    const errorDiv = document.querySelector('.EventPopoverDateTimeFieldsError [data-invalid]');
-    expect(errorDiv?.textContent).to.match(/start.*before.*end/i);
+    expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
+      /start.*before.*end/i,
+    );
   });
 
-  it('should call onEventDelete with the event id when delete button is clicked', async () => {
+  it('should call "onEventDelete" with the event id when delete button is clicked', async () => {
     const onEventDelete = spy();
     const { user } = render(
       <Popover.Root open>

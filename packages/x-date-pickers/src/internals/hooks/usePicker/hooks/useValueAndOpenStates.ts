@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -145,7 +146,7 @@ export function useValueAndOpenStates<
       ...prevState,
       // We reset the shallow value whenever we fire onChange.
       clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
-      lastCommittedValue: shouldFireOnAccept ? value : prevState.lastCommittedValue,
+      lastCommittedValue: shouldFireOnAccept ? newValue : prevState.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
     }));
 

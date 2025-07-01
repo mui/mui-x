@@ -3,6 +3,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -121,55 +122,61 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
+    if (!isInteractionEnabled || !element || params.disableAxisListener) {
       return () => {};
     }
 
-    const handleOut = () => {
-      instance.cleanInteraction?.();
-    };
+    // Clean the interaction when the mouse leaves the chart.
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+      }
+    });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        instance.cleanInteraction?.();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+      }
+    });
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      const srvEvent = event.detail.srcEvent;
+      const target = event.detail.target as SVGElement | undefined;
+      const svgPoint = getSVGPoint(element, srvEvent);
 
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
+      // Release the pointer capture if we are panning, as this would cause the tooltip to
+      // be locked to the first "section" it touches.
+      if (
+        event.detail.srcEvent.buttons >= 1 &&
+        target?.hasPointerCapture(event.detail.srcEvent.pointerId) &&
+        // Ensure we are not removing the capture from the zoom slider
+        instance.isElementInside(target)
+      ) {
+        target?.releasePointerCapture(event.detail.srcEvent.pointerId);
+      }
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target)) {
         instance.cleanInteraction?.();
 
         return;
       }
-
       instance.setPointerCoordinate?.(svgPoint);
     };
 
-    const handleDown = (event: PointerEvent) => {
-      const target = event.currentTarget;
-      if (!target) {
-        return;
-      }
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
-      if (
-        'hasPointerCapture' in target &&
-        (target as HTMLElement).hasPointerCapture(event.pointerId)
-      ) {
-        (target as HTMLElement).releasePointerCapture(event.pointerId);
-      }
-
-      const svgPoint = getSVGPoint(element, event);
-      if (instance.isPointInside(svgPoint.x, svgPoint.y, event.target as SVGElement)) {
-        instance.setPointerCoordinate?.(svgPoint);
-      }
-    };
-
-    element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointercancel', handleOut);
-    element.addEventListener('pointerleave', handleOut);
     return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointercancel', handleOut);
-      element.removeEventListener('pointerleave', handleOut);
+      moveHandler.cleanup();
+      moveEndHandler.cleanup();
+      panHandler.cleanup();
+      panEndHandler.cleanup();
+      pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [
     svgRef,
@@ -190,13 +197,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return () => {};
     }
 
-    const handleMouseClick = (event: MouseEvent) => {
-      event.preventDefault();
-
+    const axisClickHandler = instance.addInteractionListener('tap', (event) => {
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
 
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getSVGPoint(element, event.detail.srcEvent);
 
       const xIndex = getAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
       isXAxis = xIndex !== -1;
@@ -229,12 +234,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
           });
         });
 
-      onAxisClick(event, { dataIndex, axisValue, seriesValues });
-    };
+      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
+    });
 
-    element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('click', handleMouseClick);
+      axisClickHandler.cleanup();
     };
   }, [
     params.onAxisClick,
@@ -246,6 +250,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     yAxisIds,
     usedXAxis,
     usedYAxis,
+    instance,
   ]);
 
   return {};
