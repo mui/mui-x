@@ -6,7 +6,7 @@ export const events: CalendarEvent[] = [
     id: '1',
     start: DateTime.fromISO('2025-05-05T07:30:00'),
     end: DateTime.fromISO('2025-05-05T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
@@ -27,14 +27,14 @@ export const events: CalendarEvent[] = [
     id: '4',
     start: DateTime.fromISO('2025-05-08T07:30:00'),
     end: DateTime.fromISO('2025-05-08T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
     id: '5',
     start: DateTime.fromISO('2025-05-12T07:30:00'),
     end: DateTime.fromISO('2025-05-12T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
@@ -48,7 +48,7 @@ export const events: CalendarEvent[] = [
     id: '7',
     start: DateTime.fromISO('2025-05-15T07:30:00'),
     end: DateTime.fromISO('2025-05-15T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
@@ -62,7 +62,7 @@ export const events: CalendarEvent[] = [
     id: '9',
     start: DateTime.fromISO('2025-05-19T07:30:00'),
     end: DateTime.fromISO('2025-05-19T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
@@ -83,14 +83,14 @@ export const events: CalendarEvent[] = [
     id: '12',
     start: DateTime.fromISO('2025-05-22T07:30:00'),
     end: DateTime.fromISO('2025-05-22T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
     id: '13',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
     end: DateTime.fromISO('2025-05-26T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
@@ -124,7 +124,7 @@ export const events: CalendarEvent[] = [
     id: '18',
     start: DateTime.fromISO('2025-05-29T07:30:00'),
     end: DateTime.fromISO('2025-05-29T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'workout',
   },
   {
