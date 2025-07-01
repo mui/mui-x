@@ -19,8 +19,6 @@ import {
 } from '../columns';
 import { gridDimensionsSelector } from './gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../density';
-import { gridRenderContextSelector } from '../virtualization';
-import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';

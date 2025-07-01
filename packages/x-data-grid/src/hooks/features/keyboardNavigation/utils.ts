@@ -1,6 +1,6 @@
 import { RefObject } from '@mui/x-internals/types';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GridColDef, GridRowId } from '../../../models';
+import { GridRowId } from '../../../models';
 import { gridRowSpanningHiddenCellsSelector } from '../rows/gridRowSpanningSelectors';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
