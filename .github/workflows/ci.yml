@@ -27,6 +27,6 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
-      - run: pnpm pkg-pr-new:install
-      - run: pnpm pkg-pr-new:build
-      - run: pnpm pkg-pr-new:release
+      - run: pnpm install
+      - run: pnpm release:build
+      - run: pnpm dlx pkg-pr-new publish $(pnpm code-infra list-workspaces --public-only --output=path) --pnpm --packageManager=pnpm --template './examples/*' --comment=off --peerDeps
