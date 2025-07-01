@@ -1,12 +1,24 @@
 # Testing
 
-We use [Vitest](https://vitest.dev/) for unit tests in both the browser and jsdom environments.
+## Overview
 
-## How to run
+There are multiple types of tests to assert different parts of the codebase:
+
+- **Unit tests**: These tests are run in the browser (`test_browser` CI step) and JSDOM (`test_unit` CI step) environments. They are used to test individual components and functions in isolation.
+- **Regression tests**: These tests (`test_regressions` CI step) are run in a Chromium browser using Playwright. They are used to ensure visual integrity of documentation demo examples.
+- **E2E tests**: This set of custom tests (`test_e2e` CI step) is run in Chromium, Firefox and WebKit browsers using Playwright. They are used to test certain component behaviors, which require a real browser environment.
+- **E2E website tests**: These tests (`test_e2e_website` CI step) are documentation smoke tests. They are used to test the MUI X website, ensuring that the website is functioning correctly and that the documentation examples are working as expected.
+
+We use [Vitest](https://vitest.dev/) for unit tests in both the browser and jsdom environments.
+We use [Playwright](https://playwright.dev/) for for tests that run in a browser environment.
+
+## Unit tests
+
+### How to run
 
 Some simple examples on how to run the tests.
 
-### Filter by project
+#### Filter by project
 
 ```bash
 ### starting with `x-charts`
@@ -19,7 +31,7 @@ pnpm test:unit --project "x-data-grid"
 pnpm test:unit --project "*-pro"
 ```
 
-### Filter by path
+#### Filter by path
 
 ```bash
 ### any file that has BarChart in its path
@@ -31,7 +43,7 @@ pnpm test:browser BarChart
 pnpm test:browser -t "hide tooltip"
 ```
 
-### Combine the above
+#### Combine the above
 
 ```bash
 ### only run files that contain the pattern inside a specific project
@@ -41,7 +53,7 @@ pnpm test:browser --project "x-charts" BarChart
 pnpm test:browser --project "x-charts" -t "hide tooltip"
 ```
 
-### Using test.only
+#### Using test.only
 
 Vitest's `test.only` behavior is different from Mocha's. That's because Vitest parallelizes tests and can't know whether `test.only` is used in another file. This behavior is the same as [Jest's](https://github.com/jestjs/jest/issues/4414).
 
@@ -60,7 +72,9 @@ pnpm test:browser BarChart
 
 This will run only the test that has `it.only` in it and will ignore all other tests in the file.
 
-## Testing multiple versions of React
+## Running tests against specific React of Material UI versions
+
+### Testing multiple versions of React
 
 You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following command:
 
@@ -72,7 +86,7 @@ Possible values for `version`:
 - a tag on npm, for example `next`, `experimental` or `latest`
 - an older version, for example `^17.0.0`
 
-## Testing multiple versions of Material UI
+### Testing multiple versions of Material UI
 
 Currently, we use `@mui/material` v5 in the MUI X repo and all tests are run against it.
 But MUI X packages are compatible with v5 and v6.
@@ -80,7 +94,7 @@ You can run the tests against `@mui/material` v6 by running the following comman
 
 `pnpm use-material-ui-v6`
 
-## CI
+### CI
 
 To execute additional jobs for custom versions of React/Material UI, you can use an `additional` workflow. In combination with `with-react-version` and/or `with-material-ui-6` parameters, it executes those jobs with dependency versions different from the main `pipeline` workflow.
 
@@ -98,7 +112,7 @@ To execute additional jobs for custom versions of React/Material UI, you can us
 
 ![CircleCI workflow](./circleci-workflow.png)
 
-### API
+#### API
 
 You can pass the same to our CircleCI pipeline through API as well:
 
