@@ -2,21 +2,22 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { GridRenderContext } from '../../../models';
 import type { GridColDef } from '../../../models/colDef';
-import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gridRowSpanningUtils';
 import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { runIf } from '../../../utils/utils';
+import { gridPageSizeSelector } from '../pagination';
+import { gridDataRowIdsSelector } from './gridRowsSelector';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<number, number>>;
@@ -31,17 +32,8 @@ export interface GridRowSpanningState {
 
 export type RowRange = { firstRowIndex: number; lastRowIndex: number };
 
+const EMPTY_STATE = { spannedCells: {}, hiddenCells: {}, hiddenCellOriginMap: {} };
 const EMPTY_RANGE: RowRange = { firstRowIndex: 0, lastRowIndex: 0 };
-
-const createEmptyState = () => ({
-  spannedCells: {},
-  hiddenCells: {},
-  hiddenCellOriginMap: {},
-});
-
-const isEmptyState = ({ spannedCells, hiddenCells, hiddenCellOriginMap }: GridRowSpanningState) =>
-  isObjectEmpty(spannedCells) && isObjectEmpty(hiddenCells) && isObjectEmpty(hiddenCellOriginMap);
-
 const skippedFields = new Set([
   GRID_CHECKBOX_SELECTION_FIELD,
   '__reorder__',
@@ -54,20 +46,26 @@ const skippedFields = new Set([
  */
 const DEFAULT_ROWS_TO_PROCESS = 20;
 
-const scanAdditionalRange = (
+const computeRowSpanningState = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  state: GridRowSpanningState,
-  processedRange: RowRange,
-  columns: GridColDef[],
-  rows: GridRowEntry<GridValidRowModel>[],
-  totalRange: RowRange,
+  colDefs: GridColDef[],
+  visibleRows: GridRowEntry<GridValidRowModel>[],
+  range: RowRange,
   rangeToProcess: RowRange,
+  resetState: boolean,
+  processedRange: RowRange,
 ) => {
-  const spannedCells = { ...state.spannedCells };
-  const hiddenCells = { ...state.hiddenCells };
-  const hiddenCellOriginMap = { ...state.hiddenCellOriginMap };
+  const spannedCells = resetState ? {} : { ...apiRef.current.state.rowSpanning.spannedCells };
+  const hiddenCells = resetState ? {} : { ...apiRef.current.state.rowSpanning.hiddenCells };
+  const hiddenCellOriginMap = resetState
+    ? {}
+    : { ...apiRef.current.state.rowSpanning.hiddenCellOriginMap };
 
-  columns.forEach((colDef, columnIndex) => {
+  if (resetState) {
+    processedRange = EMPTY_RANGE;
+  }
+
+  colDefs.forEach((colDef, columnIndex) => {
     if (skippedFields.has(colDef.field)) {
       return;
     }
@@ -77,12 +75,13 @@ const scanAdditionalRange = (
       index < rangeToProcess.lastRowIndex;
       index += 1
     ) {
-      const row = rows[index];
+      const row = visibleRows[index];
 
       if (hiddenCells[row.id]?.[columnIndex]) {
         continue;
       }
       const cellValue = getCellValue(row.model, colDef, apiRef);
+
       if (cellValue == null) {
         continue;
       }
@@ -95,59 +94,96 @@ const scanAdditionalRange = (
       const backwardsHiddenCells: number[] = [];
       if (index === rangeToProcess.firstRowIndex) {
         let prevIndex = index - 1;
-        let prevRowEntry = rows[prevIndex];
+        let prevRowEntry = visibleRows[prevIndex];
         while (
-          prevIndex >= totalRange.firstRowIndex &&
+          prevIndex >= range.firstRowIndex &&
           prevRowEntry &&
           getCellValue(prevRowEntry.model, colDef, apiRef) === cellValue
         ) {
-          const currentRow = rows[prevIndex + 1];
-          hiddenCells[currentRow.id] ??= {};
-          hiddenCells[currentRow.id][columnIndex] = true;
+          const currentRow = visibleRows[prevIndex + 1];
+          if (hiddenCells[currentRow.id]) {
+            hiddenCells[currentRow.id][columnIndex] = true;
+          } else {
+            hiddenCells[currentRow.id] = { [columnIndex]: true };
+          }
           backwardsHiddenCells.push(index);
           rowSpan += 1;
           spannedRowId = prevRowEntry.id;
           spannedRowIndex = prevIndex;
           prevIndex -= 1;
 
-          prevRowEntry = rows[prevIndex];
+          prevRowEntry = visibleRows[prevIndex];
         }
       }
 
       backwardsHiddenCells.forEach((hiddenCellIndex) => {
-        hiddenCellOriginMap[hiddenCellIndex] ??= {};
-        hiddenCellOriginMap[hiddenCellIndex][columnIndex] = spannedRowIndex;
+        if (hiddenCellOriginMap[hiddenCellIndex]) {
+          hiddenCellOriginMap[hiddenCellIndex][columnIndex] = spannedRowIndex;
+        } else {
+          hiddenCellOriginMap[hiddenCellIndex] = { [columnIndex]: spannedRowIndex };
+        }
       });
 
       // Scan the next rows
       let relativeIndex = index + 1;
       while (
-        relativeIndex <= totalRange.lastRowIndex &&
-        rows[relativeIndex] &&
-        getCellValue(rows[relativeIndex].model, colDef, apiRef) === cellValue
+        relativeIndex <= range.lastRowIndex &&
+        visibleRows[relativeIndex] &&
+        getCellValue(visibleRows[relativeIndex].model, colDef, apiRef) === cellValue
       ) {
-        const currentRow = rows[relativeIndex];
-        hiddenCells[currentRow.id] ??= {};
-        hiddenCells[currentRow.id][columnIndex] = true;
-        hiddenCellOriginMap[relativeIndex] ??= {};
-        hiddenCellOriginMap[relativeIndex][columnIndex] = spannedRowIndex;
+        const currentRow = visibleRows[relativeIndex];
+        if (hiddenCells[currentRow.id]) {
+          hiddenCells[currentRow.id][columnIndex] = true;
+        } else {
+          hiddenCells[currentRow.id] = { [columnIndex]: true };
+        }
+        if (hiddenCellOriginMap[relativeIndex]) {
+          hiddenCellOriginMap[relativeIndex][columnIndex] = spannedRowIndex;
+        } else {
+          hiddenCellOriginMap[relativeIndex] = { [columnIndex]: spannedRowIndex };
+        }
         relativeIndex += 1;
         rowSpan += 1;
       }
 
       if (rowSpan > 0) {
-        spannedCells[spannedRowId] ??= {};
-        spannedCells[spannedRowId][columnIndex] = rowSpan + 1;
+        if (spannedCells[spannedRowId]) {
+          spannedCells[spannedRowId][columnIndex] = rowSpan + 1;
+        } else {
+          spannedCells[spannedRowId] = { [columnIndex]: rowSpan + 1 };
+        }
       }
     }
+    processedRange = {
+      firstRowIndex: Math.min(processedRange.firstRowIndex, rangeToProcess.firstRowIndex),
+      lastRowIndex: Math.max(processedRange.lastRowIndex, rangeToProcess.lastRowIndex),
+    };
   });
+  return { spannedCells, hiddenCells, hiddenCellOriginMap, processedRange };
+};
 
-  const newProcessedRange = {
-    firstRowIndex: Math.min(processedRange.firstRowIndex, rangeToProcess.firstRowIndex),
-    lastRowIndex: Math.max(processedRange.lastRowIndex, rangeToProcess.lastRowIndex),
+const getInitialRangeToProcess = (
+  props: Pick<DataGridProcessedProps, 'pagination'>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
+) => {
+  const rowCount = gridDataRowIdsSelector(apiRef).length;
+
+  if (props.pagination) {
+    const pageSize = gridPageSizeSelector(apiRef);
+    let paginationLastRowIndex = DEFAULT_ROWS_TO_PROCESS;
+    if (pageSize > 0) {
+      paginationLastRowIndex = pageSize - 1;
+    }
+    return {
+      firstRowIndex: 0,
+      lastRowIndex: Math.min(paginationLastRowIndex, rowCount),
+    };
+  }
+
+  return {
+    firstRowIndex: 0,
+    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, rowCount),
   };
-
-  return [{ spannedCells, hiddenCells, hiddenCellOriginMap }, newProcessedRange] as const;
 };
 
 /**
@@ -159,7 +195,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
   if (!props.rowSpanning) {
     return {
       ...state,
-      rowSpanning: createEmptyState(),
+      rowSpanning: EMPTY_STATE,
     };
   }
 
@@ -180,30 +216,34 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
   ) {
     return {
       ...state,
-      rowSpanning: createEmptyState(),
+      rowSpanning: EMPTY_STATE,
     };
   }
 
-  const columns = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
-  const { range, rows } = getVisibleRows(apiRef);
-  const rangeToProcess = {
-    firstRowIndex: 0,
-    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, rows.length),
-  };
+  const rangeToProcess = getInitialRangeToProcess(props, apiRef);
+  const rows = rowIds.map((id) => ({
+    id,
+    model: dataRowIdToModelLookup[id!],
+  })) as GridRowEntry<GridValidRowModel>[];
+  const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
 
-  const [rowSpanning] = scanAdditionalRange(
+  const { spannedCells, hiddenCells, hiddenCellOriginMap } = computeRowSpanningState(
     apiRef,
-    createEmptyState(),
-    EMPTY_RANGE,
-    columns,
+    colDefs,
     rows,
-    range ?? EMPTY_RANGE,
     rangeToProcess,
+    rangeToProcess,
+    true,
+    EMPTY_RANGE,
   );
 
   return {
     ...state,
-    rowSpanning,
+    rowSpanning: {
+      spannedCells,
+      hiddenCells,
+      hiddenCellOriginMap,
+    },
   };
 };
 
@@ -211,25 +251,24 @@ export const useGridRowSpanning = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
-  const processedRange = useLazyRef(() => {
-    const currentPage = getVisibleRows(apiRef);
-    return {
-      firstRowIndex: 0,
-      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, currentPage.rows.length),
-    };
+  const processedRange = useLazyRef<RowRange, void>(() => {
+    return apiRef.current.state.rowSpanning !== EMPTY_STATE
+      ? getInitialRangeToProcess(props, apiRef)
+      : EMPTY_RANGE;
   });
 
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {
-      const { range, rows } = getVisibleRows(apiRef);
+      const { range, rows: visibleRows } = getVisibleRows(apiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
       if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
 
-      let rowSpanning = apiRef.current.state.rowSpanning;
-
       if (resetState) {
-        rowSpanning = createEmptyState();
+        processedRange.current = EMPTY_RANGE;
       }
 
       const rangeToProcess = getUnprocessedRange(
@@ -244,20 +283,26 @@ export const useGridRowSpanning = (
         return;
       }
 
-      const columns = gridVisibleColumnDefinitionsSelector(apiRef);
-
-      [rowSpanning, processedRange.current] = scanAdditionalRange(
+      const colDefs = gridVisibleColumnDefinitionsSelector(apiRef);
+      const {
+        spannedCells,
+        hiddenCells,
+        hiddenCellOriginMap,
+        processedRange: newProcessedRange,
+      } = computeRowSpanningState(
         apiRef,
-        rowSpanning,
-        processedRange.current,
-        columns,
-        rows,
+        colDefs,
+        visibleRows,
         range,
         rangeToProcess,
+        resetState,
+        processedRange.current,
       );
 
-      const newSpannedCellsCount = Object.keys(rowSpanning.spannedCells).length;
-      const newHiddenCellsCount = Object.keys(rowSpanning.hiddenCells).length;
+      processedRange.current = newProcessedRange;
+
+      const newSpannedCellsCount = Object.keys(spannedCells).length;
+      const newHiddenCellsCount = Object.keys(hiddenCells).length;
       const currentSpannedCellsCount = Object.keys(
         apiRef.current.state.rowSpanning.spannedCells,
       ).length;
@@ -278,11 +323,15 @@ export const useGridRowSpanning = (
       apiRef.current.setState((state) => {
         return {
           ...state,
-          rowSpanning,
+          rowSpanning: {
+            spannedCells,
+            hiddenCells,
+            hiddenCellOriginMap,
+          },
         };
       });
     },
-    [apiRef, props.pagination, props.paginationMode],
+    [apiRef, processedRange, props.pagination, props.paginationMode],
   );
 
   // Reset events trigger a full re-computation of the row spanning state:
@@ -293,8 +342,8 @@ export const useGridRowSpanning = (
   // - The rows are updated
   const resetRowSpanningState = React.useCallback(() => {
     if (!props.rowSpanning) {
-      if (!isEmptyState(apiRef.current.state.rowSpanning)) {
-        apiRef.current.setState((state) => ({ ...state, rowSpanning: createEmptyState() }));
+      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
+        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
       }
     } else {
       const renderContext = gridRenderContextSelector(apiRef);
@@ -320,55 +369,3 @@ export const useGridRowSpanning = (
     resetRowSpanningState();
   }, [resetRowSpanningState]);
 };
-
-function getUnprocessedRange(testRange: RowRange, processedRange: RowRange) {
-  if (
-    testRange.firstRowIndex >= processedRange.firstRowIndex &&
-    testRange.lastRowIndex <= processedRange.lastRowIndex
-  ) {
-    return null;
-  }
-  // Overflowing at the end
-  // Example: testRange={ firstRowIndex: 10, lastRowIndex: 20 }, processedRange={ firstRowIndex: 0, lastRowIndex: 15 }
-  // Unprocessed Range={ firstRowIndex: 16, lastRowIndex: 20 }
-  if (
-    testRange.firstRowIndex >= processedRange.firstRowIndex &&
-    testRange.lastRowIndex > processedRange.lastRowIndex
-  ) {
-    return { firstRowIndex: processedRange.lastRowIndex, lastRowIndex: testRange.lastRowIndex };
-  }
-  // Overflowing at the beginning
-  // Example: testRange={ firstRowIndex: 0, lastRowIndex: 20 }, processedRange={ firstRowIndex: 16, lastRowIndex: 30 }
-  // Unprocessed Range={ firstRowIndex: 0, lastRowIndex: 15 }
-  if (
-    testRange.firstRowIndex < processedRange.firstRowIndex &&
-    testRange.lastRowIndex <= processedRange.lastRowIndex
-  ) {
-    return {
-      firstRowIndex: testRange.firstRowIndex,
-      lastRowIndex: processedRange.firstRowIndex - 1,
-    };
-  }
-  // TODO: Should return two ranges handle overflowing at both ends ?
-  return testRange;
-}
-
-function isRowContextInitialized(renderContext: GridRenderContext) {
-  return renderContext.firstRowIndex !== 0 || renderContext.lastRowIndex !== 0;
-}
-
-function getCellValue(
-  row: GridValidRowModel,
-  colDef: GridColDef,
-  apiRef: RefObject<GridApiCommunity>,
-) {
-  if (!row) {
-    return null;
-  }
-  let cellValue = row[colDef.field];
-  const valueGetter = colDef.rowSpanValueGetter ?? colDef.valueGetter;
-  if (valueGetter) {
-    cellValue = valueGetter(cellValue as never, row, colDef, apiRef);
-  }
-  return cellValue;
-}
