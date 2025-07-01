@@ -75,8 +75,6 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-tree-view-pro',
 ];
 
-// TODO move this helper to @mui/monorepo/.eslintrc
-// It needs to know about the parent "no-restricted-imports" to not override them.
 /**
  *
  * @param {string} packageName
@@ -96,7 +94,6 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
             message: 'Use relative import instead',
           })),
           patterns: [
-            // TODO move rule into main repo to allow deep @mui/monorepo imports
             {
               group: ['@mui/*/*/*'],
               message: 'Use less deep import instead',
