@@ -5,7 +5,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { useVirtualizer } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
-import { GridApiCommunity, GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridRootProps } from '../utils/useGridRootProps';
