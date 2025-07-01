@@ -20,7 +20,7 @@ export type ZoomConfig = {
 };
 
 type Entry<T extends AnyInteraction> = {
-  [K in T['type']]?: T;
+  [K in T['type']]?: Required<T>;
 };
 export type DefaultizedZoomConfig = {
   zoom: Entry<ZoomInteraction>;
@@ -45,10 +45,12 @@ export type OnWheelInteraction = {
 export type OnPinchInteraction = {
   type: 'onPinch';
   mode?: 'all';
+  keys?: never[];
 };
 export type OnTapAndDragInteraction = {
   type: 'onTapAndDrag';
   mode?: InteractionMode;
+  keys?: never[];
 };
 export type OnDragInteraction = {
   type: 'onDrag';
@@ -61,10 +63,12 @@ export type OnDragInteraction = {
 export type OnDoubleDragInteraction = {
   type: 'onDoubleDrag';
   mode?: 'all';
+  keys?: never[];
 };
 export type OnPressAndDragInteraction = {
   type: 'onPressAndDrag';
   mode?: InteractionMode;
+  keys?: never[];
 };
 
 type AllLetters =

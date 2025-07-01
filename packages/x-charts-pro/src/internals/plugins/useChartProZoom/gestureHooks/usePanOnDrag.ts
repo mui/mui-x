@@ -12,6 +12,7 @@ import { PanEvent } from '@mui/x-internal-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
+import { isKeyPressed } from '../isKeyPressed';
 
 export const usePanOnDrag = (
   {
@@ -28,6 +29,23 @@ export const usePanOnDrag = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
+  const pressedKeysRef = React.useRef<Set<string>>(new Set());
+  const config = params.zoomConfig.pan.onDrag;
+
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      pressedKeysRef.current.add(event.key.length === 1 ? event.key.toLowerCase() : event.key);
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      pressedKeysRef.current.delete(event.key.length === 1 ? event.key.toLowerCase() : event.key);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
@@ -40,12 +58,15 @@ export const usePanOnDrag = (
   React.useEffect(() => {
     const element = svgRef.current;
 
-    if (element === null || !isPanEnabled) {
+    if (element === null || !isPanEnabled || !config) {
       return () => {};
     }
 
     const handlePanStart = (event: PanEvent) => {
-      if (!isGestureEnabledForPointer(event.detail.srcEvent, params.zoomConfig.pan.onDrag!.mode)) {
+      if (
+        !isKeyPressed(pressedKeysRef.current, config.keys) ||
+        !isGestureEnabledForPointer(event.detail.srcEvent, params.zoomConfig.pan.onDrag!.mode)
+      ) {
         return;
       }
       if (event.detail.target === element || instance.isElementInside(event.detail.target)) {

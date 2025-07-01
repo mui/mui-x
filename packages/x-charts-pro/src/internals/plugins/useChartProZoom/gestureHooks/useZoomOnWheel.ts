@@ -17,6 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { isKeyPressed } from '../isKeyPressed';
 
 export const useZoomOnWheel = (
   {
@@ -35,17 +36,38 @@ export const useZoomOnWheel = (
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressedKeysRef = React.useRef<Set<string>>(new Set());
+  const config = params.zoomConfig.zoom.onWheel;
+
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      pressedKeysRef.current.add(event.key.length === 1 ? event.key.toLowerCase() : event.key);
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      pressedKeysRef.current.delete(event.key.length === 1 ? event.key.toLowerCase() : event.key);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled || !params.zoomConfig.zoom.onWheel) {
+    if (element === null || !isZoomEnabled || !config) {
       return () => {};
     }
 
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
+      if (!isKeyPressed(pressedKeysRef.current, config.keys)) {
+        return;
+      }
+
       const point = getSVGPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,

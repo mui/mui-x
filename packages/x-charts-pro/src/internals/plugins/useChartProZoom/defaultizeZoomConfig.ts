@@ -6,34 +6,34 @@ export const defaultizeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
   const defaultizedConfig: DefaultizedZoomConfig = { zoom: {}, pan: {} };
 
   if (!zoomConfig?.zoom) {
-    defaultizedConfig.zoom.onWheel = { type: 'onWheel', mode: 'all' };
-    defaultizedConfig.zoom.onPinch = { type: 'onPinch', mode: 'all' };
-    defaultizedConfig.zoom.onTapAndDrag = { type: 'onTapAndDrag', mode: 'touch' };
+    defaultizedConfig.zoom.onWheel = { type: 'onWheel', mode: 'all', keys: [] };
+    defaultizedConfig.zoom.onPinch = { type: 'onPinch', mode: 'all', keys: [] };
+    defaultizedConfig.zoom.onTapAndDrag = { type: 'onTapAndDrag', mode: 'touch', keys: [] };
   } else {
     zoomConfig.zoom.forEach((interaction) => {
       if (typeof interaction === 'string') {
-        defaultizedConfig.zoom[interaction] = { type: interaction, mode: 'all' };
+        defaultizedConfig.zoom[interaction] = { type: interaction, mode: 'all', keys: [] };
       } else {
         defaultizedConfig.zoom[interaction.type as string] = {
           type: interaction.type,
           mode: interaction.mode ?? 'all',
-          keys: 'keys' in interaction ? interaction.keys : undefined,
+          keys: 'keys' in interaction ? interaction.keys : [],
         };
       }
     });
   }
 
   if (!zoomConfig?.pan) {
-    defaultizedConfig.pan.onDrag = { type: 'onDrag', mode: 'all' };
+    defaultizedConfig.pan.onDrag = { type: 'onDrag', mode: 'all', keys: [] };
   } else {
     zoomConfig.pan.forEach((interaction) => {
       if (typeof interaction === 'string') {
-        defaultizedConfig.pan[interaction] = { type: interaction, mode: 'all' };
+        defaultizedConfig.pan[interaction] = { type: interaction, mode: 'all', keys: [] };
       } else {
         defaultizedConfig.pan[interaction.type as string] = {
           type: interaction.type,
           mode: interaction.mode ?? 'all',
-          keys: 'keys' in interaction ? interaction.keys : undefined,
+          keys: 'keys' in interaction ? interaction.keys : [],
         };
       }
     });

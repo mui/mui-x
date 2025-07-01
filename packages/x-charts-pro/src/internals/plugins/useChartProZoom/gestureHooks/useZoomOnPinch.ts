@@ -34,18 +34,17 @@ export const useZoomOnPinch = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const config = params.zoomConfig.zoom.onPinch;
 
   // Zoom on pinch
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled || !params.zoomConfig.zoom.onPinch) {
+    if (element === null || !isZoomEnabled || !config) {
       return () => {};
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
-      if (
-        !isGestureEnabledForPointer(event.detail.srcEvent, params.zoomConfig.zoom.onPinch!.mode)
-      ) {
+      if (!isGestureEnabledForPointer(event.detail.srcEvent, config!.mode)) {
         return;
       }
 
