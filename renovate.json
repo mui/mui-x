@@ -90,8 +90,10 @@
       ]
     },
     {
-      "groupName": "MUI Internal",
-      "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
+      "groupName": "Infra packages",
+      "matchPackageNames": ["@mui/internal-*", "@mui/docs"],
+      "followTag": "canary",
+      "schedule": null
     },
     {
       "groupName": "Playwright",
