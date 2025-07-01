@@ -309,7 +309,7 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@swc/core@1.12.0)(@types/node@24.0.7)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.1
+        specifier: ^0.0.2-canary.3
         version: 0.0.2-canary.3(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)
       '@mui/internal-markdown':
         specifier: ^2.0.6
@@ -895,7 +895,7 @@ importers:
   packages/eslint-plugin-mui-x:
     dependencies:
       '@typescript-eslint/utils':
-        specifier: ^8.35.0
+        specifier: ^8.35.1
         version: 8.35.1(eslint@9.30.0)(typescript@5.8.3)
     devDependencies:
       '@types/eslint':
