@@ -45,8 +45,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     | 'dataSource'
     | 'dataSourceCache'
     | 'onDataSourceError'
-    | 'pagination'
     | 'pageSizeOptions'
+    | 'pagination'
     | 'signature'
   >,
   options: GridDataSourceBaseOptions = {},
@@ -68,9 +68,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const onDataSourceErrorProp = props.onDataSourceError;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
-    // if pagination is disabled, do not split data into chunks
     if (props.pagination !== true) {
-      return new CacheChunkManager(0);
+      return new CacheChunkManager(paginationModel.pageSize);
     }
 
     const sortedPageSizeOptions = props.pageSizeOptions
