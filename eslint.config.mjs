@@ -195,7 +195,7 @@ export default defineConfig(
         },
       ],
       'no-restricted-imports': 'off',
-      // TODO move to @mui/monorepo/.eslintrc
+      // TODO move to @mui/internal-code-infra/eslint
       'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
       'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],
       'jsdoc/require-param-name': ['error', { contexts: ['TSFunctionType'] }],
@@ -217,10 +217,10 @@ export default defineConfig(
       ],
       // Fixes false positive when using both `inputProps` and `InputProps` on the same example
       // See https://stackoverflow.com/questions/42367236/why-am-i-getting-this-warning-no-duplicate-props-allowed-react-jsx-no-duplicate
-      // TODO move to @mui/monorepo/.eslintrc
+      // TODO move to @mui/internal-code-infra/eslint
       // TODO Fix <Input> props names to not conflict
       'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
-      // TODO move to @mui/monorepo/.eslintrc, these are false positive
+      // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
     },
   },
