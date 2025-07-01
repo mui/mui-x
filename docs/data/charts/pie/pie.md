@@ -141,7 +141,7 @@ Here's how the Pie Chart is composed:
 
 ```jsx
 // Disable the default axis behavior
-const noAxis = [{ position: 'none'}];
+const noAxis = [{ position: 'none' }];
 
 <ChartDataProvider xAxis={noAxis} yAxis={noAxis}>
   <ChartsWrapper>
@@ -152,10 +152,10 @@ const noAxis = [{ position: 'none'}];
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartDataProvider>;
 ```
 
 :::info
-The code defines `noAxis` for the x and y-axes to override the default axes created by the  `<ChartDataProvider />`.
+The code defines `noAxis` for the x and y-axes to override the default axes created by the `<ChartDataProvider />`.
 This ensures that the pie is centered.
 :::
