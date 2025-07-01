@@ -1,4 +1,3 @@
-/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -55,7 +54,7 @@ export default function FeaturesHighlight() {
               borderBottom: { md: 'none', xs: `1px solid ${theme.palette.divider}` },
             })}
           >
-            {/* eslint-disable material-ui/no-hardcoded-labels */}
+            {}
             {/* first column */}
             <Stack
               flexBasis={{ xs: '100%', sm: '50%' }}

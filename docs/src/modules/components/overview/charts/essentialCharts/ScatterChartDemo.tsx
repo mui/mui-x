@@ -1,4 +1,3 @@
-/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import { ScatterSeriesType } from '@mui/x-charts/models';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
