@@ -3,22 +3,11 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { Virtualization, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
-import {
-  gridVisibleColumnDefinitionsSelector,
-  gridVisiblePinnedColumnDefinitionsSelector,
-  gridColumnPositionsSelector,
-} from '../columns/gridColumnsSelector';
-import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridEventPriority } from '../../utils';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
-import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 const HAS_LAYOUT = !isJSDOM;
 
@@ -104,67 +93,4 @@ export function useGridVirtualization(
     setVirtualization(!rootProps.disableVirtualization);
   }, [disableVirtualization, autoHeight]);
   /* eslint-enable react-hooks/exhaustive-deps */
-}
-
-type RenderContextInputs = {
-  enabledForRows: boolean;
-  enabledForColumns: boolean;
-  apiRef: RefObject<GridPrivateApiCommunity>;
-  autoHeight: boolean;
-  rowBufferPx: number;
-  columnBufferPx: number;
-  leftPinnedWidth: number;
-  columnsTotalWidth: number;
-  viewportInnerWidth: number;
-  viewportInnerHeight: number;
-  lastRowHeight: number;
-  lastColumnWidth: number;
-  rowsMeta: ReturnType<typeof gridRowsMetaSelector>;
-  columnPositions: ReturnType<typeof gridColumnPositionsSelector>;
-  rows: ReturnType<typeof useGridVisibleRows>['rows'];
-  range: ReturnType<typeof useGridVisibleRows>['range'];
-  pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>;
-  columns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
-  hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
-  listView: boolean;
-  virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
-};
-
-function inputsSelector(
-  apiRef: RefObject<GridPrivateApiCommunity>,
-  rootProps: ReturnType<typeof useGridRootProps>,
-  enabledForRows: boolean,
-  enabledForColumns: boolean,
-): RenderContextInputs {
-  const dimensions = gridDimensionsSelector(apiRef);
-  const currentPage = getVisibleRows(apiRef, rootProps);
-  const columns = rootProps.listView
-    ? [gridListColumnSelector(apiRef)!]
-    : gridVisibleColumnDefinitionsSelector(apiRef);
-  const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
-  const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
-  const lastColumn = columns.at(-1);
-  return {
-    enabledForRows,
-    enabledForColumns,
-    apiRef,
-    autoHeight: rootProps.autoHeight,
-    rowBufferPx: rootProps.rowBufferPx,
-    columnBufferPx: rootProps.columnBufferPx,
-    leftPinnedWidth: dimensions.leftPinnedWidth,
-    columnsTotalWidth: dimensions.columnsTotalWidth,
-    viewportInnerWidth: dimensions.viewportInnerSize.width,
-    viewportInnerHeight: dimensions.viewportInnerSize.height,
-    lastRowHeight: lastRowId !== undefined ? apiRef.current.unstable_getRowHeight(lastRowId) : 0,
-    lastColumnWidth: lastColumn?.computedWidth ?? 0,
-    rowsMeta: gridRowsMetaSelector(apiRef),
-    columnPositions: gridColumnPositionsSelector(apiRef),
-    rows: currentPage.rows,
-    range: currentPage.range,
-    pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-    columns,
-    hiddenCellsOriginMap,
-    listView: rootProps.listView ?? false,
-    virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
-  };
 }
