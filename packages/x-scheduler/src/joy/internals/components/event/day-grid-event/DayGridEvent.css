@@ -52,7 +52,7 @@
 
 /* Smaller containers (month view) */
 @container (width < 300px) {
-  .EventCardContent {
+  .EventCard--compact .EventCardContent {
     padding: 0 0 0 var(--space-5);
   }
 
@@ -68,7 +68,7 @@
     margin-inline-start: var(--space-1);
   }
 
-  .EventCardContent::before {
+  .EventCard--compact .EventCardContent::before {
     left: var(--space-1);
   }
 }
