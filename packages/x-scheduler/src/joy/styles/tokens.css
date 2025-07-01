@@ -321,7 +321,7 @@
   --shadow-tint: 215 22% 17%;
 }
 
-.mode-dark {
+.mode-dark .joy {
   --mauve-1: #121113;
   --mauve-2: #1a191b;
   --mauve-2-rgb: 26, 25, 27;
@@ -415,6 +415,6 @@
   --border-color: var(--mauve-4);
 }
 
-body {
+body .joy {
   background-color: var(--surface);
 }
