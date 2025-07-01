@@ -49,15 +49,18 @@ const isAnyReactCompilerPluginEnabled =
   ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW ||
   ENABLE_REACT_COMPILER_PLUGIN_SCHEDULER;
 
-const addReactCompilerRule = (packagesNames, isEnabled) =>
-  !isEnabled
-    ? []
-    : packagesNames.map((packageName) => ({
-        files: [`packages/${packageName}/src/**/*.${EXTENSION_TS}`],
-        rules: {
-          'react-compiler/react-compiler': 'error',
-        },
-      }));
+/**
+ * @param {Object[]} packageInfo
+ * @param {string[]} packageInfo.packagesNames
+ * @param {boolean} packageInfo.isEnabled
+ */
+function getReactCompilerFilesForPackages(packageInfo) {
+  return packageInfo
+    .filter((pkg) => pkg.isEnabled)
+    .flatMap((pkg) =>
+      pkg.packagesNames.map((packageName) => `packages/${packageName}/src/**/*.${EXTENSION_TS}`),
+    );
+}
 
 const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/material',
@@ -135,6 +138,29 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
         },
       ]),
 ];
+
+const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
+  {
+    packagesNames: CHARTS_PACKAGES,
+    isEnabled: ENABLE_REACT_COMPILER_PLUGIN_CHARTS,
+  },
+  {
+    packagesNames: GRID_PACKAGES,
+    isEnabled: ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
+  },
+  {
+    packagesNames: PICKERS_PACKAGES,
+    isEnabled: ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
+  },
+  {
+    packagesNames: TREE_VIEW_PACKAGES,
+    isEnabled: ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
+  },
+  {
+    packagesNames: SCHEDULER_PACKAGES,
+    isEnabled: ENABLE_REACT_COMPILER_PLUGIN_SCHEDULER,
+  },
+]);
 
 export default defineConfig(
   includeIgnoreFile(path.join(dirname, '.gitignore'), 'Git Ignore rules'),
@@ -400,11 +426,16 @@ export default defineConfig(
   ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
   ...buildPackageRestrictedImports('@mui/x-telemetry', 'x-telemetry'),
 
-  ...addReactCompilerRule(CHARTS_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
-  ...addReactCompilerRule(GRID_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID),
-  ...addReactCompilerRule(PICKERS_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS),
-  ...addReactCompilerRule(TREE_VIEW_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW),
-  ...addReactCompilerRule(SCHEDULER_PACKAGES, ENABLE_REACT_COMPILER_PLUGIN_SCHEDULER),
+  ...[
+    packageFilesWithReactCompiler.length > 0
+      ? {
+          files: packageFilesWithReactCompiler,
+          rules: {
+            'react-compiler/react-compiler': 'error',
+          },
+        }
+      : {},
+  ],
 
   // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
   {
