@@ -1,4 +1,4 @@
-import { ThemeOptions, alpha } from '@mui/material/styles';
+import { ThemeOptions } from '@mui/material/styles';
 import '@mui/x-charts/themeAugmentation';
 import '@mui/x-charts-pro/themeAugmentation';
 

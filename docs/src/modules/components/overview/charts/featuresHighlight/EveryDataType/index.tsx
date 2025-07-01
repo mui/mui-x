@@ -10,14 +10,14 @@ export default function EveryDataType() {
   const [selected, setSelected] = React.useState(1);
   const [active, setActive] = React.useState(false);
 
-  // React.useEffect(() => {
-  //   if (active) {
-  //     return undefined;
-  //   }
-  //   const timeout = setTimeout(() => setSelected((p) => (p + 1) % 4), 5000);
+  React.useEffect(() => {
+    if (active) {
+      return undefined;
+    }
+    const timeout = setTimeout(() => setSelected((p) => (p + 1) % 4), 5000);
 
-  //   return () => clearTimeout(timeout);
-  // }, [selected, active]);
+    return () => clearTimeout(timeout);
+  }, [selected, active]);
   return (
     <Stack
       spacing={3}
