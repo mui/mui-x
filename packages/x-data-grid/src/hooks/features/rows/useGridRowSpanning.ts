@@ -34,11 +34,6 @@ export type RowRange = { firstRowIndex: number; lastRowIndex: number };
 
 const EMPTY_STATE = { spannedCells: {}, hiddenCells: {}, hiddenCellOriginMap: {} };
 const EMPTY_RANGE: RowRange = { firstRowIndex: 0, lastRowIndex: 0 };
-const skippedFields = new Set([
-  GRID_CHECKBOX_SELECTION_FIELD,
-  '__reorder__',
-  GRID_DETAIL_PANEL_TOGGLE_FIELD,
-]);
 /**
  * Default number of rows to process during state initialization to avoid flickering.
  * Number `20` is arbitrarily chosen to be large enough to cover most of the cases without
@@ -66,10 +61,6 @@ const computeRowSpanningState = (
   }
 
   colDefs.forEach((colDef, columnIndex) => {
-    if (skippedFields.has(colDef.field)) {
-      return;
-    }
-
     for (
       let index = rangeToProcess.firstRowIndex;
       index < rangeToProcess.lastRowIndex;
