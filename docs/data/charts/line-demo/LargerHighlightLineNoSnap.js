@@ -61,6 +61,7 @@ function CustomLine(props) {
     </React.Fragment>
   );
 }
+
 export default function LargerHighlightLineNoSnap() {
   const [showInteractionArea, setShowInteractionArea] = React.useState(true);
 

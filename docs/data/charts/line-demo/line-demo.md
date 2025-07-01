@@ -59,13 +59,13 @@ This modification implies a small drop of rendering performances (around +50ms t
 
 ## Larger interaction area
 
-The line highlight has a narrow interaction area.
-Before a proper solution get implemented, it's possible to use a workaround with slots.
+A line is highlighted when a pointer is hovering over it.
+Which is a narrow interaction area.
+While a permanent solution isn't implemented, it's possible to define a larger interaction area with slots.
 
-The idea is to have two paths.
-A small one to display the line.
-And a larger one invisible that take cares of interactions.
+The idea is to have two paths:
+A small one to display the line, and a larger invisible one that handles the interactions.
 
-This solution has an issue when lines cross over each other, as the highlight will not be on the line closest to the pointer, but by the last defined series.
+This solution has an issue when lines cross over each other, as the highlight is not on the closest line to the pointer, but by the last defined series.
 
 {{"demo": "LargerHighlightLineNoSnap.js"}}
