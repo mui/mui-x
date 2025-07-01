@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/introduction/mcp`, title: 'AI support via MCP', newFeature: true },
       { pathname: `/x/introduction/priority-support`, newFeature: true, plan: 'premium' },
       { pathname: `/x/guides/telemetry`, plan: 'pro' },
       { pathname: `/x/introduction/roadmap` },
@@ -73,7 +74,7 @@ const pages: MuiPage[] = [
                 plan: 'pro',
                 title: 'Master-detail row panels',
               },
-              { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
+              { pathname: '/x/react-data-grid/row-ordering', plan: 'pro', title: 'Row reordering' },
               { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
             ],
@@ -184,6 +185,9 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
                 plan: 'premium',
               },
+              {
+                pathname: '/x/react-data-grid/server-side-data/recipes',
+              },
             ],
           },
           {
@@ -283,6 +287,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
               { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
               { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+              { pathname: '/x/api/data-grid/grid-render-context', title: 'GridRenderContext' },
               {
                 pathname: '/x/api/data-grid/grid-row-class-name-params',
                 title: 'GridRowClassNameParams',

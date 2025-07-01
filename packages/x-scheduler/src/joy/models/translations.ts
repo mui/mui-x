@@ -12,6 +12,7 @@ export interface SchedulerTranslations {
 
   // EventPopover
   closeButtonAriaLabel: string;
+  deleteEvent: string;
   descriptionLabel: string;
   endDateLabel: string;
   endTimeLabel: string;

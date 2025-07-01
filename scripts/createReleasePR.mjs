@@ -30,7 +30,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
-import inquirer from 'inquirer';
+import { input, select, confirm } from '@inquirer/prompts';
 import { generateChangelog as generateChangelogFromModule } from './changelogUtils.mjs';
 import pck from '../package.json' with { type: 'json' };
 
@@ -52,7 +52,6 @@ const ORG = 'mui';
 const REPO = 'mui-x';
 
 // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-// eslint-disable-next-line no-useless-escape
 const getRemoteRegex = (owner) =>
   new RegExp(String.raw`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
 
@@ -100,7 +99,6 @@ async function findMuiXRemote() {
     const { stdout } = await execa('git', ['remote', '-v']);
     const remotes = stdout.split('\n');
     // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-    // eslint-disable-next-line no-useless-escape
     const rx = getRemoteRegex(ORG);
 
     console.log('Checking for MUI-X remote...', stdout);
@@ -174,7 +172,6 @@ async function findForkRemote() {
     let forkRemote = '';
     for (const line of remotes) {
       // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-      // eslint-disable-next-line no-useless-escape
       const rx = getRemoteRegex(forkOwner);
 
       if (line.match(rx)) {
@@ -205,28 +202,24 @@ async function findForkRemote() {
 async function selectMajorVersion() {
   const currentMajorVersion = packageVersion.split('.')[0];
 
-  const selection = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'majorVersion',
-      message: 'Please select the major version you are trying to update:',
-      default: currentMajorVersion,
-      validate: (input) => {
-        if (!/^\d+$/.test(input)) {
-          return 'Major version must be a number';
-        }
+  const majorVersion = await input({
+    message: 'Please select the major version you are trying to update:',
+    default: currentMajorVersion,
+    validate: (answer) => {
+      if (!/^\d+$/.test(answer)) {
+        return 'Major version must be a number';
+      }
 
-        if (parseInt(input, 10) > parseInt(currentMajorVersion, 10)) {
-          return `Cannot select a major version (${input}) higher than the current major version (${currentMajorVersion})`;
-        }
+      if (parseInt(answer, 10) > parseInt(currentMajorVersion, 10)) {
+        return `Cannot select a major version (${answer}) higher than the current major version (${currentMajorVersion})`;
+      }
 
-        return true;
-      },
+      return true;
     },
-  ]);
+  });
 
-  console.log(`Selected major version: ${selection.majorVersion}`);
-  return selection.majorVersion;
+  console.log(`Selected major version: ${majorVersion}`);
+  return majorVersion;
 }
 
 /**
@@ -374,15 +367,11 @@ async function selectVersionType(majorVersion) {
   }
 
   // First prompt for version type
-  const { versionChoice } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'versionChoice',
-      message: 'Please select the version type:',
-      default: 'patch',
-      choices,
-    },
-  ]);
+  const versionChoice = await select({
+    message: 'Please select the version type:',
+    default: 'patch',
+    choices,
+  });
 
   // Handle the selected version type
   switch (versionChoice) {
@@ -419,14 +408,10 @@ async function selectVersionType(majorVersion) {
         defaultCustomVersion = `${defaultMajor}.${defaultMinor}.${defaultPatch + 1}`;
       }
 
-      const { customVersion } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'customVersion',
-          message: 'Enter custom version:',
-          default: defaultCustomVersion,
-        },
-      ]);
+      const customVersion = await input({
+        message: 'Enter custom version:',
+        default: defaultCustomVersion,
+      });
 
       console.log(`Selected: Custom version ${customVersion}`);
       return {
@@ -550,14 +535,10 @@ async function checkUncommittedChanges() {
       console.warn('  git stash');
       console.warn('in another terminal window.');
       // eslint-disable-next-line no-await-in-loop
-      await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'continue',
-          message: 'Press Enter to check again, or Ctrl+C to abort...',
-          default: true,
-        },
-      ]);
+      await confirm({
+        message: 'Press Enter to check again, or Ctrl+C to abort...',
+        default: true,
+      });
       // eslint-disable-next-line no-await-in-loop
       const result = await execa('git', ['status', '--porcelain']);
       stdout = result.stdout;
@@ -858,6 +839,9 @@ async function main({ githubToken }) {
       process.exit(1);
     }
 
+    console.log('package.json and CHANGELOG.md found, proceeding...');
+    console.log(`Current package version: ${packageVersion}`);
+
     // If no token is provided, throw an error
     if (!githubToken) {
       console.error(
@@ -993,14 +977,10 @@ async function main({ githubToken }) {
     await updateChangelog(changelogContent);
 
     // Wait for user confirmation
-    await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'continue',
-        message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
-        default: true,
-      },
-    ]);
+    await confirm({
+      message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
+      default: true,
+    });
 
     // Commit the changes
     console.log('Committing changes...');

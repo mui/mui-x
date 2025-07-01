@@ -105,6 +105,14 @@ const onItemClick = (
 
 {{"demo": "PieClick.js"}}
 
+## CSS
+
+You can customize the different elements rendered by a pie chart using CSS.
+
+In the example below, the outer series is selected using the `data-series` attribute to reduce its opacity.
+
+{{"demo": "PieCSSStyling.js"}}
+
 ## Animation
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
@@ -132,7 +140,10 @@ In addition to the common chart components available for [composition](/x/react-
 Here's how the Pie Chart is composed:
 
 ```jsx
-<ChartDataProvider>
+// Disable the default axis behavior
+const noAxis = [{ position: 'none' }];
+
+<ChartDataProvider xAxis={noAxis} yAxis={noAxis}>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -141,5 +152,10 @@ Here's how the Pie Chart is composed:
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartDataProvider>;
 ```
+
+:::info
+The code defines `noAxis` for the x and y-axes to override the default axes created by the `<ChartDataProvider />`.
+This ensures that the pie is centered.
+:::

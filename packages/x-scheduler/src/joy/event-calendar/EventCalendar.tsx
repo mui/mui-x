@@ -5,6 +5,7 @@ import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
+import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
@@ -72,7 +73,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       content = <div>TODO: Month view</div>;
       break;
     case 'agenda':
-      content = <div>TODO: Agenda view</div>;
+      content = <AgendaView onEventsChange={onEventsChange} />;
       break;
     default:
       content = null;
@@ -81,11 +82,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   return (
     <EventCalendarStoreContext.Provider value={store}>
       <TranslationsProvider translations={translations}>
-        <div
-          className={clsx(className, 'EventCalendarRoot', 'joy', 'light')}
-          ref={forwardedRef}
-          {...other}
-        >
+        <div className={clsx(className, 'EventCalendarRoot', 'joy')} ref={forwardedRef} {...other}>
           <aside className="EventCalendarSidePanel">
             <span style={{ display: 'flex', alignItems: 'center', height: 44 }}>
               TODO: Time nav

@@ -1,4 +1,6 @@
 @import '../styles/colors.css';
+@import '../styles/tokens.css';
+@import '../styles/utils.css';
 
 .EventCalendarRoot {
   width: 100%;
@@ -56,11 +58,11 @@
 }
 
 .EventCalendarResourceLegendColor {
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
   flex-shrink: 0;
-  background-color: var(--event-color-8);
+  background-color: var(--event-color-9);
 }
 
 .mode-dark .EventCalendarResourceLegendColor {

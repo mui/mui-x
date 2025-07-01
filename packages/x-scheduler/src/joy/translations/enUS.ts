@@ -14,6 +14,7 @@ export const enUS: SchedulerTranslations = {
 
   // EventPopover
   closeButtonAriaLabel: 'Close modal',
+  deleteEvent: 'Delete event',
   descriptionLabel: 'Description',
   endDateLabel: 'End date',
   endTimeLabel: 'End time',

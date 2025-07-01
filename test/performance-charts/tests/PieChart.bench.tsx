@@ -1,9 +1,10 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('PieChart', () => {
   const dataLength = 50;

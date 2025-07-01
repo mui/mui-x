@@ -7,7 +7,7 @@ import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
 import { TimeGridProps } from './TimeGrid.types';
 import { CalendarEvent } from '../../../models/events';
-import { Event } from '../../../event/Event';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
@@ -141,7 +141,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                       data-weekend={isWeekend(adapter, day) ? '' : undefined}
                     >
                       {getEventsStartingInDay(day).map((event: CalendarEvent) => (
-                        <Event
+                        <TimeGridEvent
                           key={event.id}
                           event={event}
                           eventResource={resourcesByIdMap.get(event.resource)}

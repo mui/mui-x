@@ -1,8 +1,19 @@
-import adapterDependencies from './adapter-dependencies.json';
+import { vi } from 'vitest';
+import { getPickerAdapterDeps } from './getPickerAdapterDeps';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
+
+const adapterDependencies = getPickerAdapterDeps();
 
 describe('postProcessImport', () => {
   const ADAPTERS = ['AdapterDateFns', 'AdapterDayjs', 'AdapterLuxon', 'AdapterMoment'];
+
+  beforeEach(() => {
+    vi.stubEnv('PICKERS_ADAPTERS_DEPS', JSON.stringify(adapterDependencies));
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
 
   describe('@mui/lab imports', () => {
     ADAPTERS.forEach((adapter) => {

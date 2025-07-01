@@ -55,7 +55,6 @@ export default function CommunityOrPro({
           href="/x/introduction/licensing/"
           endIcon={<ArrowForwardIcon />}
           sx={{ width: 'fit-content' }}
-          // eslint-disable-next-line material-ui/no-hardcoded-labels
         >
           About licensing
         </Button>

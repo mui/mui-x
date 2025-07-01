@@ -37,4 +37,4 @@ TODO: Add a demo of a standalone `<MonthView />` when available.
 
 ### Agenda
 
-TODO: Add a demo of a standalone `<AgendaView />` when available.
+{{"demo": "StandaloneAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
