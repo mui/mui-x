@@ -70,7 +70,6 @@ export type VirtualizerParams = {
 
   contentHeight: number;
   minimalContentHeight: number | string;
-  needsHorizontalScrollbar: boolean;
   autoHeight: boolean;
   getRowHeight?: (params: any) => number | null | undefined | 'auto';
   /**

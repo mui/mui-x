@@ -87,7 +87,6 @@ export function useGridVirtualizer(
 
   /* TODO: extract dimensions code */
   const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
-  const needsHorizontalScrollbar = useGridSelector(apiRef, needsHorizontalScrollbarSelector);
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const { autoHeight } = rootProps;
@@ -168,7 +167,6 @@ export function useGridVirtualizer(
 
     contentHeight,
     minimalContentHeight,
-    needsHorizontalScrollbar: needsHorizontalScrollbar && !listView,
     autoHeight,
     getRowHeight,
     getEstimatedRowHeight: React.useMemo(

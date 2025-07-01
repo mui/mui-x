@@ -99,7 +99,6 @@ function useVirtualization(
 
     contentHeight,
     minimalContentHeight,
-    needsHorizontalScrollbar,
     autoHeight,
 
     onWheel,
@@ -115,6 +114,11 @@ function useVirtualization(
 
     fixme,
   } = params;
+
+  const needsHorizontalScrollbar = useSelector(
+    store,
+    Dimensions.selectors.needsHorizontalScrollbar,
+  );
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
