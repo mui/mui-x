@@ -141,7 +141,22 @@ export const useGridChartsIntegration = (
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
 
   const { chartStateLookup, setChartState } = context || EMPTY_CHART_INTEGRATION_CONTEXT;
-  const chartIds = Object.keys(chartStateLookup);
+  const availableChartIds = React.useMemo(() => {
+    const ids = Object.keys(chartStateLookup);
+    // cleanup visibleCategories and visibleSeries references
+    Object.keys(visibleCategories.current).forEach((chartId) => {
+      if (!ids.includes(chartId)) {
+        delete visibleCategories.current[chartId];
+        delete visibleSeries.current[chartId];
+      }
+    });
+
+    return ids;
+  }, [chartStateLookup]);
+  const syncedChartIds = React.useMemo(
+    () => availableChartIds.filter((chartId) => chartStateLookup[chartId].synced !== false),
+    [availableChartIds, chartStateLookup],
+  );
 
   const getColumnName = React.useCallback(
     (field: string) => {
@@ -183,12 +198,13 @@ export const useGridChartsIntegration = (
   });
 
   const handleRowDataUpdate = React.useCallback(
-    (forceChartId?: string) => {
-      const availableCharts = chartIds.filter((chartId) =>
-        forceChartId ? chartId === forceChartId : chartStateLookup[chartId].synced !== false,
-      );
-
-      if (availableCharts.length === 0) {
+    (chartIds: string[]) => {
+      if (
+        chartIds.length === 0 ||
+        chartIds.some(
+          (chartId) => !visibleCategories.current[chartId] || !visibleSeries.current[chartId],
+        )
+      ) {
         return;
       }
       const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
@@ -220,7 +236,7 @@ export const useGridChartsIntegration = (
         }
       }
 
-      availableCharts.forEach((chartId) => {
+      chartIds.forEach((chartId) => {
         setChartState(chartId, {
           categories: visibleCategories.current[chartId].map((category) => ({
             id: category.field,
@@ -235,7 +251,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, getColumnName, setChartState, chartIds, chartStateLookup],
+    [apiRef, getColumnName, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
@@ -244,22 +260,14 @@ export const useGridChartsIntegration = (
   );
 
   const handleColumnDataUpdate = React.useCallback(
-    (forceChartId?: string) => {
+    (chartIds: string[]) => {
       // if there are no charts, skip the data processing
       if (chartIds.length === 0) {
         return;
       }
 
-      const availableCharts = chartIds.filter((chartId) =>
-        forceChartId ? chartId === forceChartId : chartStateLookup[chartId].synced !== false,
-      );
-
-      if (availableCharts.length === 0) {
-        return;
-      }
-
       const chartableColumns = gridChartableColumnsSelector(apiRef);
-      const selectedFields = availableCharts.reduce(
+      const selectedFields = chartIds.reduce(
         (acc, chartId) => {
           const series = gridChartsSeriesSelector(apiRef, chartId);
           const categories = gridChartsCategoriesSelector(apiRef, chartId);
@@ -280,7 +288,7 @@ export const useGridChartsIntegration = (
       const series: Record<string, GridChartsIntegrationItem[]> = {};
       const categories: Record<string, GridChartsIntegrationItem[]> = {};
 
-      availableCharts.forEach((chartId) => {
+      chartIds.forEach((chartId) => {
         categories[chartId] = [];
         series[chartId] = [];
 
@@ -335,7 +343,7 @@ export const useGridChartsIntegration = (
         }
       });
 
-      debouncedHandleRowDataUpdate(forceChartId);
+      debouncedHandleRowDataUpdate(chartIds);
     },
     [apiRef, debouncedHandleRowDataUpdate],
   );
@@ -399,9 +407,9 @@ export const useGridChartsIntegration = (
           },
         };
       });
-      debouncedHandleColumnDataUpdate();
+      debouncedHandleColumnDataUpdate(syncedChartIds);
     },
-    [apiRef, debouncedHandleColumnDataUpdate],
+    [apiRef, syncedChartIds, debouncedHandleColumnDataUpdate],
   );
 
   const updateSeries = React.useCallback(
@@ -431,9 +439,9 @@ export const useGridChartsIntegration = (
           },
         };
       });
-      debouncedHandleColumnDataUpdate();
+      debouncedHandleColumnDataUpdate(syncedChartIds);
     },
-    [apiRef, debouncedHandleColumnDataUpdate],
+    [apiRef, syncedChartIds, debouncedHandleColumnDataUpdate],
   );
 
   const setActiveChartId = React.useCallback<GridChartsIntegrationApi['setActiveChartId']>(
@@ -457,11 +465,11 @@ export const useGridChartsIntegration = (
         synced,
       });
       apiRef.current.publishEvent('chartSynchronizationStateChange', { chartId, synced });
-      if (synced) {
-        debouncedHandleColumnDataUpdate(chartId);
+      if (synced && chartStateLookup[chartId]) {
+        debouncedHandleColumnDataUpdate([chartId]);
       }
     },
-    [apiRef, setChartState, debouncedHandleColumnDataUpdate],
+    [apiRef, chartStateLookup, setChartState, debouncedHandleColumnDataUpdate],
   );
 
   const updateDataReference = React.useCallback<
@@ -547,29 +555,29 @@ export const useGridChartsIntegration = (
   useGridEvent(
     apiRef,
     'columnsChange',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleColumnDataUpdate()),
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleColumnDataUpdate(syncedChartIds)),
   );
   useGridEvent(
     apiRef,
     'pivotModeChange',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleColumnDataUpdate()),
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleColumnDataUpdate(syncedChartIds)),
   );
   useGridEvent(
     apiRef,
     'filteredRowsSet',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate()),
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
   );
   useGridEvent(
     apiRef,
     'sortedRowsSet',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate()),
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
   );
 
   React.useEffect(() => {
-    if (!activeChartId && chartIds.length > 0) {
-      setActiveChartId(chartIds[0]);
+    if (!activeChartId && availableChartIds.length > 0) {
+      setActiveChartId(availableChartIds[0]);
     }
-  }, [chartIds, activeChartId, setActiveChartId]);
+  }, [availableChartIds, activeChartId, setActiveChartId]);
 
   const isInitialized = React.useRef(false);
   React.useEffect(() => {
@@ -577,13 +585,13 @@ export const useGridChartsIntegration = (
       return;
     }
 
-    if (chartIds.length === 0) {
+    if (availableChartIds.length === 0) {
       return;
     }
 
     isInitialized.current = true;
 
-    chartIds.forEach((chartId) => {
+    availableChartIds.forEach((chartId) => {
       setChartState(chartId, {
         type: props.initialState?.chartsIntegration?.charts?.[chartId]?.chartType || '',
         configuration:
@@ -591,9 +599,10 @@ export const useGridChartsIntegration = (
       });
     });
 
-    debouncedHandleColumnDataUpdate();
+    debouncedHandleColumnDataUpdate(syncedChartIds);
   }, [
-    chartIds,
+    availableChartIds,
+    syncedChartIds,
     props.initialState?.chartsIntegration?.charts,
     setChartState,
     debouncedHandleColumnDataUpdate,
