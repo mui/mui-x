@@ -82,7 +82,7 @@ function initializeState(params: VirtualizerParams) {
 function useVirtualization(
   store: Store<BaseState>,
   params: VirtualizerParams,
-  api: { dimensions: Dimensions.API; virtualization: Virtualization.API },
+  api: Dimensions.API & { calculateColSpan: any },
 ) {
   const {
     initialState,
@@ -383,14 +383,14 @@ function useVirtualization(
         const minFirstColumn = pinnedColumns.left.length;
         const maxLastColumn = columns.length - pinnedColumns.right.length;
 
-        api.virtualization.calculateColSpan(id, minFirstColumn, maxLastColumn, columns);
+        api.calculateColSpan(id, minFirstColumn, maxLastColumn, columns);
 
         if (pinnedColumns.left.length > 0) {
-          api.virtualization.calculateColSpan(id, 0, pinnedColumns.left.length, columns);
+          api.calculateColSpan(id, 0, pinnedColumns.left.length, columns);
         }
 
         if (pinnedColumns.right.length > 0) {
-          api.virtualization.calculateColSpan(
+          api.calculateColSpan(
             id,
             columns.length - pinnedColumns.right.length,
             columns.length,
@@ -399,8 +399,8 @@ function useVirtualization(
         }
       }
 
-      const baseRowHeight = !api.dimensions.rowsMeta.rowHasAutoHeight(id)
-        ? api.dimensions.rowsMeta.getRowHeight(id)
+      const baseRowHeight = !api.rowsMeta.rowHasAutoHeight(id)
+        ? api.rowsMeta.getRowHeight(id)
         : 'auto';
 
       let isFirstVisible = false;
@@ -640,7 +640,7 @@ function useVirtualization(
 
   return {
     getters,
-    use: () => useSelector(store, (state) => state),
+    useVirtualization: () => useSelector(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
     calculateColSpan,

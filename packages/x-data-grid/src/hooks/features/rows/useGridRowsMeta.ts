@@ -60,7 +60,7 @@ export const useGridRowsMeta = (
     rowHasAutoHeight,
     getRowHeightEntry,
     getLastMeasuredRowIndex,
-  } = virtualizer.dimensions.rowsMeta;
+  } = virtualizer.api.rowsMeta;
 
   useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
 

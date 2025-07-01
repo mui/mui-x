@@ -85,7 +85,7 @@ export function useGridVirtualization(
 
   useGridApiMethod(apiRef, api, 'public');
 
-  const forceUpdateRenderContext = virtualizer.virtualization.forceUpdateRenderContext;
+  const forceUpdateRenderContext = virtualizer.api.forceUpdateRenderContext;
 
   apiRef.current.register('private', {
     updateRenderContext: forceUpdateRenderContext,

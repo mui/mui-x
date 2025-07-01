@@ -32,7 +32,7 @@ function initializeState(_params: VirtualizerParams) {
 function useColspan(
   store: Store<BaseState & Colspan.State>,
   params: VirtualizerParams,
-  api: { virtualization: Virtualization.API },
+  api: Virtualization.API,
 ) {
   const resetColSpan = () => {
     store.state.colspanMap = new Map();
@@ -62,7 +62,7 @@ function useColspan(
     },
   );
 
-  api.virtualization.calculateColSpan = calculateColSpan;
+  api.calculateColSpan = calculateColSpan;
 
   return {
     resetColSpan,

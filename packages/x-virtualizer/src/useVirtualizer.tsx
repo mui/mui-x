@@ -4,6 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { Store } from '@mui/x-internals/store';
 import { Colspan } from './features/colspan';
 import { Dimensions } from './features/dimensions';
+import { Keyboard } from './features/keyboard';
 import { Virtualization } from './features/virtualization';
 import type { RowId } from './models/core';
 import type { HeightEntry, RowSpacing, RowVisibilityParams } from './models/dimensions';
@@ -131,56 +132,25 @@ export type VirtualizerParams = {
   };
 };
 
+const FEATURES = [Dimensions, Virtualization, Colspan, Keyboard] as const;
+
 export const useVirtualizer = (params: VirtualizerParams) => {
   const store = useLazyRef(() => {
-    const state = {
-      ...Dimensions.initialize(params),
-      ...Virtualization.initialize(params),
-      ...Colspan.initialize(params),
-    };
-    return new Store(state);
+    return new Store(
+      FEATURES.map((f) => f.initialize(params)).reduce(
+        (state, partial) => Object.assign(state, partial),
+        {},
+      ) as Dimensions.State & Virtualization.State & Colspan.State & Keyboard.State,
+    );
   }).current;
 
-  const api = {} as {
-    dimensions: Dimensions.API;
-    virtualization: Virtualization.API;
-    colspan: Colspan.API;
-  };
-  api.dimensions = Dimensions.use(store, params, api);
-  api.virtualization = Virtualization.use(store, params, api);
-  api.colspan = Colspan.use(store, params, api);
-
-  /* Extra APIs moved here (could be reorganized in a separate file) */
-
-  const getViewportPageSize = () => {
-    const dimensions = Dimensions.selectors.dimensions(store.state);
-    if (!dimensions.isReady) {
-      return 0;
-    }
-
-    // TODO: Use a combination of scrollTop, dimensions.viewportInnerSize.height and rowsMeta.possitions
-    // to find out the maximum number of rows that can fit in the visible part of the grid
-    if (params.getRowHeight) {
-      const renderContext = Virtualization.selectors.renderContext(store.state);
-      const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
-
-      return Math.min(viewportPageSize - 1, params.rows.length);
-    }
-
-    const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / dimensions.rowHeight,
-    );
-
-    return Math.min(maximumPageSizeWithoutScrollBar, params.rows.length);
-  };
+  const api = {} as Dimensions.API & Virtualization.API & Colspan.API & Keyboard.API;
+  for (const feature of FEATURES) {
+    Object.assign(api, feature.use(store, params, api));
+  }
 
   return {
     store,
-    colspan: api.colspan,
-    dimensions: api.dimensions,
-    virtualization: api.virtualization,
-    extra: {
-      getViewportPageSize,
-    },
+    api,
   };
 };
