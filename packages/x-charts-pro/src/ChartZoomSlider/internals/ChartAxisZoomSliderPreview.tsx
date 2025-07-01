@@ -9,7 +9,7 @@ import {
 import { alpha } from '@mui/system';
 import useId from '@mui/utils/useId';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
-import { ChartAxisZoomSliderChartPreview } from './ChartAxisZoomSliderChartPreview';
+import { ChartAxisZoomSliderPreviewContent } from './ChartAxisZoomSliderPreviewContent';
 
 const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
   rx: 4,
@@ -38,7 +38,7 @@ export function ChartAxisZoomSliderPreview({
     <g {...props}>
       <PreviewRectangles {...props} axisId={axisId} axisDirection={axisDirection} />
       <rect {...props} fill="transparent" rx={4} ry={4} />
-      <ChartAxisZoomSliderChartPreview axisId={axisId} {...props} />
+      <ChartAxisZoomSliderPreviewContent axisId={axisId} {...props} />
     </g>
   );
 }

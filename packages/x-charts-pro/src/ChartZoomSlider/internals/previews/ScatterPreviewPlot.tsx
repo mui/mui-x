@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  AxisId,
   selectorChartComputedXAxes,
   selectorChartComputedYAxes,
   useSelector,
@@ -9,7 +8,6 @@ import {
   ColorGetter,
   useScatterPlotData,
   scatterSeriesConfig,
-  ZoomMap,
 } from '@mui/x-charts/internals';
 import {
   ChartDrawingArea,
@@ -20,15 +18,9 @@ import {
 } from '@mui/x-charts/hooks';
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
 import { DefaultizedScatterSeriesType } from '@mui/x-charts/models';
+import { PreviewPlotProps } from './PreviewPlot.types';
 
-interface ScatterPreviewPlotProps {
-  axisId: AxisId;
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-  zoomMap: ZoomMap;
-}
+interface ScatterPreviewPlotProps extends PreviewPlotProps {}
 
 export function ScatterPreviewPlot({
   axisId,

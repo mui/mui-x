@@ -11,20 +11,14 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { AreaElement } from '@mui/x-charts/LineChart';
+import { PreviewPlotProps } from './PreviewPlot.types';
 
 const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
 })();
 
-interface AreaPreviewPlotProps {
-  axisId: AxisId;
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-  zoomMap: ZoomMap;
-}
+interface AreaPreviewPlotProps extends PreviewPlotProps {}
 
 export function AreaPreviewPlot({ axisId, x, y, height, width, zoomMap }: AreaPreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {

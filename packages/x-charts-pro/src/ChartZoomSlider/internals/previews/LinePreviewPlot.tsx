@@ -10,15 +10,9 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { LineElement } from '@mui/x-charts/LineChart';
+import { PreviewPlotProps } from './PreviewPlot.types';
 
-interface LinePreviewPlotProps {
-  axisId: AxisId;
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-  zoomMap: ZoomMap;
-}
+interface LinePreviewPlotProps extends PreviewPlotProps {}
 
 export function LinePreviewPlot({ axisId, x, y, height, width, zoomMap }: LinePreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {

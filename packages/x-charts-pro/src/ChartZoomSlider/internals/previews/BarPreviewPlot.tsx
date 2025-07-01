@@ -10,15 +10,9 @@ import {
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
+import { PreviewPlotProps } from './PreviewPlot.types';
 
-interface BarPreviewPlotProps {
-  axisId: AxisId;
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-  zoomMap: ZoomMap;
-}
+interface BarPreviewPlotProps extends PreviewPlotProps {}
 
 export function BarPreviewPlot(props: BarPreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {
