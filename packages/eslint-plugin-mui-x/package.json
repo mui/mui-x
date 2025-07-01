@@ -1,8 +1,13 @@
 {
-  "name": "eslint-plugin-material-ui",
+  "name": "eslint-plugin-mui-x",
   "private": true,
   "description": "Custom eslint rules for MUI X.",
-  "main": "src/index.js",
+  "type": "module",
+  "main": "src/index.mjs",
+  "module": "src/index.mjs",
+  "dependencies": {
+    "@typescript-eslint/utils": "^8.35.1"
+  },
   "devDependencies": {
     "@types/eslint": "^9.6.1",
     "@typescript-eslint/parser": "catalog:",

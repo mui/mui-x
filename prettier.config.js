@@ -1,1 +1,3 @@
-module.exports = require('@mui/monorepo/prettier.config');
+import { createBaseConfig } from '@mui/internal-code-infra/prettier';
+
+export default createBaseConfig();
