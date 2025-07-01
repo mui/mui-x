@@ -4,26 +4,17 @@ packages:
   - test
   - test/*
   - bundle-size
-ignoredBuiltDependencies:
-  - '@mui/monorepo'
-  - msw
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@vvago/vale'
-  - 'core-js'
-  - 'esbuild'
-  - 'nx'
-  - 'sharp'
+
 catalog:
-  '@babel/core': ^7.27.4
+  '@babel/core': ^7.27.7
   '@babel/plugin-transform-react-constant-elements': ^7.27.1
   '@babel/plugin-transform-runtime': ^7.27.4
   '@babel/preset-typescript': ^7.27.1
   '@babel/runtime': ^7.27.6
-  '@babel/traverse': ^7.27.4
+  '@babel/traverse': ^7.27.7
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
-  '@emotion/styled': ^11.14.0
+  '@emotion/styled': ^11.14.1
   '@mui/icons-material': ^7.1.2
   '@mui/internal-test-utils': ^2.0.9
   '@mui/material': ^7.1.2
@@ -32,22 +23,22 @@ catalog:
   '@mui/utils': ^7.1.1
   '@playwright/test': ^1.53.1
   '@react-spring/web': ^10.0.1
-  '@types/chance': ^1.1.6
+  '@types/chance': ^1.1.7
   '@types/d3-scale': ^4.0.9
   '@types/format-util': ^1.0.4
   '@types/karma': ^6.3.9
-  '@types/lodash': ^4.17.18
+  '@types/lodash': ^4.17.19
   '@types/luxon': ^3.6.2
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
   '@types/prop-types': ^15.7.15
-  '@types/react': 19.0.12
-  '@types/react-dom': 19.0.4
+  '@types/react': 19.1.8
+  '@types/react-dom': 19.1.6
   '@types/react-router': ^5.1.20
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.0
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.34.1
+  '@typescript-eslint/parser': ^8.35.1
   autoprefixer: ^10.4.21
   babel-plugin-module-resolver: ^5.0.2
   babel-plugin-optimize-clsx: ^2.6.2
@@ -70,9 +61,9 @@ catalog:
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.0
   prop-types: ^15.8.1
-  react: 19.0.0
-  react-dom: 19.0.0
-  react-router: ^7.6.2
+  react: 19.1.0
+  react-dom: 19.1.0
+  react-router: ^7.6.3
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.0.1
@@ -88,3 +79,16 @@ catalog:
   '@vitest/ui': ^3.2.4
   webpack-bundle-analyzer: ^4.10.2
   yargs: ^18.0.0
+
+ignoredBuiltDependencies:
+  - '@mui/monorepo'
+  - msw
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - '@vvago/vale'
+  - core-js
+  - esbuild
+  - nx
+  - sharp
+  - unrs-resolver

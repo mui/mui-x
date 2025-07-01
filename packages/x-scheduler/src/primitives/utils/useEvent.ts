@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { getAdapter } from './adapter/getAdapter';
 import { useOnEveryMinuteStart } from './useOnEveryMinuteStart';

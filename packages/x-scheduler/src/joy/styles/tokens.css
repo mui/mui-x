@@ -223,9 +223,8 @@
   --code-padding-bottom: 0.12em;
   --code-padding-left: 0.24em;
   --code-padding-right: 0.24em;
-}
 
-.mode-light {
+  /* Mode-light */
   --mauve-1: #fdfcfd;
   --mauve-2: #faf9fb;
   --mauve-2-rgb: 250, 249, 251;
@@ -324,7 +323,7 @@
   --shadow-tint: 215 22% 17%;
 }
 
-.mode-dark {
+.mode-dark .joy {
   --mauve-1: #121113;
   --mauve-2: #1a191b;
   --mauve-2-rgb: 26, 25, 27;
@@ -419,6 +418,6 @@
   --shadow-tint: 0 0% 0%;
 }
 
-body {
+body .joy {
   background-color: var(--surface);
 }
