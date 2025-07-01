@@ -1,4 +1,4 @@
-.EventTitle {
+.DayGridEventTitle {
   margin: 0;
   color: var(--event-primary-text);
   font-weight: var(--font-weight-2);
@@ -6,7 +6,7 @@
   line-height: var(--line-height-1);
 }
 
-.EventTime {
+.DayGridEventTime {
   display: inline-block;
   color: var(--event-secondary-text);
   font-weight: var(--font-weight-1);
@@ -23,13 +23,13 @@
   cursor: pointer;
 }
 
-.EventCard--compact .EventCardContent {
+.EventCard--compact .DayGridEventCardContent {
   margin: 0;
   position: relative;
   padding: var(--space-1) var(--space-2) var(--space-1) var(--space-7);
 }
 
-.EventCard--compact .EventCardContent::before {
+.EventCard--compact .DayGridEventCardContent::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -52,23 +52,23 @@
 
 /* Smaller containers (month view) */
 @container (width < 300px) {
-  .EventCard--compact .EventCardContent {
+  .EventCard--compact .DayGridEventCardContent {
     padding: 0 0 0 var(--space-5);
   }
 
-  .EventTime {
+  .DayGridEventTime {
     display: inline;
   }
 
-  .EventTimeEnd {
+  .DayGridEventTimeEnd {
     display: none;
   }
 
-  .EventTitle {
+  .DayGridEventTitle {
     margin-inline-start: var(--space-1);
   }
 
-  .EventCard--compact .EventCardContent::before {
+  .EventCard--compact .DayGridEventCardContent::before {
     left: var(--space-1);
   }
 }

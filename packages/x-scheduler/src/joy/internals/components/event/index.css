@@ -14,12 +14,6 @@
   --allDay-accepted-primary-text: var(--event-color-12);
 }
 
-.mode-dark .EventContainer {
-  --regular-accepted-bg: var(--event-color-3);
-  --compact-accepted-bg: transparent;
-  --allDay-accepted-bg: var(--event-color-5);
-}
-
 .EventCard--regular {
   --event-background: var(--regular-accepted-bg);
   --event-primary-text: var(--regular-accepted-primary-text);
