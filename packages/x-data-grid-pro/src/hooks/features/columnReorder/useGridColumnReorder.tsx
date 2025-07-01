@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
@@ -84,6 +85,58 @@ export const useGridColumnReorder = (
     };
   }, []);
 
+  const handleDragEnd = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
+    (params, event): void => {
+      const dragColField = gridColumnReorderDragColSelector(apiRef);
+      if (props.disableColumnReorder || !dragColField) {
+        return;
+      }
+
+      logger.debug('End dragging col');
+      event.preventDefault();
+      // Prevent drag events propagation.
+      // For more information check here https://github.com/mui/mui-x/issues/2680.
+      event.stopPropagation();
+
+      clearTimeout(removeDnDStylesTimeout.current);
+
+      // For more information check here https://github.com/mui/mui-x/issues/14678
+      if (dragColNode.current!.classList.contains(classes.columnHeaderDragging)) {
+        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
+      }
+
+      dragColNode.current = null;
+
+      // Check if the column was dropped outside the grid.
+      if (event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside) {
+        // Accessing params.field may contain the wrong field as header elements are reused
+        apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
+        originColumnIndex.current = null;
+      } else {
+        // Emit the columnOrderChange event only once when the reordering stops.
+        const columnOrderChangeParams: GridColumnOrderChangeParams = {
+          column: apiRef.current.getColumn(dragColField),
+          targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragColField),
+          oldIndex: originColumnIndex.current!,
+        };
+
+        apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
+      }
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        columnReorder: { ...state.columnReorder, dragCol: '' },
+      }));
+    },
+    [
+      apiRef,
+      props.disableColumnReorder,
+      props.keepColumnPositionIfDraggedOutside,
+      logger,
+      classes.columnHeaderDragging,
+    ],
+  );
+
   const handleDragStart = React.useCallback<GridEventListener<'columnHeaderDragStart'>>(
     (params, event) => {
       if (props.disableColumnReorder || params.colDef.disableReorder) {
@@ -97,6 +150,13 @@ export const useGridColumnReorder = (
 
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(classes.columnHeaderDragging);
+
+      const handleDragEndEvent = (dragEndEvent: DragEvent) => {
+        dragColNode.current!.removeEventListener('dragend', handleDragEndEvent);
+        apiRef.current.publishEvent('columnHeaderDragEndNative', params, dragEndEvent);
+      };
+      dragColNode.current.addEventListener('dragend', handleDragEndEvent);
+
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
       }
@@ -297,62 +357,10 @@ export const useGridColumnReorder = (
     [apiRef, logger, isRtl],
   );
 
-  const handleDragEnd = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
-    (params, event): void => {
-      const dragColField = gridColumnReorderDragColSelector(apiRef);
-      if (props.disableColumnReorder || !dragColField) {
-        return;
-      }
-
-      logger.debug('End dragging col');
-      event.preventDefault();
-      // Prevent drag events propagation.
-      // For more information check here https://github.com/mui/mui-x/issues/2680.
-      event.stopPropagation();
-
-      clearTimeout(removeDnDStylesTimeout.current);
-
-      // For more information check here https://github.com/mui/mui-x/issues/14678
-      if (dragColNode.current!.classList.contains(classes.columnHeaderDragging)) {
-        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
-      }
-
-      dragColNode.current = null;
-
-      // Check if the column was dropped outside the grid.
-      if (event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside) {
-        // Accessing params.field may contain the wrong field as header elements are reused
-        apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
-        originColumnIndex.current = null;
-      } else {
-        // Emit the columnOrderChange event only once when the reordering stops.
-        const columnOrderChangeParams: GridColumnOrderChangeParams = {
-          column: apiRef.current.getColumn(dragColField),
-          targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragColField),
-          oldIndex: originColumnIndex.current!,
-        };
-
-        apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
-      }
-
-      apiRef.current.setState((state) => ({
-        ...state,
-        columnReorder: { ...state.columnReorder, dragCol: '' },
-      }));
-    },
-    [
-      apiRef,
-      props.disableColumnReorder,
-      props.keepColumnPositionIfDraggedOutside,
-      logger,
-      classes.columnHeaderDragging,
-    ],
-  );
-
   useGridEvent(apiRef, 'columnHeaderDragStart', handleDragStart);
   useGridEvent(apiRef, 'columnHeaderDragEnter', handleDragEnter);
   useGridEvent(apiRef, 'columnHeaderDragOver', handleDragOver);
-  useGridEvent(apiRef, 'columnHeaderDragEnd', handleDragEnd);
+  useGridEvent(apiRef, 'columnHeaderDragEndNative', handleDragEnd);
   useGridEvent(apiRef, 'cellDragEnter', handleDragEnter);
   useGridEvent(apiRef, 'cellDragOver', handleDragOver);
   useGridEventPriority(apiRef, 'columnOrderChange', props.onColumnOrderChange);

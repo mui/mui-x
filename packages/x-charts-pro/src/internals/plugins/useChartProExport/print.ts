@@ -23,8 +23,6 @@ export function printChart(
 
     await Promise.all(loadStyleSheets(printDoc, root));
 
-    printWindow.contentWindow!.print();
-
     const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
     mediaQueryList.addEventListener('change', (mql) => {
       const isAfterPrint = mql.matches === false;
@@ -32,6 +30,9 @@ export function printChart(
         doc.body.removeChild(printWindow);
       }
     });
+
+    printWindow.contentWindow!.print();
   };
+
   doc.body.appendChild(printWindow);
 }

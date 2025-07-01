@@ -101,8 +101,28 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-image-export-trigger',
+    title: 'ChartsToolbarImageExportTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-print-export-trigger',
+    title: 'ChartsToolbarPrintExportTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-toolbar-pro',
     title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
+    title: 'ChartsToolbarZoomInTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-trigger',
+    title: 'ChartsToolbarZoomOutTrigger',
     plan: 'pro',
   },
   {
@@ -164,6 +184,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/heatmap-tooltip-content',
+    title: 'HeatmapTooltipContent',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },
@@ -221,6 +246,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'PieChart',
   },
   {
+    pathname: '/x/api/charts/pie-chart-pro',
+    title: 'PieChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
   },
@@ -233,8 +263,9 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarChart',
   },
   {
-    pathname: '/x/api/charts/radar-data-provider',
-    title: 'RadarDataProvider',
+    pathname: '/x/api/charts/radar-chart-pro',
+    title: 'RadarChartPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/radar-grid',

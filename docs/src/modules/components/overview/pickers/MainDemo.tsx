@@ -65,6 +65,14 @@ const components: Components<Theme> = {
   },
 };
 
+// Use CSS variables to avoid first load light/dark blink.
+const darkThemeManagement = {
+  colorSchemes: { light: true, dark: true },
+  cssVariables: {
+    colorSchemeSelector: 'data-mui-color-scheme',
+  },
+};
+
 export default function MainDemo() {
   const brandingTheme = useTheme();
   const isMobile = useMediaQuery(brandingTheme.breakpoints.down('sm'));
@@ -77,7 +85,7 @@ export default function MainDemo() {
     setShowCustomTheme((prev) => !prev);
   };
 
-  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
+  const theme = createTheme(darkThemeManagement, { palette: { mode: brandingTheme.palette.mode } });
   const customTheme = createTheme(brandingTheme, {
     components,
     shape: { borderRadius: 8 },

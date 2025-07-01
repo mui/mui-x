@@ -6,7 +6,6 @@ import { data } from './randomData';
 export default function ScatterCustomShape() {
   return (
     <ScatterChart
-      width={600}
       height={300}
       series={[
         {

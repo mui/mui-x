@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { Theme } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
@@ -108,7 +108,7 @@ export interface DateRangeCalendarProps
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate?: PickerValidDate;
+  referenceDate?: PickerValidDate | [PickerValidDate, PickerValidDate];
   /**
    * The number of calendars to render.
    * @default 2

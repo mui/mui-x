@@ -1,11 +1,12 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_debounce as debounce } from '@mui/utils';
+import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useId from '@mui/utils/useId';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { QuickFilterContext, QuickFilterState } from './QuickFilterContext';
-import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
@@ -201,7 +202,7 @@ function QuickFilter(props: QuickFilterProps) {
     }
   }, []);
 
-  const element = useGridComponentRenderer(
+  const element = useComponentRenderer(
     'div',
     render,
     {

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
@@ -23,7 +22,7 @@ import {
   includeRowSelection,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
@@ -580,7 +579,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     // HTMLElement.focus() only scrolls to the element on a real browser
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should not jump during scroll while the focus is on the checkbox',
       async () => {
         const data = getBasicGridData(20, 1);
@@ -638,7 +637,7 @@ describe('<DataGrid /> - Row selection', () => {
     //
     //     // JSDOM doesn't fire "blur" when .focus is called in another element
     //     // FIXME Firefox doesn't show any ripple
-    //     testSkipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
+    //     it.skipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
     //       render(<TestDataGridSelection checkboxSelection />);
     //       const cell = getCell(1, 1);
     //       fireUserEvent.mousePress(cell);

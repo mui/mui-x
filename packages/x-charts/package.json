@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.3.1",
+  "version": "8.6.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "main": "src/index.js",
@@ -38,15 +38,16 @@
     "directory": "packages/x-charts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
-    "@mui/utils": "^7.0.2",
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
     "@mui/x-charts-vendor": "workspace:*",
     "@mui/x-internals": "workspace:*",
+    "@mui/x-internal-gestures": "workspace:*",
     "bezier-easing": "^2.1.0",
-    "clsx": "^2.1.1",
-    "prop-types": "^15.8.1",
-    "reselect": "^5.1.1",
-    "use-sync-external-store": "^1.5.0"
+    "clsx": "catalog:",
+    "prop-types": "catalog:",
+    "reselect": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -65,15 +66,15 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
-    "@mui/material": "^7.0.2",
-    "@mui/system": "^7.0.2",
-    "@types/prop-types": "^15.7.14",
-    "@types/use-sync-external-store": "^1.5.0",
-    "csstype": "^3.1.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "rimraf": "^6.0.1"
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
+    "csstype": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

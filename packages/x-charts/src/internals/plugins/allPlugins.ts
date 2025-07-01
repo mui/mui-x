@@ -22,6 +22,14 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartVoronoiSignature,
 ];
 
+export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
+  UseChartZAxisSignature,
+  UseChartCartesianAxisSignature<TSeries>,
+  UseChartInteractionSignature,
+  UseChartHighlightSignature,
+  UseChartVoronoiSignature,
+];
+
 export const DEFAULT_PLUGINS = [
   useChartZAxis,
   useChartCartesianAxis,

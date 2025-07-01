@@ -558,11 +558,6 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': selectedStyles,
     },
-    [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
-      '[role=row]': {
-        background: vars.colors.background.base,
-      },
-    },
 
     /* Cell styles */
     [`& .${c.cell}`]: {
@@ -651,7 +646,7 @@ export const GridRootStyles = styled('div', {
       opacity: vars.colors.interactive.disabledOpacity,
     },
     [`& .${c['rowReorderCell--draggable']}`]: {
-      cursor: 'move',
+      cursor: 'grab',
       opacity: 1,
     },
     [`& .${c.rowReorderCellContainer}`]: {
@@ -764,6 +759,9 @@ export const GridRootStyles = styled('div', {
     },
 
     /* ScrollbarFiller styles */
+    [`& .${c.columnHeaders} .${c.scrollbarFiller}`]: {
+      backgroundColor: headerBackground,
+    },
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
@@ -785,6 +783,9 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
+    },
+    [`& .${c.columnHeaders} .${c.filler}`]: {
+      backgroundColor: headerBackground,
     },
 
     /* Hide grid rows, row filler, and vertical scrollbar. Used when skeleton/no columns overlay is visible */

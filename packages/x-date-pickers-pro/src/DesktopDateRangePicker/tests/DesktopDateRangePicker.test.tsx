@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -16,7 +15,7 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -482,7 +481,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     // test:unit does not call `blur` when focusing another element.
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should call onClose when blur the current field without prior change (multi input field)',
       async () => {
         const onChange = spy();
@@ -693,6 +692,23 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
+    });
+
+    it('should work with separate start and end "reference" dates', async () => {
+      const { user } = render(
+        <DesktopDateRangePicker
+          referenceDate={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-06')]}
+          defaultRangePosition="end"
+        />,
+      );
+
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
+
+      expect(document.activeElement).to.equal(getPickerDay('6'));
     });
   });
 
