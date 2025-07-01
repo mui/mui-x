@@ -129,7 +129,7 @@ export const MonthView = React.memo(
                             ) : (
                               renderCellNumberContent(day.date)
                             )}
-                            {getEventsStartingInDay(day.date).map((eventProp: CalendarEvent) => (
+                            {day.events.map((eventProp: CalendarEvent) => (
                               // TODO: Issue 18554 - Style the event (compact variant)
                               <DayGrid.Event
                                 key={eventProp.id}
