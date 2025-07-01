@@ -10,10 +10,10 @@ import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
+import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { SchedulerValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
-import { getColorClassName } from '../internals/utils/color-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import './MonthView.css';
 
@@ -128,30 +128,16 @@ export const MonthView = React.memo(
                             ) : (
                               renderCellNumberContent(day.date)
                             )}
-                            {day.events.map((eventProp) => {
-                              const eventResource = resourcesByIdMap.get(eventProp.resource);
-                              return (
-                                // TODO: Issue 18554 - Style the event (compact variant)
-                                <DayGrid.Event
-                                  key={eventProp.id}
-                                  start={eventProp.start}
-                                  end={eventProp.end}
-                                  onClick={(event) => onEventClick(event, eventProp)}
-                                  className={clsx(
-                                    'MonthViewEvent',
-                                    className,
-                                    getColorClassName({ resource: eventResource }),
-                                  )}
-                                >
-                                  <span
-                                    className="LinesClamp"
-                                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
-                                  >
-                                    {eventProp.title}
-                                  </span>
-                                </DayGrid.Event>
-                              );
-                            })}
+                            {day.events.map((eventProp) => (
+                              <DayGridEvent
+                                key={eventProp.id}
+                                event={eventProp}
+                                eventResource={resourcesByIdMap.get(eventProp.resource)}
+                                variant="compact"
+                                ariaLabelledBy={`MonthViewHeaderCell-${day.date.toString()}`}
+                                onEventClick={onEventClick}
+                              />
+                            ))}
                           </DayGrid.Cell>
                         );
                       })}

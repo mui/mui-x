@@ -1,0 +1,44 @@
+.EventCard {
+  border-radius: var(--radius-4);
+  background-color: var(--event-background);
+}
+
+.EventTitle {
+  margin: 0;
+  color: var(--event-primary-text);
+  font-weight: var(--font-weight-2);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+}
+
+.EventTime {
+  color: var(--event-secondary-text);
+  font-weight: var(--font-weight-1);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+}
+
+.EventCard--compact {
+  position: relative;
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1) 0 var(--space-1) var(--space-4);
+}
+
+.EventCard--compact::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: 50%;
+  border: 1px solid var(--compact-circle-bg);
+  background-color: var(--compact-circle-bg);
+}
+
+.EventCard--compact .EventTime {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
