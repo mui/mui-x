@@ -72,17 +72,29 @@ const scanAdditionalRange = (
   totalRange: RowRange,
   rangeToProcess: RowRange,
 ) => {
-  const spannedCells = { ...state.spannedCells };
-  const hiddenCells = { ...state.hiddenCells };
-  const hiddenCellOriginMap = { ...state.hiddenCellOriginMap };
+  const newState = { ...state };
 
-  let didUpdate = false;
+  let didUpdate = {
+    spannedCells: false,
+    hiddenCells: false,
+    hiddenCellOriginMap: false,
+  };
 
-  const write = (target: any, rowId: GridRowId, columnIndex: number, value: any) => {
-    target[rowId] ??= {};
-    if (target[rowId][columnIndex] !== value) {
-      didUpdate = true;
+  const write = (
+    field: 'spannedCells' | 'hiddenCells' | 'hiddenCellOriginMap',
+    rowId: GridRowId,
+    columnIndex: number,
+    value: any,
+  ) => {
+    let target = newState[field] as any;
+    if (target[rowId]?.[columnIndex] !== value) {
+      if (!didUpdate[field]) {
+        didUpdate[field] = true;
+        newState[field] = { ...(newState[field] as any) };
+        target = newState[field] as any;
+      }
     }
+    target[rowId] ??= {};
     target[rowId][columnIndex] = value;
   };
 
@@ -98,7 +110,7 @@ const scanAdditionalRange = (
     ) {
       const row = rows[index];
 
-      if (hiddenCells[row.id]?.[columnIndex]) {
+      if (newState.hiddenCells[row.id]?.[columnIndex]) {
         continue;
       }
       const cellValue = getCellValue(row.model, colDef, apiRef);
@@ -121,8 +133,7 @@ const scanAdditionalRange = (
           getCellValue(prevRowEntry.model, colDef, apiRef) === cellValue
         ) {
           const currentRow = rows[prevIndex + 1];
-          write(hiddenCells, currentRow.id, columnIndex, true);
-          didUpdate = true;
+          write('hiddenCells', currentRow.id, columnIndex, true);
           backwardsHiddenCells.push(index);
           rowSpan += 1;
           spannedRowId = prevRowEntry.id;
@@ -134,7 +145,7 @@ const scanAdditionalRange = (
       }
 
       backwardsHiddenCells.forEach((hiddenCellIndex) => {
-        write(hiddenCellOriginMap, hiddenCellIndex, columnIndex, spannedRowIndex);
+        write('hiddenCellOriginMap', hiddenCellIndex, columnIndex, spannedRowIndex);
       });
 
       // Scan the next rows
@@ -145,24 +156,27 @@ const scanAdditionalRange = (
         getCellValue(rows[relativeIndex].model, colDef, apiRef) === cellValue
       ) {
         const currentRow = rows[relativeIndex];
-        write(hiddenCells, currentRow.id, columnIndex, true);
-        write(hiddenCellOriginMap, relativeIndex, columnIndex, spannedRowIndex);
+        write('hiddenCells', currentRow.id, columnIndex, true);
+        write('hiddenCellOriginMap', relativeIndex, columnIndex, spannedRowIndex);
         relativeIndex += 1;
         rowSpan += 1;
       }
 
       if (rowSpan > 0) {
-        write(spannedCells, spannedRowId, columnIndex, rowSpan + 1);
+        write('spannedCells', spannedRowId, columnIndex, rowSpan + 1);
       }
     }
   });
 
-  const processedRange = {
+  newState.processedRange = {
     firstRowIndex: Math.min(state.processedRange.firstRowIndex, rangeToProcess.firstRowIndex),
     lastRowIndex: Math.max(state.processedRange.lastRowIndex, rangeToProcess.lastRowIndex),
   };
 
-  return [{ spannedCells, hiddenCells, hiddenCellOriginMap, processedRange }, didUpdate] as const;
+  return [
+    newState,
+    didUpdate.spannedCells || didUpdate.hiddenCells || didUpdate.hiddenCellOriginMap,
+  ] as const;
 };
 
 /**
@@ -233,6 +247,7 @@ export const useGridRowSpanning = (
       }
 
       let rowSpanning = apiRef.current.state.rowSpanning;
+
       if (resetState) {
         rowSpanning = createEmptyState();
       }
@@ -270,10 +285,12 @@ export const useGridRowSpanning = (
         return;
       }
 
-      apiRef.current.setState((state) => ({
-        ...state,
-        rowSpanning,
-      }));
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          rowSpanning,
+        };
+      });
     },
     [apiRef, props.pagination, props.paginationMode],
   );
