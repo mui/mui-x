@@ -72,6 +72,46 @@ pnpm test:browser BarChart
 
 This will run only the test that has `it.only` in it and will ignore all other tests in the file.
 
+## Regression tests
+
+These tests parse the documentation demo examples and run them in a browser environment to ensure that the visual output matches the expected output.
+
+Browser renders each demo example, takes a screenshot of the rendered output, and pushes it to Argos, a visual regression testing service.
+
+Argos compares the screenshots with the baseline image and reports any visual differences.
+
+### How to run
+
+You can run the regression tests locally by running the following command:
+
+```bash
+pnpm test:regressions:dev
+```
+
+> [!IMPORTANT]
+> Ensure that you have the packages built before running the regression tests.
+>
+> If you are trying to fix a test only in one package, you can rebuild only that package before rerunning the tests.
+
+### Browsing the regression tests suite
+
+If you want to have the option to freely browse the regression tests suite and analyze the results, you can run the following command:
+
+```bash
+pnpm --filter @mui-x-internal/test-regressions run dev
+```
+
+or
+
+```bash
+// move to the the test-regressions package
+cd test/regressions
+// then run the dev script
+pnpm run dev
+```
+
+After the command is executed, you can open the browser and go to `http://localhost:5001/#dev` to see the regression tests suite.
+
 ## Running tests against specific React of Material UI versions
 
 ### Testing multiple versions of React
