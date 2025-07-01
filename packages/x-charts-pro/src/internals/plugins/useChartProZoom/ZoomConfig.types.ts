@@ -32,6 +32,8 @@ export type PanInteraction =
   | OnDragInteraction
   | OnDoubleDragInteraction
   | OnPressAndDragInteraction;
+
+export type InteractionName = ZoomInteraction['type'] | PanInteraction['type'];
 export type InteractionMode = 'touch' | 'mouse' | 'all';
 
 export type OnWheelInteraction = {

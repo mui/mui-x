@@ -18,17 +18,14 @@ import {
   zoomAtPoint,
 } from './useZoom.utils';
 import { isKeyPressed } from '../isKeyPressed';
+import { selectorZoomConfig } from '../ZoomConfig.selectors';
 
 export const useZoomOnWheel = (
   {
     store,
     instance,
     svgRef,
-    params,
-  }: Pick<
-    Parameters<ChartPlugin<UseChartProZoomSignature>>[0],
-    'store' | 'instance' | 'svgRef' | 'params'
-  >,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
@@ -37,22 +34,24 @@ export const useZoomOnWheel = (
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const pressedKeysRef = React.useRef<Set<string>>(new Set());
-  const config = params.zoomConfig.zoom.onWheel;
+  const config = useSelector(store, selectorZoomConfig, ['onWheel' as const]);
 
   React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      pressedKeysRef.current.add(event.key.length === 1 ? event.key.toLowerCase() : event.key);
-    };
-    const handleKeyUp = (event: KeyboardEvent) => {
-      pressedKeysRef.current.delete(event.key.length === 1 ? event.key.toLowerCase() : event.key);
-    };
+    const pressedKeysSet = pressedKeysRef.current;
+    if (!isZoomEnabled || !config) {
+      return () => {};
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => pressedKeysRef.current.add(event.key);
+    const handleKeyUp = (event: KeyboardEvent) => pressedKeysRef.current.delete(event.key);
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      pressedKeysSet.clear();
     };
-  }, []);
+  }, [config, isZoomEnabled]);
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
@@ -64,7 +63,7 @@ export const useZoomOnWheel = (
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
-      if (!isKeyPressed(pressedKeysRef.current, config.keys)) {
+      if (!isKeyPressed(pressedKeysRef.current, config?.keys)) {
         return;
       }
 

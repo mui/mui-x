@@ -201,7 +201,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   }, [removeIsInteracting]);
 
   // Add events
-  const pluginData = { store, instance, svgRef, params };
+  const pluginData = { store, instance, svgRef };
 
   usePanOnDrag(pluginData, setZoomDataCallback);
 
@@ -252,13 +252,6 @@ useChartProZoom.params = {
   zoomConfig: true,
 };
 
-useChartProZoom.getDefaultizedParams = ({ params }) => {
-  return {
-    ...params,
-    zoomConfig: defaultizeZoomConfig(params.zoomConfig),
-  };
-};
-
 useChartProZoom.getInitialState = (params) => {
   const { initialZoom, zoomData, defaultizedXAxis, defaultizedYAxis } = params;
 
@@ -275,6 +268,7 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
+      zoomConfig: defaultizeZoomConfig(params.zoomConfig),
     },
   };
 };

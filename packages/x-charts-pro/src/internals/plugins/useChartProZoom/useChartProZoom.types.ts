@@ -30,10 +30,8 @@ export interface UseChartProZoomParameters {
   zoomConfig?: ZoomConfig;
 }
 
-export type UseChartProZoomDefaultizedParameters = Omit<UseChartProZoomParameters, 'zoomConfig'> &
-  UseChartCartesianAxisDefaultizedParameters & {
-    zoomConfig: DefaultizedZoomConfig;
-  };
+export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
+  UseChartCartesianAxisDefaultizedParameters;
 
 export interface UseChartProZoomState {
   zoom: {
@@ -50,6 +48,10 @@ export interface UseChartProZoomState {
      * Internal information to know if the user control the state or not.
      */
     isControlled: boolean;
+    /**
+     * Configuration for zoom interactions.
+     */
+    zoomConfig: DefaultizedZoomConfig;
   };
 }
 

@@ -20,6 +20,6 @@ export function isKeyPressed(set: Set<string>, keys?: string[]): boolean {
       return set.has('Control') || set.has('Meta');
     }
     // For letter keys
-    return set.has(key);
+    return set.has(key.toLowerCase()) || set.has(key.toUpperCase());
   });
 }

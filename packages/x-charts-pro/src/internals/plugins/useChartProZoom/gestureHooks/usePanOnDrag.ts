@@ -13,45 +13,44 @@ import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
 import { isKeyPressed } from '../isKeyPressed';
+import { selectorPanConfig } from '../ZoomConfig.selectors';
 
 export const usePanOnDrag = (
   {
     store,
     instance,
     svgRef,
-    params,
-  }: Pick<
-    Parameters<ChartPlugin<UseChartProZoomSignature>>[0],
-    'store' | 'instance' | 'svgRef' | 'params'
-  >,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
   const pressedKeysRef = React.useRef<Set<string>>(new Set());
-  const config = params.zoomConfig.pan.onDrag;
-
-  React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      pressedKeysRef.current.add(event.key.length === 1 ? event.key.toLowerCase() : event.key);
-    };
-    const handleKeyUp = (event: KeyboardEvent) => {
-      pressedKeysRef.current.delete(event.key.length === 1 ? event.key.toLowerCase() : event.key);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
+  const config = useSelector(store, selectorPanConfig, ['onDrag' as const]);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
     () => (Object.values(optionsLookup).some((v) => v.panning) && config) || false,
     [optionsLookup, config],
   );
+
+  React.useEffect(() => {
+    const pressedKeysSet = pressedKeysRef.current;
+    if (!isPanEnabled || !config) {
+      return () => {};
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => pressedKeysRef.current.add(event.key);
+    const handleKeyUp = (event: KeyboardEvent) => pressedKeysRef.current.delete(event.key);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      pressedKeysSet.clear();
+    };
+  }, [isPanEnabled, config]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -62,7 +61,7 @@ export const usePanOnDrag = (
 
     const handlePanStart = (event: PanEvent) => {
       if (
-        !isKeyPressed(pressedKeysRef.current, config.keys) ||
+        !isKeyPressed(pressedKeysRef.current, config!.keys) ||
         !isGestureEnabledForPointer(event.detail.srcEvent, config!.mode)
       ) {
         return;

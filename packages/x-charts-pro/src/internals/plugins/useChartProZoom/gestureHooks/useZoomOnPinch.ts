@@ -18,23 +18,20 @@ import {
   zoomAtPoint,
 } from './useZoom.utils';
 import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
+import { selectorZoomConfig } from '../ZoomConfig.selectors';
 
 export const useZoomOnPinch = (
   {
     store,
     instance,
     svgRef,
-    params,
-  }: Pick<
-    Parameters<ChartPlugin<UseChartProZoomSignature>>[0],
-    'store' | 'instance' | 'svgRef' | 'params'
-  >,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
-  const config = params.zoomConfig.zoom.onPinch;
+  const config = useSelector(store, selectorZoomConfig, ['onPinch' as const]);
 
   // Zoom on pinch
   React.useEffect(() => {
