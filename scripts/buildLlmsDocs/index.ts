@@ -78,8 +78,9 @@ import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
 import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
 import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
-import pages from 'docsx/data/pages';
+import { pageToTitleI18n } from 'docs/src/modules/utils/helpers';
 import type { MuiPage } from 'docs/src/MuiPage';
+import pages from 'docsx/data/pages';
 
 function processApiFile(filePath: string): string {
   const content = fs.readFileSync(filePath, 'utf-8');
@@ -274,10 +275,22 @@ function findNonComponentMarkdownFiles(
       }
     }
 
+    let fixedPathname = '';
+
+    if (extensionMatched) {
+      fixedPathname = page.filename.replace(/^.*\/data\//, '/');
+    } else {
+      const fragments = page.filename.split('/');
+      const lastFragment = fragments[fragments.length - 1].replace(/\.md$/, '');
+      if (lastFragment !== 'index' && lastFragment !== fragments[fragments.length - 2]) {
+        fixedPathname = `${page.pathname}/${lastFragment}`;
+      } else {
+        fixedPathname = page.pathname;
+      }
+    }
+
     // Apply fixPathname first, then replaceUrl to get the proper output structure (like components)
-    const fixedPathname = (
-      extensionMatched ? page.filename.replace(/^.*\/data\//, '/') : page.pathname
-    )
+    fixedPathname = fixedPathname
       .replace(/\/data-grid\//, '/x/react-data-grid/')
       .replace(/\/date-pickers\//, '/x/react-date-pickers/')
       .replace(/\/charts\//, '/x/react-charts/')
@@ -571,10 +584,11 @@ function generateStructuredContent(
 
   // Special handling for API sections
   if (page.pathname.includes('/api/') && page.children && page.children.length > 0) {
+    const renderedTitle = pageToTitleI18n(page, () => undefined);
     // Add section header
-    if (page.title && depth > 0) {
+    if (renderedTitle && depth > 0) {
       const headerLevel = depth === 1 ? '##' : '###';
-      content += `${headerLevel} ${page.title}\n\n`;
+      content += `${headerLevel} ${renderedTitle}\n\n`;
     } else if (page.subheader) {
       const headerLevel = depth === 1 ? '##' : '###';
       content += `${headerLevel} ${page.subheader}\n\n`;
@@ -606,10 +620,11 @@ function generateStructuredContent(
 
   // If this page has children, it's a section
   if (page.children && page.children.length > 0) {
+    const renderedTitle = pageToTitleI18n(page, () => undefined);
     // Add section header if it has a title or subheader
-    if (page.title && depth > 0) {
+    if (renderedTitle && depth > 0) {
       const headerLevel = depth === 1 ? '##' : '###';
-      content += `${headerLevel} ${page.title}\n\n`;
+      content += `${headerLevel} ${renderedTitle}\n\n`;
     } else if (page.subheader) {
       const headerLevel = depth === 1 ? '##' : '###';
       content += `${headerLevel} ${page.subheader}\n\n`;
@@ -621,7 +636,8 @@ function generateStructuredContent(
     }
   } else if (matchedFile) {
     // This is a leaf page with a matching file
-    const title = page.title || matchedFile.title;
+    const renderedTitle = pageToTitleI18n(page, () => undefined);
+    const title = renderedTitle || matchedFile.title;
     const planIndicator = page.plan ? ` (${page.plan})` : '';
     const newFeatureIndicator = page.newFeature ? ' 🆕' : '';
     const plannedIndicator = page.planned ? ' (planned)' : '';
