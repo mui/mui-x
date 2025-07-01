@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { act, createRenderer, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
@@ -137,10 +137,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
   });
 
   describe('GridChartsIntegrationContextProvider', () => {
-    it('should generate an empty context for the new consumer key', () => {
+    it('should generate an empty context for the new consumer key', async () => {
       expect(integrationContext?.chartStateLookup).to.equal(undefined);
       render(<Test />);
-      expect(integrationContext!.chartStateLookup.test).to.not.equal(undefined);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test).to.not.equal(undefined);
+      });
     });
 
     it('should partially update the context', () => {
@@ -157,10 +159,11 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
   describe('Context updates via grid', () => {
     describe('initialState', () => {
-      it('should set the context on init', () => {
+      it('should set the context on init', async () => {
         render(<Test initialState={baseInitialState} />);
-
-        expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+        });
       });
 
       it('should not set the context on init if there are no series', () => {
@@ -181,7 +184,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         expect(integrationContext!.chartStateLookup.test.categories).to.deep.equal([]);
       });
 
-      it('should not add to the context hidden items', () => {
+      it('should not add to the context hidden items', async () => {
         render(
           <Test
             initialState={{
@@ -197,7 +200,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           />,
         );
 
-        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
+        });
         expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
       });
 
@@ -232,11 +237,13 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     });
 
     describe('syncing with grid model', () => {
-      it('should update the context when filter model changes', () => {
+      it('should update the context when filter model changes', async () => {
         render(<Test initialState={baseInitialState} />);
-        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
-          rows.length,
-        );
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
+            rows.length,
+          );
+        });
 
         act(() => {
           apiRef!.current?.setFilterModel({
@@ -250,40 +257,52 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           });
         });
 
-        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(1);
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(1);
+        });
       });
 
-      it('should update the context when sort model changes', () => {
+      it('should update the context when sort model changes', async () => {
         render(<Test initialState={baseInitialState} />);
-        expect(integrationContext!.chartStateLookup.test.series[0].data[0]).to.equal(
-          rows[0].amount,
-        );
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series[0].data[0]).to.equal(
+            rows[0].amount,
+          );
+        });
 
         act(() => {
           apiRef!.current?.sortColumn('amount', 'desc');
         });
 
-        expect(integrationContext!.chartStateLookup.test.series[0].data[0]).to.equal(
-          rows[rows.length - 1].amount,
-        );
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series[0].data[0]).to.equal(
+            rows[rows.length - 1].amount,
+          );
+        });
       });
 
-      it('should switch to the grouped column if the active category becomes grouped', () => {
+      it('should switch to the grouped column if the active category becomes grouped', async () => {
         render(<Test initialState={baseInitialState} />);
-        expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+        });
 
         act(() => {
           apiRef!.current?.setRowGroupingModel(['category1']);
         });
 
-        expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal(
-          GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-        );
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal(
+            GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+          );
+        });
       });
 
-      it('should remove series if they become pivoting values', () => {
+      it('should remove series if they become pivoting values', async () => {
         render(<Test initialState={baseInitialState} />);
-        expect(integrationContext!.chartStateLookup.test.series[0].id).to.equal('amount');
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series[0].id).to.equal('amount');
+        });
 
         act(() => {
           apiRef!.current?.setPivotActive(true);
@@ -294,12 +313,14 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           });
         });
 
-        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+        });
       });
     });
 
     describe('API', () => {
-      it('should allow updating categories and series through the API', () => {
+      it('should allow updating categories and series through the API', async () => {
         render(<Test />);
 
         expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
@@ -317,7 +338,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           apiRef!.current?.updateSeries('test', [{ field: 'amount' }]);
         });
 
-        expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+        });
         expect(integrationContext!.chartStateLookup.test.series[0].id).to.equal('amount');
       });
     });
@@ -356,7 +379,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
   });
 
   describe('sync control', () => {
-    it('should allow chart sync control', () => {
+    it('should allow chart sync control', async () => {
       // both charts are the same
       render(
         <Test
@@ -382,9 +405,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       expect(integrationContext!.chartStateLookup.test2.synced).to.equal(true);
 
       // data is loaded for both charts
-      expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
-        rows.length,
-      );
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
+          rows.length,
+        );
+      });
+
       expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(
         rows.length,
       );
@@ -405,7 +431,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       });
 
       // first chart is updated
-      expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(0);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(0);
+      });
       // second chart is not updated
       expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(
         rows.length,
@@ -417,7 +445,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       });
 
       // data is updated
-      expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(0);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(0);
+      });
 
       // update rows again
       act(() => {
@@ -425,9 +455,11 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       });
 
       // both charts are updated
-      expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
-        rows.length,
-      );
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
+          rows.length,
+        );
+      });
       expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(
         rows.length,
       );
@@ -435,16 +467,18 @@ describe('<DataGridPremium /> - Charts Integration', () => {
   });
 
   describe('GridChartsRendererProxy', () => {
-    it('should intercept rendering with custom renderer', () => {
+    it('should intercept rendering with custom renderer', async () => {
       render(<Test initialState={baseInitialState} />);
 
       expect(renderSpy.called).to.equal(true);
-      expect(renderSpy.lastCall.firstArg.chartStateLookup.test.categories[0].id).to.equal(
-        'category1',
-      );
+      await waitFor(() => {
+        expect(renderSpy.lastCall.firstArg.chartStateLookup.test.categories[0].id).to.equal(
+          'category1',
+        );
+      });
     });
 
-    it('should trigger another render when the context is updated', () => {
+    it('should trigger another render when the context is updated', async () => {
       render(<Test initialState={baseInitialState} />);
 
       renderSpy.resetHistory();
@@ -454,7 +488,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         apiRef!.current?.sortColumn('amount', 'desc');
       });
 
-      expect(renderSpy.callCount).to.be.greaterThan(0);
+      await waitFor(() => {
+        expect(renderSpy.callCount).to.be.greaterThan(0);
+      });
     });
   });
 
@@ -530,7 +566,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       // click on the second menu item (Add to series)
       await user.click(screen.getAllByRole('menuitem')[1]);
 
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(2);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(2);
+      });
 
       // open the menu for the second field
       await user.click(field2Menu);
@@ -540,7 +578,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       // click on the first menu item (Add to categories)
       await user.click(screen.getAllByRole('menuitem')[0]);
 
-      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(2);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(2);
+      });
 
       // remaining column is not chartable so there should not be any other field menus
       const remainingFields = screen
@@ -560,7 +600,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       await user.click(hideCheckbox);
 
       // series are back to 1
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+      });
     });
 
     it('should allow configuration change', async () => {
