@@ -655,7 +655,6 @@ type RenderContextInputs = any;
 // type RenderContextInputs = {
 //   enabledForRows: boolean;
 //   enabledForColumns: boolean;
-//   apiRef: RefObject<any>;
 //   autoHeight: boolean;
 //   rowBufferPx: number;
 //   columnBufferPx: number;
@@ -675,6 +674,45 @@ type RenderContextInputs = any;
 //   listView: boolean;
 //   virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
 // };
+//
+// function inputsSelector(
+//   store: Store<BaseState>,
+//   params: VirtualizerParams,
+//   enabledForRows: boolean,
+//   enabledForColumns: boolean,
+// ): RenderContextInputs {
+//   const dimensions = Dimensions.selectors.dimensions(store.state);
+//   const rows = params.rows;
+//   const range = params.range;
+//   const columns = params.columns;
+//
+//   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
+//   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
+//   const lastColumn = columns.at(-1);
+//
+//   return {
+//     enabledForRows,
+//     enabledForColumns,
+//     autoHeight: rootProps.autoHeight,
+//     rowBufferPx: rootProps.rowBufferPx,
+//     columnBufferPx: rootProps.columnBufferPx,
+//     leftPinnedWidth: dimensions.leftPinnedWidth,
+//     columnsTotalWidth: dimensions.columnsTotalWidth,
+//     viewportInnerWidth: dimensions.viewportInnerSize.width,
+//     viewportInnerHeight: dimensions.viewportInnerSize.height,
+//     lastRowHeight: lastRowId !== undefined ? apiRef.current.unstable_getRowHeight(lastRowId) : 0,
+//     lastColumnWidth: lastColumn?.computedWidth ?? 0,
+//     rowsMeta: gridRowsMetaSelector(apiRef),
+//     columnPositions: gridColumnPositionsSelector(apiRef),
+//     rows,
+//     range,
+//     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
+//     columns,
+//     hiddenCellsOriginMap,
+//     listView: rootProps.listView ?? false,
+//     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
+//   };
+// }
 
 function computeRenderContext(
   inputs: RenderContextInputs,

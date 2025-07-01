@@ -302,14 +302,6 @@ export function useGridVirtualizer(
   });
 }
 
-function needsHorizontalScrollbarSelector(apiRef: RefObject<GridApiCommunity>) {
-  return (
-    apiRef.current.state.dimensions.viewportOuterSize.width > 0 &&
-    apiRef.current.state.dimensions.columnsTotalWidth >
-      apiRef.current.state.dimensions.viewportOuterSize.width
-  );
-}
-
 type RenderContextInputs = {
   enabledForRows: boolean;
   enabledForColumns: boolean;
