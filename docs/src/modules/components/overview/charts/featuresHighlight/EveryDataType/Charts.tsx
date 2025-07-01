@@ -8,6 +8,7 @@ import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { useTheme } from '@mui/material/styles';
 
 // Data about ALphabet
 
@@ -37,9 +38,14 @@ const formatUSD = (value: number | null) =>
       }).format(value);
 
 export function LineAndBar() {
+  const theme = useTheme();
   return (
     <ChartDataProvider
-      colors={['#000000', 'var(--palette-color-3)', 'var(--palette-color-4)']}
+      colors={[
+        (theme.vars || theme).palette.text.primary,
+        'var(--palette-color-3)',
+        'var(--palette-color-4)',
+      ]}
       series={[
         {
           type: 'line',

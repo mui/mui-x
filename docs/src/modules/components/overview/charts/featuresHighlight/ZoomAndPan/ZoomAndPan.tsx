@@ -57,6 +57,7 @@ export default function ZoomAndPan() {
                 }
                 return dateFormatter(value);
               },
+              tickLabelStyle: { fontWeight: 400 },
             },
           ]}
           yAxis={[
@@ -67,6 +68,7 @@ export default function ZoomAndPan() {
               tickNumber: 4,
               min: 80,
               max: 200,
+              tickLabelStyle: { fontWeight: 400 },
             } as YAxis,
           ]}
           initialZoom={[

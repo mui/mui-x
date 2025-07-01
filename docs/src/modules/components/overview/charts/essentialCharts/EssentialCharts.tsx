@@ -7,6 +7,10 @@ import ChartDemoNavigator from '../ChartDemoNavigator';
 
 const advancedFeatures = [
   {
+    title: 'Scatter Chart',
+    description: '',
+  },
+  {
     title: 'Bar Chart',
     description: '',
   },
@@ -16,10 +20,6 @@ const advancedFeatures = [
   },
   {
     title: 'Pie Chart',
-    description: '',
-  },
-  {
-    title: 'Scatter Chart',
     description: '',
   },
 ];
@@ -34,10 +34,10 @@ export default function EssentialCharts() {
       activeItem={activeItem}
       setActiveItem={setActiveItem}
     >
-      {activeItem === 0 && <BarChartDemo />}
-      {activeItem === 1 && <LineChartDemo />}
-      {activeItem === 2 && <PieChartDemo />}
-      {activeItem === 3 && <ScatterChartDemo />}
+      {activeItem === 0 && <ScatterChartDemo />}
+      {activeItem === 1 && <BarChartDemo />}
+      {activeItem === 2 && <LineChartDemo />}
+      {activeItem === 3 && <PieChartDemo />}
     </ChartDemoNavigator>
   );
 }

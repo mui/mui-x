@@ -52,12 +52,23 @@ export const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
           }),
         },
       },
+      MuiChartsXAxis: {
+        defaultProps: {
+          tickLabelStyle: {
+            fontWeight: 400,
+          },
+        },
+      },
+      MuiChartsYAxis: {
+        defaultProps: {
+          tickLabelStyle: {
+            fontWeight: 400,
+          },
+        },
+      },
       MuiChartsAxis: {
         styleOverrides: {
           root: ({ theme }) => ({
-            '& .MuiChartsAxis-tickLabel': {
-              fontWeight: '400 !important',
-            },
             '& .MuiChartsAxis-line': {
               stroke: theme.palette.text.secondary,
               strokeWidth: 0.5,

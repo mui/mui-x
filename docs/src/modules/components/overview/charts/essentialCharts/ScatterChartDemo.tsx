@@ -22,6 +22,7 @@ const series: ScatterSeriesType[] = [
     type: 'scatter',
     label: 'Other',
     highlightScope: { highlight: 'item', fade: 'global' },
+    markerSize: 3,
     data: data
       .filter((item) => !constructors.includes(item.constructor) && item.density !== null)
       .map((item) => ({ x: item.year, y: item.density as number, id: item.id })),
@@ -31,6 +32,7 @@ const series: ScatterSeriesType[] = [
       type: 'scatter',
       label: constructor,
       highlightScope: { highlight: 'item', fade: 'global' },
+      markerSize: 3,
       data: data
         .filter((item) => item.constructor === constructor && item.density !== null)
         .map((item) => ({ x: item.year, y: item.density as number, id: item.id })),

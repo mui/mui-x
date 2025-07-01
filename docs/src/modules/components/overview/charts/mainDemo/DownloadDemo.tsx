@@ -6,18 +6,12 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 // Import data
-import dataMaterial from '../data/@mui-material.json';
-import dataCharts from '../data/@mui-x-charts.json';
-import dataDataGrid from '../data/@mui-x-data-grid.json';
-import dataPickers from '../data/@mui-x-date-pickers.json';
+import dataMaterial from '../data/material.json';
+import dataCharts from '../data/x-charts.json';
+import dataGrid from '../data/x-data-grid.json';
+import dataPickers from '../data/x-date-pickers.json';
 import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
-
-type Versions = '5' | '6' | '7' | '8';
-
-type DataItem = {
-  date: Date;
-} & Partial<Record<Versions, number | undefined | null>> &
-  Partial<Record<`${Versions}_percent`, number | undefined | null>>;
+import { generateDataset, Versions } from './generateDataset';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
@@ -30,20 +24,6 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
   );
 }
 
-const addRelativeValue = (versions: Versions[]) => (item: DataItem) => {
-  const sum = versions.reduce((a, version: Versions) => a + (item[version] ?? 0), 0);
-
-  for (const version of versions) {
-    if (version in item) {
-      item[`${version}_percent`] = (100 * (item[version] ?? 0)) / sum;
-    } else {
-      item[version] = null;
-      item[`${version}_percent`] = null;
-    }
-  }
-  return item;
-};
-
 const versions: Record<string, Versions[]> = {
   '@mui/material': ['5', '6', '7'],
   '@mui/x-data-grid': ['5', '6', '7', '8'],
@@ -52,19 +32,11 @@ const versions: Record<string, Versions[]> = {
 };
 
 const packages = {
-  '@mui/material': dataMaterial.map((item) =>
-    addRelativeValue(versions['@mui/material'])({ ...item, date: new Date(item.date) }),
-  ),
-  '@mui/x-data-grid': dataDataGrid.map((item) =>
-    addRelativeValue(versions['@mui/x-data-grid'])({ ...item, date: new Date(item.date) }),
-  ),
-  '@mui/x-date-pickers': dataPickers.map((item) =>
-    addRelativeValue(versions['@mui/x-date-pickers'])({ ...item, date: new Date(item.date) }),
-  ),
-  '@mui/x-charts': dataCharts.map((item) =>
-    addRelativeValue(versions['@mui/x-charts'])({ ...item, date: new Date(item.date) }),
-  ),
-} as const;
+  '@mui/material': generateDataset(dataMaterial),
+  '@mui/x-data-grid': generateDataset(dataGrid),
+  '@mui/x-date-pickers': generateDataset(dataPickers),
+  '@mui/x-charts': generateDataset(dataCharts),
+};
 
 const IntlAbsolute = new Intl.NumberFormat('en-US');
 const valueFormatter = (value: number | null) => {
@@ -91,7 +63,7 @@ const percentValueFormatter = (value: number | null) => {
 
 export default function DownloadDemo() {
   const [selectedPackage, setSelectedPackage] =
-    React.useState<keyof typeof packages>('@mui/material');
+    React.useState<keyof typeof packages>('@mui/x-charts');
 
   const [selectedFormat, setSelectedFormat] = React.useState<'absolute' | 'relative'>('absolute');
 

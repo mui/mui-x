@@ -12,8 +12,7 @@ const series: RadarSeriesType[] = [
     type: 'radar',
     label: 'Bulbasaur',
     data: [45, 49, 49, 45, 65],
-    color: 'green',
-
+    color: '#7DAB53',
     hideMark: true,
   },
 
@@ -21,14 +20,14 @@ const series: RadarSeriesType[] = [
     type: 'radar',
     label: 'Charmander',
     data: [39, 52, 43, 65, 50],
-    color: 'red',
+    color: '#FF8D16',
     hideMark: true,
   },
   {
     type: 'radar',
     label: 'Squirtle',
     data: [44, 48, 65, 43, 50],
-    color: 'blue',
+    color: '#4CB0EE',
     hideMark: true,
   },
 ];
