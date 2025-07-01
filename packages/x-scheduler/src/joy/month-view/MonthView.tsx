@@ -16,6 +16,7 @@ import { isWeekend } from '../internals/utils/date-utils';
 import { getColorClassName } from '../internals/utils/color-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import './MonthView.css';
+import { CalendarEvent } from '../models/events';
 
 const adapter = getAdapter();
 
@@ -128,30 +129,29 @@ export const MonthView = React.memo(
                             ) : (
                               renderCellNumberContent(day.date)
                             )}
-                            {day.events.map((eventProp) => {
-                              const eventResource = resourcesByIdMap.get(eventProp.resource);
-                              return (
-                                // TODO: Issue 18554 - Style the event (compact variant)
-                                <DayGrid.Event
-                                  key={eventProp.id}
-                                  start={eventProp.start}
-                                  end={eventProp.end}
-                                  onClick={(event) => onEventClick(event, eventProp)}
-                                  className={clsx(
-                                    'MonthViewEvent',
-                                    className,
-                                    getColorClassName({ resource: eventResource }),
-                                  )}
+                            {getEventsStartingInDay(day.date).map((eventProp: CalendarEvent) => (
+                              // TODO: Issue 18554 - Style the event (compact variant)
+                              <DayGrid.Event
+                                key={eventProp.id}
+                                start={eventProp.start}
+                                end={eventProp.end}
+                                onClick={(event) => onEventClick(event, eventProp)}
+                                className={clsx(
+                                  'MonthViewEvent',
+                                  className,
+                                  getColorClassName({
+                                    resource: resourcesByIdMap.get(eventProp.resource),
+                                  }),
+                                )}
+                              >
+                                <span
+                                  className="LinesClamp"
+                                  style={{ '--number-of-lines': 1 } as React.CSSProperties}
                                 >
-                                  <span
-                                    className="LinesClamp"
-                                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
-                                  >
-                                    {eventProp.title}
-                                  </span>
-                                </DayGrid.Event>
-                              );
-                            })}
+                                  {eventProp.title}
+                                </span>
+                              </DayGrid.Event>
+                            ))}
                           </DayGrid.Cell>
                         );
                       })}
