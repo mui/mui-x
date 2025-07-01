@@ -75,39 +75,6 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-tree-view-pro',
 ];
 
-/**
- *
- * @param {string} packageName
- * @param {string} root
- */
-const buildPackageRestrictedImports = (packageName, root) => [
-  {
-    files: [`packages/${root}/src/**/*.${EXTENSION_TS}`],
-    ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
-            name: pkName,
-            message: 'Use relative import instead',
-          })),
-          patterns: [
-            {
-              group: ['@mui/*/*/*'],
-              message: 'Use less deep import instead',
-            },
-            {
-              group: [`${packageName}/*`, `${packageName}/**`],
-              message: 'Use relative import instead',
-            },
-          ],
-        },
-      ],
-    },
-  },
-];
-
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
   {
     packagesNames: CHARTS_PACKAGES,
@@ -383,21 +350,46 @@ export default defineConfig(
       'jsdoc/require-returns': 'off',
     },
   },
-  ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts'),
-  ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro'),
-  ...buildPackageRestrictedImports('@mui/x-charts-premium', 'x-charts-premium'),
-  ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod'),
-  ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
-  ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
-  ...buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
-  ...buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
-  ...buildPackageRestrictedImports('@mui/x-date-pickers', 'x-date-pickers'),
-  ...buildPackageRestrictedImports('@mui/x-date-pickers-pro', 'x-date-pickers-pro'),
-  ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view'),
-  ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro'),
-  ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
-  ...buildPackageRestrictedImports('@mui/x-telemetry', 'x-telemetry'),
-
+  ...[
+    'x-charts',
+    'x-charts-pro',
+    'x-charts-premium',
+    'x-codemod',
+    'x-data-grid',
+    'x-data-grid-pro',
+    'x-data-grid-premium',
+    'x-data-grid-generator',
+    'x-date-pickers',
+    'x-date-pickers-pro',
+    'x-scheduler',
+    'x-tree-view',
+    'x-license',
+    'x-telemetry',
+  ].map((pkgName) => ({
+    files: [`packages/${pkgName}/src/**/*.${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+            name: pkName,
+            message: 'Use relative import instead',
+          })),
+          patterns: [
+            {
+              group: ['@mui/*/*/*'],
+              message: 'Use less deep import instead',
+            },
+            {
+              group: [`@mui/${pkgName}/*`, `@mui/${pkgName}/**`],
+              message: 'Use relative import instead',
+            },
+          ],
+        },
+      ],
+    },
+  })),
   ...[
     packageFilesWithReactCompiler.length > 0
       ? {
