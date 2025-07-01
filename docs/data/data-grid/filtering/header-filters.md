@@ -6,7 +6,7 @@ title: Data Grid - Header filters
 
 <p class="description">Give users quick-access column filters in the Data Grid header.</p>
 
-The header filter features adds a header row to the Data Grid Pro that lets users quickly filter columns.
+The header filter feature adds a header row to the Data Grid Pro that lets users quickly filter columns.
 Filters added on the filter panel are synchronized with header filters, and vice versa.
 
 In the demo below, you can switch between different operators by clicking the operator button in the header filter cell or pressing <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> on Windows) when focusing on a header filter cell.
