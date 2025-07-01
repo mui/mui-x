@@ -79,9 +79,8 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
  *
  * @param {string} packageName
  * @param {string} root
- * @param {boolean} allowRootImports
  */
-const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
+const buildPackageRestrictedImports = (packageName, root) => [
   {
     files: [`packages/${root}/src/**/*.${EXTENSION_TS}`],
     ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
@@ -107,28 +106,6 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
       ],
     },
   },
-  ...(allowRootImports
-    ? []
-    : [
-        {
-          files: [
-            `packages/${root}/src/**/*.test.${EXTENSION_TS}`,
-            `packages/${root}/src/**/*.spec.${EXTENSION_TS}`,
-          ],
-          ignores: ['**/*.d.ts'],
-          rules: {
-            'no-restricted-imports': [
-              'error',
-              {
-                paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
-                  name,
-                  message: 'Use deeper import instead',
-                })),
-              },
-            ],
-          },
-        },
-      ]),
 ];
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
@@ -351,7 +328,10 @@ export default defineConfig(
   // Common config from core end
 
   {
-    files: [`docs/**/*.${EXTENSION_TS}`],
+    files: [
+      `docs/**/*.${EXTENSION_TS}`,
+      `packages/{!x-data-grid*|!x-license|!x-telemetry}/src/**/*.{test|spec}.${EXTENSION_TS}`,
+    ],
     ignores: ['**/*.d.ts'],
     rules: {
       'no-restricted-imports': [
@@ -403,18 +383,18 @@ export default defineConfig(
       'jsdoc/require-returns': 'off',
     },
   },
-  ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
-  ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
-  ...buildPackageRestrictedImports('@mui/x-charts-premium', 'x-charts-premium', false),
-  ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
+  ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts'),
+  ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro'),
+  ...buildPackageRestrictedImports('@mui/x-charts-premium', 'x-charts-premium'),
+  ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod'),
   ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
   ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
   ...buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
   ...buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
-  ...buildPackageRestrictedImports('@mui/x-date-pickers', 'x-date-pickers', false),
-  ...buildPackageRestrictedImports('@mui/x-date-pickers-pro', 'x-date-pickers-pro', false),
-  ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
-  ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
+  ...buildPackageRestrictedImports('@mui/x-date-pickers', 'x-date-pickers'),
+  ...buildPackageRestrictedImports('@mui/x-date-pickers-pro', 'x-date-pickers-pro'),
+  ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view'),
+  ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro'),
   ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
   ...buildPackageRestrictedImports('@mui/x-telemetry', 'x-telemetry'),
 
