@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import useId from '@mui/utils/useId';
 import { useGridSelector, vars } from '@mui/x-data-grid-pro/internals';
@@ -127,6 +128,36 @@ function GridChartsPanelChartSelector(props: {
   );
 }
 
+GridChartsPanelChartSelector.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  activeChartId: PropTypes.string.isRequired,
+  chartEntries: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.shape({
+          categories: PropTypes.arrayOf(
+            PropTypes.shape({
+              data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]))
+                .isRequired,
+              id: PropTypes.string.isRequired,
+              label: PropTypes.string.isRequired,
+            }),
+          ).isRequired,
+          configuration: PropTypes.object.isRequired,
+          label: PropTypes.string,
+          series: PropTypes.arrayOf(PropTypes.object).isRequired,
+          synced: PropTypes.bool.isRequired,
+          type: PropTypes.string.isRequired,
+        }),
+        PropTypes.string,
+      ]).isRequired,
+    ),
+  ).isRequired,
+} as any;
+
 function GridChartsPanel(_: GridChartsPanelProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -196,5 +227,23 @@ function GridChartsPanel(_: GridChartsPanelProps) {
     </Tabs>
   );
 }
+
+GridChartsPanel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override the default column name generation logic. Use field in combination with the grid state to determine the name of the column that will be shown to the user.
+   * @param {string} field The field name
+   * @returns {string} The name of the column
+   */
+  getColumnName: PropTypes.func,
+  /**
+   * The schema of the charts configuration.
+   * @type {GridChartsConfigurationOptions}
+   */
+  schema: PropTypes.object,
+} as any;
 
 export { GridChartsPanel };
