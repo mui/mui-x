@@ -30,19 +30,15 @@ const TabRoot = styled('button', {
   shouldForwardProp: (prop) => prop !== 'active',
 })<{ active?: boolean }>(({ active }) => ({
   flex: 1,
-  padding: vars.spacing(1, 2),
+  padding: vars.spacing(1.25, 2),
   background: active ? vars.colors.background.base : 'transparent',
-  color: active ? vars.colors.interactive.selected : vars.colors.foreground.base,
+  color: active ? vars.colors.interactive.selected : vars.colors.foreground.muted,
   border: 'none',
   borderBottom: active ? `2px solid ${vars.colors.interactive.selected}` : '2px solid transparent',
   font: vars.typography.font.body,
-  fontWeight: active ? vars.typography.fontWeight.medium : vars.typography.fontWeight.regular,
+  fontWeight: vars.typography.fontWeight.medium,
   cursor: 'pointer',
   transition: 'color 0.2s, border-bottom 0.2s',
-  '&:hover': {
-    background: vars.colors.interactive.hover,
-    color: vars.colors.interactive.selected,
-  },
 }));
 
 function Tab(props: TabProps) {
