@@ -86,12 +86,7 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
     files: [`packages/${root}/src/**/*.${EXTENSION_TS}`],
-    ignores: [
-      '**/*.d.ts',
-      '**/*.spec{.ts,.tsx}',
-      '**/*.test{.ts,.tsx}',
-      `packages/${root}/src/index{.ts,.tsx,.js}`,
-    ],
+    ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
     rules: {
       'no-restricted-imports': [
         'error',
