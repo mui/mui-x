@@ -41,7 +41,6 @@ const TabListRoot = styled('div', {
   slot: 'TabsTabList',
 })({
   display: 'flex',
-  borderBottom: `1px solid ${vars.colors.border.base}`,
   background: vars.colors.background.base,
 });
 
