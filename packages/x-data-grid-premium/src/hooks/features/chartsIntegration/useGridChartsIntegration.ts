@@ -133,6 +133,9 @@ export const useGridChartsIntegration = (
     | 'slotProps'
   >,
 ) => {
+  const visibleCategories = React.useRef<Record<string, GridColDef[]>>({});
+  const visibleSeries = React.useRef<Record<string, GridColDef[]>>({});
+
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
@@ -179,7 +182,68 @@ export const useGridChartsIntegration = (
     changeEvent: 'activeChartIdChange',
   });
 
-  const handleDataUpdate = React.useCallback(
+  const handleRowDataUpdate = React.useCallback(
+    (forceChartId?: string) => {
+      const availableCharts = chartIds.filter((chartId) =>
+        forceChartId ? chartId === forceChartId : chartStateLookup[chartId].synced !== false,
+      );
+
+      if (availableCharts.length === 0) {
+        return;
+      }
+      const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
+
+      // keep only unique columns
+      const dataColumns = [
+        ...new Set([
+          ...Object.values(visibleCategories.current).flat(),
+          ...Object.values(visibleSeries.current).flat(),
+        ]),
+      ];
+
+      // go through data only once and collect everything that will be needed
+      const data: Record<any, (string | number | null)[]> = Object.fromEntries(
+        dataColumns.map((column) => [column.field, []]),
+      );
+      for (let i = 0; i < rows.length; i += 1) {
+        for (let j = 0; j < dataColumns.length; j += 1) {
+          const value: string | { label: string } | null = getRowValue(
+            rows[i].model,
+            dataColumns[j],
+            apiRef,
+          );
+          if (value !== null) {
+            data[dataColumns[j].field].push(
+              typeof value === 'object' && 'label' in value ? value.label : value,
+            );
+          }
+        }
+      }
+
+      availableCharts.forEach((chartId) => {
+        setChartState(chartId, {
+          categories: visibleCategories.current[chartId].map((category) => ({
+            id: category.field,
+            label: getColumnName(category.field),
+            data: data[category.field] || [],
+          })),
+          series: visibleSeries.current[chartId].map((seriesItem) => ({
+            id: seriesItem.field,
+            label: getColumnName(seriesItem.field),
+            data: (data[seriesItem.field] || []) as (number | null)[],
+          })),
+        });
+      });
+    },
+    [apiRef, getColumnName, setChartState, chartIds, chartStateLookup],
+  );
+
+  const debouncedHandleRowDataUpdate = React.useMemo(
+    () => debounce(handleRowDataUpdate, 0),
+    [handleRowDataUpdate],
+  );
+
+  const handleColumnDataUpdate = React.useCallback(
     (forceChartId?: string) => {
       // if there are no charts, skip the data processing
       if (chartIds.length === 0) {
@@ -195,8 +259,6 @@ export const useGridChartsIntegration = (
       }
 
       const chartableColumns = gridChartableColumnsSelector(apiRef);
-      const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
-
       const selectedFields = availableCharts.reduce(
         (acc, chartId) => {
           const series = gridChartsSeriesSelector(apiRef, chartId);
@@ -217,8 +279,6 @@ export const useGridChartsIntegration = (
 
       const series: Record<string, GridChartsIntegrationItem[]> = {};
       const categories: Record<string, GridChartsIntegrationItem[]> = {};
-      const visibleCategories: Record<string, GridColDef[]> = {};
-      const visibleSeries: Record<string, GridColDef[]> = {};
 
       availableCharts.forEach((chartId) => {
         categories[chartId] = [];
@@ -259,67 +319,30 @@ export const useGridChartsIntegration = (
           apiRef.current.updateSeries(chartId, series[chartId]);
         }
 
-        visibleCategories[chartId] = categories[chartId]
+        visibleCategories.current[chartId] = categories[chartId]
           .filter((category) => category.hidden !== true)
           .map((category) => chartableColumns[category.field]);
-        visibleSeries[chartId] = series[chartId]
+        visibleSeries.current[chartId] = series[chartId]
           .filter((seriesItem) => seriesItem.hidden !== true)
           .map((seriesItem) => chartableColumns[seriesItem.field]);
 
-        if (visibleCategories[chartId].length === 0 || visibleSeries[chartId].length === 0) {
-          visibleCategories[chartId] = [];
-          visibleSeries[chartId] = [];
+        if (
+          visibleCategories.current[chartId].length === 0 ||
+          visibleSeries.current[chartId].length === 0
+        ) {
+          visibleCategories.current[chartId] = [];
+          visibleSeries.current[chartId] = [];
         }
       });
 
-      // keep only unique columns
-      const dataColumns = [
-        ...new Set([
-          ...Object.values(visibleCategories).flat(),
-          ...Object.values(visibleSeries).flat(),
-        ]),
-      ];
-
-      // go through data only once and collect everything that will be needed
-      const data: Record<any, (string | number | null)[]> = Object.fromEntries(
-        dataColumns.map((column) => [column.field, []]),
-      );
-      for (let i = 0; i < rows.length; i += 1) {
-        for (let j = 0; j < dataColumns.length; j += 1) {
-          const value: string | { label: string } | null = getRowValue(
-            rows[i].model,
-            dataColumns[j],
-            apiRef,
-          );
-          if (value !== null) {
-            data[dataColumns[j].field].push(
-              typeof value === 'object' && 'label' in value ? value.label : value,
-            );
-          }
-        }
-      }
-
-      availableCharts.forEach((chartId) => {
-        setChartState(chartId, {
-          categories: visibleCategories[chartId].map((category) => ({
-            id: category.field,
-            label: getColumnName(category.field),
-            data: data[category.field] || [],
-          })),
-          series: visibleSeries[chartId].map((seriesItem) => ({
-            id: seriesItem.field,
-            label: getColumnName(seriesItem.field),
-            data: (data[seriesItem.field] || []) as (number | null)[],
-          })),
-        });
-      });
+      debouncedHandleRowDataUpdate(forceChartId);
     },
-    [apiRef, getColumnName, setChartState, chartIds, chartStateLookup],
+    [apiRef, debouncedHandleRowDataUpdate],
   );
 
-  const debouncedHandleDataUpdate = React.useMemo(
-    () => debounce(handleDataUpdate, 0),
-    [handleDataUpdate],
+  const debouncedHandleColumnDataUpdate = React.useMemo(
+    () => debounce(handleColumnDataUpdate, 0),
+    [handleColumnDataUpdate],
   );
 
   const setChartsPanelOpen = React.useCallback<GridChartsIntegrationApi['setChartsPanelOpen']>(
@@ -376,9 +399,9 @@ export const useGridChartsIntegration = (
           },
         };
       });
-      debouncedHandleDataUpdate();
+      debouncedHandleColumnDataUpdate();
     },
-    [apiRef, debouncedHandleDataUpdate],
+    [apiRef, debouncedHandleColumnDataUpdate],
   );
 
   const updateSeries = React.useCallback(
@@ -408,9 +431,9 @@ export const useGridChartsIntegration = (
           },
         };
       });
-      debouncedHandleDataUpdate();
+      debouncedHandleColumnDataUpdate();
     },
-    [apiRef, debouncedHandleDataUpdate],
+    [apiRef, debouncedHandleColumnDataUpdate],
   );
 
   const setActiveChartId = React.useCallback<GridChartsIntegrationApi['setActiveChartId']>(
@@ -435,10 +458,10 @@ export const useGridChartsIntegration = (
       });
       apiRef.current.publishEvent('chartSynchronizationStateChange', { chartId, synced });
       if (synced) {
-        debouncedHandleDataUpdate(chartId);
+        debouncedHandleColumnDataUpdate(chartId);
       }
     },
-    [apiRef, setChartState, debouncedHandleDataUpdate],
+    [apiRef, setChartState, debouncedHandleColumnDataUpdate],
   );
 
   const updateDataReference = React.useCallback<
@@ -524,22 +547,22 @@ export const useGridChartsIntegration = (
   useGridEvent(
     apiRef,
     'columnsChange',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
-  );
-  useGridEvent(
-    apiRef,
-    'filteredRowsSet',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
-  );
-  useGridEvent(
-    apiRef,
-    'sortedRowsSet',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleColumnDataUpdate()),
   );
   useGridEvent(
     apiRef,
     'pivotModeChange',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleDataUpdate()),
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleColumnDataUpdate()),
+  );
+  useGridEvent(
+    apiRef,
+    'filteredRowsSet',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate()),
+  );
+  useGridEvent(
+    apiRef,
+    'sortedRowsSet',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate()),
   );
 
   React.useEffect(() => {
@@ -568,11 +591,11 @@ export const useGridChartsIntegration = (
       });
     });
 
-    debouncedHandleDataUpdate();
+    debouncedHandleColumnDataUpdate();
   }, [
     chartIds,
     props.initialState?.chartsIntegration?.charts,
     setChartState,
-    debouncedHandleDataUpdate,
+    debouncedHandleColumnDataUpdate,
   ]);
 };
