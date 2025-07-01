@@ -11,12 +11,37 @@ import {
   useGridApiRef,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
+  GridGetRowsParams,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
-describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
+class TestCache {
+  private cache: Map<string, GridGetRowsResponse>;
+
+  constructor() {
+    this.cache = new Map();
+  }
+
+  set(key: GridGetRowsParams, value: GridGetRowsResponse) {
+    this.cache.set(JSON.stringify(key), value);
+  }
+
+  get(key: GridGetRowsParams) {
+    return this.cache.get(JSON.stringify(key));
+  }
+
+  size() {
+    return this.cache.size;
+  }
+
+  clear() {
+    this.cache.clear();
+  }
+}
+
+describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
@@ -30,7 +55,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     return null;
   }
 
-  function TestDataSourceAggregation(
+  function TestDataSource(
     props: Partial<DataGridPremiumProps> & {
       getAggregatedValue?: GridDataSource['getAggregatedValue'];
     },
@@ -38,7 +63,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     apiRef = useGridApiRef();
     const { getAggregatedValue: getAggregatedValueProp, ...rest } = props;
     const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
-      { rowLength: 10, maxColumns: 1 },
+      { rowLength: 200, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
 
@@ -48,7 +73,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
-            paginationModel: JSON.stringify(params.paginationModel),
             aggregationModel: JSON.stringify(params.aggregationModel),
           });
 
@@ -110,9 +134,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       },
       getAggregatedValue: () => 'Agg value',
     };
-    const { user } = render(
-      <TestDataSourceAggregation dataSource={dataSource} columns={[{ field: 'id' }]} />,
-    );
+    const { user } = render(<TestDataSource dataSource={dataSource} columns={[{ field: 'id' }]} />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
@@ -123,7 +145,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
-    const { user } = render(<TestDataSourceAggregation aggregationFunctions={{}} />);
+    const { user } = render(<TestDataSource aggregationFunctions={{}} />);
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
@@ -133,7 +155,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
 
   it('should provide the `aggregationModel` in the `getRows` params', async () => {
     render(
-      <TestDataSourceAggregation
+      <TestDataSource
         initialState={{
           aggregation: { model: { id: 'size' } },
         }}
@@ -148,7 +170,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
 
   it('should show the aggregation footer row when aggregation is enabled', async () => {
     render(
-      <TestDataSourceAggregation
+      <TestDataSource
         initialState={{
           aggregation: { model: { id: 'size' } },
         }}
@@ -160,14 +182,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
     await waitFor(() => {
       const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 200 });
     });
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {
     const getAggregatedValue = () => 'Agg value';
     render(
-      <TestDataSourceAggregation
+      <TestDataSource
         initialState={{
           aggregation: { model: { id: 'size' } },
         }}
@@ -180,5 +202,18 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     expect(apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(
       'Agg value',
     );
+  });
+
+  describe('Cache', () => {
+    it('should cache the data in one chunk when pagination is disabled', async () => {
+      const testCache = new TestCache();
+      render(<TestDataSource dataSourceCache={testCache} />);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(199)).not.to.be.undefined);
+      expect(testCache.size()).to.equal(1); // 1 chunk of 200 rows
+    });
   });
 });
