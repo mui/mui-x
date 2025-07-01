@@ -30,7 +30,7 @@ const data = dateEntry
 export default function PieChartDemo() {
   return (
     <React.Fragment>
-      <Typography variant="body2" color="text.secondary" fontWeight={500}>
+      <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ px: 1 }}>
         @mui/material downloads on 08-Jun-25
       </Typography>
       <PieChart
@@ -44,9 +44,9 @@ export default function PieChartDemo() {
             cy: '100%',
           },
         ]}
-        sx={{ aspectRatio: 2 }}
-        height={100}
-        margin={5}
+        sx={{ aspectRatio: 3 }}
+        height={80}
+        margin={0}
         slotProps={{
           legend: {
             direction: 'horizontal',

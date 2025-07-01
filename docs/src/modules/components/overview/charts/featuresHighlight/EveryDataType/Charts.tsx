@@ -39,7 +39,7 @@ const formatUSD = (value: number | null) =>
 export function LineAndBar() {
   return (
     <ChartDataProvider
-      colors={['var(--palette-color-0)', 'var(--palette-color-1)', 'var(--palette-color-2)']}
+      colors={['#000000', 'var(--palette-color-3)', 'var(--palette-color-4)']}
       series={[
         {
           type: 'line',
@@ -68,8 +68,13 @@ export function LineAndBar() {
         { id: 'ratio', position: 'none' },
       ]}
     >
-      <ChartsSurface>
-        <BarPlot />
+      <ChartsSurface
+        sx={{
+          '& .MuiLineElement-root': { strokeWidth: 1.5 },
+          '& .MuiMarkElement-root': { r: 3, strokeWidth: 1.5 },
+        }}
+      >
+        <BarPlot borderRadius={4} />
         <LinePlot />
         <MarkPlot />
         <ChartsAxis />

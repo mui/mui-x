@@ -19,6 +19,17 @@ type DataItem = {
 } & Partial<Record<Versions, number | undefined | null>> &
   Partial<Record<`${Versions}_percent`, number | undefined | null>>;
 
+function AreaGradient({ color, id }: { color: string; id: string }) {
+  return (
+    <defs>
+      <linearGradient id={id} x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%" stopColor={color} stopOpacity={0.5} />
+        <stop offset="100%" stopColor={color} stopOpacity={0} />
+      </linearGradient>
+    </defs>
+  );
+}
+
 const addRelativeValue = (versions: Versions[]) => (item: DataItem) => {
   const sum = versions.reduce((a, version: Versions) => a + (item[version] ?? 0), 0);
 
@@ -113,9 +124,6 @@ export default function DownloadDemo() {
 
       <div style={{ flex: 1, minHeight: 300 }}>
         <LineChartPro
-          colors={(mode) =>
-            rainbowSurgePalette(mode).slice(selectedPackage === '@mui/x-charts' ? 1 : 0)
-          }
           skipAnimation
           dataset={packages[selectedPackage]}
           series={versions[selectedPackage].map((v) => ({
@@ -124,6 +132,7 @@ export default function DownloadDemo() {
             stack: 'v',
             area: true,
             showMark: false,
+            curve: 'linear',
             label: `v${v}`,
             valueFormatter: selectedFormat === 'relative' ? percentValueFormatter : valueFormatter,
           }))}
@@ -150,10 +159,26 @@ export default function DownloadDemo() {
           margin={{ left: 0, bottom: 0 }}
           sx={{
             [`& .${lineElementClasses.root}`]: {
-              display: 'none',
+              strokeWidth: 1.5,
+            },
+            '& .MuiAreaElement-series-5': {
+              fill: "url('#5')",
+            },
+            '& .MuiAreaElement-series-6': {
+              fill: "url('#6')",
+            },
+            '& .MuiAreaElement-series-7': {
+              fill: "url('#7')",
+            },
+            '& .MuiAreaElement-series-8': {
+              fill: "url('#8')",
             },
           }}
-        />
+        >
+          {versions[selectedPackage].map((v, i) => (
+            <AreaGradient color={rainbowSurgePalette('light')[i]} id={v} />
+          ))}
+        </LineChartPro>
       </div>
     </Stack>
   );

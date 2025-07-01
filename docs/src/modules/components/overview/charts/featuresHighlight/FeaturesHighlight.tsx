@@ -39,7 +39,6 @@ export default function FeaturesHighlight() {
           maxWidth: 1200,
           height: { md: 640 },
           overflow: 'hidden',
-          p: 1,
           background: theme.palette.gradients.linearSubtle,
         })}
       >
@@ -65,15 +64,15 @@ export default function FeaturesHighlight() {
             >
               <Stack
                 spacing={1}
-                p={1}
-                flexBasis={{ xs: '50%', sm: '65%' }}
+                p={2}
+                flexBasis={{ xs: '50%', sm: '70%' }}
                 sx={(theme) => ({
                   borderBottom: `1px solid ${theme.palette.divider}`,
                 })}
               >
                 <EveryDataType />
               </Stack>
-              <Stack spacing={1} p={2} flexBasis={{ xs: '50%', sm: '35%' }}>
+              <Stack spacing={1} p={2} flexBasis={{ xs: '50%', sm: '30%' }} justifyContent="center">
                 <ColorPaletteSequence />
               </Stack>
             </Stack>
@@ -81,7 +80,7 @@ export default function FeaturesHighlight() {
             {/* second column */}
             <Stack flexBasis={{ xs: '100%', sm: '50%' }}>
               <Box
-                p={1}
+                p={2}
                 flexBasis="30%"
                 sx={(theme) => ({
                   borderBottom: `1px solid ${theme.palette.divider}`,
@@ -94,7 +93,7 @@ export default function FeaturesHighlight() {
                 </Typography>
                 <Legends />
               </Box>
-              <Box p={1} flexBasis={{ xs: '65%', sm: '50%', md: '65%' }}>
+              <Box p={2} flexBasis={{ xs: '65%', sm: '50%', md: '65%' }}>
                 <ZoomAndPan />
               </Box>
             </Stack>
@@ -108,11 +107,15 @@ export default function FeaturesHighlight() {
           >
             <Stack
               spacing={1}
-              p={1}
-              flexBasis={{ xs: '35%', sm: '50%', md: '35%' }}
+              p={2}
+              flexBasis={{ xs: '50%', md: '35%' }}
               sx={(theme) => ({
-                borderBottom: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
-                borderRight: { md: 'none', xs: `1px solid ${theme.palette.divider}` },
+                borderBottom: {
+                  xs: `1px solid ${theme.palette.divider}`,
+                  sm: 'none',
+                  md: `1px solid ${theme.palette.divider}`,
+                },
+                borderRight: { md: 'none', xs: 'none', sm: `1px solid ${theme.palette.divider}` },
               })}
             >
               <Typography variant="subtitle2">Composition</Typography>
@@ -131,7 +134,7 @@ export default function FeaturesHighlight() {
 </ChartDataProvider>`}
               />
             </Stack>
-            <Box flexBasis="70%" p={1}>
+            <Box flexBasis={{ xs: '50%', md: '65%' }} p={2}>
               <BarChartToggle />
             </Box>
           </Stack>

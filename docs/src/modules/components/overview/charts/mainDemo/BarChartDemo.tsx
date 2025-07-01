@@ -23,7 +23,7 @@ const valueFormatter: AxisConfig['valueFormatter'] = (value, { location }) => {
 export default function BarChartDemo() {
   return (
     <React.Fragment>
-      <Typography variant="body2" color="text.secondary" fontWeight={500}>
+      <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ px: 1 }}>
         Issues opened daily
       </Typography>
       <BarChart
@@ -31,6 +31,7 @@ export default function BarChartDemo() {
         series={[{ dataKey: 'value' }]}
         margin={5}
         height={100}
+        borderRadius={4}
         xAxis={[{ dataKey: 'weekDay', scaleType: 'band', valueFormatter, disableTicks: true }]}
         yAxis={[{ position: 'none' }]}
       />

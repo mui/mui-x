@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ThemeOptions, createTheme, useTheme } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -8,67 +9,84 @@ import PieChartDemo from './PieChartDemo';
 import BarChartDemo from './BarChartDemo';
 import HeatmapDemo from './HeatmapDemo';
 import DownloadDemo from './DownloadDemo';
+import { getTheme } from '../theme/getTheme';
+import { ThemeProvider } from '@mui/material/styles';
 
 export default function MainDemo() {
+  const currentTheme = useTheme();
+
+  const customTheme = createTheme(
+    currentTheme as ThemeOptions,
+    getTheme(currentTheme.palette.mode),
+  );
+
   return (
-    <Paper
-      component="div"
-      variant="outlined"
-      sx={(theme) => ({
-        my: 8,
-        mx: 'auto',
-        maxWidth: 1200,
-        height: { md: 640 },
-        overflow: 'hidden',
-        p: 1,
-        border: 'none',
-        background: theme.palette.gradients.linearSubtle,
-      })}
-    >
-      <Stack direction="row" height="100%" spacing={1}>
-        {/* Left/Main Section */}
-        <Stack
-          direction="column"
-          spacing={1}
-          flexBasis={{ xs: '100%', md: '65%' }}
-          maxHeight={{ xs: 500, md: 580 }}
-          minWidth={0}
-          sx={(theme) => ({
-            borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
-            pr: { md: 1, xs: 0 },
-          })}
-        >
+    <ThemeProvider theme={customTheme}>
+      <Paper
+        component="div"
+        variant="outlined"
+        sx={(theme) => ({
+          my: 8,
+          mx: 'auto',
+          maxWidth: 1200,
+          height: { md: 640 },
+          overflow: 'hidden',
+          p: 1,
+          background: theme.palette.gradients.linearSubtle,
+        })}
+      >
+        <Stack direction="row" height="100%" spacing={1}>
+          {/* Left/Main Section */}
           <Stack
-            display={{ xs: 'none', md: 'flex' }}
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ md: 1, xs: 0.5 }}
+            direction="column"
+            spacing={1}
+            flexBasis={{ xs: '100%', md: '65%' }}
+            maxHeight={{ xs: 500, md: 580 }}
+            minWidth={0}
+            sx={(theme) => ({
+              pr: { md: 1, xs: 0 },
+            })}
           >
-            {statCardData.map((card, index) => (
-              <StatCard key={index} {...card} />
-            ))}
+            <Stack
+              display={{ xs: 'none', md: 'flex' }}
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={{ md: 1, xs: 0.5 }}
+            >
+              {statCardData.map((card, index) => (
+                <StatCard key={index} {...card} />
+              ))}
+            </Stack>
+            <Box component="div" sx={{ flexGrow: 1, minHeight: 0 }}>
+              <DownloadDemo />
+            </Box>
           </Stack>
-          <Box component="div" sx={{ flexGrow: 1, minHeight: 0 }}>
-            <DownloadDemo />
-          </Box>
+          {/* Right/Sidebar Section */}
+          <Stack
+            direction="column"
+            spacing={1}
+            flexBasis={{ xs: '100%', md: '35%' }}
+            sx={{ display: { xs: 'none', md: 'flex' } }}
+          >
+            <Paper
+              component="div"
+              variant="outlined"
+              sx={{ px: 1, py: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
+            >
+              <PieChartDemo />
+            </Paper>
+            <Paper
+              component="div"
+              variant="outlined"
+              sx={{ px: 1, py: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
+            >
+              <BarChartDemo />
+            </Paper>
+            <Paper component="div" variant="outlined" sx={{ px: 1, py: 2 }}>
+              <HeatmapDemo />
+            </Paper>
+          </Stack>
         </Stack>
-        {/* Right/Sidebar Section */}
-        <Stack
-          direction="column"
-          spacing={1}
-          flexBasis={{ xs: '100%', md: '35%' }}
-          sx={{ display: { xs: 'none', md: 'flex' } }}
-        >
-          <Paper component="div" variant="outlined" sx={{ p: 1 }}>
-            <PieChartDemo />
-          </Paper>
-          <Paper component="div" variant="outlined" sx={{ p: 1 }}>
-            <BarChartDemo />
-          </Paper>
-          <Paper component="div" variant="outlined" sx={{ p: 1 }}>
-            <HeatmapDemo />
-          </Paper>
-        </Stack>
-      </Stack>
-    </Paper>
+      </Paper>
+    </ThemeProvider>
   );
 }

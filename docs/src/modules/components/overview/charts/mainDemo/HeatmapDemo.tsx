@@ -1,8 +1,21 @@
 import * as React from 'react';
-import { interpolateBlues } from 'd3-scale-chromatic';
+import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import Typography from '@mui/material/Typography';
 import { AxisConfig } from '@mui/x-charts/models';
+
+const purples = [
+  '#F0F1FF',
+  '#DBDEFF',
+  '#CDD2FE',
+  '#9BA5FD',
+  '#6978FC',
+  '#5060FB',
+  '#283BF1',
+  '#0A1AAE',
+];
+
+const defaultColorMap = interpolateRgbBasis(purples);
 
 const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const hours = ['6am-10am', '10am-12am', '12am-5pm', '5pm-8pm', '8pm-12pm'];
@@ -71,15 +84,14 @@ function CustomCell(props: any) {
   return (
     <React.Fragment>
       <rect
+        {...other}
         x={x + 1}
         y={y + 1}
-        width={width - 2}
-        height={height - 2}
+        width={width - 1 * 2}
+        height={height - 1 * 2}
         fill={ownerState.color}
-        clipPath="inset(0px round 10px)"
+        clipPath={ownerState.isHighlighted ? undefined : 'inset(0px round 4px)'}
       />
-      {/* A rectangle just here to catch events */}
-      <rect {...other} x={x} y={y} width={width} height={height} fill="transparent" />
     </React.Fragment>
   );
 }
@@ -87,7 +99,7 @@ function CustomCell(props: any) {
 export default function HeatmapDemo() {
   return (
     <React.Fragment>
-      <Typography variant="body2" color="text.secondary" fontWeight={500}>
+      <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ px: 1 }}>
         Issues opening time
       </Typography>
       <Heatmap
@@ -114,7 +126,7 @@ export default function HeatmapDemo() {
             max: 20,
             colorMap: {
               type: 'continuous',
-              color: (t: number) => interpolateBlues(t * 0.8 + 0.2),
+              color: defaultColorMap,
             },
           },
         ]}
