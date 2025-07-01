@@ -4,16 +4,7 @@ packages:
   - test
   - test/*
   - bundle-size
-ignoredBuiltDependencies:
-  - '@mui/monorepo'
-  - msw
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@vvago/vale'
-  - 'core-js'
-  - 'esbuild'
-  - 'nx'
-  - 'sharp'
+
 catalog:
   '@babel/core': ^7.27.7
   '@babel/plugin-transform-react-constant-elements': ^7.27.1
@@ -88,3 +79,16 @@ catalog:
   '@vitest/ui': ^3.2.4
   webpack-bundle-analyzer: ^4.10.2
   yargs: ^18.0.0
+
+ignoredBuiltDependencies:
+  - '@mui/monorepo'
+  - msw
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - '@vvago/vale'
+  - core-js
+  - esbuild
+  - nx
+  - sharp
+  - unrs-resolver
