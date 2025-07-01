@@ -341,18 +341,12 @@ export const useGridRowSpanning = (
   // - The `paginationModel` is updated
   // - The rows are updated
   const resetRowSpanningState = React.useCallback(() => {
-    if (!props.rowSpanning) {
-      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
-        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
-      }
-    } else {
-      const renderContext = gridRenderContextSelector(apiRef);
-      if (!isRowContextInitialized(renderContext)) {
-        return;
-      }
-      updateRowSpanningState(renderContext, true);
+    const renderContext = gridRenderContextSelector(apiRef);
+    if (!isRowContextInitialized(renderContext)) {
+      return;
     }
-  }, [apiRef, props.rowSpanning, updateRowSpanningState]);
+    updateRowSpanningState(renderContext, true);
+  }, [apiRef, updateRowSpanningState]);
 
   useGridEvent(
     apiRef,
@@ -360,12 +354,18 @@ export const useGridRowSpanning = (
     runIf(props.rowSpanning, updateRowSpanningState),
   );
 
-  useGridEvent(apiRef, 'sortedRowsSet', resetRowSpanningState);
-  useGridEvent(apiRef, 'paginationModelChange', resetRowSpanningState);
-  useGridEvent(apiRef, 'filteredRowsSet', resetRowSpanningState);
-  useGridEvent(apiRef, 'columnsChange', resetRowSpanningState);
+  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
-    resetRowSpanningState();
-  }, [resetRowSpanningState]);
+    if (!props.rowSpanning) {
+      if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
+        apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
+      }
+    } else if (apiRef.current.state.rowSpanning === EMPTY_STATE) {
+      resetRowSpanningState();
+    }
+  }, [apiRef, resetRowSpanningState, props.rowSpanning]);
 };
