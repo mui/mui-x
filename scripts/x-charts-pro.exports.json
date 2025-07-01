@@ -149,8 +149,6 @@
   { "name": "ChartsReferenceLineClasses", "kind": "Interface" },
   { "name": "ChartsReferenceLineClassKey", "kind": "TypeAlias" },
   { "name": "ChartsReferenceLineProps", "kind": "TypeAlias" },
-  { "name": "ChartsRenderer", "kind": "Function" },
-  { "name": "ChartsRendererProps", "kind": "Interface" },
   { "name": "ChartsSurface", "kind": "Variable" },
   { "name": "ChartsSurfaceProps", "kind": "Interface" },
   { "name": "ChartsText", "kind": "Function" },
