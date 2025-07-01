@@ -1,8 +1,3 @@
-.EventCard {
-  border-radius: var(--radius-4);
-  background-color: var(--event-background);
-}
-
 .EventTitle {
   margin: 0;
   color: var(--event-primary-text);
@@ -12,25 +7,34 @@
 }
 
 .EventTime {
+  display: inline-block;
   color: var(--event-secondary-text);
   font-weight: var(--font-weight-1);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
+  white-space: nowrap;
+  width: 150px;
 }
 
 .EventCard--compact {
-  position: relative;
-  display: flex;
-  gap: var(--space-1);
-  padding: var(--space-1) 0 var(--space-1) var(--space-4);
+  container-type: inline-size;
+  border-radius: var(--radius-3);
+  background-color: var(--event-background);
+  cursor: pointer;
 }
 
-.EventCard--compact::before {
+.EventCard--compact .EventCardContent {
+  margin: 0;
+  position: relative;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-7);
+}
+
+.EventCard--compact .EventCardContent::before {
   content: '';
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 0;
+  left: var(--space-2);
   width: var(--space-2);
   height: var(--space-2);
   border-radius: 50%;
@@ -38,7 +42,33 @@
   background-color: var(--compact-circle-bg);
 }
 
-.EventCard--compact .EventTime {
-  flex-shrink: 0;
-  opacity: 0.7;
+.EventCard--compact:active {
+  background-color: var(--interactive-active-bg);
+}
+
+.EventCard--compact:hover {
+  background-color: var(--interactive-hover-bg);
+}
+
+/* Smaller containers (month view) */
+@container (width < 300px) {
+  .EventCardContent {
+    padding: 0 0 0 var(--space-5);
+  }
+
+  .EventTime {
+    display: inline;
+  }
+
+  .EventTimeEnd {
+    display: none;
+  }
+
+  .EventTitle {
+    margin-inline-start: var(--space-1);
+  }
+
+  .EventCardContent::before {
+    left: var(--space-1);
+  }
 }

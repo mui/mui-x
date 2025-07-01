@@ -43,20 +43,24 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       case 'compact':
       default:
         return (
-          <React.Fragment>
-            <time className={clsx('EventTime')}>
-              {adapter.formatByString(eventProp.start, 'h:mm a')}
+          <p
+            className={clsx('EventCardContent', 'LinesClamp')}
+            style={{ '--number-of-lines': 1 } as React.CSSProperties}
+          >
+            <time className="EventTime">
+              <span className="EventTimeStart">
+                {adapter.formatByString(eventProp.start, 'h:mm a')}
+              </span>
+              <span className="EventTimeEnd">
+                {' '}
+                - {adapter.formatByString(eventProp.end, 'h:mm a')}
+              </span>
             </time>
-            <p
-              className={clsx('EventTitle', 'LinesClamp')}
-              style={{ '--number-of-lines': 1 } as React.CSSProperties}
-            >
-              {eventProp.title}
-            </p>
-          </React.Fragment>
+            <span className="EventTitle">{eventProp.title}</span>
+          </p>
         );
     }
-  }, [variant, eventProp.start, eventProp.title]);
+  }, [variant, eventProp.title, eventProp.start, eventProp.end]);
 
   return (
     <div

@@ -71,7 +71,7 @@
 .MonthViewCell {
   display: flex;
   flex-direction: column;
-  padding: var(--space-2);
+  padding: var(--space-1);
   font-size: var(--font-size-2);
   line-height: var(--line-height-1);
   color: var(--secondary-text-color);
