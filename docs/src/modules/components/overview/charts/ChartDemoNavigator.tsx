@@ -34,7 +34,7 @@ export default function ChartDemoNavigator(
         direction={{ xs: 'column', md: 'row' }}
         spacing={{ xs: 1, md: 6 }}
         py={8}
-        alignItems="center"
+        alignItems="start"
       >
         <Stack
           spacing={2}

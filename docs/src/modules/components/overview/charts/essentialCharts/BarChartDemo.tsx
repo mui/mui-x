@@ -121,16 +121,7 @@ function Bar() {
 
 export default function BareChartDemo() {
   return (
-    <ChartDemoWrapper
-      link="/x/react-charts/bars/"
-      code={`
-<BarChart
-  dataset={precipitationData}
-  xAxis={[{ dataKey: 'month' }]}
-  series={[{ dataKey: 'seoul', label: 'Seoul rainfall' }]}
-  grid={{ horizontal: true }}
-/>`}
-    >
+    <ChartDemoWrapper link="/x/react-charts/bars/">
       <Bar />
     </ChartDemoWrapper>
   );

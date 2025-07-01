@@ -75,14 +75,7 @@ function ZoomAndPan() {
 
 export default function ZoomAndPanDemo() {
   return (
-    <ChartDemoWrapper
-      link="/x/react-charts/zoom-and-pan/"
-      code={`
-<LineChartPro
-  xAxis={[{ scaleType: 'time', dataKey: 'date', zoom: true }]}
-  yAxis={[{ zoom: true }]}
-/>`}
-    >
+    <ChartDemoWrapper link="/x/react-charts/zoom-and-pan/">
       <ZoomAndPan />
     </ChartDemoWrapper>
   );

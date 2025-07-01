@@ -90,18 +90,7 @@ function MultiAxes() {
 
 export default function MultiAxesDemo() {
   return (
-    <ChartDemoWrapper
-      link="/x/react-charts/axis/"
-      code={`
-<ChartContainer>
-  <BarPlot />
-  <LinePlot />
-  <ChartsXAxis />
-  <ChartsYAxis axisId="leftAxis" label="Temperature (°C)" />
-  <ChartsYAxis axisId="rightAxis" label="Precipitation (mm)" />
-  <ChartsTooltip />
-</ChartContainer>`}
-    >
+    <ChartDemoWrapper link="/x/react-charts/axis/">
       <MultiAxes />
     </ChartDemoWrapper>
   );

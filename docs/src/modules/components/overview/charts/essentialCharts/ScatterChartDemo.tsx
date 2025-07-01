@@ -82,19 +82,7 @@ function Scatter() {
 
 export default function ScatterChartDemo() {
   return (
-    <ChartDemoWrapper
-      link="/x/react-charts/scatter/"
-      code={`
-<ScatterChart
-  series={[
-    { label: 'Other', data },
-    { label: 'Intel', data },
-    { label: 'Apple', data },
-    { label: 'IBM', data },
-  ]}
-  yAxis={[{ scaleType: 'log', label: 'transistor/mm²' }]}
-/>`}
-    >
+    <ChartDemoWrapper link="/x/react-charts/scatter/">
       <Scatter />
     </ChartDemoWrapper>
   );

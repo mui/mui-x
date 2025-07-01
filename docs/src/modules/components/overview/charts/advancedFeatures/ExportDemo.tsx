@@ -32,7 +32,7 @@ function Export() {
   const apiRef = React.useRef<ChartProApi<'line'>>(undefined);
 
   return (
-    <Stack height="100%">
+    <Stack height="100%" spacing={3} alignItems="center">
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <Typography align="center">Google Vs Meta stock price</Typography>
         <LineChartPro
@@ -86,20 +86,7 @@ function Export() {
 
 export default function ExportDemo() {
   return (
-    <ChartDemoWrapper
-      link="/x/react-charts/export/"
-      code={`
-const apiRef = React.useRef<ChartProApi<'line'>>(undefined);
-<LineChartPro
-  apiRef={apiRef}
-/>
-<Button onClick={
-  () => apiRef.current.exportAsImage({type: 'image/jpeg'})
-}>
-  JPEG
-</Button>
-`}
-    >
+    <ChartDemoWrapper link="/x/react-charts/export/">
       <Export />
     </ChartDemoWrapper>
   );

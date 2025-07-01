@@ -62,16 +62,7 @@ function Pie() {
 
 export default function PieChartDemo() {
   return (
-    <ChartDemoWrapper
-      link="/x/react-charts/pie/"
-      code={`
-<PieChart
-  series={[{
-    data: desktopOS,
-    valueFormatter,
-  }]}
-/>`}
-    >
+    <ChartDemoWrapper link="/x/react-charts/pie/">
       <Pie />
     </ChartDemoWrapper>
   );

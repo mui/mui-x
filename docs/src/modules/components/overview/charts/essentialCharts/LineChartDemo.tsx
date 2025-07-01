@@ -108,18 +108,7 @@ function Line() {
 
 export default function LineChartDemo() {
   return (
-    <ChartDemoWrapper
-      link="/x/react-charts/lines/"
-      code={`
-<LineChart
-  dataset={inflationData}
-  series={[
-    { dataKey: 'rateDE', label: 'Germany', valueFormatter },
-    { dataKey: 'rateUK', label: 'United Kingdom', valueFormatter },
-    { dataKey: 'rateFR', label: 'France', valueFormatter },
-  ]}
-/>`}
-    >
+    <ChartDemoWrapper link="/x/react-charts/lines/">
       <Line />
     </ChartDemoWrapper>
   );

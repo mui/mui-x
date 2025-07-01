@@ -22,9 +22,7 @@ export default function ChartDemoWrapper(
         sx={{
           width: '100%',
           padding: 2,
-          minHeight: {
-            md: 600,
-          },
+          minHeight: { md: 500 },
         }}
         justifyContent={code ? 'space-between' : 'space-around'}
       >
