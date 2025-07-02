@@ -11,6 +11,8 @@ export interface SchedulerTranslations {
   allDay: string;
 
   // MonthView
+  noResourceAriaLabel: string;
+  resourceAriaLabel: string;
   weekAbbreviation: string;
   weekNumberAriaLabel: string;
 

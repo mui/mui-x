@@ -13,6 +13,8 @@ export const enUS: SchedulerTranslations = {
   allDay: 'All day',
 
   // MonthView
+  noResourceAriaLabel: 'No specific resource',
+  resourceAriaLabel: 'Resource',
   weekAbbreviation: 'W',
   weekNumberAriaLabel: 'Week number',
 

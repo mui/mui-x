@@ -25,21 +25,13 @@
 
 .EventCard--compact .DayGridEventCardContent {
   margin: 0;
-  position: relative;
-  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-7);
 }
 
-.EventCard--compact .DayGridEventCardContent::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: var(--space-2);
-  width: var(--space-2);
-  height: var(--space-2);
-  border-radius: 50%;
-  border: 1px solid var(--compact-circle-bg);
-  background-color: var(--compact-circle-bg);
+.DayGridEventCardWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
 }
 
 .EventCard--compact:active {
@@ -52,8 +44,9 @@
 
 /* Smaller containers (month view) */
 @container (width < 300px) {
-  .EventCard--compact .DayGridEventCardContent {
-    padding: 2px 0 2px var(--space-5);
+  .EventCard--compact .DayGridEventCardWrapper {
+    padding: 2px 0 2px var(--space-1);
+    gap: var(--space-1);
   }
 
   .DayGridEventTime {
@@ -66,9 +59,5 @@
 
   .DayGridEventTitle {
     margin-inline-start: var(--space-1);
-  }
-
-  .EventCard--compact .DayGridEventCardContent::before {
-    left: var(--space-1);
   }
 }
