@@ -10,8 +10,8 @@ import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore'
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
+import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
-import { DayGridEvent } from '../internals/components/event';
 
 const adapter = getAdapter();
 
