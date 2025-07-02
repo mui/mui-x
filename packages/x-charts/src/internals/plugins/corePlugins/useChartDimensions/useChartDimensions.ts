@@ -212,33 +212,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     },
     [isXInside, isYInside],
   );
-  const isElementInside = React.useCallback(
-    (element: Element | EventTarget | null | undefined) => {
-      const svgElement = svgRef.current;
-      if (!element || !(element instanceof Element) || !svgElement) {
-        return false;
-      }
-      // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
-      if (element.closest('[data-drawing-container]')) {
-        return true;
-      }
 
-      const rect = element.getBoundingClientRect();
-      const { x: left, y: top } = getSVGPoint(svgElement, {
-        clientX: rect.left,
-        clientY: rect.top,
-      });
-      const { x: right, y: bottom } = getSVGPoint(svgElement, {
-        clientX: rect.right,
-        clientY: rect.bottom,
-      });
-
-      return isXInside(left) && isXInside(right) && isYInside(top) && isYInside(bottom);
-    },
-    [isXInside, isYInside, svgRef],
-  );
-
-  return { instance: { isPointInside, isXInside, isYInside, isElementInside } };
+  return { instance: { isPointInside, isXInside, isYInside } };
 };
 
 useChartDimensions.params = {

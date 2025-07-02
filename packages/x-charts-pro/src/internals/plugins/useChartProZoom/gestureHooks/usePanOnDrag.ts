@@ -6,6 +6,7 @@ import {
   selectorChartDrawingArea,
   ZoomData,
   selectorChartZoomOptionsLookup,
+  getSVGPoint,
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { PanEvent } from '@mui/x-internal-gestures/core';
@@ -38,7 +39,11 @@ export const usePanOnDrag = (
     }
 
     const handlePanStart = (event: PanEvent) => {
-      if (event.detail.target === element || instance.isElementInside(event.detail.target)) {
+      const svgPoint = getSVGPoint(element, event.detail.srcEvent);
+      if (
+        event.detail.target === element ||
+        instance.isPointInside(svgPoint.x, svgPoint.y, event.detail.target)
+      ) {
         startRef.current = store.value.zoom.zoomData;
       }
     };
