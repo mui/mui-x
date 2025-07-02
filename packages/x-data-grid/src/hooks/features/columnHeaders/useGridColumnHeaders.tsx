@@ -163,7 +163,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const { renderContext: currentContext = renderContext } = params || {};
 
     const firstColumnToRender = currentContext.firstColumnIndex;
-    const lastColumnToRender = currentContext.lastColumnIndex;
+    // HACK: renderContext ins't always synchronized, this should be handled properly.
+    const lastColumnToRender = Math.min(currentContext.lastColumnIndex, visibleColumns.length);
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {

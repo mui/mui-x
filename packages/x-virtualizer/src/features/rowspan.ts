@@ -46,8 +46,10 @@ function initializeState(params: VirtualizerParams): Rowspan.State {
 
 function useRowspan(
   store: Store<BaseState & Rowspan.State>,
-  params: VirtualizerParams,
-  api: Virtualization.API,
+  _params: VirtualizerParams,
+  _api: Virtualization.API,
 ) {
-  return {};
+  const getHiddenCellsOrigin = () => selectors.hiddenCellsOriginMap(store.state);
+
+  return { getHiddenCellsOrigin };
 }

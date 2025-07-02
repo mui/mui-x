@@ -3,15 +3,13 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { useVirtualizer, Rowspan } from '@mui/x-virtualizer';
+import { useVirtualizer } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
-import { useGridRootProps } from '../utils/useGridRootProps';
 import { useGridSelector } from '../utils/useGridSelector';
 import {
-  gridDimensionsSelector,
   gridContentHeightSelector,
   gridHasFillerSelector,
   gridVerticalScrollbarWidthSelector,
@@ -24,10 +22,9 @@ import {
   gridHasColSpanSelector,
 } from '../features/columns/gridColumnsSelector';
 import { gridPinnedRowsSelector, gridRowCountSelector } from '../features/rows/gridRowsSelector';
-import { useGridVisibleRows, getVisibleRows } from '../utils/useGridVisibleRows';
+import { useGridVisibleRows } from '../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../features/pagination';
-import { gridRowsMetaSelector } from '../features/rows/gridRowsMetaSelector';
 import { gridListColumnSelector } from '../features/listView/gridListViewSelectors';
 import { minimalContentHeight } from '../features/rows/gridRowsUtils';
 import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../features/columns';
@@ -192,6 +189,7 @@ export function useGridVirtualizer(
     ),
     applyRowHeight: (entry, row) =>
       apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
+    virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
     focusedCell: focusedVirtualCell,
     rowBufferPx: rootProps.rowBufferPx,
@@ -229,9 +227,6 @@ export function useGridVirtualizer(
 
     fixme: {
       focusedVirtualCell: () => gridFocusedVirtualCellSelector(apiRef),
-      inputs: (enabledForRows, enabledForColumns) =>
-        inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns),
-
       renderRow: (params) => (
         <rootProps.slots.row
           key={params.id}
@@ -300,69 +295,4 @@ export function useGridVirtualizer(
   apiRef.current.register('private', {
     virtualizer,
   });
-}
-
-type RenderContextInputs = {
-  enabledForRows: boolean;
-  enabledForColumns: boolean;
-  apiRef: RefObject<GridPrivateApiCommunity>;
-  autoHeight: boolean;
-  rowBufferPx: number;
-  columnBufferPx: number;
-  leftPinnedWidth: number;
-  columnsTotalWidth: number;
-  viewportInnerWidth: number;
-  viewportInnerHeight: number;
-  lastRowHeight: number;
-  lastColumnWidth: number;
-  rowsMeta: ReturnType<typeof gridRowsMetaSelector>;
-  columnPositions: ReturnType<typeof gridColumnPositionsSelector>;
-  rows: ReturnType<typeof useGridVisibleRows>['rows'];
-  range: ReturnType<typeof useGridVisibleRows>['range'];
-  pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>;
-  columns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
-  hiddenCellsOriginMap: ReturnType<typeof Rowspan.selectors.hiddenCellsOriginMap>;
-  listView: boolean;
-  virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
-};
-
-function inputsSelector(
-  apiRef: RefObject<GridPrivateApiCommunity>,
-  rootProps: ReturnType<typeof useGridRootProps>,
-  enabledForRows: boolean,
-  enabledForColumns: boolean,
-): RenderContextInputs {
-  const dimensions = gridDimensionsSelector(apiRef);
-  const currentPage = getVisibleRows(apiRef, rootProps);
-  const columns = rootProps.listView
-    ? [gridListColumnSelector(apiRef)!]
-    : gridVisibleColumnDefinitionsSelector(apiRef);
-  const hiddenCellsOriginMap = Rowspan.selectors.hiddenCellsOriginMap(
-    apiRef.current.virtualizer.store.state,
-  );
-  const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
-  const lastColumn = columns.at(-1);
-  return {
-    enabledForRows,
-    enabledForColumns,
-    apiRef,
-    autoHeight: rootProps.autoHeight,
-    rowBufferPx: rootProps.rowBufferPx,
-    columnBufferPx: rootProps.columnBufferPx,
-    leftPinnedWidth: dimensions.leftPinnedWidth,
-    columnsTotalWidth: dimensions.columnsTotalWidth,
-    viewportInnerWidth: dimensions.viewportInnerSize.width,
-    viewportInnerHeight: dimensions.viewportInnerSize.height,
-    lastRowHeight: lastRowId !== undefined ? apiRef.current.unstable_getRowHeight(lastRowId) : 0,
-    lastColumnWidth: lastColumn?.computedWidth ?? 0,
-    rowsMeta: gridRowsMetaSelector(apiRef),
-    columnPositions: gridColumnPositionsSelector(apiRef),
-    rows: currentPage.rows,
-    range: currentPage.range,
-    pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-    columns,
-    hiddenCellsOriginMap,
-    listView: rootProps.listView ?? false,
-    virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
-  };
 }

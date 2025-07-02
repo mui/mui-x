@@ -69,15 +69,10 @@ describe('<DataGridPro /> - Lazy loader', () => {
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
-    // XXX: Fix this when refactoring lazy-loading
-    // Possible cause: dimensions.isReady is read from the virtualizatioon store
-    // and might be ready earlier than before.
-    const N = 1;
-
-    expect(handleFetchRows.callCount).to.equal(N + 1);
+    expect(handleFetchRows.callCount).to.equal(1);
     // Should be 1. When tested in the browser it's called only 2 time
     fireEvent.click(getColumnHeaderCell(0));
-    expect(handleFetchRows.callCount).to.equal(N + 2);
+    expect(handleFetchRows.callCount).to.equal(2);
   });
 
   // Needs layout

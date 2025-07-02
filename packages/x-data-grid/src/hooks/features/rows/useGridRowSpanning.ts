@@ -239,10 +239,7 @@ export const useGridRowSpanning = (
 
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {
-      const { range, rows: visibleRows } = getVisibleRows(apiRef, {
-        pagination: props.pagination,
-        paginationMode: props.paginationMode,
-      });
+      const { range, rows: visibleRows } = getVisibleRows(apiRef);
       if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
@@ -252,7 +249,10 @@ export const useGridRowSpanning = (
       const rangeToProcess = getUnprocessedRange(
         {
           firstRowIndex: renderContext.firstRowIndex,
-          lastRowIndex: Math.min(renderContext.lastRowIndex, range.lastRowIndex + 1),
+          lastRowIndex: Math.min(
+            renderContext.lastRowIndex,
+            range.lastRowIndex - range.firstRowIndex + 1,
+          ),
         },
         previousState.processedRange,
       );
@@ -288,7 +288,7 @@ export const useGridRowSpanning = (
 
       store.set('rowSpanning', newState);
     },
-    [apiRef, props.pagination, props.paginationMode],
+    [apiRef],
   );
 
   // Reset events trigger a full re-computation of the row spanning state:

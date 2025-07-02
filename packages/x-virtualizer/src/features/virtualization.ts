@@ -5,11 +5,12 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import type { integer, RefObject } from '@mui/x-internals/types';
+import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { createSelector, useSelector, useSelectorEffect, Store } from '@mui/x-internals/store';
+import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions } from './dimensions';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 import {
@@ -79,11 +80,21 @@ function initializeState(params: VirtualizerParams) {
   return state;
 }
 
-function useVirtualization(
-  store: Store<BaseState>,
-  params: VirtualizerParams,
-  api: Dimensions.API & { calculateColSpan: any },
-) {
+/** APIs to override for colspan/rowspan */
+type AbstractAPI = {
+  getCellColSpanInfo: (rowId: RowId, columnIndex: integer) => CellColSpanInfo;
+  calculateColSpan: (
+    rowId: RowId,
+    minFirstColumn: integer,
+    maxLastColumn: integer,
+    columns: ColumnWithWidth[],
+  ) => void;
+  getHiddenCellsOrigin: () => Record<RowId, Record<number, number>>;
+};
+
+type API = Dimensions.API & AbstractAPI;
+
+function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: API) {
   const {
     initialState,
     isRtl,
@@ -257,7 +268,7 @@ function useVirtualization(
       MINIMUM_COLUMN_WIDTH * 6,
     );
 
-    const inputs = fixme.inputs(enabledForRows, enabledForColumns);
+    const inputs = inputsSelector(store, params, api, enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
     if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
@@ -280,7 +291,7 @@ function useVirtualization(
     ) {
       return;
     }
-    const inputs = fixme.inputs(enabledForRows, enabledForColumns);
+    const inputs = inputsSelector(store, params, api, enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
@@ -517,19 +528,6 @@ function useVirtualization(
     [columnsTotalWidth, contentHeight],
   );
 
-  /**
-   * Calculate `colSpan` for each cell in the row.
-   * Placeholder API for colspan to re-implement.
-   */
-  const calculateColSpan = (
-    _rowId: RowId,
-    _minFirstColumn: integer,
-    _maxLastColumn: integer,
-    _columns: ColumnWithWidth[],
-  ): void => {
-    throw new Error('Unimplemented: colspan feature is required');
-  };
-
   useEnhancedEffect(() => {
     if (!isRenderContextReady.current) {
       return;
@@ -642,77 +640,72 @@ function useVirtualization(
     store.update({ ...store.state, getters });
   }, Object.values(getters));
 
+  /* Placeholder API functions for colspan & rowspan to re-implement */
+
+  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
+    throw new Error('Unimplemented: colspan feature is required');
+  };
+
+  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
+    throw new Error('Unimplemented: colspan feature is required');
+  };
+
+  const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
+    throw new Error('Unimplemented: rowspan feature is required');
+  };
+
   return {
     getters,
     useVirtualization: () => useSelector(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
+    getCellColSpanInfo,
     calculateColSpan,
+    getHiddenCellsOrigin,
   };
 }
 
-type RenderContextInputs = any;
-// type RenderContextInputs = {
-//   enabledForRows: boolean;
-//   enabledForColumns: boolean;
-//   autoHeight: boolean;
-//   rowBufferPx: number;
-//   columnBufferPx: number;
-//   leftPinnedWidth: number;
-//   columnsTotalWidth: number;
-//   viewportInnerWidth: number;
-//   viewportInnerHeight: number;
-//   lastRowHeight: number;
-//   lastColumnWidth: number;
-//   rowsMeta: ReturnType<typeof gridRowsMetaSelector>;
-//   columnPositions: ReturnType<typeof gridColumnPositionsSelector>;
-//   rows: ReturnType<typeof useGridVisibleRows>['rows'];
-//   range: ReturnType<typeof useGridVisibleRows>['range'];
-//   pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>;
-//   columns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
-//   hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
-//   listView: boolean;
-//   virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
-// };
-//
-// function inputsSelector(
-//   store: Store<BaseState>,
-//   params: VirtualizerParams,
-//   enabledForRows: boolean,
-//   enabledForColumns: boolean,
-// ): RenderContextInputs {
-//   const dimensions = Dimensions.selectors.dimensions(store.state);
-//   const rows = params.rows;
-//   const range = params.range;
-//   const columns = params.columns;
-//
-//   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
-//   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
-//   const lastColumn = columns.at(-1);
-//
-//   return {
-//     enabledForRows,
-//     enabledForColumns,
-//     autoHeight: rootProps.autoHeight,
-//     rowBufferPx: rootProps.rowBufferPx,
-//     columnBufferPx: rootProps.columnBufferPx,
-//     leftPinnedWidth: dimensions.leftPinnedWidth,
-//     columnsTotalWidth: dimensions.columnsTotalWidth,
-//     viewportInnerWidth: dimensions.viewportInnerSize.width,
-//     viewportInnerHeight: dimensions.viewportInnerSize.height,
-//     lastRowHeight: lastRowId !== undefined ? apiRef.current.unstable_getRowHeight(lastRowId) : 0,
-//     lastColumnWidth: lastColumn?.computedWidth ?? 0,
-//     rowsMeta: gridRowsMetaSelector(apiRef),
-//     columnPositions: gridColumnPositionsSelector(apiRef),
-//     rows,
-//     range,
-//     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-//     columns,
-//     hiddenCellsOriginMap,
-//     listView: rootProps.listView ?? false,
-//     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
-//   };
-// }
+type RenderContextInputs = ReturnType<typeof inputsSelector>;
+
+function inputsSelector(
+  store: Store<BaseState>,
+  params: VirtualizerParams,
+  api: API,
+  enabledForRows: boolean,
+  enabledForColumns: boolean,
+) {
+  const dimensions = Dimensions.selectors.dimensions(store.state);
+  const rows = params.rows;
+  const range = params.range;
+  const columns = params.columns;
+
+  const hiddenCellsOriginMap = api.getHiddenCellsOrigin();
+  const lastRowId = params.rows.at(-1)?.id;
+  const lastColumn = columns.at(-1);
+
+  return {
+    api,
+    enabledForRows,
+    enabledForColumns,
+    autoHeight: params.autoHeight,
+    rowBufferPx: params.rowBufferPx,
+    columnBufferPx: params.columnBufferPx,
+    leftPinnedWidth: dimensions.leftPinnedWidth,
+    columnsTotalWidth: dimensions.columnsTotalWidth,
+    viewportInnerWidth: dimensions.viewportInnerSize.width,
+    viewportInnerHeight: dimensions.viewportInnerSize.height,
+    lastRowHeight: lastRowId !== undefined ? api.rowsMeta.getRowHeight(lastRowId) : 0,
+    lastColumnWidth: lastColumn?.computedWidth ?? 0,
+    rowsMeta: Dimensions.selectors.rowsMeta(store.state),
+    columnPositions: Dimensions.selectors.columnPositions(store.state, params.columns),
+    rows,
+    range,
+    pinnedColumns: params.pinnedColumns,
+    columns,
+    hiddenCellsOriginMap,
+    virtualizeColumnsWithAutoRowHeight: params.virtualizeColumnsWithAutoRowHeight,
+  };
+}
 
 function computeRenderContext(
   inputs: RenderContextInputs,
@@ -757,12 +750,13 @@ function computeRenderContext(
     renderContext.lastRowIndex = lastRowIndex;
   }
 
-  if (inputs.listView) {
-    return {
-      ...renderContext,
-      lastColumnIndex: 1,
-    };
-  }
+  // XXX
+  // if (inputs.listView) {
+  //   return {
+  //     ...renderContext,
+  //     lastColumnIndex: 1,
+  //   };
+  // }
 
   if (inputs.enabledForColumns) {
     let firstColumnIndex = 0;
@@ -784,7 +778,7 @@ function computeRenderContext(
     if (!inputs.virtualizeColumnsWithAutoRowHeight) {
       for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
         const row = inputs.rows[i];
-        hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
+        hasRowWithAutoHeight = inputs.api.rowsMeta.rowHasAutoHeight(row.id);
       }
     }
 
@@ -810,7 +804,7 @@ function getNearestIndexToRender(
   offset: number,
   options?: SearchOptions,
 ) {
-  const lastMeasuredIndexRelativeToAllRows = inputs.apiRef.current.getLastMeasuredRowIndex();
+  const lastMeasuredIndexRelativeToAllRows = inputs.api.rowsMeta.getLastMeasuredRowIndex();
   let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
   if (inputs.range?.lastRowIndex && !allRowsMeasured) {
     // Check if all rows in this page are already measured
@@ -877,8 +871,8 @@ function deriveRenderContext(
   });
 
   const firstColumnToRender = getFirstNonSpannedColumnToRender({
+    api: inputs.api,
     firstColumnToRender: initialFirstColumnToRender,
-    apiRef: inputs.apiRef,
     firstRowToRender,
     lastRowToRender,
     visibleRows: inputs.rows,
@@ -1124,14 +1118,14 @@ function createRange(from: number, to: number) {
 }
 
 function getFirstNonSpannedColumnToRender({
+  api,
   firstColumnToRender,
-  apiRef,
   firstRowToRender,
   lastRowToRender,
   visibleRows,
 }: {
+  api: API;
   firstColumnToRender: number;
-  apiRef: RefObject<any>;
   firstRowToRender: number;
   lastRowToRender: number;
   visibleRows: RowEntry[];
@@ -1147,10 +1141,7 @@ function getFirstNonSpannedColumnToRender({
       const row = visibleRows[i];
       if (row) {
         const rowId = visibleRows[i].id;
-        const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-          rowId,
-          firstNonSpannedColumnToRender,
-        );
+        const cellColSpanInfo = api.getCellColSpanInfo(rowId, firstNonSpannedColumnToRender);
 
         if (
           cellColSpanInfo &&

@@ -90,6 +90,7 @@ export type VirtualizerParams = {
   /** Update the row height values before they're used.
    * Used to add detail panel heights. */
   applyRowHeight?: (entry: HeightEntry, rowEntry: RowEntry) => void;
+  virtualizeColumnsWithAutoRowHeight?: boolean;
 
   resizeThrottleMs: number;
   onResize?: (lastSize: Size) => void;
@@ -112,7 +113,6 @@ export type VirtualizerParams = {
 
   fixme: {
     focusedVirtualCell: () => any;
-    inputs: (enabledForRows: boolean, enabledForColumns: boolean) => RenderContextInputs;
     renderRow: (params: {
       id: any;
       model: Row;
