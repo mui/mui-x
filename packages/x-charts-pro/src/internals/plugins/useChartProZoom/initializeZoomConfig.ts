@@ -1,6 +1,11 @@
 'use client';
 
-import type { ZoomConfig, DefaultizedZoomConfig } from './ZoomConfig.types';
+import type {
+  ZoomConfig,
+  DefaultizedZoomConfig,
+  ZoomInteraction,
+  PanInteraction,
+} from './ZoomConfig.types';
 
 export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomConfig => {
   const defaultizedConfig: DefaultizedZoomConfig = { zoom: {}, pan: {} };
@@ -15,11 +20,12 @@ export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
       if (typeof interaction === 'string') {
         defaultizedConfig.zoom[interaction] = { type: interaction, mode: 'all', keys: [] };
       } else {
-        defaultizedConfig.zoom[interaction.type as string] = {
-          type: interaction.type,
+        const type = interaction.type;
+        defaultizedConfig.zoom[type] = {
+          type,
           mode: interaction.mode ?? 'all',
           keys: interaction.keys ?? [],
-        };
+        } as Required<ZoomInteraction>;
       }
     });
   }
@@ -33,11 +39,12 @@ export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
       if (typeof interaction === 'string') {
         defaultizedConfig.pan[interaction] = { type: interaction, mode: 'all', keys: [] };
       } else {
-        defaultizedConfig.pan[interaction.type as string] = {
-          type: interaction.type,
+        const type = interaction.type;
+        defaultizedConfig.pan[type] = {
+          type,
           mode: interaction.mode ?? 'all',
           keys: interaction.keys ?? [],
-        };
+        } as Required<PanInteraction>;
       }
     });
   }

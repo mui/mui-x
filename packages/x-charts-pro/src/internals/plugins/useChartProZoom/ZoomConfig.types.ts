@@ -27,7 +27,8 @@ export type DefaultizedZoomConfig = {
 export type ZoomInteraction = OnWheelInteraction | OnPinchInteraction;
 export type PanInteraction = OnDragInteraction;
 
-export type InteractionName = ZoomInteraction['type'] | PanInteraction['type'];
+export type ZoomInteractionName = ZoomInteraction['type'];
+export type PanInteractionName = PanInteraction['type'];
 export type InteractionMode = 'touch' | 'mouse' | 'all';
 
 export type OnWheelInteraction = {
