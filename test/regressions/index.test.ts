@@ -196,7 +196,7 @@ async function main() {
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
-      await new Promise((r) => setTimeout(r, 200));
+      await sleep(100);
       await page.evaluate(() => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
 
@@ -207,7 +207,7 @@ async function main() {
         virtualScroller.scrollLeft = 400;
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
-      await new Promise((r) => setTimeout(r, 200));
+      await sleep(100);
 
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });

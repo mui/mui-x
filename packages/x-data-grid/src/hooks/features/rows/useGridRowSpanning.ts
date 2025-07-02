@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import useLazyRef from '@mui/utils/useLazyRef';
 import { RowSpanningState } from '@mui/x-virtualizer/models';
 import { Rowspan } from '@mui/x-virtualizer/features';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
