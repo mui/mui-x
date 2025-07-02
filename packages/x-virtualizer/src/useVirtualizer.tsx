@@ -5,6 +5,7 @@ import { Store } from '@mui/x-internals/store';
 import { Colspan } from './features/colspan';
 import { Dimensions } from './features/dimensions';
 import { Keyboard } from './features/keyboard';
+import { Rowspan } from './features/rowspan';
 import { Virtualization } from './features/virtualization';
 import type { RowId } from './models/core';
 import type { HeightEntry, RowSpacing, RowVisibilityParams } from './models/dimensions';
@@ -48,6 +49,7 @@ export type VirtualizerParams = {
   initialState?: {
     scroll?: { top: number; left: number };
     dimensions?: Partial<Dimensions.State['dimensions']>;
+    rowSpanning?: Rowspan.State['rowSpanning'];
     virtualization?: Partial<Virtualization.State['virtualization']>;
   };
   isRtl: boolean;
@@ -131,7 +133,7 @@ export type VirtualizerParams = {
   };
 };
 
-const FEATURES = [Dimensions, Virtualization, Colspan, Keyboard] as const;
+const FEATURES = [Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
 
 export const useVirtualizer = (params: VirtualizerParams) => {
   const store = useLazyRef(() => {
@@ -139,11 +141,11 @@ export const useVirtualizer = (params: VirtualizerParams) => {
       FEATURES.map((f) => f.initialize(params)).reduce(
         (state, partial) => Object.assign(state, partial),
         {},
-      ) as Dimensions.State & Virtualization.State & Colspan.State & Keyboard.State,
+      ) as Dimensions.State & Virtualization.State & Colspan.State & Rowspan.State & Keyboard.State,
     );
   }).current;
 
-  const api = {} as Dimensions.API & Virtualization.API & Colspan.API & Keyboard.API;
+  const api = {} as Dimensions.API & Virtualization.API & Colspan.API & Rowspan.API & Keyboard.API;
   for (const feature of FEATURES) {
     Object.assign(api, feature.use(store, params, api));
   }

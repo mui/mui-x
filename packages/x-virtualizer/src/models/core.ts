@@ -87,3 +87,5 @@ export namespace ScrollDirection {
     /* eslint-enable */
   }
 }
+
+export type RowRange = { firstRowIndex: number; lastRowIndex: number };

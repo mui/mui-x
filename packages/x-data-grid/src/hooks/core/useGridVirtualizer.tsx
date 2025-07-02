@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { useVirtualizer } from '@mui/x-virtualizer';
+import { useVirtualizer, Rowspan } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -28,7 +28,6 @@ import { useGridVisibleRows, getVisibleRows } from '../utils/useGridVisibleRows'
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../features/pagination';
 import { gridRowsMetaSelector } from '../features/rows/gridRowsMetaSelector';
-import { gridRowSpanningHiddenCellsOriginMapSelector } from '../features/rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../features/listView/gridListViewSelectors';
 import { minimalContentHeight } from '../features/rows/gridRowsUtils';
 import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../features/columns';
@@ -147,6 +146,7 @@ export function useGridVirtualizer(
     initialState: {
       scroll: rootProps.initialState?.scroll,
       dimensions: apiRef.current.state.dimensions,
+      rowSpanning: apiRef.current.state.rowSpanning,
       virtualization: apiRef.current.state.virtualization,
     },
     isRtl,
@@ -321,7 +321,7 @@ type RenderContextInputs = {
   range: ReturnType<typeof useGridVisibleRows>['range'];
   pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>;
   columns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
-  hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
+  hiddenCellsOriginMap: ReturnType<typeof Rowspan.selectors.hiddenCellsOriginMap>;
   listView: boolean;
   virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
 };
@@ -337,7 +337,9 @@ function inputsSelector(
   const columns = rootProps.listView
     ? [gridListColumnSelector(apiRef)!]
     : gridVisibleColumnDefinitionsSelector(apiRef);
-  const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
+  const hiddenCellsOriginMap = Rowspan.selectors.hiddenCellsOriginMap(
+    apiRef.current.virtualizer.store.state,
+  );
   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
   const lastColumn = columns.at(-1);
   return {

@@ -1,8 +1,8 @@
 import { RefObject } from '@mui/x-internals/types';
+import { Rowspan } from '@mui/x-virtualizer';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridRowId } from '../../../models';
-import { gridRowSpanningHiddenCellsSelector } from '../rows/gridRowSpanningSelectors';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 export const getLeftColumnIndex = ({
   currentColIndex,
@@ -51,12 +51,12 @@ export const getRightColumnIndex = ({
 };
 
 export function findNonRowSpannedCell(
-  apiRef: RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   rowId: GridRowId,
   colIndex: number,
   rowSpanScanDirection: 'up' | 'down',
 ) {
-  const rowSpanHiddenCells = gridRowSpanningHiddenCellsSelector(apiRef);
+  const rowSpanHiddenCells = Rowspan.selectors.hiddenCells(apiRef.current.virtualizer.store.state);
   if (!rowSpanHiddenCells[rowId]?.[colIndex]) {
     return rowId;
   }
