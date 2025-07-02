@@ -1702,6 +1702,36 @@ ScatterChartPro.propTypes = {
     }),
   ),
   /**
+   * Configuration for zoom interactions.
+   */
+  zoomConfig: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    pan: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['onDrag']),
+        PropTypes.shape({
+          keys: PropTypes.arrayOf(PropTypes.string).isRequired,
+          mode: PropTypes.oneOf(['all', 'mouse', 'touch']),
+          type: PropTypes.oneOf(['onDrag']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+    zoom: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['onPinch', 'onWheel']),
+        PropTypes.shape({
+          keys: PropTypes.arrayOf(PropTypes.string).isRequired,
+          mode: PropTypes.oneOf(['all']),
+          type: PropTypes.oneOf(['onWheel']).isRequired,
+        }),
+        PropTypes.shape({
+          keys: PropTypes.array,
+          mode: PropTypes.oneOf(['all']),
+          type: PropTypes.oneOf(['onPinch']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+  }),
+  /**
    * The list of zoom data related to each axis.
    */
   zoomData: PropTypes.arrayOf(
