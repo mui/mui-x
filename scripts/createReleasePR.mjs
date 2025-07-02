@@ -267,14 +267,7 @@ function sortVersionsFromTags(a, b) {
 
   // Compare prerelease identifiers (alpha, beta, etc.)
   if (aPrereleaseParts[0] !== bPrereleaseParts[0]) {
-    // alpha comes before beta
-    if (aPrereleaseParts[0] === 'alpha' && bPrereleaseParts[0] === 'beta') {
-      return -1;
-    }
-    if (aPrereleaseParts[0] === 'beta' && bPrereleaseParts[0] === 'alpha') {
-      return 1;
-    }
-    // alphabetical order for other identifiers
+    // alphabetical order for identifiers, since we basically only use alpha and beta
     return aPrereleaseParts[0].localeCompare(bPrereleaseParts[0]);
   }
 
@@ -283,6 +276,7 @@ function sortVersionsFromTags(a, b) {
     return Number(aPrereleaseParts[1]) - Number(bPrereleaseParts[1]);
   }
 
+  // this should never happen, but just in case
   // If one has a version number and the other doesn't, the one with version is greater
   return aPrereleaseParts.length - bPrereleaseParts.length;
 }
