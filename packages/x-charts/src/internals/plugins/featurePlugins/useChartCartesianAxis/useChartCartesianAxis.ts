@@ -101,8 +101,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       if (
         event.detail.srcEvent.buttons >= 1 &&
         target?.hasPointerCapture(event.detail.srcEvent.pointerId) &&
-        // Ensure we are not removing the capture from the zoom slider
-        instance.isElementInside(target)
+        !target?.closest('[data-charts-zoom-slider]')
       ) {
         target?.releasePointerCapture(event.detail.srcEvent.pointerId);
       }
