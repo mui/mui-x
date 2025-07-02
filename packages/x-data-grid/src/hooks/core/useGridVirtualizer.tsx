@@ -191,7 +191,7 @@ export function useGridVirtualizer(
       apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
-    focusedCell: focusedVirtualCell,
+    focusedVirtualCell,
     rowBufferPx: rootProps.rowBufferPx,
     columnBufferPx: rootProps.columnBufferPx,
 
@@ -225,35 +225,33 @@ export function useGridVirtualizer(
       return column.colSpan ?? 0;
     },
 
-    fixme: {
-      focusedVirtualCell: () => gridFocusedVirtualCellSelector(apiRef),
-      renderRow: (params) => (
-        <rootProps.slots.row
-          key={params.id}
-          row={params.model}
-          rowId={params.id}
-          index={params.rowIndex}
-          selected={isRowSelected(params.id)}
-          offsetLeft={params.offsetLeft}
-          columnsTotalWidth={columnsTotalWidth}
-          rowHeight={params.baseRowHeight}
-          pinnedColumns={pinnedColumns}
-          visibleColumns={params.columns as any}
-          firstColumnIndex={params.firstColumnIndex}
-          lastColumnIndex={params.lastColumnIndex}
-          focusedColumnIndex={params.focusedColumnIndex}
-          isFirstVisible={params.isFirstVisible}
-          isLastVisible={params.isLastVisible}
-          isNotVisible={params.isVirtualFocusRow}
-          showBottomBorder={params.showBottomBorder}
-          scrollbarWidth={verticalScrollbarWidth}
-          gridHasFiller={hasFiller}
-          {...rootProps.slotProps?.row}
-        />
-      ),
-      renderInfiniteLoadingTrigger: (id) =>
-        (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
-    },
+    renderRow: (params) => (
+      <rootProps.slots.row
+        key={params.id}
+        row={params.model}
+        rowId={params.id}
+        index={params.rowIndex}
+        selected={isRowSelected(params.id)}
+        offsetLeft={params.offsetLeft}
+        columnsTotalWidth={columnsTotalWidth}
+        rowHeight={params.baseRowHeight}
+        pinnedColumns={pinnedColumns}
+        visibleColumns={params.columns as any}
+        firstColumnIndex={params.firstColumnIndex}
+        lastColumnIndex={params.lastColumnIndex}
+        focusedColumnIndex={params.focusedColumnIndex}
+        isFirstVisible={params.isFirstVisible}
+        isLastVisible={params.isLastVisible}
+        isNotVisible={params.isVirtualFocusRow}
+        showBottomBorder={params.showBottomBorder}
+        scrollbarWidth={verticalScrollbarWidth}
+        gridHasFiller={hasFiller}
+        {...rootProps.slotProps?.row}
+      />
+    ),
+
+    renderInfiniteLoadingTrigger: (id) =>
+      (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
   });
 
   // HACK: Keep the grid's store in sync with the virtualizer store. We set up the

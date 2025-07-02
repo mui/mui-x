@@ -469,7 +469,7 @@ function useRowsMeta(
                 ? entry.borderBoxSize[0].blockSize
                 : entry.contentRect.height;
             const rowId = (entry.target as any).__mui_id;
-            const focusedVirtualRowId = params.fixme.focusedVirtualCell()?.id;
+            const focusedVirtualRowId = params.focusedVirtualCell?.id;
             if (focusedVirtualRowId === rowId && height === 0) {
               // Focused virtual row has 0 height.
               // We don't want to store it to avoid scroll jumping.

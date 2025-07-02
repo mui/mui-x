@@ -117,13 +117,14 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     onRenderContextChange,
     onScrollChange,
 
-    focusedCell,
+    focusedVirtualCell: focusedCell,
     rowBufferPx,
     columnBufferPx,
 
     scrollReset,
 
-    fixme,
+    renderRow,
+    renderInfiniteLoadingTrigger,
   } = params;
 
   const needsHorizontalScrollbar = useSelector(
@@ -461,7 +462,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       const lastColumnIndex = currentRenderContext.lastColumnIndex;
 
       rowElements.push(
-        fixme.renderRow({
+        renderRow({
           id,
           model,
           rowIndex,
@@ -488,7 +489,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         rowElements.push(panel);
       }
       if (params.position === undefined && isLastVisibleInSection) {
-        rowElements.push(fixme.renderInfiniteLoadingTrigger(id));
+        rowElements.push(renderInfiniteLoadingTrigger(id));
       }
     });
     return rowElements;

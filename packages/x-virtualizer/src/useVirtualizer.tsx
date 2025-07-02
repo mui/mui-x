@@ -102,7 +102,7 @@ export type VirtualizerParams = {
     nextRenderContext: RenderContext,
   ) => void;
 
-  focusedCell: FocusedCell | null;
+  focusedVirtualCell: FocusedCell | null;
 
   rowBufferPx: number;
   columnBufferPx: number;
@@ -111,26 +111,23 @@ export type VirtualizerParams = {
 
   getColspan: (rowId: RowId, column: ColumnWithWidth, columnIndex: integer) => number;
 
-  fixme: {
-    focusedVirtualCell: () => any;
-    renderRow: (params: {
-      id: any;
-      model: Row;
-      rowIndex: number;
-      offsetLeft: number;
-      columnsTotalWidth: number;
-      baseRowHeight: number | 'auto';
-      columns: ColumnWithWidth[];
-      firstColumnIndex: number;
-      lastColumnIndex: number;
-      focusedColumnIndex: number | undefined;
-      isFirstVisible: boolean;
-      isLastVisible: boolean;
-      isVirtualFocusRow: boolean;
-      showBottomBorder: boolean;
-    }) => React.ReactElement;
-    renderInfiniteLoadingTrigger: (id: any) => React.ReactElement;
-  };
+  renderRow: (params: {
+    id: any;
+    model: Row;
+    rowIndex: number;
+    offsetLeft: number;
+    columnsTotalWidth: number;
+    baseRowHeight: number | 'auto';
+    columns: ColumnWithWidth[];
+    firstColumnIndex: number;
+    lastColumnIndex: number;
+    focusedColumnIndex: number | undefined;
+    isFirstVisible: boolean;
+    isLastVisible: boolean;
+    isVirtualFocusRow: boolean;
+    showBottomBorder: boolean;
+  }) => React.ReactElement;
+  renderInfiniteLoadingTrigger: (id: any) => React.ReactElement;
 };
 
 const FEATURES = [Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
