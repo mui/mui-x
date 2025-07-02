@@ -218,12 +218,8 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       if (!element || !(element instanceof Element) || !svgElement) {
         return false;
       }
-      if (
-        // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
-        // For element allowed handle interaction, wrapping them in <g data-chart-element-inside /> mark them as being inside the drawing area.
-        // Closest uses a css selector. A comma `,` is read as an "or" operator.
-        element.closest('[data-drawing-container],[data-chart-element-inside]')
-      ) {
+      // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
+      if (element.closest('[data-drawing-container]')) {
         return true;
       }
 
