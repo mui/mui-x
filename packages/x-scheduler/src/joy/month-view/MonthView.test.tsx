@@ -4,8 +4,8 @@ import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { CalendarEvent } from '@mui/x-scheduler/joy';
 import { spy } from 'sinon';
-import { MonthView } from './MonthView';
-import { StandaloneView } from '../standalone-view/StandaloneView';
+import { MonthView } from '@mui/x-scheduler/joy/month-view';
+import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
 
 const events: CalendarEvent[] = [
   {
@@ -30,32 +30,17 @@ describe('<MonthView />', () => {
     resources: [],
   };
 
-  it('should render the weekday headers', () => {
+  it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
       <StandaloneView {...standaloneDefaults}>
         <MonthView />
       </StandaloneView>,
     );
     const headerTexts = screen.getAllByRole('columnheader').map((header) => header.textContent);
-    expect(headerTexts).to.include.members(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
-  });
-
-  it('should render a cell for each day of the month', () => {
-    render(
-      <StandaloneView {...standaloneDefaults}>
-        <MonthView />
-      </StandaloneView>,
-    );
     const gridCells = screen.getAllByRole('gridcell');
-    expect(gridCells.length).to.be.at.least(31);
-  });
 
-  it('should show the abbreviated month for day 1', () => {
-    render(
-      <StandaloneView {...standaloneDefaults}>
-        <MonthView />
-      </StandaloneView>,
-    );
+    expect(headerTexts).to.include.members(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+    expect(gridCells.length).to.be.at.least(31);
     expect(screen.getByText(/may 1/i)).not.to.equal(null);
   });
 
