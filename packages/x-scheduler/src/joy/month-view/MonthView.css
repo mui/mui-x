@@ -71,11 +71,7 @@
 .MonthViewCell {
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
   padding: var(--space-1);
-=======
-  padding: var(--space-2);
->>>>>>> master
   font-size: var(--font-size-2);
   line-height: var(--line-height-1);
   color: var(--secondary-text-color);
@@ -109,7 +105,6 @@
   color: var(--disabled-text-color);
 }
 
-<<<<<<< HEAD
 .MonthViewMoreEvents {
   margin: 0;
   color: var(--secondary-text-color);
@@ -118,8 +113,6 @@
   padding-inline-start: var(--space-1);
 }
 
-=======
->>>>>>> master
 .MonthViewCellNumberButton {
   width: fit-content;
   align-self: flex-end;
