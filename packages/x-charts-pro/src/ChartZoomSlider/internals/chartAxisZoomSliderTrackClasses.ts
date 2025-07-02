@@ -1,6 +1,6 @@
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import ClassNameGenerator from '@mui/utils/ClassNameGenerator';
 import type { ChartAxisZoomSliderActiveTrackProps } from './ChartAxisZoomSliderActiveTrack';
 
 export interface ChartAxisZoomSliderTrackClasses {
@@ -25,7 +25,7 @@ export const chartAxisZoomSliderTrackClasses: ChartAxisZoomSliderTrackClasses =
   ]);
 
 export function getAxisZoomSliderTrackUtilityClass(slot: string) {
-  return generateUtilityClass('MuiChartAxisZoomSliderTrack', slot);
+  return `${ClassNameGenerator.generate('MuiChartAxisZoomSliderTrack')}-${slot}`;
 }
 
 export const useUtilityClasses = (props: Partial<ChartAxisZoomSliderActiveTrackProps>) => {
