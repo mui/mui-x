@@ -15,9 +15,14 @@ import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { SchedulerValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import './MonthView.css';
 
 const adapter = getAdapter();
+const EVENT_HEIGHT = 22;
+const CELL_PADDING = 8;
+const DAY_NUMBER_HEADER_HEIGHT = 18;
+const HIDDEN_EVENTS_HEIGHT = 16;
 
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
@@ -27,6 +32,8 @@ export const MonthView = React.memo(
     const { className, onDayHeaderClick, onEventsChange, ...other } = props;
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useForkRef(forwardedRef, containerRef);
+    const cellRef = React.useRef<HTMLDivElement>(null);
+    const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const store = useEventCalendarStore();
     const visibleDate = useSelector(store, selectors.visibleDate);
@@ -72,6 +79,18 @@ export const MonthView = React.memo(
       );
     };
 
+    useResizeObserver(
+      cellRef,
+      () => {
+        const cellHeight = cellRef.current!.clientHeight;
+        const availableHeight =
+          cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT - HIDDEN_EVENTS_HEIGHT;
+        const maxEvents = Math.floor(availableHeight / EVENT_HEIGHT);
+        setMaxEvents(maxEvents);
+      },
+      true,
+    );
+
     return (
       <div ref={handleRef} className={clsx('MonthViewContainer', 'joy', className)} {...other}>
         <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
@@ -92,7 +111,7 @@ export const MonthView = React.memo(
                 ))}
               </div>
               <div className="MonthViewBody">
-                {weeks.map((week) => {
+                {weeks.map((week, weekIdx) => {
                   const weekNumer = adapter.getWeekNumber(week[0].date);
                   return (
                     <DayGrid.Row key={weekNumer} className="MonthViewRow">
@@ -103,11 +122,15 @@ export const MonthView = React.memo(
                       >
                         {weekNumer}
                       </div>
-                      {week.map((day) => {
+                      {week.map((day, dayIdx) => {
                         const isCurrentMonth = adapter.isSameMonth(day.date, visibleDate);
                         const isToday = adapter.isSameDay(day.date, today);
+
+                        const visibleEvents = day.events.slice(0, maxEvents);
+                        const hiddenCount = day.events.length - maxEvents;
                         return (
                           <DayGrid.Cell
+                            ref={weekIdx === 0 && dayIdx === 0 ? cellRef : undefined}
                             key={day.date.toString()}
                             className={clsx(
                               'MonthViewCell',
@@ -128,7 +151,7 @@ export const MonthView = React.memo(
                             ) : (
                               renderCellNumberContent(day.date)
                             )}
-                            {day.events.map((eventProp) => (
+                            {visibleEvents.map((eventProp) => (
                               <DayGridEvent
                                 key={eventProp.id}
                                 event={eventProp}
@@ -138,6 +161,9 @@ export const MonthView = React.memo(
                                 onEventClick={onEventClick}
                               />
                             ))}
+                            {hiddenCount > 0 && day.events.length > 0 && (
+                              <p className="MonthViewMoreEvents">{hiddenCount} more...</p>
+                            )}
                           </DayGrid.Cell>
                         );
                       })}

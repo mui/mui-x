@@ -105,6 +105,13 @@
   color: var(--disabled-text-color);
 }
 
+.MonthViewMoreEvents {
+  margin: 0;
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+}
+
 .MonthViewCellNumberButton {
   width: fit-content;
   align-self: flex-end;
