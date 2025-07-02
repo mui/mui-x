@@ -74,70 +74,6 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-tree-view-pro',
 ];
 
-// TODO move this helper to @mui/monorepo/.eslintrc
-// It needs to know about the parent "no-restricted-imports" to not override them.
-/**
- *
- * @param {string} packageName
- * @param {string} root
- * @param {boolean} allowRootImports
- */
-const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
-  {
-    files: [`packages/${root}/src/**/*.${EXTENSION_TS}`],
-    ignores: [
-      '**/*.d.ts',
-      '**/*.spec{.ts,.tsx}',
-      '**/*.test{.ts,.tsx}',
-      `packages/${root}/src/index{.ts,.tsx,.js}`,
-    ],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
-            name: pkName,
-            message: 'Use relative import instead',
-          })),
-          patterns: [
-            // TODO move rule into main repo to allow deep @mui/monorepo imports
-            {
-              group: ['@mui/*/*/*'],
-              message: 'Use less deep import instead',
-            },
-            {
-              group: [`${packageName}/*`, `${packageName}/**`],
-              message: 'Use relative import instead',
-            },
-          ],
-        },
-      ],
-    },
-  },
-  ...(allowRootImports
-    ? []
-    : [
-        {
-          files: [
-            `packages/${root}/src/**/*.test.${EXTENSION_TS}`,
-            `packages/${root}/src/**/*.spec.${EXTENSION_TS}`,
-          ],
-          ignores: ['**/*.d.ts'],
-          rules: {
-            'no-restricted-imports': [
-              'error',
-              {
-                paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
-                  name,
-                  message: 'Use deeper import instead',
-                })),
-              },
-            ],
-          },
-        },
-      ]),
-];
-
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
   {
     packagesNames: CHARTS_PACKAGES,
@@ -202,7 +138,7 @@ export default defineConfig(
         },
       ],
       'no-restricted-imports': 'off',
-      // TODO move to @mui/monorepo/.eslintrc
+      // TODO move to @mui/internal-code-infra/eslint
       'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
       'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],
       'jsdoc/require-param-name': ['error', { contexts: ['TSFunctionType'] }],
@@ -224,10 +160,10 @@ export default defineConfig(
       ],
       // Fixes false positive when using both `inputProps` and `InputProps` on the same example
       // See https://stackoverflow.com/questions/42367236/why-am-i-getting-this-warning-no-duplicate-props-allowed-react-jsx-no-duplicate
-      // TODO move to @mui/monorepo/.eslintrc
+      // TODO move to @mui/internal-code-infra/eslint
       // TODO Fix <Input> props names to not conflict
       'react/jsx-no-duplicate-props': ['warn', { ignoreCase: false }],
-      // TODO move to @mui/monorepo/.eslintrc, these are false positive
+      // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
     },
   },
@@ -358,7 +294,10 @@ export default defineConfig(
   // Common config from core end
 
   {
-    files: [`docs/**/*.${EXTENSION_TS}`],
+    files: [
+      `docs/**/*.${EXTENSION_TS}`,
+      `packages/{!x-data-grid*|!x-license|!x-telemetry}/src/**/*.{test|spec}.${EXTENSION_TS}`,
+    ],
     ignores: ['**/*.d.ts'],
     rules: {
       'no-restricted-imports': [
@@ -410,21 +349,47 @@ export default defineConfig(
       'jsdoc/require-returns': 'off',
     },
   },
-  ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
-  ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
-  ...buildPackageRestrictedImports('@mui/x-charts-premium', 'x-charts-premium', false),
-  ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
-  ...buildPackageRestrictedImports('@mui/x-data-grid', 'x-data-grid'),
-  ...buildPackageRestrictedImports('@mui/x-data-grid-pro', 'x-data-grid-pro'),
-  ...buildPackageRestrictedImports('@mui/x-data-grid-premium', 'x-data-grid-premium'),
-  ...buildPackageRestrictedImports('@mui/x-data-grid-generator', 'x-data-grid-generator'),
-  ...buildPackageRestrictedImports('@mui/x-date-pickers', 'x-date-pickers', false),
-  ...buildPackageRestrictedImports('@mui/x-date-pickers-pro', 'x-date-pickers-pro', false),
-  ...buildPackageRestrictedImports('@mui/x-tree-view', 'x-tree-view', false),
-  ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
-  ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
-  ...buildPackageRestrictedImports('@mui/x-telemetry', 'x-telemetry'),
-
+  ...[
+    'x-charts',
+    'x-charts-pro',
+    'x-charts-premium',
+    'x-codemod',
+    'x-data-grid',
+    'x-data-grid-pro',
+    'x-data-grid-premium',
+    'x-data-grid-generator',
+    'x-date-pickers',
+    'x-date-pickers-pro',
+    'x-scheduler',
+    'x-tree-view',
+    'x-tree-view-pro',
+    'x-license',
+    'x-telemetry',
+  ].map((pkgName) => ({
+    files: [`packages/${pkgName}/src/**/*.${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+            name: pkName,
+            message: 'Use relative import instead',
+          })),
+          patterns: [
+            {
+              group: ['@mui/*/*/*'],
+              message: 'Use less deep import instead',
+            },
+            {
+              group: [`@mui/${pkgName}/*`, `@mui/${pkgName}/**`],
+              message: 'Use relative import instead',
+            },
+          ],
+        },
+      ],
+    },
+  })),
   ...[
     packageFilesWithReactCompiler.length > 0
       ? {
