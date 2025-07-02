@@ -8,13 +8,13 @@ import {
   useSelector,
   useStore,
   ZOOM_SLIDER_MARGIN,
+  ZOOM_SLIDER_PREVIEW_SIZE,
   ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { ChartAxisZoomSliderPreview } from './ChartAxisZoomSliderPreview';
 import {
   ZOOM_SLIDER_ACTIVE_TRACK_SIZE,
-  ZOOM_SLIDER_PREVIEW_SIZE,
   ZOOM_SLIDER_SIZE,
   ZOOM_SLIDER_TRACK_SIZE,
 } from './constants';

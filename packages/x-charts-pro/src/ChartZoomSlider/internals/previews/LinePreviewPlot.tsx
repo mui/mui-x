@@ -1,30 +1,19 @@
 import * as React from 'react';
 import {
   AxisId,
-  selectorChartComputedXAxes,
-  selectorChartComputedYAxes,
   useSelector,
   useStore,
   useLinePlotData,
-  ZoomMap,
+  selectorChartPreviewComputedXAxis,
+  selectorChartPreviewComputedYAxis,
 } from '@mui/x-charts/internals';
-import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { LineElement } from '@mui/x-charts/LineChart';
 import { PreviewPlotProps } from './PreviewPlot.types';
 
 interface LinePreviewPlotProps extends PreviewPlotProps {}
 
-export function LinePreviewPlot({ axisId, x, y, height, width, zoomMap }: LinePreviewPlotProps) {
-  const drawingArea: ChartDrawingArea = {
-    left: x,
-    top: y,
-    width,
-    height,
-    right: x + width,
-    bottom: y + height,
-  };
-
-  const completedData = useLinePreviewData(axisId, drawingArea, zoomMap);
+export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
+  const completedData = useLinePreviewData(axisId);
   return (
     <g>
       {completedData.map(({ d, seriesId, color, gradientId }) => {
@@ -43,18 +32,11 @@ export function LinePreviewPlot({ axisId, x, y, height, width, zoomMap }: LinePr
   );
 }
 
-function useLinePreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, zoomMap: ZoomMap) {
+function useLinePreviewData(axisId: AxisId) {
   const store = useStore();
 
-  let xAxes = useSelector(store, selectorChartComputedXAxes, [{ drawingArea, zoomMap }]).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, [{ drawingArea, zoomMap }]).axis;
-
-  /* We only want to show the data represented in this axis. */
-  if (axisId in xAxes) {
-    xAxes = { [axisId]: xAxes[axisId] };
-  } else if (axisId in yAxes) {
-    yAxes = { [axisId]: yAxes[axisId] };
-  }
+  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
+  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
 
   return useLinePlotData(xAxes, yAxes);
 }

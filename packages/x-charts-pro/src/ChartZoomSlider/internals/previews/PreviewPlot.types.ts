@@ -1,8 +1,5 @@
+import { AxisId } from '@mui/x-charts/internals';
+
 export interface PreviewPlotProps {
   axisId: AxisId;
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-  zoomMap: ZoomMap;
 }

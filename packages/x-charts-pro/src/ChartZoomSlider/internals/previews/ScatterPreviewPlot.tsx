@@ -1,47 +1,31 @@
 import * as React from 'react';
 import {
-  selectorChartComputedXAxes,
-  selectorChartComputedYAxes,
   useSelector,
   useStore,
   D3Scale,
   ColorGetter,
   useScatterPlotData,
   scatterSeriesConfig,
+  selectorChartPreviewComputedXAxis,
+  selectorChartPreviewComputedYAxis,
 } from '@mui/x-charts/internals';
-import {
-  ChartDrawingArea,
-  useScatterSeriesContext,
-  useXAxes,
-  useYAxes,
-  useZAxes,
-} from '@mui/x-charts/hooks';
+import { useScatterSeriesContext, useXAxes, useYAxes, useZAxes } from '@mui/x-charts/hooks';
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
 import { DefaultizedScatterSeriesType } from '@mui/x-charts/models';
 import { PreviewPlotProps } from './PreviewPlot.types';
 
-interface ScatterPreviewPlotProps extends PreviewPlotProps {}
+interface ScatterPreviewPlotProps extends PreviewPlotProps {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}
 
-export function ScatterPreviewPlot({
-  axisId,
-  x,
-  y,
-  height,
-  width,
-  zoomMap,
-}: ScatterPreviewPlotProps) {
-  const drawingArea: ChartDrawingArea = {
-    left: x,
-    top: y,
-    width,
-    height,
-    right: x + width,
-    bottom: y + height,
-  };
+export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPreviewPlotProps) {
   const store = useStore();
   const seriesData = useScatterSeriesContext();
-  let xAxes = useSelector(store, selectorChartComputedXAxes, [{ drawingArea, zoomMap }]).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, [{ drawingArea, zoomMap }]).axis;
+  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
+  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const { zAxis: zAxes, zAxisIds } = useZAxes();
@@ -49,13 +33,6 @@ export function ScatterPreviewPlot({
 
   if (seriesData === undefined) {
     return null;
-  }
-
-  /* We only want to show the data represented in this axis. */
-  if (axisId in xAxes) {
-    xAxes = { [axisId]: xAxes[axisId] };
-  } else if (axisId in yAxes) {
-    yAxes = { [axisId]: yAxes[axisId] };
   }
 
   const { series, seriesOrder } = seriesData;
@@ -82,7 +59,10 @@ export function ScatterPreviewPlot({
             color={color}
             colorGetter={colorGetter}
             series={series[seriesId]}
-            drawingArea={drawingArea}
+            x={x}
+            y={y}
+            height={height}
+            width={width}
           />
         );
       })}
@@ -91,24 +71,23 @@ export function ScatterPreviewPlot({
 }
 
 interface ScatterPreviewItemsProps {
-  drawingArea: ChartDrawingArea;
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 }
 
 function ScatterPreviewItems(props: ScatterPreviewItemsProps) {
-  const { series, xScale, yScale, color, colorGetter, drawingArea } = props;
+  const { series, xScale, yScale, color, colorGetter, x, y, width, height } = props;
 
   const isPointInside = React.useCallback(
-    (x: number, y: number) =>
-      x >= drawingArea.left &&
-      x <= drawingArea.right &&
-      y >= drawingArea.top &&
-      y <= drawingArea.bottom,
-    [drawingArea.bottom, drawingArea.left, drawingArea.right, drawingArea.top],
+    (px: number, py: number) => px >= x && px <= x + width && py >= y && py <= y + height,
+    [height, width, x, y],
   );
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, isPointInside);

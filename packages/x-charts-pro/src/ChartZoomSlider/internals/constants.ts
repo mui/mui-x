@@ -1,5 +1,4 @@
 export const ZOOM_SLIDER_TRACK_SIZE = 8;
-export const ZOOM_SLIDER_PREVIEW_SIZE = 40;
 export const ZOOM_SLIDER_ACTIVE_TRACK_SIZE = 10;
 export const ZOOM_SLIDER_THUMB_HEIGHT = 20;
 export const ZOOM_SLIDER_THUMB_WIDTH = 10;

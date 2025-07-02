@@ -2,14 +2,12 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
   AxisId,
-  selectorChartComputedXAxes,
-  selectorChartComputedYAxes,
   useSelector,
   useStore,
   useAreaPlotData,
-  ZoomMap,
+  selectorChartPreviewComputedXAxis,
+  selectorChartPreviewComputedYAxis,
 } from '@mui/x-charts/internals';
-import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { AreaElement } from '@mui/x-charts/LineChart';
 import { PreviewPlotProps } from './PreviewPlot.types';
 
@@ -20,17 +18,9 @@ const AreaPlotRoot = styled('g', {
 
 interface AreaPreviewPlotProps extends PreviewPlotProps {}
 
-export function AreaPreviewPlot({ axisId, x, y, height, width, zoomMap }: AreaPreviewPlotProps) {
-  const drawingArea: ChartDrawingArea = {
-    left: x,
-    top: y,
-    width,
-    height,
-    right: x + width,
-    bottom: y + height,
-  };
+export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
+  const completedData = useAreaPreviewData(axisId);
 
-  const completedData = useAreaPreviewData(axisId, drawingArea, zoomMap);
   return (
     <AreaPlotRoot>
       {completedData.map(
@@ -50,18 +40,11 @@ export function AreaPreviewPlot({ axisId, x, y, height, width, zoomMap }: AreaPr
   );
 }
 
-function useAreaPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, zoomMap: ZoomMap) {
+function useAreaPreviewData(axisId: AxisId) {
   const store = useStore();
 
-  let xAxes = useSelector(store, selectorChartComputedXAxes, [{ drawingArea, zoomMap }]).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, [{ drawingArea, zoomMap }]).axis;
-
-  /* We only want to show the data represented in this axis. */
-  if (axisId in xAxes) {
-    xAxes = { [axisId]: xAxes[axisId] };
-  } else if (axisId in yAxes) {
-    yAxes = { [axisId]: yAxes[axisId] };
-  }
+  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
+  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
 
   return useAreaPlotData(xAxes, yAxes);
 }

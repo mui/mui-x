@@ -1,18 +1,22 @@
 import * as React from 'react';
 import {
   AxisId,
-  selectorChartComputedXAxes,
-  selectorChartComputedYAxes,
+  selectorChartPreviewComputedXAxis,
+  selectorChartPreviewComputedYAxis,
   useBarPlotData,
   useSelector,
   useStore,
-  ZoomMap,
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
 import { PreviewPlotProps } from './PreviewPlot.types';
 
-interface BarPreviewPlotProps extends PreviewPlotProps {}
+interface BarPreviewPlotProps extends PreviewPlotProps {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}
 
 export function BarPreviewPlot(props: BarPreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {
@@ -24,7 +28,7 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
     bottom: props.y + props.height,
   };
 
-  const { completedData } = useBarPreviewData(props.axisId, drawingArea, props.zoomMap);
+  const { completedData } = useBarPreviewData(props.axisId, drawingArea);
 
   return (
     <g>
@@ -54,18 +58,11 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
   );
 }
 
-function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, zoomMap: ZoomMap) {
+function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  let xAxes = useSelector(store, selectorChartComputedXAxes, [{ drawingArea, zoomMap }]).axis;
-  let yAxes = useSelector(store, selectorChartComputedYAxes, [{ drawingArea, zoomMap }]).axis;
-
-  /* We only want to show the data represented in this axis. */
-  if (axisId in xAxes) {
-    xAxes = { [axisId]: xAxes[axisId] };
-  } else if (axisId in yAxes) {
-    yAxes = { [axisId]: yAxes[axisId] };
-  }
+  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
+  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
 
   return useBarPlotData(drawingArea, xAxes, yAxes);
 }
