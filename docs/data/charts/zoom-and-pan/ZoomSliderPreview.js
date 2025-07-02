@@ -16,6 +16,7 @@ import {
   countryData,
 } from '../dataset/countryData';
 import { shareOfRenewables } from '../dataset/shareOfRenewables';
+import { populationPrediction2050 } from '../dataset/populationPrediction2050';
 
 const lineData = usUnemploymentRate.map((d) => d.rate / 100);
 
@@ -29,6 +30,7 @@ const gdpPerCapitaFormatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
   notation: 'compact',
 });
+const populationFormatter = new Intl.NumberFormat('en-US', { notation: 'compact' });
 
 const lineXAxis = {
   scaleType: 'time',
@@ -64,6 +66,35 @@ const lineSettings = {
       valueFormatter: (v) => percentageFormatter.format(v),
     },
   ],
+  height: 400,
+};
+
+const areaXAxis = {
+  id: 'x',
+  data: new Array(101).fill(null).map((_, i) => i),
+  label: 'Age',
+  valueFormatter: (v) => (v === 100 ? '100+' : `${v}`),
+};
+
+const areaSettings = {
+  yAxis: [
+    {
+      id: 'y',
+      width: 44,
+      zoom: { slider: { enabled: true, preview: true } },
+      valueFormatter: (v) => populationFormatter.format(v),
+    },
+  ],
+  series: ['Europe', 'Asia', 'Americas', 'Africa', 'Oceania'].map((continent) => ({
+    data: populationPrediction2050
+      .filter((point) => point.location === continent)
+      .map((point) => point.value),
+    showMark: false,
+    area: true,
+    label: continent,
+    stack: 'population',
+    valueFormatter: (v) => populationFormatter.format(v),
+  })),
   height: 400,
 };
 
@@ -130,7 +161,7 @@ export default function ZoomSliderPreview() {
         aria-label="chart type"
         fullWidth
       >
-        {['bar', 'line', 'scatter'].map((type) => (
+        {['bar', 'line', 'area', 'scatter'].map((type) => (
           <ToggleButton key={type} value={type} aria-label="left aligned">
             {type}
           </ToggleButton>
@@ -138,6 +169,7 @@ export default function ZoomSliderPreview() {
       </ToggleButtonGroup>
       {chartType === 'bar' && <BarChartPreview />}
       {chartType === 'line' && <LineChartPreview />}
+      {chartType === 'area' && <AreaChartPreview />}
       {chartType === 'scatter' && <ScatterChartPreview />}
     </Stack>
   );
@@ -160,6 +192,28 @@ function LineChartPreview() {
       />
       <Typography variant="caption">
         Source: Federal Reserve Bank of St. Louis. Updated: Jun 6, 2025 7:46 AM CDT.
+      </Typography>
+    </React.Fragment>
+  );
+}
+
+function AreaChartPreview() {
+  return (
+    <React.Fragment>
+      <Typography variant="h6" sx={{ alignSelf: 'center' }}>
+        Population by Age Group in 2050 (Projected)
+      </Typography>
+      <LineChartPro
+        {...areaSettings}
+        xAxis={[
+          {
+            ...areaXAxis,
+            zoom: { slider: { enabled: true, preview: true } },
+          },
+        ]}
+      />
+      <Typography variant="caption">
+        Source: World Population Prospects: The 2024 Revision, United Nations.
       </Typography>
     </React.Fragment>
   );
