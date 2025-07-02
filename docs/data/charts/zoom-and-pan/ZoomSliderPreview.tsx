@@ -59,7 +59,6 @@ const lineSettings = {
       width: 44,
       valueFormatter: (v: number | null) => percentageFormatter.format(v!),
       min: 0,
-      zoom: { slider: { enabled: true, preview: true } },
     },
   ],
   series: [
@@ -84,7 +83,6 @@ const areaSettings = {
     {
       id: 'y',
       width: 44,
-      zoom: { slider: { enabled: true, preview: true } },
       valueFormatter: (v: number | null) => populationFormatter.format(v!),
     },
   ],
@@ -110,7 +108,6 @@ const scatterSettings = {
       id: 'y',
       width: 44,
       min: 0,
-      zoom: { slider: { enabled: true, preview: true } },
     },
   ],
   series: continents.map((continent) => ({
@@ -190,10 +187,7 @@ function LineChartPreview() {
       <LineChartPro
         {...lineSettings}
         xAxis={[
-          {
-            ...lineXAxis,
-            zoom: { slider: { enabled: true, preview: true } },
-          },
+          { ...lineXAxis, zoom: { slider: { enabled: true, preview: true } } },
         ]}
       />
       <Typography variant="caption">
@@ -212,10 +206,7 @@ function AreaChartPreview() {
       <LineChartPro
         {...areaSettings}
         xAxis={[
-          {
-            ...areaXAxis,
-            zoom: { slider: { enabled: true, preview: true } },
-          },
+          { ...areaXAxis, zoom: { slider: { enabled: true, preview: true } } },
         ]}
       />
       <Typography variant="caption">
