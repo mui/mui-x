@@ -7,10 +7,12 @@ title: Data Grid - Multi-filters
 <p class="description">Let end users apply multiple filters to the Data Grid simultaneously.</p>
 
 By default, it's only possible to apply one filter at a time to the Data Grid.
-With the Data Grid Pro, end users can simultaneously apply multiple filters with multiple criteria for more fine-grained data analysis.
+With the Data Grid Pro, users can apply multiple filters based on different criteria for more fine-grained data analysis.
+They can apply multiple filters to a single column and multiple columns simultaneously.
 
-The following demo lets you filter rows according to several different criteria.
-You can add more filters with the **Add Filter** button on the filter panel.
+The demo below shows how this feature works.
+Click the filter icon to open the menu and add the first filter—the Data Grid dynamically responds as you enter a value.
+Then click **Add Filter** to apply additional criteria.
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -20,18 +22,15 @@ The multi-filter feature is available by default on the Data Grid Pro.
 
 ### One filter per column
 
-You can limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `slotProps.filterPanel`.
-
-### Use cases
-
-- Sometimes it's a limitation of some server-side filtering APIs to only allow one filter per column.
-- You can also write custom logic to prevent some columns from being shown as possible filters.
-
-This demo implements a basic use case to prevent showing multiple filters for one column.
+To limit the user to only applying one filter to any given column, you can use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available to `slotProps.filterPanel` as shown in the demo below:
 
 {{"demo": "DisableMultiFiltersDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Disable action buttons
+## Disabling multi-filters
+
+To disable multi-filtering, pass the `disableMultipleColumnsFiltering` to the Data Grid Pro.
+
+### Remove multi-filter action buttons
 
 To disable the **Add Filter** or **Remove All** buttons, pass `disableAddFilterButton` or `disableRemoveAllButton`, respectively, to `componentsProps.filterPanel` as shown below:
 

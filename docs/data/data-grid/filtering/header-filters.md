@@ -15,13 +15,14 @@ In the demo below, you can switch between different operators by clicking the op
 
 ## Simple header filters
 
-You can disable the default filter panel using `disableColumnFilter` prop and only show the default operator by passing `slots.headerFilterMenu` as `null`.
+You can disable the default filter panel using the `disableColumnFilter` prop, and show only the default operator by passing `slots.headerFilterMenu` as `null`.
 
 {{"demo": "SimpleHeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Inline clear button
 
-The clear button is within the header filter menu by default. To display the clear button in the header filter cell instead, set `slotProps.headerFilterCell.showClearIcon` to `true`.
+By default, the clear button is located in the header filter menu.
+To display the clear button in the header filter cell instead, set `slotProps.headerFilterCell.showClearIcon` to `true`:
 
 {{"demo": "HeaderFilteringInlineClearDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
