@@ -21,7 +21,7 @@ export const chartAxisZoomSliderTrackClasses: ChartAxisZoomSliderTrackClasses = 
   'background',
   'active',
 ].reduce((acc, slot) => {
-  acc[slot] = getAxisZoomSliderTrackUtilityClass(slot);
+  acc[slot as keyof ChartAxisZoomSliderTrackClasses] = getAxisZoomSliderTrackUtilityClass(slot);
   return acc;
 }, {} as ChartAxisZoomSliderTrackClasses);
 
