@@ -20,7 +20,7 @@ If you plan to update/reorder those data, you should add an `id` property which 
 
 ## Donut chart
 
-A donut chart (or doughnut chart) is essentially a pie chart with a hole in the middle.
+A donut chart (or doughnut chart) is essentially a pie chart with a hollow center.
 
 You can transform any pie chart into a donut chart by setting the `innerRadius` property to a value greater than 0.
 
