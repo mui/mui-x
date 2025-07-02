@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
+import { useDrawingArea } from '@mui/x-charts/hooks';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import ChartDemoWrapper from '../ChartDemoWrapper';
-import { useDrawingArea } from '@mui/x-charts/hooks';
 import { styled } from '@mui/material/styles';
+import ChartDemoWrapper from '../ChartDemoWrapper';
 
 // Data derived from https://gs.statcounter.com/os-market-share/desktop/worldwide/2023
 // And https://gs.statcounter.com/os-market-share/mobile/worldwide/2023
