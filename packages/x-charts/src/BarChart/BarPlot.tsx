@@ -81,7 +81,7 @@ function BarPlot(props: BarPlotProps) {
   const classes = useUtilityClasses();
 
   return (
-    <BarPlotRoot className={classes.root}>
+    <BarPlotRoot data-chart-element-inside className={classes.root}>
       {!withoutBorderRadius &&
         masksData.map(({ id, x, y, width, height, hasPositive, hasNegative, layout }) => {
           return (
