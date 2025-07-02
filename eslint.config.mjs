@@ -362,6 +362,7 @@ export default defineConfig(
     'x-date-pickers-pro',
     'x-scheduler',
     'x-tree-view',
+    'x-tree-view-pro',
     'x-license',
     'x-telemetry',
   ].map((pkgName) => ({
