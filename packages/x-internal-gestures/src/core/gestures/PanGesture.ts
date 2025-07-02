@@ -54,6 +54,9 @@ export type PanGestureOptions<GestureName extends string> = PointerGestureOption
 /**
  * Event data specific to pan gesture events
  * Contains information about movement distance, direction, and velocity
+ *
+ * When multiple pointers are used the gesture will only be recognized when
+ * pointers move in a coordinated way.
  */
 export type PanGestureEventData<
   CustomData extends Record<string, unknown> = Record<string, unknown>,
@@ -167,10 +170,16 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
    */
   private direction: Array<'up' | 'down' | 'left' | 'right'>;
 
+  /**
+   * Maximum angle difference (in degrees) for pointers to be considered moving together
+   */
+  private intentionAngleThreshold: number;
+
   constructor(options: PanGestureOptions<GestureName>) {
     super(options);
     this.direction = options.direction || ['up', 'down', 'left', 'right'];
     this.threshold = options.threshold || 0;
+    this.intentionAngleThreshold = 45;
   }
 
   public clone(overrides?: Record<string, unknown>): PanGesture<GestureName> {
@@ -304,7 +313,8 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
           if (
             !this.state.movementThresholdReached &&
             distance >= this.threshold &&
-            isDirectionAllowed(moveDirection, this.direction)
+            isDirectionAllowed(moveDirection, this.direction) &&
+            this.arePointersMovingTogether(relevantPointers, this.state.startPointers)
           ) {
             this.state.movementThresholdReached = true;
             this.isActive = true;
@@ -322,6 +332,16 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
           }
           // If we've already crossed the threshold, continue tracking
           else if (this.state.movementThresholdReached && this.isActive) {
+            // Check if multiple pointers are still moving in the same direction
+            if (
+              relevantPointers.length >= 2 &&
+              !this.arePointersMovingTogether(relevantPointers, this.state.startPointers)
+            ) {
+              // If pointers are moving in different directions, cancel the gesture
+              this.cancel(targetElement, relevantPointers, event);
+              return;
+            }
+
             // Update total accumulated delta
             this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
             this.state.totalDeltaX += lastDeltaX;
@@ -454,5 +474,81 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       this.emitPanEvent(el, 'end', pointers, event, this.state.lastCentroid!);
     }
     this.resetState();
+  }
+
+  /**
+   * Checks if multiple pointers are moving together in a similar direction
+   *
+   * This utility calculates the movement vectors for each pointer from their
+   * starting positions to their current positions, then checks if these vectors
+   * are within the allowed angle threshold of each other.
+   *
+   * @param pointers The current pointers to check
+   * @param startPointers The starting pointers to compare against
+   * @returns true if pointers are moving together, false otherwise
+   */
+  private arePointersMovingTogether(
+    pointers: PointerData[],
+    startPointers: Map<number, PointerData>,
+  ): boolean {
+    // If we have less than 2 pointers, we don't need to check
+    if (pointers.length < 2) {
+      return true;
+    }
+
+    // For each pointer, calculate its movement vector
+    const movements: Array<{ pointerId: number; angle: number; distance: number }> = [];
+
+    for (const pointer of pointers) {
+      const startPointer = startPointers.get(pointer.pointerId);
+      if (!startPointer) {
+        continue;
+      }
+
+      // Calculate movement vector
+      const dx = pointer.clientX - startPointer.clientX;
+      const dy = pointer.clientY - startPointer.clientY;
+
+      // Calculate distance moved
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Skip pointers that haven't moved enough to have a clear direction
+      if (distance < this.threshold / 2) {
+        continue;
+      }
+
+      // Calculate angle in degrees (0-360)
+      let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      if (angle < 0) {
+        angle += 360;
+      }
+
+      movements.push({
+        pointerId: pointer.pointerId,
+        angle,
+        distance,
+      });
+    }
+
+    // If we don't have at least 2 significant movements, we can't determine intention
+    if (movements.length < 2) {
+      return true;
+    }
+
+    // Check if all movement angles are within the threshold of each other
+    for (let i = 0; i < movements.length - 1; i += 1) {
+      for (let j = i + 1; j < movements.length; j += 1) {
+        const angleDiff = Math.min(
+          Math.abs(movements[i].angle - movements[j].angle),
+          360 - Math.abs(movements[i].angle - movements[j].angle),
+        );
+
+        if (angleDiff > this.intentionAngleThreshold) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }

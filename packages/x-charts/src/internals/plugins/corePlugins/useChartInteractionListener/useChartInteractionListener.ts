@@ -34,13 +34,19 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           threshold: 0,
           maxPointers: 1,
         }),
+        new PanGesture({
+          name: 'doubleFingerPan',
+          threshold: 5,
+          minPointers: 2,
+          maxPointers: 2,
+        }),
         new MoveGesture({
           name: 'move',
-          preventIf: ['pan', 'pinch'], // Prevent move gesture when pan is active
+          preventIf: ['pan', 'doubleFingerPan', 'pinch'], // Prevent move gesture when pan is active
         }),
         new PinchGesture({
           name: 'pinch',
-          threshold: 5,
+          threshold: 15,
           preventIf: ['pan'],
         }),
         new TurnWheelGesture({
@@ -51,7 +57,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         new TapGesture({
           name: 'tap',
           maxDistance: 10,
-          preventIf: ['pan', 'pinch'],
+          preventIf: ['pan', 'doubleFingerPan', 'pinch'],
         }),
         new PressGesture({
           name: 'quickPress',
@@ -61,7 +67,10 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       ],
     });
 
-    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel', 'tap', 'quickPress'], svg);
+    gestureManager.registerElement(
+      ['pan', 'move', 'pinch', 'turnWheel', 'tap', 'quickPress', 'doubleFingerPan'],
+      svg,
+    );
 
     return () => {
       // Cleanup gesture manager

@@ -12,6 +12,9 @@ export type ChartInteraction =
   | 'pan'
   | 'panStart'
   | 'panEnd'
+  | 'doubleFingerPan'
+  | 'doubleFingerPanStart'
+  | 'doubleFingerPanEnd'
   | 'pinch'
   | 'pinchStart'
   | 'pinchEnd'
@@ -27,7 +30,13 @@ export type InteractionListenerResult = { cleanup: () => void };
 
 export type AddInteractionListener = {
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'pan' | 'panStart' | 'panEnd',
+    interaction:
+      | 'pan'
+      | 'panStart'
+      | 'panEnd'
+      | 'doubleFingerPan'
+      | 'doubleFingerPanStart'
+      | 'doubleFingerPanEnd',
     callback: (event: PanEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;

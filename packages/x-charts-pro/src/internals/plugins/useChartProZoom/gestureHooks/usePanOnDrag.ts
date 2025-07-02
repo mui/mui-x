@@ -27,7 +27,12 @@ export const usePanOnDrag = (
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
   const pressedKeysRef = React.useRef<Set<string>>(new Set());
-  const config = useSelector(store, selectorPanConfig, ['onDrag' as const]);
+
+  const doubleDragConfig = useSelector(store, selectorPanConfig, ['onDoubleDrag' as const]);
+  const dragConfig = useSelector(store, selectorPanConfig, ['onDrag' as const]);
+  // Default to drag if both are configured
+  const useDoubleDrag = doubleDragConfig && !dragConfig;
+  const config = useDoubleDrag ? doubleDragConfig : dragConfig;
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
@@ -37,7 +42,7 @@ export const usePanOnDrag = (
 
   React.useEffect(() => {
     const pressedKeysSet = pressedKeysRef.current;
-    if (!isPanEnabled || !config) {
+    if (!isPanEnabled || !config || useDoubleDrag) {
       return () => {};
     }
 
@@ -50,7 +55,7 @@ export const usePanOnDrag = (
       window.removeEventListener('keyup', handleKeyUp);
       pressedKeysSet.clear();
     };
-  }, [isPanEnabled, config]);
+  }, [isPanEnabled, config, useDoubleDrag]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -96,9 +101,18 @@ export const usePanOnDrag = (
       throttledCallback(event, zoomData);
     };
 
-    const panHandler = instance.addInteractionListener('pan', handlePan);
-    const panStartHandler = instance.addInteractionListener('panStart', handlePanStart);
-    const panEndHandler = instance.addInteractionListener('panEnd', handlePanEnd);
+    const panHandler = instance.addInteractionListener(
+      useDoubleDrag ? 'doubleFingerPan' : 'pan',
+      handlePan,
+    );
+    const panStartHandler = instance.addInteractionListener(
+      useDoubleDrag ? 'doubleFingerPanStart' : 'panStart',
+      handlePanStart,
+    );
+    const panEndHandler = instance.addInteractionListener(
+      useDoubleDrag ? 'doubleFingerPanEnd' : 'panEnd',
+      handlePanEnd,
+    );
 
     return () => {
       panStartHandler.cleanup();
@@ -117,5 +131,6 @@ export const usePanOnDrag = (
     store,
     startRef,
     config,
+    useDoubleDrag,
   ]);
 };
