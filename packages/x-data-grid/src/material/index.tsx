@@ -33,7 +33,10 @@ import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
+import MUITabs from '@mui/material/Tabs';
+import MUITab from '@mui/material/Tab';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useId from '@mui/utils/useId';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
@@ -626,6 +629,78 @@ function BaseSelectOption({ native, ...props }: NonNullable<P['baseSelectOption'
   return <MUIMenuItem {...props} />;
 }
 
+const StyledTabs = styled(MUITabs, {
+  name: 'MuiDataGrid',
+  slot: 'Tabs',
+})(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledTab = styled(MUITab, {
+  name: 'MuiDataGrid',
+  slot: 'Tab',
+})({
+  flex: 1,
+});
+
+const StyledTabPanel = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'TabPanel',
+})({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+});
+
+function TabPanel(
+  props: {
+    children?: React.ReactNode;
+    value: string;
+    active: boolean;
+  } & React.HTMLAttributes<HTMLDivElement>,
+) {
+  const { children, value, active, ...other } = props;
+
+  return (
+    <StyledTabPanel role="tabpanel" style={{ display: active ? 'flex' : 'none' }} {...other}>
+      {children}
+    </StyledTabPanel>
+  );
+}
+
+function BaseTabs({ items, value, ...props }: P['baseTabs']) {
+  const id = useId();
+  const labelId = `${id}-tab-${value}`;
+  const panelId = `${id}-tabpanel-${value}`;
+  return (
+    <React.Fragment>
+      <StyledTabs {...props} value={value} variant="scrollable" scrollButtons="auto">
+        {items.map((item) => (
+          <StyledTab
+            key={item.value}
+            value={item.value}
+            label={item.label}
+            id={labelId}
+            aria-controls={panelId}
+          />
+        ))}
+      </StyledTabs>
+      {items.map((item) => (
+        <TabPanel
+          key={item.value}
+          value={item.value}
+          active={value === item.value}
+          id={panelId}
+          aria-labelledby={labelId}
+        >
+          {item.children}
+        </TabPanel>
+      ))}
+    </React.Fragment>
+  );
+}
+
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
@@ -681,6 +756,7 @@ const baseSlots: GridBaseSlots = {
   baseButton: BaseButton,
   baseIconButton: BaseIconButton,
   baseTooltip: BaseTooltip,
+  baseTabs: BaseTabs,
   basePagination: BasePagination,
   basePopper: BasePopper,
   baseSelect: BaseSelect,

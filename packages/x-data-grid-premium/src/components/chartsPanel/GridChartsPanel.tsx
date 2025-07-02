@@ -11,11 +11,9 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { ChartState, GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
 import { GridChartsPanelChart } from './chart/GridChartsPanelChart';
 import { GridChartsPanelCustomize } from './customize/GridChartsPanelCustomize';
-import { Tab, TabList, TabPanel, Tabs } from '../tabs';
 import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { GridChartsPanelData } from './data/GridChartsPanelData';
-import { SidebarHeader } from '../sidebar';
 
 export interface GridChartsPanelProps {
   /**
@@ -164,6 +162,7 @@ function GridChartsPanel(_: GridChartsPanelProps) {
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
   const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
   const chartEntries = Object.entries(chartStateLookup);
+  const [activeTab, setActiveTab] = React.useState('chart');
 
   const handleChartSyncChange = React.useCallback(
     (newSyncState: boolean) => {
@@ -179,52 +178,64 @@ function GridChartsPanel(_: GridChartsPanelProps) {
     [activeChartId, setChartState],
   );
 
+  const tabItems = React.useMemo(
+    () => [
+      {
+        value: 'chart',
+        label: apiRef.current.getLocaleText('chartsTabChart'),
+        children: (
+          <GridChartsPanelChart
+            charts={chartStateLookup}
+            activeChartId={activeChartId}
+            selectedChartType={chartStateLookup[activeChartId]?.type}
+            onChartSyncChange={handleChartSyncChange}
+            onChartTypeChange={handleChartTypeChange}
+          />
+        ),
+      },
+      {
+        value: 'data',
+        label: apiRef.current.getLocaleText('chartsTabFields'),
+        children: <GridChartsPanelData />,
+      },
+      {
+        value: 'customize',
+        label: apiRef.current.getLocaleText('chartsTabCustomize'),
+        children: <GridChartsPanelCustomize activeChartId={activeChartId} />,
+      },
+    ],
+    [apiRef, activeChartId, chartStateLookup, handleChartSyncChange, handleChartTypeChange],
+  );
+
   // TODO: render a placeholder if there are no charts available - use the locale text `chartsConfigurationNoCharts`
 
   return (
-    <Tabs initialTab="chart">
-      <SidebarHeader>
-        <GridChartsPanelHeader ownerState={rootProps}>
-          {chartEntries.length > 1 ? (
-            <GridChartsPanelChartSelector
-              activeChartId={activeChartId}
-              chartEntries={chartEntries}
-            />
-          ) : (
-            <GridChartsPanelTitle ownerState={rootProps}>Charts</GridChartsPanelTitle>
-          )}
-          <rootProps.slots.baseIconButton
-            onClick={() => {
-              apiRef.current.setChartsPanelOpen(false);
-            }}
-            aria-label={apiRef.current.getLocaleText('chartsCloseButton')}
-            {...rootProps.slotProps?.baseIconButton}
-          >
-            <rootProps.slots.sidebarCloseIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
-        </GridChartsPanelHeader>
-        <TabList>
-          <Tab value="chart">{apiRef.current.getLocaleText('chartsTabChart')}</Tab>
-          <Tab value="data">{apiRef.current.getLocaleText('chartsTabFields')}</Tab>
-          <Tab value="customize">{apiRef.current.getLocaleText('chartsTabCustomize')}</Tab>
-        </TabList>
-      </SidebarHeader>
-      <TabPanel value="chart">
-        <GridChartsPanelChart
-          charts={chartStateLookup}
-          activeChartId={activeChartId}
-          selectedChartType={chartStateLookup[activeChartId]?.type}
-          onChartSyncChange={handleChartSyncChange}
-          onChartTypeChange={handleChartTypeChange}
-        />
-      </TabPanel>
-      <TabPanel value="data">
-        <GridChartsPanelData />
-      </TabPanel>
-      <TabPanel value="customize">
-        <GridChartsPanelCustomize activeChartId={activeChartId} />
-      </TabPanel>
-    </Tabs>
+    <React.Fragment>
+      <GridChartsPanelHeader ownerState={rootProps}>
+        {chartEntries.length > 1 ? (
+          <GridChartsPanelChartSelector activeChartId={activeChartId} chartEntries={chartEntries} />
+        ) : (
+          <GridChartsPanelTitle ownerState={rootProps}>Charts</GridChartsPanelTitle>
+        )}
+        <rootProps.slots.baseIconButton
+          onClick={() => {
+            apiRef.current.setChartsPanelOpen(false);
+          }}
+          aria-label={apiRef.current.getLocaleText('chartsCloseButton')}
+          {...rootProps.slotProps?.baseIconButton}
+        >
+          <rootProps.slots.sidebarCloseIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
+      </GridChartsPanelHeader>
+      <rootProps.slots.baseTabs
+        items={tabItems}
+        value={activeTab}
+        onChange={(_event, value) => {
+          setActiveTab(value);
+        }}
+        {...rootProps.slotProps?.baseTabs}
+      />
+    </React.Fragment>
   );
 }
 

@@ -750,6 +750,12 @@
       "class": null
     },
     {
+      "name": "baseTabs",
+      "description": "The custom Tabs component used in the grid.",
+      "default": "Tabs",
+      "class": null
+    },
+    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",

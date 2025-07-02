@@ -291,6 +291,16 @@ export type SwitchProps = CommonProps & {
   title?: string;
 };
 
+export type TabsProps = Omit<CommonProps, 'onChange'> & {
+  items: {
+    value: string;
+    label: string;
+    children: React.ReactNode;
+  }[];
+  value: string;
+  onChange: (event: React.SyntheticEvent, value: string) => void;
+};
+
 export type TextFieldProps = CommonProps & {
   role?: string;
   autoComplete?: string;
