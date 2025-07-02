@@ -1,4 +1,3 @@
-import { includeIgnoreFile } from '@eslint/compat';
 import {
   baseSpecRules,
   createBaseConfig,
@@ -99,8 +98,6 @@ const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
 ]);
 
 export default defineConfig(
-  includeIgnoreFile(path.join(dirname, '.gitignore'), 'Git Ignore rules'),
-  includeIgnoreFile(path.join(dirname, '.eslintignore'), 'ESLint Ignore rules'),
   {
     name: 'Base Config',
     extends: createBaseConfig({
@@ -120,6 +117,8 @@ export default defineConfig(
       },
     },
     rules: {
+      '@typescript-eslint/no-redeclare': 'error',
+      'material-ui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
       'import/no-relative-packages': 'error',
@@ -163,7 +162,7 @@ export default defineConfig(
       // See https://stackoverflow.com/questions/42367236/why-am-i-getting-this-warning-no-duplicate-props-allowed-react-jsx-no-duplicate
       // TODO move to @mui/internal-code-infra/eslint
       // TODO Fix <Input> props names to not conflict
-      'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
+      'react/jsx-no-duplicate-props': ['warn', { ignoreCase: false }],
       // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
     },
