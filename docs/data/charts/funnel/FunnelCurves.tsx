@@ -52,7 +52,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'vertical',
                 variant: props.variant,
-                dataDirection: 'increasing',
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -67,7 +67,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'horizontal',
                 variant: props.variant,
-                dataDirection: 'increasing',
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}

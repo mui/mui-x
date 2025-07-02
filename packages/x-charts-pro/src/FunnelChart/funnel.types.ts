@@ -98,7 +98,7 @@ export interface FunnelSeriesType
    *
    * @default 'auto'
    */
-  dataDirection?: 'increasing' | 'decreasing' | 'auto';
+  funnelDirection?: 'increasing' | 'decreasing' | 'auto';
 }
 
 /**
@@ -135,11 +135,11 @@ export type FunnelItem = {
 export interface DefaultizedFunnelSeriesType
   extends Omit<
     DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'>,
-    'dataDirection'
+    'funnelDirection'
   > {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
-  dataDirection: 'increasing' | 'decreasing';
+  funnelDirection: 'increasing' | 'decreasing';
 }
 
 export type FunnelDataPoints = Record<'x' | 'y', number> & {
