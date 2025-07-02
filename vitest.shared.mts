@@ -9,12 +9,13 @@ const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 export const alias = [
   // Generates resolver aliases for all packages and their plans.
   ...[
-    { lib: 'x-charts', plans: ['pro'] },
+    { lib: 'x-charts', plans: ['pro', 'premium'] },
     { lib: 'x-date-pickers', plans: ['pro'] },
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler' },
     { lib: 'x-internals' },
+    { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
     { lib: 'x-telemetry' },
   ].flatMap((v) => {

@@ -558,11 +558,6 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': selectedStyles,
     },
-    [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
-      '[role=row]': {
-        background: vars.colors.background.base,
-      },
-    },
 
     /* Cell styles */
     [`& .${c.cell}`]: {
