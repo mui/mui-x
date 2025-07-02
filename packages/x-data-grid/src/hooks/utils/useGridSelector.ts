@@ -93,11 +93,23 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
   const subscribe = React.useCallback(
     () => {
       if (refs.current.subscription) {
+        if (refs.current.selector?.name === 'testSelector') {
+          console.log('useGridSelector try to subscribe, but already subscribed');
+        }
+
         return null;
+      }
+
+      if (refs.current.selector?.name === 'testSelector') {
+        console.log('useGridSelector subscribe');
       }
 
       refs.current.subscription = apiRef.current.store.subscribe(() => {
         const newState = refs.current.selector(apiRef, refs.current.args) as T;
+        if (refs.current.selector?.name === 'testSelector') {
+          console.log('useGridSelector compare state', { new: newState, prev: refs.current.state });
+        }
+
         if (!refs.current.equals(refs.current.state, newState)) {
           refs.current.state = newState;
           setState(newState);
@@ -113,6 +125,9 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
   const unsubscribe = React.useCallback(() => {
     return () => {
       if (refs.current.subscription) {
+        if (refs.current.selector?.name === 'testSelector') {
+          console.log('useGridSelector unsubscribe');
+        }
         refs.current.subscription();
         refs.current.subscription = undefined;
       }

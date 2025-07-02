@@ -64,6 +64,7 @@ export default defineConfig({
       isolate: false,
       provider: 'playwright',
       headless: true,
+      // headless: false,
       screenshotFailures: false,
       orchestratorScripts: [
         {
