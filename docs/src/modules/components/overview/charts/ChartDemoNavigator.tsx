@@ -36,12 +36,13 @@ export default function ChartDemoNavigator(
         py={8}
         alignItems="start"
       >
+        {/* Chart selection column */}
         <Stack
           spacing={2}
           sx={{
-            width: { xs: '100%', md: 500 },
+            width: '100%',
             minWidth: '260px',
-            maxWidth: { xs: '500px', md: '400px' },
+            maxWidth: { md: 300 },
           }}
         >
           <SectionHeadline
@@ -67,12 +68,13 @@ export default function ChartDemoNavigator(
             ))}
           </Stack>
         </Stack>
+
+        {/* Demo column */}
         <Stack
           justifyContent="center"
           alignItems="center"
           sx={{
-            width: { xs: '100%' },
-            maxWidth: { xs: '500px', md: '100%' },
+            width: '100%',
             minHeight: 0,
             minWidth: 0,
           }}
