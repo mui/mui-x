@@ -99,6 +99,12 @@
         "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
       }
     },
+    "zoomConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ pan?: Array&lt;'onDrag'<br>&#124;&nbsp;{ keys: Array&lt;string&gt;, mode?: 'all'<br>&#124;&nbsp;'mouse'<br>&#124;&nbsp;'touch', type: 'onDrag' }&gt;, zoom?: Array&lt;'onPinch'<br>&#124;&nbsp;'onWheel'<br>&#124;&nbsp;{ keys: Array&lt;string&gt;, mode?: 'all', type: 'onWheel' }<br>&#124;&nbsp;{ keys?: array, mode?: 'all', type: 'onPinch' }&gt; }"
+      }
+    },
     "zoomData": {
       "type": {
         "name": "arrayOf",

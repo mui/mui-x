@@ -17,6 +17,8 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
+import { selectorZoomConfig } from '../ZoomConfig.selectors';
 
 export const useZoomOnPinch = (
   {
@@ -29,15 +31,20 @@ export const useZoomOnPinch = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const config = useSelector(store, selectorZoomConfig, ['onPinch' as const]);
 
   // Zoom on pinch
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomEnabled || !config) {
       return () => {};
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
+      if (!isGestureEnabledForPointer(event.detail.srcEvent, config!.mode)) {
+        return;
+      }
+
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
@@ -79,5 +86,14 @@ export const useZoomOnPinch = (
       zoomHandler.cleanup();
       rafThrottledCallback.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, store, instance, setZoomDataCallback]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomEnabled,
+    optionsLookup,
+    store,
+    instance,
+    setZoomDataCallback,
+    config,
+  ]);
 };

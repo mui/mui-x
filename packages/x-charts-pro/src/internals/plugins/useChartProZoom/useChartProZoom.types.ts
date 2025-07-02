@@ -6,6 +6,7 @@ import {
   ZoomData,
   AxisId,
 } from '@mui/x-charts/internals';
+import { ZoomConfig, DefaultizedZoomConfig } from './ZoomConfig.types';
 
 export interface UseChartProZoomParameters {
   /**
@@ -23,6 +24,10 @@ export interface UseChartProZoomParameters {
    * The list of zoom data related to each axis.
    */
   zoomData?: readonly ZoomData[];
+  /**
+   * Configuration for zoom interactions.
+   */
+  zoomConfig?: ZoomConfig;
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
@@ -43,6 +48,10 @@ export interface UseChartProZoomState {
      * Internal information to know if the user control the state or not.
      */
     isControlled: boolean;
+    /**
+     * Configuration for zoom interactions.
+     */
+    zoomConfig: DefaultizedZoomConfig;
   };
 }
 

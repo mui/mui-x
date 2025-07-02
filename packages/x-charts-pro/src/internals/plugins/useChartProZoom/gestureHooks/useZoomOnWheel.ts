@@ -17,6 +17,8 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { isKeyPressed } from '../isKeyPressed';
+import { selectorZoomConfig } from '../ZoomConfig.selectors';
 
 export const useZoomOnWheel = (
   {
@@ -31,17 +33,40 @@ export const useZoomOnWheel = (
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressedKeysRef = React.useRef<Set<string>>(new Set());
+  const config = useSelector(store, selectorZoomConfig, ['onWheel' as const]);
+
+  React.useEffect(() => {
+    const pressedKeysSet = pressedKeysRef.current;
+    if (!isZoomEnabled || !config) {
+      return () => {};
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => pressedKeysRef.current.add(event.key);
+    const handleKeyUp = (event: KeyboardEvent) => pressedKeysRef.current.delete(event.key);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      pressedKeysSet.clear();
+    };
+  }, [config, isZoomEnabled]);
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomEnabled || !config) {
       return () => {};
     }
 
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
+      if (!isKeyPressed(pressedKeysRef.current, config?.keys)) {
+        return;
+      }
+
       const point = getSVGPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
@@ -96,5 +121,14 @@ export const useZoomOnWheel = (
       startedOutsideRef.current = false;
       rafThrottledSetZoomData.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback, store]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomEnabled,
+    optionsLookup,
+    instance,
+    setZoomDataCallback,
+    store,
+    config,
+  ]);
 };
