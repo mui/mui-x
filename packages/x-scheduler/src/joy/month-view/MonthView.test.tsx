@@ -97,4 +97,45 @@ describe('<MonthView />', () => {
     expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
     expect(screen.getByText('15')).not.to.equal(null);
   });
+
+  it('should show "+N more..." when there are more events than fit in a cell', () => {
+    const manyEvents = [
+      {
+        id: '1',
+        start: DateTime.fromISO('2025-05-01T08:00:00'),
+        end: DateTime.fromISO('2025-05-01T09:00:00'),
+        title: 'Breakfast',
+      },
+      {
+        id: '2',
+        start: DateTime.fromISO('2025-05-01T09:30:00'),
+        end: DateTime.fromISO('2025-05-01T10:30:00'),
+        title: 'Team Standup',
+      },
+      {
+        id: '3',
+        start: DateTime.fromISO('2025-05-01T11:00:00'),
+        end: DateTime.fromISO('2025-05-01T12:00:00'),
+        title: 'Client Call',
+      },
+      {
+        id: '4',
+        start: DateTime.fromISO('2025-05-01T13:00:00'),
+        end: DateTime.fromISO('2025-05-01T14:00:00'),
+        title: 'Lunch',
+      },
+      {
+        id: '5',
+        start: DateTime.fromISO('2025-05-01T15:00:00'),
+        end: DateTime.fromISO('2025-05-01T16:00:00'),
+        title: 'Design Review',
+      },
+    ];
+    render(
+      <StandaloneView events={manyEvents} resources={[]}>
+        <MonthView />
+      </StandaloneView>,
+    );
+    expect(screen.getByText(/more/i)).not.to.equal(null);
+  });
 });
