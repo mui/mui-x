@@ -1,11 +1,9 @@
 import * as React from 'react';
 import {
   AxisId,
-  selectorChartAxisZoomOptionsLookup,
   selectorChartSeriesProcessed,
   useSelector,
   useStore,
-  ZoomData,
 } from '@mui/x-charts/internals';
 import { LinePreviewPlot } from './previews/LinePreviewPlot';
 import { AreaPreviewPlot } from './previews/AreaPreviewPlot';
@@ -25,11 +23,6 @@ export function ChartAxisZoomSliderPreviewContent(props: ChartAxisZoomSliderPrev
 
   const store = useStore();
   const processedSeries = useSelector(store, selectorChartSeriesProcessed);
-  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, [axisId]);
-
-  const zoomMap = new Map<AxisId, ZoomData>([
-    [axisId, { axisId, start: zoomOptions.minStart, end: zoomOptions.maxEnd }],
-  ]);
 
   const children: React.JSX.Element[] = [];
   const clipId = `zoom-preview-mask-${axisId}`;
@@ -39,19 +32,19 @@ export function ChartAxisZoomSliderPreviewContent(props: ChartAxisZoomSliderPrev
   const hasScatterSeries = (processedSeries.scatter?.seriesOrder?.length ?? 0) > 0;
 
   if (hasLineSeries) {
-    children.push(<AreaPreviewPlot key="area" {...props} zoomMap={zoomMap} />);
+    children.push(<AreaPreviewPlot key="area" axisId={axisId} />);
   }
 
   if (hasBarSeries) {
-    children.push(<BarPreviewPlot key="bar" {...props} zoomMap={zoomMap} />);
+    children.push(<BarPreviewPlot key="bar" {...props} />);
   }
 
   if (hasLineSeries) {
-    children.push(<LinePreviewPlot key="line" {...props} zoomMap={zoomMap} />);
+    children.push(<LinePreviewPlot key="line" axisId={axisId} />);
   }
 
   if (hasScatterSeries) {
-    children.push(<ScatterPreviewPlot key="scatter" {...props} zoomMap={zoomMap} />);
+    children.push(<ScatterPreviewPlot key="scatter" {...props} />);
   }
 
   return (
