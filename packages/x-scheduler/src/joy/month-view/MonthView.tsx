@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@base-ui-components/react/utils';
+import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { MonthViewProps } from './MonthView.types';
@@ -15,14 +16,13 @@ import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { SchedulerValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
-import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import './MonthView.css';
 
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
-const HIDDEN_EVENTS_HEIGHT = 16;
+const HIDDEN_EVENTS_HEIGHT = 18;
 
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
@@ -85,8 +85,8 @@ export const MonthView = React.memo(
         const cellHeight = cellRef.current!.clientHeight;
         const availableHeight =
           cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT - HIDDEN_EVENTS_HEIGHT;
-        const maxEvents = Math.floor(availableHeight / EVENT_HEIGHT);
-        setMaxEvents(maxEvents);
+        const maxEventsCount = Math.floor(availableHeight / EVENT_HEIGHT);
+        setMaxEvents(maxEventsCount);
       },
       true,
     );

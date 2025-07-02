@@ -73,7 +73,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
           </div>
         );
     }
-  }, [variant, eventProp.title, eventProp.start, eventProp.end]);
+  }, [
+    variant,
+    eventProp.title,
+    eventProp.start,
+    eventProp.end,
+    eventResource?.name,
+    translations.resourceAriaLabel,
+    translations.noResourceAriaLabel,
+  ]);
 
   return (
     <div
