@@ -77,6 +77,7 @@
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
     "zAxis": { "description": "The configuration of the z-axes." },
+    "zoomConfig": { "description": "Configuration for zoom interactions." },
     "zoomData": { "description": "The list of zoom data related to each axis." }
   },
   "classDescriptions": {},
