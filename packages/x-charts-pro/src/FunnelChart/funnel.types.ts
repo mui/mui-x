@@ -89,12 +89,12 @@ export interface FunnelSeriesType
    */
   variant?: 'filled' | 'outlined';
   /**
-   * Denotes if the data is increasing or decreasing.
+   * Denotes if the funnel is increasing or decreasing.
    * Only used in the `pyramid` and `step-pyramid` curves.
    *
-   * - `increasing`, first data point is smaller than the last data point.
-   * - `decreasing`, first data point is greater than the last data point.
-   * - `auto`, the data direction is determined automatically based on the first and last data points.
+   * - `increasing`, funnel is drawn with a point at the top and a wide base.
+   * - `decreasing`, funnel is drawn with a wide top and a point at the base.
+   * - `auto`, the direction is determined automatically based on the first and last data points.
    *
    * @default 'auto'
    */
