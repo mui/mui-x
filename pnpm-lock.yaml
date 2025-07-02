@@ -290,9 +290,6 @@ importers:
       '@emotion/styled':
         specifier: 'catalog:'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
-      '@eslint/compat':
-        specifier: ^1.3.1
-        version: 1.3.1(eslint@9.30.0)
       '@inquirer/prompts':
         specifier: ^7.5.3
         version: 7.5.3(@types/node@24.0.7)
@@ -300,17 +297,17 @@ importers:
         specifier: 'catalog:'
         version: 7.1.2(@mui/material@7.1.2(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@mui/internal-babel-plugin-display-name':
-        specifier: ^1.0.2
-        version: 1.0.2(@babel/core@7.27.7)(@babel/preset-react@7.27.1(@babel/core@7.27.7))
+        specifier: ^1.0.4-canary.2
+        version: 1.0.4-canary.2(@babel/core@7.27.7)(@babel/preset-react@7.27.1(@babel/core@7.27.7))
       '@mui/internal-babel-plugin-resolve-imports':
-        specifier: ^2.0.5
-        version: 2.0.5(@babel/core@7.27.7)
+        specifier: ^2.0.7-canary.3
+        version: 2.0.7-canary.3(@babel/core@7.27.7)
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.7
-        version: 1.0.7(@swc/core@1.12.0)(@types/node@24.0.7)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)
+        specifier: ^1.0.9-canary.3
+        version: 1.0.9-canary.3(@swc/core@1.12.0)(@types/node@24.0.7)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.6
-        version: 0.0.2-canary.7(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)
+        specifier: ^0.0.2-canary.9
+        version: 0.0.2-canary.9(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.6
@@ -4229,23 +4226,23 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/internal-babel-plugin-display-name@1.0.2':
-    resolution: {integrity: sha512-hnvpDAxATJVGfL6TaPtTFLCxyENMLU4i19gVi9Bx6sqC+aNDIgdpEzqEZRWr6raeLqdJvdoj8CMgsCDjJ1vbVg==}
+  '@mui/internal-babel-plugin-display-name@1.0.4-canary.2':
+    resolution: {integrity: sha512-0n7ampSn7qkZJPOwoLSr/rQe3/b4VfwjfkG2pzdX9Bcg0TFKfQuYd+UoGpFgUp/kQ2M6WQHx0S1M4YlyQAEJWw==}
     peerDependencies:
-      '@babel/core': ^7.0.0
-      '@babel/preset-react': ^7.0.0
+      '@babel/core': '7'
+      '@babel/preset-react': '7'
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.5':
-    resolution: {integrity: sha512-FGnxs2ZD+1xDvbnvwqTZvlKgVmCmoApbuw9HjUtloh7H0TV1w8uCIaTZpxQg+HkUJ+aeVkUsHeys0208rXoG5w==}
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.3':
+    resolution: {integrity: sha512-Hsvp3j4ZMIDQPnxv8HI2VNODmdzEjtDPowCWr1ZOcVLXBO67sTY0LiIg6EzUbE3OAodLLZwAKZl4K7dARBSMYw==}
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@1.0.7':
-    resolution: {integrity: sha512-JznE7TsF20iUEXe3v/AZVGInoQUm15uTTDxgepJ8crnwnk5gR0V4qpooXGQOEebyXbsIcOSvEsafEs01QCOb+w==}
+  '@mui/internal-bundle-size-checker@1.0.9-canary.3':
+    resolution: {integrity: sha512-xUO1GQDl6xbFdQJMYOgKMdxD8duz/HRVO9FfOravWvHGqvfErFo9+mcS0Q99czlmViSol05CVqOOBdjZwFy+OQ==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.2-canary.7':
-    resolution: {integrity: sha512-z/ehQIodDqDKEZqVXX+e5MPgXrEBba8QCht1hm4Fvyrv2mHr3zio93FmAezt0dVm79bpgf0zhGbaWwSGHspfjw==}
+  '@mui/internal-code-infra@0.0.2-canary.9':
+    resolution: {integrity: sha512-U+or0zJp+B71M2pYgG1CxmuSm8molPwPxfatERzBBZTkXImrBCQbrXnz72OgS3STylZrUUrrLoiBY1zn6753cA==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -15064,7 +15061,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.8
 
-  '@mui/internal-babel-plugin-display-name@1.0.2(@babel/core@7.27.7)(@babel/preset-react@7.27.1(@babel/core@7.27.7))':
+  '@mui/internal-babel-plugin-display-name@1.0.4-canary.2(@babel/core@7.27.7)(@babel/preset-react@7.27.1(@babel/core@7.27.7))':
     dependencies:
       '@babel/core': 7.27.7
       '@babel/helper-module-imports': 7.27.1
@@ -15073,12 +15070,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.5(@babel/core@7.27.7)':
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.3(@babel/core@7.27.7)':
     dependencies:
       '@babel/core': 7.27.7
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.7(@swc/core@1.12.0)(@types/node@24.0.7)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.3(@swc/core@1.12.0)(@types/node@24.0.7)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)':
     dependencies:
       '@aws-sdk/client-s3': 3.804.0
       '@aws-sdk/credential-providers': 3.804.0
@@ -15125,7 +15122,7 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@0.0.2-canary.7(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)':
+  '@mui/internal-code-infra@0.0.2-canary.9(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)':
     dependencies:
       '@eslint/compat': 1.3.1(eslint@9.30.0)
       '@next/eslint-plugin-next': 15.3.4
