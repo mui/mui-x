@@ -16,7 +16,7 @@ To create a pyramid chart, set the `curve` property to `pyramid` in the series.
 
 {{"demo": "Pyramid.js"}}
 
-Based on the order of the data items, the pyramid chart can be inverted.
+Based on the order of the data items, the pyramid chart can be inverted. Also by default, the sections have the same size because they use the band scale type. A linear scale, is also available, and will scale the the sections based on their value. To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
 
 {{"demo": "PyramidInverted.js"}}
 
