@@ -66,7 +66,7 @@ function LinePlot(props: LinePlotProps) {
 
   const completedData = useAggregatedData();
   return (
-    <LinePlotRoot data-drawing-container {...other}>
+    <LinePlotRoot {...other}>
       {completedData.map(({ d, seriesId, color, gradientId }) => {
         return (
           <LineElement

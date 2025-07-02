@@ -68,7 +68,7 @@ function AreaPlot(props: AreaPlotProps) {
   const completedData = useAggregatedData();
 
   return (
-    <AreaPlotRoot data-drawing-container {...other}>
+    <AreaPlotRoot {...other}>
       {completedData.map(
         ({ d, seriesId, color, area, gradientId }) =>
           !!area && (
