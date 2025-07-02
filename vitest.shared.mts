@@ -9,12 +9,13 @@ const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 export const alias = [
   // Generates resolver aliases for all packages and their plans.
   ...[
-    { lib: 'x-charts', plans: ['pro'] },
+    { lib: 'x-charts', plans: ['pro', 'premium'] },
     { lib: 'x-date-pickers', plans: ['pro'] },
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler' },
     { lib: 'x-internals' },
+    { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
     { lib: 'x-telemetry' },
   ].flatMap((v) => {
@@ -31,7 +32,7 @@ export const alias = [
   }),
   {
     find: 'test/utils',
-    replacement: new URL('./test/utils', import.meta.url).pathname,
+    replacement: fileURLToPath(new URL('./test/utils', import.meta.url)),
   },
 ];
 
@@ -53,7 +54,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    setupFiles: [new URL('test/setupVitest.ts', import.meta.url).pathname],
+    setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
     env: {

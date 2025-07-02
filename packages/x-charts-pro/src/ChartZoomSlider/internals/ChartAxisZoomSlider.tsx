@@ -33,7 +33,7 @@ interface ChartZoomSliderProps {
 export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
-  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const zoomData = useSelector(store, selectorChartAxisZoomData, [axisId]);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();
@@ -87,7 +87,7 @@ export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderPr
   const backgroundRectOffset = (ZOOM_SLIDER_SIZE - ZOOM_SLIDER_TRACK_SIZE) / 2;
 
   return (
-    <g transform={`translate(${x} ${y})`}>
+    <g transform={`translate(${x} ${y})`} style={{ touchAction: 'none' }}>
       <ChartAxisZoomSliderTrack
         x={axisDirection === 'x' ? 0 : backgroundRectOffset}
         y={axisDirection === 'x' ? backgroundRectOffset : 0}

@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test:performance": "vitest bench",
-    "build": "pnpm --filter=\"@mui/x-charts-pro...\" build",
+    "test:performance:trace": "TRACE=true vitest bench --run",
+    "build": "pnpm --filter=\"@mui/x-charts-premium...\" build",
     "test:performance:browser": "vitest bench --browser"
   },
   "devDependencies": {
@@ -12,6 +13,7 @@
     "@emotion/react": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
+    "@mui/x-charts-premium": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",

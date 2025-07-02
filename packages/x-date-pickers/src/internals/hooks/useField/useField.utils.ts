@@ -20,10 +20,10 @@ import { getMonthsInYear } from '../../utils/date-utils';
 import { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   formatToken: string,
 ): Pick<FieldSection, 'type' | 'contentType'> & { maxLength: number | undefined } => {
-  const config = utils.formatTokenMap[formatToken];
+  const config = adapter.formatTokenMap[formatToken];
 
   if (config == null) {
     throw new Error(
@@ -49,43 +49,43 @@ export const getDateSectionConfigFromFormatToken = (
   };
 };
 
-export const getDaysInWeekStr = (utils: MuiPickersAdapter, format: string) => {
+export const getDaysInWeekStr = (adapter: MuiPickersAdapter, format: string) => {
   const elements: PickerValidDate[] = [];
 
-  const now = utils.date(undefined, 'default');
-  const startDate = utils.startOfWeek(now);
-  const endDate = utils.endOfWeek(now);
+  const now = adapter.date(undefined, 'default');
+  const startDate = adapter.startOfWeek(now);
+  const endDate = adapter.endOfWeek(now);
 
   let current = startDate;
-  while (utils.isBefore(current, endDate)) {
+  while (adapter.isBefore(current, endDate)) {
     elements.push(current);
-    current = utils.addDays(current, 1);
+    current = adapter.addDays(current, 1);
   }
 
-  return elements.map((weekDay) => utils.formatByString(weekDay, format));
+  return elements.map((weekDay) => adapter.formatByString(weekDay, format));
 };
 
 export const getLetterEditingOptions = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   timezone: PickersTimezone,
   sectionType: FieldSectionType,
   format: string,
 ) => {
   switch (sectionType) {
     case 'month': {
-      return getMonthsInYear(utils, utils.date(undefined, timezone)).map((month) =>
-        utils.formatByString(month, format!),
+      return getMonthsInYear(adapter, adapter.date(undefined, timezone)).map((month) =>
+        adapter.formatByString(month, format!),
       );
     }
 
     case 'weekDay': {
-      return getDaysInWeekStr(utils, format);
+      return getDaysInWeekStr(adapter, format);
     }
 
     case 'meridiem': {
-      const now = utils.date(undefined, timezone);
-      return [utils.startOfDay(now), utils.endOfDay(now)].map((date) =>
-        utils.formatByString(date, format),
+      const now = adapter.date(undefined, timezone);
+      return [adapter.startOfDay(now), adapter.endOfDay(now)].map((date) =>
+        adapter.formatByString(date, format),
       );
     }
 
@@ -101,10 +101,10 @@ export const FORMAT_SECONDS_NO_LEADING_ZEROS = 's';
 
 const NON_LOCALIZED_DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-export const getLocalizedDigits = (utils: MuiPickersAdapter) => {
-  const today = utils.date(undefined);
-  const formattedZero = utils.formatByString(
-    utils.setSeconds(today, 0),
+export const getLocalizedDigits = (adapter: MuiPickersAdapter) => {
+  const today = adapter.date(undefined);
+  const formattedZero = adapter.formatByString(
+    adapter.setSeconds(today, 0),
     FORMAT_SECONDS_NO_LEADING_ZEROS,
   );
 
@@ -113,7 +113,7 @@ export const getLocalizedDigits = (utils: MuiPickersAdapter) => {
   }
 
   return Array.from({ length: 10 }).map((_, index) =>
-    utils.formatByString(utils.setSeconds(today, index), FORMAT_SECONDS_NO_LEADING_ZEROS),
+    adapter.formatByString(adapter.setSeconds(today, index), FORMAT_SECONDS_NO_LEADING_ZEROS),
   );
 };
 
@@ -164,7 +164,7 @@ export const cleanLeadingZeros = (valueStr: string, size: number) => {
 };
 
 export const cleanDigitSectionValue = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   value: number,
   sectionBoundaries: FieldSectionValueBoundaries<any>,
   localizedDigits: string[],
@@ -190,11 +190,11 @@ export const cleanDigitSectionValue = (
   }
 
   if (section.type === 'day' && section.contentType === 'digit-with-letter') {
-    const date = utils.setDate(
+    const date = adapter.setDate(
       (sectionBoundaries as FieldSectionValueBoundaries<'day'>).longestMonth,
       value,
     );
-    return utils.formatByString(date, section.format);
+    return adapter.formatByString(date, section.format);
   }
 
   // queryValue without leading `0` (`01` => `1`)
@@ -248,25 +248,25 @@ export const getSectionVisibleValue = (
 };
 
 export const changeSectionValueFormat = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   valueStr: string,
   currentFormat: string,
   newFormat: string,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
-    if (getDateSectionConfigFromFormatToken(utils, currentFormat).type === 'weekDay') {
+    if (getDateSectionConfigFromFormatToken(adapter, currentFormat).type === 'weekDay') {
       throw new Error("changeSectionValueFormat doesn't support week day formats");
     }
   }
 
-  return utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
+  return adapter.formatByString(adapter.parse(valueStr, currentFormat)!, newFormat);
 };
 
-const isFourDigitYearFormat = (utils: MuiPickersAdapter, format: string) =>
-  utils.formatByString(utils.date(undefined, 'system'), format).length === 4;
+const isFourDigitYearFormat = (adapter: MuiPickersAdapter, format: string) =>
+  adapter.formatByString(adapter.date(undefined, 'system'), format).length === 4;
 
 export const doesSectionFormatHaveLeadingZeros = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   contentType: FieldSectionContentType,
   sectionType: FieldSectionType,
   format: string,
@@ -275,40 +275,40 @@ export const doesSectionFormatHaveLeadingZeros = (
     return false;
   }
 
-  const now = utils.date(undefined, 'default');
+  const now = adapter.date(undefined, 'default');
 
   switch (sectionType) {
-    // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
+    // We can't use `changeSectionValueFormat`, because  `adapter.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
       // Remove once https://github.com/iamkun/dayjs/pull/2847 is merged and bump dayjs version
-      if (utils.lib === 'dayjs' && format === 'YY') {
+      if (adapter.lib === 'dayjs' && format === 'YY') {
         return true;
       }
-      return utils.formatByString(utils.setYear(now, 1), format).startsWith('0');
+      return adapter.formatByString(adapter.setYear(now, 1), format).startsWith('0');
     }
 
     case 'month': {
-      return utils.formatByString(utils.startOfYear(now), format).length > 1;
+      return adapter.formatByString(adapter.startOfYear(now), format).length > 1;
     }
 
     case 'day': {
-      return utils.formatByString(utils.startOfMonth(now), format).length > 1;
+      return adapter.formatByString(adapter.startOfMonth(now), format).length > 1;
     }
 
     case 'weekDay': {
-      return utils.formatByString(utils.startOfWeek(now), format).length > 1;
+      return adapter.formatByString(adapter.startOfWeek(now), format).length > 1;
     }
 
     case 'hours': {
-      return utils.formatByString(utils.setHours(now, 1), format).length > 1;
+      return adapter.formatByString(adapter.setHours(now, 1), format).length > 1;
     }
 
     case 'minutes': {
-      return utils.formatByString(utils.setMinutes(now, 1), format).length > 1;
+      return adapter.formatByString(adapter.setMinutes(now, 1), format).length > 1;
     }
 
     case 'seconds': {
-      return utils.formatByString(utils.setSeconds(now, 1), format).length > 1;
+      return adapter.formatByString(adapter.setSeconds(now, 1), format).length > 1;
     }
 
     default: {
@@ -322,7 +322,7 @@ export const doesSectionFormatHaveLeadingZeros = (
  * To make sure that the parsing works, we are building a format and a date without any separator.
  */
 export const getDateFromDateSections = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   sections: FieldSection[],
   localizedDigits: string[],
 ): PickerValidDate => {
@@ -346,7 +346,7 @@ export const getDateFromDateSections = (
   const formatWithoutSeparator = sectionFormats.join(' ');
   const dateWithoutSeparatorStr = sectionValues.join(' ');
 
-  return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator)!;
+  return adapter.parse(dateWithoutSeparatorStr, formatWithoutSeparator)!;
 };
 
 export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection[]) =>
@@ -388,17 +388,17 @@ export const createDateStrForV6InputFromSections = (
 };
 
 export const getSectionsBoundaries = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   localizedDigits: string[],
   timezone: PickersTimezone,
 ): FieldSectionsValueBoundaries => {
-  const today = utils.date(undefined, timezone);
-  const endOfYear = utils.endOfYear(today);
-  const endOfDay = utils.endOfDay(today);
+  const today = adapter.date(undefined, timezone);
+  const endOfYear = adapter.endOfYear(today);
+  const endOfDay = adapter.endOfDay(today);
 
-  const { maxDaysInMonth, longestMonth } = getMonthsInYear(utils, today).reduce(
+  const { maxDaysInMonth, longestMonth } = getMonthsInYear(adapter, today).reduce(
     (acc, month) => {
-      const daysInMonth = utils.getDaysInMonth(month);
+      const daysInMonth = adapter.getDaysInMonth(month);
 
       if (daysInMonth > acc.maxDaysInMonth) {
         return { maxDaysInMonth: daysInMonth, longestMonth: month };
@@ -412,21 +412,21 @@ export const getSectionsBoundaries = (
   return {
     year: ({ format }) => ({
       minimum: 0,
-      maximum: isFourDigitYearFormat(utils, format) ? 9999 : 99,
+      maximum: isFourDigitYearFormat(adapter, format) ? 9999 : 99,
     }),
     month: () => ({
       minimum: 1,
       // Assumption: All years have the same amount of months
-      maximum: utils.getMonth(endOfYear) + 1,
+      maximum: adapter.getMonth(endOfYear) + 1,
     }),
     day: ({ currentDate }) => ({
       minimum: 1,
-      maximum: utils.isValid(currentDate) ? utils.getDaysInMonth(currentDate) : maxDaysInMonth,
+      maximum: adapter.isValid(currentDate) ? adapter.getDaysInMonth(currentDate) : maxDaysInMonth,
       longestMonth: longestMonth!,
     }),
     weekDay: ({ format, contentType }) => {
       if (contentType === 'digit') {
-        const daysInWeek = getDaysInWeekStr(utils, format).map(Number);
+        const daysInWeek = getDaysInWeekStr(adapter, format).map(Number);
         return {
           minimum: Math.min(...daysInWeek),
           maximum: Math.max(...daysInWeek),
@@ -439,10 +439,10 @@ export const getSectionsBoundaries = (
       };
     },
     hours: ({ format }) => {
-      const lastHourInDay = utils.getHours(endOfDay);
+      const lastHourInDay = adapter.getHours(endOfDay);
       const hasMeridiem =
         removeLocalizedDigits(
-          utils.formatByString(utils.endOfDay(today), format),
+          adapter.formatByString(adapter.endOfDay(today), format),
           localizedDigits,
         ) !== lastHourInDay.toString();
 
@@ -451,7 +451,7 @@ export const getSectionsBoundaries = (
           minimum: 1,
           maximum: Number(
             removeLocalizedDigits(
-              utils.formatByString(utils.startOfDay(today), format),
+              adapter.formatByString(adapter.startOfDay(today), format),
               localizedDigits,
             ),
           ),
@@ -466,12 +466,12 @@ export const getSectionsBoundaries = (
     minutes: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of minutes
-      maximum: utils.getMinutes(endOfDay),
+      maximum: adapter.getMinutes(endOfDay),
     }),
     seconds: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of seconds
-      maximum: utils.getSeconds(endOfDay),
+      maximum: adapter.getSeconds(endOfDay),
     }),
     meridiem: () => ({
       minimum: 0,
@@ -514,62 +514,62 @@ export const validateSections = <TValue extends PickerValidValue>(
 };
 
 const transferDateSectionValue = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   section: FieldSection,
   dateToTransferFrom: PickerValidDate,
   dateToTransferTo: PickerValidDate,
 ) => {
   switch (section.type) {
     case 'year': {
-      return utils.setYear(dateToTransferTo, utils.getYear(dateToTransferFrom));
+      return adapter.setYear(dateToTransferTo, adapter.getYear(dateToTransferFrom));
     }
 
     case 'month': {
-      return utils.setMonth(dateToTransferTo, utils.getMonth(dateToTransferFrom));
+      return adapter.setMonth(dateToTransferTo, adapter.getMonth(dateToTransferFrom));
     }
 
     case 'weekDay': {
-      let dayInWeekStrOfActiveDate = utils.formatByString(dateToTransferFrom, section.format);
+      let dayInWeekStrOfActiveDate = adapter.formatByString(dateToTransferFrom, section.format);
       if (section.hasLeadingZerosInInput) {
         dayInWeekStrOfActiveDate = cleanLeadingZeros(dayInWeekStrOfActiveDate, section.maxLength!);
       }
 
-      const formattedDaysInWeek = getDaysInWeekStr(utils, section.format);
+      const formattedDaysInWeek = getDaysInWeekStr(adapter, section.format);
       const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
       const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
       const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-      return utils.addDays(dateToTransferFrom, diff);
+      return adapter.addDays(dateToTransferFrom, diff);
     }
 
     case 'day': {
-      return utils.setDate(dateToTransferTo, utils.getDate(dateToTransferFrom));
+      return adapter.setDate(dateToTransferTo, adapter.getDate(dateToTransferFrom));
     }
 
     case 'meridiem': {
-      const isAM = utils.getHours(dateToTransferFrom) < 12;
-      const mergedDateHours = utils.getHours(dateToTransferTo);
+      const isAM = adapter.getHours(dateToTransferFrom) < 12;
+      const mergedDateHours = adapter.getHours(dateToTransferTo);
 
       if (isAM && mergedDateHours >= 12) {
-        return utils.addHours(dateToTransferTo, -12);
+        return adapter.addHours(dateToTransferTo, -12);
       }
 
       if (!isAM && mergedDateHours < 12) {
-        return utils.addHours(dateToTransferTo, 12);
+        return adapter.addHours(dateToTransferTo, 12);
       }
 
       return dateToTransferTo;
     }
 
     case 'hours': {
-      return utils.setHours(dateToTransferTo, utils.getHours(dateToTransferFrom));
+      return adapter.setHours(dateToTransferTo, adapter.getHours(dateToTransferFrom));
     }
 
     case 'minutes': {
-      return utils.setMinutes(dateToTransferTo, utils.getMinutes(dateToTransferFrom));
+      return adapter.setMinutes(dateToTransferTo, adapter.getMinutes(dateToTransferFrom));
     }
 
     case 'seconds': {
-      return utils.setSeconds(dateToTransferTo, utils.getSeconds(dateToTransferFrom));
+      return adapter.setSeconds(dateToTransferTo, adapter.getSeconds(dateToTransferFrom));
     }
 
     default: {
@@ -591,7 +591,7 @@ const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
 };
 
 export const mergeDateIntoReferenceDate = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   dateToTransferFrom: PickerValidDate,
   sections: FieldSection[],
   referenceDate: PickerValidDate,
@@ -604,7 +604,7 @@ export const mergeDateIntoReferenceDate = (
     )
     .reduce((mergedDate, section) => {
       if (!shouldLimitToEditedSections || section.modified) {
-        return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
+        return transferDateSectionValue(adapter, section, dateToTransferFrom, mergedDate);
       }
 
       return mergedDate;
