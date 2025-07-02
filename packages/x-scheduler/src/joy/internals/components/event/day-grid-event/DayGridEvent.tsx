@@ -51,8 +51,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               role="img"
               aria-label={
                 eventResource?.name
-                  ? `${translations.resourceAriaLabel}: ${eventResource.name}`
-                  : `${translations.noResourceAriaLabel}`
+                  ? translations.resourceAriaLabel(eventResource.name)
+                  : translations.noResourceAriaLabel
               }
             />
             <p
@@ -73,15 +73,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
           </div>
         );
     }
-  }, [
-    variant,
-    eventProp.title,
-    eventProp.start,
-    eventProp.end,
-    eventResource?.name,
-    translations.resourceAriaLabel,
-    translations.noResourceAriaLabel,
-  ]);
+  }, [variant, eventProp.title, eventProp.start, eventProp.end, eventResource?.name, translations]);
 
   return (
     <div

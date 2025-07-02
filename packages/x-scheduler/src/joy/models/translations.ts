@@ -12,9 +12,9 @@ export interface SchedulerTranslations {
 
   // MonthView
   noResourceAriaLabel: string;
-  resourceAriaLabel: string;
+  resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
-  weekNumberAriaLabel: string;
+  weekNumberAriaLabel: (weekNumber: number) => string;
 
   // EventPopover
   closeButtonAriaLabel: string;

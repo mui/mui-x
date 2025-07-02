@@ -118,7 +118,7 @@ export const MonthView = React.memo(
                       <div
                         className="MonthViewWeekNumberCell"
                         role="rowheader"
-                        aria-label={`${translations.weekNumberAriaLabel}: ${weekNumer}`}
+                        aria-label={translations.weekNumberAriaLabel(weekNumer)}
                       >
                         {weekNumer}
                       </div>

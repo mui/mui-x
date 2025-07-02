@@ -14,9 +14,9 @@ export const enUS: SchedulerTranslations = {
 
   // MonthView
   noResourceAriaLabel: 'No specific resource',
-  resourceAriaLabel: 'Resource',
+  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
   weekAbbreviation: 'W',
-  weekNumberAriaLabel: 'Week number',
+  weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
 
   // EventPopover
   closeButtonAriaLabel: 'Close modal',
