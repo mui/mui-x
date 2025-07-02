@@ -4,8 +4,6 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import type { ChartAxisZoomSliderActiveTrackProps } from './ChartAxisZoomSliderActiveTrack';
 
 export interface ChartAxisZoomSliderTrackClasses {
-  /** Styles applied to the root element. */
-  root: string;
   /** Styles applied to the root element when it is horizontal. */
   horizontal: string;
   /** Styles applied to the root element when it is vertical. */
@@ -20,7 +18,6 @@ export type ChartAxisZoomSliderTrackClassKey = keyof ChartAxisZoomSliderTrackCla
 
 export const chartAxisZoomSliderTrackClasses: ChartAxisZoomSliderTrackClasses =
   generateUtilityClasses('MuiChartAxisZoomSliderTrack', [
-    'root',
     'horizontal',
     'vertical',
     'background',
