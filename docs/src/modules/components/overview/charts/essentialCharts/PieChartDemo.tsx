@@ -3,6 +3,8 @@ import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import { useDrawingArea } from '@mui/x-charts/hooks';
+import { styled } from '@mui/material/styles';
 
 // Data derived from https://gs.statcounter.com/os-market-share/desktop/worldwide/2023
 // And https://gs.statcounter.com/os-market-share/mobile/worldwide/2023
@@ -34,6 +36,23 @@ const desktopOS = [
 
 const valueFormatter = (item: { value: number }) => `${item.value}%`;
 
+const StyledText = styled('text')(({ theme }) => ({
+  fill: theme.palette.text.primary,
+  textAnchor: 'middle',
+  dominantBaseline: 'central',
+  fontWeight: 500,
+  fontSize: 18,
+}));
+
+function PieCenterLabel({ children }: { children: string }) {
+  const { width, height, left, top } = useDrawingArea();
+  return (
+    <StyledText x={left + width / 2} y={top + height / 2}>
+      {children}
+    </StyledText>
+  );
+}
+
 function Pie() {
   return (
     <Stack height="100%">
@@ -43,10 +62,9 @@ function Pie() {
           {
             data: desktopOS,
             valueFormatter,
-            arcLabel: 'label',
             arcLabelMinAngle: 35,
-            arcLabelRadius: '50%',
             outerRadius: '90%',
+            innerRadius: '60%',
           },
         ]}
         sx={{
@@ -54,7 +72,9 @@ function Pie() {
             fontWeight: 'bold',
           },
         }}
-      />
+      >
+        <PieCenterLabel>1.9 Bn Desktops</PieCenterLabel> {/* source: ChatGPT */}
+      </PieChart>
     </Stack>
   );
 }

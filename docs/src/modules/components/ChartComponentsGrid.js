@@ -93,14 +93,19 @@ function getComponents() {
 
 export default function ChartComponentsGrid() {
   return (
-    <List>
+    <List dense>
       {getComponents().map((component) => (
         <ListItem key={component.title}>
           <ListItemText
             primary={
               <Stack direction="row" alignItems="center" spacing={1}>
                 <CircleIcon sx={{ fontSize: 10 }} />
-                <Link href={component.href} underline="hover" sx={{ fontWeight: 500 }} pl={0.5}>
+                <Link
+                  href={component.href}
+                  underline="hover"
+                  sx={{ fontWeight: 500, fontSize: 16 }}
+                  pl={0.5}
+                >
                   {component.title}
                 </Link>
                 {component.pro && <span className="plan-pro" />}
