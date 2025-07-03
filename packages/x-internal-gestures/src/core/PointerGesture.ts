@@ -146,10 +146,10 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
     return pointers.filter(
       (pointer) =>
         (calculatedTarget === pointer.target ||
-        calculatedTarget.contains(pointer.target as Node) ||
-        pointer.target === this.originalTarget ||
-        calculatedTarget === this.originalTarget) &&
-        this.isPointerTypeAllowed(pointer.pointerType)
+          calculatedTarget.contains(pointer.target as Node) ||
+          pointer.target === this.originalTarget ||
+          calculatedTarget === this.originalTarget) &&
+        this.isPointerTypeAllowed(pointer.pointerType),
     );
   }
 
