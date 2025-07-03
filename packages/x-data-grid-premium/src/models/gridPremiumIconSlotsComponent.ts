@@ -204,4 +204,14 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridDeleteIcon
    */
   chartsMenuRemoveIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the sync button in the charts configuration panel when sync is enabled
+   * @default GridSyncIcon
+   */
+  chartsSyncIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the sync button in the charts configuration panel when sync is disabled
+   * @default GridSyncDisabledIcon
+   */
+  chartsSyncDisabledIcon: React.JSXElementConstructor<IconProps>;
 }
