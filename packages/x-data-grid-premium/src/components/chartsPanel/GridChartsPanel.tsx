@@ -14,7 +14,6 @@ import type {
 } from '../../models/gridChartsIntegration';
 import { GridChartsPanelChart } from './chart/GridChartsPanelChart';
 import { GridChartsPanelCustomize } from './customize/GridChartsPanelCustomize';
-import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { GridChartsPanelData } from './data/GridChartsPanelData';
@@ -183,12 +182,12 @@ function GridChartsPanel(props: GridChartsPanelProps) {
     return schema[activeChartType] || {};
   }, [schema, activeChartType]);
   const sectionLimitLookup = React.useMemo(() => {
-    return new Map<GridChartsIntegrationSection, number>(
+    return new Map(
       [
         ['categories', currentChartConfiguration.maxCategories],
         ['series', currentChartConfiguration.maxSeries],
       ].filter(([_, value]) => typeof value === 'number' && value > 0) as [
-        GridChartsIntegrationSection,
+        'categories' | 'series',
         number,
       ][],
     );
