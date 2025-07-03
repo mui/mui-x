@@ -15,6 +15,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 - 🌎 Improve Greek (el-GR) translations on the Charts
+- 🌎 Improve Danish (da-DK) locale on the Data Grid
 
 Special thanks go out to the community members for their valuable contributions:
 @ShahrazH, @vadimkuragkovskiy, @whythecode
