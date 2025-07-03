@@ -11,6 +11,7 @@ _Jul 3, 2025_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
+- 📊 Add `useChartProApiRef` for easier access to the API
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 - 🌎 Improve Greek (el-GR) translations on the Charts
@@ -25,7 +26,6 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.6.1`
 
-- [data grid][docs] Audit and revise the Pro row docs (#17926) @mapache-salvaje
 - [DataGrid] Fix column state restore with controlled column visibility model (#18567) @arminmeh
 - [DataGrid] Fix styling virtualized column headers (#18603) @KenanYusuf
 
@@ -49,18 +49,12 @@ Same changes as in `@mui/x-date-pickers@8.6.1`.
 
 ### Charts
 
-From https://github.com/mui/mui-x/pull/18013
-
-- Provide a `useChartProApiRef` for easier access to the API
-
 #### `@mui/x-charts@8.6.1`
 
 - [charts] Export `ChartsReferenceLineProps` (#18598) @bernardobelchior
 - [charts] Extract bar and line plot logic into reusable hooks (#18541) @bernardobelchior
 - [charts] Extract plot logic into separate files for reuse (#18522) @bernardobelchior
 - [charts] Profile charts benchmarks using chromium (#18528) @bernardobelchior
-- [docs][charts] Add donut chart as a special case of a pie chart (#18652) @bernardobelchior
-- [docs][charts] Centralize country and continent data (#18604) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -86,9 +80,13 @@ Same changes as in `@mui/x-tree-view@8.6.1`, plus:
 
 ### Docs
 
+- [docs] Add MCP stub (#18204) @bharatkashyap
 - [docs] Fix AI Assistant proxy rewrite prefix (#18661) @arminmeh
 - [docs] Improve test README.MD (#18634) @LukasTy
 - [docs] Provide workaround for pie chart composition (#18600) @alexfauquette
+- [docs][charts] Add donut chart as a special case of a pie chart (#18652) @bernardobelchior
+- [docs][charts] Centralize country and continent data (#18604) @bernardobelchior
+- [docs][data grid] Audit and revise the Pro row docs (#17926) @mapache-salvaje
 - [docs][pickers] Add mention of theme augmentation in relevant migration section (#18608) @LukasTy
 
 ### Core
@@ -98,7 +96,6 @@ Same changes as in `@mui/x-tree-view@8.6.1`, plus:
 
 ### Miscellaneous
 
-- [docs] Add MCP stub (#18204) @bharatkashyap
 - [code-infra] Bump code-infra version and fix breaking changes (#18653) @brijeshb42
 - [code-infra] Ensure `material-ui/disallow-react-api-in-server-components` ESLint rule is applied (#18570) @LukasTy
 - [code-infra] Migrate to flat eslint config (#18562) @brijeshb42
