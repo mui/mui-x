@@ -31,7 +31,7 @@ describe('Gesture Keyboard Filter', () => {
         }),
         new TapGesture({
           name: 'shiftTap',
-          keys: ['Shift'], // This gesture requires Shift key to be pressed
+          requiredKeys: ['Shift'], // This gesture requires Shift key to be pressed
         }),
       ],
     });

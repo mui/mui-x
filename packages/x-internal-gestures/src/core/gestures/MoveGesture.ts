@@ -110,7 +110,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       threshold: this.threshold,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
-      keys: this.keys,
+      requiredKeys: this.requiredKeys,
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,

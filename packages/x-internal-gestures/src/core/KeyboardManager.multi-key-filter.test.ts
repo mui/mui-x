@@ -34,12 +34,12 @@ describe('Gesture Multiple Key Filter', () => {
         new PanGesture({
           name: 'ctrlPan',
           threshold: 0,
-          keys: ['Control'], // This gesture requires Control key to be pressed
+          requiredKeys: ['Control'], // This gesture requires Control key to be pressed
         }),
         new PanGesture({
           name: 'ctrlAltPan',
           threshold: 0,
-          keys: ['Control', 'Alt'], // This gesture requires both Control and Alt keys
+          requiredKeys: ['Control', 'Alt'], // This gesture requires both Control and Alt keys
         }),
       ],
     });

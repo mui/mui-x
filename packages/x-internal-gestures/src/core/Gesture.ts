@@ -77,7 +77,7 @@ export type GestureOptions<GestureName extends string> = {
    * @example ['Shift', 'Alt']
    * @default [] (no key requirement)
    */
-  keys?: KeyboardKey[];
+  requiredKeys?: KeyboardKey[];
 };
 
 // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
@@ -139,7 +139,7 @@ export abstract class Gesture<GestureName extends string> {
   /**
    * Array of keyboard keys that must be pressed for the gesture to be recognized.
    */
-  protected keys?: KeyboardKey[];
+  protected requiredKeys?: KeyboardKey[];
 
   /**
    * KeyboardManager instance for tracking key presses
@@ -198,7 +198,7 @@ export abstract class Gesture<GestureName extends string> {
     this.preventDefault = options.preventDefault ?? false;
     this.stopPropagation = options.stopPropagation ?? false;
     this.preventIf = options.preventIf ?? [];
-    this.keys = options.keys;
+    this.requiredKeys = options.requiredKeys;
   }
 
   /**
@@ -248,7 +248,7 @@ export abstract class Gesture<GestureName extends string> {
     this.preventDefault = options.preventDefault ?? this.preventDefault;
     this.stopPropagation = options.stopPropagation ?? this.stopPropagation;
     this.preventIf = options.preventIf ?? this.preventIf;
-    this.keys = options.keys ?? this.keys;
+    this.requiredKeys = options.requiredKeys ?? this.requiredKeys;
   }
 
   /**
@@ -318,8 +318,8 @@ export abstract class Gesture<GestureName extends string> {
    */
   protected shouldPreventGesture(element: TargetElement): boolean {
     // First check if required keyboard keys are pressed
-    if (this.keys && this.keys.length > 0) {
-      if (!this.keyboardManager.areKeysPressed(this.keys)) {
+    if (this.requiredKeys && this.requiredKeys.length > 0) {
+      if (!this.keyboardManager.areKeysPressed(this.requiredKeys)) {
         return true; // Prevent the gesture if required keys are not pressed
       }
     }

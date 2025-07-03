@@ -60,7 +60,7 @@ describe('Gesture Keyboard Filter Dynamic Updates', () => {
   it('should respect dynamically updated key requirements', async () => {
     // Update the gesture to require Shift key
     gestureManager.setGestureOptions('dynamicTap', target, {
-      keys: ['Shift'],
+      requiredKeys: ['Shift'],
     });
 
     // Perform a tap with no keys pressed
@@ -87,7 +87,7 @@ describe('Gesture Keyboard Filter Dynamic Updates', () => {
   it('should support removing key requirements dynamically', async () => {
     // First add a key requirement
     gestureManager.setGestureOptions('dynamicTap', target, {
-      keys: ['Control'],
+      requiredKeys: ['Control'],
     });
 
     // Perform a tap with no keys pressed
@@ -98,7 +98,7 @@ describe('Gesture Keyboard Filter Dynamic Updates', () => {
 
     // Now remove the key requirement
     gestureManager.setGestureOptions('dynamicTap', target, {
-      keys: [], // Empty array removes the requirement
+      requiredKeys: [], // Empty array removes the requirement
     });
 
     // Perform a tap with no keys pressed
@@ -111,7 +111,7 @@ describe('Gesture Keyboard Filter Dynamic Updates', () => {
   it('should support changing key requirements dynamically', async () => {
     // First require Control key
     gestureManager.setGestureOptions('dynamicTap', target, {
-      keys: ['Control'],
+      requiredKeys: ['Control'],
     });
 
     // Press Control key
@@ -127,7 +127,7 @@ describe('Gesture Keyboard Filter Dynamic Updates', () => {
 
     // Change to require Shift key instead
     gestureManager.setGestureOptions('dynamicTap', target, {
-      keys: ['Shift'],
+      requiredKeys: ['Shift'],
     });
 
     // Perform a tap with Control key still pressed (but now Shift is required)

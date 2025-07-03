@@ -186,7 +186,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
       min: this.min,
       initialDelta: this.initialDelta,
       invert: this.invert,
-      keys: this.keys,
+      requiredKeys: this.requiredKeys,
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,
