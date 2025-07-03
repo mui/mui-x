@@ -144,7 +144,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 ## Ignore diacritics (accents)
 
-When filtering text, diacritics—accented letters such as _é_ or _à_—are considered distinct from their standard counterparts (_e_ and _a_).
+When filtering, diacritics—accented letters such as _é_ or _à_—are considered distinct from their standard counterparts (_e_ and _a_).
 This can lead to a poor experience when users expect them to be treated as equivalent.
 
 If your dataset includes diacritics that need to be ignored, you can pass the `ignoreDiacritics` prop to the Data Grid:
