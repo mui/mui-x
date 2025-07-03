@@ -6,9 +6,11 @@ import { BarChartPro } from './BarChartPro';
 describe('<BarChartPro /> - License', () => {
   const { render } = createRenderer();
 
-  it('should render watermark when the license is missing', async () => {
+  beforeEach(() => {
     LicenseInfo.setLicenseKey('');
+  });
 
+  it('should render watermark when the license is missing', async () => {
     expect(() => render(<BarChartPro series={[]} width={100} height={100} />)).toErrorDev([
       'MUI X: Missing license key.',
     ]);

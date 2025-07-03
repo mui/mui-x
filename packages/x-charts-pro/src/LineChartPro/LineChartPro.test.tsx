@@ -6,9 +6,11 @@ import { LineChartPro } from './LineChartPro';
 describe('<LineChartPro /> - License', () => {
   const { render } = createRenderer();
 
-  it('should render watermark when the license is missing', async () => {
+  beforeEach(() => {
     LicenseInfo.setLicenseKey('');
+  });
 
+  it('should render watermark when the license is missing', async () => {
     expect(() => render(<LineChartPro series={[]} width={100} height={100} />)).toErrorDev([
       'MUI X: Missing license key.',
     ]);
