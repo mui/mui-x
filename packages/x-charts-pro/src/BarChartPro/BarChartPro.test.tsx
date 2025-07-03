@@ -1,17 +1,10 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
-import { sharedLicenseStatuses } from '@mui/x-license/useLicenseVerifier/useLicenseVerifier';
 import { BarChartPro } from './BarChartPro';
 
 describe('<BarChartPro /> - License', () => {
   const { render } = createRenderer();
-
-  beforeEach(() => {
-    Object.keys(sharedLicenseStatuses).forEach((key) => {
-      delete sharedLicenseStatuses[key];
-    });
-  });
 
   it('should render watermark when the license is missing', async () => {
     LicenseInfo.setLicenseKey('');
