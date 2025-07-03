@@ -28,6 +28,7 @@ The following are all team members who have contributed to this release:
 
 - [DataGrid] Fix column state restore with controlled column visibility model (#18567) @arminmeh
 - [DataGrid] Fix styling virtualized column headers (#18603) @KenanYusuf
+- [l10n] Improve Danish (da-DK) locale (#18537) @ShahrazH
 
 #### `@mui/x-data-grid-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -55,6 +56,7 @@ Same changes as in `@mui/x-date-pickers@8.6.1`.
 - [charts] Extract bar and line plot logic into reusable hooks (#18541) @bernardobelchior
 - [charts] Extract plot logic into separate files for reuse (#18522) @bernardobelchior
 - [charts] Profile charts benchmarks using chromium (#18528) @bernardobelchior
+- [l10n] Add Greek (el-GR) locale to charts (#18548) @whythecode
 
 #### `@mui/x-charts-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -92,7 +94,6 @@ Same changes as in `@mui/x-tree-view@8.6.1`, plus:
 ### Core
 
 - [core] Avoid stringifying `document` object (#18657) @vadimkuragkovskiy
-- [l10n] Add Greek (el-GR) locale to charts (#18548) @whythecode
 
 ### Miscellaneous
 
@@ -102,7 +103,6 @@ Same changes as in `@mui/x-tree-view@8.6.1`, plus:
 - [code-infra] Refactor eslint config (#18643) @LukasTy
 - [infra] Add renovatebot rule for latest infra packages (#18609) @Janpot
 - [infra] Updates release script to fetch latest major version from upstream (#18552) @michelengelen
-- [l10n] Improve Danish (da-DK) locale (#18537) @ShahrazH
 - [release] Add missing contributor to changelog (#18561) @bernardobelchior
 
 ## 8.6.0
