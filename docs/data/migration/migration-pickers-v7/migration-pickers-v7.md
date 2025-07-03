@@ -156,12 +156,10 @@ The new default behavior for all other cases is as follows:
 Here are a few examples of how the new behavior works:
 
 - On `<DesktopDateTimePicker />`:
-
   - Previously selecting a date and then selecting all time sections automatically closed the Picker.
   - Now, the user has to click "**OK**" to confirm the selection and close the Picker regardless of the selection process.
 
 - On `<DesktopDateTimeRangePicker />`:
-
   - Previously selecting a start date and then selecting all time sections automatically switched to the end date selection step. After the last end time section was selected, the Picker closed.
   - Now, the user has to click "**Next**" to confirm the start date and time selection to get to the end date and time selection step. Clicking "**OK**" while on the end date and time step confirms the selection and closes the Picker.
 
@@ -264,6 +262,10 @@ This approach can be more appropriate for deeper changes.
 :::
 
 #### Migrate the theme
+
+:::success
+Be sure to [import the `@mui/x-date-pickers` types](/x/react-date-pickers/quickstart/#theme-augmentation) for the following theme entry keys to work in TypeScript environment.
+:::
 
 If you are using the theme to customize `MuiTextField`,
 you need to pass the same config to `MuiPickersTextField`:
@@ -772,7 +774,6 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
   If you were not passing those props to the picker, then you can use their default values:
-
   - `formatDensity`: `"dense"`
   - `enableAccessibleFieldDOMStructure`: `true`
   - `selectedSections`: `undefined`
@@ -1689,7 +1690,6 @@ However, consider looking into your usage to see if you really need those types.
   ```
 
 - `BaseSingleInputFieldProps`
-
   - If you are building a custom field for a Date Picker:
 
     ```diff
@@ -1812,7 +1812,6 @@ However, consider looking into your usage to see if you really need those types.
     ```
 
 - `BaseMultiInputFieldProps`
-
   - If you are building a custom multi input field for a Date Range Picker:
 
     ```diff
@@ -1876,7 +1875,6 @@ However, consider looking into your usage to see if you really need those types.
     ```
 
 - `BasePickersTextFieldProps`
-
   - If your Text Field is used inside a non-range picker or in a range-picker with a single input field:
 
     ```diff
@@ -1920,7 +1918,7 @@ However, consider looking into your usage to see if you really need those types.
 - `UseClearableFieldSlotProps`
 
   ```ts
-  import { SlotComponentProps } from '@mui/utils';
+  import { SlotComponentProps } from '@mui/utils/types';
   import { FieldOwnerState } from '@mui/x-date-pickers/models';
   import { ClearIcon } from '@mui/x-date-pickers/icons';
   import IconButton from '@mui/material/IconButton';

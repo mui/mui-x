@@ -9,7 +9,6 @@ import {
   waitFor,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
-import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
 import {
@@ -35,7 +34,7 @@ import {
   $$,
 } from 'test/utils/helperFn';
 import Dialog from '@mui/material/Dialog';
-import { testSkipIf, isJSDOM, describeSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/densitySelector';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
@@ -241,7 +240,7 @@ describe('<DataGrid /> - Rows', () => {
       );
     }
 
-    testSkipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
+    it.skipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
       expect(() => {
         render(
           <ErrorBoundary>
@@ -482,7 +481,7 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   // Need layouting
-  describeSkipIf(isJSDOM)('prop: getRowHeight', () => {
+  describe.skipIf(isJSDOM)('prop: getRowHeight', () => {
     describe('static row height', () => {
       const ROW_HEIGHT = 52;
       function TestCase(props: Partial<DataGridProps>) {
@@ -804,7 +803,7 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       const { userAgent } = window.navigator;
-      testSkipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
+      it.skipIf(!userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when the 2nd page has less rows than the 1st page',
         async () => {
           const data = getBasicGridData(120, 3);
@@ -862,13 +861,12 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       // In Chrome non-headless and Edge this test is flaky
-      testSkipIf(!isJSDOM || !userAgent.includes('Headless') || /edg/i.test(userAgent))(
+      it.skipIf(!isJSDOM || !userAgent.includes('Headless') || /edg/i.test(userAgent))(
         'should position correctly the render zone when changing pageSize to a lower value and moving to next page',
         {
           // Retry the test because it is flaky
-          retries: 3,
+          retry: 3,
         },
-        // @ts-expect-error mocha types are incorrect
         async () => {
           const data = getBasicGridData(120, 3);
           const columnHeaderHeight = 50;
@@ -969,7 +967,7 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     // Needs layout
-    testSkipIf(isJSDOM)('should consider the spacing when computing the content size', () => {
+    it.skipIf(isJSDOM)('should consider the spacing when computing the content size', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -987,7 +985,7 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     // Needs layout
-    testSkipIf(isJSDOM)('should update the content size when getRowSpacing is removed', () => {
+    it.skipIf(isJSDOM)('should update the content size when getRowSpacing is removed', () => {
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -1119,7 +1117,7 @@ describe('<DataGrid /> - Rows', () => {
 
   // https://github.com/mui/mui-x/issues/10373
   // needs virtualization
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport',
     async () => {
       const { user } = render(

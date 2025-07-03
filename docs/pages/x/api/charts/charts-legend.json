@@ -40,6 +40,12 @@
       "isGlobal": false
     },
     {
+      "key": "item",
+      "className": "MuiChartsLegend-item",
+      "description": "Styles applied to the list item around each series in the legend.",
+      "isGlobal": false
+    },
+    {
       "key": "label",
       "className": "MuiChartsLegend-label",
       "description": "Styles applied to the series label.",

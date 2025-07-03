@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { computeFlexColumnsWidth } from './gridColumnsUtils';
 
 describe('gridColumnsUtils', () => {
