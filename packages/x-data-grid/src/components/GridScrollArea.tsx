@@ -212,7 +212,8 @@ function GridVerticalScrollAreaContent(props: ScrollAreaProps) {
     if (scrollDirection === 'down') {
       // Only render if the user has not reached yet the bottom of the list
       const totalRowsHeight = rowsMeta.currentPageTotalHeight || 0;
-      const maxScrollTop = totalRowsHeight - dimensions.viewportInnerSize.height;
+      const maxScrollTop =
+        totalRowsHeight - dimensions.viewportInnerSize.height - dimensions.scrollbarSize;
       return scrollPosition.current.top < maxScrollTop;
     }
 
