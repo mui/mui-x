@@ -30,6 +30,10 @@ To limit the user to only applying one filter to any given column, you can use t
 
 To disable multi-filtering, pass the `disableMultipleColumnsFiltering` to the Data Grid Pro.
 
+```tsx
+<DataGridPro disableMultipleColumnsFiltering />
+```
+
 ### Remove multi-filter action buttons
 
 To disable the **Add Filter** or **Remove All** buttons, pass `disableAddFilterButton` or `disableRemoveAllButton`, respectively, to `componentsProps.filterPanel` as shown below:

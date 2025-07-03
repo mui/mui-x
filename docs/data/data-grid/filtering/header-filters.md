@@ -54,7 +54,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-The demo below uses the `renderHeaderFilter()` method to hide the header filter cell for the **Phone** column and customize it for the **Admin** column:
+The demo below uses the `renderHeaderFilter()` method to hide the header filter cell for the **Phone** column and customize it for the **Is admin?** column:
 
 {{"demo": "CustomHeaderFilterSingleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
