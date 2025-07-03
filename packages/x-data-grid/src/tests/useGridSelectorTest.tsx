@@ -1,3 +1,4 @@
+/* eslint-disable no-promise-executor-return */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 'use client';
@@ -6,7 +7,7 @@ import * as React from 'react';
 import { useGridSelector, DataGrid, useGridApiRef, GridApi } from '@mui/x-data-grid';
 
 const testSelector = (apiRef: React.RefObject<GridApi>) => {
-  return apiRef.current.state.test;
+  return (apiRef.current.state as unknown as { test: number }).test;
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -44,7 +45,10 @@ export default function Test() {
         onClick={async () => {
           setMounted((prev) => prev + 1);
           await sleep(500);
-          apiRef.current?.setState((prev) => ({ ...prev, test: (prev.test || 0) + 1 }));
+          apiRef.current?.setState((prev) => ({
+            ...prev,
+            test: ((prev as unknown as { test: number }).test || 0) + 1,
+          }));
         }}
       >
         Toggle
