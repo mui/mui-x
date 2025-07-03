@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable no-restricted-syntax */
 /**
  * This module provides utilities for generating a changelog for MUI X packages.
  *

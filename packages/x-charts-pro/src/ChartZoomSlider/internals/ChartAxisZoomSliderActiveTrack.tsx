@@ -1,3 +1,4 @@
+'use client';
 import { styled } from '@mui/material/styles';
 import {
   AxisId,
@@ -27,6 +28,7 @@ import {
   ZOOM_SLIDER_THUMB_HEIGHT,
   ZOOM_SLIDER_THUMB_WIDTH,
 } from './constants';
+import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderActiveTrackRect = styled('rect')(({ theme }) => ({
   '&': {
@@ -67,6 +69,7 @@ export function ChartAxisZoomSliderActiveTrack({
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
   const [endThumbEl, setEndThumbEl] = React.useState<SVGRectElement | null>(null);
   const { tooltipStart, tooltipEnd } = getZoomSliderTooltipsText(axis, drawingArea);
+  const classes = useUtilityClasses({ axisDirection });
 
   const previewThumbWidth =
     axisDirection === 'x' ? ZOOM_SLIDER_THUMB_WIDTH : ZOOM_SLIDER_THUMB_HEIGHT;
@@ -271,6 +274,7 @@ export function ChartAxisZoomSliderActiveTrack({
         height={previewHeight}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
+        className={classes.active}
       />
       <ChartAxisZoomSliderThumb
         ref={setStartThumbEl}

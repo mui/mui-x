@@ -693,6 +693,23 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
+
+    it('should work with separate start and end "reference" dates', async () => {
+      const { user } = render(
+        <DesktopDateRangePicker
+          referenceDate={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-06')]}
+          defaultRangePosition="end"
+        />,
+      );
+
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
+
+      expect(document.activeElement).to.equal(getPickerDay('6'));
+    });
   });
 
   describe('disabled dates', () => {

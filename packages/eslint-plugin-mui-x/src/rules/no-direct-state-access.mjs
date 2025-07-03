@@ -1,4 +1,4 @@
-const { ESLintUtils, AST_NODE_TYPES } = require('@typescript-eslint/utils');
+import { ESLintUtils, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
 const createESLintRule = ESLintUtils.RuleCreator(() => ``);
 
@@ -15,6 +15,11 @@ function checkIsAccessingMember(maybeMemberExpression, propertyName) {
   return undefined;
 }
 
+/**
+ * @param {import('@typescript-eslint/utils').TSESTree.MemberExpression} node
+ * @param {import('@typescript-eslint/utils').TSESLint.RuleContext<"direct-access", []>} context
+ * @param {import('@typescript-eslint/utils').TSESTree.MemberExpression} nodeToReport
+ */
 function reportIfDirectlyAccessingState(node, context, nodeToReport = node) {
   const maybeApiRef = checkIsAccessingMember(checkIsAccessingMember(node, 'state'), 'current');
 
@@ -67,4 +72,4 @@ const rule = createESLintRule({
   },
 });
 
-module.exports = rule;
+export default rule;

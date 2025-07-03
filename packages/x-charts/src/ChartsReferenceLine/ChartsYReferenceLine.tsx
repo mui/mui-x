@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useYScale } from '../hooks';
@@ -127,5 +128,56 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
     </ReferenceLineRoot>
   );
 }
+
+ChartsYReferenceLine.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The id of the axis used for the reference value.
+   * @default The `id` of the first defined axis.
+   */
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The label to display along the reference line.
+   */
+  label: PropTypes.string,
+  /**
+   * The alignment if the label is in the chart drawing area.
+   * @default 'middle'
+   */
+  labelAlign: PropTypes.oneOf(['end', 'middle', 'start']),
+  /**
+   * The style applied to the label.
+   */
+  labelStyle: PropTypes.object,
+  /**
+   * The style applied to the line.
+   */
+  lineStyle: PropTypes.object,
+  /**
+   * Additional space around the label in px.
+   * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
+   * @default 5
+   */
+  spacing: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+  ]),
+  /**
+   * The y value associated with the reference line.
+   * If defined the reference line will be horizontal.
+   */
+  y: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+    .isRequired,
+} as any;
 
 export { ChartsYReferenceLine };
