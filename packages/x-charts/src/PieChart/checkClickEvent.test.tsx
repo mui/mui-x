@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { PieChart } from '@mui/x-charts/PieChart';
@@ -13,19 +12,6 @@ const config = {
 
 describe('PieChart - click event', () => {
   const { render } = createRenderer();
-
-  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-  beforeEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
 
   describe('onItemClick', () => {
     it('should add cursor="pointer" to arc elements', () => {

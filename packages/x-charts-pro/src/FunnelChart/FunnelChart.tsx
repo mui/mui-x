@@ -19,7 +19,7 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
-import { FunnelChartPluginsSignatures } from './FunnelChart.plugins';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 
 export interface FunnelChartProps
   extends Omit<
@@ -34,6 +34,8 @@ export interface FunnelChartProps
       | 'xAxis'
       | 'rotationAxis'
       | 'radiusAxis'
+      | 'slots'
+      | 'slotProps'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -92,7 +94,9 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   return (
     <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
       {...chartDataProviderProProps}
+      gap={themedProps.gap}
       seriesConfig={seriesConfig}
+      plugins={FUNNEL_CHART_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
@@ -143,17 +147,6 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band']),
-      size: PropTypes.number,
-      tickLabelStyle: PropTypes.object,
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.shape({
-      categories: PropTypes.arrayOf(PropTypes.string),
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['point']),
       size: PropTypes.number,
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
@@ -291,7 +284,7 @@ FunnelChart.propTypes = {
   ]),
   /**
    * The function called for onClick events.
-   * The second argument contains information about all line/bar elements at the current mouse position.
+   * The second argument contains information about all funnel elements at the current position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */

@@ -1,5 +1,8 @@
 'use client';
 import * as React from 'react';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useChartContext } from '../context/ChartProvider';
 import { useSvgRef } from '../hooks';
 
 type MousePosition = {
@@ -15,44 +18,36 @@ export type UseMouseTrackerReturnValue = null | MousePosition;
  * @deprecated We recommend using vanilla JS to let popper track mouse position.
  */
 export function useMouseTracker(): UseMouseTrackerReturnValue {
-  const svgRef = useSvgRef();
+  const { instance } = useChartContext();
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
-
-    const controller = new AbortController();
-
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
         setMousePosition(null);
       }
-    };
+    });
 
-    const handleMove = (event: PointerEvent) => {
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
-        height: event.height,
-        pointerType: event.pointerType as MousePosition['pointerType'],
+        x: event.detail.centroid.x,
+        y: event.detail.centroid.y,
+        height: event.detail.srcEvent.height,
+        pointerType: event.detail.srcEvent.pointerType as MousePosition['pointerType'],
       });
     };
 
-    element.addEventListener('pointerdown', handleMove, { signal: controller.signal });
-    element.addEventListener('pointermove', handleMove, { signal: controller.signal });
-    element.addEventListener('pointerup', handleOut, { signal: controller.signal });
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
 
     return () => {
-      // Calling `.abort()` removes ALL event listeners
-      // For more info, see https://kettanaito.com/blog/dont-sleep-on-abort-controller
-      controller.abort();
+      moveHandler.cleanup();
+      panHandler.cleanup();
+      moveEndHandler.cleanup();
     };
-  }, [svgRef]);
+  }, [instance]);
 
   return mousePosition;
 }
@@ -62,7 +57,6 @@ type PointerType = Pick<MousePosition, 'pointerType'>;
 export function usePointerType(): null | PointerType {
   const svgRef = useSvgRef();
 
-  // Use a ref to avoid rerendering on every mousemove event.
   const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
 
   React.useEffect(() => {
@@ -103,3 +97,15 @@ export function utcFormatter(v: string | number | Date): string {
   }
   return v.toLocaleString();
 }
+
+// Taken from @mui/x-date-time-pickers
+const mainPointerFineMediaQuery = '@media (pointer: fine)';
+
+/**
+ * Returns true if the main pointer is fine (e.g. mouse).
+ * This is useful for determining how to position tooltips or other UI elements based on the type of input device.
+ * @returns true if the main pointer is fine, false otherwise.
+ */
+export const useIsFineMainPointer = (): boolean => {
+  return useMediaQuery(mainPointerFineMediaQuery, { defaultMatches: true });
+};

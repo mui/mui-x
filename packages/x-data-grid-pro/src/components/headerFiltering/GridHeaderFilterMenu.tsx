@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_capitalize as capitalize, HTMLElementType } from '@mui/utils';
+import capitalize from '@mui/utils/capitalize';
+import HTMLElementType from '@mui/utils/HTMLElementType';
 import {
   useGridRootProps,
   useGridApiContext,
@@ -42,29 +43,13 @@ function GridHeaderFilterMenu({
     apiRef.current.hideHeaderFilterMenu();
   }, [apiRef]);
 
-  const handleListKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();
-      }
-      if (event.key === 'Escape' || event.key === 'Tab') {
-        hideMenu();
-      }
-    },
-    [hideMenu],
-  );
-
   if (!target) {
     return null;
   }
 
   return (
     <GridMenu position="bottom-end" open={open} target={target} onClose={hideMenu}>
-      <rootProps.slots.baseMenuList
-        aria-labelledby={labelledBy}
-        id={id}
-        onKeyDown={handleListKeyDown}
-      >
+      <rootProps.slots.baseMenuList aria-labelledby={labelledBy} id={id}>
         {showClearItem && [
           <rootProps.slots.baseMenuItem
             key="filter-menu-clear-filter"

@@ -30,7 +30,7 @@ export class CacheChunkManager {
 
     // split the range into chunks
     const chunkedKeys: GridGetRowsParams[] = [];
-    for (let i = key.start; i < key.end; i += this.chunkSize) {
+    for (let i = key.start; i <= key.end; i += this.chunkSize) {
       const end = Math.min(i + this.chunkSize - 1, key.end);
       chunkedKeys.push({ ...key, start: i, end });
     }

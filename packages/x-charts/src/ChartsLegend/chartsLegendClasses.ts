@@ -7,6 +7,8 @@ import type { ChartsLegendSlotExtension } from './chartsLegend.types';
 export interface ChartsLegendClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the list item around each series in the legend. */
+  item: string;
   /** Styles applied to a series element. */
   series: string;
   /** Styles applied to series mark element. */
@@ -27,6 +29,7 @@ export const useUtilityClasses = (props: ChartsLegendProps & ChartsLegendSlotExt
   const { classes, direction } = props;
   const slots = {
     root: ['root', direction],
+    item: ['item'],
     mark: ['mark'],
     label: ['label'],
     series: ['series'],
@@ -37,6 +40,7 @@ export const useUtilityClasses = (props: ChartsLegendProps & ChartsLegendSlotExt
 
 export const legendClasses: ChartsLegendClasses = generateUtilityClasses('MuiChartsLegend', [
   'root',
+  'item',
   'series',
   'mark',
   'label',

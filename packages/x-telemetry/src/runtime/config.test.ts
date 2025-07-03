@@ -1,7 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 
-import { expect } from 'chai';
-import { ponyfillGlobal } from '@mui/utils';
 import { vi } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { getTelemetryEnvConfig } from './config';
@@ -38,14 +36,14 @@ describe('Telemetry: getTelemetryConfig', () => {
   testConfigWithDisabledEnv('NEXT_PUBLIC_MUI_X_TELEMETRY_DISABLED');
 
   it('should be disabled if global.__MUI_X_TELEMETRY_DISABLED__ is set to `1`', () => {
-    ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = undefined;
+    (globalThis as any).__MUI_X_TELEMETRY_DISABLED__ = undefined;
     vi.stubGlobal('__MUI_X_TELEMETRY_DISABLED__', true);
 
     expect(getTelemetryEnvConfig(true).IS_COLLECTING).equal(false);
   });
 
   it('should be enabled if global.__MUI_X_TELEMETRY_DISABLED__ is set to `0`', () => {
-    ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = undefined;
+    (globalThis as any).__MUI_X_TELEMETRY_DISABLED__ = undefined;
     vi.stubGlobal('__MUI_X_TELEMETRY_DISABLED__', false);
 
     expect(getTelemetryEnvConfig(true).IS_COLLECTING).equal(true);

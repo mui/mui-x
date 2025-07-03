@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';

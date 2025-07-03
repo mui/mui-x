@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 
-const TimeGridRoot = React.forwardRef(function CalendarRoot(
+export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   componentProps: TimeGridRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -31,5 +31,3 @@ export namespace TimeGridRoot {
 
   export interface Props extends BaseUIComponentProps<'div', State> {}
 }
-
-export { TimeGridRoot };

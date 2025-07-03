@@ -5,6 +5,8 @@ import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
   LineChartProps,
+  LineChartSlots,
+  LineChartSlotProps,
   LineHighlightPlot,
   LinePlot,
   MarkPlot,
@@ -18,6 +20,11 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -25,17 +32,31 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { LINE_CHART_PRO_PLUGINS, LineChartProPluginsSignatures } from './LineChartPro.plugins';
 
+export interface LineChartProSlots
+  extends Omit<LineChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
+export interface LineChartProSlotProps
+  extends Omit<LineChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {}
+
 export interface LineChartProProps
-  extends Omit<LineChartProps, 'apiRef'>,
+  extends Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'line', LineChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
     > {
   /**
-   * If true, shows the default chart toolbar.
-   * @default false
+   * Overridable component slots.
+   * @default {}
    */
-  showToolbar?: boolean;
+  slots?: LineChartProSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: LineChartProSlotProps;
 }
 
 /**
@@ -86,11 +107,12 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        {showToolbar ? <ChartsToolbarPro /> : null}
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
@@ -382,6 +404,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -472,6 +495,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -553,6 +577,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -634,6 +659,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -715,6 +741,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -796,6 +823,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -877,6 +905,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -958,6 +987,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1058,6 +1088,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1147,6 +1178,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1227,6 +1259,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1307,6 +1340,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1387,6 +1421,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1467,6 +1502,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1547,6 +1583,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,
@@ -1627,6 +1664,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
             step: PropTypes.number,

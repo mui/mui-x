@@ -54,6 +54,7 @@ export const pickersInputBaseClasses = generateUtilityClasses<PickersInputBaseCl
     'adornedStart',
     'adornedEnd',
     'input',
+    'inputSizeSmall',
     'activeBar',
   ],
 );
