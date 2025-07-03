@@ -9,7 +9,38 @@
 /**
  * Type definition for keyboard keys
  */
-export type KeyboardKey = string;
+export type KeyboardKey = AllKeys | (string & {});
+
+type AllNumbers = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+type AllLetters =
+  | 'a'
+  | 'b'
+  | 'c'
+  | 'd'
+  | 'e'
+  | 'f'
+  | 'g'
+  | 'h'
+  | 'i'
+  | 'j'
+  | 'k'
+  | 'l'
+  | 'm'
+  | 'n'
+  | 'o'
+  | 'p'
+  | 'q'
+  | 'r'
+  | 's'
+  | 't'
+  | 'u'
+  | 'v'
+  | 'w'
+  | 'x'
+  | 'y'
+  | 'z';
+type AllMeta = 'Shift' | 'Control' | 'Alt' | 'Meta' | 'ControlOrMeta';
+type AllKeys = AllMeta | AllLetters | AllNumbers;
 
 /**
  * Class responsible for tracking keyboard state
@@ -70,7 +101,12 @@ export class KeyboardManager {
       return true; // No keys required means the condition is satisfied
     }
 
-    return keys.every((key) => this.pressedKeys.has(key));
+    return keys.every((key) => {
+      if (key === 'ControlOrMeta') {
+        return this.pressedKeys.has('Control') || this.pressedKeys.has('Meta');
+      }
+      return this.pressedKeys.has(key);
+    });
   }
 
   /**
