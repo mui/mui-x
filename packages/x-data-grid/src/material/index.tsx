@@ -35,6 +35,7 @@ import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
 import MUITabs from '@mui/material/Tabs';
 import MUITab from '@mui/material/Tab';
+import MUIToggleButton from '@mui/material/ToggleButton';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import useId from '@mui/utils/useId';
 import {
@@ -307,6 +308,18 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
   const { material, ...rest } = props;
   return <MUIButton {...rest} {...material} ref={ref} />;
 });
+
+const StyledToggleButton = styled(MUIToggleButton)(({ theme }) => ({
+  gap: theme.spacing(1),
+  border: 0,
+}));
+
+const BaseToggleButton = forwardRef<any, P['baseToggleButton']>(
+  function BaseToggleButton(props, ref) {
+    const { material, ...rest } = props;
+    return <StyledToggleButton size="small" color="primary" {...rest} {...material} ref={ref} />;
+  },
+);
 
 const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
   const { material, ...rest } = props;
@@ -668,13 +681,13 @@ function TabPanel(
   );
 }
 
-function BaseTabs({ items, value, ...props }: P['baseTabs']) {
+function BaseTabs({ items, value, material, ...props }: P['baseTabs']) {
   const id = useId();
   const labelId = `${id}-tab-${value}`;
   const panelId = `${id}-tabpanel-${value}`;
   return (
     <React.Fragment>
-      <StyledTabs {...props} value={value} variant="scrollable" scrollButtons="auto">
+      <StyledTabs {...props} value={value} variant="scrollable" scrollButtons="auto" {...material}>
         {items.map((item) => (
           <StyledTab
             key={item.value}
@@ -753,6 +766,7 @@ const baseSlots: GridBaseSlots = {
   baseTextField: BaseTextField,
   baseButton: BaseButton,
   baseIconButton: BaseIconButton,
+  baseToggleButton: BaseToggleButton,
   baseTooltip: BaseTooltip,
   baseTabs: BaseTabs,
   basePagination: BasePagination,
