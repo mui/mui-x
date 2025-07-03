@@ -4,10 +4,12 @@ import { styled } from '@mui/system';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
+import type { GridChartsConfigurationOptions } from '../../../models/gridChartsIntegration';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export interface GridChartsPanelChartProps {
+  schema: GridChartsConfigurationOptions;
   selectedChartType: string;
   onChartTypeChange: (type: string) => void;
 }
@@ -79,15 +81,14 @@ const GridChartTypeButton = styled('button', {
 });
 
 function GridChartsPanelChart(props: GridChartsPanelChartProps) {
-  const { selectedChartType, onChartTypeChange } = props;
+  const { schema, selectedChartType, onChartTypeChange } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const chartConfig = rootProps.slotProps?.chartsPanel?.schema || {};
 
   return (
     <GridChartsManagementRoot ownerState={rootProps} className={classes.root}>
       <GridChartTypeRoot className={classes.chartTypeRoot}>
-        {Object.entries(chartConfig).map(([type, config]) => (
+        {Object.entries(schema).map(([type, config]) => (
           <GridChartTypeButton
             key={type}
             className={classes.button}
