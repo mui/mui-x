@@ -425,7 +425,7 @@ export default {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
-    ]
+    ],
   },
 };
 ```
@@ -448,8 +448,8 @@ export default defineConfig({
         '@mui/x-data-grid-premium',
       ],
     },
-  }
-})
+  },
+});
 ```
 
 #### Next.js
@@ -472,8 +472,27 @@ export default {
 
 If you're importing the packages inside Node.js, you can make CSS imports a no-op like this:
 
+**Using `require()`**:
+
 ```js
 require.extensions['.css'] = () => null;
+```
+
+**Using `import`**:
+
+```js
+// node-ignore-css.js
+// Needs to be loaded before your code runs:
+//   node --import ./node-ignore-css.js ./index.js
+import { registerHooks } from 'node:module';
+registerHooks({
+  load(url, context, nextLoad) {
+    if (url.endsWith('.css')) {
+      return { url, format: 'module', source: '', shortCircuit: true };
+    }
+    return nextLoad(url, context);
+  },
+});
 ```
 
 <!-- ### Editing
