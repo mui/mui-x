@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.6.1
+## 8.7.0
 
 _Jul 3, 2025_
 
@@ -24,33 +24,33 @@ The following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.6.1`
+#### `@mui/x-data-grid@8.7.0`
 
 - [DataGrid] Fix column state restore with controlled column visibility model (#18567) @arminmeh
 - [DataGrid] Fix styling virtualized column headers (#18603) @KenanYusuf
 - [l10n] Improve Danish (da-DK) locale (#18537) @ShahrazH
 
-#### `@mui/x-data-grid-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.6.1`.
+Same changes as in `@mui/x-data-grid@8.7.0`.
 
-#### `@mui/x-data-grid-premium@8.6.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.7.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.6.1`.
+Same changes as in `@mui/x-data-grid-pro@8.7.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.6.1`
+#### `@mui/x-date-pickers@8.7.0`
 
 - [pickers] Support different `start` and `end` `referenceDate` props on range components (#18549) @LukasTy
 
-#### `@mui/x-date-pickers-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.6.1`.
+Same changes as in `@mui/x-date-pickers@8.7.0`.
 
 ### Charts
 
-#### `@mui/x-charts@8.6.1`
+#### `@mui/x-charts@8.7.0`
 
 - [charts] Export `ChartsReferenceLineProps` (#18598) @bernardobelchior
 - [charts] Extract bar and line plot logic into reusable hooks (#18541) @bernardobelchior
@@ -58,9 +58,9 @@ Same changes as in `@mui/x-date-pickers@8.6.1`.
 - [charts] Profile charts benchmarks using chromium (#18528) @bernardobelchior
 - [l10n] Add Greek (el-GR) locale to charts (#18548) @whythecode
 
-#### `@mui/x-charts-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.6.1`, plus:
+Same changes as in `@mui/x-charts@8.7.0`, plus:
 
 - [charts-pro] Add `useChartProApiRef` for easier refs (#18013) @JCQuintas
 - [charts-pro] Add tests and classes to zoom slider (#18660) @JCQuintas
@@ -70,13 +70,13 @@ Same changes as in `@mui/x-charts@8.6.1`, plus:
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.6.1`
+#### `@mui/x-tree-view@8.7.0`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.6.1`, plus:
+Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 
 - [tree view pro] Add missing `dataSource` JSDoc (#18650) @LukasTy
 
