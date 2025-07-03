@@ -142,7 +142,7 @@ export abstract class Gesture<GestureName extends string> {
   /**
    * Array of keyboard keys that must be pressed for the gesture to be recognized.
    */
-  protected requiredKeys?: KeyboardKey[];
+  protected requiredKeys: KeyboardKey[];
 
   /**
    * KeyboardManager instance for tracking key presses
@@ -201,7 +201,7 @@ export abstract class Gesture<GestureName extends string> {
     this.preventDefault = options.preventDefault ?? false;
     this.stopPropagation = options.stopPropagation ?? false;
     this.preventIf = options.preventIf ?? [];
-    this.requiredKeys = options.requiredKeys;
+    this.requiredKeys = options.requiredKeys ?? [];
   }
 
   /**
