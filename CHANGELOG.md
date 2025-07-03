@@ -5,6 +5,111 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.6.1
+
+<!-- generated comparing v8.6.0..master -->
+
+_Jul 3, 2025_
+
+We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+- 🌎 Improve Greek (el-GR) translations on the Charts
+
+Special thanks go out to the community members for their valuable contributions:
+@ShahrazH, @vadimkuragkovskiy, @whythecode
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @brijeshb42, @mapache-salvaje, @arminmeh, @bernardobelchior, @bharatkashyap, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @michelengelen, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.6.1`
+
+- [data grid][docs] Audit and revise the Pro row docs (#17926) @mapache-salvaje
+- [DataGrid] Fix column state restore with controlled column visibility model (#18567) @arminmeh
+- [DataGrid] Fix styling virtualized column headers (#18603) @KenanYusuf
+
+#### `@mui/x-data-grid-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.6.1`.
+
+#### `@mui/x-data-grid-premium@8.6.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.6.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.6.1`
+
+- [pickers] Support different `start` and `end` `referenceDate` props on range components (#18549) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.6.1`.
+
+### Charts
+
+From https://github.com/mui/mui-x/pull/18013
+
+- Provide a `useChartProApiRef` for easier access to the API
+
+#### `@mui/x-charts@8.6.1`
+
+- [charts] Export `ChartsReferenceLineProps` (#18598) @bernardobelchior
+- [charts] Extract bar and line plot logic into reusable hooks (#18541) @bernardobelchior
+- [charts] Extract plot logic into separate files for reuse (#18522) @bernardobelchior
+- [charts] Profile charts benchmarks using chromium (#18528) @bernardobelchior
+- [docs][charts] Add donut chart as a special case of a pie chart (#18652) @bernardobelchior
+- [docs][charts] Centralize country and continent data (#18604) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.6.1`, plus:
+
+- [charts-pro] Add `useChartProApiRef` for easier refs (#18013) @JCQuintas
+- [charts-pro] Add tests and classes to zoom slider (#18660) @JCQuintas
+- [charts-pro] Fix geometry not handling gestures in specific scenarios (#18651) @JCQuintas
+- [charts-pro] Rename `useChartApiContext` to `useChartProApiContext` (#18565) @JCQuintas
+- [charts-pro] Zoom pointer improvements (#17480) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.6.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.6.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.6.1`, plus:
+
+- [tree view pro] Add missing `dataSource` JSDoc (#18650) @LukasTy
+
+### Docs
+
+- [docs] Fix AI Assistant proxy rewrite prefix (#18661) @arminmeh
+- [docs] Improve test README.MD (#18634) @LukasTy
+- [docs] Provide workaround for pie chart composition (#18600) @alexfauquette
+- [docs][pickers] Add mention of theme augmentation in relevant migration section (#18608) @LukasTy
+
+### Core
+
+- [core] Avoid stringifying `document` object (#18657) @vadimkuragkovskiy
+- [l10n] Add Greek (el-GR) locale to charts (#18548) @whythecode
+
+### Miscellaneous
+
+- [docs] Add MCP stub (#18204) @bharatkashyap
+- [code-infra] Bump code-infra version and fix breaking changes (#18653) @brijeshb42
+- [code-infra] Ensure `material-ui/disallow-react-api-in-server-components` ESLint rule is applied (#18570) @LukasTy
+- [code-infra] Migrate to flat eslint config (#18562) @brijeshb42
+- [code-infra] Refactor eslint config (#18643) @LukasTy
+- [infra] Add renovatebot rule for latest infra packages (#18609) @Janpot
+- [infra] Updates release script to fetch latest major version from upstream (#18552) @michelengelen
+- [l10n] Improve Danish (da-DK) locale (#18537) @ShahrazH
+- [release] Add missing contributor to changelog (#18561) @bernardobelchior
+
 ## 8.6.0
 
 _Jun 27, 2025_
