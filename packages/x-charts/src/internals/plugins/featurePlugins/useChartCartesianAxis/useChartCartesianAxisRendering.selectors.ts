@@ -1,4 +1,3 @@
-import type { ChartDrawingArea } from '../../../../hooks';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -9,7 +8,7 @@ import { computeAxisValue } from './computeAxisValue';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
-import { ZoomAxisFilters, ZoomData, ZoomMap } from './zoom.types';
+import { ZoomAxisFilters, ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
 import { AxisId } from '../../../../models/axis';
 import {
@@ -125,50 +124,6 @@ export const selectorChartZoomAxisFilters = createSelector(
   },
 );
 
-export const selectorChartComputedXAxes = createSelector(
-  [
-    selectorChartRawXAxis,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
-    (_, params: { drawingArea: ChartDrawingArea; zoomMap: ZoomMap | undefined }) => params,
-  ],
-  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, { drawingArea, zoomMap }) =>
-    computeAxisValue({
-      drawingArea,
-      formattedSeries,
-      axis,
-      seriesConfig,
-      axisDirection: 'x',
-      zoomMap,
-      zoomOptions,
-      getFilters,
-    }),
-);
-
-export const selectorChartComputedYAxes = createSelector(
-  [
-    selectorChartRawYAxis,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
-    (_, params: { drawingArea: ChartDrawingArea; zoomMap: ZoomMap | undefined }) => params,
-  ],
-  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, { drawingArea, zoomMap }) =>
-    computeAxisValue({
-      drawingArea,
-      formattedSeries,
-      axis,
-      seriesConfig,
-      axisDirection: 'y',
-      zoomMap,
-      zoomOptions,
-      getFilters,
-    }),
-);
-
 /**
  * The only interesting selectors that merge axis data and zoom if provided.
  */
@@ -176,14 +131,14 @@ export const selectorChartComputedYAxes = createSelector(
 export const selectorChartXAxis = createSelector(
   [
     selectorChartRawXAxis,
+    selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
+    selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    selectorChartDrawingArea,
-    selectorChartZoomMap,
   ],
-  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, drawingArea, zoomMap) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
@@ -199,14 +154,14 @@ export const selectorChartXAxis = createSelector(
 export const selectorChartYAxis = createSelector(
   [
     selectorChartRawYAxis,
+    selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
+    selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    selectorChartDrawingArea,
-    selectorChartZoomMap,
   ],
-  (axis, formattedSeries, seriesConfig, zoomOptions, getFilters, drawingArea, zoomMap) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
