@@ -22,6 +22,7 @@ import {
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
 import { getBlockedSections } from '../../../hooks/features/chartsIntegration/utils';
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import { SectionLimitLookup } from './GridChartsPanelData';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -153,10 +154,12 @@ export interface FieldTransferObject {
 export type DropPosition = 'top' | 'bottom' | null;
 
 interface GridChartsPanelDataBodyProps {
+  sectionLimitLookup: SectionLimitLookup;
   searchValue: string;
 }
 
-function GridChartsPanelDataBody({ searchValue }: GridChartsPanelDataBodyProps) {
+function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
+  const { searchValue, sectionLimitLookup } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
@@ -329,8 +332,14 @@ function GridChartsPanelDataBody({ searchValue }: GridChartsPanelDataBodyProps) 
                 className={classes.sectionTitle}
               >
                 {apiRef.current.getLocaleText('chartsCategories')}
-                {categories.length > 0 && (
-                  <rootProps.slots.baseBadge badgeContent={categories.length} />
+                {(sectionLimitLookup.has('categories') || categories.length > 0) && (
+                  <rootProps.slots.baseBadge
+                    badgeContent={
+                      sectionLimitLookup.has('categories')
+                        ? `${categories.length}/${sectionLimitLookup.get('categories')}`
+                        : categories.length
+                    }
+                  />
                 )}
               </GridChartsPanelDataSectionTitle>
             </CollapsibleTrigger>
@@ -381,7 +390,15 @@ function GridChartsPanelDataBody({ searchValue }: GridChartsPanelDataBodyProps) 
                 className={classes.sectionTitle}
               >
                 {apiRef.current.getLocaleText('chartsSeries')}
-                {series.length > 0 && <rootProps.slots.baseBadge badgeContent={series.length} />}
+                {(sectionLimitLookup.has('series') || series.length > 0) && (
+                  <rootProps.slots.baseBadge
+                    badgeContent={
+                      sectionLimitLookup.has('series')
+                        ? `${series.length}/${sectionLimitLookup.get('series')}`
+                        : series.length
+                    }
+                  />
+                )}
               </GridChartsPanelDataSectionTitle>
             </CollapsibleTrigger>
             <CollapsiblePanel>
