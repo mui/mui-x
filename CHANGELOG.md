@@ -34,7 +34,7 @@ Same changes as in `@mui/x-data-grid-pro@7.29.8`.
 ### Miscellaneous
 
 - [infra] Add  `test_package` to fix CI (#18553) @bernardobelchior
-- [infra] Aligned praparation script with master version (#18672) @michelengelen
+- [infra] Aligned preparation script with master version (#18672) @michelengelen
 - [infra] Updates release script to fetch latest major version from upstream (#18649) @michelengelen
 
 ## v7.29.7
