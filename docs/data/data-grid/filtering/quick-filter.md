@@ -158,7 +158,7 @@ In the demo below, you can use the **Ignore diacritics** toggle to see how the f
 {{"demo": "QuickFilteringDiacritics.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The `ignoreDiacritics` prop affects all columns and all filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).
+The `ignoreDiacritics` prop affects all columns and filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).
 :::
 
 ## Disable quick filter

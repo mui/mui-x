@@ -159,7 +159,7 @@ If your dataset includes diacritics that need to be ignored, you can pass the `i
 ```
 
 :::info
-The `ignoreDiacritics` prop affects all columns and all filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).
+The `ignoreDiacritics` prop affects all columns and filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).
 :::
 
 ## apiRef
