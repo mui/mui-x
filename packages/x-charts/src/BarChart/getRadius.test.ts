@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { getRadius } from './getRadius';
 
 describe('getRadius', () => {

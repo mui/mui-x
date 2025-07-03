@@ -169,7 +169,6 @@ To use the v5 version of MUI X, you first need to update to the new package nam
 - Some event listeners and DOM attributes were removed from `GridCell` and `GridRow` to improve performance.
 
   The following props were removed.
-
   - `onCellBlur`
   - `onCellOver`
   - `onCellOut`
@@ -262,7 +261,6 @@ To use the v5 version of MUI X, you first need to update to the new package nam
   | `densitySelector`                 | `gridDensitySelector`                 |
 
 - Some selectors have been removed/reworked
-
   1. `sortedGridRowsSelector` was removed. You can use `gridSortedRowEntriesSelector` instead.
 
   The return format has changed:
@@ -335,7 +333,6 @@ To use the v5 version of MUI X, you first need to update to the new package nam
 ### `apiRef` methods
 
 - The `apiRef` methods to partially update the filter model have been renamed:
-
   1. `apiRef.current.applyFilterLinkOperator` was renamed to `apiRef.current.setFilterLinkOperator`
   2. `apiRef.current.upsertFilter` was renamed to `apiRef.current.upsertFilterItem`
   3. `apiRef.current.deleteFilter` was renamed to `apiRef.current.deleteFilterItem`

@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { DesktopTimePicker } from '../DesktopTimePicker';
 import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
 import { TimePickerProps } from './TimePicker.types';
@@ -47,7 +47,7 @@ TimePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

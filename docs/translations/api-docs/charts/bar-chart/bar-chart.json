@@ -54,6 +54,7 @@
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series-type/'>BarSeriesType</a> objects."
     },
+    "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
@@ -77,9 +78,12 @@
     "axisTickLabel": "Custom component for tick label.",
     "bar": "The component that renders the bar.",
     "barLabel": "The component that renders the bar label.",
+    "baseButton": "",
+    "baseIconButton": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper."
   }
 }

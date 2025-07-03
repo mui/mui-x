@@ -10,8 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
+import { useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { DigitalClockClasses, getDigitalClockUtilityClass } from './digitalClockClasses';
@@ -112,7 +112,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   inProps: DigitalClockProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
@@ -124,7 +124,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   });
 
   const {
-    ampm = utils.is12HourCycleInCurrentLocale(),
+    ampm = adapter.is12HourCycleInCurrentLocale(),
     timeStep = 30,
     autoFocus,
     slots,
@@ -191,7 +191,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   const valueOrReferenceDate = useClockReferenceDate({
     value,
     referenceDate: referenceDateProp,
-    utils,
+    adapter,
     props,
     timezone,
   });
@@ -236,7 +236,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
 
   const isTimeDisabled = React.useCallback(
     (valueToCheck: PickerValidDate) => {
-      const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
+      const isAfter = createIsAfterIgnoreDatePart(
+        disableIgnoringDatePartForTimeValidation,
+        adapter,
+      );
 
       const containsValidTime = () => {
         if (minTime && isAfter(minTime, valueToCheck)) {
@@ -259,7 +262,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
       };
 
       const isValidValue = () => {
-        if (utils.getMinutes(valueToCheck) % minutesStep !== 0) {
+        if (adapter.getMinutes(valueToCheck) % minutesStep !== 0) {
           return false;
         }
 
@@ -274,7 +277,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     },
     [
       disableIgnoringDatePartForTimeValidation,
-      utils,
+      adapter,
       minTime,
       maxTime,
       disableFuture,
@@ -287,17 +290,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
 
   const timeOptions = React.useMemo(() => {
     const result: PickerValidDate[] = [];
-    const startOfDay = utils.startOfDay(valueOrReferenceDate);
+    const startOfDay = adapter.startOfDay(valueOrReferenceDate);
     let nextTimeStepOption = startOfDay;
-    while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
+    while (adapter.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
       result.push(nextTimeStepOption);
-      nextTimeStepOption = utils.addMinutes(nextTimeStepOption, timeStep);
+      nextTimeStepOption = adapter.addMinutes(nextTimeStepOption, timeStep);
     }
     return result;
-  }, [valueOrReferenceDate, timeStep, utils]);
+  }, [valueOrReferenceDate, timeStep, adapter]);
 
   const focusedOptionIndex = timeOptions.findIndex((option) =>
-    utils.isEqual(option, valueOrReferenceDate),
+    adapter.isEqual(option, valueOrReferenceDate),
   );
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -349,8 +352,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
           if (skipDisabled && optionDisabled) {
             return null;
           }
-          const isSelected = utils.isEqual(option, value);
-          const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
+          const isSelected = adapter.isEqual(option, value);
+          const formattedValue = adapter.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
           const isFocused =
             focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0);
           const tabIndex = isFocused ? 0 : -1;
@@ -386,7 +389,7 @@ DigitalClock.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

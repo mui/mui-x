@@ -11,6 +11,9 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
+import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
+import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -32,7 +35,7 @@ const series = [
 
 export default function PrintChart() {
   const [chartType, setChartType] = React.useState('scatter');
-  const apiRef = React.useRef(undefined);
+  const apiRef = useChartProApiRef();
 
   const handleChange = (event) => setChartType(event.target.value);
 
@@ -57,8 +60,10 @@ export default function PrintChart() {
             <MenuItem value="scatter">Scatter</MenuItem>
             <MenuItem value="line">Line</MenuItem>
             <MenuItem value="bar">Bar</MenuItem>
+            <MenuItem value="pie">Pie</MenuItem>
             <MenuItem value="heatmap">Heatmap</MenuItem>
             <MenuItem value="funnel">Funnel</MenuItem>
+            <MenuItem value="radar">Radar</MenuItem>
           </Select>
         </FormControl>
         <Button onClick={() => apiRef.current.exportAsPrint()} variant="contained">
@@ -97,6 +102,25 @@ function Chart({ apiRef, type }) {
         />
       );
 
+    case 'pie':
+      return (
+        <PieChartPro
+          apiRef={apiRef}
+          series={[
+            {
+              arcLabel: 'value',
+              data: [
+                { id: 0, value: 10, label: 'series A' },
+                { id: 1, value: 15, label: 'series B' },
+                { id: 2, value: 20, label: 'series C' },
+              ],
+            },
+          ]}
+          height={300}
+          hideLegend={false}
+        />
+      );
+
     case 'heatmap':
       return (
         <Heatmap
@@ -125,6 +149,26 @@ function Chart({ apiRef, type }) {
               ],
             },
           ]}
+        />
+      );
+
+    case 'radar':
+      return (
+        <RadarChartPro
+          apiRef={apiRef}
+          height={300}
+          series={[{ label: 'Lisa', data: [120, 98, 86, 99, 85, 65] }]}
+          radar={{
+            max: 120,
+            metrics: [
+              'Math',
+              'Chinese',
+              'English',
+              'Geography',
+              'Physics',
+              'History',
+            ],
+          }}
         />
       );
 

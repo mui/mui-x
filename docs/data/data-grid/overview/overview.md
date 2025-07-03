@@ -1,6 +1,6 @@
 ---
 title: React Data Grid component
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 packageName: '@mui/x-data-grid'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 ---

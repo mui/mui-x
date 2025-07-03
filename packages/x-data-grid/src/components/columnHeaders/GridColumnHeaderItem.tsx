@@ -1,7 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { GridStateColDef } from '../../models/colDef/gridColDef';

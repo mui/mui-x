@@ -15,12 +15,16 @@ The first two numbers in each tuple correspond to the x and y indexes of the cel
 The third number is the value for the given cell.
 
 ```jsx
-series={[{
-    data: [
+<Heatmap
+  series={[
+    {
+      data: [
         [0, 2, 2.7], // Cell (0, 2) receives the value 2.7
         [1, 2, 4.5], // Cell (1, 2) receives the value 4.5
-    ]
-}]}
+      ],
+    },
+  ]}
+/>
 ```
 
 You can specify x and y ticks with the `xAxis` and `yAxis` props.
@@ -87,8 +91,6 @@ To display it set `hideLegend` to `false`.
 You can modify it with `slots.legend` and `slotProps.legend`.
 
 {{"demo": "HeatmapLegend.js"}}
-
-## Labels 🚧
 
 ## Custom item
 

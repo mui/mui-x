@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import {
   getDataGridUtilityClass,
@@ -6,10 +7,8 @@ import {
   useGridSelector,
   GridSingleSelectColDef,
 } from '@mui/x-data-grid-pro';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 
 import { keyframes, styled } from '@mui/system';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';

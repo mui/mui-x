@@ -8,13 +8,13 @@ import { PickerValue } from '../models';
 export const useClockReferenceDate = <TProps extends {}>({
   value,
   referenceDate: referenceDateProp,
-  utils,
+  adapter,
   props,
   timezone,
 }: {
   value: PickerValue;
   referenceDate: PickerValidDate | undefined;
-  utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
   props: TProps;
   timezone: PickersTimezone;
 }): PickerValidDate => {
@@ -22,14 +22,14 @@ export const useClockReferenceDate = <TProps extends {}>({
     () =>
       singleItemValueManager.getInitialReferenceValue({
         value,
-        utils,
+        adapter,
         props,
         referenceDate: referenceDateProp,
         granularity: SECTION_TYPE_GRANULARITY.day,
         timezone,
-        getTodayDate: () => getTodayDate(utils, timezone, 'date'),
-      }), // We only want to compute the reference date on mount.
-    [], // eslint-disable-line react-hooks/exhaustive-deps
+        getTodayDate: () => getTodayDate(adapter, timezone, 'date'),
+      }), // We want the `referenceDate` to update on prop and `timezone` change (https://github.com/mui/mui-x/issues/10804)
+    [referenceDateProp, timezone], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return value ?? referenceDate;
