@@ -7,8 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.6.1
 
-<!-- generated comparing v8.6.0..master -->
-
 _Jul 3, 2025_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
