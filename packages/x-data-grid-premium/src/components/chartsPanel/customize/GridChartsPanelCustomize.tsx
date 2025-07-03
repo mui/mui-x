@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
+import { GridShadowScrollArea } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
@@ -18,12 +19,15 @@ interface GridChartsPanelCustomizeProps {
 
 type OwnerState = DataGridPremiumProcessedProps;
 
-const GridChartsPanelCustomizeRoot = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 4,
-  padding: 8,
-  overflowY: 'auto',
+const GridChartsPanelCustomizeRoot = styled(GridShadowScrollArea)({
+  height: '100%',
+});
+
+const GridChartsPanelCustomizeSection = styled(Collapsible, {
+  name: 'MuiDataGrid',
+  slot: 'ChartsPanelCustomizeSection',
+})<{ ownerState: OwnerState }>({
+  margin: vars.spacing(0.5, 1),
 });
 
 const GridChartsPanelCustomizePanel = styled(CollapsiblePanel, {
@@ -73,7 +77,11 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   return (
     <GridChartsPanelCustomizeRoot>
       {sections.map((section, index) => (
-        <Collapsible key={section.id} initiallyOpen={index === 0}>
+        <GridChartsPanelCustomizeSection
+          key={section.id}
+          initiallyOpen={index === 0}
+          ownerState={rootProps}
+        >
           <CollapsibleTrigger>
             <GridChartsPanelCustomizePanelTitle ownerState={rootProps}>
               {section.label}
@@ -162,7 +170,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
               );
             })}
           </GridChartsPanelCustomizePanel>
-        </Collapsible>
+        </GridChartsPanelCustomizeSection>
       ))}
     </GridChartsPanelCustomizeRoot>
   );
