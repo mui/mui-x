@@ -306,8 +306,8 @@ importers:
         specifier: ^1.0.9-canary.3
         version: 1.0.9-canary.3(@swc/core@1.12.0)(@types/node@24.0.7)(esbuild@0.25.5)(lightningcss@1.29.3)(rollup@4.40.0)(terser@5.39.0)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.7.0)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.9
-        version: 0.0.2-canary.9(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)
+        specifier: ^0.0.2-canary.12
+        version: 0.0.2-canary.12(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.6
@@ -2364,12 +2364,24 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
+  '@argos-ci/api-client@0.7.1':
+    resolution: {integrity: sha512-cJBNriNEs4aSBBpvsJH0f1D71rr9zxu/f0xRiqdEIIEN4ioFCCxs/66hNKrTxCw+lTaBnBL6LaM5vrBUkzgkzQ==}
+    engines: {node: '>=18.0.0'}
+
   '@argos-ci/api-client@0.8.1':
     resolution: {integrity: sha512-3IHv7ANSPNO6OwWgwULlHbP9/tFV9kQDu6+nL9jysfPkGj0GgtrOsyBb+iU931c7wSMo1OD+XNujCnRzDD968w==}
     engines: {node: '>=18.0.0'}
 
+  '@argos-ci/core@2.12.0':
+    resolution: {integrity: sha512-SmJYi93Oh0DYnJ1kZVFtzM0UDr0MfrcUhOuUsBJNpYc4hV2AlCNeoi8hzWYPJvARMKh03ZcbNx4+VY5jXiGLOA==}
+    engines: {node: '>=18.0.0'}
+
   '@argos-ci/core@3.2.0':
     resolution: {integrity: sha512-wraH5RGFpoU7zcKV2BVi4LvY+5bWR/Ds6OVhUtq3jtd7I3qJRFVFq2IX1TfPPvBBA7wX0OqcrqgIWAQwy+vsoA==}
+    engines: {node: '>=18.0.0'}
+
+  '@argos-ci/util@2.2.1':
+    resolution: {integrity: sha512-z2B3EYVhDCDYlQwg55C/P8Xvbupb+XjmRHggIYl1R3yiNEBqy/kT9X/uOVMHxFyhLsM2PXsOOruugJoT11dB7Q==}
     engines: {node: '>=18.0.0'}
 
   '@argos-ci/util@2.3.1':
@@ -4241,8 +4253,8 @@ packages:
     resolution: {integrity: sha512-xUO1GQDl6xbFdQJMYOgKMdxD8duz/HRVO9FfOravWvHGqvfErFo9+mcS0Q99czlmViSol05CVqOOBdjZwFy+OQ==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.2-canary.9':
-    resolution: {integrity: sha512-U+or0zJp+B71M2pYgG1CxmuSm8molPwPxfatERzBBZTkXImrBCQbrXnz72OgS3STylZrUUrrLoiBY1zn6753cA==}
+  '@mui/internal-code-infra@0.0.2-canary.12':
+    resolution: {integrity: sha512-gdt279pGxOEXkzSTioHuyqLj42iAiwf01GMcvqADTg0CoMwGq0qsJcKrxHEnG2ufw0euco5vswDVyDUCQS0XCQ==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -10251,6 +10263,9 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
+  openapi-fetch@0.13.1:
+    resolution: {integrity: sha512-8P77k9Cmp0VNyry8ml293v1mqAyr4AkN7fE9VuUJ2mR0bK1NWihDM+Vj5/Try4aIYwYpT2OyCrYS3ObIRtO4LQ==}
+
   openapi-fetch@0.13.5:
     resolution: {integrity: sha512-AQK8T9GSKFREFlN1DBXTYsLjs7YV2tZcJ7zUWxbjMoQmj8dDSFRrzhLCbHPZWA1TMV3vACqfCxLEZcwf2wxV6Q==}
 
@@ -12691,10 +12706,30 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
+  '@argos-ci/api-client@0.7.1':
+    dependencies:
+      debug: 4.4.1(supports-color@8.1.1)
+      openapi-fetch: 0.13.1
+    transitivePeerDependencies:
+      - supports-color
+
   '@argos-ci/api-client@0.8.1':
     dependencies:
       debug: 4.4.1(supports-color@8.1.1)
       openapi-fetch: 0.13.5
+    transitivePeerDependencies:
+      - supports-color
+
+  '@argos-ci/core@2.12.0':
+    dependencies:
+      '@argos-ci/api-client': 0.7.1
+      '@argos-ci/util': 2.2.1
+      axios: 1.8.4(debug@4.4.1)
+      convict: 6.2.4
+      debug: 4.4.1(supports-color@8.1.1)
+      fast-glob: 3.3.3
+      sharp: 0.33.5
+      tmp: 0.2.3
     transitivePeerDependencies:
       - supports-color
 
@@ -12710,6 +12745,8 @@ snapshots:
       tmp: 0.2.3
     transitivePeerDependencies:
       - supports-color
+
+  '@argos-ci/util@2.2.1': {}
 
   '@argos-ci/util@2.3.1': {}
 
@@ -15122,8 +15159,9 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@0.0.2-canary.9(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)':
+  '@mui/internal-code-infra@0.0.2-canary.12(@typescript-eslint/parser@8.35.1(eslint@9.30.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.0)(prettier@3.6.2)(typescript@5.8.3)':
     dependencies:
+      '@argos-ci/core': 2.12.0
       '@eslint/compat': 1.3.1(eslint@9.30.0)
       '@next/eslint-plugin-next': 15.3.4
       '@octokit/rest': 22.0.0
@@ -22298,6 +22336,10 @@ snapshots:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  openapi-fetch@0.13.1:
+    dependencies:
+      openapi-typescript-helpers: 0.0.15
 
   openapi-fetch@0.13.5:
     dependencies:
