@@ -107,7 +107,7 @@ const processItemsLookups = ({
       label,
       parentId,
       idAttribute: undefined,
-      expandable: getChildrenCount ? getChildrenCount(item) > 0 : !!children?.length,
+      expandable: getChildrenCount ? Math.abs(getChildrenCount(item)) > 0 : !!children?.length,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
       depth,
     };
