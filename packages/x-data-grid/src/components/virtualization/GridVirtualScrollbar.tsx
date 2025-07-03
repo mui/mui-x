@@ -161,11 +161,6 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       <Container
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
-        style={
-          props.position === 'vertical' && rootProps.listView
-            ? { height: '100%', top: 0 }
-            : undefined
-        }
         tabIndex={-1}
         aria-hidden="true"
         // tabIndex does not prevent focus with a mouse click, throwing a console error
