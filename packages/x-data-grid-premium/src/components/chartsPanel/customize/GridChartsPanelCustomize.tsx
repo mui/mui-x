@@ -32,8 +32,8 @@ const GridChartsPanelCustomizePanel = styled(CollapsiblePanel, {
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
-  padding: 16,
-  gap: 24,
+  padding: vars.spacing(2, 1.5),
+  gap: vars.spacing(3),
 });
 
 const GridChartsPanelCustomizePanelTitle = styled('div', {
