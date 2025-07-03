@@ -75,7 +75,8 @@ const areaXAxis = {
   id: 'x',
   data: new Array(101).fill(null).map((_, i) => i),
   label: 'Age',
-  valueFormatter: (v: number | null) => (v === 100 ? '100+' : `${v}`),
+  valueFormatter: (v: number | null) =>
+    v === 100 ? '100+' : Math.round(v!).toString(),
 } satisfies XAxis;
 
 const areaSettings = {
