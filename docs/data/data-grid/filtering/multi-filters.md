@@ -18,7 +18,7 @@ Then click **Add Filter** to apply additional criteria.
 
 ## Implementing multi-filters
 
-The multi-filter feature is available by default on the Data Grid Pro.
+The multi-filter feature is available by default with the Data Grid Pro and doesn't require any additional configuration.
 
 ### One filter per column
 
