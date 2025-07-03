@@ -6,14 +6,10 @@ import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { ChartState } from '../../../models/gridChartsIntegration';
 
 export interface GridChartsPanelChartProps {
-  charts: Record<string, ChartState>;
-  activeChartId: string;
   selectedChartType: string;
   onChartTypeChange: (type: string) => void;
-  onChartSyncChange: (sync: boolean) => void;
 }
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -25,8 +21,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: ['chartsManagement'],
     chartTypeRoot: ['chartTypeRoot'],
     button: ['chartTypeSelectorButton'],
-    managementArea: ['chartsManagementArea'],
-    managementLabel: ['chartsManagementLabel'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -84,21 +78,8 @@ const GridChartTypeButton = styled('button', {
   };
 });
 
-const GridChartsManagementArea = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'ChartsManagementArea',
-})({
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing(2),
-  padding: vars.spacing(0, 1),
-  minHeight: 52,
-  borderTop: `1px solid ${vars.colors.border.base}`,
-  marginTop: vars.spacing(2),
-});
-
 function GridChartsPanelChart(props: GridChartsPanelChartProps) {
-  const { charts, activeChartId, selectedChartType, onChartTypeChange, onChartSyncChange } = props;
+  const { selectedChartType, onChartTypeChange } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const chartConfig = rootProps.slotProps?.chartsPanel?.schema || {};
@@ -119,16 +100,6 @@ function GridChartsPanelChart(props: GridChartsPanelChartProps) {
           </GridChartTypeButton>
         ))}
       </GridChartTypeRoot>
-      <GridChartsManagementArea className={classes.managementArea}>
-        <rootProps.slots.baseSwitch
-          size="small"
-          checked={charts[activeChartId]?.synced !== false}
-          onChange={() => onChartSyncChange(charts[activeChartId]?.synced === false)}
-          title={rootProps.localeText.chartsSyncButtonLabel}
-          label={rootProps.localeText.chartsSyncButtonLabel}
-          {...rootProps.slotProps?.baseSwitch}
-        />
-      </GridChartsManagementArea>
     </GridChartsManagementRoot>
   );
 }

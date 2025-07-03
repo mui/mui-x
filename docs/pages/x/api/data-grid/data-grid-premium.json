@@ -1040,6 +1040,12 @@
       "class": null
     },
     {
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
@@ -1553,6 +1559,18 @@
       "name": "chartsMenuRemoveIcon",
       "description": "Icon used for the remove button in the charts configuration panel menu",
       "default": "GridDeleteIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSyncIcon",
+      "description": "Icon used for the sync button in the charts configuration panel when sync is enabled",
+      "default": "GridSyncIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSyncDisabledIcon",
+      "description": "Icon used for the sync button in the charts configuration panel when sync is disabled",
+      "default": "GridSyncDisabledIcon",
       "class": null
     }
   ],

@@ -841,6 +841,12 @@
       "class": null
     },
     {
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",

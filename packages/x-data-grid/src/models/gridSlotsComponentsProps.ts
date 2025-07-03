@@ -41,6 +41,7 @@ import type {
   TextFieldProps,
   IconProps,
   TabsProps,
+  ToggleButtonProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -70,6 +71,7 @@ export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseSkeletonPropsOverrides {}
 export interface BaseIconPropsOverrides {}
+export interface BaseToggleButtonPropsOverrides {}
 
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
@@ -108,6 +110,7 @@ interface BaseSlotProps {
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
+  baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
   basePagination: PaginationProps & BasePaginationPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
