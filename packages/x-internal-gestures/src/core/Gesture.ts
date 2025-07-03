@@ -74,6 +74,9 @@ export type GestureOptions<GestureName extends string> = {
    * Array of keyboard keys that must be pressed for the gesture to be recognized.
    * If not provided or empty, no keyboard key requirement is applied.
    *
+   * A special identifier `ControlOrMeta` can be used to match either Control or Meta keys,
+   * which is useful for cross-platform compatibility.
+   *
    * @example ['Shift', 'Alt']
    * @default [] (no key requirement)
    */
