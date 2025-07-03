@@ -3,9 +3,8 @@
 import * as React from 'react';
 import { GridChartsPanelDataBody } from './GridChartsPanelDataBody';
 import { GridChartsPanelDataHeader } from './GridChartsPanelDataHeader';
-import { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
-export type SectionLimitLookup = Map<GridChartsIntegrationSection, number>;
+export type SectionLimitLookup = Map<'categories' | 'series', number>;
 
 export interface GridChartsPanelDataProps {
   sectionLimitLookup: SectionLimitLookup;
