@@ -384,6 +384,7 @@ export const useGridCellEditing = (
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
       updateFieldInCellModesModel(id, field, { mode: GridCellModes.View, ...other });
+      updateStateToStopCellEditMode({ id, field, ...other });
     },
     [throwIfNotInMode, updateFieldInCellModesModel],
   );
@@ -599,3 +600,4 @@ export const useGridCellEditing = (
     });
   }, [apiRef, cellModesModel, updateStateToStartCellEditMode, updateStateToStopCellEditMode]);
 };
+//
