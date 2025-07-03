@@ -145,6 +145,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
       threshold: this.threshold,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
+      keys: this.keys,
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,

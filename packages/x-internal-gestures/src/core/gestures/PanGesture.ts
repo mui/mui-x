@@ -182,6 +182,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
       direction: [...this.direction],
+      keys: this.keys,
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,
