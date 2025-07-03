@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ScatterSeriesType } from '@mui/x-charts/models';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
-import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -42,12 +42,25 @@ const series: ScatterSeriesType[] = [
 
 const numberFormatter = new Intl.NumberFormat('en-US').format;
 
+const TooltipPaper = styled('div', {
+  name: 'Tooltip',
+  slot: 'Paper',
+})(({ theme }) => {
+  return {
+    padding: theme.spacing(1),
+    backgroundColor: (theme.vars || theme).palette.background.paper,
+    color: (theme.vars || theme).palette.text.primary,
+    borderRadius: (theme.vars || theme).shape?.borderRadius,
+    border: `solid ${(theme.vars || theme).palette.divider} 1px`,
+  };
+});
+
 function CustomTooltip() {
   const item = useItemTooltip<'scatter'>();
 
   return (
     <ChartsTooltipContainer trigger="item">
-      <Paper sx={{ p: 1 }}>
+      <TooltipPaper>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Box
             sx={{ width: 20, height: 20, backgroundColor: item?.color, borderRadius: 1, mr: 2 }}
@@ -61,7 +74,7 @@ function CustomTooltip() {
             {item?.value.y == null ? 'NaN' : `${numberFormatter(item?.value.y)} transistor/mm²`}
           </Typography>
         </Box>
-      </Paper>
+      </TooltipPaper>
     </ChartsTooltipContainer>
   );
 }

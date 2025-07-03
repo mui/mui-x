@@ -19,7 +19,7 @@ const advancedFeatures = [
     description: '',
   },
   {
-    title: 'Pie Chart',
+    title: 'Donut Chart',
     description: '',
   },
 ];

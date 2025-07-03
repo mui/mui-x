@@ -11,7 +11,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 
   [`& .${toggleButtonGroupClasses.grouped}`]: {
     border: 0,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 8,
   },
 }));
 

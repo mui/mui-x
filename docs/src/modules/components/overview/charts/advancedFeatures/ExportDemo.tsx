@@ -33,7 +33,7 @@ function Export() {
   return (
     <Stack height="100%" spacing={3} alignItems="center">
       <div style={{ flexGrow: 1, minHeight: 0 }}>
-        <Typography align="center">Google Vs Meta stock price</Typography>
+        <Typography align="center">Google vs Meta stock price</Typography>
         <LineChartPro
           apiRef={apiRef}
           dataset={formattedDataset}

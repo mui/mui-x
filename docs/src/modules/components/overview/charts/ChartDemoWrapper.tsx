@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions, ThemeProvider, useTheme } from '@mui/material/styles';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import DemoWrapper from '../DemoWrapper';
+import { getTheme } from './theme/getTheme';
 
 export default function ChartDemoWrapper(
   props: React.PropsWithChildren<{
@@ -12,8 +13,8 @@ export default function ChartDemoWrapper(
   }>,
 ) {
   const { code, link, children } = props;
-  const brandingTheme = useTheme();
-  const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
+  const currentTheme = useTheme();
+  const theme = createTheme(currentTheme as ThemeOptions, getTheme(currentTheme.palette.mode));
 
   return (
     <DemoWrapper link={link}>

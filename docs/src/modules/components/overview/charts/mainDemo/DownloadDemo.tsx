@@ -148,7 +148,7 @@ export default function DownloadDemo() {
           }}
         >
           {versions[selectedPackage].map((v, i) => (
-            <AreaGradient color={rainbowSurgePalette('light')[i]} id={v} />
+            <AreaGradient color={rainbowSurgePalette('light')[i]} id={v} key={v} />
           ))}
         </LineChartPro>
       </div>
