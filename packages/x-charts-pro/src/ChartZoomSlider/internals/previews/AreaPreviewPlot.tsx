@@ -7,8 +7,8 @@ import {
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
+  SeriesId,
 } from '@mui/x-charts/internals';
-import { AreaElement } from '@mui/x-charts/LineChart';
 import { PreviewPlotProps } from './PreviewPlot.types';
 
 const AreaPlotRoot = styled('g', {
@@ -26,17 +26,39 @@ export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
       {completedData.map(
         ({ d, seriesId, color, area, gradientId }) =>
           !!area && (
-            <AreaElement
+            <PreviewAreaElement
               key={seriesId}
               id={seriesId}
               d={d}
               color={color}
               gradientId={gradientId}
-              skipAnimation
             />
           ),
       )}
     </AreaPlotRoot>
+  );
+}
+
+export interface PreviewAreaElementProps
+  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+  id: SeriesId;
+  gradientId?: string;
+  color: string;
+  d: string;
+}
+
+/**
+ * Preview of the area element for the zoom preview.
+ * Based on AreaElement and AnimatedArea.
+ */
+function PreviewAreaElement({ id, color, gradientId, onClick, ...other }: PreviewAreaElementProps) {
+  return (
+    <path
+      fill={gradientId ? `url(#${gradientId})` : color}
+      stroke="none"
+      data-series={id}
+      {...other}
+    />
   );
 }
 
