@@ -142,6 +142,11 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
+export type ToggleButtonProps = CommonProps & {
+  selected?: boolean;
+  value: string;
+};
+
 export type DividerProps = {
   className?: string;
   orientation?: 'horizontal' | 'vertical';

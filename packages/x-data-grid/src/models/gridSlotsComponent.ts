@@ -76,6 +76,11 @@ export interface GridBaseSlots {
    */
   baseInput: React.JSXElementConstructor<GridSlotProps['baseInput']>;
   /**
+   * The custom ToggleButton component used in the grid.
+   * @default ToggleButton
+   */
+  baseToggleButton: React.JSXElementConstructor<GridSlotProps['baseToggleButton']>;
+  /**
    * The custom Tooltip component used in the grid.
    * @default Tooltip
    */
