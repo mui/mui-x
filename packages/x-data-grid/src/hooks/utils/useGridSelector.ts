@@ -110,10 +110,10 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
     EMPTY,
   );
 
-  const unsubscribe = React.useCallback((callback: () => void) => {
+  const unsubscribe = React.useCallback(() => {
     // Fixes issue in React Strict Mode, where getSnapshot is not called
     if (!refs.current.subscription) {
-      callback();
+      subscribe();
     }
     return () => {
       if (refs.current.subscription) {
