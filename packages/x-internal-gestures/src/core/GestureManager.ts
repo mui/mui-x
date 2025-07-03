@@ -145,7 +145,7 @@ export class GestureManager<
 
   private pointerManager: PointerManager;
 
-  private keyboardManager: KeyboardManager = KeyboardManager.getInstance();
+  private keyboardManager: KeyboardManager = new KeyboardManager();
 
   /**
    * Create a new GestureManager instance to coordinate gesture recognition
