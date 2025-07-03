@@ -377,18 +377,6 @@ export const useGridCellEditing = (
     },
   ) as GridCellEditingApi['startCellEditMode'];
 
-  const stopCellEditMode = React.useCallback<GridCellEditingApi['stopCellEditMode']>(
-    (params) => {
-      const { id, field, ...other } = params;
-
-      throwIfNotInMode(id, field, GridCellModes.Edit);
-
-      updateFieldInCellModesModel(id, field, { mode: GridCellModes.View, ...other });
-      updateStateToStopCellEditMode({ id, field, ...other });
-    },
-    [throwIfNotInMode, updateFieldInCellModesModel],
-  );
-
   const updateStateToStopCellEditMode = useEventCallback<[GridStopCellEditModeParams], void>(
     async (params) => {
       const { id, field, ignoreModifications, cellToFocusAfter = 'none' } = params;
@@ -483,6 +471,18 @@ export const useGridCellEditing = (
       }
     },
   ) as GridCellEditingApi['stopCellEditMode'];
+
+  const stopCellEditMode = React.useCallback<GridCellEditingApi['stopCellEditMode']>(
+    (params) => {
+      const { id, field, ...other } = params;
+
+      throwIfNotInMode(id, field, GridCellModes.Edit);
+
+      updateFieldInCellModesModel(id, field, { mode: GridCellModes.View, ...other });
+      updateStateToStopCellEditMode({ id, field, ...other });
+    },
+    [throwIfNotInMode, updateFieldInCellModesModel, updateStateToStopCellEditMode],
+  );
 
   const setCellEditingEditCellValue = React.useCallback<
     GridCellEditingPrivateApi['setCellEditingEditCellValue']
