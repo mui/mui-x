@@ -34,7 +34,6 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPre
 import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 import { gridChartsPanelOpenSelector } from '../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
-import { GridChartsPanel } from '../components/chartsPanel/GridChartsPanel';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -87,9 +86,9 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     ) : null;
 
   const chartsConfigurationSidePanel =
-    props.chartsIntegration && chartsConfigurationOpen ? (
+    props.slots.chartsPanel && props.chartsIntegration && chartsConfigurationOpen ? (
       <Sidebar>
-        <GridChartsPanel />
+        <props.slots.chartsPanel {...props.slotProps?.chartsPanel} />
       </Sidebar>
     ) : null;
 
