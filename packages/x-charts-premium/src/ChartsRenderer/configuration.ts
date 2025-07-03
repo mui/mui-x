@@ -152,6 +152,7 @@ export const configurationOptions: GridChartsConfigurationOptions = {
   pie: {
     label: 'Pie',
     icon: GridPieChartIcon,
+    maxCategories: 1,
     customization: [
       {
         id: 'mainSection',

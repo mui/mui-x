@@ -8,9 +8,13 @@ import { GridMenu } from '@mui/x-data-grid-pro';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { ChartState, GridChartsConfigurationOptions } from '../../models/gridChartsIntegration';
+import type {
+  ChartState,
+  GridChartsConfigurationOptions,
+} from '../../models/gridChartsIntegration';
 import { GridChartsPanelChart } from './chart/GridChartsPanelChart';
 import { GridChartsPanelCustomize } from './customize/GridChartsPanelCustomize';
+import type { GridChartsIntegrationSection } from '../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { GridChartsPanelData } from './data/GridChartsPanelData';
@@ -162,13 +166,33 @@ GridChartsPanelChartSelector.propTypes = {
   ).isRequired,
 } as any;
 
-function GridChartsPanel(_: GridChartsPanelProps) {
+function GridChartsPanel(props: GridChartsPanelProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const { schema = {} } = props;
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
   const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
-  const chartEntries = Object.entries(chartStateLookup);
   const [activeTab, setActiveTab] = React.useState('chart');
+
+  const chartEntries = React.useMemo(() => Object.entries(chartStateLookup), [chartStateLookup]);
+  const activeChartType = React.useMemo(
+    () => chartStateLookup[activeChartId]?.type || '',
+    [chartStateLookup, activeChartId],
+  );
+  const currentChartConfiguration: GridChartsConfigurationOptions[string] = React.useMemo(() => {
+    return schema[activeChartType] || {};
+  }, [schema, activeChartType]);
+  const sectionLimitLookup = React.useMemo(() => {
+    return new Map<GridChartsIntegrationSection, number>(
+      [
+        ['categories', currentChartConfiguration.maxCategories],
+        ['series', currentChartConfiguration.maxSeries],
+      ].filter(([_, value]) => typeof value === 'number' && value > 0) as [
+        GridChartsIntegrationSection,
+        number,
+      ][],
+    );
+  }, [currentChartConfiguration]);
 
   const handleChartSyncChange = React.useCallback(
     (newSyncState: boolean) => {
@@ -191,6 +215,7 @@ function GridChartsPanel(_: GridChartsPanelProps) {
         label: apiRef.current.getLocaleText('chartsTabChart'),
         children: (
           <GridChartsPanelChart
+            schema={schema}
             selectedChartType={chartStateLookup[activeChartId]?.type}
             onChartTypeChange={handleChartTypeChange}
           />
@@ -199,15 +224,28 @@ function GridChartsPanel(_: GridChartsPanelProps) {
       {
         value: 'data',
         label: apiRef.current.getLocaleText('chartsTabFields'),
-        children: <GridChartsPanelData />,
+        children: <GridChartsPanelData sectionLimitLookup={sectionLimitLookup} />,
       },
       {
         value: 'customize',
         label: apiRef.current.getLocaleText('chartsTabCustomize'),
-        children: <GridChartsPanelCustomize activeChartId={activeChartId} />,
+        children: (
+          <GridChartsPanelCustomize
+            activeChartId={activeChartId}
+            sections={currentChartConfiguration.customization || []}
+          />
+        ),
       },
     ],
-    [apiRef, activeChartId, chartStateLookup, handleChartTypeChange],
+    [
+      apiRef,
+      activeChartId,
+      chartStateLookup,
+      handleChartTypeChange,
+      schema,
+      currentChartConfiguration,
+      sectionLimitLookup,
+    ],
   );
 
   // TODO: render a placeholder if there are no charts available - use the locale text `chartsConfigurationNoCharts`

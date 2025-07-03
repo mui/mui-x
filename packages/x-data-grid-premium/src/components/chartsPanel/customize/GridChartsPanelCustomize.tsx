@@ -4,7 +4,7 @@ import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
-import { GridChartsConfigurationSection } from '../../../models/gridChartsIntegration';
+import type { GridChartsConfigurationSection } from '../../../models/gridChartsIntegration';
 import { Collapsible } from '../../collapsible/Collapsible';
 import { CollapsibleTrigger } from '../../collapsible/CollapsibleTrigger';
 import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';
@@ -13,6 +13,7 @@ import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../../hooks/features/c
 
 interface GridChartsPanelCustomizeProps {
   activeChartId: string;
+  sections: GridChartsConfigurationSection[];
 }
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -44,7 +45,7 @@ const GridChartsPanelCustomizePanelTitle = styled('div', {
 });
 
 export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
-  const { activeChartId } = props;
+  const { activeChartId, sections } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
@@ -55,10 +56,6 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
     categories,
     series,
   } = chartStateLookup[activeChartId] ?? EMPTY_CHART_INTEGRATION_CONTEXT_STATE;
-
-  const sections: GridChartsConfigurationSection[] = React.useMemo(() => {
-    return rootProps.slotProps?.chartsPanel?.schema?.[chartType]?.customization || [];
-  }, [rootProps.slotProps?.chartsPanel?.schema, chartType]);
 
   const handleChange = (field: string, value: any) => {
     // TODO: keep configuration per chart type but share color palette state
