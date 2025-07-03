@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
@@ -9,7 +8,6 @@ import {
   UseTreeViewKeyboardNavigationSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
-import { testSkipIf } from 'test/utils/skipIf';
 
 describeTreeView<
   [
@@ -137,6 +135,56 @@ describeTreeView<
         });
         fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
         expect(view.getFocusedItemId()).to.equal('1.1');
+      });
+
+      it('should move the focus to the last visible and enabled descendant of the previous sibling', () => {
+        const view = render({
+          items: [
+            {
+              id: '1',
+              children: [
+                { id: '1-1' },
+                {
+                  id: '1-2',
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3' }],
+                },
+              ],
+            },
+            { id: '2' },
+          ],
+          defaultExpandedItems: ['1', '1-2'],
+        });
+
+        act(() => {
+          view.getItemRoot('2').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
+        expect(view.getFocusedItemId()).to.equal('1-2-3');
+      });
+
+      it('should move the focus to the last visible descendant of the previous sibling, skipping disabled items', () => {
+        const view = render({
+          items: [
+            {
+              id: '1',
+              children: [
+                { id: '1-1' },
+                {
+                  id: '1-2',
+                  children: [{ id: '1-2-1' }, { id: '1-2-2' }, { id: '1-2-3', disabled: true }],
+                },
+              ],
+            },
+            { id: '2' },
+          ],
+          defaultExpandedItems: ['1', '1-2'],
+        });
+
+        act(() => {
+          view.getItemRoot('2').focus();
+        });
+        fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowUp' });
+        expect(view.getFocusedItemId()).to.equal('1-2-2');
       });
 
       it('should skip disabled items', () => {
@@ -1171,7 +1219,7 @@ describeTreeView<
     });
 
     // Only the SimpleTreeView can have React Element labels.
-    testSkipIf(treeViewComponentName !== 'SimpleTreeView')(
+    it.skipIf(treeViewComponentName !== 'SimpleTreeView')(
       'should work with ReactElement label',
       () => {
         const view = render({

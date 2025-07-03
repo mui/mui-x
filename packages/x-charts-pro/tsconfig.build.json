@@ -8,10 +8,12 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
   },
   "references": [
     { "path": "../x-charts/tsconfig.build.json" },
+    { "path": "../x-internal-gestures/tsconfig.build.json" },
     { "path": "../x-internals/tsconfig.build.json" },
     { "path": "../x-license/tsconfig.build.json" }
   ],

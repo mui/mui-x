@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -136,7 +135,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
   function Test(props: Partial<DataGridPremiumProps>) {
     return (
-      <div style={{ height: 600, width: '100%' }}>
+      <div style={{ height: 600, width: 600 }}>
         <DataGridPremium rows={ROWS} columns={COLUMNS} showToolbar cellSelection {...props} />
       </div>
     );

@@ -4,12 +4,12 @@ import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { useChartRootRef } from '@mui/x-charts/hooks';
 import Button from '@mui/material/Button';
-
 import { Stack } from '@mui/system';
 import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 
 function CustomChartWrapper({ children }) {
   const chartRootRef = useChartRootRef();
@@ -25,10 +25,17 @@ function CustomChartWrapper({ children }) {
 }
 
 export default function ExportCompositionNoSnap() {
-  const apiRef = React.useRef(undefined);
+  const apiRef = useChartProApiRef();
 
   return (
-    <Stack width="100%">
+    <Stack width="100%" sx={{ display: 'block' }}>
+      <Button
+        onClick={() => apiRef.current.exportAsPrint()}
+        variant="contained"
+        sx={{ mb: 1 }}
+      >
+        Print
+      </Button>
       <ChartDataProviderPro
         apiRef={apiRef}
         height={300}
@@ -65,8 +72,6 @@ export default function ExportCompositionNoSnap() {
           </ChartsSurface>
         </CustomChartWrapper>
       </ChartDataProviderPro>
-
-      <Button onClick={() => apiRef.current?.exportAsPrint()}>Print</Button>
     </Stack>
   );
 }

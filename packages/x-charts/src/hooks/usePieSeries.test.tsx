@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { usePieSeries, usePieSeriesContext } from './usePieSeries';
 import { DefaultizedPieSeriesType, PieSeriesType } from '../models';
@@ -38,7 +37,6 @@ describe('usePieSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('usePieSeries', () => {
   it('should return the specific pie series when a single seriesId is provided', () => {
     const { result } = renderHook(() => usePieSeries('1'), options);
@@ -57,7 +55,7 @@ describe('usePieSeries', () => {
 
   it('should return undefined series when invalid seriesIds are provided', () => {
     const message = [
-      `MUI X: The following ids provided to "usePieSeries" could not be found: "3".`,
+      `MUI X Charts: The following ids provided to "usePieSeries" could not be found: "3".`,
       `Make sure that they exist and their series are using the "pie" series type.`,
     ].join('\n');
 

@@ -7,7 +7,7 @@ import {
   gridRowCountSelector,
 } from '@mui/x-data-grid-pro';
 import { vars, NotRendered } from '@mui/x-data-grid-pro/internals';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { SidebarHeader } from '../sidebar';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

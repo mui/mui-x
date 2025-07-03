@@ -59,6 +59,7 @@
     "series": {
       "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series-type/'>ScatterSeriesType</a> objects."
     },
+    "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
@@ -79,5 +80,28 @@
     "zAxis": { "description": "The configuration of the z-axes." },
     "zoomData": { "description": "The list of zoom data related to each axis." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "baseButton": "",
+    "baseDivider": "",
+    "baseIconButton": "",
+    "baseMenuItem": "",
+    "baseMenuList": "",
+    "basePopper": "",
+    "baseTooltip": "",
+    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
+    "legend": "Custom rendering of the legend.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "marker": "The component that renders the marker for a scatter point.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "scatter": "",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip popper.",
+    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
+    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
+  }
 }

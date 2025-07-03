@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { RefObject } from '@mui/x-internals/types';
@@ -342,12 +343,14 @@ export const useGridVirtualScroller = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
     const nextRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
 
-    // Prevents batching render context changes
-    ReactDOM.flushSync(() => {
-      updateRenderContext(nextRenderContext);
-    });
+    if (!areRenderContextsEqual(nextRenderContext, renderContext)) {
+      // Prevents batching render context changes
+      ReactDOM.flushSync(() => {
+        updateRenderContext(nextRenderContext);
+      });
 
-    scrollTimeout.start(1000, triggerUpdateRenderContext);
+      scrollTimeout.start(1000, triggerUpdateRenderContext);
+    }
 
     return nextRenderContext;
   });

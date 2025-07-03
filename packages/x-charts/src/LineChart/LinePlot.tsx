@@ -2,8 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { warnOnce } from '@mui/x-internals/warning';
-import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import {
   LineElement,
   lineElementClasses,
@@ -11,16 +9,11 @@ import {
   LineElementSlotProps,
   LineElementSlots,
 } from './LineElement';
-import { getValueToPositionMapper } from '../hooks/useScale';
-import { getCurveFactory } from '../internals/getCurve';
-import { isBandScale } from '../internals/isBandScale';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { LineItemIdentifier } from '../models/seriesType/line';
-import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { useLinePlotData } from './useLinePlotData';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -50,119 +43,10 @@ const LinePlotRoot = styled('g', {
 });
 
 const useAggregatedData = () => {
-  const seriesData = useLineSeriesContext();
+  const { xAxis: xAxes } = useXAxes();
+  const { yAxis: yAxes } = useYAxes();
 
-  const { xAxis, xAxisIds } = useXAxes();
-  const { yAxis, yAxisIds } = useYAxes();
-  const getGradientId = useChartGradientIdBuilder();
-
-  // This memo prevents odd line chart behavior when hydrating.
-  const allData = React.useMemo(() => {
-    if (seriesData === undefined) {
-      return [];
-    }
-
-    const { series, stackingGroups } = seriesData;
-    const defaultXAxisId = xAxisIds[0];
-    const defaultYAxisId = yAxisIds[0];
-
-    return stackingGroups.flatMap(({ ids: groupIds }) => {
-      return groupIds.flatMap((seriesId) => {
-        const {
-          xAxisId = defaultXAxisId,
-          yAxisId = defaultYAxisId,
-          stackedData,
-          data,
-          connectNulls,
-          curve,
-          strictStepCurve,
-        } = series[seriesId];
-
-        const xScale = xAxis[xAxisId].scale;
-        const xPosition = getValueToPositionMapper(xScale);
-        const yScale = yAxis[yAxisId].scale;
-        const xData = xAxis[xAxisId].data;
-
-        const gradientId: string | undefined =
-          (yAxis[yAxisId].colorScale && getGradientId(yAxisId)) ||
-          (xAxis[xAxisId].colorScale && getGradientId(xAxisId)) ||
-          undefined;
-
-        if (process.env.NODE_ENV !== 'production') {
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
-            );
-          }
-          if (xData.length < stackedData.length) {
-            warnOnce(
-              `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
-              'error',
-            );
-          }
-        }
-
-        const shouldExpand = curve?.includes('step') && !strictStepCurve && isBandScale(xScale);
-
-        const formattedData: {
-          x: any;
-          y: [number, number];
-          nullData: boolean;
-          isExtension?: boolean;
-        }[] =
-          xData?.flatMap((x, index) => {
-            const nullData = data[index] == null;
-            if (shouldExpand) {
-              const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
-              if (!nullData && (index === 0 || data[index - 1] == null)) {
-                rep.unshift({
-                  x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: stackedData[index],
-                  nullData,
-                  isExtension: true,
-                });
-              }
-              if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
-                rep.push({
-                  x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: stackedData[index],
-                  nullData,
-                  isExtension: true,
-                });
-              }
-              return rep;
-            }
-            return { x, y: stackedData[index], nullData };
-          }) ?? [];
-
-        const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
-
-        const linePath = d3Line<{
-          x: any;
-          y: [number, number];
-          nullData: boolean;
-          isExtension?: boolean;
-        }>()
-          .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
-          .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
-          .y((d) => yScale(d.y[1])!);
-
-        const d = linePath.curve(getCurveFactory(curve))(d3Data) || '';
-        return {
-          ...series[seriesId],
-          gradientId,
-          d,
-          seriesId,
-        };
-      });
-    });
-  }, [seriesData, xAxisIds, yAxisIds, xAxis, yAxis, getGradientId]);
-
-  return allData;
+  return useLinePlotData(xAxes, yAxes);
 };
 
 /**

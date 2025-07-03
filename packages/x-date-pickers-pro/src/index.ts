@@ -1,6 +1,8 @@
+// eslint-disable-next-line no-restricted-imports
 export * from '@mui/x-date-pickers';
 
 export * from './DateRangePickerDay';
+export * from './DateRangePickerDay2';
 
 // Fields
 export * from './MultiInputDateRangeField';

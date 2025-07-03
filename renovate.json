@@ -90,8 +90,14 @@
       ]
     },
     {
-      "groupName": "MUI Internal",
-      "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
+      "groupName": "Infra packages",
+      "matchPackageNames": ["@mui/internal-*", "@mui/docs"],
+      "followTag": "canary",
+      "schedule": null
+    },
+    {
+      "groupName": "Playwright",
+      "matchPackageNames": ["@playwright/test", "mcr.microsoft.com/playwright"]
     },
     {
       "matchDepTypes": ["action"],
@@ -104,7 +110,7 @@
     },
     {
       "groupName": "Vite & Vitest",
-      "matchPackageNames": ["@vitejs/**", "/vitest/"]
+      "matchPackageNames": ["@vitejs/**", "/vitest/", "esbuild"]
     },
     {
       "groupName": "date-fns-v2",

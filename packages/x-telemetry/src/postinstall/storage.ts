@@ -1,5 +1,4 @@
 import { randomBytes } from 'crypto';
-import Conf from 'conf';
 import path from 'path';
 import notifyAboutMuiXTelemetry from './notify';
 import getEnvironmentInfo from './get-environment-info';
@@ -22,14 +21,21 @@ function getStorageDirectory(distDir: string): string | undefined {
   return undefined;
 }
 
+interface ConfStorage {
+  get: (key: string, defaultValue?: string) => string | undefined;
+  set: (key: string, value: string) => void;
+  path: string;
+}
+
 export class TelemetryStorage {
-  public static init({ distDir }: { distDir: string }) {
+  public static async init({ distDir }: { distDir: string }) {
     const storageDirectory = getStorageDirectory(distDir);
-    let conf: Conf<any> | null = null;
+    let conf: ConfStorage | null = null;
     try {
       // `conf` incorrectly throws a permission error during initialization
       // instead of waiting for first use. We need to handle it, otherwise the
       // process may crash.
+      const { default: Conf } = await import('conf');
       conf = new Conf({ projectName: 'mui-x', cwd: storageDirectory });
     } catch (_) {
       conf = null;
@@ -38,7 +44,7 @@ export class TelemetryStorage {
     return new TelemetryStorage(conf);
   }
 
-  private constructor(private readonly conf: Conf<any> | null) {
+  private constructor(private readonly conf: ConfStorage | null) {
     this.notify();
   }
 

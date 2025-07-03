@@ -1,7 +1,7 @@
 import * as React from 'react';
 import InstallationInstructions from './InstallationInstructions';
 
-// #default-branch-switch
+// #npm-tag-reference
 
 const packages = {
   Community: '@mui/x-tree-view',

@@ -6,13 +6,12 @@ import type {
 } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import {
-  AxisDefaultized,
   AxisId,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
   PolarAxisDefaultized,
+  ComputedXAxis,
+  ComputedYAxis,
 } from '../../../../models/axis';
 import { ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
 import { ColorGetter } from './colorProcessor.types';
@@ -69,8 +68,8 @@ export type ItemTooltipWithMultipleValues<T extends 'radar' = 'radar'> = Pick<
 };
 
 export interface TooltipGetterAxesConfig {
-  x?: AxisDefaultized<any, any, ChartsXAxisProps>;
-  y?: AxisDefaultized<any, any, ChartsYAxisProps>;
+  x?: ComputedXAxis;
+  y?: ComputedYAxis;
   rotation?: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
   radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
 }
@@ -87,9 +86,10 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   | null;
 
 /**
- * Return an array of the axes that should trigger the tooltip.
- *
  * If `axisId` is set to undefined, the default axis will be used.
+ *
+ * @param {Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>} series A map of series ID to their series configuration.
+ * @returns {{ direction: Directions; axisId: AxisId | undefined }[]} an array of the axes that should trigger the tooltip.
  */
 export type AxisTooltipGetter<
   TSeriesType extends ChartSeriesType,

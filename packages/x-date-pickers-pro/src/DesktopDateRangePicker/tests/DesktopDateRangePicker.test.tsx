@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { spy, useFakeTimers, SinonFakeTimers } from 'sinon';
+import { spy } from 'sinon';
 import { fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,7 +15,8 @@ import {
   getFieldSectionsContainer,
   getTextbox,
 } from 'test/utils/pickers';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   within(screen.getByRole('grid', { name: picker })).getByRole('gridcell', { name });
@@ -481,7 +481,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     // test:unit does not call `blur` when focusing another element.
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should call onClose when blur the current field without prior change (multi input field)',
       async () => {
         const onChange = spy();
@@ -693,18 +693,32 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
+
+    it('should work with separate start and end "reference" dates', async () => {
+      const { user } = render(
+        <DesktopDateRangePicker
+          referenceDate={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-06')]}
+          defaultRangePosition="end"
+        />,
+      );
+
+      await openPickerAsync(user, {
+        type: 'date-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
+
+      expect(document.activeElement).to.equal(getPickerDay('6'));
+    });
   });
 
   describe('disabled dates', () => {
-    // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-    let timer: SinonFakeTimers | null = null;
-
     beforeEach(() => {
-      timer = useFakeTimers({ now: new Date(2018, 0, 10), toFake: ['Date'] });
+      vi.setSystemTime(new Date(2018, 0, 10));
     });
 
     afterEach(() => {
-      timer?.restore();
+      vi.useRealTimers();
     });
 
     it('should respect the disablePast prop', async () => {

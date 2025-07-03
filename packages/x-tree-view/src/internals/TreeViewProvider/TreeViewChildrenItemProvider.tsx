@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeViewContext } from './TreeViewContext';
@@ -8,10 +9,6 @@ import { selectorItemOrderedChildrenIds } from '../plugins/useTreeViewItems/useT
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
-
-if (process.env.NODE_ENV !== 'production') {
-  TreeViewChildrenItemContext.displayName = 'TreeViewChildrenItemContext';
-}
 
 interface TreeViewChildrenItemProviderProps {
   itemId: string | null;

@@ -12,11 +12,13 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 
 ### Data format
 
-To plot lines, a series must have a `data` property containing an array of numbers.
-This `data` array corresponds to y values.
+Line charts series should contain a `data` property containing an array of numbers.
+This `data` array corresponds to y-values.
 
-By default, those y values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
-To modify the x values, you should provide a `xAxis` with data property.
+You can specify x-values with the `xAxis` prop.
+This axis can have any `scaleType` and its `data` should have the same length as your series.
+
+By default, those y-values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
 
 {{"demo": "BasicLineChart.js"}}
 
@@ -214,22 +216,24 @@ The highlighted data has a mark regardless if it has an even or odd index.
 Line plots are made of three elements named `LineElement`, `AreaElement`, and `MarkElement`.
 Each element can be selected with the CSS class name `.MuiLineElement-root`, `.MuiAreaElement-root`, or `.MuiMarkElement-root`.
 
-If you want to select the element of a given series, you can use classes `.MuiLineElement-series-<seriesId>` with `<seriesId>` the id of the series you want to customize.
+If you want to select the element of a given series, you can use the `data-series` attribute.
 
 In the next example, each line style is customized with dashes, and marks are removed.
 The area of Germany's GDP also gets a custom gradient color.
 The definition of `myGradient` is passed as a children of the chart component.
 
 ```jsx
-sx={{
-  '& .MuiLineElement-root': {
-    strokeDasharray: '10 5',
-    strokeWidth: 4,
-  },
-  '& .MuiAreaElement-series-Germany': {
-    fill: "url('#myGradient')",
-  },
-}}
+<LineChart
+  sx={{
+    '& .MuiLineElement-root': {
+      strokeDasharray: '10 5',
+      strokeWidth: 4,
+    },
+    '& .MuiAreaElement-root[data-series="Germany"]': {
+      fill: "url('#myGradient')",
+    },
+  }}
+/>
 ```
 
 {{"demo": "CSSCustomization.js"}}
@@ -259,3 +263,48 @@ This will lead to strange behaviors.
 ```
 
 {{"demo": "LineAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+
+- `<AreaPlot />` renders the series areas.
+- `<LinePlot />` renders the series lines.
+- `<MarkPlot />` renders the series marks.
+- `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
+
+Here's how the Line Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        {/* Elements clipped inside the drawing area. */}
+        <AreaPlot />
+        <LinePlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <g data-drawing-container>
+        {/* Elements able to overflow the drawing area. */}
+        <MarkPlot />
+      </g>
+      <LineHighlightPlot />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+    <ChartsTooltip />
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
+
+See [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
+:::

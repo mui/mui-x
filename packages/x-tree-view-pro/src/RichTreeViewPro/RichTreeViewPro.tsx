@@ -135,6 +135,7 @@ RichTreeViewPro.propTypes = {
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
       getParentId: PropTypes.func.isRequired,
+      setEditedItem: PropTypes.func.isRequired,
       setIsItemDisabled: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
       setItemSelection: PropTypes.func.isRequired,
@@ -160,10 +161,16 @@ RichTreeViewPro.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The data source object.
+   */
   dataSource: PropTypes.shape({
     getChildrenCount: PropTypes.func.isRequired,
     getTreeItems: PropTypes.func.isRequired,
   }),
+  /**
+   * The data source cache object.
+   */
   dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,
@@ -202,13 +209,14 @@ RichTreeViewPro.propTypes = {
    */
   expansionTrigger: PropTypes.oneOf(['content', 'iconContainer']),
   /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`,
-   * the feature will be fully disabled and any property / method call will not have any effect.
+   * Used to determine the children of a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {R[]} The children of the item.
+   * @default (item) => item.children
    */
-  experimentalFeatures: PropTypes.shape({
-    lazyLoading: PropTypes.bool,
-  }),
+  getItemChildren: PropTypes.func,
   /**
    * Used to determine the id of a given item.
    *

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersInputClasses,
@@ -18,7 +18,7 @@ export interface PickersInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
 }
 
-interface PickerInputOwnerState extends PickerTextFieldOwnerState {
+export interface PickerInputOwnerState extends PickerTextFieldOwnerState {
   /**
    * `true` if the input has an underline, `false` otherwise.
    */
@@ -44,7 +44,10 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
         // @ts-ignore
         .filter((key) => (theme.vars ?? theme).palette[key].main)
         .map((color) => ({
-          props: { inputColor: color },
+          props: {
+            inputColor: color as PickerTextFieldOwnerState['inputColor'],
+            inputHasUnderline: true,
+          },
           style: {
             '&::after': {
               // @ts-ignore
@@ -53,7 +56,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
           },
         })),
       {
-        props: { disableUnderline: false },
+        props: { inputHasUnderline: true },
         style: {
           '&::after': {
             background: 'red',
@@ -161,6 +164,7 @@ const PickersInput = React.forwardRef(function PickersInput(
       slots={{ root: PickersInputRoot }}
       slotProps={{ root: { disableUnderline } }}
       {...other}
+      ownerState={ownerState}
       label={label}
       classes={classes}
       ref={ref as any}

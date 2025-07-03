@@ -1,14 +1,18 @@
 ---
-title: React Data Grid - Prompt Field component
+title: Data Grid - Prompt Field component
 productId: x-data-grid
 components: PromptField, PromptFieldRecord, PromptFieldControl, PromptFieldSend
 packageName: '@mui/x-data-grid-premium'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
-# Data Grid - Prompt Field [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Data Grid - Prompt Field component [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Provide users with a prompt field to interact with the AI assistant.</p>
+
+The prompt field is part of the [AI Assistant feature](/x/react-data-grid/ai-assistant/).
+
+You can use the Prompt Field component directly if you want to build your own UI for the AI Assistant.
 
 ## Basic usage
 

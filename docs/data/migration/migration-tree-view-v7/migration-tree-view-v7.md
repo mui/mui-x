@@ -1,5 +1,5 @@
 ---
-title: React Tree View - Migration from v7 to v8
+title: Tree View - Migration from v7 to v8
 productId: x-tree-view
 ---
 
@@ -61,7 +61,7 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
 # Tree View specific

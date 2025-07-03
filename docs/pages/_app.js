@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { CodeCopyProvider } from '@mui/docs/CodeCopy';
@@ -32,20 +31,19 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    // #default-branch-switch
+    // #npm-tag-reference
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
     return 'latest';
   }
-  const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
+  return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
 
-ponyfillGlobal.muiDocConfig = {
+globalThis.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    // #default-branch-switch
+    // #npm-tag-reference
     // TODO: Do we really need this? The condition does not make that much sense tbh!
     // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
     newDeps['@mui/material'] =
@@ -67,9 +65,12 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
+      // TODO: CHARTS-PREMIUM: uncomment when premium is available
+      // '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
+      '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',
     };
   },

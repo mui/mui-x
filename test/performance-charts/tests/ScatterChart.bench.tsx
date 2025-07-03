@@ -1,9 +1,10 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('ScatterChart', () => {
   const dataLength = 800;
@@ -19,7 +20,7 @@ describe('ScatterChart', () => {
     async () => {
       const { findByText } = render(
         <ScatterChart
-          xAxis={[{ data: xData, valueFormatter: (v) => v.toLocaleString('en-US') }]}
+          xAxis={[{ data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US') }]}
           series={[
             {
               data,

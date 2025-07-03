@@ -1,9 +1,10 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('BarChartPro', () => {
   const dataLength = 400;
@@ -20,7 +21,7 @@ describe('BarChartPro', () => {
     async () => {
       const { findByText } = render(
         <BarChartPro
-          xAxis={[{ id: 'x', scaleType: 'band', data: xData, zoom: { filterMode: 'discard' } }]}
+          xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
           series={[
             {

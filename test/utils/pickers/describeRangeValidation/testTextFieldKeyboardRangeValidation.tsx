@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { SinonFakeTimers, spy, useFakeTimers } from 'sinon';
+import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { act } from '@mui/internal-test-utils/createRenderer';
-import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (
@@ -27,7 +26,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 ) => {
   const { componentFamily, render, fieldType, withDate, withTime, setValue } = getOptions();
 
-  describeSkipIf(componentFamily !== 'field' || !setValue)('text field keyboard:', () => {
+  describe.skipIf(componentFamily !== 'field' || !setValue)('text field keyboard:', () => {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const setValue = getOptions().setValue!;
 
@@ -49,7 +48,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], fieldType);
     });
 
-    testSkipIf(!withDate)('should apply shouldDisableDate', () => {
+    it.skipIf(!withDate)('should apply shouldDisableDate', () => {
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
@@ -99,14 +98,14 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, false], fieldType);
     });
     describe('with fake timers', () => {
-      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-      let timer: SinonFakeTimers | null = null;
       beforeEach(() => {
-        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+        vi.setSystemTime(new Date(2018, 0, 1));
       });
+
       afterEach(() => {
-        timer?.restore();
+        vi.useRealTimers();
       });
+
       it('should apply disablePast', () => {
         const onErrorMock = spy();
         const now = adapterToUse.date();
@@ -190,7 +189,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], fieldType);
     });
 
-    testSkipIf(!withDate)('should apply minDate', () => {
+    it.skipIf(!withDate)('should apply minDate', () => {
       const onErrorMock = spy();
       render(<ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />);
 
@@ -223,7 +222,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, false], fieldType);
     });
 
-    testSkipIf(!withDate)('should apply maxDate', () => {
+    it.skipIf(!withDate)('should apply maxDate', () => {
       const onErrorMock = spy();
       render(<ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />);
 
@@ -248,7 +247,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], fieldType);
     });
 
-    testSkipIf(!withTime)('should apply minTime', () => {
+    it.skipIf(!withTime)('should apply minTime', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest onError={onErrorMock} minTime={adapterToUse.date('2018-03-10T12:00:00')} />,
@@ -284,7 +283,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, false], fieldType);
     });
 
-    testSkipIf(!withTime)('should apply maxTime', () => {
+    it.skipIf(!withTime)('should apply maxTime', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest onError={onErrorMock} maxTime={adapterToUse.date('2018-03-10T12:00:00')} />,

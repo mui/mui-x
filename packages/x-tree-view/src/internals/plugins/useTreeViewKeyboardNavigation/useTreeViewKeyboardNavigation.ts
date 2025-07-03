@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -152,7 +153,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           selectorIsItemEditable(store.value, itemId) &&
           !selectorIsItemBeingEdited(store.value, itemId)
         ) {
-          instance.setEditedItemId(itemId);
+          instance.setEditedItem(itemId);
         } else if (canToggleItemExpansion(itemId)) {
           instance.setItemExpansion({ event, itemId });
           event.preventDefault();

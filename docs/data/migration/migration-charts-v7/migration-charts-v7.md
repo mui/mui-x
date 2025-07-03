@@ -1,5 +1,5 @@
 ---
-title: React Charts - Migration from v7 to v8
+title: Charts - Migration from v7 to v8
 productId: x-charts
 ---
 
@@ -16,7 +16,7 @@ With the v8 you can now:
 
 - Have access to the charts internal outside of the SVG by using the `ChartDataProvider` (see the [new composition docs](/x/react-charts/composition/#structural-components)).
 - Easily customize the legend since it's now an HTML element, and not a SVG one (see the [new legend docs](/x/react-charts/legend/#customization)).
-- Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#overriding-content-2).
+- Simplified customization of the tooltip with a [new DX](#renaming-tooltip-slots-and-props) and [more demos](/x/react-charts/tooltip/#creating-a-tooltip).
 
 :::success
 This guide is also available in <a href="https://raw.githubusercontent.com/mui/mui-x/refs/heads/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md" target="_blank">Markdown format</a> to be referenced by AI tools like Copilot or Cursor to help you with the migration.
@@ -74,7 +74,7 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-<!-- #default-branch-switch -->
+<!-- #npm-tag-reference -->
 
 ```bash
 # Charts-specific

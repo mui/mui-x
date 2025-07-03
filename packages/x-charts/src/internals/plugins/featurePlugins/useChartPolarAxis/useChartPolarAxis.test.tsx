@@ -1,24 +1,18 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
-import { clearWarningsCache } from '@mui/x-internals/warning';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useChartPolarAxis } from './useChartPolarAxis';
 
 describe('useChartPolarAxis', () => {
   const { render } = createRenderer();
 
-  beforeEach(() => {
-    clearWarningsCache();
-  });
-
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  testSkipIf(!isJSDOM)('should throw an error when axis have duplicate ids', () => {
+  it.skipIf(!isJSDOM)('should throw an error when axis have duplicate ids', () => {
     const expectedError = [
-      'MUI X: The following axis ids are duplicated: qwerty.',
+      'MUI X Charts: The following axis ids are duplicated: qwerty.',
       'Please make sure that each axis has a unique id.',
     ].join('\n');
 
@@ -39,11 +33,11 @@ describe('useChartPolarAxis', () => {
 
   // can't catch render errors in the browser for unknown reason
   // tried try-catch + error boundary + window onError preventDefault
-  testSkipIf(!isJSDOM)(
+  it.skipIf(!isJSDOM)(
     'should throw an error when axis have duplicate ids across different directions (radius, rotation)',
     () => {
       const expectedError = [
-        'MUI X: The following axis ids are duplicated: qwerty.',
+        'MUI X Charts: The following axis ids are duplicated: qwerty.',
         'Please make sure that each axis has a unique id.',
       ].join('\n');
 

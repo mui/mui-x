@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { stub, SinonStub, spy } from 'sinon';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';
@@ -12,7 +11,7 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
@@ -380,7 +379,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
   });
 
   // JSDOM doesn't support scroll events
-  describeSkipIf(isJSDOM)('Auto-scroll', () => {
+  describe.skipIf(isJSDOM)('Auto-scroll', () => {
     beforeEach(() => {
       stub(window, 'requestAnimationFrame').callsFake(() => 0);
     });
@@ -455,8 +454,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       const gridRect = grid('root')!.getBoundingClientRect();
 
       await act(async () => {
-        virtualScroller.scrollTop = 30;
-        virtualScroller.dispatchEvent(new Event('scroll'));
+        virtualScroller.scrollTo({ top: 30 });
       });
       expect(virtualScroller.scrollTop).to.equal(30);
 

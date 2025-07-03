@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/system';
 import {
@@ -182,7 +183,7 @@ function AggregationSelect({
   return (
     <React.Fragment>
       <rootProps.slots.baseChip
-        label={aggFunc}
+        label={rootProps.aggregationFunctions[aggFunc]?.label ?? aggFunc}
         size="small"
         variant="outlined"
         ref={aggregationMenuTriggerRef}
@@ -211,7 +212,7 @@ function AggregationSelect({
               onClick={() => handleClick(func)}
               {...rootProps.slotProps?.baseMenuItem}
             >
-              {func}
+              {rootProps.aggregationFunctions[func]?.label ?? func}
             </rootProps.slots.baseMenuItem>
           ))}
         </rootProps.slots.baseMenuList>

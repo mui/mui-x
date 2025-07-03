@@ -43,7 +43,7 @@ It can also be moved with the `position: { vertical, horizontal }` property whic
 By default, the legend is placed above the charts.
 
 :::warning
-The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />`.
+The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />` props.
 In the second case, you are free to place the legend where you want.
 :::
 
@@ -51,7 +51,7 @@ In the second case, you are free to place the legend where you want.
 
 ### Hiding
 
-You can hide the legend with the `hideLegend` property of the Chart.
+You can hide the legend with the `hideLegend` prop of the Chart.
 
 {{"demo": "HiddenLegend.js"}}
 
@@ -89,6 +89,13 @@ The legend can be made scrollable by setting the `overflowY` for vertical legend
 Make sure that the legend container has a fixed height or width to enable scrolling.
 
 {{"demo": "ScrollableLegend.js"}}
+
+### Series styling
+
+You can use CSS to style the series in the legend.
+Each legend item has a `data-series` attribute where its value is the ID of the series it represents.
+
+{{"demo": "LegendStyleSeries.js"}}
 
 ### Custom component
 

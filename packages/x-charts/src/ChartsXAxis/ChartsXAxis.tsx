@@ -5,30 +5,28 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
-import { clampAngle } from '../internals/clampAngle';
 import { useIsHydrated } from '../hooks/useIsHydrated';
-import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
-import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisConfig, AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
+import { useTicks } from '../hooks/useTicks';
+import { AxisConfig, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
-import { useDrawingArea, ChartDrawingArea } from '../hooks/useDrawingArea';
-import { getWordsByLines } from '../internals/getWordsByLines';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useXAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
+import { shortenLabels } from './shortenLabels';
+import { getVisibleLabels } from './getVisibleLabels';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
-  const { classes, position } = ownerState;
+  const { classes, position, id } = ownerState;
   const slots = {
-    root: ['root', 'directionX', position],
+    root: ['root', 'directionX', position, `id-${id}`],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
@@ -43,143 +41,6 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) =
 const TICK_LABEL_GAP = 3;
 /* Gap between the axis label and tick labels. */
 const AXIS_LABEL_TICK_LABEL_GAP = 4;
-
-/* Returns a set of indices of the tick labels that should be visible.  */
-function getVisibleLabels(
-  xTicks: TickItemType[],
-  {
-    tickLabelStyle: style,
-    tickLabelInterval,
-    tickLabelMinGap,
-    reverse,
-    isMounted,
-    isPointInside,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized<ScaleName, any, ChartsXAxisProps>, 'reverse'> & {
-      isMounted: boolean;
-      tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
-      isPointInside: (position: number) => boolean;
-    },
-): Set<TickItemType> {
-  const getTickLabelSize = (tick: TickItemType) => {
-    if (!isMounted || tick.formattedValue === undefined) {
-      return { width: 0, height: 0 };
-    }
-
-    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
-
-    return {
-      width: Math.max(...tickSizes.map((size) => size.width)),
-      height: Math.max(tickSizes.length * tickSizes[0].height),
-    };
-  };
-
-  if (typeof tickLabelInterval === 'function') {
-    return new Set(xTicks.filter((item, index) => tickLabelInterval(item.value, index)));
-  }
-
-  // Filter label to avoid overlap
-  let previousTextLimit = 0;
-  const direction = reverse ? -1 : 1;
-
-  return new Set(
-    xTicks.filter((item, labelIndex) => {
-      const { offset, labelOffset } = item;
-      const textPosition = offset + labelOffset;
-
-      if (
-        labelIndex > 0 &&
-        direction * textPosition < direction * (previousTextLimit + tickLabelMinGap)
-      ) {
-        return false;
-      }
-
-      if (!isPointInside(textPosition)) {
-        return false;
-      }
-
-      /* Measuring text width is expensive, so we need to delay it as much as possible to improve performance. */
-      const { width, height } = getTickLabelSize(item);
-
-      const distance = getMinXTranslation(width, height, style?.angle);
-
-      const currentTextLimit = textPosition - (direction * distance) / 2;
-      if (
-        labelIndex > 0 &&
-        direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
-      ) {
-        // Except for the first label, we skip all label that overlap with the last accepted.
-        // Notice that the early return prevents `previousTextLimit` from being updated.
-        return false;
-      }
-
-      previousTextLimit = textPosition + (direction * distance) / 2;
-      return true;
-    }),
-  );
-}
-
-function shortenLabels(
-  visibleLabels: Set<TickItemType>,
-  drawingArea: Pick<ChartDrawingArea, 'left' | 'width' | 'right'>,
-  maxHeight: number,
-  isRtl: boolean,
-  tickLabelStyle: ChartsXAxisProps['tickLabelStyle'],
-) {
-  const shortenedLabels = new Map<TickItemType, string>();
-  const angle = clampAngle(tickLabelStyle?.angle ?? 0);
-
-  // Multiplying the space available to the left of the text position by leftBoundFactor returns the max width of the text.
-  // Same for rightBoundFactor
-  let leftBoundFactor = 1;
-  let rightBoundFactor = 1;
-
-  if (tickLabelStyle?.textAnchor === 'start') {
-    leftBoundFactor = Infinity;
-    rightBoundFactor = 1;
-  } else if (tickLabelStyle?.textAnchor === 'end') {
-    leftBoundFactor = 1;
-    rightBoundFactor = Infinity;
-  } else {
-    leftBoundFactor = 2;
-    rightBoundFactor = 2;
-  }
-
-  if (angle > 90 && angle < 270) {
-    [leftBoundFactor, rightBoundFactor] = [rightBoundFactor, leftBoundFactor];
-  }
-
-  if (isRtl) {
-    [leftBoundFactor, rightBoundFactor] = [rightBoundFactor, leftBoundFactor];
-  }
-
-  for (const item of visibleLabels) {
-    if (item.formattedValue) {
-      // That maximum width of the tick depends on its proximity to the axis bounds.
-      const width = Math.min(
-        (item.offset + item.labelOffset) * leftBoundFactor,
-        (drawingArea.left +
-          drawingArea.width +
-          drawingArea.right -
-          item.offset -
-          item.labelOffset) *
-          rightBoundFactor,
-      );
-
-      const doesTextFit = (text: string) =>
-        doesTextFitInRect(text, {
-          width,
-          height: maxHeight,
-          angle,
-          measureText: (string: string) => getStringSize(string, tickLabelStyle),
-        });
-
-      shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
-    }
-  }
-
-  return shortenedLabels;
-}
 
 const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
@@ -284,6 +145,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    direction: 'x',
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {
@@ -292,7 +154,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelMinGap,
     reverse,
     isMounted,
-    isPointInside: (x: number) => instance.isPointInside({ x, y: -1 }, { direction: 'x' }),
+    isXInside: instance.isXInside,
   });
 
   const axisLabelProps = useSlotProps({
@@ -362,7 +224,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
-        const showTick = instance.isPointInside({ x: tickOffset, y: -1 }, { direction: 'x' });
+        const showTick = instance.isXInside(tickOffset);
         const tickLabel = tickLabels.get(item);
         const showTickLabel = visibleLabels.has(item);
 

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -160,7 +161,7 @@ export const useGridRowSelection = (
    * API METHODS
    */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
-    (model) => {
+    (model, reason) => {
       if (
         props.signature === GridSignature.DataGrid &&
         !canHaveMultipleSelection &&
@@ -176,10 +177,13 @@ export const useGridRowSelection = (
       const currentModel = gridRowSelectionStateSelector(apiRef);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        apiRef.current.setState((state) => ({
-          ...state,
-          rowSelection: props.rowSelection ? model : emptyModel,
-        }));
+        apiRef.current.setState(
+          (state) => ({
+            ...state,
+            rowSelection: props.rowSelection ? model : emptyModel,
+          }),
+          reason,
+        );
       }
     },
     [apiRef, logger, props.rowSelection, props.signature, canHaveMultipleSelection],
@@ -250,7 +254,7 @@ export const useGridRowSelection = (
           }
         }
 
-        apiRef.current.setRowSelectionModel(newSelectionModel);
+        apiRef.current.setRowSelectionModel(newSelectionModel, 'singleRowSelection');
       } else {
         logger.debug(`Toggling selection for row ${id}`);
 
@@ -297,7 +301,7 @@ export const useGridRowSelection = (
           (newSelectionModel.type === 'include' && newSelectionModel.ids.size < 2) ||
           canHaveMultipleSelection;
         if (isSelectionValid) {
-          apiRef.current.setRowSelectionModel(newSelectionModel);
+          apiRef.current.setRowSelectionModel(newSelectionModel, 'singleRowSelection');
         }
       }
     },
@@ -406,7 +410,7 @@ export const useGridRowSelection = (
         (newSelectionModel.type === 'include' && newSelectionModel.ids.size < 2) ||
         canHaveMultipleSelection;
       if (isSelectionValid) {
-        apiRef.current.setRowSelectionModel(newSelectionModel);
+        apiRef.current.setRowSelectionModel(newSelectionModel, 'multipleRowsSelection');
       }
     },
     [
@@ -601,7 +605,7 @@ export const useGridRowSelection = (
             apiRef.current.selectRows(Array.from(newSelectionModel.ids), true, true);
           }
         } else {
-          apiRef.current.setRowSelectionModel(newSelectionModel);
+          apiRef.current.setRowSelectionModel(newSelectionModel, 'multipleRowsSelection');
         }
       }
     },
@@ -715,7 +719,9 @@ export const useGridRowSelection = (
     (value: boolean) => {
       const filterModel = gridFilterModelSelector(apiRef);
       const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
-      const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
+      const hasFilters =
+        filterModel.items.length > 0 || quickFilterModel?.some((val) => val.length);
+
       if (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&

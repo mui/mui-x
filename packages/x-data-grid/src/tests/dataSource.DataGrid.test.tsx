@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGrid,
@@ -13,7 +12,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
 
@@ -46,7 +45,7 @@ const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, ve
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
+describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
   const editRowSpy = spy();
@@ -304,6 +303,37 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         expect(onDataSourceError.callCount).to.equal(1);
       });
     });
+
+    it('should not call `onDataSourceError` after unmount', async () => {
+      const onDataSourceError = spy();
+      const { promise, reject } = Promise.withResolvers<GridGetRowsResponse>();
+      const getRows = spy(() => promise);
+      const dataSource: GridDataSource = {
+        getRows,
+      };
+      const { unmount } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'id' }]}
+            dataSource={dataSource}
+            onDataSourceError={onDataSourceError}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+            }}
+            pagination
+            pageSizeOptions={pageSizeOptions}
+            disableVirtualization
+          />
+        </div>,
+      );
+      await waitFor(() => {
+        expect(getRows.called).to.equal(true);
+      });
+      unmount();
+      reject();
+      await promise.catch(() => 'rejected');
+      expect(onDataSourceError.notCalled).to.equal(true);
+    });
   });
 
   describe('Editing', () => {
@@ -350,6 +380,49 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await waitFor(() => {
         expect(clearSpy.callCount).to.equal(1);
       });
+    });
+
+    // Context: https://github.com/mui/mui-x/pull/17684
+    it('should call `editRow()` when a computed column is updated', async () => {
+      const { user } = render(
+        <TestDataSource
+          dataSetOptions={{ ...dataSetOptions, maxColumns: 3 }}
+          columns={[
+            {
+              field: 'commodity',
+            },
+            {
+              field: 'computed',
+              editable: true,
+              valueGetter: (value, row) => `${row.commodity}-computed`,
+              valueSetter: (value, row) => {
+                const [commodity] = value!.toString().split('-');
+                return { ...row, commodity: `${commodity}-edited` };
+              },
+            },
+          ]}
+          dataSourceCache={null}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+
+      await waitFor(() => {
+        expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+      });
+      const cell = getCell(1, 1);
+      await user.click(cell);
+      expect(cell).toHaveFocus();
+
+      editRowSpy.resetHistory();
+
+      // edit the cell
+      await user.keyboard('{Enter}{Enter}');
+
+      expect(editRowSpy.callCount).to.equal(1);
+      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
     });
   });
 });

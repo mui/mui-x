@@ -1,8 +1,10 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
@@ -424,7 +426,7 @@ export const useGridCellEditing = (
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field);
 
       if (props.dataSource?.updateRow) {
-        if (row[field] === rowUpdate[field]) {
+        if (isDeepEqual(row, rowUpdate)) {
           finishCellEditMode();
           return;
         }

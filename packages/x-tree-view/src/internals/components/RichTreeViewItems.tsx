@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
@@ -14,10 +15,6 @@ import { useTreeViewContext } from '../TreeViewProvider';
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
 >(null);
-
-if (process.env.NODE_ENV !== 'production') {
-  RichTreeViewItemsContext.displayName = 'RichTreeViewItemsProvider';
-}
 
 const WrappedTreeItem = React.memo(function WrappedTreeItem({
   itemSlot,

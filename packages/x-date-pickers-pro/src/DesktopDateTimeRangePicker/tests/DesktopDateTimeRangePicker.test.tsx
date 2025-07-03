@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
@@ -8,21 +7,18 @@ import {
   getFieldSectionsContainer,
   expectFieldValueV7,
 } from 'test/utils/pickers';
-import { SinonFakeTimers, useFakeTimers } from 'sinon';
-import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
+import { vi } from 'vitest';
+import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {
   const { render } = createPickerRenderer();
 
-  // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
-  let timer: SinonFakeTimers | null = null;
-
   beforeEach(() => {
-    timer = useFakeTimers({ now: new Date(2018, 0, 10, 10, 16, 0), toFake: ['Date'] });
+    vi.setSystemTime(new Date(2018, 0, 10, 10, 16, 0));
   });
 
   afterEach(() => {
-    timer?.restore();
+    vi.useRealTimers();
   });
 
   describe('value selection', () => {
@@ -97,6 +93,34 @@ describe('<DesktopDateTimeRangePicker />', () => {
       expect(meridiem).toHaveFocus();
       const sectionsContainer = getFieldSectionsContainer();
       expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
+    });
+
+    it('should work with separate start and end "reference" dates', async () => {
+      const { user } = render(
+        <DesktopDateTimeRangePicker
+          referenceDate={[
+            adapterToUse.date('2018-01-01T10:15:00'),
+            adapterToUse.date('2018-01-06T14:20:00'),
+          ]}
+        />,
+      );
+
+      await openPickerAsync(user, {
+        type: 'date-time-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
+
+      expect(document.activeElement).to.equal(screen.getByRole('gridcell', { name: '1' }));
+
+      await user.click(screen.getByRole('gridcell', { name: '1' }));
+      expect(screen.getByRole('option', { name: '10 hours', selected: true })).not.to.equal(null);
+      expect(screen.getByRole('option', { name: '15 minutes', selected: true })).not.to.equal(null);
+
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
+      expect(screen.getByRole('option', { name: '2 hours', selected: true })).not.to.equal(null);
+      expect(screen.getByRole('option', { name: '20 minutes', selected: true })).not.to.equal(null);
     });
   });
 

@@ -22,7 +22,11 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
     '!docsx/data/data-grid/filtering/CustomInputComponent', // Needs interaction
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
-    '!docsx/data/charts/tooltip/*', // Needs interaction
+    '!docsx/data/charts/tooltip/Custom*', // Composition example
+    '!docsx/data/charts/tooltip/Item*', // Composition example
+    '!docsx/data/data-grid/server-side-data/useNestedPagination',
+    '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
+    '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
   ],
   { eager: true, import: 'default' },
 );

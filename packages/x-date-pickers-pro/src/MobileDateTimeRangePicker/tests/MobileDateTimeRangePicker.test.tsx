@@ -1,26 +1,34 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  openPicker,
+  openPickerAsync,
   getFieldSectionsContainer,
   expectFieldValueV7,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
+import { vi } from 'vitest';
 
 describe('<MobileDateTimeRangePicker />', () => {
-  const { render } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 10, 10, 16, 0),
-    clockOptions: { toFake: ['Date'] },
-  });
+  const { render } = createPickerRenderer();
 
   describe('value selection', () => {
+    beforeEach(() => {
+      vi.setSystemTime(new Date(2018, 0, 10, 10, 16, 0));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it('should cycle focused views among the visible step after selection', async () => {
       const { user } = render(<MobileDateTimeRangePicker />);
 
-      openPicker({ type: 'date-time-range', initialFocus: 'start', fieldType: 'single-input' });
+      await openPickerAsync(user, {
+        type: 'date-time-range',
+        initialFocus: 'start',
+        fieldType: 'single-input',
+      });
 
       const day = screen.getByRole('gridcell', { name: '10' });
       expect(day).toHaveFocus();

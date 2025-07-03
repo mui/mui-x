@@ -105,7 +105,19 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
-### CSS 🚧
+### CSS
+
+You can target scatter markers with the following CSS selectors:
+
+- `[data-series='<series id>']` Selects the group containing markers of the series with the given id.
+- `[data-highlighted=true]` Selects markers with highlighted state.
+- `[data-faded=true]` Selects markers with faded state.
+
+To select all marker groups, use the `scatterClasses.root` class name.
+
+Here is an example that customizes the look of highlighted items depending on the series they belong to.
+
+{{"demo": "ScatterCSSSelectors.js"}}
 
 ### Shape
 
@@ -132,3 +144,36 @@ This hook returns the order of the series and information about the series thems
 See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
 
 {{"demo": "CustomScatter.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
+
+Here's how the Scatter Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsAxis />
+      <ChartsGrid />
+      <g data-drawing-container>
+        {/* Elements able to overflow the drawing area. */}
+        <ScatterPlot />
+      </g>
+      <ChartsOverlay />
+      <ChartsAxisHighlight />
+    </ChartsSurface>
+    <ChartsTooltip trigger="item" />
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
+
+See the [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
+:::

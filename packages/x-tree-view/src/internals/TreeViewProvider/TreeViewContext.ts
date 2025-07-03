@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { TreeViewAnyPluginSignature } from '../models';
 import { TreeViewContextValue } from './TreeViewProvider.types';
@@ -6,10 +7,6 @@ import { TreeViewContextValue } from './TreeViewProvider.types';
  * @ignore - internal component.
  */
 export const TreeViewContext = React.createContext<TreeViewContextValue<any> | null>(null);
-
-if (process.env.NODE_ENV !== 'production') {
-  TreeViewContext.displayName = 'TreeViewContext';
-}
 
 export const useTreeViewContext = <
   TSignatures extends readonly TreeViewAnyPluginSignature[],

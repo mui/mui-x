@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
@@ -129,7 +130,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     (params) => setDragCol(params.field),
     [],
   );
-  const handleColumnReorderStop = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
+  const handleColumnReorderStop = React.useCallback<GridEventListener<'columnHeaderDragEndNative'>>(
     () => setDragCol(''),
     [],
   );
@@ -155,7 +156,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   useGridEvent(apiRef, 'columnResizeStart', handleColumnResizeStart);
   useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
   useGridEvent(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
-  useGridEvent(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
+  useGridEvent(apiRef, 'columnHeaderDragEndNative', handleColumnReorderStop);
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {

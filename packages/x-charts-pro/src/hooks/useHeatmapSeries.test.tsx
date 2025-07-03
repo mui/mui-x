@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useHeatmapSeries, useHeatmapSeriesContext } from './useHeatmapSeries';
 import { Heatmap } from '../Heatmap';
@@ -48,7 +47,6 @@ describe('useHeatmapSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useHeatmapSeries', () => {
   it('should return the specific heatmap series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useHeatmapSeries('1'), options);
@@ -67,7 +65,7 @@ describe('useHeatmapSeries', () => {
 
   it('should return undefined series when invalid seriesIds are provided', () => {
     const message = [
-      `MUI X: The following ids provided to "useHeatmapSeries" could not be found: "3".`,
+      `MUI X Charts: The following ids provided to "useHeatmapSeries" could not be found: "3".`,
       `Make sure that they exist and their series are using the "heatmap" series type.`,
     ].join('\n');
 

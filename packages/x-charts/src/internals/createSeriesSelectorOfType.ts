@@ -37,7 +37,7 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
         const formattedIds = failedIds.map((v) => JSON.stringify(v)).join(', ');
         const fnName = `use${seriesType.charAt(0).toUpperCase()}${seriesType.slice(1)}Series`;
         warnOnce([
-          `MUI X: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
+          `MUI X Charts: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
           `Make sure that they exist and their series are using the "${seriesType}" series type.`,
         ]);
       }
@@ -48,13 +48,13 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
   return (ids?: SeriesId | SeriesId[]) => {
     const store = useStore();
 
-    return useSelector(store, selectorSeriesWithIds, ids, fastArrayCompare);
+    return useSelector(store, selectorSeriesWithIds, [ids], fastArrayCompare);
   };
 }
 
 export function createAllSeriesSelectorOfType<T extends keyof ChartsSeriesConfig>(seriesType: T) {
   const selectorSeries = createSelector(
-    selectorChartSeriesProcessed,
+    [selectorChartSeriesProcessed],
     (processedSeries) => processedSeries[seriesType],
   );
 

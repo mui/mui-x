@@ -9,9 +9,17 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["node", "@mui/material/themeCssVarsAugmentation", "@emotion/styled", "csstype"]
+    "types": [
+      "../../mui-env.d.ts",
+      "@mui/material/themeCssVarsAugmentation",
+      "@emotion/styled",
+      "csstype"
+    ]
   },
-  "references": [{ "path": "../x-internals/tsconfig.build.json" }],
+  "references": [
+    { "path": "../x-internals/tsconfig.build.json" },
+    { "path": "../x-internal-gestures/tsconfig.build.json" }
+  ],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

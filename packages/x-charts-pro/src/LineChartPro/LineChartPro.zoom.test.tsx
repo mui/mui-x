@@ -1,13 +1,24 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable no-await-in-loop */
 import * as React from 'react';
-import { expect } from 'chai';
-import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
 
-describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
+const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
+  const axisData = Array.from(
+    document.querySelectorAll(
+      `.MuiChartsAxis-direction${axis.toUpperCase()} .MuiChartsAxis-tickContainer`,
+    ),
+  )
+    .map((v) => v.textContent)
+    .filter(Boolean);
+
+  return axisData as string[];
+};
+
+describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   const { render } = createRenderer();
 
   const lineChartProps = {
@@ -38,33 +49,14 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     ),
   };
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  beforeEach(() => {
-    // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  // eslint-disable-next-line mocha/no-top-level-hooks
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
-  it('should zoom on wheel', async function test() {
-    this.timeout(10000);
+  it('should zoom on wheel', async () => {
     const onZoomChange = sinon.spy();
     const { user } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
       options,
     );
 
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
     const svg = document.querySelector('svg')!;
 
@@ -84,10 +76,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     }
 
     expect(onZoomChange.callCount).to.equal(200);
-    expect(screen.queryByText('A')).to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
 
     // scroll back
     for (let i = 0; i < 200; i += 1) {
@@ -97,10 +86,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     }
 
     expect(onZoomChange.callCount).to.equal(400);
-    expect(screen.queryByText('A')).not.to.equal(null);
-    expect(screen.queryByText('B')).not.to.equal(null);
-    expect(screen.queryByText('C')).not.to.equal(null);
-    expect(screen.queryByText('D')).not.to.equal(null);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
@@ -115,10 +101,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
         options,
       );
 
-      expect(screen.queryByText('A')).to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).to.equal(null);
-      expect(screen.queryByText('D')).not.to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
       const svg = document.querySelector('svg')!;
 
@@ -144,10 +127,7 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(1);
-      expect(screen.queryByText('A')).to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).not.to.equal(null);
-      expect(screen.queryByText('D')).to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
       await user.pointer([
@@ -171,10 +151,124 @@ describeSkipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(2);
-      expect(screen.queryByText('A')).not.to.equal(null);
-      expect(screen.queryByText('B')).to.equal(null);
-      expect(screen.queryByText('C')).to.equal(null);
-      expect(screen.queryByText('D')).to.equal(null);
+      expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
+  });
+
+  it('should pan with area series enabled', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <LineChartPro
+        {...lineChartProps}
+        series={[
+          {
+            data: [10, 20, 30, 40],
+            area: true,
+          },
+        ]}
+        initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
+        onZoomChange={onZoomChange}
+      />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['D']);
+
+    const target = document.querySelector('.MuiAreaElement-root')!;
+
+    // We drag from right to left to pan the view
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target,
+        coords: { x: 50, y: 50 },
+      },
+      {
+        target,
+        coords: { x: 150, y: 50 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target,
+        coords: { x: 150, y: 50 },
+      },
+    ]);
+    // Wait the animation frame
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.equal(1);
+    expect(getAxisTickValues('x')).to.deep.equal(['C']);
+
+    // Continue dragging to see more data points
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target,
+        coords: { x: 50, y: 50 },
+      },
+      {
+        target,
+        coords: { x: 250, y: 50 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target,
+        coords: { x: 250, y: 50 },
+      },
+    ]);
+    // Wait the animation frame
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.equal(2);
+    expect(getAxisTickValues('x')).to.deep.equal(['A']);
+  });
+
+  it('should zoom on pinch', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+    const svg = document.querySelector('svg')!;
+
+    await user.pointer([
+      {
+        keys: '[TouchA>]',
+        target: svg,
+        coords: { x: 55, y: 45 },
+      },
+      {
+        keys: '[TouchB>]',
+        target: svg,
+        coords: { x: 45, y: 55 },
+      },
+      {
+        pointerName: 'TouchA',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        pointerName: 'TouchB',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+      {
+        keys: '[/TouchA]',
+        target: svg,
+        coords: { x: 65, y: 25 },
+      },
+      {
+        keys: '[/TouchB]',
+        target: svg,
+        coords: { x: 25, y: 65 },
+      },
+    ]);
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.be.above(0);
+    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
 });

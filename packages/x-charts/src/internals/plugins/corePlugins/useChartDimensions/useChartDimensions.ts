@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
+import { useSelector } from '../../../store/useSelector';
 import { DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
@@ -173,50 +174,45 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   if (process.env.NODE_ENV !== 'production') {
     if (stateRef.current.displayError && params.width === undefined && innerWidth === 0) {
       console.error(
-        `MUI X: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
+        `MUI X Charts: ChartContainer does not have \`width\` prop, and its container has no \`width\` defined.`,
       );
       stateRef.current.displayError = false;
     }
     if (stateRef.current.displayError && params.height === undefined && innerHeight === 0) {
       console.error(
-        `MUI X: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
+        `MUI X Charts: ChartContainer does not have \`height\` prop, and its container has no \`height\` defined.`,
       );
       stateRef.current.displayError = false;
     }
   }
 
+  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const isXInside = React.useCallback(
+    (x: number) => x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width,
+    [drawingArea.left, drawingArea.width],
+  );
+
+  const isYInside = React.useCallback(
+    (y: number) => y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height,
+    [drawingArea.height, drawingArea.top],
+  );
   const isPointInside = React.useCallback(
-    (
-      { x, y }: { x: number; y: number },
-      options?: {
-        targetElement?: Element;
-        direction?: 'x' | 'y';
-      },
-    ) => {
+    (x: number, y: number, targetElement?: Element | EventTarget | null) => {
       // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
-      if (options?.targetElement && options?.targetElement.closest('[data-drawing-container]')) {
+      if (
+        targetElement &&
+        'closest' in targetElement &&
+        targetElement.closest('[data-drawing-container]')
+      ) {
         return true;
       }
 
-      const drawingArea = selectorChartDrawingArea(store.value);
-
-      const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
-      const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
-
-      if (options?.direction === 'x') {
-        return isInsideX;
-      }
-
-      if (options?.direction === 'y') {
-        return isInsideY;
-      }
-
-      return isInsideX && isInsideY;
+      return isXInside(x) && isYInside(y);
     },
-    [store.value],
+    [isXInside, isYInside],
   );
 
-  return { instance: { isPointInside } };
+  return { instance: { isPointInside, isXInside, isYInside } };
 };
 
 useChartDimensions.params = {

@@ -27,10 +27,13 @@ const defaultAlias = {
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
+  '@mui/x-charts-premium': resolveAliasPath('./packages/x-charts-premium/src'),
   '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
+  '@mui/x-scheduler': resolveAliasPath('./packages/x-scheduler'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
+  '@mui/x-internal-gestures': resolveAliasPath('./packages/x-internal-gestures/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
@@ -92,6 +95,14 @@ module.exports = function getBabelConfig(api) {
       },
     ],
     [
+      '@mui/internal-babel-plugin-display-name',
+      {
+        allowedCallees: {
+          '@mui/x-internals/forwardRef': ['forwardRef'],
+        },
+      },
+    ],
+    [
       'transform-inline-environment-variables',
       {
         include: [
@@ -104,30 +115,6 @@ module.exports = function getBabelConfig(api) {
       },
     ],
   ];
-
-  if (process.env.NODE_ENV === 'test') {
-    plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v2` version installed as `date-fns-v2` for tests.
-    plugins.push([
-      'babel-plugin-replace-imports',
-      {
-        test: /date-fns/i,
-        replacer: 'date-fns-v2',
-        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsV2/',
-      },
-    ]);
-    plugins.push([
-      'babel-plugin-replace-imports',
-      {
-        test: /date-fns-jalali/i,
-        replacer: 'date-fns-jalali-v2',
-        // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
-        filenameIncludes: 'src/AdapterDateFnsJalaliV2/',
-      },
-      'replace-date-fns-jalali-imports',
-    ]);
-  }
 
   if (process.env.NODE_ENV === 'production') {
     if (!process.env.TEST_BUILD) {
@@ -185,18 +172,6 @@ module.exports = function getBabelConfig(api) {
       /prettier/,
     ],
     env: {
-      coverage: {
-        plugins: [
-          'babel-plugin-istanbul',
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
-            },
-          ],
-        ],
-      },
       development: {
         plugins: [
           [
@@ -204,18 +179,6 @@ module.exports = function getBabelConfig(api) {
             {
               alias: defaultAlias,
               root: ['./'],
-            },
-          ],
-        ],
-      },
-      test: {
-        sourceMaps: 'both',
-        plugins: [
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
             },
           ],
         ],

@@ -8,6 +8,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 
 function ExportParamsSelector({ apiRef }) {
   const [type, setType] = React.useState('image/png');
@@ -15,13 +16,7 @@ function ExportParamsSelector({ apiRef }) {
   const quality = Math.max(0, Math.min(1, Number.parseFloat(rawQuality)));
 
   return (
-    <Stack
-      direction="row"
-      justifyContent="space-between"
-      flexWrap="wrap"
-      gap={2}
-      sx={{ width: '100%' }}
-    >
+    <Stack justifyContent="space-between" gap={2} sx={{ width: '100%' }}>
       <FormControl fullWidth>
         <FormLabel id="image-format-radio-buttons-group-label">
           Image Format
@@ -59,18 +54,20 @@ function ExportParamsSelector({ apiRef }) {
           helperText="Only applicable to lossy formats."
         />
       </FormControl>
-      <Button
-        variant="outlined"
-        onClick={() => apiRef.current?.exportAsImage({ type, quality })}
-      >
-        Export Image
-      </Button>
+      <div>
+        <Button
+          onClick={() => apiRef.current.exportAsImage({ type, quality })}
+          variant="contained"
+        >
+          Export Image
+        </Button>
+      </div>
     </Stack>
   );
 }
 
 export default function ExportChartAsImage() {
-  const apiRef = React.useRef(undefined);
+  const apiRef = useChartProApiRef();
 
   return (
     <Stack width="100%" gap={2}>
