@@ -12,6 +12,7 @@ _Jul 3, 2025_
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add `useChartProApiRef` for easier access to the API
+- 📆 Support different start and end `referenceDate` props on range components
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 - 🌎 Improve Greek (el-GR) translations on the Charts
@@ -103,6 +104,7 @@ Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 - [code-infra] Migrate to flat eslint config (#18562) @brijeshb42
 - [code-infra] Refactor eslint config (#18643) @LukasTy
 - [infra] Add renovatebot rule for latest infra packages (#18609) @Janpot
+- [infra] Move pushArgos script to code-infra (#18667) @Janpot
 - [infra] Updates release script to fetch latest major version from upstream (#18552) @michelengelen
 - [release] Add missing contributor to changelog (#18561) @bernardobelchior
 
