@@ -37,9 +37,8 @@ const GridChartsPanelHeader = styled('div', {
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: vars.spacing(1),
-  padding: vars.spacing(1, 0.75, 0, 1.5),
+  gap: vars.spacing(0.25),
+  padding: vars.spacing(1, 0.5, 0, 0.75),
   boxSizing: 'border-box',
 });
 
@@ -49,6 +48,8 @@ const GridChartsPanelTitle = styled('div', {
 })<{ ownerState: OwnerState }>({
   font: vars.typography.font.large,
   fontWeight: vars.typography.fontWeight.medium,
+  marginLeft: vars.spacing(0.5),
+  marginRight: 'auto',
 });
 
 const GridChartsPanelChartSelection = styled('button', {
@@ -58,13 +59,18 @@ const GridChartsPanelChartSelection = styled('button', {
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(0.25),
-  padding: 0,
+  padding: vars.spacing(0.75, 0.5),
+  borderRadius: vars.radius.base,
   font: vars.typography.font.large,
   fontWeight: vars.typography.fontWeight.medium,
   cursor: 'pointer',
   border: 'none',
   background: 'none',
   outline: 'none',
+  marginRight: 'auto',
+  '&:hover, &:focus-visible': {
+    backgroundColor: vars.colors.interactive.hover,
+  },
 });
 
 function GridChartsPanelChartSelector(props: {
@@ -185,10 +191,7 @@ function GridChartsPanel(_: GridChartsPanelProps) {
         label: apiRef.current.getLocaleText('chartsTabChart'),
         children: (
           <GridChartsPanelChart
-            charts={chartStateLookup}
-            activeChartId={activeChartId}
             selectedChartType={chartStateLookup[activeChartId]?.type}
-            onChartSyncChange={handleChartSyncChange}
             onChartTypeChange={handleChartTypeChange}
           />
         ),
@@ -204,7 +207,7 @@ function GridChartsPanel(_: GridChartsPanelProps) {
         children: <GridChartsPanelCustomize activeChartId={activeChartId} />,
       },
     ],
-    [apiRef, activeChartId, chartStateLookup, handleChartSyncChange, handleChartTypeChange],
+    [apiRef, activeChartId, chartStateLookup, handleChartTypeChange],
   );
 
   // TODO: render a placeholder if there are no charts available - use the locale text `chartsConfigurationNoCharts`
@@ -217,6 +220,22 @@ function GridChartsPanel(_: GridChartsPanelProps) {
         ) : (
           <GridChartsPanelTitle ownerState={rootProps}>Charts</GridChartsPanelTitle>
         )}
+        <rootProps.slots.baseTooltip title={rootProps.localeText.chartsSyncButtonLabel}>
+          <rootProps.slots.baseToggleButton
+            value="sync"
+            aria-label={rootProps.localeText.chartsSyncButtonLabel}
+            selected={chartStateLookup[activeChartId]?.synced}
+            onClick={() => {
+              handleChartSyncChange(!chartStateLookup[activeChartId]?.synced);
+            }}
+          >
+            {chartStateLookup[activeChartId]?.synced ? (
+              <rootProps.slots.chartsSyncIcon fontSize="small" />
+            ) : (
+              <rootProps.slots.chartsSyncDisabledIcon fontSize="small" />
+            )}
+          </rootProps.slots.baseToggleButton>
+        </rootProps.slots.baseTooltip>
         <rootProps.slots.baseIconButton
           onClick={() => {
             apiRef.current.setChartsPanelOpen(false);
