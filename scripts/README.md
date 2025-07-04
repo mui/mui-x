@@ -72,7 +72,7 @@ In case of a problem, another method to generate the changelog is available at t
 
 1. Checkout the last version of the working branch
 2. `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages)
-3. `pnpm release:publish` (release the versions on npm, you need your 2FA device)
+3. `pnpm release:publish --publish-branch v7.x` (release the versions on npm, you need your 2FA device)
 4. `pnpm release:tag` (push the newly created tag)
 
 > [!WARNING]
