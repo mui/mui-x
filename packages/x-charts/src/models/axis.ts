@@ -79,10 +79,12 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableLine?: boolean;
   /**
-   * If true, the ticks are disabled.
+   * Defines if the axis ticks should be displayed.
+   * - `true`, all ticks will be removed.
+   * - a filtering function of the form (value, index) => boolean. If the function returns `true`, the tick will be displayed.
    * @default false
    */
-  disableTicks?: boolean;
+  disableTicks?: boolean | ((value: any, index: number) => boolean);
   /**
    * The fill color of the axis text.
    * @default 'currentColor'
@@ -131,6 +133,11 @@ export interface ChartsAxisProps extends TickParams {
    * @default {}
    */
   slotProps?: Partial<ChartsAxisSlotProps>;
+  /**
+   * Used to group axes together in a chart.
+   * A grouped axis' ticks will will start at the same position as the first axis in the group.
+   */
+  groupId?: string;
   sx?: SxProps;
 }
 
@@ -539,6 +546,7 @@ export type DefaultedAxis<
   AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
 > = AxisConfig<S, V, AxisProps> & {
   zoom: DefaultizedZoomOptions | undefined;
+  groupStartOffset: number | undefined;
 };
 /**
  * The x-axis configuration with missing values filled with default values.
