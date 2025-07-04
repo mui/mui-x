@@ -30,7 +30,7 @@ export default function ControlledAxisHighlight() {
   return (
     <Stack spacing={2} alignItems={'center'} sx={{ width: '100%' }}>
       <FormControl>
-        <FormLabel id="axis-index-radio-group">Item ID</FormLabel>
+        <FormLabel id="axis-index-radio-group">Highlighted index</FormLabel>
         <RadioGroup
           aria-labelledby="axis-index-radio-group"
           name="radio-buttons-group"
@@ -49,12 +49,12 @@ export default function ControlledAxisHighlight() {
         <BarChart
           {...barChartsProps}
           highlightedAxis={highlightedAxis}
-          onAxisInteraction={(newState) => setHighlightedAxis(newState)}
+          onHighlightedAxisChange={(newState) => setHighlightedAxis(newState)}
         />
         <LineChart
           {...lineChartsProps}
           highlightedAxis={highlightedAxis}
-          onAxisInteraction={(newState) => setHighlightedAxis(newState)}
+          onHighlightedAxisChange={(newState) => setHighlightedAxis(newState)}
         />
       </Box>
     </Stack>

@@ -54,26 +54,24 @@ You can set the `highlightedItem` value based on inputs, and sync it when the us
 ## Controlled axis highlight
 
 The highlight can be controlled by using `highlightedAxis` prop.
-Its value can be `null` to remove axis highlight, or an object `{ direction: 'x' | 'y', axisId: string, dataIndex: number }`.
+Its value is an array of objects `{ axisId: string, dataIndex: number }`.
+An empty array meaning no highlight.
 
-The `onAxisInteraction` handler is trigger each time the pointer crosses the boundaries between two axis values.
-Its parameter is an array of objects `{ direction, axisId, dataIndex }`.
+The `onHighlightedAxisChange` handler is triggered each time the pointer crosses the boundaries between two axis values.
+Its parameter is an array of objects `{ axisId, dataIndex }`.
 One per axis.
-Axes without data are ignored by the handler.
-
-The handler gets an array of objects.
-Whereas the controlled value only accept one object.
+Axes without a `data` property are ignored by the handler.
 
 :::warning
-The `onAxisInteraction` can be triggered at a high frequency when user move their pointer on the chart.
+The `onHighlightedAxisChange` can be triggered at a high frequency when the user moves their pointer over the chart.
 
-To avoid performance issues, avoid defining object in the props which creates a new reference at each render.
-Either define them outside the component, or memoize them.
+To avoid performance issues, avoid re-creating objects that are passed to props on every render.
+Prefer defining them outside the component, or memoizing them.
 
-Especially for axes and series which when updated impact a lot of computation.
+This suggestion is especially useful for axes and series which, when updated, impact a lot of computation.
 
 ```jsx
-// ❌ The chart gets a new axis at each render. Leading to useless computation.
+// ❌ The chart gets a new axis on each render, leading to useless computation.
 const Component = () => <BarChart xAxis={[{ data: [1, 2, 3]}]}>
 
 // ✅ For static settings, define them outside the component.

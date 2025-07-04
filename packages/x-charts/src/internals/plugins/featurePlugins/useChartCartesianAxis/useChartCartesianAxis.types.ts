@@ -51,14 +51,14 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
   /**
    * The function called when the pointer position corresponds to a new axis data item.
    * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function get called if at least ones axis is updated.
-   * And the parameter contains the identifier for all axes with a `data` property.
-   * @param {AxisItemIdentifier[]} newAxisItems The array of axes item identifiers.
+   * In case of multiple axes, the function is called if at least ones axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
    */
-  onAxisInteraction?: (newAxisItems: AxisItemIdentifier[]) => void;
+  onHighlightedAxisChange?: (axisItems: AxisItemIdentifier[]) => void;
   /**
-   * The controlled axis highlighted.
-   * Indicates the direction, axis id, and data index to highlight.
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
    */
   highlightedAxis?: AxisItemIdentifier[];
   /**

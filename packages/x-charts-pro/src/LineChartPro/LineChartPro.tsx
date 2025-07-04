@@ -198,13 +198,15 @@ LineChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
-   * The controlled axis highlighted.
-   * Indicates the direction, axis id, and data index to highlight.
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
    */
-  highlightedAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    dataIndex: PropTypes.number.isRequired,
-  }),
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
@@ -265,19 +267,19 @@ LineChartPro.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
-   * The function called when the pointer position corresponds to a new axis data item.
-   * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function get called if at least ones axis is updated.
-   * And the parameter contains the identifier for all axes with a `data` property.
-   * @param {AxisItemIdentifier[]} newAxisItems The array of axes item identifiers.
-   */
-  onAxisInteraction: PropTypes.func,
-  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least ones axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a line element is clicked.
    */

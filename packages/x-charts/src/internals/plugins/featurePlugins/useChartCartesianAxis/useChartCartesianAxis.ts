@@ -25,7 +25,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   svgRef,
   instance,
 }) => {
-  const { xAxis, yAxis, dataset, onAxisInteraction } = params;
+  const { xAxis, yAxis, dataset, onHighlightedAxisChange } = params;
 
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
@@ -104,7 +104,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       }
 
       if (prevAxisInteraction.length !== nextAxisInteraction.length) {
-        onAxisInteraction!(nextAxisInteraction);
+        onHighlightedAxisChange!(nextAxisInteraction);
         return;
       }
       if (
@@ -114,10 +114,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
             nextAxisInteraction[itemIndex].dataIndex !== dataIndex,
         )
       ) {
-        onAxisInteraction!(nextAxisInteraction);
+        onHighlightedAxisChange!(nextAxisInteraction);
       }
     },
-    !onAxisInteraction,
+    !onHighlightedAxisChange,
   );
 
   React.useEffect(() => {
@@ -261,7 +261,7 @@ useChartCartesianAxis.params = {
   dataset: true,
   onAxisClick: true,
   disableAxisListener: true,
-  onAxisInteraction: true,
+  onHighlightedAxisChange: true,
   highlightedAxis: true,
 };
 

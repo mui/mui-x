@@ -23,8 +23,8 @@
     "height": { "type": { "name": "number" } },
     "highlightedAxis": {
       "type": {
-        "name": "shape",
-        "description": "{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }"
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
       }
     },
     "highlightedItem": {
@@ -49,18 +49,18 @@
         "describedArgs": ["event", "data"]
       }
     },
-    "onAxisInteraction": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(newAxisItems: Array<AxisItemIdentifier>) => void",
-        "describedArgs": ["newAxisItems"]
-      }
-    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onHighlightedAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
       }
     },
     "onItemClick": {
