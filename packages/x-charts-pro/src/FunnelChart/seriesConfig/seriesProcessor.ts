@@ -27,14 +27,7 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
   seriesOrder.forEach((seriesId) => {
     const currentSeries = series[seriesId];
 
-    const firstDataPoint = currentSeries.data.at(0);
-    const lastDataPoint = currentSeries.data.at(-1);
-    const dataDirection =
-      firstDataPoint !== undefined &&
-      lastDataPoint !== undefined &&
-      firstDataPoint.value < lastDataPoint.value
-        ? 'increasing'
-        : 'decreasing';
+    const direction = currentSeries.direction ?? 'decreasing';
 
     completedSeries[seriesId] = {
       labelMarkType: 'square',
@@ -45,7 +38,7 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         id: `${seriesId}-funnel-item-${v.id ?? i}`,
         ...v,
       })),
-      dataDirection,
+      direction,
       dataPoints: [],
     };
 
@@ -59,7 +52,7 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         // Main = main axis, Other = other axis
         // For horizontal layout, main is y, other is x
         // For vertical layout, main is x, other is y
-        const isIncreasing = completedSeries[seriesId].dataDirection === 'increasing';
+        const isIncreasing = completedSeries[seriesId].direction === 'increasing';
         const currentMaxMain = item.value;
         const getNextDataIndex = () => {
           if (isIncreasing) {

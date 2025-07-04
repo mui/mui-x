@@ -88,6 +88,14 @@ export interface FunnelSeriesType
    * @default 'filled'
    */
   variant?: 'filled' | 'outlined';
+  /**
+   * Toggles the direction the funnel is drawn.
+   *
+   * - `decreasing`, funnel is drawn with a wide top and a point at the base.
+   * - `increasing`, funnel is drawn with a point at the top and a wide base.
+   * @default 'decreasing'
+   */
+  direction?: 'increasing' | 'decreasing';
 }
 
 /**
@@ -125,13 +133,6 @@ export interface DefaultizedFunnelSeriesType
   extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
-  /**
-   * Denotes if the data is increasing, first data point is less than the last data point.
-   * While the data is decreasing if the first data point is greater than the last data point.
-   *
-   * This is used to determine the direction of the funnel.
-   */
-  dataDirection: 'increasing' | 'decreasing';
 }
 
 export type FunnelDataPoints = Record<'x' | 'y', number> & {
