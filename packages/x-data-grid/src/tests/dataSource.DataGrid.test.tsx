@@ -15,30 +15,7 @@ import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
-
-class TestCache {
-  private cache: Map<string, GridGetRowsResponse>;
-
-  constructor() {
-    this.cache = new Map();
-  }
-
-  set(key: GridGetRowsParams, value: GridGetRowsResponse) {
-    this.cache.set(getKeyDefault(key), value);
-  }
-
-  get(key: GridGetRowsParams) {
-    return this.cache.get(getKeyDefault(key));
-  }
-
-  size() {
-    return this.cache.size;
-  }
-
-  clear() {
-    this.cache.clear();
-  }
-}
+import { TestCache } from '../internals/utils';
 
 const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
