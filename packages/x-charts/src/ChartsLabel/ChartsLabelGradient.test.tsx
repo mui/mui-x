@@ -2,10 +2,11 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { ChartsLabelGradient } from '@mui/x-charts/ChartsLabel/ChartsLabelGradient';
 import { labelGradientClasses } from '@mui/x-charts/ChartsLabel';
 import { isJSDOM } from 'test/utils/skipIf';
 import RtlProvider from '@mui/system/RtlProvider';
+// It's not publicly exported, so, using a relative import
+import { ChartsLabelGradient } from './ChartsLabelGradient';
 
 describe('<ChartsLabelGradient />', () => {
   const { render } = createRenderer();

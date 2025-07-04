@@ -8,7 +8,7 @@ import {
   MuiCommercialPackageName,
 } from '@mui/x-license';
 import { isJSDOM } from 'test/utils/skipIf';
-import { sharedLicenseStatuses } from './useLicenseVerifier';
+import { clearLicenseStatusCache } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
@@ -41,10 +41,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
   describe('error', () => {
     beforeEach(() => {
-      Object.keys(sharedLicenseStatuses).forEach((key) => {
-        // @ts-ignore
-        delete sharedLicenseStatuses[key];
-      });
+      clearLicenseStatusCache();
     });
 
     it('should log the missing license key error only once', () => {
