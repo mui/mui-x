@@ -56,3 +56,16 @@ Notice that using another shape than "circle" renders a `<path />` instead of th
 This modification implies a small drop of rendering performances (around +50ms to render 1.000 marks).
 
 {{"demo": "CustomLineMarks.js"}}
+
+## Larger interaction area
+
+A line is highlighted when a pointer is hovering over it.
+Which is a narrow interaction area.
+While a permanent solution isn't implemented, it's possible to define a larger interaction area with slots.
+
+The idea is to have two paths:
+A small one to display the line, and a larger invisible one that handles the interactions.
+
+This solution has an issue when lines cross over each other, as the highlight is not on the closest line to the pointer, but by the last defined series.
+
+{{"demo": "LargerHighlightLineNoSnap.js"}}
