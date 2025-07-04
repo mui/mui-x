@@ -92,9 +92,9 @@ type AbstractAPI = {
   getHiddenCellsOrigin: () => Record<RowId, Record<number, number>>;
 };
 
-type API = Dimensions.API & AbstractAPI;
+type RequiredAPI = Dimensions.API & AbstractAPI;
 
-function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: API) {
+function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
   const {
     initialState,
     isRtl,
@@ -193,7 +193,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
       previousContextScrollPosition.current = scrollPosition.current;
     },
-    [onRenderContextChange],
+    [store, onRenderContextChange],
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
@@ -671,7 +671,7 @@ type RenderContextInputs = ReturnType<typeof inputsSelector>;
 function inputsSelector(
   store: Store<BaseState>,
   params: VirtualizerParams,
-  api: API,
+  api: RequiredAPI,
   enabledForRows: boolean,
   enabledForColumns: boolean,
 ) {
@@ -1125,7 +1125,7 @@ function getFirstNonSpannedColumnToRender({
   lastRowToRender,
   visibleRows,
 }: {
-  api: API;
+  api: RequiredAPI;
   firstColumnToRender: number;
   firstRowToRender: number;
   lastRowToRender: number;
