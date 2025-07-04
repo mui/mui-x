@@ -16,6 +16,7 @@ export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColum
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';
 export { vars } from '../constants/cssVariables';
+export { useCSSVariablesClass } from '../utils/css/context';
 
 export { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 export { propsStateInitializer } from '../hooks/core/useGridProps';

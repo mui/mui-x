@@ -31,6 +31,7 @@ import {
   GridChartsIcon,
   GridSyncDisabledIcon,
   GridSyncIcon,
+  GridChartsPaletteIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -76,6 +77,7 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   chartsMenuRemoveIcon: GridDeleteIcon,
   chartsSyncIcon: GridSyncIcon,
   chartsSyncDisabledIcon: GridSyncDisabledIcon,
+  chartsPaletteIcon: GridChartsPaletteIcon,
 };
 
 const materialSlots = {

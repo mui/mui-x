@@ -173,6 +173,7 @@
   { "name": "GridChartsIcon", "kind": "Variable" },
   { "name": "GridChartsIntegrationContextProvider", "kind": "Function" },
   { "name": "GridChartsIntegrationContextProviderProps", "kind": "Interface" },
+  { "name": "GridChartsPaletteIcon", "kind": "Variable" },
   { "name": "GridChartsPanel", "kind": "Function" },
   { "name": "GridChartsPanelProps", "kind": "Interface" },
   { "name": "GridChartsRendererProxy", "kind": "Function" },

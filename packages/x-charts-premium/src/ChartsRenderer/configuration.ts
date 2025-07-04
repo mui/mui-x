@@ -1,3 +1,18 @@
+import {
+  blueberryTwilightPalette,
+  mangoFusionPalette,
+  cheerfulFiestaPalette,
+  strawberrySkyPalette,
+  rainbowSurgePalette,
+  bluePalette,
+  greenPalette,
+  purplePalette,
+  redPalette,
+  orangePalette,
+  yellowPalette,
+  cyanPalette,
+  pinkPalette,
+} from '@mui/x-charts/colorPalettes';
 import { GridChartsConfigurationOptions, GridChartsConfigurationSection } from './types';
 import {
   GridBarChartIcon,
@@ -9,22 +24,26 @@ import {
 
 const colorOptions = {
   label: 'Color palette',
-  type: 'select',
+  type: 'colorPalette',
   default: 'rainbowSurgePalette',
   options: [
-    { label: 'Blueberry Twilight', value: 'blueberryTwilightPalette' },
-    { label: 'Mango Fusion', value: 'mangoFusionPalette' },
-    { label: 'Cheerful Fiesta', value: 'cheerfulFiestaPalette' },
-    { label: 'Strawberry Sky', value: 'strawberrySkyPalette' },
-    { label: 'Rainbow Surge', value: 'rainbowSurgePalette' },
-    { label: 'Blue', value: 'bluePalette' },
-    { label: 'Green', value: 'greenPalette' },
-    { label: 'Purple', value: 'purplePalette' },
-    { label: 'Red', value: 'redPalette' },
-    { label: 'Orange', value: 'orangePalette' },
-    { label: 'Yellow', value: 'yellowPalette' },
-    { label: 'Cyan', value: 'cyanPalette' },
-    { label: 'Pink', value: 'pinkPalette' },
+    {
+      label: 'Blueberry Twilight',
+      value: 'blueberryTwilightPalette',
+      palette: blueberryTwilightPalette,
+    },
+    { label: 'Mango Fusion', value: 'mangoFusionPalette', palette: mangoFusionPalette },
+    { label: 'Cheerful Fiesta', value: 'cheerfulFiestaPalette', palette: cheerfulFiestaPalette },
+    { label: 'Strawberry Sky', value: 'strawberrySkyPalette', palette: strawberrySkyPalette },
+    { label: 'Rainbow Surge', value: 'rainbowSurgePalette', palette: rainbowSurgePalette },
+    { label: 'Blue', value: 'bluePalette', palette: bluePalette },
+    { label: 'Green', value: 'greenPalette', palette: greenPalette },
+    { label: 'Purple', value: 'purplePalette', palette: purplePalette },
+    { label: 'Red', value: 'redPalette', palette: redPalette },
+    { label: 'Orange', value: 'orangePalette', palette: orangePalette },
+    { label: 'Yellow', value: 'yellowPalette', palette: yellowPalette },
+    { label: 'Cyan', value: 'cyanPalette', palette: cyanPalette },
+    { label: 'Pink', value: 'pinkPalette', palette: pinkPalette },
   ],
 };
 

@@ -1841,6 +1841,7 @@
     "chartsMenuMoveToTopIcon": "Icon used for the move to top button in the charts configuration panel menu",
     "chartsMenuMoveUpIcon": "Icon used for the move up button in the charts configuration panel menu",
     "chartsMenuRemoveIcon": "Icon used for the remove button in the charts configuration panel menu",
+    "chartsPaletteIcon": "Icon used to display the palette option in the charts configuration panel",
     "chartsPanel": "Component rendered when charts panel is open. Only needed when <code>chartsIntegration</code> prop is passed to the grid. Pass <code>GridChartsPanel</code> to render the default charts panel.",
     "chartsSearchClearIcon": "Icon used for the clear button in the sidebar search field in the charts configuration panel",
     "chartsSearchIcon": "Icon used for the search icon in the sidebar search field in the charts configuration panel",
