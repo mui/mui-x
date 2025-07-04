@@ -214,4 +214,9 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridSyncDisabledIcon
    */
   chartsSyncDisabledIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used to display the palette option in the charts configuration panel
+   * @default GridChartsPaletteIcon
+   */
+  chartsPaletteIcon: React.JSXElementConstructor<IconProps>;
 }
