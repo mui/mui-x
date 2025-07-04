@@ -15,6 +15,7 @@ __diff_output__
 !/docs/pages/playground/tsconfig.json
 /docs/.env.local
 /docs/export
+/docs/public/x/
 /test/regressions/screenshots
 /test/performance-charts/traces
 build

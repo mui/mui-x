@@ -48,6 +48,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         )
         .map((page) => {
           return {
+            filePath: page.filename,
             demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
             demoPathname: `${page.pathname.replace('/date-pickers', '/x/react-date-pickers')}/`,
           };
