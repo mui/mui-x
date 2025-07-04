@@ -1,3 +1,4 @@
+'use client';
 /* eslint-disable react-compiler/react-compiler */
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
