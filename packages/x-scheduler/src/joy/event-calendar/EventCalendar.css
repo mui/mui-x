@@ -27,6 +27,12 @@
   padding: var(--space-4) var(--space-4) var(--space-4) 0;
 }
 
+.EventCalendarMainPanel--month {
+  max-height: 100%;
+  height: 100dvh;
+  height: 100vh;
+}
+
 .EventCalendarContent {
   display: flex;
   flex: 1;
