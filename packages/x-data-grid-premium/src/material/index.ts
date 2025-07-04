@@ -28,6 +28,10 @@ import {
   GridPromptIcon,
   GridRerunIcon,
   GridHistoryIcon,
+  GridChartsIcon,
+  GridSyncDisabledIcon,
+  GridSyncIcon,
+  GridChartsPaletteIcon,
 } from './icons';
 
 const iconsSlots: GridPremiumIconSlotsComponent = {
@@ -62,6 +66,18 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   promptAggregationIcon: GridFunctionsIcon,
   promptGroupIcon: GridGroupWorkIcon,
   promptChangesToggleIcon: GridExpandMoreIcon,
+  chartsIcon: GridChartsIcon,
+  chartsSearchIcon: GridSearchIcon,
+  chartsSearchClearIcon: GridClearIcon,
+  chartsMenuMoveUpIcon: GridExpandLessIcon,
+  chartsMenuMoveDownIcon: GridExpandMoreIcon,
+  chartsMenuMoveToTopIcon: GridMoveToTopIcon,
+  chartsMenuMoveToBottomIcon: GridMoveToBottomIcon,
+  chartsMenuAddIcon: GridAddIcon,
+  chartsMenuRemoveIcon: GridDeleteIcon,
+  chartsSyncIcon: GridSyncIcon,
+  chartsSyncDisabledIcon: GridSyncDisabledIcon,
+  chartsPaletteIcon: GridChartsPaletteIcon,
 };
 
 const materialSlots = {
