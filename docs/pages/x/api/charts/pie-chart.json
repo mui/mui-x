@@ -52,7 +52,12 @@
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
