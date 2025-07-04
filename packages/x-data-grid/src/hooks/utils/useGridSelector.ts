@@ -115,6 +115,7 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
     if (!refs.current.subscription) {
       subscribe();
     }
+
     return () => {
       if (refs.current.subscription) {
         refs.current.subscription();
