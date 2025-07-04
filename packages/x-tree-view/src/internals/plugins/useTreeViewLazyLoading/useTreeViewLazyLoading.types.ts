@@ -61,7 +61,13 @@ export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPu
 }
 
 export interface UseTreeViewLazyLoadingParameters<R extends {}> {
+  /**
+   * The data source object.
+   */
   dataSource?: DataSource<R>;
+  /**
+   * The data source cache object.
+   */
   dataSourceCache?: DataSourceCache;
 }
 export type UseTreeViewLazyLoadingParametersWithDefaults<R extends {}> = DefaultizedProps<

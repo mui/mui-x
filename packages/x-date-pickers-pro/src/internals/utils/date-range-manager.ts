@@ -14,12 +14,22 @@ interface CalculateRangeChangeOptions {
    */
   allowRangeFlip?: boolean;
   shouldMergeDateAndTime?: boolean;
-  referenceDate?: PickerValidDate;
+  referenceDate?: PickerValidDate | [PickerValidDate, PickerValidDate];
 }
 
 interface CalculateRangeChangeResponse {
   nextSelection: RangePosition;
   newRange: PickerRangeValue;
+}
+
+export function resolveReferenceDate(
+  referenceDate: PickerValidDate | [PickerValidDate, PickerValidDate] | undefined,
+  rangePosition: RangePosition,
+): PickerValidDate | undefined {
+  if (Array.isArray(referenceDate)) {
+    return rangePosition === 'start' ? referenceDate[0] : referenceDate[1];
+  }
+  return referenceDate;
 }
 
 export function calculateRangeChange({
@@ -46,7 +56,7 @@ export function calculateRangeChange({
 
   const newSelectedDate =
     referenceDate && selectedDate && shouldMergeDateAndTime
-      ? mergeDateAndTime(adapter, selectedDate, referenceDate)
+      ? mergeDateAndTime(adapter, selectedDate, resolveReferenceDate(referenceDate, rangePosition)!)
       : selectedDate;
 
   if (rangePosition === 'start') {

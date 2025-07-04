@@ -35,7 +35,6 @@ export default function TreeViewFeaturesHighlight() {
       <Divider />
       <Stack spacing={4} py={8} alignItems="center">
         <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
             Using the MUI X Tree View
           </Typography>
@@ -45,11 +44,9 @@ export default function TreeViewFeaturesHighlight() {
             fontWeight="semiBold"
             color="text.primary"
             textAlign="center"
-            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             Create stunning tree structures
           </Typography>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary" textAlign="center">
             A highly performant, customizable React component with best-in-class developer
             experience.

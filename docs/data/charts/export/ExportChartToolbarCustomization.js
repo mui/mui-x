@@ -5,10 +5,8 @@ import Stack from '@mui/material/Stack';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
-import {
-  continents,
-  populationGdpPerCapitaData,
-} from './populationGdpPerCapitaData';
+import { continents, countryData } from '../dataset/countryData';
+import { populationGdpPerCapitaData } from './populationGdpPerCapitaData';
 import ExportOptionSelector from './ExportOptionSelector';
 
 const populationFormatter = new Intl.NumberFormat('en-US', {
@@ -25,7 +23,7 @@ const series = continents.map((continent) => ({
   data: populationGdpPerCapitaData[continent].map((p) => ({
     x: p.population,
     y: p.gdpPerCapita,
-    id: p.country,
+    id: countryData[p.code].country,
   })),
   valueFormatter: (value) =>
     `${value.id}: ${populationFormatter.format(value.x)} people, ${gdpPerCapitaFormatter.format(value.y)} GDP per capita`,

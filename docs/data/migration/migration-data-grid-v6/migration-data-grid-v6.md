@@ -160,7 +160,6 @@ As a result, the following changes have been made:
 - ✅ The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 - The `getOptionValue` and `getOptionLabel` props were removed from the following components:
-
   - `GridEditSingleSelectCell`
   - `GridFilterInputSingleSelect`
   - `GridFilterInputMultipleSingleSelect`
@@ -476,7 +475,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   ```
 
   The most notable changes that might affect your application or tests are:
-
   - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
 
     ```diff

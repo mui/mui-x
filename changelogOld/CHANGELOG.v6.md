@@ -3507,7 +3507,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   It is recommended to migrate `valueOptions` to an array of objects to be able to add a custom label for each value.
   To override the label used for each option when the cell is in edit mode or in the filter panel, the following components now support a `getOptionLabel` prop.
   This prop accepts a callback that is called with the item from `valueOptions` and must return the new label.
-
   - `GridEditSingleSelectCell`
   - `GridFilterInputSingleSelect`
   - `GridFilterInputMultipleSingleSelect`
@@ -3575,7 +3574,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   ```
 
 - The following selectors have been renamed:
-
   - `gridVisibleSortedRowIdsSelector` renamed to `gridExpandedSortedRowIdsSelector`
   - `gridVisibleSortedRowEntriesSelector` renamed to `gridExpandedSortedRowEntriesSelector`
   - `gridVisibleRowCountSelector` renamed to `gridExpandedRowCountSelector`
@@ -4584,7 +4582,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   The `gridColumnsSelector` was deprecated during v5 and is now removed from the export list.
 
   Please consider using one of the following selectors as a replacement:
-
   - `gridColumnFieldsSelector`, to obtain the column fields in the order they appear on the screen;
   - `gridColumnLookupSelector`, to access column definitions by field;
   - `gridColumnVisibilityModelSelector`, for the visibility state of each column.
@@ -4606,7 +4603,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [pickers] Rename remaining `private` components (#6550) @LukasTy
   Previously we had 4 component names with `Private` prefix in order to avoid breaking changes in v5.
   These components were renamed:
-
   - `PrivatePickersMonth` -> `MuiPickersMonth`
   - `PrivatePickersSlideTransition` -> `MuiPickersSlideTransition`
   - `PrivatePickersToolbarText` -> `MuiPickersToolbarText`
@@ -4821,7 +4817,6 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - ⌚️ New components to edit date and time with <kbd>keyboard</kbd>—without using any modal or dropdown UI.
   Please check out our [documentation](https://mui.com/x/react-date-pickers/fields/) to discover those new components.
-
   - [`DateField`](https://mui.com/x/react-date-pickers/date-field/) to edit date
   - [`TimeField`](https://mui.com/x/react-date-pickers/time-field/) to edit time
   - [`DateTimeField`](https://mui.com/x/react-date-pickers/date-time-field/) to edit date and time
@@ -4852,7 +4847,6 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   ```
 
   For users that didn't migrate to the new editing API in v5, additional work may be needed because the new API is not equivalent to the legacy API. Although, some migration steps are available to help in this task.
-
   - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
   - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
   - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.

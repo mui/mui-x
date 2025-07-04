@@ -168,7 +168,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 #### Breaking changes
 
 - [DataGrid] Polish cell editing (#2220) @m4theushw
-
   - Replace `onCellModeChange` prop with `onCellEditStart` or `onCellEditStop`.
   - Rename `onCellEditEnter` prop to `onCellEditStart`.
   - Rename `onCellEditEnd` prop to `onCellEditStop`.
@@ -197,7 +196,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   ```
 
 - [DataGrid] Allow non-integer column width for flex columns (#2282) @flaviendelangle
-
   - The `width` property of the columns is no longer updated with the actual width of of the column. Use the new `computedWidth` property in the callbacks instead.
 
   ```diff
@@ -249,7 +247,6 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 #### Breaking changes
 
 - [DataGrid] Improve controllable cell edit (#2143) @m4theushw
-
   - The `onEditCellChange` prop was renamed to `onEditCellPropsChange`.
   - The `onEditCellChangeCommitted` prop was renamed to `onCellEditCommit`.
   - The `onEditRowModelChange` prop was removed. Use the new `onEditRowsModelChange` prop.
@@ -260,14 +257,12 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
     ```
 
 - [XGrid] Improve controllable cell edit (#2143) @m4theushw
-
   - The `cellEditPropsChange` event was renamed to `editCellPropsChange`.
   - The `cellEditPropsChangeCommitted` event was renamed to `cellEditCommit`.
   - The `cellValueChange` event was removed. Listen to `cellEditCommit` to detect when the value is committed.
   - The `editRowModelChange` event was renamed to `editRowsModelChange`.
 
 - [DataGrid] Improve controllable pagination (#2099) @flaviendelangle
-
   - The `pageSize` is now a controlled prop. If you set a value, you also need to handle updates with onPageSizeChange. See [the documentation](https://mui.com/x/react-data-grid/pagination/#page-size).
   - Change the controllable API signature:
 
@@ -377,7 +372,6 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
   ```
 
 - [DataGrid] Improve the editing API (#1955) @m4theushw
-
   - The `props` key in the first argument of `commitCellChange()` was removed to promote the use of the value already stored in the state.
     To update the value in the state, call `setEditCellProps()` before.
 
@@ -552,14 +546,12 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Fix events naming (#1862) @m4theushw
 
   The following `XGrid` events were renamed:
-
   - `columnHeaderNavigationKeydown` to `columnHeaderNavigationKeyDown`
   - `columnResizeCommitted` to `columnWidthChange`
   - `rowsUpdated` to `rowsUpdate`
   - `columnsUpdated` to `columnsChange`
 
   The following `XGrid` DOM events were removed:
-
   - `focusout`
   - `keydown`
   - `keyup`
@@ -637,7 +629,6 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [DataGrid] Rename CSS classes according to new convention (#1872) @DanailH
 
   The main grid components:
-
   - `.data-container` was removed
   - `.MuiDataGrid-columnHeaderSortable` was renamed to `.MuiDataGrid-columnHeader--sortable`
   - `.MuiDataGrid-columnHeaderCenter` was renamed to `.MuiDataGrid-columnHeader--alignCenter`
@@ -661,7 +652,6 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
   - `.MuiDataGrid-scrollArea-right` was renamed to `.MuiDataGrid-scrollArea--right`
 
   The standalone components:
-
   - `.MuiDataGridMenu-*` was renamed to `.MuiGridMenu-*`
   - `.MuiDataGridPanel-*` was renamed to `.MuiGridPanel-*`
   - `.MuiDataGridPanelContent-*` was renamed to `.MuiGridPanelContent-*`
@@ -913,7 +903,6 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
   ```
 
 - [DataGrid] Rename CSS classes (#1660) @DanailH
-
   1. `MuiDataGrid-colCellWrapper` to `MuiDataGrid-columnHeaderWrapper`
   2. `MuiDataGrid-colCell` to `MuiDataGrid-columnHeader`
   3. `MuiDataGrid-colCellCheckbox` to `MuiDataGrid-columnHeaderCheckbox`
@@ -1179,7 +1168,6 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add support for custom row ids without cloning (#1377) @m4theushw
   This change has involved the following refactorings.
-
   - Changes on `apiRef.current`.
 
   ```diff
@@ -1559,7 +1547,6 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 #### Breaking changes
 
 - [DataGrid] Implement customization pattern of Material UI v5 (#851, #879) @dtassone
-
   - Capitalize the keys of the `components` prop. This change aims to bring consistency with the customization pattern of Material UI v5:
 
   ```diff

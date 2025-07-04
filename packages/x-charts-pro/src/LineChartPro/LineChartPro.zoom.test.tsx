@@ -155,6 +155,74 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     });
   });
 
+  it('should pan with area series enabled', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <LineChartPro
+        {...lineChartProps}
+        series={[
+          {
+            data: [10, 20, 30, 40],
+            area: true,
+          },
+        ]}
+        initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
+        onZoomChange={onZoomChange}
+      />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['D']);
+
+    const target = document.querySelector('.MuiAreaElement-root')!;
+
+    // We drag from right to left to pan the view
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target,
+        coords: { x: 50, y: 50 },
+      },
+      {
+        target,
+        coords: { x: 150, y: 50 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target,
+        coords: { x: 150, y: 50 },
+      },
+    ]);
+    // Wait the animation frame
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.equal(1);
+    expect(getAxisTickValues('x')).to.deep.equal(['C']);
+
+    // Continue dragging to see more data points
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target,
+        coords: { x: 50, y: 50 },
+      },
+      {
+        target,
+        coords: { x: 250, y: 50 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target,
+        coords: { x: 250, y: 50 },
+      },
+    ]);
+    // Wait the animation frame
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.equal(2);
+    expect(getAxisTickValues('x')).to.deep.equal(['A']);
+  });
+
   it('should zoom on pinch', async () => {
     const onZoomChange = sinon.spy();
     const { user } = render(

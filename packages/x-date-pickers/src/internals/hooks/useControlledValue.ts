@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
-import type { PickerValueManager } from '../models';
+import type { PickerRangeValue, PickerValueManager } from '../models';
 import { PickersTimezone, PickerValidDate } from '../../models';
 import { PickerValidValue } from '../models';
 import { usePickerAdapter } from '../../hooks/usePickerAdapter';
@@ -53,7 +53,7 @@ export const useControlledValue = <
       return inputTimezone;
     }
     if (referenceDate) {
-      return adapter.getTimezone(referenceDate);
+      return adapter.getTimezone(Array.isArray(referenceDate) ? referenceDate[0] : referenceDate);
     }
     return 'default';
   }, [timezoneProp, inputTimezone, referenceDate, adapter]);
@@ -88,7 +88,7 @@ interface UseValueWithTimezoneParameters<
    * It does not need to have its default value.
    * This is only used to determine the timezone to use when `props.value` and `props.defaultValue` are not defined.
    */
-  referenceDate: PickerValidDate | undefined;
+  referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   onChange: TChange | undefined;
   valueManager: PickerValueManager<TValue, any>;
 }

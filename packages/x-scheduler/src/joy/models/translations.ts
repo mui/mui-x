@@ -10,6 +10,10 @@ export interface SchedulerTranslations {
   // WeekView
   allDay: string;
 
+  // MonthView
+  weekAbbreviation: string;
+  weekNumberAriaLabel: string;
+
   // EventPopover
   closeButtonAriaLabel: string;
   deleteEvent: string;

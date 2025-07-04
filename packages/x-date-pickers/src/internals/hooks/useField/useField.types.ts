@@ -15,7 +15,12 @@ import {
 } from '../../../models';
 import { InternalPropNames } from '../../../hooks/useSplitFieldProps';
 import type { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
+import {
+  FormProps,
+  InferNonNullablePickerValue,
+  PickerRangeValue,
+  PickerValidValue,
+} from '../../models';
 
 export interface UseFieldParameters<
   TValue extends PickerValidValue,
@@ -50,7 +55,7 @@ export interface UseFieldInternalProps<
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate?: PickerValidDate;
+  referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

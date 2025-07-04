@@ -147,25 +147,21 @@ Here is the list of the currently supported formats:
   - ✅ 4-digits values (for example, `2023`)
   - ❌ Values with ordinal (for example, `2023th`)
 - The month
-
   - ✅ 1-based digit (for example, `08`)
   - ✅ Multi-letter values (for example, `Aug`, `August`)
   - ❌ 1-letter values (for example, `A`) because several months are represented with the same letter
 
 - The day of the month
-
   - ✅ 1-based digit values (for example, `24`)
   - ✅ 1-based digit values with ordinal (for example, `24th`)
 
 - The day of the week
-
   - ✅ 0-based digit values (for example, `03`)
   - ✅ 1-based digit values (for example, `04`)
   - ✅ Multi-letter values (for example, `Tue`, `Tuesday`)
   - ❌ 1-letter values (for example, `T`) because several days of the week are represented with the same letter
 
 - The hours
-
   - ✅ 0-based 12-hours values (for example, `03`)
   - ✅ 0-based 24-hours values (for example, `15`)
   - ❌ 1-based values (for example, `24` instead of `00`)

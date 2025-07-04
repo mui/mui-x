@@ -40,7 +40,6 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null>) {
 export default function DigitalClock() {
   return (
     <Card variant="outlined" sx={{ padding: 0.8, height: 'fit-content' }}>
-      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <Typography variant="subtitle2" sx={{ pt: 1, pb: 2 }}>
         Book now!
       </Typography>

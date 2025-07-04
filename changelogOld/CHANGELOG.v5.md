@@ -2700,7 +2700,6 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 #### Breaking changes
 
 - [DataGrid] The following CSS classes were renamed to follow the internal convention:
-
   - `MuiDataGrid-columnsContainer` was renamed to `MuiDataGrid-columnHeaders`
   - `MuiDataGrid-columnHeaderWrapper` was renamed to `MuiDataGrid-columnHeadersInner`
   - The `scroll` class applied to `MuiDataGrid-columnHeaderWrapper` was renamed to `MuiDataGrid-columnHeadersInner--scrollable`
@@ -2780,13 +2779,11 @@ _Nov 4, 2021_
   If you relay on any of these selectors, open an issue explaining the use case so that will be taken into account when refactoring them.
 
   The following selectors were prefixed by `unstable_`. Use the provided alternatives.
-
   1. `gridContainerSizesSelector` was renamed to `unstable_gridContainerSizesSelector`
   2. `gridViewportSizesSelector` was renamed to `unstable_gridViewportSizesSelector`
   3. `gridScrollBarSizeSelector` was renamed to `unstable_gridScrollBarSizeSelector`
 
   The following selectors were removed. You can hard-code their logic in your application if you really need them.
-
   1. `gridDataContainerSizesSelector`
 
   ```ts
@@ -2852,7 +2849,6 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 #### Breaking changes
 
 - [DataGridPro] The following methods from `apiRef` were renamed. Use the provided alternatives. (#2870) @flaviendelangle
-
   1. `apiRef.current.applyFilters` was renamed to `apiRef.current.unsafe_applyFilters`
   2. `apiRef.current.applyFilterLinkOperator` was renamed to `apiRef.current.setFilterLinkOperator`
   3. `apiRef.current.upsertFilter` was renamed to `apiRef.current.upsertFilterItem`
@@ -2868,7 +2864,6 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```
 
 - [DataGridPro] Rename filtering, sorting, and rows selectors to match the naming convention (#2942) @flaviendelangle
-
   1. `unorderedGridRowIdsSelector` was renamed to `gridRowIdsSelector`
   2. `sortingGridStateSelector` was renamed to `gridSortingStateSelector`
   3. `sortedGridRowIdsSelector` was renamed to `gridSortedRowIdsSelector`
@@ -2968,7 +2963,6 @@ A big thanks to the 5 contributors who made this release possible. Here are some
   ```
 
   The following CSS classes were renamed:
-
   - `.MuiDataGrid-gridMenuList` was renamed to `.MuiDataGrid-menuList`
   - `.MuiGridToolbarContainer-root` was renamed to `.MuiDataGrid-toolbarContainer`
   - `.MuiGridMenu-root` was renamed to `.MuiDataGrid-menu`
@@ -2984,7 +2978,6 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] The CSS classes `.MuiDataGrid-window` and `.MuiDataGrid-windowContainer` were removed (#2673) @m4theushw
 
   The following CSS classes were renamed:
-
   - `.MuiDataGrid-viewport` was renamed to `.MuiDataGrid-virtualScroller`
   - `.MuiDataGrid-dataContainer` was renamed to `.MuiDataGrid-virtualScrollerContent`
   - `.MuiDataGrid-renderingZone` was renamed to `.MuiDataGrid-virtualScrollerRenderZone`
@@ -3101,7 +3094,6 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Remove unused event listeners and redundant DOM attributes on `GridCell` and `GridRow` (#2810) @m4theushw
 
   The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
-
   - `onCellBlur`
   - `onCellOver`
   - `onCellOut`

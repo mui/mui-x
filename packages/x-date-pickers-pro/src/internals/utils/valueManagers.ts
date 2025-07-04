@@ -42,10 +42,12 @@ export const rangeValueManager: RangePickerValueManager = {
     }
 
     const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
+    const startReferenceDate = Array.isArray(referenceDate) ? referenceDate[0]! : referenceDate;
+    const endReferenceDate = Array.isArray(referenceDate) ? referenceDate[1]! : referenceDate;
 
     return [
-      shouldKeepStartDate ? value[0]! : referenceDate,
-      shouldKeepEndDate ? value[1]! : referenceDate,
+      shouldKeepStartDate ? value[0]! : startReferenceDate,
+      shouldKeepEndDate ? value[1]! : endReferenceDate,
     ];
   },
   cleanValue: (utils, value) =>

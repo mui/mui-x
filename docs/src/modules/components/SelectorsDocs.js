@@ -58,10 +58,8 @@ function SelectorAccordion({ selector }) {
         />
       </AccordionSummary>
       <SelectorDetails>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="subtitle2">Signature:</Typography>
         <SelectorExample code={signature} language="tsx" />
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="subtitle2">Example</Typography>
         <SelectorExample code={example} language="tsx" />
       </SelectorDetails>

@@ -11,7 +11,6 @@ import { FieldOwnerState } from '@mui/x-date-pickers/models';
 export default function FlightPicker() {
   return (
     <Card variant="outlined" sx={{ flexGrow: 1, padding: 1 }}>
-      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <Typography variant="subtitle2" sx={{ pb: 2 }}>
         Book your flight
       </Typography>
