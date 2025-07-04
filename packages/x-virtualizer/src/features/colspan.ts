@@ -11,7 +11,6 @@ type ColspanMap = Map<RowId, Record<ColumnIndex, CellColSpanInfo>>;
 
 const selectors = {};
 
-/* eslint-disable */
 export const Colspan = {
   initialize: initializeState,
   use: useColspan,
@@ -23,7 +22,6 @@ export namespace Colspan {
   };
   export type API = ReturnType<typeof useColspan>;
 }
-/* eslint-enable */
 
 function initializeState(_params: VirtualizerParams) {
   return {

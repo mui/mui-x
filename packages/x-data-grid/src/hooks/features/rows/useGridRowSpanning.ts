@@ -287,7 +287,7 @@ export const useGridRowSpanning = (
 
       store.set('rowSpanning', newState);
     },
-    [apiRef, store],
+    [apiRef],
   );
 
   // Reset events trigger a full re-computation of the row spanning state:

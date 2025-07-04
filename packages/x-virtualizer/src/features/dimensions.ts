@@ -13,7 +13,8 @@ import {
   createSelectorMemoized,
 } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { VirtualizerParams } from '../useVirtualizer';
+import type { BaseState } from '../useVirtualizer';
 
 /* eslint-disable no-underscore-dangle */
 
@@ -61,7 +62,6 @@ const selectors = {
     state.dimensions.columnsTotalWidth > state.dimensions.viewportOuterSize.width,
 };
 
-/* eslint-disable */
 export const Dimensions = {
   initialize: initializeState,
   use: useDimensions,
@@ -76,7 +76,6 @@ export namespace Dimensions {
   };
   export type API = ReturnType<typeof useDimensions>;
 }
-/* eslint-enable */
 
 function initializeState(params: VirtualizerParams): Dimensions.State {
   const dimensions = {
@@ -234,10 +233,8 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
     store.update({ dimensions: newDimensions });
   }, [
-    store,
     params.scrollbarSize,
     params.autoHeight,
-    params.refs.container,
     rowHeight,
     headerHeight,
     groupHeaderHeight,

@@ -24,10 +24,11 @@ export interface GridColumnSpanningPrivateApi {
   resetColSpan: () => void;
   /**
    * Calculate column spanning for each cell in the row
-   * @param {GridRowId} rowId The row id
-   * @param {number} minFirstColumn First visible column index
-   * @param {number} maxLastColumn Last visible column index
-   * @param {GridStateColDef[]} columns List of columns to calculate colSpan for
+   * @param {Object} options The options to apply on the calculation.
+   * @param {GridRowId} options.rowId The row id
+   * @param {number} options.minFirstColumn First visible column index
+   * @param {number} options.maxLastColumn Last visible column index
+   * @param {GridStateColDef[]} options.columns List of columns to calculate colSpan for
    */
   calculateColSpan: (
     rowId: GridRowId,

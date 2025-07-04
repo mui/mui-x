@@ -26,15 +26,12 @@ import { useGridVisibleRows } from '../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../features/pagination';
 import { gridListColumnSelector } from '../features/listView/gridListViewSelectors';
+import { minimalContentHeight } from '../features/rows/gridRowsUtils';
 import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../features/columns';
 import { gridFocusedVirtualCellSelector } from '../features/virtualization/gridFocusedVirtualCellSelector';
 import { gridRowSelectionManagerSelector } from '../features/rowSelection';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../constants/dataGridPropsDefaultValues';
-import {
-  getValidRowHeight,
-  rowHeightWarning,
-  minimalContentHeight,
-} from '../features/rows/gridRowsUtils';
+import { getValidRowHeight, rowHeightWarning } from '../features/rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../features/columns/gridColumnsUtils';
 
 type RootProps = DataGridProcessedProps;
@@ -174,7 +171,7 @@ export function useGridVirtualizer(
         getEstimatedRowHeight
           ? (rowEntry) => getEstimatedRowHeight({ ...rowEntry, densityFactor: density })
           : undefined,
-      [getEstimatedRowHeight, density],
+      [getEstimatedRowHeight],
     ),
     getRowSpacing: React.useMemo(
       () =>
@@ -188,7 +185,7 @@ export function useGridVirtualizer(
                 ),
               })
           : undefined,
-      [apiRef, getRowSpacing],
+      [getRowSpacing],
     ),
     applyRowHeight: (entry, row) =>
       apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
