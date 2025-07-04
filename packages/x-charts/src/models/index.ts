@@ -12,6 +12,7 @@ export type {
   YAxis,
   RadiusAxis,
   RotationAxis,
+  AxisItemIdentifier,
   AxisValueFormatterContext,
 } from './axis';
 

@@ -187,6 +187,16 @@ ScatterChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
@@ -247,6 +257,14 @@ ScatterChartPro.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least ones axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
