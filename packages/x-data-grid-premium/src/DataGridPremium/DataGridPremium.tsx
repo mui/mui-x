@@ -33,10 +33,11 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPremium> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
@@ -45,6 +46,7 @@ const configuration: GridConfiguration = {
       const apiRef = useGridApiContext();
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
+    useGridRowsOverridableMethods,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';
@@ -66,7 +68,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps);
+  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
@@ -83,7 +85,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     ) : null;
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}
