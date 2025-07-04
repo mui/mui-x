@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -30,12 +30,11 @@ describe('useChartCartesianAxis - axis highlight', () => {
 
     const svg = document.querySelector<HTMLElement>('svg')!;
 
+    await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 75, clientY: 60 } }]);
+
+    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+
     await user.pointer([
-      {
-        keys: '[TouchA>]',
-        target: svg,
-        coords: { clientX: 75, clientY: 60 },
-      },
       {
         pointerName: 'TouchA',
         target: svg,
@@ -91,7 +90,7 @@ describe('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 45, clientY: 60 } }]);
 
-    expect(onHighlightedAxisChange.callCount).to.equal(1);
+    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
     expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
@@ -130,7 +129,7 @@ describe('useChartCartesianAxis - axis highlight', () => {
         { keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } },
       ]);
 
-      expect(onHighlightedAxisChange.callCount).to.equal(1);
+      await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
       expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
         { axisId: 'x-axis', dataIndex: 0 },
       ]);
@@ -167,7 +166,7 @@ describe('useChartCartesianAxis - axis highlight', () => {
         { keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } },
       ]);
 
-      expect(onHighlightedAxisChange.callCount).to.equal(1);
+      await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
       expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
         { axisId: 'x-axis', dataIndex: 0 },
       ]);
