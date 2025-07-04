@@ -1,7 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render, cleanup } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
@@ -18,7 +17,7 @@ describe('ScatterChartPro', () => {
   bench(
     'ScatterChartPro with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <ScatterChartPro
           xAxis={[
             {
@@ -39,7 +38,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText('60', { ignore: 'span' });
+      expect(page.getByText('60')).toBeInTheDocument();
 
       cleanup();
     },
@@ -49,7 +48,7 @@ describe('ScatterChartPro', () => {
   bench(
     'ScatterChartPro with big data amount and zoomed in',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <ScatterChartPro
           xAxis={[
             {
@@ -70,7 +69,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText('50.06', { ignore: 'span' });
+      expect(page.getByText('50.06')).toBeInTheDocument();
 
       cleanup();
     },

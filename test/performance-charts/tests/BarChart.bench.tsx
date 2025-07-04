@@ -1,7 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render, cleanup } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
@@ -19,11 +18,11 @@ describe('BarChart', () => {
   bench(
     'BarChart with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <BarChart xAxis={[{ data: xData }]} series={[{ data: yData }]} width={500} height={300} />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      expect(page.getByText('143')).toBeInTheDocument();
 
       cleanup();
     },
