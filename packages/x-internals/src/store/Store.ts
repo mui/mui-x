@@ -1,5 +1,7 @@
 type Listener<T> = (value: T) => void;
 
+/* eslint-disable lines-between-class-members */
+
 export class Store<State> {
   public state: State;
 
@@ -40,6 +42,7 @@ export class Store<State> {
     }
     let it = this.listeners.values();
     let result;
+    // eslint-disable-next-line no-cond-assign
     while (((result = it.next()), !result.done)) {
       if (this.needsReset) {
         this.needsReset = false;

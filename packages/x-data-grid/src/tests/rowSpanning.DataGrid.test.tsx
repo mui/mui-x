@@ -6,7 +6,6 @@ import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-gri
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { GridPrivateApiCommon } from '../models/api/gridApiCommon';
 
 describe('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();

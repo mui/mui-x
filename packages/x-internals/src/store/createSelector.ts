@@ -102,7 +102,7 @@ export const createSelectorMemoized: CreateSelectorFunction = (...inputs: any[])
 
     let fn = cache.get(cacheKey);
     if (!fn) {
-      const selectors = inputs.length === 1 ? [((state: any) => state), combiner] : inputs
+      const selectors = inputs.length === 1 ? [((x: any) => x), combiner] : inputs
       let reselectArgs = inputs;
       const selectorArgs = [undefined, undefined, undefined];
       switch (argsLength) {
