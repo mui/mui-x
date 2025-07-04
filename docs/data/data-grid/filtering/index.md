@@ -149,7 +149,18 @@ const columns = [
 
 ## Ignore diacritics (accents)
 
-You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
+When filtering, diacritics—accented letters such as _é_ or _à_—are considered distinct from their standard counterparts (_e_ and _a_).
+This can lead to a poor experience when users expect them to be treated as equivalent.
+
+If your dataset includes diacritics that need to be ignored, you can pass the `ignoreDiacritics` prop to the Data Grid:
+
+```tsx
+<DataGrid ignoreDiacritics />
+```
+
+:::info
+The `ignoreDiacritics` prop affects all columns and filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).
+:::
 
 ## apiRef
 
