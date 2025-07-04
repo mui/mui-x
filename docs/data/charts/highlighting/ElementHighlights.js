@@ -85,6 +85,28 @@ const pieChartsParams = {
   margin: { top: 50, bottom: 50 },
 };
 
+function CustomLine(props) {
+  const { d, ownerState, className, ...other } = props;
+
+  return (
+    <React.Fragment>
+      <path
+        d={d}
+        stroke={
+          ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color
+        }
+        strokeWidth={ownerState.isHighlighted ? 4 : 2}
+        strokeLinejoin="round"
+        fill="none"
+        filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+        opacity={ownerState.isFaded ? 0.3 : 1}
+        className={className}
+      />
+      <path d={d} stroke="transparent" strokeWidth={25} fill="none" {...other} />
+    </React.Fragment>
+  );
+}
+
 export default function ElementHighlights() {
   const [chartType, setChartType] = React.useState('bar');
   const [withArea, setWithArea] = React.useState(false);
@@ -141,6 +163,7 @@ export default function ElementHighlights() {
                 fade,
               },
             }))}
+            slots={withArea ? {} : { line: CustomLine }}
           />
         )}
 

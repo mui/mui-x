@@ -62,6 +62,7 @@ try {
 }
 
 export default withDocsInfra({
+  reactStrictMode: true,
   typescript: {
     // The tsconfig also contains path aliases that are used by next.js.
     tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
