@@ -20,11 +20,6 @@ import {
   RowEntry,
 } from './models';
 
-/* eslint-disable jsdoc/require-returns-type */
-/* eslint-disable jsdoc/require-param */
-/* eslint-disable jsdoc/require-param-type */
-/* eslint-disable jsdoc/require-param-description */
-
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
 export type VirtualScrollerCompat = Virtualization.State['getters'];
 
@@ -75,16 +70,21 @@ export type VirtualizerParams = {
    * Function that returns the estimated height for a row.
    * Only works if dynamic row height is used.
    * Once the row height is measured this value is discarded.
+   * @param rowEntry
    * @returns The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
    */
   getEstimatedRowHeight?: (rowEntry: RowEntry) => number | null;
   /**
    * Function that allows to specify the spacing between rows.
+   * @param rowEntry
+   * @param params With all properties from [[GridRowSpacingParams]].
+   * @returns The row spacing values.
    */
   getRowSpacing?: (rowEntry: RowEntry, visibility: RowVisibilityParams) => RowSpacing;
-  /**
-   * Update the row height values before they're used.
+  /** Update the row height values before they're used.
    * Used to add detail panel heights.
+   * @param entry
+   * @param rowEntry
    */
   applyRowHeight?: (entry: HeightEntry, rowEntry: RowEntry) => void;
   virtualizeColumnsWithAutoRowHeight?: boolean;
