@@ -1,5 +1,6 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
 import { Gesture } from './Gesture';
+import { KeyboardManager } from './KeyboardManager';
 import { PointerManager, PointerManagerOptions } from './PointerManager';
 import { GestureElement } from './types/GestureElement';
 import { MergeUnions } from './types/MergeUnions';
@@ -143,6 +144,8 @@ export class GestureManager<
     new ActiveGesturesRegistry();
 
   private pointerManager: PointerManager;
+
+  private keyboardManager: KeyboardManager = new KeyboardManager();
 
   /**
    * Create a new GestureManager instance to coordinate gesture recognition
@@ -345,7 +348,12 @@ export class GestureManager<
     // Clone the gesture template and create a new instance with optional overrides
     // This allows each element to have its own state, event listeners, and configuration
     const gestureInstance = gestureTemplate.clone(options);
-    gestureInstance.init(element, this.pointerManager, this.activeGesturesRegistry);
+    gestureInstance.init(
+      element,
+      this.pointerManager,
+      this.activeGesturesRegistry,
+      this.keyboardManager,
+    );
 
     // Store the gesture in the element's gesture map
     elementGestures.set(gestureName, gestureInstance);
@@ -417,5 +425,6 @@ export class GestureManager<
     this.gestureTemplates.clear();
     this.elementGestureMap.clear();
     this.activeGesturesRegistry.destroy();
+    this.keyboardManager.destroy();
   }
 }

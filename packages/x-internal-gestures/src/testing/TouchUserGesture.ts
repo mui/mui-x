@@ -28,7 +28,7 @@ export type TouchUserGestureRoot = {
 } & TapUserGestureRoot<'touch'> &
   PressUserGestureRoot<'touch'> &
   PinchUserGestureRoot &
-  PanUserGestureRoot &
+  PanUserGestureRoot<'touch'> &
   RotateUserGestureRoot &
   TouchUserGestureRootExtension;
 
@@ -49,7 +49,7 @@ class TouchUserGesture extends UserGesture implements TouchUserGestureRoot {
     return pinch(this.pointerManager, options, this.advanceTimers);
   }
 
-  async pan(options: PanUserGestureOptions): Promise<void> {
+  async pan(options: PanUserGestureOptions<'touch'>): Promise<void> {
     return pan(this.pointerManager, options, this.advanceTimers);
   }
 

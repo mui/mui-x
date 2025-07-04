@@ -7,6 +7,7 @@
 // Export core classes
 export { Gesture } from './Gesture';
 export { GestureManager } from './GestureManager';
+export { KeyboardManager, type KeyboardKey } from './KeyboardManager';
 export { PointerGesture } from './PointerGesture';
 export { PointerManager } from './PointerManager';
 

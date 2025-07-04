@@ -1,5 +1,7 @@
 import { move } from './gestures/MoveUserGesture';
 import { MoveUserGestureOptions, MoveUserGestureRoot } from './gestures/MoveUserGesture.types';
+import { pan } from './gestures/PanUserGesture';
+import type { PanUserGestureOptions, PanUserGestureRoot } from './gestures/PanUserGesture.types';
 import { press } from './gestures/PressUserGesture';
 import { PressUserGestureOptions, PressUserGestureRoot } from './gestures/PressUserGesture.types';
 import { tap } from './gestures/TapUserGesture';
@@ -26,6 +28,7 @@ export type MouseUserGestureRoot = {
 } & TapUserGestureRoot<'mouse'> &
   PressUserGestureRoot<'mouse'> &
   MoveUserGestureRoot &
+  PanUserGestureRoot<'mouse'> &
   TurnWheelUserGestureRoot &
   MouseUserGestureRootExtension;
 
@@ -52,6 +55,10 @@ class MouseUserGesture extends UserGesture implements MouseUserGestureRoot {
 
   async turnWheel(options: TurnWheelUserGestureOptions): Promise<void> {
     return turnWheel(this.pointerManager, options, this.advanceTimers);
+  }
+
+  async pan(options: PanUserGestureOptions<'mouse'>): Promise<void> {
+    return pan(this.pointerManager, options, this.advanceTimers);
   }
 }
 

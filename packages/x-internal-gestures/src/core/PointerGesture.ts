@@ -1,5 +1,6 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
 import { Gesture, GestureEventData, GestureOptions } from './Gesture';
+import type { KeyboardManager } from './KeyboardManager';
 import { PointerData, PointerManager } from './PointerManager';
 import { TargetElement } from './types/TargetElement';
 
@@ -102,8 +103,9 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
-    super.init(element, pointerManager, gestureRegistry);
+    super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
     this.unregisterHandler = this.pointerManager!.registerGestureHandler((pointers, event) =>
       this.handlePointerEvent(pointers, event),

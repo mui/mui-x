@@ -1,6 +1,6 @@
-import { Pointers } from '../types/Pointers';
+import { Pointers, type MousePointer, type PointerType } from '../types/Pointers';
 
-export type PanUserGestureOptions = {
+export type PanUserGestureOptions<P extends PointerType> = {
   /**
    * The target element to start the pan on.
    */
@@ -60,14 +60,31 @@ export type PanUserGestureOptions = {
    * @default true
    */
   releasePointers?: boolean | number[];
-};
+} & (P extends 'mouse'
+  ? {
+      /**
+       * The pointer configuration to be used.
+       */
+      pointer?: MousePointer;
+    }
+  : {
+      /**
+       * The pointers configuration to be used.
+       *
+       * It can be an object with the amount and distance properties, or an array of pointers.
+       *
+       * @default
+       * { amount: 1, distance: 50 }
+       */
+      pointers?: Pointers;
+    });
 
-export type PanUserGestureRoot = {
+export type PanUserGestureRoot<P extends PointerType> = {
   /**
    * Sets up the pan gesture with the given options.
    *
    * @param {PanUserGestureOptions} options - Configuration for the pan gesture
    * @returns {Promise<void>} A promise that resolves when the gesture is complete
    */
-  pan: (options: PanUserGestureOptions) => Promise<void>;
+  pan: (options: PanUserGestureOptions<P>) => Promise<void>;
 };
