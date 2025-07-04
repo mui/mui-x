@@ -1,9 +1,11 @@
-import type { GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridPivotingPrivateApiCommunity,
   GridPivotingStatePartial,
 } from '@mui/x-data-grid/internals';
+import type { RefObject } from '@mui/x-internals/types';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export type GridPivotingPropsOverrides = {
   rows: DataGridPremiumProcessedProps['rows'];
@@ -89,3 +91,15 @@ export type GridPivotingColDefOverrides = Pick<
   | 'resizable'
   | 'sortingOrder'
 >;
+
+export interface GridPivotingInternalCache {
+  nonPivotDataRef: RefObject<
+    | {
+        rows: GridRowModel[];
+        columns: Map<string, GridColDef>;
+        originalRowsProp: readonly GridRowModel[];
+      }
+    | undefined
+  >;
+  exportedStateRef: RefObject<GridInitialStatePremium | null>;
+}
