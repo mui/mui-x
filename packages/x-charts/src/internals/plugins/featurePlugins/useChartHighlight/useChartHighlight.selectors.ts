@@ -1,3 +1,9 @@
+import {
+  selectorChartsInteractionAxis,
+  selectorChartsInteractionXAxis,
+  useSelector,
+  useStore,
+} from '@mui/x-charts/internals';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries/useChartSeries.types';
@@ -62,10 +68,11 @@ export const selectorChartsIsHighlighted = createSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,
+    selectorChartsInteractionAxis,
     (_, item: HighlightItemData | null) => item,
   ],
-  (highlightScope, highlightedItem, item) =>
-    createIsHighlighted(highlightScope, highlightedItem)(item),
+  (highlightScope, highlightedItem, axisInteractionData, item) =>
+    createIsHighlighted(highlightScope, highlightedItem, axisInteractionData)(item),
 );
 
 export const selectorChartsIsFaded = createSelector(
