@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { LicenseInfo } from '@mui/x-license';
+import { clearLicenseStatusCache, LicenseInfo } from '@mui/x-license';
 import { Heatmap } from './Heatmap';
 
 describe('<Heatmap /> - License', () => {
   const { render } = createRenderer();
 
   it('should render watermark when the license is missing', async () => {
+    // Clear any previous license status cache to ensure a clean test environment
+    // Needed, because we run test with "isolate: false"
+    clearLicenseStatusCache();
     LicenseInfo.setLicenseKey('');
 
     expect(() =>
