@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { defineConfig } from 'vitest/config';
 import codspeedPlugin from '@codspeed/vitest-plugin';
 import react from '@vitejs/plugin-react';
