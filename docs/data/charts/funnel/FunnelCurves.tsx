@@ -41,11 +41,6 @@ export default function FunnelCurves() {
             options: ['filled', 'outlined'],
             defaultValue: 'filled',
           },
-          direction: {
-            knob: 'select',
-            options: ['decreasing', 'increasing'],
-            defaultValue: 'decreasing',
-          },
         } as const
       }
       renderDemo={(props) => (
@@ -57,7 +52,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'vertical',
                 variant: props.variant,
-                direction: props.direction,
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -72,7 +67,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'horizontal',
                 variant: props.variant,
-                direction: props.direction,
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -89,7 +84,6 @@ export default function FunnelCurves() {
   series={[{ 
     curve: '${props.curveType}',
     variant: '${props.variant}',
-    direction: '${props.direction}',
     ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
   }]}
   gap={${props.gap}}
