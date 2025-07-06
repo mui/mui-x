@@ -321,8 +321,8 @@ importers:
         specifier: 'catalog:'
         version: 7.1.1(@types/react@19.1.8)(react@19.1.0)
       '@next/eslint-plugin-next':
-        specifier: 15.3.4
-        version: 15.3.4
+        specifier: 15.3.5
+        version: 15.3.5
       '@octokit/plugin-retry':
         specifier: ^8.0.1
         version: 8.0.1(@octokit/core@5.2.0)
@@ -4603,8 +4603,8 @@ packages:
   '@next/env@15.3.4':
     resolution: {integrity: sha512-ZkdYzBseS6UjYzz6ylVKPOK+//zLWvD6Ta+vpoye8cW11AjiQjGYVibF0xuvT4L0iJfAPfZLFidaEzAOywyOAQ==}
 
-  '@next/eslint-plugin-next@15.3.4':
-    resolution: {integrity: sha512-lBxYdj7TI8phbJcLSAqDt57nIcobEign5NYIKCiy0hXQhrUbTqLqOaSDi568U6vFg4hJfBdZYsG4iP/uKhCqgg==}
+  '@next/eslint-plugin-next@15.3.5':
+    resolution: {integrity: sha512-BZwWPGfp9po/rAnJcwUBaM+yT/+yTWIkWdyDwc74G9jcfTrNrmsHe+hXHljV066YNdVs8cxROxX5IgMQGX190w==}
 
   '@next/swc-darwin-arm64@15.3.4':
     resolution: {integrity: sha512-z0qIYTONmPRbwHWvpyrFXJd5F9YWLCsw3Sjrzj2ZvMYy9NPQMPZ1NjOJh4ojr4oQzcGYwgJKfidzehaNa1BpEg==}
@@ -15123,7 +15123,7 @@ snapshots:
     dependencies:
       '@argos-ci/core': 3.2.0
       '@eslint/compat': 1.3.1(eslint@9.30.0)
-      '@next/eslint-plugin-next': 15.3.4
+      '@next/eslint-plugin-next': 15.3.5
       '@octokit/rest': 22.0.0
       chalk: 5.4.1
       eslint: 9.30.0
@@ -15583,7 +15583,7 @@ snapshots:
 
   '@next/env@15.3.4': {}
 
-  '@next/eslint-plugin-next@15.3.4':
+  '@next/eslint-plugin-next@15.3.5':
     dependencies:
       fast-glob: 3.3.1
 
