@@ -67,8 +67,8 @@ catalogs:
       specifier: ^1.0.4
       version: 1.0.4
     '@types/lodash':
-      specifier: ^4.17.19
-      version: 4.17.19
+      specifier: ^4.17.20
+      version: 4.17.20
     '@types/luxon':
       specifier: ^3.6.2
       version: 3.6.2
@@ -346,7 +346,7 @@ importers:
         version: 11.0.4
       '@types/lodash':
         specifier: 'catalog:'
-        version: 4.17.19
+        version: 4.17.20
       '@types/node':
         specifier: ^24.0.7
         version: 24.0.7
@@ -854,7 +854,7 @@ importers:
         version: 0.0.20
       '@types/lodash':
         specifier: 'catalog:'
-        version: 4.17.19
+        version: 4.17.20
       '@types/luxon':
         specifier: 'catalog:'
         version: 3.6.2
@@ -5655,8 +5655,8 @@ packages:
   '@types/katex@0.16.7':
     resolution: {integrity: sha512-HMwFiRujE5PjrgwHQ25+bsLJgowjGjm5Z8FVSf0N6PwgJrwxH0QxzHYDcKsTfV3wva0vzrpqMTJS2jXPr5BMEQ==}
 
-  '@types/lodash@4.17.19':
-    resolution: {integrity: sha512-NYqRyg/hIQrYPT9lbOeYc3kIRabJDn/k4qQHIXUpx88CBDww2fD15Sg5kbXlW86zm2XEW4g0QxkTI3/Kfkc7xQ==}
+  '@types/lodash@4.17.20':
+    resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
   '@types/luxon@3.6.2':
     resolution: {integrity: sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==}
@@ -16795,7 +16795,7 @@ snapshots:
 
   '@types/katex@0.16.7': {}
 
-  '@types/lodash@4.17.19': {}
+  '@types/lodash@4.17.20': {}
 
   '@types/luxon@3.6.2': {}
 
