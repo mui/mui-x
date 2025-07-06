@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui-components/react": "1.0.0-beta.0",
+    "@base-ui-components/react": "1.0.0-beta.1",
     "@floating-ui/react": "^0.27.13",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
