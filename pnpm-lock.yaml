@@ -43,8 +43,8 @@ catalogs:
       specifier: ^7.1.2
       version: 7.1.2
     '@mui/stylis-plugin-rtl':
-      specifier: ^7.1.0
-      version: 7.1.0
+      specifier: ^7.2.0
+      version: 7.2.0
     '@mui/system':
       specifier: ^7.1.1
       version: 7.1.1
@@ -625,7 +625,7 @@ importers:
         version: 7.1.1(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/server@11.11.0)(@types/react@19.1.8)(next@15.3.4(@babel/core@7.27.7)(@playwright/test@1.53.1)(babel-plugin-macros@3.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 7.1.0(stylis@4.3.6)
+        version: 7.2.0(stylis@4.3.6)
       '@mui/system':
         specifier: 'catalog:'
         version: 7.1.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
@@ -1932,7 +1932,7 @@ importers:
         version: 7.1.2(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 7.1.0(stylis@4.3.6)
+        version: 7.2.0(stylis@4.3.6)
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../packages/x-charts/build
@@ -4388,8 +4388,8 @@ packages:
       '@emotion/styled':
         optional: true
 
-  '@mui/stylis-plugin-rtl@7.1.0':
-    resolution: {integrity: sha512-13OlF0VKg2jR4zsWqefyn23tWANTUqArOtsTHMW/HH+599DFWxqHdwnvy40nYfq3njU8jtKDQygZoWw4Xso5Lw==}
+  '@mui/stylis-plugin-rtl@7.2.0':
+    resolution: {integrity: sha512-x+9UMuAuB82dbzxxFeCoZEZaLzdBVOSlkSEhFu8iJgsEmwJXJ9l09NsiONw8sJlp7J5etpGEiafDz0XSM/C/Fw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       stylis: 4.x
@@ -15341,7 +15341,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.1.8)(react@19.1.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
 
-  '@mui/stylis-plugin-rtl@7.1.0(stylis@4.3.6)':
+  '@mui/stylis-plugin-rtl@7.2.0(stylis@4.3.6)':
     dependencies:
       '@babel/runtime': 7.27.6
       cssjanus: 2.3.0
