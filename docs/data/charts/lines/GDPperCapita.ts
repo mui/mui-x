@@ -1,6 +1,4 @@
 export const dataset = [
-  { date: new Date(1990, 0, 1), fr: 28129, gb: 26189, dl: 25391 },
-  { date: new Date(1991, 0, 1), fr: 28294.264, gb: 25792.014, dl: 26769.96 },
   { date: new Date(1992, 0, 1), fr: 28619.805, gb: 25790.186, dl: 27385.055 },
   { date: new Date(1993, 0, 1), fr: 28336.16, gb: 26349.342, dl: 27250.701 },
   { date: new Date(1994, 0, 1), fr: 28907.977, gb: 27277.543, dl: 28140.057 },

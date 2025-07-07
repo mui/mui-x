@@ -4,7 +4,7 @@ export interface ChartExperimentalFeatures {
   /**
    * Default domainLimit to strict for line chart x-axis.
    */
-  strictDomainLimit?: true;
+  strictDomainLimit?: boolean;
 }
 
 export interface UseChartExperimentalFeaturesParameters {

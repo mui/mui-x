@@ -25,8 +25,6 @@ export default function CSSCustomization() {
           id: 'Years',
           dataKey: 'date',
           scaleType: 'time',
-          min: new Date(1990, 0, 1),
-          max: new Date(2018, 0, 1),
           valueFormatter: (date) => date.getFullYear().toString(),
         },
       ]}

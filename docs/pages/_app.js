@@ -1,6 +1,5 @@
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
-import { createTheme } from '@mui/material/styles';
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
 import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
 import * as React from 'react';
@@ -162,16 +161,6 @@ function loadDependencies() {
     document.querySelector('#material-icon-font'),
   );
 }
-
-const experimentaChartFeatures = createTheme({
-  components: {
-    MuiChartDataProvider: {
-      defaultProps: {
-        experimentalFeatures: { strictDomainLimit: true },
-      },
-    },
-  },
-});
 
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
   // eslint-disable-next-line no-console
@@ -342,7 +331,7 @@ function AppWrapper(props) {
               <PageContext.Provider value={pageContextValue}>
                 <ThemeWrapper>
                   <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                    <ThemeProvider theme={experimentaChartFeatures}>{children}</ThemeProvider>
+                    {children}
                     <GoogleAnalytics />
                   </DocsStyledEngineProvider>
                 </ThemeWrapper>
