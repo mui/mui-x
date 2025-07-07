@@ -4,8 +4,8 @@ import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { CalendarEvent } from '@mui/x-scheduler/joy';
 import { spy } from 'sinon';
-import { MonthView } from './MonthView';
-import { StandaloneView } from '../standalone-view/StandaloneView';
+import { MonthView } from '@mui/x-scheduler/joy/month-view';
+import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
 
 const events: CalendarEvent[] = [
   {
@@ -30,32 +30,17 @@ describe('<MonthView />', () => {
     resources: [],
   };
 
-  it('should render the weekday headers', () => {
+  it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
       <StandaloneView {...standaloneDefaults}>
         <MonthView />
       </StandaloneView>,
     );
     const headerTexts = screen.getAllByRole('columnheader').map((header) => header.textContent);
-    expect(headerTexts).to.include.members(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
-  });
-
-  it('should render a cell for each day of the month', () => {
-    render(
-      <StandaloneView {...standaloneDefaults}>
-        <MonthView />
-      </StandaloneView>,
-    );
     const gridCells = screen.getAllByRole('gridcell');
-    expect(gridCells.length).to.be.at.least(31);
-  });
 
-  it('should show the abbreviated month for day 1', () => {
-    render(
-      <StandaloneView {...standaloneDefaults}>
-        <MonthView />
-      </StandaloneView>,
-    );
+    expect(headerTexts).to.include.members(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+    expect(gridCells.length).to.be.at.least(31);
     expect(screen.getByText(/may 1/i)).not.to.equal(null);
   });
 
@@ -96,5 +81,46 @@ describe('<MonthView />', () => {
     );
     expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
     expect(screen.getByText('15')).not.to.equal(null);
+  });
+
+  it('should show "+N more..." when there are more events than fit in a cell', () => {
+    const manyEvents = [
+      {
+        id: '1',
+        start: DateTime.fromISO('2025-05-01T08:00:00'),
+        end: DateTime.fromISO('2025-05-01T09:00:00'),
+        title: 'Breakfast',
+      },
+      {
+        id: '2',
+        start: DateTime.fromISO('2025-05-01T09:30:00'),
+        end: DateTime.fromISO('2025-05-01T10:30:00'),
+        title: 'Team Standup',
+      },
+      {
+        id: '3',
+        start: DateTime.fromISO('2025-05-01T11:00:00'),
+        end: DateTime.fromISO('2025-05-01T12:00:00'),
+        title: 'Client Call',
+      },
+      {
+        id: '4',
+        start: DateTime.fromISO('2025-05-01T13:00:00'),
+        end: DateTime.fromISO('2025-05-01T14:00:00'),
+        title: 'Lunch',
+      },
+      {
+        id: '5',
+        start: DateTime.fromISO('2025-05-01T15:00:00'),
+        end: DateTime.fromISO('2025-05-01T16:00:00'),
+        title: 'Design Review',
+      },
+    ];
+    render(
+      <StandaloneView events={manyEvents} resources={[]}>
+        <MonthView />
+      </StandaloneView>,
+    );
+    expect(screen.getByText(/more/i)).not.to.equal(null);
   });
 });
