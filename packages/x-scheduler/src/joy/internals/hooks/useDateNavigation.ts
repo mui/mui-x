@@ -22,7 +22,7 @@ export function useDateNavigation({ visibleDate, setVisibleDate, view }: UseDate
         nextDate = adapter.addMonths(visibleDate, 1);
         break;
       case 'agenda':
-        nextDate = adapter.addDays(visibleDate, 14);
+        nextDate = adapter.addDays(visibleDate, 12);
         break;
       case 'week':
       default:
@@ -42,7 +42,7 @@ export function useDateNavigation({ visibleDate, setVisibleDate, view }: UseDate
         prevDate = adapter.addMonths(visibleDate, -1);
         break;
       case 'agenda':
-        prevDate = adapter.addDays(visibleDate, -14);
+        prevDate = adapter.addDays(visibleDate, -12);
         break;
       case 'week':
       default:

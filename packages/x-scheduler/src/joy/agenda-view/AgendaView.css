@@ -12,7 +12,6 @@
   border-bottom: 1px solid var(--border-color);
 }
 .AgendaViewRow:last-child {
-  display: flex;
   border-bottom: none;
 }
 
