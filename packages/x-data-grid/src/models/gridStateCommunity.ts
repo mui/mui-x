@@ -62,6 +62,7 @@ export interface GridStateCommunity {
   virtualization: GridVirtualizationState;
   columnResize: GridColumnResizeState;
   rowSpanning: GridRowSpanningState;
+  listView: boolean;
   listViewColumn: GridListViewState;
 }
 

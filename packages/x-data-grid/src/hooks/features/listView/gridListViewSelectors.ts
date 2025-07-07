@@ -2,6 +2,15 @@ import { createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**
+ * Get the list view state
+ * @category List View
+ * @ignore - Do not document
+ */
+export const gridListViewSelector = createRootSelector(
+  (state: GridStateCommunity) => state.listView,
+);
+
+/**
  * Get the list column definition
  * @category List View
  * @ignore - Do not document
