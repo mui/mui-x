@@ -56,13 +56,6 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "onHighlightedAxisChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
-        "describedArgs": ["axisItems"]
-      }
-    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {

@@ -1,7 +1,6 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { AxisId, ChartsAxisProps, AxisItemIdentifier } from '../../../../models/axis';
 import { createSelector } from '../../utils/selectors';
-
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
