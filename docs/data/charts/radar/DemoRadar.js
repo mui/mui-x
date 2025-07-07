@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
-import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';
+import { RadarChart } from '@mui/x-charts/RadarChart';
 
 export default function DemoRadar() {
   const theme = useTheme();
@@ -87,7 +87,7 @@ export default function DemoRadar() {
       )}
       getCode={({ props }) =>
         [
-          `import { Unstable_RadarChart as RadarChart } from '@mui/x-charts/RadarChart';`,
+          `import { RadarChart } from '@mui/x-charts/RadarChart';`,
           '',
           `<RadarChart`,
           '  {/** ... */}',

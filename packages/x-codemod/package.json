@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.4.0",
+  "version": "8.7.0",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
   "bin": "./codemod.js",
@@ -13,7 +13,6 @@
     "jscodeshift"
   ],
   "scripts": {
-    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/x-codemod/**/*.test.ts'",
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
     "copy-files": "cpy README.md build && cpy package.json build",
@@ -31,18 +30,18 @@
     "url": "https://opencollective.com/mui-org"
   },
   "dependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/runtime": "^7.27.1",
-    "@babel/traverse": "^7.27.1",
+    "@babel/core": "catalog:",
+    "@babel/runtime": "catalog:",
+    "@babel/traverse": "catalog:",
     "@mui/x-internals": "workspace:*",
-    "jscodeshift": "17.1.2",
-    "yargs": "^17.7.2"
+    "jscodeshift": "catalog:",
+    "yargs": "catalog:"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^0.12.0",
-    "dayjs": "^1.11.13",
-    "moment-timezone": "^0.5.48",
-    "rimraf": "^6.0.1"
+    "@types/jscodeshift": "^17.3.0",
+    "dayjs": "catalog:",
+    "moment-timezone": "catalog:",
+    "rimraf": "catalog:"
   },
   "sideEffects": false,
   "publishConfig": {

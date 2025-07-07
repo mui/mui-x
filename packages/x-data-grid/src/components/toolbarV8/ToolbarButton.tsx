@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../models';
 import { useToolbarContext } from './ToolbarContext';
 
@@ -75,7 +76,7 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
       previousAriaDisabled.current = ariaDisabled;
     }, [ariaDisabled, id, onItemDisabled]);
 
-    const element = useGridComponentRenderer(rootProps.slots.baseIconButton, render, {
+    const element = useComponentRenderer(rootProps.slots.baseIconButton, render, {
       ...rootProps.slotProps?.baseIconButton,
       tabIndex: focusableItemId === id ? 0 : -1,
       ...other,

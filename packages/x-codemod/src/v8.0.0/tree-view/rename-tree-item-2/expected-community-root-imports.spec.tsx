@@ -66,7 +66,7 @@ function App() {
   const treeItemLabelInputProps: TreeItemLabelInputProps = {};
 
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <TreeItem />
       <TreeItemRoot />
       <TreeItemContent />
@@ -78,6 +78,6 @@ function App() {
       <TreeItemIcon />
       <TreeItemDragAndDropOverlay />
       <TreeItemLabelInput />
-    </React.Fragment>)
+    </React.Fragment>
   );
 }

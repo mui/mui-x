@@ -17,6 +17,7 @@ const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
 const yargs = require('yargs');
+const { hideBin } = require('yargs/helpers');
 const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
@@ -105,8 +106,15 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     }
     const { code } = await babel.transformAsync(source, transformOptions);
 
+    const prettierConfigPath = await prettier.resolveConfigFile();
+    if (!prettierConfigPath) {
+      throw new Error(
+        `Could not resolve prettier config file.
+        Please provide a valid prettier config path or ensure that a prettier config file exists in the project root.`,
+      );
+    }
     const prettierConfig = await prettier.resolveConfig(jsPath, {
-      config: path.join(workspaceRoot, 'prettier.config.js'),
+      config: prettierConfigPath,
     });
     const prettierFormat = async (jsSource) =>
       prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });
@@ -192,7 +200,7 @@ async function main(argv) {
   console.log('\nWatching for file changes...');
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'transpile TypeScript demos',

@@ -29,7 +29,7 @@ function GridColumnHeaderMenu({
   const apiRef = useGridApiContext();
   const colDef = apiRef.current.getColumn(field);
 
-  const hideMenu = useEventCallback((event?: Event) => {
+  const hideMenu = useEventCallback((event?: React.KeyboardEvent | MouseEvent | TouchEvent) => {
     if (event) {
       // Prevent triggering the sorting
       event.stopPropagation();

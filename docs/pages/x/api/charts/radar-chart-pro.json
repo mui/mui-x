@@ -1,0 +1,142 @@
+{
+  "props": {
+    "radar": {
+      "type": {
+        "name": "shape",
+        "description": "{ labelFormatter?: func, labelGap?: number, max?: number, metrics: Array&lt;string&gt;<br>&#124;&nbsp;Array&lt;{ max?: number, min?: number, name: string }&gt;, startAngle?: number }"
+      },
+      "required": true
+    },
+    "series": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "divisions": { "type": { "name": "number" }, "default": "5" },
+    "height": { "type": { "name": "number" } },
+    "hideLegend": { "type": { "name": "bool" } },
+    "highlight": {
+      "type": {
+        "name": "enum",
+        "description": "'axis'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'series'"
+      },
+      "default": "'axis'"
+    },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
+      }
+    },
+    "id": { "type": { "name": "string" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
+    },
+    "shape": {
+      "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
+      "default": "'sharp'"
+    },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "stripeColor": {
+      "type": { "name": "func" },
+      "default": "(index) => index % 2 === 1 ? (theme.vars || theme).palette.text.secondary : 'none'",
+      "signature": {
+        "type": "function(index: number) => string",
+        "describedArgs": ["index"],
+        "returned": "string"
+      }
+    },
+    "width": { "type": { "name": "number" } }
+  },
+  "name": "RadarChartPro",
+  "imports": [
+    "import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';",
+    "import { RadarChartPro } from '@mui/x-charts-pro';"
+  ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "ChartsLegend",
+      "class": null
+    },
+    {
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
+    },
+    {
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiRadarChartPro",
+  "filename": "/packages/x-charts-pro/src/RadarChartPro/RadarChartPro.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "cssComponent": false
+}

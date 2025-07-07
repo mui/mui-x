@@ -23,7 +23,7 @@ export type FunnelValueType = {
   /**
    * The label to display on the tooltip, funnel section, or the legend. It can be a string or a function.
    */
-  label?: string | ((location: 'tooltip' | 'legend' | 'section') => string);
+  label?: string | ((location: 'tooltip' | 'legend' | 'section') => string | undefined);
   /**
    * The color of the funnel section
    */
@@ -57,6 +57,7 @@ export interface FunnelSeriesType
    *
    * - `bump`: A curve that creates a smooth transition between points, with a bump in the middle.
    * - `linear`: A straight line between points.
+   * - `linear-sharp`: A straight line between points, the smaller end of the funnel is a triangle.
    * - `step`: A step line that creates a staircase effect.
    * - `pyramid`: A pyramid shape that connects the points.
    * - `step-pyramid`: A step line that creates a staircase effect, with a pyramid shape.
@@ -87,6 +88,17 @@ export interface FunnelSeriesType
    * @default 'filled'
    */
   variant?: 'filled' | 'outlined';
+  /**
+   * Denotes if the funnel is increasing or decreasing.
+   * Only used in the `pyramid` and `step-pyramid` curves.
+   *
+   * - `increasing`, funnel is drawn with a point at the top and a wide base.
+   * - `decreasing`, funnel is drawn with a wide top and a point at the base.
+   * - `auto`, the direction is determined automatically based on the first and last data points.
+   *
+   * @default 'auto'
+   */
+  funnelDirection?: 'increasing' | 'decreasing' | 'auto';
 }
 
 /**
@@ -121,16 +133,13 @@ export type FunnelItem = {
 };
 
 export interface DefaultizedFunnelSeriesType
-  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
+  extends Omit<
+    DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'>,
+    'funnelDirection'
+  > {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
-  /**
-   * Denotes if the data is increasing, first data point is less than the last data point.
-   * While the data is decreasing if the first data point is greater than the last data point.
-   *
-   * This is used to determine the direction of the funnel.
-   */
-  dataDirection: 'increasing' | 'decreasing';
+  funnelDirection: 'increasing' | 'decreasing';
 }
 
 export type FunnelDataPoints = Record<'x' | 'y', number> & {

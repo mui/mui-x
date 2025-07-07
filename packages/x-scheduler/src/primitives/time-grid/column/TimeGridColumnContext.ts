@@ -1,5 +1,6 @@
+'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../utils/adapter/types';
+import { SchedulerValidDate } from '../../models';
 
 export interface TimeGridColumnContext {
   /**
@@ -15,10 +16,6 @@ export interface TimeGridColumnContext {
 export const TimeGridColumnContext = React.createContext<TimeGridColumnContext | undefined>(
   undefined,
 );
-
-if (process.env.NODE_ENV !== 'production') {
-  TimeGridColumnContext.displayName = 'TimeGridColumnContext';
-}
 
 export function useTimeGridColumnContext() {
   const context = React.useContext(TimeGridColumnContext);

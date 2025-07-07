@@ -32,10 +32,10 @@ export default function DashedLineChart() {
         [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
           strokeWidth: 1,
         },
-        '.MuiLineElement-series-pvId': {
+        [`.${lineElementClasses.root}[data-series="pvId"]`]: {
           strokeDasharray: '5 5',
         },
-        '.MuiLineElement-series-uvId': {
+        [`.${lineElementClasses.root}[data-series="uvId"]`]: {
           strokeDasharray: '3 4 5 2',
         },
         [`.${markElementClasses.root}:not(.${markElementClasses.highlighted})`]: {

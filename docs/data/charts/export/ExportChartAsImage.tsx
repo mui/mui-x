@@ -8,7 +8,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
+import { ChartProApi } from '@mui/x-charts-pro/context';
 
 function ExportParamsSelector({
   apiRef,
@@ -73,7 +74,7 @@ function ExportParamsSelector({
 }
 
 export default function ExportChartAsImage() {
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = useChartProApiRef<'line'>();
 
   return (
     <Stack width="100%" gap={2}>

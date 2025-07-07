@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
@@ -168,7 +168,7 @@ SingleInputDateRangeField.propTypes = {
    */
   InputLabelProps: PropTypes.object,
   /**
-   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
+   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input#attributes) applied to the `input` element.
    * @deprecated Use `slotProps.htmlInput` instead. This prop will be removed in a future major release. See [Migrating from deprecated APIs](https://mui.com/material-ui/migration/migrating-from-deprecated-apis/) for more details.
    */
   inputProps: PropTypes.object,
@@ -247,7 +247,7 @@ SingleInputDateRangeField.propTypes = {
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false

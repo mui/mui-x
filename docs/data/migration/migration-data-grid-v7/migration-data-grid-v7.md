@@ -129,13 +129,13 @@ You have to import it from `@mui/x-license` instead:
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - ✅ The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+  This is the reverse of the previous **Unselect all** behavior, where clicking on an indeterminate checkbox would deselect the selected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - ✅ The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
   Using `Set` allows for a more efficient row selection management.
   The `exclude` selection type allows to select all rows except the ones in the `ids` set.
 
   This change impacts the following props:
-
   - `rowSelectionModel`
   - `onRowSelectionModelChange`
 
@@ -252,7 +252,6 @@ You have to import it from `@mui/x-license` instead:
   Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
 
   Depending on the context in which the API is being used, you can decide what is the best way to deal with `null` value. Some options are:
-
   - Use optional chaining
   - Use non-null assertion operator if you are sure your code is always executed when the `apiRef` is not `null`
   - Return early if `apiRef` is `null`
@@ -298,7 +297,6 @@ You have to import it from `@mui/x-license` instead:
 ### Behavioral changes
 
 - The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
-
   1. If an initial `columnVisibilityModel` is provided, it resets to that model.
   2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
   3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
@@ -370,7 +368,6 @@ You have to import it from `@mui/x-license` instead:
 ### CSS classes and styling
 
 - The Data Grid now has a default background color, and its customization has moved from `theme.mixins.MuiDataGrid` to `theme.palette.DataGrid` with the following properties:
-
   - `bg`: Sets the background color of the entire grid (new property)
   - `headerBg`: Sets the background color of the header (previously named `containerBackground`)
   - `pinnedBg`: Sets the background color of pinned rows and columns (previously named `pinnedBackground`)

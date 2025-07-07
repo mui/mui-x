@@ -4,29 +4,19 @@ import {
   ChartPlugin,
   AxisId,
   DefaultizedZoomOptions,
-  useSelector,
-  getSVGPoint,
-  selectorChartDrawingArea,
   ZoomData,
-  createZoomLookup,
+  useSelector,
   selectorChartZoomOptionsLookup,
+  createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { useEventCallback } from '@mui/material/utils';
-import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import debounce from '@mui/utils/debounce';
+import { useEventCallback } from '@mui/material/utils';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
-import {
-  getDiff,
-  getHorizontalCenterRatio,
-  getPinchScaleRatio,
-  getVerticalCenterRatio,
-  getWheelScaleRatio,
-  isSpanValid,
-  preventDefault,
-  zoomAtPoint,
-} from './useChartProZoom.utils';
+import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
+import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
+import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 export function initializeZoomData(
@@ -63,10 +53,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 }) => {
   const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
+  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
 
   // Manage controlled state
   React.useEffect(() => {
@@ -156,6 +144,21 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [onZoomChange, store, removeIsInteracting],
   );
 
+  const setAxisZoomData = React.useCallback(
+    (axisId: AxisId, zoomData: ZoomData | ((prev: ZoomData) => ZoomData)) => {
+      setZoomDataCallback((prev) =>
+        prev.map((prevZoom) => {
+          if (prevZoom.axisId !== axisId) {
+            return prevZoom;
+          }
+
+          return typeof zoomData === 'function' ? zoomData(prevZoom) : zoomData;
+        }),
+      );
+    },
+    [setZoomDataCallback],
+  );
+
   const moveZoomRange = React.useCallback(
     (axisId: AxisId, by: number) => {
       setZoomDataCallback((prevZoomData) => {
@@ -194,298 +197,16 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     return () => {
       removeIsInteracting.clear();
     };
-  }, [setZoomDataCallback, removeIsInteracting]);
+  }, [removeIsInteracting]);
 
   // Add events
-  const panningEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const zoomEventCacheRef = React.useRef<PointerEvent[]>([]);
-  const eventPrevDiff = React.useRef<number>(0);
+  const pluginData = { store, instance, svgRef };
 
-  // Add event for chart panning
-  const isPanEnabled = React.useMemo(
-    () => Object.values(optionsLookup).some((v) => v.panning) || false,
-    [optionsLookup],
-  );
+  usePanOnDrag(pluginData, setZoomDataCallback);
 
-  const isDraggingRef = React.useRef(false);
-  const touchStartRef = React.useRef<{
-    x: number;
-    y: number;
-    zoomData: readonly ZoomData[];
-  } | null>(null);
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null || !isPanEnabled) {
-      return () => {};
-    }
+  useZoomOnWheel(pluginData, setZoomDataCallback);
 
-    const throttledHandlePan = rafThrottle(
-      (
-        touchStart: {
-          x: number;
-          y: number;
-          zoomData: readonly ZoomData[];
-        },
-        point: DOMPoint,
-      ) => {
-        const movementX = point.x - touchStart.x;
-        const movementY = (point.y - touchStart.y) * -1;
-        const newZoomData = touchStart.zoomData.map((zoom) => {
-          const options = optionsLookup[zoom.axisId];
-          if (!options || !options.panning) {
-            return zoom;
-          }
-          const min = zoom.start;
-          const max = zoom.end;
-          const span = max - min;
-          const MIN_PERCENT = options.minStart;
-          const MAX_PERCENT = options.maxEnd;
-          const movement = options.axisDirection === 'x' ? movementX : movementY;
-          const dimension = options.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
-          let newMinPercent = min - (movement / dimension) * span;
-          let newMaxPercent = max - (movement / dimension) * span;
-          if (newMinPercent < MIN_PERCENT) {
-            newMinPercent = MIN_PERCENT;
-            newMaxPercent = newMinPercent + span;
-          }
-          if (newMaxPercent > MAX_PERCENT) {
-            newMaxPercent = MAX_PERCENT;
-            newMinPercent = newMaxPercent - span;
-          }
-          if (
-            newMinPercent < MIN_PERCENT ||
-            newMaxPercent > MAX_PERCENT ||
-            span < options.minSpan ||
-            span > options.maxSpan
-          ) {
-            return zoom;
-          }
-          return {
-            ...zoom,
-            start: newMinPercent,
-            end: newMaxPercent,
-          };
-        });
-        setZoomDataCallback(newZoomData);
-      },
-    );
-
-    const handlePan = (event: PointerEvent) => {
-      if (element === null || !isDraggingRef.current || panningEventCacheRef.current.length > 1) {
-        return;
-      }
-      if (touchStartRef.current == null) {
-        return;
-      }
-
-      const touchStart = touchStartRef.current;
-      const point = getSVGPoint(element, event);
-
-      throttledHandlePan(touchStart, point);
-    };
-
-    const handleDown = (event: PointerEvent) => {
-      panningEventCacheRef.current.push(event);
-      const point = getSVGPoint(element, event);
-      if (!instance.isPointInside(point.x, point.y)) {
-        return;
-      }
-      // If there is only one pointer, prevent selecting text
-      if (panningEventCacheRef.current.length === 1) {
-        event.preventDefault();
-      }
-      isDraggingRef.current = true;
-      touchStartRef.current = {
-        x: point.x,
-        y: point.y,
-        zoomData: store.getSnapshot().zoom.zoomData,
-      };
-    };
-    const handleUp = (event: PointerEvent) => {
-      panningEventCacheRef.current.splice(
-        panningEventCacheRef.current.findIndex(
-          (cachedEvent) => cachedEvent.pointerId === event.pointerId,
-        ),
-        1,
-      );
-      isDraggingRef.current = false;
-      touchStartRef.current = null;
-    };
-    element.addEventListener('pointerdown', handleDown);
-    document.addEventListener('pointermove', handlePan);
-    document.addEventListener('pointerup', handleUp);
-    document.addEventListener('pointercancel', handleUp);
-    document.addEventListener('pointerleave', handleUp);
-    return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      document.removeEventListener('pointermove', handlePan);
-      document.removeEventListener('pointerup', handleUp);
-      document.removeEventListener('pointercancel', handleUp);
-      document.removeEventListener('pointerleave', handleUp);
-      throttledHandlePan.clear();
-    };
-  }, [
-    instance,
-    svgRef,
-    isDraggingRef,
-    isPanEnabled,
-    optionsLookup,
-    drawingArea.width,
-    drawingArea.height,
-    setZoomDataCallback,
-    store,
-  ]);
-
-  // Add event for chart zoom in/out
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
-      return () => {};
-    }
-
-    const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
-
-    const wheelHandler = (event: WheelEvent) => {
-      if (element === null) {
-        return;
-      }
-
-      const point = getSVGPoint(element, event);
-
-      if (!instance.isPointInside(point.x, point.y)) {
-        return;
-      }
-
-      event.preventDefault();
-
-      /*
-       * Need to throttle `setZoomDataCallback` instead of `wheelHandler` because we're calling `event.preventDefault()`.
-       * If we throttle the event, then some events' default behavior won't be prevented and the page will scroll while
-       * the user is trying to zoom in.
-       */
-      rafThrottledSetZoomData((prevZoomData) => {
-        return prevZoomData.map((zoom) => {
-          const option = optionsLookup[zoom.axisId];
-          if (!option) {
-            return zoom;
-          }
-
-          const centerRatio =
-            option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
-
-          const { scaleRatio, isZoomIn } = getWheelScaleRatio(event, option.step);
-          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
-
-          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-            return zoom;
-          }
-
-          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
-        });
-      });
-    };
-
-    function pointerDownHandler(event: PointerEvent) {
-      zoomEventCacheRef.current.push(event);
-    }
-
-    const pointerMoveHandler = rafThrottle(function pointerMoveHandler(event: PointerEvent) {
-      if (element === null) {
-        return;
-      }
-
-      const index = zoomEventCacheRef.current.findIndex(
-        (cachedEv) => cachedEv.pointerId === event.pointerId,
-      );
-      zoomEventCacheRef.current[index] = event;
-
-      // Not a pinch gesture
-      if (zoomEventCacheRef.current.length !== 2) {
-        return;
-      }
-
-      const firstEvent = zoomEventCacheRef.current[0];
-      const curDiff = getDiff(zoomEventCacheRef.current);
-
-      setZoomDataCallback((prevZoomData) => {
-        const newZoomData = prevZoomData.map((zoom) => {
-          const option = optionsLookup[zoom.axisId];
-          if (!option) {
-            return zoom;
-          }
-
-          const { scaleRatio, isZoomIn } = getPinchScaleRatio(
-            curDiff,
-            eventPrevDiff.current,
-            option.step,
-          );
-
-          // If the scale ratio is 0, it means the pinch gesture is not valid.
-          if (scaleRatio === 0) {
-            return zoom;
-          }
-
-          const point = getSVGPoint(element, firstEvent);
-
-          const centerRatio =
-            option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
-
-          const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
-
-          if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-            return zoom;
-          }
-          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
-        });
-        eventPrevDiff.current = curDiff;
-        return newZoomData;
-      });
-    });
-
-    function pointerUpHandler(event: PointerEvent) {
-      zoomEventCacheRef.current.splice(
-        zoomEventCacheRef.current.findIndex(
-          (cachedEvent) => cachedEvent.pointerId === event.pointerId,
-        ),
-        1,
-      );
-
-      if (zoomEventCacheRef.current.length < 2) {
-        eventPrevDiff.current = 0;
-      }
-    }
-
-    element.addEventListener('wheel', wheelHandler);
-    element.addEventListener('pointerdown', pointerDownHandler);
-    element.addEventListener('pointermove', pointerMoveHandler);
-    element.addEventListener('pointerup', pointerUpHandler);
-    element.addEventListener('pointercancel', pointerUpHandler);
-    element.addEventListener('pointerout', pointerUpHandler);
-    element.addEventListener('pointerleave', pointerUpHandler);
-
-    // Prevent zooming the entire page on touch devices
-    element.addEventListener('touchstart', preventDefault);
-    element.addEventListener('touchmove', preventDefault);
-
-    return () => {
-      element.removeEventListener('wheel', wheelHandler);
-      element.removeEventListener('pointerdown', pointerDownHandler);
-      element.removeEventListener('pointermove', pointerMoveHandler);
-      element.removeEventListener('pointerup', pointerUpHandler);
-      element.removeEventListener('pointercancel', pointerUpHandler);
-      element.removeEventListener('pointerout', pointerUpHandler);
-      element.removeEventListener('pointerleave', pointerUpHandler);
-      element.removeEventListener('touchstart', preventDefault);
-      element.removeEventListener('touchmove', preventDefault);
-
-      pointerMoveHandler.clear();
-      rafThrottledSetZoomData.clear();
-    };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback]);
+  useZoomOnPinch(pluginData, setZoomDataCallback);
 
   const zoom = React.useCallback(
     (step: number) => {
@@ -509,11 +230,13 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   return {
     publicAPI: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       zoomIn,
       zoomOut,
     },
     instance: {
       setZoomData: setZoomDataCallback,
+      setAxisZoomData,
       moveZoomRange,
       zoomIn,
       zoomOut,

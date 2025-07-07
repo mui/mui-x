@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: Date and Time Picker - Base concepts
 packageName: '@mui/x-date-pickers'
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
@@ -146,6 +146,16 @@ This can also be useful to set the part of the value that will not be selectable
 For example, in a Time Picker, it allows you to choose the date of your value:
 
 {{"demo": "ReferenceDateExplicitTimePicker.js"}}
+
+Reference date can be unique for each range component position.
+You can pass an array of dates to the `referenceDate` prop to set the reference date for each position in the range.
+This might be useful when you want different time values for start and end positions in a Date Time Range Picker.
+
+:::info
+Try selecting a date the demo below, then move to next position to observe the end reference date usage.
+:::
+
+{{"demo": "ReferenceDateRange.js"}}
 
 ## Testing caveats
 

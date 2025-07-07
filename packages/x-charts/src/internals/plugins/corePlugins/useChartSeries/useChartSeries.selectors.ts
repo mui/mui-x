@@ -5,11 +5,11 @@ export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature
   state.series;
 
 export const selectorChartSeriesProcessed = createSelector(
-  selectorChartSeriesState,
+  [selectorChartSeriesState],
   (seriesState) => seriesState.processedSeries,
 );
 
 export const selectorChartSeriesConfig = createSelector(
-  selectorChartSeriesState,
+  [selectorChartSeriesState],
   (seriesState) => seriesState.seriesConfig,
 );

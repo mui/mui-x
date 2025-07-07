@@ -1,12 +1,13 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import { ToolbarContext } from './ToolbarContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -223,7 +224,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
     [focusableItemId, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemDisabled],
   );
 
-  const element = useGridComponentRenderer(ToolbarRoot, render, {
+  const element = useComponentRenderer(ToolbarRoot, render, {
     role: 'toolbar',
     'aria-orientation': 'horizontal',
     'aria-label': rootProps.label || undefined,

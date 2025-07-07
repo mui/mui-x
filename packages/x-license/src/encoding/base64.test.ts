@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { base64Decode, base64Encode } from './base64';
 
 describe('License: base64', () => {
