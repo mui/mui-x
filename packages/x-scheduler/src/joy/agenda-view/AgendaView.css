@@ -9,10 +9,10 @@
 .AgendaViewRow {
   display: grid;
   grid-template-columns: 190px 1fr;
-  border-bottom: 1px solid var(--border-color);
 }
-.AgendaViewRow:last-child {
-  border-bottom: none;
+
+.AgendaViewRow:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .DayHeaderCell {
