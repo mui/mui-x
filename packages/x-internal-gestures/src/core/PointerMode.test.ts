@@ -49,6 +49,7 @@ describe('Pointer Mode Filter', () => {
         }),
         new TapGesture({
           name: 'anyTap',
+          pointerMode: [],
           // No pointerMode specified, accepts all pointer types
         }),
       ],
