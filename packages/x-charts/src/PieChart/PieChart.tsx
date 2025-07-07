@@ -45,7 +45,7 @@ export interface PieChartSlotProps
 export interface PieChartProps
   extends Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
@@ -185,12 +185,6 @@ PieChart.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

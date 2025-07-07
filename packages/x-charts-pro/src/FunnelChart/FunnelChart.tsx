@@ -36,6 +36,7 @@ export interface FunnelChartProps
       | 'radiusAxis'
       | 'slots'
       | 'slotProps'
+      | 'experimentalFeatures'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -231,12 +232,6 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0

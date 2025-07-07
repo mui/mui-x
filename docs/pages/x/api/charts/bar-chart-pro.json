@@ -22,9 +22,6 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ strictDomainLimit?: bool }" }
-    },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },

@@ -51,6 +51,7 @@ export interface SparkLineChartProps
     | 'colors'
     | 'slots'
     | 'slotProps'
+    | 'experimentalFeatures'
   > {
   /**
    * The xAxis configuration.
@@ -344,12 +345,6 @@ SparkLineChart.propTypes = {
    * If true, the voronoi interaction are ignored.
    */
   disableVoronoi: PropTypes.bool,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

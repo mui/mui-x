@@ -49,7 +49,7 @@ export interface BarChartSlotProps
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginsSignatures>,
-      'series' | 'plugins' | 'zAxis'
+      'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
@@ -204,12 +204,6 @@ BarChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * Option to display a cartesian grid in the background.
    */

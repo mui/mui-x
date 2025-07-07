@@ -76,7 +76,14 @@ export interface HeatmapSlotProps
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'xAxis'
+      | 'yAxis'
+      | 'skipAnimation'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -302,12 +309,6 @@ Heatmap.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

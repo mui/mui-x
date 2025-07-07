@@ -98,7 +98,7 @@ ChartDataProvider.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Options to enable features planned for the nex major.
+   * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
     strictDomainLimit: PropTypes.bool,

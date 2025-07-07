@@ -54,7 +54,7 @@ export interface ScatterChartSlotProps
 export interface ScatterChartProps
   extends Omit<
       ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
-      'series' | 'plugins' | 'onItemClick'
+      'series' | 'plugins' | 'onItemClick' | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -201,12 +201,6 @@ ScatterChart.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * Option to display a cartesian grid in the background.
    */

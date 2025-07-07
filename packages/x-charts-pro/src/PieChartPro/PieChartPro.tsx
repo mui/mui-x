@@ -31,7 +31,7 @@ export interface PieChartProProps
   extends Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'pie', PieChartProPluginSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -143,12 +143,6 @@ PieChartPro.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

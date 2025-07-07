@@ -26,9 +26,6 @@
       "default": "rainbowSurgePalette"
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ strictDomainLimit?: bool }" }
-    },
     "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" }, "default": "false" },

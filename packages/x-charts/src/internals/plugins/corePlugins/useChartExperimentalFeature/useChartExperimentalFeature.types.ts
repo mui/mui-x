@@ -9,7 +9,7 @@ export interface ChartExperimentalFeatures {
 
 export interface UseChartExperimentalFeaturesParameters {
   /**
-   * Options to enable features planned for the nex major.
+   * Options to enable features planned for the next major.
    */
   experimentalFeatures?: ChartExperimentalFeatures;
 }

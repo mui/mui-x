@@ -37,7 +37,7 @@ export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -176,12 +176,6 @@ BarChartPro.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * Option to display a cartesian grid in the background.
    */

@@ -39,7 +39,7 @@ export interface RadarChartProProps
   extends Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       RadarDataProviderProps<RadarChartProPluginsSignatures>,
-      'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -137,12 +137,6 @@ RadarChartPro.propTypes = {
    * @default 5
    */
   divisions: PropTypes.number,
-  /**
-   * Options to enable features planned for the nex major.
-   */
-  experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
-  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

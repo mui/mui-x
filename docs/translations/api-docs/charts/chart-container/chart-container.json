@@ -10,7 +10,7 @@
     },
     "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
     "experimentalFeatures": {
-      "description": "Options to enable features planned for the nex major."
+      "description": "Options to enable features planned for the next major."
     },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."

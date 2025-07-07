@@ -183,7 +183,7 @@ LineChartPro.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
-   * Options to enable features planned for the nex major.
+   * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
     strictDomainLimit: PropTypes.bool,
