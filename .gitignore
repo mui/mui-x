@@ -17,6 +17,7 @@ __diff_output__
 /docs/export
 /docs/public/x/
 /test/regressions/screenshots
+/test/performance-charts/traces
 build
 dist
 node_modules

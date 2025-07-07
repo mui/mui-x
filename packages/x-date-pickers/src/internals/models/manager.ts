@@ -6,7 +6,7 @@ import type {
   PickerValueType,
 } from '../../models';
 import type { GetDefaultReferenceDateProps } from '../utils/getDefaultReferenceDate';
-import { InferNonNullablePickerValue, PickerValidValue } from './value';
+import { InferNonNullablePickerValue, PickerRangeValue, PickerValidValue } from './value';
 import type { UseFieldInternalProps } from '../hooks/useField';
 
 export type PickerAnyManager = PickerManager<any, any, any, any, any>;
@@ -82,7 +82,7 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * Method returning the reference value to use when mounting the component.
    * @param {object} params The params of the method.
-   * @param {PickerValidDate | undefined} params.referenceDate The referenceDate provided by the user.
+   * @param {PickerValidDate | PickerValidDate[] | undefined} params.referenceDate The referenceDate provided by the user.
    * @param {TValue} params.value The value provided by the user.
    * @param {GetDefaultReferenceDateProps} params.props The validation props needed to compute the reference value.
    * @param {MuiPickersAdapter} params.adapter The Picker date adapter instance.
@@ -92,7 +92,7 @@ export interface PickerValueManager<TValue extends PickerValidValue, TError> {
    * @returns {TValue} The reference value to use for non-provided dates.
    */
   getInitialReferenceValue: (params: {
-    referenceDate: PickerValidDate | undefined;
+    referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
     value: TValue;
     props: GetDefaultReferenceDateProps;
     adapter: MuiPickersAdapter;

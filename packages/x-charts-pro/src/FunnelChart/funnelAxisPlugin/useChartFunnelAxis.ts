@@ -12,6 +12,7 @@ import {
   defaultizeXAxis,
   defaultizeYAxis,
 } from '@mui/x-charts/internals';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRendering.selectors';
 
@@ -66,49 +67,57 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
+    if (!isInteractionEnabled || !element || params.disableAxisListener) {
       return () => {};
     }
 
-    const handleOut = () => {
-      instance.cleanInteraction?.();
-    };
+    // Clean the interaction when the mouse leaves the chart.
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+      }
+    });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        instance.cleanInteraction?.();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+      }
+    });
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
-
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.target)) {
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      const srvEvent = event.detail.srcEvent;
+      const target = event.detail.target as SVGElement | undefined;
+      const svgPoint = getSVGPoint(element, srvEvent);
+      // Release the pointer capture if we are panning, as this would cause the tooltip to
+      // be locked to the first "section" it touches.
+      if (
+        event.detail.srcEvent.buttons >= 1 &&
+        target?.hasPointerCapture(event.detail.srcEvent.pointerId)
+      ) {
+        target?.releasePointerCapture(event.detail.srcEvent.pointerId);
+      }
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, target)) {
         instance.cleanInteraction?.();
         return;
       }
-
       instance.setPointerCoordinate?.(svgPoint);
     };
 
-    const handleDown = (event: PointerEvent) => {
-      const target = event.currentTarget;
-      if (!target) {
-        return;
-      }
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
-      if (
-        'hasPointerCapture' in target &&
-        (target as HTMLElement).hasPointerCapture(event.pointerId)
-      ) {
-        (target as HTMLElement).releasePointerCapture(event.pointerId);
-      }
-    };
-
-    element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointercancel', handleOut);
-    element.addEventListener('pointerleave', handleOut);
     return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointercancel', handleOut);
-      element.removeEventListener('pointerleave', handleOut);
+      moveHandler.cleanup();
+      moveEndHandler.cleanup();
+      panHandler.cleanup();
+      panEndHandler.cleanup();
+      pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [svgRef, instance, params.disableAxisListener, isInteractionEnabled]);
 
@@ -119,9 +128,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       return () => {};
     }
 
-    const handleMouseClick = (event: MouseEvent) => {
-      event.preventDefault();
-
+    const axisClickHandler = instance.addInteractionListener('tap', (event) => {
       const { axis: xAxisWithScale, axisIds: xAxisIds } = selectorChartXAxis(store.value);
       const { axis: yAxisWithScale, axisIds: yAxisIds } = selectorChartYAxis(store.value);
       const processedSeries = selectorChartSeriesProcessed(store.value);
@@ -132,7 +139,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       let dataIndex: number | null = null;
       let isXAxis: boolean = false;
 
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getSVGPoint(element, event.detail.srcEvent);
 
       const xIndex = getCartesianAxisIndex(xAxisWithScale[usedXAxis], svgPoint.x);
       isXAxis = xIndex !== -1;
@@ -161,14 +168,13 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         }
       });
 
-      onAxisClick(event, { dataIndex, axisValue, seriesValues });
-    };
+      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
+    });
 
-    element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('click', handleMouseClick);
+      axisClickHandler.cleanup();
     };
-  }, [params.onAxisClick, svgRef, store]);
+  }, [params.onAxisClick, svgRef, store, instance]);
 
   return {};
 };
