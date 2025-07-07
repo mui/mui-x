@@ -170,7 +170,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
   }
 
   const prettierConfig = await prettier.resolveConfig(process.cwd(), {
-    config: path.join(__dirname, '../../prettier.config.js'),
+    config: path.join(__dirname, '../../prettier.config.mjs'),
   });
 
   const prettified = await prettier.format(result, { ...prettierConfig, filepath: sourceFile });

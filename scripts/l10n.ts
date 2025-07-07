@@ -438,7 +438,7 @@ async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
             baseTranslationsByGroup,
           );
 
-          const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
+          const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.mjs');
           const prettierConfig = await prettier.resolveConfig(localePath, {
             config: prettierConfigPath,
           });
