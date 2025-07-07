@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Stack } from '@mui/material';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
-const data = [{ value: 30 }, { value: 20 }, { value: 25 }, { value: 15 }, { value: 10 }];
+const data = [{ value: 30 }, { value: 20 }, { value: 15 }, { value: 10 }];
 
 export default function FunnelBumpAndDirection() {
   const config = {
