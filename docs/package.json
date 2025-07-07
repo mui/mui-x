@@ -79,7 +79,7 @@
     "moment-hijri": "catalog:",
     "moment-jalaali": "catalog:",
     "moment-timezone": "catalog:",
-    "next": "^15.3.4",
+    "next": "^15.3.5",
     "nprogress": "^0.2.0",
     "postcss": "^8.5.6",
     "prop-types": "catalog:",
