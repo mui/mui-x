@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 type Axis<T> = { id: string; label: string; data: T[] }[];
 
 type GridChartsConfiguration = Record<string, string | number | boolean | null>;
@@ -8,22 +10,36 @@ type ConfigurationCallback<R> = (context: {
   series: Axis<number | null>;
 }) => R;
 
-export interface GridChartsConfigurationSection {
-  id: string;
-  label: string;
-  controls: {
-    [key: string]: {
+export type GridChartsConfigurationControl =
+  | {
       label: string;
       description?: string;
-      type: string;
-      options?: { label: string; value: string }[];
+      type: 'boolean' | 'number' | 'string';
       default: boolean | string | number | null;
       isDisabled?: ConfigurationCallback<boolean>;
       isHidden?: ConfigurationCallback<boolean>;
       htmlAttributes?: {
         [key: string]: string;
       };
+    }
+  | {
+      label: string;
+      description?: string;
+      type: 'select';
+      options: { content: React.ReactNode; value: string }[];
+      default: string;
+      isDisabled?: ConfigurationCallback<boolean>;
+      isHidden?: ConfigurationCallback<boolean>;
+      htmlAttributes?: {
+        [key: string]: string;
+      };
     };
+
+export interface GridChartsConfigurationSection {
+  id: string;
+  label: string;
+  controls: {
+    [key: string]: GridChartsConfigurationControl;
   };
 }
 

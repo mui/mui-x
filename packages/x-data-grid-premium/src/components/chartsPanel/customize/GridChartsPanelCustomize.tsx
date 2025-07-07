@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/system';
+import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { GridShadowScrollArea } from '@mui/x-data-grid-pro';
-import { useCSSVariablesClass } from '@mui/x-data-grid/internals';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
-import type { GridChartsConfigurationSection } from '../../../models/gridChartsIntegration';
+import type {
+  GridChartsConfigurationControl,
+  GridChartsConfigurationSection,
+} from '../../../models/gridChartsIntegration';
 import { Collapsible } from '../../collapsible/Collapsible';
 import { CollapsibleTrigger } from '../../collapsible/CollapsibleTrigger';
 import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';
@@ -49,50 +51,6 @@ const GridChartsPanelCustomizePanelTitle = styled('div', {
   fontWeight: vars.typography.fontWeight.medium,
 });
 
-const PaletteOptionRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'PaletteOptionRoot',
-})({
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing(1),
-});
-
-const PaletteOptionIcon = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'PaletteOptionIcon',
-})({
-  width: 24,
-  height: 24,
-  borderRadius: vars.radius.base,
-  border: `1px solid ${vars.colors.border.base}`,
-  backgroundColor: vars.colors.background.base,
-});
-
-function PaletteOption(props: {
-  palette: (mode: 'light' | 'dark') => string[];
-  children: React.ReactNode;
-}) {
-  const rootProps = useGridRootProps();
-  const variablesClass = useCSSVariablesClass();
-  const theme = useTheme();
-  const colors = props.palette(theme.palette.mode ?? 'light');
-  return (
-    <PaletteOptionRoot className={variablesClass}>
-      <PaletteOptionIcon>
-        <rootProps.slots.chartsPaletteIcon
-          style={
-            Object.fromEntries(
-              colors.map((color, index) => [`--color-${index + 1}`, color]),
-            ) as React.CSSProperties
-          }
-        />
-      </PaletteOptionIcon>
-      {props.children}
-    </PaletteOptionRoot>
-  );
-}
-
 export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   const { activeChartId, sections } = props;
   const apiRef = useGridApiContext();
@@ -134,7 +92,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
           </CollapsibleTrigger>
           <GridChartsPanelCustomizePanel ownerState={rootProps}>
             {Object.entries(section.controls).map(([key, optRaw]) => {
-              const opt = optRaw as any;
+              const opt = optRaw as GridChartsConfigurationControl;
               const context = { configuration, categories, series };
               const isHidden = opt.isHidden?.(context) ?? false;
               if (isHidden) {
@@ -175,52 +133,15 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                     }}
                     {...rootProps.slotProps?.baseSelect}
                   >
-                    {(opt.options || []).map((option: { label: string; value: string }) => (
+                    {(opt.options || []).map((option) => (
                       <rootProps.slots.baseSelectOption
                         key={option.value}
                         value={option.value}
                         native={false}
                       >
-                        {option.label}
+                        {option.content}
                       </rootProps.slots.baseSelectOption>
                     ))}
-                  </rootProps.slots.baseSelect>
-                );
-              }
-              if (opt.type === 'colorPalette') {
-                return (
-                  <rootProps.slots.baseSelect
-                    key={key}
-                    fullWidth
-                    size="small"
-                    label={opt.label}
-                    value={configuration[key] ?? opt.default}
-                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                      handleChange(key, event.target.value)
-                    }
-                    disabled={isDisabled}
-                    slotProps={{
-                      htmlInput: {
-                        ...opt.htmlAttributes,
-                      },
-                    }}
-                    {...rootProps.slotProps?.baseSelect}
-                  >
-                    {(opt.options || []).map(
-                      (option: {
-                        label: string;
-                        value: string;
-                        palette: (mode: 'light' | 'dark') => string[];
-                      }) => (
-                        <rootProps.slots.baseSelectOption
-                          key={option.value}
-                          value={option.value}
-                          native={false}
-                        >
-                          <PaletteOption palette={option.palette}>{option.label}</PaletteOption>
-                        </rootProps.slots.baseSelectOption>
-                      ),
-                    )}
                   </rootProps.slots.baseSelect>
                 );
               }
@@ -241,7 +162,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                     },
                   }}
                   {...rootProps.slotProps?.baseTextField}
-                  value={configuration[key] ?? opt.default}
+                  value={(configuration[key] ?? opt.default ?? '').toString()}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     handleChange(
                       key,
