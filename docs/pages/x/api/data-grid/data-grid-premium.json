@@ -1572,12 +1572,6 @@
       "description": "Icon used for the sync button in the charts configuration panel when sync is disabled",
       "default": "GridSyncDisabledIcon",
       "class": null
-    },
-    {
-      "name": "chartsPaletteIcon",
-      "description": "Icon used to display the palette option in the charts configuration panel",
-      "default": "GridChartsPaletteIcon",
-      "class": null
     }
   ],
   "classes": [

@@ -41,6 +41,7 @@ export const idIDGrid: GridLocaleText = {
 
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'Asisten AI',
@@ -127,6 +128,7 @@ export const idIDGrid: GridLocaleText = {
   columnMenuSortAsc: 'Urutkan menaik',
   columnMenuSortDesc: 'Urutkan menurun',
   columnMenuManagePivot: 'Kelola pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filter aktif`,
@@ -240,6 +242,27 @@ export const idIDGrid: GridLocaleText = {
   pivotDragToValues: 'Seret ke sini untuk membuat nilai',
   pivotYearColumnHeaderName: '(Tahun)',
   pivotQuarterColumnHeaderName: '(Kuartal)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'Asisten AI',
