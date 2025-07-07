@@ -7,7 +7,8 @@
 }
 
 .AgendaViewRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: 190px 1fr;
   border-bottom: 1px solid var(--border-color);
 }
 .AgendaViewRow:last-child {
@@ -46,8 +47,6 @@
 .AgendaWeekDayNameLabel {
   font-size: var(--font-size-2);
   line-height: 1;
-  /* TODO find a more robust way to make the header cells have the same width */
-  min-width: 80px;
 }
 
 .AgendaYearAndMonthLabel {

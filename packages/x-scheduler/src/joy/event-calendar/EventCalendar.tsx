@@ -17,8 +17,10 @@ import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
 import { selectors, State } from './store';
 import { EventCalendarStoreContext } from '../internals/hooks/useEventCalendarStore';
 import { MonthView } from '../month-view';
+import { DateNavigator } from '../date-navigator/DateNavigator';
 import '../index.css';
 import './EventCalendar.css';
+import { useDateNavigation } from '../internals/hooks/useDateNavigation';
 
 const adapter = getAdapter();
 
@@ -48,6 +50,17 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   const currentView = useSelector(store, selectors.currentView);
   const resources = useSelector(store, selectors.resources);
+  const visibleDate = useSelector(store, selectors.visibleDate);
+
+  const setVisibleDate = useEventCallback((date: SchedulerValidDate) => {
+    store.apply({ visibleDate: date });
+  });
+
+  const { onNextClick, onPreviousClick, onTodayClick } = useDateNavigation({
+    visibleDate,
+    setVisibleDate,
+    view: currentView,
+  });
 
   const handleDayHeaderClick = useEventCallback((day: SchedulerValidDate) => {
     store.apply({ visibleDate: day, currentView: 'day' });
@@ -87,9 +100,11 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       <TranslationsProvider translations={translations}>
         <div className={clsx(className, 'EventCalendarRoot', 'joy')} ref={forwardedRef} {...other}>
           <aside className="EventCalendarSidePanel">
-            <span style={{ display: 'flex', alignItems: 'center', height: 44 }}>
-              TODO: Time nav
-            </span>
+            <DateNavigator
+              visibleDate={visibleDate}
+              onNextClick={onNextClick}
+              onPreviousClick={onPreviousClick}
+            />
             <section
               className="EventCalendarMonthCalendarPlaceholder"
               // TODO: Add localization
@@ -123,7 +138,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
               currentView === 'month' && 'EventCalendarMainPanel--month',
             )}
           >
-            <HeaderToolbar onTodayClick={() => {}} />
+            <HeaderToolbar onTodayClick={onTodayClick} />
             <section
               // TODO: Add localization
               className="EventCalendarContent"
