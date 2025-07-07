@@ -634,7 +634,7 @@ function generateStructuredContent(
     for (const child of page.children) {
       content += generateStructuredContent(child, fileMap, depth + 1);
     }
-    content += '\n\n'
+    content += '\n\n';
   } else if (matchedFile) {
     // This is a leaf page with a matching file
     const renderedTitle = pageToTitleI18n(page, () => undefined);
