@@ -7,9 +7,9 @@ import { getColorValue } from './utils/colors';
 import { detailPanelDataGridStyles } from './styles';
 
 const DetailPanelContainer = styled(Box)(({ theme }) => ({
-  margin: theme.spacing(1),
   paddingLeft: theme.spacing(6),
   animation: 'fadeIn 0.5s ease-out',
+  backgroundColor: theme.palette.background.paper,
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -118,6 +118,7 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
         disableDensitySelector
         disableRowSelectionOnClick
         sx={{
+          backgroundColor: 'transparent',
           ...detailPanelDataGridStyles,
           '& .MuiDataGrid-columnHeader': {
             backgroundColor: 'transparent',

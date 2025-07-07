@@ -1,20 +1,23 @@
 import type {} from '@mui/x-data-grid-premium/themeAugmentation';
 import { createTheme } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
+import { grey, blueGrey } from '@mui/material/colors';
 
 export const inventoryTheme = createTheme({
+  typography: {
+    fontFamily: '"Inter", sans-serif',
+  },
   colorSchemes: {
     light: {
       palette: {
         DataGrid: {
-          headerBg: grey[50],
+          headerBg: blueGrey[50],
         },
       },
     },
     dark: {
       palette: {
         DataGrid: {
-          headerBg: grey[900],
+          headerBg: blueGrey[900],
         },
       },
     },

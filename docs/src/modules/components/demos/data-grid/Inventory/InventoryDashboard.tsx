@@ -194,7 +194,7 @@ function InventoryDashboard() {
                 pageSizeOptions={[5]}
                 disableRowSelectionOnClick
                 getDetailPanelContent={({ row }) => <ProductDetailPanel row={row} />}
-                getDetailPanelHeight={() => 120}
+                getDetailPanelHeight={() => 115}
                 rowHeight={80}
                 onRowClick={onRowClick}
                 slots={{
