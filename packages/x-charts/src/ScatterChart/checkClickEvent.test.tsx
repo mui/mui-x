@@ -116,7 +116,7 @@ describe('ScatterChart - click event', () => {
     });
   });
 
-  describe.skipIf(isJSDOM)('onItemClick - disabling voronoi', () => {
+  describe('onItemClick - disabling voronoi', () => {
     it('should not call onItemClick when clicking the SVG', async () => {
       const onItemClick = spy();
       const { user } = render(
