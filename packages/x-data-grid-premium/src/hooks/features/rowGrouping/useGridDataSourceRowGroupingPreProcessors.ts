@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { GridRowId, gridRowTreeSelector, gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import {
+  GridRowId,
+  gridRowTreeSelector,
+  gridColumnLookupSelector,
+  GridDataSourceGroupNode,
+} from '@mui/x-data-grid-pro';
 import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
@@ -50,8 +55,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
         const parentPath =
-          (params.updates as GridRowsPartialUpdates).groupKeys ??
-          getParentIds(rowId, params).map((id) => getGroupKey(params.dataRowIdToModelLookup[id]));
+          (params.updates as GridRowsPartialUpdates).groupKeys ?? getParentPath(rowId, params);
         const leafKey = getGroupKey(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,
@@ -122,20 +126,15 @@ export const useGridDataSourceRowGroupingPreProcessors = (
   );
 };
 
-function getParentIds(rowId: GridRowId, treeCreationParams: GridRowTreeCreationParams): string[] {
+function getParentPath(rowId: GridRowId, treeCreationParams: GridRowTreeCreationParams): string[] {
   if (
     treeCreationParams.updates.type !== 'full' ||
     !treeCreationParams.previousTree?.[rowId] ||
-    treeCreationParams.previousTree[rowId].depth < 1
+    treeCreationParams.previousTree[rowId].depth < 1 ||
+    !('path' in treeCreationParams.previousTree[rowId])
   ) {
     return [];
   }
 
-  const parentId = treeCreationParams.previousTree[rowId].parent;
-  if (!parentId) {
-    return [];
-  }
-
-  const grandparentIds = getParentIds(parentId, treeCreationParams);
-  return [...grandparentIds, parentId.toString()];
+  return (treeCreationParams.previousTree[rowId] as GridDataSourceGroupNode).path || [];
 }
