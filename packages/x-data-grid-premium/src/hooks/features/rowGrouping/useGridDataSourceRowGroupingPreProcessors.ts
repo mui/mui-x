@@ -10,6 +10,7 @@ import {
   skipSorting,
   skipFiltering,
   GridRowsPartialUpdates,
+  GridRowTreeCreationParams,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { getGroupingRules, RowGroupingStrategy } from './gridRowGroupingUtils';
@@ -48,7 +49,9 @@ export const useGridDataSourceRowGroupingPreProcessors = (
       apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
-        const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
+        const parentPath =
+          (params.updates as GridRowsPartialUpdates).groupKeys ??
+          getParentIds(rowId, params).map((id) => getGroupKey(params.dataRowIdToModelLookup[id]));
         const leafKey = getGroupKey(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,
@@ -118,3 +121,21 @@ export const useGridDataSourceRowGroupingPreProcessors = (
     getVisibleRowsLookup,
   );
 };
+
+function getParentIds(rowId: GridRowId, treeCreationParams: GridRowTreeCreationParams): string[] {
+  if (
+    treeCreationParams.updates.type !== 'full' ||
+    !treeCreationParams.previousTree?.[rowId] ||
+    treeCreationParams.previousTree[rowId].depth < 1
+  ) {
+    return [];
+  }
+
+  const parentId = treeCreationParams.previousTree[rowId].parent;
+  if (!parentId) {
+    return [];
+  }
+
+  const grandparentIds = getParentIds(parentId, treeCreationParams);
+  return [...grandparentIds, parentId.toString()];
+}
