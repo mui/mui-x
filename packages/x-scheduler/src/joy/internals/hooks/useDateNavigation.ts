@@ -11,52 +11,28 @@ type UseDateNavigationProps = {
   view: ViewType;
 };
 
+function getNavigationDate(view: ViewType, visibleDate: SchedulerValidDate, delta: number) {
+  switch (view) {
+    case 'day':
+      return adapter.addDays(visibleDate, delta);
+    case 'month':
+      return adapter.addMonths(adapter.startOfMonth(visibleDate), delta);
+    case 'agenda':
+      return adapter.addDays(visibleDate, 12 * delta);
+    case 'week':
+    default:
+      return adapter.addWeeks(adapter.startOfWeek(visibleDate), delta);
+  }
+}
+
 export function useDateNavigation({ visibleDate, setVisibleDate, view }: UseDateNavigationProps) {
   const handleNext = React.useCallback(() => {
-    let nextDate;
-    switch (view) {
-      case 'day':
-        nextDate = adapter.addDays(visibleDate, 1);
-        break;
-      case 'month': {
-        const startOfCurrentMonth = adapter.startOfMonth(visibleDate);
-        nextDate = adapter.addMonths(startOfCurrentMonth, 1);
-        break;
-      }
-      case 'agenda':
-        nextDate = adapter.addDays(visibleDate, 12);
-        break;
-      case 'week':
-      default: {
-        const startOfCurrentWeek = adapter.startOfWeek(visibleDate);
-        nextDate = adapter.addWeeks(startOfCurrentWeek, 1);
-        break;
-      }
-    }
+    const nextDate = getNavigationDate(view, visibleDate, 1);
     setVisibleDate(nextDate);
   }, [visibleDate, setVisibleDate, view]);
 
   const handlePrevious = React.useCallback(() => {
-    let prevDate;
-    switch (view) {
-      case 'day':
-        prevDate = adapter.addDays(visibleDate, -1);
-        break;
-      case 'month': {
-        const startOfCurrentMonth = adapter.startOfMonth(visibleDate);
-        prevDate = adapter.addMonths(startOfCurrentMonth, -1);
-        break;
-      }
-      case 'agenda':
-        prevDate = adapter.addDays(visibleDate, -12);
-        break;
-      case 'week':
-      default: {
-        const startOfCurrentWeek = adapter.startOfWeek(visibleDate);
-        prevDate = adapter.addWeeks(startOfCurrentWeek, -1);
-        break;
-      }
-    }
+    const prevDate = getNavigationDate(view, visibleDate, -1);
     setVisibleDate(prevDate);
   }, [visibleDate, setVisibleDate, view]);
 
