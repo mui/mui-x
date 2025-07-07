@@ -24,7 +24,7 @@ import {
   ScrollDirection,
 } from '../models';
 
-/* eslint-disable import/export, no-redeclare */
+/* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
@@ -195,7 +195,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
       previousContextScrollPosition.current = scrollPosition.current;
     },
-    [onRenderContextChange],
+    [store, onRenderContextChange],
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
@@ -319,6 +319,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
    * solution to decouple the code.
    */
   const getRows = (
+    // eslint-disable-next-line @typescript-eslint/default-param-last
     params: {
       rows?: RowEntry[];
       position?: PinnedRowPosition;
@@ -518,7 +519,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
 
     return size;
-  }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar]);
+  }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
 
   const verticalScrollRestoreCallback = React.useRef<Function | null>(null);
   const onContentSizeApplied = React.useCallback(
@@ -536,6 +537,8 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       return;
     }
     forceUpdateRenderContext();
+    // NOTE: forceUpdateRenderContext is stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabledForColumns, enabledForRows]);
 
   useEnhancedEffect(() => {
@@ -574,15 +577,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise there's nowhere to scroll), but before paint to avoid reflows
       if (!isScrollRestored.top || !isScrollRestored.left) {
         verticalScrollRestoreCallback.current = (
-          columnsTotalWidth: number,
-          contentHeight: number,
+          columnsTotalWidthCurrent: number,
+          contentHeightCurrent: number,
         ) => {
-          if (!isScrollRestored.left && columnsTotalWidth) {
+          if (!isScrollRestored.left && columnsTotalWidthCurrent) {
             scroller.scrollLeft = left;
             ignoreNextScrollEvent.current = true;
             isScrollRestored.left = true;
           }
-          if (!isScrollRestored.top && contentHeight) {
+          if (!isScrollRestored.top && contentHeightCurrent) {
             scroller.scrollTop = top;
             ignoreNextScrollEvent.current = true;
             isScrollRestored.top = true;
@@ -641,6 +644,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   });
   React.useEffect(() => {
     store.update({ ...store.state, getters });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, Object.values(getters));
 
   /* Placeholder API functions for colspan & rowspan to re-implement */

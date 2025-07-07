@@ -20,6 +20,10 @@ import {
   RowEntry,
 } from './models';
 
+/* eslint-disable jsdoc/require-param-type */
+/* eslint-disable jsdoc/require-param-description */
+/* eslint-disable jsdoc/require-returns-type */
+
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
 export type VirtualScrollerCompat = Virtualization.State['getters'];
 

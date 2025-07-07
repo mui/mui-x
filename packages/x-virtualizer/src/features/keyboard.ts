@@ -3,7 +3,7 @@ import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 import { Dimensions } from './dimensions';
 import { Virtualization } from './virtualization';
 
-/* eslint-disable import/export, no-redeclare */
+/* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
 const selectors = {};
 

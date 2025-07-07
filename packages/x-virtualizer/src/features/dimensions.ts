@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -15,7 +16,7 @@ import {
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
-/* eslint-disable import/export, no-redeclare */
+/* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
 const EMPTY_DIMENSIONS: DimensionsState = {

@@ -6,7 +6,7 @@ import type { ColumnWithWidth, RowId } from '../models';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Virtualization } from './virtualization';
 
-/* eslint-disable import/export, no-redeclare */
+/* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
 type ColumnIndex = number;
 type ColspanMap = Map<RowId, Record<ColumnIndex, CellColSpanInfo>>;
