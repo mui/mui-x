@@ -84,6 +84,7 @@
         "@mui/lab",
         "@mui/material",
         "@mui/material-nextjs",
+        "@mui/stylis-plugin-rtl",
         "@mui/system",
         "@mui/types",
         "@mui/utils"
