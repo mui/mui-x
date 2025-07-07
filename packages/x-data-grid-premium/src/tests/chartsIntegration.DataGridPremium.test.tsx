@@ -16,7 +16,10 @@ import {
   GridValidRowModel,
   GridChartsIcon,
 } from '@mui/x-data-grid-premium';
-import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
+import {
+  GridChartsConfigurationOptions,
+  GridChartsIntegrationContextValue,
+} from '../models/gridChartsIntegration';
 
 const rows: GridValidRowModel[] = [
   { id: 0, category1: 'CatA', category2: 'Cat1', nonChartable: '-', amount: 100 },
@@ -61,7 +64,7 @@ const baseInitialState: GridInitialState = {
   },
 };
 
-const configurationOptions = {
+const configurationOptions: GridChartsConfigurationOptions = {
   type1: {
     label: 'Type 1 ',
     icon: GridChartsIcon,
