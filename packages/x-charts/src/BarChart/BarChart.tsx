@@ -287,7 +287,7 @@ BarChart.propTypes = {
   /**
    * The function called when the pointer position corresponds to a new axis data item.
    * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function is called if at least ones axis is updated.
+   * In case of multiple axes, the function is called if at least one axis is updated.
    * The argument contains the identifier for all axes with a `data` property.
    * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
    */
