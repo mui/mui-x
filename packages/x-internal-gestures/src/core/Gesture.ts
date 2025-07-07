@@ -3,6 +3,7 @@
  */
 
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
+import { KeyboardKey, KeyboardManager } from './KeyboardManager';
 import { PointerData, PointerManager } from './PointerManager';
 import { CustomEventListener } from './types/CustomEventListener';
 import { TargetElement } from './types/TargetElement';
@@ -75,6 +76,17 @@ export type GestureOptions<GestureName extends string> = {
    */
   preventIf?: string[];
   /**
+   * Array of keyboard keys that must be pressed for the gesture to be recognized.
+   * If not provided or empty, no keyboard key requirement is applied.
+   *
+   * A special identifier `ControlOrMeta` can be used to match either Control or Meta keys,
+   * which is useful for cross-platform compatibility.
+   *
+   * @example ['Shift', 'Alt']
+   * @default [] (no key requirement)
+   */
+  requiredKeys?: KeyboardKey[];
+  /**
    * List of pointer types that can trigger this gesture.
    * If provided, only the specified pointer types will be able to activate the gesture.
    *
@@ -141,6 +153,16 @@ export abstract class Gesture<GestureName extends string> {
   protected preventIf: string[];
 
   /**
+   * Array of keyboard keys that must be pressed for the gesture to be recognized.
+   */
+  protected requiredKeys: KeyboardKey[];
+
+  /**
+   * KeyboardManager instance for tracking key presses
+   */
+  protected keyboardManager!: KeyboardManager;
+
+  /**
    * List of pointer types that can trigger this gesture.
    * If undefined, all pointer types are allowed.
    */
@@ -198,6 +220,7 @@ export abstract class Gesture<GestureName extends string> {
     this.preventDefault = options.preventDefault ?? false;
     this.stopPropagation = options.stopPropagation ?? false;
     this.preventIf = options.preventIf ?? [];
+    this.requiredKeys = options.requiredKeys ?? [];
     this.pointerMode = options.pointerMode ?? [];
   }
 
@@ -209,10 +232,12 @@ export abstract class Gesture<GestureName extends string> {
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
     this.element = element;
     this.pointerManager = pointerManager;
     this.gesturesRegistry = gestureRegistry;
+    this.keyboardManager = keyboardManager;
 
     const changeOptionsEventName = `${this.name}ChangeOptions`;
     (this.element as CustomEventListener).addEventListener(
@@ -246,6 +271,7 @@ export abstract class Gesture<GestureName extends string> {
     this.preventDefault = options.preventDefault ?? this.preventDefault;
     this.stopPropagation = options.stopPropagation ?? this.stopPropagation;
     this.preventIf = options.preventIf ?? this.preventIf;
+    this.requiredKeys = options.requiredKeys ?? this.requiredKeys;
     this.pointerMode = options.pointerMode ?? this.pointerMode;
   }
 
@@ -315,6 +341,11 @@ export abstract class Gesture<GestureName extends string> {
    * @returns true if the gesture should be prevented, false otherwise
    */
   protected shouldPreventGesture(element: TargetElement): boolean {
+    // First check if required keyboard keys are pressed
+    if (!this.keyboardManager.areKeysPressed(this.requiredKeys)) {
+      return true; // Prevent the gesture if required keys are not pressed
+    }
+
     if (this.preventIf.length === 0) {
       return false; // No prevention rules, allow the gesture
     }
