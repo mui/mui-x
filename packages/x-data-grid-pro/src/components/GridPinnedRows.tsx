@@ -1,7 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import { getDataGridUtilityClass, gridClasses, useGridSelector } from '@mui/x-data-grid';
+import {
+  getDataGridUtilityClass,
+  gridClasses,
+  gridRowTreeSelector,
+  useGridSelector,
+} from '@mui/x-data-grid';
 import {
   GridPinnedRowsProps,
   gridPinnedRowsSelector,
@@ -21,6 +26,7 @@ export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProp
 
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rows = pinnedRowsData[position];
+  const { getRows } = virtualScroller;
 
   const pinnedRenderContext = React.useMemo(
     () => ({
@@ -36,11 +42,14 @@ export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProp
     return null;
   }
 
-  const pinnedRows = virtualScroller.getRows({
-    position,
-    rows,
-    renderContext: pinnedRenderContext,
-  });
+  const pinnedRows = getRows(
+    {
+      position,
+      rows,
+      renderContext: pinnedRenderContext,
+    },
+    gridRowTreeSelector(apiRef),
+  );
 
   return (
     <div className={clsx(classes.root, gridClasses[`pinnedRows--${position}`])} role="presentation">
