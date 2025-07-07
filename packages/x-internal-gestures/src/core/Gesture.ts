@@ -46,6 +46,11 @@ export type GestureEventData<CustomData extends Record<string, unknown> = Record
   };
 
 /**
+ * Defines the types of pointers that can trigger a gesture.
+ */
+export type PointerMode = 'mouse' | 'touch' | 'pen';
+
+/**
  * Configuration options for creating a gesture instance.
  */
 export type GestureOptions<GestureName extends string> = {
@@ -81,6 +86,14 @@ export type GestureOptions<GestureName extends string> = {
    * @default [] (no key requirement)
    */
   requiredKeys?: KeyboardKey[];
+  /**
+   * List of pointer types that can trigger this gesture.
+   * If provided, only the specified pointer types will be able to activate the gesture.
+   *
+   * @example ['mouse', 'touch']
+   * @default [] (all pointer types allowed)
+   */
+  pointerMode?: PointerMode[];
 };
 
 // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
@@ -150,6 +163,12 @@ export abstract class Gesture<GestureName extends string> {
   protected keyboardManager!: KeyboardManager;
 
   /**
+   * List of pointer types that can trigger this gesture.
+   * If undefined, all pointer types are allowed.
+   */
+  protected pointerMode: PointerMode[];
+
+  /**
    * User-mutable data object for sharing state between gesture events
    * This object is included in all events emitted by this gesture
    */
@@ -202,6 +221,7 @@ export abstract class Gesture<GestureName extends string> {
     this.stopPropagation = options.stopPropagation ?? false;
     this.preventIf = options.preventIf ?? [];
     this.requiredKeys = options.requiredKeys ?? [];
+    this.pointerMode = options.pointerMode ?? [];
   }
 
   /**
@@ -252,6 +272,7 @@ export abstract class Gesture<GestureName extends string> {
     this.stopPropagation = options.stopPropagation ?? this.stopPropagation;
     this.preventIf = options.preventIf ?? this.preventIf;
     this.requiredKeys = options.requiredKeys ?? this.requiredKeys;
+    this.pointerMode = options.pointerMode ?? this.pointerMode;
   }
 
   /**
@@ -333,6 +354,22 @@ export abstract class Gesture<GestureName extends string> {
 
     // Check if any of the gestures that would prevent this one are active
     return this.preventIf.some((gestureName) => activeGestures[gestureName]);
+  }
+
+  /**
+   * Checks if the given pointer type is allowed for this gesture based on the pointerMode setting.
+   *
+   * @param pointerType - The type of pointer to check.
+   * @returns true if the pointer type is allowed, false otherwise.
+   */
+  protected isPointerTypeAllowed(pointerType: string): boolean {
+    // If no pointer mode is specified, all pointer types are allowed
+    if (!this.pointerMode || this.pointerMode.length === 0) {
+      return true;
+    }
+
+    // Check if the pointer type is in the allowed types list
+    return this.pointerMode.includes(pointerType as PointerMode);
   }
 
   /**
