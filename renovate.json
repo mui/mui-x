@@ -78,16 +78,7 @@
     },
     {
       "groupName": "Material UI",
-      "matchPackageNames": [
-        "@mui/icons-material",
-        "@mui/joy",
-        "@mui/lab",
-        "@mui/material",
-        "@mui/material-nextjs",
-        "@mui/system",
-        "@mui/types",
-        "@mui/utils"
-      ]
+      "matchPackageNames": ["@mui/*"]
     },
     {
       "groupName": "Infra packages",
