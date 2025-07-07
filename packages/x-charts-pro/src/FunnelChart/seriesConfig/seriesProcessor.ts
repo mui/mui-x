@@ -24,10 +24,7 @@ const getFunnelDirection = (
   firstValue: number | undefined | null,
   lastValue: number | undefined | null,
 ): 'increasing' | 'decreasing' => {
-  if (
-    curve?.includes('pyramid') &&
-    (funnelDirection === 'increasing' || funnelDirection === 'decreasing')
-  ) {
+  if (funnelDirection === 'increasing' || funnelDirection === 'decreasing') {
     return funnelDirection;
   }
 
