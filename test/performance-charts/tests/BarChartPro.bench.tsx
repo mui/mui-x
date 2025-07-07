@@ -7,7 +7,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('BarChartPro', () => {
-  const dataLength = 400;
+  const dataLength = 1000;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -17,7 +17,7 @@ describe('BarChartPro', () => {
   const yData = data.map((d) => d.y);
 
   bench(
-    'BarChartPro with big data amount',
+    `BarChartPro rendering ${dataLength} data points`,
     async () => {
       const { findByText } = render(
         <BarChartPro
