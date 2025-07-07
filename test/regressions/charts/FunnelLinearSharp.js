@@ -5,11 +5,11 @@ import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelCha
 const data = [{ value: 30 }, { value: 20 }, { value: 25 }, { value: 15 }, { value: 10 }];
 
 export default function FunnelLinearSharpAndDirection() {
-  const props = {
+  const config = {
     curveType: 'linear-sharp',
     borderRadius: 10,
     gap: 0,
-  } as const;
+  };
 
   return (
     <Stack sx={{ width: '100%' }} flexDirection={'row'}>
@@ -18,62 +18,62 @@ export default function FunnelLinearSharpAndDirection() {
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'decreasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'decreasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'decreasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'decreasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
       <Stack flex={1}>
@@ -81,58 +81,58 @@ export default function FunnelLinearSharpAndDirection() {
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'decreasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'decreasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'decreasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'decreasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
       <Stack flex={1}>
@@ -140,62 +140,62 @@ export default function FunnelLinearSharpAndDirection() {
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'increasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'increasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'increasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'increasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
       <Stack flex={1}>
@@ -203,58 +203,58 @@ export default function FunnelLinearSharpAndDirection() {
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'increasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'increasing',
               data: data.toReversed(),
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'vertical',
               funnelDirection: 'increasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
             {
-              curve: props.curveType,
-              borderRadius: props.borderRadius,
+              curve: config.curveType,
+              borderRadius: config.borderRadius,
               layout: 'horizontal',
               funnelDirection: 'increasing',
               data,
             },
           ]}
-          gap={props.gap}
+          gap={config.gap}
           height={180}
-          slotProps={{ legend: { direction: 'vertical' } }}
+          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
     </Stack>
