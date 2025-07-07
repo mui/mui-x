@@ -10,7 +10,7 @@ import {
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { isRangeValid } from '../internals/utils/date-utils';
-import { calculateRangeChange } from '../internals/utils/date-range-manager';
+import { calculateRangeChange, resolveReferenceDate } from '../internals/utils/date-range-manager';
 import { usePickerRangePositionContext } from '../hooks';
 
 export type DateTimeRangePickerTimeWrapperProps<
@@ -47,8 +47,17 @@ function DateTimeRangePickerTimeWrapper<
 >(props: DateTimeRangePickerTimeWrapperProps<TComponentProps>) {
   const adapter = usePickerAdapter();
 
-  const { viewRenderer, value, onChange, defaultValue, onViewChange, views, className, ...other } =
-    props;
+  const {
+    viewRenderer,
+    value,
+    onChange,
+    defaultValue,
+    onViewChange,
+    views,
+    className,
+    referenceDate: referenceDateProp,
+    ...other
+  } = props;
 
   const { rangePosition } = usePickerRangePositionContext();
 
@@ -59,6 +68,7 @@ function DateTimeRangePickerTimeWrapper<
   const currentValue = (rangePosition === 'start' ? value?.[0] : value?.[1]) ?? null;
   const currentDefaultValue =
     (rangePosition === 'start' ? defaultValue?.[0] : defaultValue?.[1]) ?? null;
+  const referenceDate = resolveReferenceDate(referenceDateProp, rangePosition);
   const handleOnChange = (
     newDate: PickerValidDate | null,
     selectionState: PickerSelectionState,
@@ -79,6 +89,7 @@ function DateTimeRangePickerTimeWrapper<
 
   return viewRenderer({
     ...other,
+    referenceDate,
     views,
     onViewChange,
     value: currentValue,

@@ -1,4 +1,5 @@
 import { SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
+import type { FunnelCurveType } from '../curves';
 
 const createPoint = ({
   main,
@@ -17,6 +18,25 @@ const createPoint = ({
     ? { x: other, y: main, useBandWidth, stackOffset }
     : { x: main, y: other, useBandWidth, stackOffset };
 
+const getFunnelDirection = (
+  funnelDirection: 'increasing' | 'decreasing' | 'auto' | undefined,
+  curve: FunnelCurveType | undefined,
+  firstValue: number | undefined | null,
+  lastValue: number | undefined | null,
+): 'increasing' | 'decreasing' => {
+  if (
+    curve?.includes('pyramid') &&
+    (funnelDirection === 'increasing' || funnelDirection === 'decreasing')
+  ) {
+    return funnelDirection;
+  }
+
+  // Implicit check for null or undefined values
+  return firstValue != null && lastValue != null && firstValue < lastValue
+    ? 'increasing'
+    : 'decreasing';
+};
+
 const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
   const { seriesOrder, series } = params;
 
@@ -29,12 +49,12 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
 
     const firstDataPoint = currentSeries.data.at(0);
     const lastDataPoint = currentSeries.data.at(-1);
-    const dataDirection =
-      firstDataPoint !== undefined &&
-      lastDataPoint !== undefined &&
-      firstDataPoint.value < lastDataPoint.value
-        ? 'increasing'
-        : 'decreasing';
+    const funnelDirection = getFunnelDirection(
+      currentSeries.funnelDirection,
+      currentSeries.curve,
+      firstDataPoint?.value,
+      lastDataPoint?.value,
+    );
 
     completedSeries[seriesId] = {
       labelMarkType: 'square',
@@ -45,7 +65,7 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         id: `${seriesId}-funnel-item-${v.id ?? i}`,
         ...v,
       })),
-      dataDirection,
+      funnelDirection,
       dataPoints: [],
     };
 
@@ -59,7 +79,7 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         // Main = main axis, Other = other axis
         // For horizontal layout, main is y, other is x
         // For vertical layout, main is x, other is y
-        const isIncreasing = completedSeries[seriesId].dataDirection === 'increasing';
+        const isIncreasing = completedSeries[seriesId].funnelDirection === 'increasing';
         const currentMaxMain = item.value;
         const getNextDataIndex = () => {
           if (isIncreasing) {

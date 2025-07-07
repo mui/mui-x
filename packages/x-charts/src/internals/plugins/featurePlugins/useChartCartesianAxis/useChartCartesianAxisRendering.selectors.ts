@@ -92,7 +92,7 @@ const selectorChartYFilter = createSelector(
     }),
 );
 
-const selectorChartZoomAxisFilters = createSelector(
+export const selectorChartZoomAxisFilters = createSelector(
   [selectorChartXFilter, selectorChartYFilter, selectorChartRawXAxis, selectorChartRawYAxis],
   (xMapper, yMapper, xAxis, yAxis) => {
     if (xMapper === undefined || yMapper === undefined) {

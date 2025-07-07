@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable no-restricted-syntax */
 /**
  * This module provides utilities for generating a changelog for MUI X packages.
  *
@@ -359,6 +358,9 @@ export async function generateChangelog({
                   break;
                 case 'pickers':
                   pickersCommits.push(commitItem);
+                  break;
+                case 'charts':
+                  chartsCommits.push(commitItem);
                   break;
                 case 'Scheduler':
                   schedulerCommits.push(commitItem);
