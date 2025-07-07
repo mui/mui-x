@@ -78,6 +78,7 @@ export default chartsApiPages;
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
       'x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
+      'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
