@@ -65,7 +65,7 @@ export type VirtualizerParams = {
   contentHeight: number;
   minimalContentHeight: number | string;
   autoHeight: boolean;
-  getRowHeight?: (params: any) => number | null | undefined | 'auto';
+  getRowHeight?: (row: RowEntry) => number | null | undefined | 'auto';
   /**
    * Function that returns the estimated height for a row.
    * Only works if dynamic row height is used.

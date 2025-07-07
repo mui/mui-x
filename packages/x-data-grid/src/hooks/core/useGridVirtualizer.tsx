@@ -165,7 +165,12 @@ export function useGridVirtualizer(
     contentHeight,
     minimalContentHeight,
     autoHeight,
-    getRowHeight,
+    getRowHeight: React.useMemo(() => {
+      if (!getRowHeight) {
+        return undefined;
+      }
+      return (rowEntry) => getRowHeight({ ...rowEntry, densityFactor: density });
+    }, [getRowHeight, density]),
     getEstimatedRowHeight: React.useMemo(
       () =>
         getEstimatedRowHeight
