@@ -321,10 +321,8 @@ export abstract class Gesture<GestureName extends string> {
    */
   protected shouldPreventGesture(element: TargetElement): boolean {
     // First check if required keyboard keys are pressed
-    if (this.requiredKeys && this.requiredKeys.length > 0) {
-      if (!this.keyboardManager.areKeysPressed(this.requiredKeys)) {
-        return true; // Prevent the gesture if required keys are not pressed
-      }
+    if (!this.keyboardManager.areKeysPressed(this.requiredKeys)) {
+      return true; // Prevent the gesture if required keys are not pressed
     }
 
     if (this.preventIf.length === 0) {
