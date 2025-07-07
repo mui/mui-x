@@ -1,6 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import index from 'eslint-plugin-jsdoc';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartId } from '../hooks/useChartId';
@@ -99,103 +100,111 @@ function MarkPlot(props: MarkPlotProps) {
 
   return (
     <g {...other}>
-      {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.map((seriesId) => {
-          const {
-            xAxisId = defaultXAxisId,
-            yAxisId = defaultYAxisId,
-            stackedData,
-            data,
-            showMark = true,
-            shape = 'circle',
-          } = series[seriesId];
+      {(() => {
+        const children = [];
 
-          if (showMark === false) {
-            return null;
-          }
+        for (const { ids: groupIds } of stackingGroups) {
+          for (const seriesId of groupIds) {
+            const {
+              xAxisId = defaultXAxisId,
+              yAxisId = defaultYAxisId,
+              stackedData,
+              data,
+              showMark = true,
+              shape = 'circle',
+            } = series[seriesId];
 
-          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
-          const yScale = yAxis[yAxisId].scale;
-          const xData = xAxis[xAxisId].data;
+            if (showMark === false) {
+              continue;
+            }
 
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X Charts: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+            const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+            const yScale = yAxis[yAxisId].scale;
+            const xData = xAxis[xAxisId].data;
+
+            if (xData === undefined) {
+              throw new Error(
+                `MUI X Charts: ${
+                  xAxisId === DEFAULT_X_AXIS_KEY
+                    ? 'The first `xAxis`'
+                    : `The x-axis with id "${xAxisId}"`
+                } should have data property to be able to display a line plot.`,
+              );
+            }
+
+            const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
+
+            const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
+
+            const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
+
+            const isSeriesHighlighted = isHighlighted({ seriesId });
+            const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
+
+            children.push(
+              <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
+                {(() => {
+                  const grandchildren = [];
+
+                  for (let dataIndex = 0; dataIndex < xData.length; dataIndex += 1) {
+                    const value = data[dataIndex] == null ? null : stackedData[dataIndex][1];
+                    const y = value === null ? null : yScale(value)!;
+
+                    if (value === null || y === null) {
+                      // Remove missing data point
+                      continue;
+                    }
+
+                    const x = xScale(xData[dataIndex]);
+
+                    if (!instance.isPointInside(x, y)) {
+                      // Remove out of range
+                      continue;
+                    }
+
+                    if (
+                      showMark === true ||
+                      showMark({
+                        x,
+                        y,
+                        index: dataIndex,
+                        position: xData[dataIndex],
+                        value,
+                      })
+                    ) {
+                      grandchildren.push(
+                        <Mark
+                          key={`${seriesId}-${dataIndex}`}
+                          id={seriesId}
+                          dataIndex={dataIndex}
+                          shape={shape}
+                          color={colorGetter(dataIndex)}
+                          x={x}
+                          y={y}
+                          skipAnimation={skipAnimation}
+                          onClick={
+                            onItemClick &&
+                            ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex }))
+                          }
+                          isHighlighted={
+                            highlightedItems[xAxisId]?.has(dataIndex) || isSeriesHighlighted
+                          }
+                          isFaded={isSeriesFaded}
+                          {...slotProps?.mark}
+                        />,
+                      );
+                    }
+                  }
+
+                  return grandchildren;
+                })()}
+              </g>,
             );
           }
+        }
 
-          const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
-
-          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
-
-          const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
-
-          const isSeriesHighlighted = isHighlighted({ seriesId });
-          const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
-
-          return (
-            <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
-              {(() => {
-                const children = [];
-
-                for (let dataIndex = 0; dataIndex < xData.length; dataIndex += 1) {
-                  const value = data[dataIndex] == null ? null : stackedData[dataIndex][1];
-                  const y = value === null ? null : yScale(value)!;
-
-                  if (value === null || y === null) {
-                    // Remove missing data point
-                    continue;
-                  }
-
-                  const x = xScale(xData[dataIndex]);
-
-                  if (!instance.isPointInside(x, y)) {
-                    // Remove out of range
-                    continue;
-                  }
-
-                  if (
-                    showMark === true ||
-                    showMark({
-                      x,
-                      y,
-                      index: dataIndex,
-                      position: xData[dataIndex],
-                      value,
-                    })
-                  ) {
-                    children.push(
-                      <Mark
-                        key={`${seriesId}-${dataIndex}`}
-                        id={seriesId}
-                        dataIndex={dataIndex}
-                        shape={shape}
-                        color={colorGetter(dataIndex)}
-                        x={x}
-                        y={y}
-                        skipAnimation={skipAnimation}
-                        onClick={
-                          onItemClick &&
-                          ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex }))
-                        }
-                        isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
-                        isFaded={isSeriesFaded}
-                        {...slotProps?.mark}
-                      />,
-                    );
-                  }
-                }
-
-                return children;
-              })()}
-            </g>
-          );
-        });
-      })}
+        return children;
+      })()}
     </g>
   );
 }
