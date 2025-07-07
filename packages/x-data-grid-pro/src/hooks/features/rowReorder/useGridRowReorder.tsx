@@ -327,7 +327,7 @@ export const useGridRowReorder = (
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
-    (params, event): void => {
+    (_, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
@@ -349,7 +349,7 @@ export const useGridRowReorder = (
       applyDraggedState(dragRowId, false);
 
       // Check if the row was dropped outside the grid.
-      if (event.dataTransfer.dropEffect === 'none') {
+      if (!event.dataTransfer || event.dataTransfer.dropEffect === 'none') {
         // Reset drop target state
         setDropTarget({
           targetRowId: null,
