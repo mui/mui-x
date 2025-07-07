@@ -4,6 +4,7 @@ import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
+import { resolvePrettierConfigPath } from '../utils';
 
 export type DocumentedInterfaces = Map<string, XProjectNames[]>;
 
@@ -85,17 +86,14 @@ export function linkify(
   });
 }
 
-export async function writePrettifiedFile(
-  filename: string,
-  data: string,
-  project: XTypeScriptProject,
-) {
+export async function writePrettifiedFile(filename: string, data: string) {
+  const prettierConfigPath = await resolvePrettierConfigPath();
   const prettierConfig = await prettier.resolveConfig(filename, {
-    config: project.prettierConfigPath,
+    config: prettierConfigPath,
   });
   if (prettierConfig === null) {
     throw new Error(
-      `Could not resolve config for '${filename}' using prettier config path '${project.prettierConfigPath}'.`,
+      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
     );
   }
 
