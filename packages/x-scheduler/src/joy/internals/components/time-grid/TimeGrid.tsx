@@ -25,7 +25,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   const { days, className, onDayHeaderClick, onEventsChange, ...other } = props;
 
   const translations = useTranslations();
-  const today = adapter.date('2025-05-26');
+  const today = adapter.date();
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const headerWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -58,7 +58,9 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     <span className="TimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
       <span className="TimeGridHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
-      <span className="TimeGridHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
+      <span className={clsx('TimeGridHeaderDayNumber', adapter.isSameDay(day, today) && 'Today')}>
+        {adapter.format(day, 'dayOfMonth')}
+      </span>
     </span>
   );
 
