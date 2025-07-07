@@ -84,6 +84,7 @@ export interface HeatmapProps
       | 'slots'
       | 'slotProps'
       | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -368,14 +369,6 @@ Heatmap.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
-  /**
-   * The function called when the pointer position corresponds to a new axis data item.
-   * This update can either be caused by a pointer movement, or an axis update.
-   * In case of multiple axes, the function is called if at least one axis is updated.
-   * The argument contains the identifier for all axes with a `data` property.
-   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
-   */
-  onHighlightedAxisChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeriesType]] objects.

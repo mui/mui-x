@@ -34,10 +34,6 @@
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
-    "onHighlightedAxisChange": {
-      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function is called if at least one axis is updated. The argument contains the identifier for all axes with a <code>data</code> property.",
-      "typeDescriptions": { "axisItems": "The array of axes item identifiers." }
-    },
     "series": {
       "description": "The series to display in the bar chart. An array of HeatmapSeriesType objects."
     },
