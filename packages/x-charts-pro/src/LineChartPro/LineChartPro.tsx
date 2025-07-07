@@ -108,7 +108,6 @@ const LineChartPro = React.forwardRef(function LineChartPro(
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
-  console.log(props.slotProps?.toolbar);
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
