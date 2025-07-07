@@ -152,6 +152,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/isIS.ts"
   },
   {
+    "languageTag": "id-ID",
+    "importName": "idID",
+    "localeName": "Indonesian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 191,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/idID.ts"
+  },
+  {
     "languageTag": "it-IT",
     "importName": "itIT",
     "localeName": "Italian",
