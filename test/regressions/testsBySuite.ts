@@ -66,19 +66,19 @@ Object.keys(regressionsImports).forEach((path: string) => {
   });
 });
 
-const chartsImports = import.meta.glob<React.ComponentType>('./charts/**/*', {
+const chartsImports = import.meta.glob<React.ComponentType>('./charts/**/*.js', {
   eager: true,
   import: 'default',
 });
 Object.keys(chartsImports).forEach((path: string) => {
-  const name = path.replace('./charts/', '').replace(/\.[^/.]+$/, '');
+  const name = path.replace('./charts/', '').replace('.js', '');
   const suite = `test-regressions-charts`;
 
   tests.push({
     path,
     suite,
     name,
-    case: regressionsImports[path],
+    case: chartsImports[path],
   });
 });
 
