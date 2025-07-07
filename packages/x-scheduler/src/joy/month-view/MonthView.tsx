@@ -162,7 +162,9 @@ export const MonthView = React.memo(
                               />
                             ))}
                             {hiddenCount > 0 && day.events.length > 0 && (
-                              <p className="MonthViewMoreEvents">{hiddenCount} more...</p>
+                              <p className="MonthViewMoreEvents">
+                                {translations.hiddenEvents(hiddenCount)}
+                              </p>
                             )}
                           </DayGrid.Cell>
                         );

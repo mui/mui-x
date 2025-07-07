@@ -13,6 +13,7 @@ export const enUS: SchedulerTranslations = {
   allDay: 'All day',
 
   // MonthView
+  hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
   noResourceAriaLabel: 'No specific resource',
   resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
   weekAbbreviation: 'W',

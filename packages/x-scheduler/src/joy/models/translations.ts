@@ -11,6 +11,7 @@ export interface SchedulerTranslations {
   allDay: string;
 
   // MonthView
+  hiddenEvents: (hiddenEventsCount: number) => string;
   noResourceAriaLabel: string;
   resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
