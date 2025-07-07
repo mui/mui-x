@@ -31,9 +31,9 @@ export function skipSorting(rowTree: GridRowTreeConfig) {
 }
 
 /**
-* Retrieves the parent path for a row from the previous tree state.
-* Used during full tree updates to maintain correct hierarchy.
-*/
+ * Retrieves the parent path for a row from the previous tree state.
+ * Used during full tree updates to maintain correct hierarchy.
+ */
 export function getParentPath(
   rowId: GridRowId,
   treeCreationParams: GridRowTreeCreationParams,
