@@ -67,7 +67,7 @@ const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTy
     ...other,
     name,
     workspaceRoot,
-    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
+    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.mjs'),
   };
 };
 
