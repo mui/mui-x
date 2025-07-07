@@ -7,6 +7,10 @@
       "type": { "description": "string" },
       "default": "The title of the document the chart belongs to",
       "isProPlan": true
+    },
+    "onBeforeExport": {
+      "type": { "description": "(iframe: HTMLIFrameElement) =&gt; void" },
+      "isProPlan": true
     }
   }
 }
