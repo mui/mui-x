@@ -47,8 +47,8 @@
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.9",
     "@mui/types": "^7.4.3",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "rimraf": "^6.0.1"
   },
   "engines": {
