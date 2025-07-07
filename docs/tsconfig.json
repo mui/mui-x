@@ -9,6 +9,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "incremental": true,
+    "jsx": "preserve",
     "types": ["@mui/internal-test-utils/initMatchers", "vitest/globals"]
   },
   "include": [

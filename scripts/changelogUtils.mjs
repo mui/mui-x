@@ -359,6 +359,9 @@ export async function generateChangelog({
                 case 'pickers':
                   pickersCommits.push(commitItem);
                   break;
+                case 'charts':
+                  chartsCommits.push(commitItem);
+                  break;
                 case 'Scheduler':
                   schedulerCommits.push(commitItem);
                   break;

@@ -41,6 +41,11 @@ This kind of interaction is controlled by series properties `highlightScope` whi
   - `'series'` Fade all the items of the series.
   - `'global'` Fade all the items of the chart.
 
+:::info
+For line chart, you can increase the interaction area by using slots.
+Detailed explanations are available in a [dedicated line interaction demonstration](/x/react-charts/line-demo/#larger-interaction-area).
+:::
+
 {{"demo": "ElementHighlights.js"}}
 
 ## Controlled highlight
