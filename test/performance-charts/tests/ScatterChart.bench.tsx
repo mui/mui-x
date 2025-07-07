@@ -7,7 +7,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('ScatterChart', () => {
-  const dataLength = 2_000;
+  const dataLength = 1_400;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -16,7 +16,7 @@ describe('ScatterChart', () => {
   const xData = data.map((d) => d.x);
 
   bench(
-    `ScatterChart rendering ${dataLength} data points`,
+    'ScatterChart with big data amount',
     async () => {
       const { findByText } = render(
         <ScatterChart

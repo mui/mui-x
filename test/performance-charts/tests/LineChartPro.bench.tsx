@@ -7,7 +7,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('LineChartPro', () => {
-  const dataLength = 2_000;
+  const dataLength = 1_400;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -17,13 +17,13 @@ describe('LineChartPro', () => {
   const yData = data.map((d) => d.y);
 
   bench(
-    `LineChartPro with marks rendering ${dataLength} data points`,
+    'LineChartPro with big data amount and zoomed in (with marks)',
     async () => {
       const { findByText } = render(
         <LineChartPro
           xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
-          series={[{ data: yData }]}
+          series={[{ data: yData, showMark: true }]}
           width={500}
           height={300}
         />,

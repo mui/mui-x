@@ -7,7 +7,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('LineChart', () => {
-  const dataLength = 2_000;
+  const dataLength = 1_400;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -17,10 +17,15 @@ describe('LineChart', () => {
   const yData = data.map((d) => d.y);
 
   bench(
-    `LineChart with marks rendering ${dataLength} data points`,
+    'LineChart with big data amount (with marks)',
     async () => {
       const { findByText } = render(
-        <LineChart xAxis={[{ data: xData }]} series={[{ data: yData }]} width={500} height={300} />,
+        <LineChart
+          xAxis={[{ data: xData }]}
+          series={[{ data: yData, showMark: true }]}
+          width={500}
+          height={300}
+        />,
       );
 
       await findByText(dataLength.toLocaleString(), { ignore: 'span' });
@@ -31,12 +36,12 @@ describe('LineChart', () => {
   );
 
   bench(
-    `Area chart rendering ${dataLength} data points (no marks)`,
+    'Area chart with big data amount (no marks)',
     async () => {
       const { findByText } = render(
         <LineChart
           xAxis={[{ data: xData }]}
-          series={[{ area: true, data: yData }]}
+          series={[{ area: true, data: yData, showMark: false }]}
           width={500}
           height={300}
         />,

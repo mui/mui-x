@@ -7,7 +7,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('ScatterChartPro', () => {
-  const dataLength = 2_000;
+  const dataLength = 1_400;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -16,7 +16,7 @@ describe('ScatterChartPro', () => {
   const xData = data.map((d) => d.x);
 
   bench(
-    `ScatterChartPro rendering ${dataLength} data points`,
+    'ScatterChartPro with big data amount',
     async () => {
       const { findByText } = render(
         <ScatterChartPro
@@ -43,7 +43,7 @@ describe('ScatterChartPro', () => {
   );
 
   bench(
-    `Zoomed in ScatterChartPro rendering ${dataLength} data points`,
+    'ScatterChartPro with big data amount and zoomed in',
     async () => {
       const { findByText } = render(
         <ScatterChartPro
