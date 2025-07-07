@@ -157,6 +157,13 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
 
     const Container = props.position === 'vertical' ? ScrollbarVertical : ScrollbarHorizontal;
 
+    const scrollbarInnerStyle = React.useMemo(
+      () => ({
+        [propertyDimension]: `${scrollbarInnerSize}px`,
+      }),
+      [propertyDimension, scrollbarInnerSize],
+    );
+
     return (
       <Container
         ref={useForkRef(ref, scrollbarRef)}
@@ -169,10 +176,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
           event.target.blur();
         }}
       >
-        <div
-          className={classes.content}
-          style={{ [propertyDimension]: `${scrollbarInnerSize}px` }}
-        />
+        <div className={classes.content} style={scrollbarInnerStyle} />
       </Container>
     );
   },
