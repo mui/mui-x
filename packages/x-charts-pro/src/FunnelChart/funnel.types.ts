@@ -88,6 +88,17 @@ export interface FunnelSeriesType
    * @default 'filled'
    */
   variant?: 'filled' | 'outlined';
+  /**
+   * Denotes if the funnel is increasing or decreasing.
+   * Only used in the `pyramid` and `step-pyramid` curves.
+   *
+   * - `increasing`, funnel is drawn with a point at the top and a wide base.
+   * - `decreasing`, funnel is drawn with a wide top and a point at the base.
+   * - `auto`, the direction is determined automatically based on the first and last data points.
+   *
+   * @default 'auto'
+   */
+  funnelDirection?: 'increasing' | 'decreasing' | 'auto';
 }
 
 /**
@@ -122,16 +133,13 @@ export type FunnelItem = {
 };
 
 export interface DefaultizedFunnelSeriesType
-  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
+  extends Omit<
+    DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'>,
+    'funnelDirection'
+  > {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
-  /**
-   * Denotes if the data is increasing, first data point is less than the last data point.
-   * While the data is decreasing if the first data point is greater than the last data point.
-   *
-   * This is used to determine the direction of the funnel.
-   */
-  dataDirection: 'increasing' | 'decreasing';
+  funnelDirection: 'increasing' | 'decreasing';
 }
 
 export type FunnelDataPoints = Record<'x' | 'y', number> & {
