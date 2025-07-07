@@ -71,10 +71,6 @@
   background-color: var(--event-color-9);
 }
 
-.mode-dark .EventCalendarResourceLegendColor {
-  background-color: var(--event-color-5);
-}
-
 .EventCalendarResourceLegendName {
   font-size: var(--font-size-2);
   color: var(--text-secondary);
