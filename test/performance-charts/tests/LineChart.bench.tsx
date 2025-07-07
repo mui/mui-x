@@ -17,16 +17,26 @@ describe('LineChart', () => {
   const yData = data.map((d) => d.y);
 
   bench(
-    'LineChart with big data amount',
+    `LineChart with marks rendering ${dataLength} data points`,
+    async () => {
+      const { findByText } = render(
+        <LineChart xAxis={[{ data: xData }]} series={[{ data: yData }]} width={500} height={300} />,
+      );
+
+      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+
+      cleanup();
+    },
+    options,
+  );
+
+  bench(
+    `Area chart rendering ${dataLength} data points (no marks)`,
     async () => {
       const { findByText } = render(
         <LineChart
           xAxis={[{ data: xData }]}
-          series={[
-            {
-              data: yData,
-            },
-          ]}
+          series={[{ area: true, data: yData }]}
           width={500}
           height={300}
         />,
