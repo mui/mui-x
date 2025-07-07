@@ -1,5 +1,14 @@
-import { GridRowId, GridRowTreeConfig, GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
-import { defaultGridFilterLookup, getTreeNodeDescendants } from '@mui/x-data-grid/internals';
+import {
+  GridRowId,
+  GridRowTreeConfig,
+  GRID_ROOT_GROUP_ID,
+  GridDataSourceGroupNode,
+} from '@mui/x-data-grid';
+import {
+  defaultGridFilterLookup,
+  getTreeNodeDescendants,
+  GridRowTreeCreationParams,
+} from '@mui/x-data-grid/internals';
 
 export function skipFiltering(rowTree: GridRowTreeConfig) {
   const filteredChildrenCountLookup: Record<GridRowId, number> = {};
@@ -19,4 +28,20 @@ export function skipFiltering(rowTree: GridRowTreeConfig) {
 
 export function skipSorting(rowTree: GridRowTreeConfig) {
   return getTreeNodeDescendants(rowTree, GRID_ROOT_GROUP_ID, false);
+}
+
+export function getParentPath(
+  rowId: GridRowId,
+  treeCreationParams: GridRowTreeCreationParams,
+): string[] {
+  if (
+    treeCreationParams.updates.type !== 'full' ||
+    !treeCreationParams.previousTree?.[rowId] ||
+    treeCreationParams.previousTree[rowId].depth < 1 ||
+    !('path' in treeCreationParams.previousTree[rowId])
+  ) {
+    return [];
+  }
+
+  return (treeCreationParams.previousTree[rowId] as GridDataSourceGroupNode).path || [];
 }

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import {
-  GridRowId,
-  gridRowTreeSelector,
-  gridColumnLookupSelector,
-  GridDataSourceGroupNode,
-} from '@mui/x-data-grid-pro';
+import { GridRowId, gridRowTreeSelector, gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
@@ -15,7 +10,7 @@ import {
   skipSorting,
   skipFiltering,
   GridRowsPartialUpdates,
-  GridRowTreeCreationParams,
+  getParentPath,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { getGroupingRules, RowGroupingStrategy } from './gridRowGroupingUtils';
@@ -125,16 +120,3 @@ export const useGridDataSourceRowGroupingPreProcessors = (
     getVisibleRowsLookup,
   );
 };
-
-function getParentPath(rowId: GridRowId, treeCreationParams: GridRowTreeCreationParams): string[] {
-  if (
-    treeCreationParams.updates.type !== 'full' ||
-    !treeCreationParams.previousTree?.[rowId] ||
-    treeCreationParams.previousTree[rowId].depth < 1 ||
-    !('path' in treeCreationParams.previousTree[rowId])
-  ) {
-    return [];
-  }
-
-  return (treeCreationParams.previousTree[rowId] as GridDataSourceGroupNode).path || [];
-}
