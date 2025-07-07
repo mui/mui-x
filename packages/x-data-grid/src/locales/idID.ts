@@ -1,7 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const idIDGrid: GridLocaleText = {
+export const idIDGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Tidak ad abaris',
   noResultsOverlayLabel: 'Tidak ada hasil yang ditemukan.',
