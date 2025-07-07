@@ -4,6 +4,8 @@ import type { RowRange } from '../models';
 import type { RowSpanningState, RowSpanningCaches } from '../models/rowspan';
 import { Virtualization } from './virtualization';
 
+/* eslint-disable import/export, no-redeclare */
+
 const EMPTY_RANGE: RowRange = { firstRowIndex: 0, lastRowIndex: 0 };
 const EMPTY_CACHES: RowSpanningCaches = {
   spannedCells: {},

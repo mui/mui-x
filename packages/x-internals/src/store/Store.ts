@@ -1,5 +1,8 @@
 type Listener<T> = (value: T) => void;
 
+/* eslint-disable no-cond-assign */
+/* eslint-disable lines-between-class-members */
+
 export class Store<State> {
   public state: State;
 

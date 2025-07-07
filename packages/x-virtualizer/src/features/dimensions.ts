@@ -13,9 +13,9 @@ import {
   createSelectorMemoized,
 } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
-import type { VirtualizerParams } from '../useVirtualizer';
-import type { BaseState } from '../useVirtualizer';
+import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
+/* eslint-disable import/export, no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
 const EMPTY_DIMENSIONS: DimensionsState = {
@@ -421,7 +421,7 @@ function useRowsMeta(
     }
 
     isHeightMetaValid.current = true;
-  }, [pinnedRows, rows, processHeightEntry]);
+  }, [store, pinnedRows, rows, processHeightEntry]);
   const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
 
   const getRowHeight = (rowId: RowId) => {
