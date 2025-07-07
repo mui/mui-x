@@ -1,23 +1,27 @@
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { addLabels, balanceSheet, valueFormatter } from './netflixsBalanceSheet';
 
 export default function StackBars() {
   return (
-    <BarChart
-      dataset={balanceSheet}
-      series={addLabels([
-        { dataKey: 'currAss', stack: 'assets' },
-        { dataKey: 'nCurrAss', stack: 'assets' },
-        { dataKey: 'curLia', stack: 'liability' },
-        { dataKey: 'nCurLia', stack: 'liability' },
-        { dataKey: 'capStock', stack: 'equity' },
-        { dataKey: 'retEarn', stack: 'equity' },
-        { dataKey: 'treas', stack: 'equity' },
-      ])}
-      xAxis={[{ dataKey: 'year' }]}
-      {...config}
-    />
+    <div style={{ width: '100%' }}>
+      <Typography>Netflix balance sheet</Typography>
+      <BarChart
+        dataset={balanceSheet}
+        series={addLabels([
+          { dataKey: 'currAss', stack: 'assets' },
+          { dataKey: 'nCurrAss', stack: 'assets' },
+          { dataKey: 'curLia', stack: 'liability' },
+          { dataKey: 'nCurLia', stack: 'liability' },
+          { dataKey: 'capStock', stack: 'equity' },
+          { dataKey: 'retEarn', stack: 'equity' },
+          { dataKey: 'treas', stack: 'equity' },
+        ])}
+        xAxis={[{ dataKey: 'year' }]}
+        {...config}
+      />
+    </div>
   );
 }
 
