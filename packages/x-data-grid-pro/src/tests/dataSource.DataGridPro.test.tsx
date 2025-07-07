@@ -29,7 +29,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     return null;
   }
 
-  function TestDataSourceAggregation(props: Partial<DataGridProProps>) {
+  function TestDataSource(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 200, maxColumns: 1 },
@@ -79,7 +79,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   describe('Cache', () => {
     it('should cache the data in one chunk when pagination is disabled', async () => {
       const testCache = new TestCache();
-      render(<TestDataSourceAggregation dataSourceCache={testCache} />);
+      render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });

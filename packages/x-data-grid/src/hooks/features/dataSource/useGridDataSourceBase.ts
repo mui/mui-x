@@ -68,7 +68,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const onDataSourceErrorProp = props.onDataSourceError;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
-    if (props.pagination !== true) {
+    if (!props.pagination) {
       return new CacheChunkManager(paginationModel.pageSize);
     }
 
