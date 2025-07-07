@@ -17,6 +17,9 @@
     },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "divisions": { "type": { "name": "number" }, "default": "5" },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ strictDomainLimit?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
     "highlight": {

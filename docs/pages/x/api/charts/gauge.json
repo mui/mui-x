@@ -7,6 +7,9 @@
     "cx": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "cy": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "endAngle": { "type": { "name": "number" }, "default": "360" },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ strictDomainLimit?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "id": { "type": { "name": "string" } },
     "innerRadius": {

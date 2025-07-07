@@ -7,6 +7,9 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableVoronoi": { "type": { "name": "bool" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ strictDomainLimit?: bool }" }
+    },
     "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {

@@ -205,6 +205,12 @@ BarChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * Options to enable features planned for the nex major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    strictDomainLimit: PropTypes.bool,
+  }),
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({

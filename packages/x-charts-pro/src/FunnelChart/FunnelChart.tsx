@@ -232,6 +232,12 @@ FunnelChart.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
+   * Options to enable features planned for the nex major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    strictDomainLimit: PropTypes.bool,
+  }),
+  /**
    * The gap, in pixels, between funnel sections.
    * @default 0
    */
