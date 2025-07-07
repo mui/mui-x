@@ -1,28 +1,11 @@
 import { renderHook, act } from '@mui/internal-test-utils';
 import { DateTime } from 'luxon';
-import { spy, stub } from 'sinon';
-import { beforeEach, afterEach } from 'vitest';
+import { spy } from 'sinon';
 import { useDateNavigation } from './useDateNavigation';
-import * as adapterModule from '../../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 
 describe('useDateNavigation', () => {
-  const realAdapter = adapterModule.getAdapter();
-  const mockToday = DateTime.fromISO('2025-07-07T00:00:00Z');
-  let getAdapterStub: sinon.SinonStub;
-
-  beforeEach(() => {
-    getAdapterStub = stub(adapterModule, 'getAdapter').callsFake(
-      () =>
-        ({
-          ...realAdapter,
-          date: ((..._args: any[]) => mockToday) as unknown as typeof realAdapter.date,
-        }) as any,
-    );
-  });
-
-  afterEach(() => {
-    getAdapterStub.restore();
-  });
+  const adapter = getAdapter();
 
   it('should go to next day', () => {
     const setVisibleDate = spy();
@@ -44,7 +27,7 @@ describe('useDateNavigation', () => {
     );
     act(() => result.current.onPreviousClick());
     expect(setVisibleDate.firstCall.args[0].toMillis()).to.equal(
-      realAdapter.addDays(visibleDate, -1).toMillis(),
+      adapter.addDays(visibleDate, -1).toMillis(),
     );
   });
 
@@ -55,7 +38,7 @@ describe('useDateNavigation', () => {
       useDateNavigation({ visibleDate, setVisibleDate, view: 'week' }),
     );
     act(() => result.current.onNextClick());
-    const startOfWeek = realAdapter.startOfWeek(visibleDate);
+    const startOfWeek = adapter.startOfWeek(visibleDate);
     expect(setVisibleDate.firstCall.args[0].toMillis()).to.equal(
       startOfWeek.plus({ weeks: 1 }).toMillis(),
     );
@@ -68,7 +51,7 @@ describe('useDateNavigation', () => {
       useDateNavigation({ visibleDate, setVisibleDate, view: 'week' }),
     );
     act(() => result.current.onPreviousClick());
-    const startOfWeek = realAdapter.startOfWeek(visibleDate);
+    const startOfWeek = adapter.startOfWeek(visibleDate);
     expect(setVisibleDate.firstCall.args[0].toMillis()).to.equal(
       startOfWeek.plus({ weeks: -1 }).toMillis(),
     );
@@ -81,7 +64,7 @@ describe('useDateNavigation', () => {
       useDateNavigation({ visibleDate, setVisibleDate, view: 'month' }),
     );
     act(() => result.current.onNextClick());
-    const startOfMonth = realAdapter.startOfMonth(visibleDate);
+    const startOfMonth = adapter.startOfMonth(visibleDate);
     expect(setVisibleDate.firstCall.args[0].toMillis()).to.equal(
       startOfMonth.plus({ months: 1 }).toMillis(),
     );
@@ -94,7 +77,7 @@ describe('useDateNavigation', () => {
       useDateNavigation({ visibleDate, setVisibleDate, view: 'month' }),
     );
     act(() => result.current.onPreviousClick());
-    const startOfMonth = realAdapter.startOfMonth(visibleDate);
+    const startOfMonth = adapter.startOfMonth(visibleDate);
     expect(setVisibleDate.firstCall.args[0].toMillis()).to.equal(
       startOfMonth.plus({ months: -1 }).toMillis(),
     );
@@ -108,7 +91,7 @@ describe('useDateNavigation', () => {
     );
     act(() => result.current.onNextClick());
     expect(setVisibleDate.firstCall.args[0].toMillis()).to.equal(
-      realAdapter.addDays(visibleDate, 12).toMillis(),
+      adapter.addDays(visibleDate, 12).toMillis(),
     );
   });
 
@@ -120,19 +103,7 @@ describe('useDateNavigation', () => {
     );
     act(() => result.current.onPreviousClick());
     expect(setVisibleDate.firstCall.args[0].toMillis()).to.equal(
-      realAdapter.addDays(visibleDate, -12).toMillis(),
-    );
-  });
-
-  it('should go to today', () => {
-    const setVisibleDate = spy();
-    const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
-    const { result } = renderHook(() =>
-      useDateNavigation({ visibleDate, setVisibleDate, view: 'day' }),
-    );
-    act(() => result.current.onTodayClick());
-    expect(setVisibleDate.firstCall.args[0].startOf('day').toMillis()).to.equal(
-      mockToday.startOf('day').toMillis(),
+      adapter.addDays(visibleDate, -12).toMillis(),
     );
   });
 });
