@@ -4,16 +4,7 @@ packages:
   - test
   - test/*
   - bundle-size
-ignoredBuiltDependencies:
-  - '@mui/monorepo'
-  - msw
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@vvago/vale'
-  - 'core-js'
-  - 'esbuild'
-  - 'nx'
-  - 'sharp'
+
 catalog:
   '@babel/core': ^7.27.7
   '@babel/plugin-transform-react-constant-elements': ^7.27.1
@@ -24,13 +15,13 @@ catalog:
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': ^7.1.2
+  '@mui/icons-material': ^7.2.0
   '@mui/internal-test-utils': ^2.0.9
-  '@mui/material': ^7.1.2
-  '@mui/stylis-plugin-rtl': ^7.1.0
-  '@mui/system': ^7.1.1
-  '@mui/utils': ^7.1.1
-  '@playwright/test': ^1.53.1
+  '@mui/material': ^7.2.0
+  '@mui/stylis-plugin-rtl': ^7.2.0
+  '@mui/system': ^7.2.0
+  '@mui/utils': ^7.2.0
+  '@playwright/test': ^1.53.2
   '@react-spring/web': ^10.0.1
   '@types/chance': ^1.1.7
   '@types/d3-scale': ^4.0.9
@@ -47,7 +38,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.0
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.34.1
+  '@typescript-eslint/parser': ^8.35.1
   autoprefixer: ^10.4.21
   babel-plugin-module-resolver: ^5.0.2
   babel-plugin-optimize-clsx: ^2.6.2
@@ -88,3 +79,16 @@ catalog:
   '@vitest/ui': ^3.2.4
   webpack-bundle-analyzer: ^4.10.2
   yargs: ^18.0.0
+
+ignoredBuiltDependencies:
+  - '@mui/monorepo'
+  - msw
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - '@vvago/vale'
+  - core-js
+  - esbuild
+  - nx
+  - sharp
+  - unrs-resolver

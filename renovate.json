@@ -78,20 +78,13 @@
     },
     {
       "groupName": "Material UI",
-      "matchPackageNames": [
-        "@mui/icons-material",
-        "@mui/joy",
-        "@mui/lab",
-        "@mui/material",
-        "@mui/material-nextjs",
-        "@mui/system",
-        "@mui/types",
-        "@mui/utils"
-      ]
+      "matchPackageNames": ["@mui/*"]
     },
     {
-      "groupName": "MUI Internal",
-      "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
+      "groupName": "Infra packages",
+      "matchPackageNames": ["@mui/internal-*", "@mui/docs"],
+      "followTag": "canary",
+      "schedule": null
     },
     {
       "groupName": "Playwright",

@@ -1459,6 +1459,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"
     },
+    "scrollArea--down": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom scroll area element"
+    },
     "scrollArea--left": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the left scroll area element"
@@ -1466,6 +1470,10 @@
     "scrollArea--right": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the right scroll area element"
+    },
+    "scrollArea--up": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top scroll area element"
     },
     "scrollbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the scrollbars" },
     "scrollbar--horizontal": {

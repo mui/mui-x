@@ -12,6 +12,7 @@ type CommunityOrProProps = {
   description: string;
   communityDescription: string;
   proDescription: string;
+  premiumDescription?: string;
 };
 
 export default function CommunityOrPro({
@@ -20,6 +21,7 @@ export default function CommunityOrPro({
   description,
   communityDescription,
   proDescription,
+  premiumDescription,
 }: CommunityOrProProps) {
   return (
     <React.Fragment>
@@ -53,7 +55,6 @@ export default function CommunityOrPro({
           href="/x/introduction/licensing/"
           endIcon={<ArrowForwardIcon />}
           sx={{ width: 'fit-content' }}
-          // eslint-disable-next-line material-ui/no-hardcoded-labels
         >
           About licensing
         </Button>
@@ -81,6 +82,17 @@ export default function CommunityOrPro({
             link="https://mui.com/pricing/"
           />
         </Box>
+        {premiumDescription && (
+          <Box sx={{ flexBasis: '50%' }}>
+            <InfoCard
+              title="Premium"
+              icon={<img src="/static/x/premium.svg" width={16} height={16} alt="" />}
+              description={[premiumDescription]}
+              backgroundColor="subtle"
+              link="https://mui.com/pricing/"
+            />
+          </Box>
+        )}
       </Stack>
     </React.Fragment>
   );
