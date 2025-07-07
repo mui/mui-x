@@ -24,7 +24,11 @@ const getFunnelDirection = (
   firstValue: number | undefined | null,
   lastValue: number | undefined | null,
 ): 'increasing' | 'decreasing' => {
-  if (funnelDirection === 'increasing' || funnelDirection === 'decreasing') {
+  if (
+    curve !== 'step' &&
+    curve !== 'linear-sharp' &&
+    (funnelDirection === 'increasing' || funnelDirection === 'decreasing')
+  ) {
     return funnelDirection;
   }
 
