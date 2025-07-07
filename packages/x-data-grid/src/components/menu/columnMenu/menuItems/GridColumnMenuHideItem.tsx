@@ -11,7 +11,9 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   const rootProps = useGridRootProps();
 
   const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-  const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
+  const columnsWithMenu = visibleColumns.filter(
+    (col) => 'disableColumnMenu' in col && col.disableColumnMenu !== true,
+  );
   // do not allow to hide the last column with menu
   const disabled = columnsWithMenu.length === 1;
 

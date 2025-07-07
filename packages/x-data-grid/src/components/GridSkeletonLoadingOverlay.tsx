@@ -17,7 +17,7 @@ import {
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
-import { GridColDef, GridEventListener } from '../models';
+import { GridColDef, GridEventListener, GridColType } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
@@ -156,7 +156,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
           <slots.skeletonCell
             key={`skeleton-column-${i}-${column.field}`}
             field={column.field}
-            type={column.type}
+            type={'type' in column ? (column.type as GridColType) : 'string'}
             align={column.align}
             width="var(--width)"
             height={dimensions.rowHeight}
