@@ -5,7 +5,7 @@ import { ChartPrintExportOptions } from './useChartProExport.types';
 
 export function printChart(
   element: HTMLElement | SVGElement,
-  { fileName }: ChartPrintExportOptions = {},
+  { fileName, onBeforeExport }: ChartPrintExportOptions = {},
 ) {
   const printWindow = createExportIframe(fileName);
   const doc = ownerDocument(element);
@@ -30,6 +30,8 @@ export function printChart(
         doc.body.removeChild(printWindow);
       }
     });
+
+    onBeforeExport?.(printWindow);
 
     printWindow.contentWindow!.print();
   };

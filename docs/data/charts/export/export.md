@@ -80,6 +80,18 @@ Additionally, the name of the exported file has been customized to resemble the 
 If the browser does not support a requested image format, the export defaults to PNG.
 :::
 
+### `onBeforeExport`
+
+When exporting, the chart is rendered onto an iframe and then exported as an image or PDF.
+
+You can modify the iframe before the export process starts by using the `onBeforeExport` callback.
+
+This can be useful to add custom styles or modify the chart's appearance before exporting.
+
+For example, you can hide the toolbar when exporting the chart, as shown below:
+
+{{"demo": "ExportChartOnBeforeExport.js"}}
+
 ## Composition
 
 As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
