@@ -7,7 +7,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('ScatterChart', () => {
-  const dataLength = 10_000;
+  const dataLength = 5_000;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -21,11 +21,7 @@ describe('ScatterChart', () => {
       const { findByText } = render(
         <ScatterChart
           xAxis={[{ data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US') }]}
-          series={[
-            {
-              data,
-            },
-          ]}
+          series={[{ data }]}
           width={500}
           height={300}
         />,
