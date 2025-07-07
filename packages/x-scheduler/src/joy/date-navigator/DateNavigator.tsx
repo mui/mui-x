@@ -16,13 +16,25 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
 
   return (
     <header ref={forwardedRef} className={clsx('DateNavigatorContainer', className)} {...other}>
-      {adapter.format(visibleDate, 'monthShort')} {adapter.format(visibleDate, 'year')}
-      <button onClick={onPreviousClick} type="button">
-        <ChevronLeft size={16} strokeWidth={2} />
-      </button>
-      <button onClick={onNextClick} type="button">
-        <ChevronRight size={16} strokeWidth={2} />
-      </button>
+      <p className="DateNavigatorLabel">
+        {adapter.format(visibleDate, 'monthShort')} {adapter.format(visibleDate, 'year')}
+      </p>
+      <div className="DateNavigatorButtonsContainer">
+        <button
+          className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
+          onClick={onPreviousClick}
+          type="button"
+        >
+          <ChevronLeft size={24} strokeWidth={2} />
+        </button>
+        <button
+          className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
+          onClick={onNextClick}
+          type="button"
+        >
+          <ChevronRight size={24} strokeWidth={2} />
+        </button>
+      </div>
     </header>
   );
 });
