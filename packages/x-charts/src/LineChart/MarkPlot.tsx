@@ -139,59 +139,59 @@ function MarkPlot(props: MarkPlotProps) {
 
           return (
             <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
-              {xData
-                ?.map((x, index) => {
-                  const value = data[index] == null ? null : stackedData[index][1];
-                  return {
-                    x: xScale(x),
-                    y: value === null ? null : yScale(value)!,
-                    position: x,
-                    value,
-                    index,
-                  };
-                })
-                .filter(({ x, y, index, position, value }) => {
+              {(() => {
+                const children = [];
+
+                for (let dataIndex = 0; dataIndex < xData.length; dataIndex += 1) {
+                  const value = data[dataIndex] == null ? null : stackedData[dataIndex][1];
+                  const y = value === null ? null : yScale(value)!;
+
                   if (value === null || y === null) {
                     // Remove missing data point
-                    return false;
+                    continue;
                   }
+
+                  const x = xScale(xData[dataIndex]);
+
                   if (!instance.isPointInside(x, y)) {
                     // Remove out of range
-                    return false;
+                    continue;
                   }
-                  if (showMark === true) {
-                    return true;
+
+                  if (
+                    showMark === true ||
+                    showMark({
+                      x,
+                      y,
+                      index: dataIndex,
+                      position: xData[dataIndex],
+                      value,
+                    })
+                  ) {
+                    children.push(
+                      <Mark
+                        key={`${seriesId}-${dataIndex}`}
+                        id={seriesId}
+                        dataIndex={dataIndex}
+                        shape={shape}
+                        color={colorGetter(dataIndex)}
+                        x={x}
+                        y={y}
+                        skipAnimation={skipAnimation}
+                        onClick={
+                          onItemClick &&
+                          ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex }))
+                        }
+                        isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
+                        isFaded={isSeriesFaded}
+                        {...slotProps?.mark}
+                      />,
+                    );
                   }
-                  return showMark({
-                    x,
-                    y,
-                    index,
-                    position,
-                    value,
-                  });
-                })
-                .map(({ x, y, index }) => {
-                  return (
-                    <Mark
-                      key={`${seriesId}-${index}`}
-                      id={seriesId}
-                      dataIndex={index}
-                      shape={shape}
-                      color={colorGetter(index)}
-                      x={x}
-                      y={y!} // Don't know why TS doesn't get from the filter that y can't be null
-                      skipAnimation={skipAnimation}
-                      onClick={
-                        onItemClick &&
-                        ((event) =>
-                          onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
-                      }
-                      isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
-                      isFaded={isSeriesFaded}
-                      {...slotProps?.mark}
-                    />
-                  );
-                })}
+                }
+
+                return children;
+              })()}
             </g>
           );
         });
