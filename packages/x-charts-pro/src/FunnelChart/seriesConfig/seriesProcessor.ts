@@ -93,43 +93,6 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         const currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
         const stackOffset = stackOffsets[dataIndex];
 
-        if (isIncreasing) {
-          return [
-            // Top right (vertical) or Top left (horizontal)
-            createPoint({
-              main: nextMaxMain,
-              other: nextMaxOther,
-              inverse: isHorizontal,
-              useBandWidth: false,
-              stackOffset,
-            }),
-            // Bottom right (vertical) or Top right (horizontal)
-            createPoint({
-              main: currentMaxMain,
-              other: currentMaxOther,
-              inverse: isHorizontal,
-              useBandWidth: true,
-              stackOffset,
-            }),
-            // Bottom left (vertical) or Bottom right (horizontal)
-            createPoint({
-              main: -currentMaxMain,
-              other: currentMaxOther,
-              inverse: isHorizontal,
-              useBandWidth: true,
-              stackOffset,
-            }),
-            // Top left (vertical) or Bottom left (horizontal)
-            createPoint({
-              main: -nextMaxMain,
-              other: nextMaxOther,
-              inverse: isHorizontal,
-              useBandWidth: false,
-              stackOffset,
-            }),
-          ];
-        }
-
         return [
           // Top right (vertical) or Top left (horizontal)
           createPoint({
