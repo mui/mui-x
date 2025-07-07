@@ -12,7 +12,9 @@ export interface SchedulerTranslations {
 
   // MonthView
   hiddenEvents: (hiddenEventsCount: number) => string;
+  nextTimeSpan: (timeSpan: string) => string;
   noResourceAriaLabel: string;
+  previousTimeSpan: (timeSpan: string) => string;
   resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;

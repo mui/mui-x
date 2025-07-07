@@ -104,6 +104,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
               visibleDate={visibleDate}
               onNextClick={onNextClick}
               onPreviousClick={onPreviousClick}
+              currentView={currentView}
             />
             <section
               className="EventCalendarMonthCalendarPlaceholder"
