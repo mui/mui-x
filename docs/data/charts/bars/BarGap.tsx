@@ -1,8 +1,8 @@
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { balanceSheet, addLabels } from './netflixsBalanceSheet';
-import Typography from '@mui/material/Typography';
 
 const series = addLabels([
   { dataKey: 'totAss' },
