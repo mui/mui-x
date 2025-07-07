@@ -23,7 +23,7 @@ describe('BarChart', () => {
         <BarChart xAxis={[{ data: xData }]} series={[{ data: yData }]} width={500} height={300} />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      await findByText(dataLength.toString(), { ignore: 'span' });
 
       cleanup();
     },
