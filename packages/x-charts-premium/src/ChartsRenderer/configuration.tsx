@@ -1,19 +1,20 @@
+import * as React from 'react';
 import {
-  blueberryTwilightPalette,
-  mangoFusionPalette,
-  cheerfulFiestaPalette,
-  strawberrySkyPalette,
-  rainbowSurgePalette,
   bluePalette,
-  greenPalette,
-  purplePalette,
-  redPalette,
-  orangePalette,
-  yellowPalette,
+  cheerfulFiestaPalette,
   cyanPalette,
+  greenPalette,
+  mangoFusionPalette,
+  orangePalette,
   pinkPalette,
+  purplePalette,
+  rainbowSurgePalette,
+  redPalette,
+  strawberrySkyPalette,
+  yellowPalette,
 } from '@mui/x-charts/colorPalettes';
-import { GridChartsConfigurationOptions, GridChartsConfigurationSection } from './types';
+import { PaletteOption } from './components/PaletteOption';
+import type { GridChartsConfigurationOptions, GridChartsConfigurationSection } from './types';
 import {
   GridBarChartIcon,
   GridColumnChartIcon,
@@ -24,26 +25,46 @@ import {
 
 const colorOptions = {
   label: 'Color palette',
-  type: 'colorPalette',
+  type: 'select' as const,
   default: 'rainbowSurgePalette',
   options: [
     {
-      label: 'Blueberry Twilight',
+      content: 'Blueberry Twilight',
       value: 'blueberryTwilightPalette',
-      palette: blueberryTwilightPalette,
     },
-    { label: 'Mango Fusion', value: 'mangoFusionPalette', palette: mangoFusionPalette },
-    { label: 'Cheerful Fiesta', value: 'cheerfulFiestaPalette', palette: cheerfulFiestaPalette },
-    { label: 'Strawberry Sky', value: 'strawberrySkyPalette', palette: strawberrySkyPalette },
-    { label: 'Rainbow Surge', value: 'rainbowSurgePalette', palette: rainbowSurgePalette },
-    { label: 'Blue', value: 'bluePalette', palette: bluePalette },
-    { label: 'Green', value: 'greenPalette', palette: greenPalette },
-    { label: 'Purple', value: 'purplePalette', palette: purplePalette },
-    { label: 'Red', value: 'redPalette', palette: redPalette },
-    { label: 'Orange', value: 'orangePalette', palette: orangePalette },
-    { label: 'Yellow', value: 'yellowPalette', palette: yellowPalette },
-    { label: 'Cyan', value: 'cyanPalette', palette: cyanPalette },
-    { label: 'Pink', value: 'pinkPalette', palette: pinkPalette },
+    {
+      content: <PaletteOption palette={mangoFusionPalette}>Mango Fusion</PaletteOption>,
+      value: 'mangoFusionPalette',
+    },
+    {
+      content: <PaletteOption palette={cheerfulFiestaPalette}>Cheerful Fiesta</PaletteOption>,
+      value: 'cheerfulFiestaPalette',
+    },
+    {
+      content: <PaletteOption palette={strawberrySkyPalette}>Strawberry Sky</PaletteOption>,
+      value: 'strawberrySkyPalette',
+    },
+    {
+      content: <PaletteOption palette={rainbowSurgePalette}>Rainbow Surge</PaletteOption>,
+      value: 'rainbowSurgePalette',
+    },
+    { content: <PaletteOption palette={bluePalette}>Blue</PaletteOption>, value: 'bluePalette' },
+    { content: <PaletteOption palette={greenPalette}>Green</PaletteOption>, value: 'greenPalette' },
+    {
+      content: <PaletteOption palette={purplePalette}>Purple</PaletteOption>,
+      value: 'purplePalette',
+    },
+    { content: <PaletteOption palette={redPalette}>Red</PaletteOption>, value: 'redPalette' },
+    {
+      content: <PaletteOption palette={orangePalette}>Orange</PaletteOption>,
+      value: 'orangePalette',
+    },
+    {
+      content: <PaletteOption palette={yellowPalette}>Yellow</PaletteOption>,
+      value: 'yellowPalette',
+    },
+    { content: <PaletteOption palette={cyanPalette}>Cyan</PaletteOption>, value: 'cyanPalette' },
+    { content: <PaletteOption palette={pinkPalette}>Pink</PaletteOption>, value: 'pinkPalette' },
   ],
 };
 
@@ -96,10 +117,10 @@ const getBarColumnCustomization = (type: 'bar' | 'column'): GridChartsConfigurat
         type: 'select',
         default: 'none',
         options: [
-          { label: 'None', value: 'none' },
-          { label: 'Horizontal', value: 'horizontal' },
-          { label: 'Vertical', value: 'vertical' },
-          { label: 'Both', value: 'both' },
+          { content: 'None', value: 'none' },
+          { content: 'Horizontal', value: 'horizontal' },
+          { content: 'Vertical', value: 'vertical' },
+          { content: 'Both', value: 'both' },
         ],
       },
       tickPlacement: {
@@ -107,10 +128,10 @@ const getBarColumnCustomization = (type: 'bar' | 'column'): GridChartsConfigurat
         type: 'select',
         default: 'extremities',
         options: [
-          { label: 'End', value: 'end' },
-          { label: 'Extremities', value: 'extremities' },
-          { label: 'Middle', value: 'middle' },
-          { label: 'Start', value: 'start' },
+          { content: 'End', value: 'end' },
+          { content: 'Extremities', value: 'extremities' },
+          { content: 'Middle', value: 'middle' },
+          { content: 'Start', value: 'start' },
         ],
       },
       tickLabelPlacement: {
@@ -118,8 +139,8 @@ const getBarColumnCustomization = (type: 'bar' | 'column'): GridChartsConfigurat
         type: 'select',
         default: 'middle',
         options: [
-          { label: 'Middle', value: 'middle' },
-          { label: 'Tick', value: 'tick' },
+          { content: 'Middle', value: 'middle' },
+          { content: 'Tick', value: 'tick' },
         ],
       },
       hideLegend: { label: 'Hide Legend', type: 'boolean', default: false },
