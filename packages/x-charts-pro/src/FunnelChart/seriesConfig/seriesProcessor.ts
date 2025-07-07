@@ -77,17 +77,26 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         // For horizontal layout, main is y, other is x
         // For vertical layout, main is x, other is y
         const isIncreasing = completedSeries[seriesId].funnelDirection === 'increasing';
-        const currentMaxMain = item.value;
-        const getNextDataIndex = () => {
-          if (isIncreasing) {
-            return dataIndex === 0 ? dataIndex : dataIndex - 1;
-          }
-          return dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
-        };
-        const nextDataIndex = getNextDataIndex();
-        const nextMaxMain = array[nextDataIndex].value ?? 0;
-        const nextMaxOther = 0;
-        const currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
+
+        let currentMaxMain = 0;
+        let currentMaxOther = 0;
+        let nextMaxMain = 0;
+        let nextMaxOther = 0;
+        let nextDataIndex = 0;
+
+        if (isIncreasing) {
+          nextDataIndex = dataIndex === 0 ? dataIndex : dataIndex - 1;
+          currentMaxMain = array[nextDataIndex].value ?? 0;
+          nextMaxMain = item.value;
+          nextMaxOther = 0;
+          currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
+        } else {
+          nextDataIndex = dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
+          currentMaxMain = item.value;
+          nextMaxMain = array[nextDataIndex].value ?? 0;
+          nextMaxOther = 0;
+          currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
+        }
         const stackOffset = stackOffsets[dataIndex];
 
         return [
