@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { addLabels, balanceSheet } from './netflixsBalanceSheet';
+import { addLabels, balanceSheet, valueFormatter } from './netflixsBalanceSheet';
 
 export default function StackBars() {
   return (
@@ -16,7 +16,6 @@ export default function StackBars() {
         { dataKey: 'treas', stack: 'equity' },
       ])}
       xAxis={[{ dataKey: 'year' }]}
-      yAxis={[{ width: 80 }]}
       {...config}
     />
   );
@@ -24,6 +23,7 @@ export default function StackBars() {
 
 const config: Partial<BarChartProps> = {
   height: 350,
-  margin: { left: 40 },
+  margin: { left: 0 },
+  yAxis: [{ width: 50, valueFormatter }],
   hideLegend: true,
 };
