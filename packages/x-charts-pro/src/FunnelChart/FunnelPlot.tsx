@@ -151,7 +151,7 @@ const useAggregatedData = () => {
               })
             : currentSeries.sectionLabel;
 
-        const isIncreasing = currentSeries.dataDirection === 'increasing';
+        const isIncreasing = currentSeries.funnelDirection === 'increasing';
 
         const curve = getFunnelCurve(currentSeries.curve, {
           isHorizontal,

@@ -6,11 +6,11 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { CalendarEvent } from '../models/events';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
+import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
 
 const adapter = getAdapter();
@@ -33,7 +33,7 @@ export const AgendaView = React.memo(
     const getDayList = useDayList();
 
     const days = React.useMemo(
-      () => getDayList({ date: visibleDate.startOf('week'), amount: 12 }),
+      () => getDayList({ date: adapter.startOfWeek(visibleDate), amount: 12 }),
       [getDayList, visibleDate],
     );
 
@@ -68,7 +68,7 @@ export const AgendaView = React.memo(
                   </div>
                   <div className="EventsList">
                     {getEventsStartingInDay(day).map((event: CalendarEvent) => (
-                      <AgendaEvent
+                      <DayGridEvent
                         key={event.id}
                         event={event}
                         variant="compact"

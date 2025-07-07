@@ -12,6 +12,13 @@ export const enUS: SchedulerTranslations = {
   // WeekView
   allDay: 'All day',
 
+  // MonthView
+  hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
+  noResourceAriaLabel: 'No specific resource',
+  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+  weekAbbreviation: 'W',
+  weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
+
   // EventPopover
   closeButtonAriaLabel: 'Close modal',
   deleteEvent: 'Delete event',
