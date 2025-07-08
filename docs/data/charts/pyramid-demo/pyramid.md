@@ -27,9 +27,6 @@ In order to manually control the direction of the pyramid, the `funnelDirection`
 
 This is useful when the data is not sorted, or when you want to enforce a specific direction regardless of the data order.
 
-In the example below, an upright pyramid is used to showcase income levels.
-For this use-case the `increasing` pyramid is always correct, regardless of the data.
-
 {{"demo": "PyramidDirection.js"}}
 
 ## Segments
