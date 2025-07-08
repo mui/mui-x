@@ -74,6 +74,7 @@ ChartsToolbarPrintExportTrigger.propTypes = {
    */
   options: PropTypes.shape({
     fileName: PropTypes.string,
+    onBeforeExport: PropTypes.func,
   }),
   /**
    * A function to customize the rendering of the component.
