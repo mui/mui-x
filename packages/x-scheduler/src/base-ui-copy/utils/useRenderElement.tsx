@@ -2,11 +2,10 @@ import * as React from 'react';
 import { mergeObjects } from '@base-ui-components/utils/mergeObjects';
 import { isReactVersionAtLeast } from '@base-ui-components/utils/reactVersion';
 import { useForkRef, useForkRefN } from '@base-ui-components/utils/useForkRef';
-import { mergeClassNames } from '@base-ui-components/react/merge-props';
+import { mergeClassNames, mergeProps, mergePropsN } from '@base-ui-components/react/merge-props';
 import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types';
 import { CustomStyleHookMapping, getStyleHookProps } from './getStyleHookProps';
 import { resolveClassName } from './resolveClassName';
-import { mergeProps, mergePropsN } from '../merge-props';
 
 type IntrinsicTagName = keyof React.JSX.IntrinsicElements;
 

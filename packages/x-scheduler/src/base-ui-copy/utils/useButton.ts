@@ -3,9 +3,9 @@
 'use client';
 import * as React from 'react';
 import { useModernLayoutEffect } from '@base-ui-components/utils/useModernLayoutEffect';
+import { makeEventPreventable, mergeProps } from '@base-ui-components/react/merge-props';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { makeEventPreventable, mergeProps } from '../merge-props';
 import { useRootElementName } from './useRootElementName';
 import { useCompositeRootContext } from '../composite/CompositeRootContext';
 import { BaseUIEvent, HTMLProps } from './types';
