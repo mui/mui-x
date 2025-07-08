@@ -195,8 +195,9 @@ export function useGridVirtualizer(
           : undefined,
       [apiRef, getRowSpacing],
     ),
-    applyRowHeight: (entry, row) =>
+    applyRowHeight: useEventCallback((entry, row) =>
       apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
+    ),
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
     focusedVirtualCell,
