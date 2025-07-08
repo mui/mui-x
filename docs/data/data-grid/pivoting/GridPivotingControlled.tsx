@@ -4,6 +4,7 @@ import {
   GridColDef,
   GridRowModel,
   GridPivotModel,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 
 const rows: GridRowModel[] = [
@@ -52,9 +53,6 @@ export default function GridPivotingControlled() {
   // Pivot mode toggle state
   const [pivotModeEnabled, setPivotModeEnabled] = React.useState(true);
 
-  // Pivot panel visibility state
-  const [pivotPanelOpen, setPivotPanelOpen] = React.useState(true);
-
   return (
     <div style={{ height: 560, width: '100%' }}>
       <DataGridPremium
@@ -64,10 +62,14 @@ export default function GridPivotingControlled() {
         onPivotModelChange={setPivotModel}
         pivotActive={pivotModeEnabled}
         onPivotActiveChange={setPivotModeEnabled}
-        pivotPanelOpen={pivotPanelOpen}
-        onPivotPanelOpenChange={setPivotPanelOpen}
         columnGroupHeaderHeight={36}
         showToolbar
+        initialState={{
+          sidebar: {
+            open: true,
+            openedValue: GridSidebarValue.pivot,
+          },
+        }}
         slotProps={{
           toolbar: {
             showQuickFilter: false,

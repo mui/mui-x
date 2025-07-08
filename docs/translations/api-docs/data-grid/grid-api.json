@@ -117,6 +117,7 @@
     "hideFilterPanel": { "description": "Hides the filter panel." },
     "hideHeaderFilterMenu": { "description": "Hides the header filter menu." },
     "hidePreferences": { "description": "Hides the preferences panel." },
+    "hideSidebar": { "description": "Hides the sidebar." },
     "ignoreDiacritics": {
       "description": "Returns the value of the <code>ignoreDiacritics</code> prop."
     },
@@ -194,7 +195,7 @@
     "setPinnedColumns": { "description": "Changes the pinned columns." },
     "setPivotActive": { "description": "Sets whether the pivot mode is active." },
     "setPivotModel": { "description": "Sets the pivot model to use in the pivot mode." },
-    "setPivotPanelOpen": { "description": "Sets whether the pivot panel is open." },
+    "setPivotPanelOpen": { "description": "" },
     "setQuickFilterValues": {
       "description": "Set the quick filter values to the one given by <code>values</code>"
     },
@@ -221,6 +222,9 @@
     "showHeaderFilterMenu": { "description": "Opens the header filter menu for the given field." },
     "showPreferences": {
       "description": "Displays the preferences panel. The <code>newValue</code> argument controls the content of the panel."
+    },
+    "showSidebar": {
+      "description": "Displays the sidebar. The <code>newValue</code> argument controls the content of the sidebar."
     },
     "sortColumn": { "description": "Sorts a column." },
     "startCellEditMode": {

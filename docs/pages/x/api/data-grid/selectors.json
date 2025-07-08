@@ -324,6 +324,7 @@
     "description": ""
   },
   { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
+  { "name": "gridSidebarStateSelector", "returnType": "GridSidebarState", "description": "" },
   {
     "name": "gridSortModelSelector",
     "returnType": "GridSortModel",
