@@ -1,4 +1,8 @@
 import * as React from 'react';
+import type {
+  GridChartsConfigurationOptions,
+  GridChartsConfigurationSection,
+} from '@mui/x-internals/types';
 import {
   bluePalette,
   cheerfulFiestaPalette,
@@ -15,7 +19,7 @@ import {
   blueberryTwilightPalette,
 } from '@mui/x-charts/colorPalettes';
 import { PaletteOption } from './components/PaletteOption';
-import type { GridChartsConfigurationOptions, GridChartsConfigurationSection } from './types';
+
 import {
   GridBarChartIcon,
   GridColumnChartIcon,

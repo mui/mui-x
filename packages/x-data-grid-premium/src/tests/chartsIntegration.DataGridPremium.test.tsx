@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   GridChartsIntegrationContextProvider,
@@ -16,10 +16,7 @@ import {
   GridValidRowModel,
   GridChartsIcon,
 } from '@mui/x-data-grid-premium';
-import {
-  GridChartsConfigurationOptions,
-  GridChartsIntegrationContextValue,
-} from '../models/gridChartsIntegration';
+import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
 const rows: GridValidRowModel[] = [
   { id: 0, category1: 'CatA', category2: 'Cat1', nonChartable: '-', amount: 100 },

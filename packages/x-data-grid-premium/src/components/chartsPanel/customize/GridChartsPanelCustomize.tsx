@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
+import type {
+  GridChartsConfigurationSection,
+  GridChartsConfigurationControl,
+} from '@mui/x-internals/types';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { GridShadowScrollArea } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
-import type {
-  GridChartsConfigurationControl,
-  GridChartsConfigurationSection,
-} from '../../../models/gridChartsIntegration';
 import { Collapsible } from '../../collapsible/Collapsible';
 import { CollapsibleTrigger } from '../../collapsible/CollapsibleTrigger';
 import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';

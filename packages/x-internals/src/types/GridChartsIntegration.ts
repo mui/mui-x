@@ -1,17 +1,16 @@
-// Types/Interfaces are copied from the x-data-grid-premium to make the configuration compatible without depending on the grid package
 import * as React from 'react';
 
-type Axis<T> = { id: string; label: string; data: T[] }[];
+export type Axis<T> = { id: string; label: string; data: T[] }[];
 
-type GridChartsConfiguration = Record<string, string | number | boolean | null>;
+export type GridChartsConfiguration = Record<string, string | number | boolean | null>;
 
-type ConfigurationCallback<R> = (context: {
+export type ConfigurationCallback<R> = (context: {
   configuration: GridChartsConfiguration;
   categories: Axis<string | number | null>;
   series: Axis<number | null>;
 }) => R;
 
-type GridChartsConfigurationControl =
+export type GridChartsConfigurationControl =
   | {
       label: string;
       description?: string;
@@ -44,6 +43,26 @@ export interface GridChartsConfigurationSection {
   };
 }
 
+/**
+ * @example
+ * const configuration: GridChartsConfigurationOptions = {
+ *  'bar': {
+ *    'label': 'Bar',
+ *    'icon': <BarChartIcon />,
+ *    'maxCategories': 1,
+ *    'customization': [{
+ *      'id': 'mainSection',
+ *      'label': 'Main Section',
+ *      'controls': {
+ *        'height': { label: 'Height', type: 'number', default: 350 },
+ *        'layout': { label: 'Layout', type: 'select', default: 'vertical', options: [{ content: 'Vertical', value: 'vertical' }, { content: 'Horizontal', value: 'horizontal' }] },
+ *        'stacked': { label: 'Stacked', type: 'boolean', default: false, isHidden: (configuration, categories, series) => series.length < 2 },
+ *        'hideLegend': { label: 'Hide Legend', type: 'boolean', default: false },
+ *      },
+ *    }]
+ *  },
+ * };
+ */
 export interface GridChartsConfigurationOptions {
   [key: string]: {
     label: string;
