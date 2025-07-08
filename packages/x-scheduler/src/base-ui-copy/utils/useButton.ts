@@ -4,8 +4,8 @@
 import * as React from 'react';
 import { useModernLayoutEffect } from '@base-ui-components/utils/useModernLayoutEffect';
 import { makeEventPreventable, mergeProps } from '@base-ui-components/react/merge-props';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useForkRef from '@mui/utils/useForkRef';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useForkRef } from '@base-ui-components/utils/useForkRef';
 import { useRootElementName } from './useRootElementName';
 import { useCompositeRootContext } from '../composite/CompositeRootContext';
 import { BaseUIEvent, HTMLProps } from './types';
