@@ -30,7 +30,7 @@ This is useful when the data is not sorted, or when you want to enforce a specif
 In the example below, an upright pyramid is used to showcase income levels.
 For this use-case the `increasing` pyramid is always correct, regardless of the data.
 
-{{"demo": "PyramidInverted.js"}}
+{{"demo": "PyramidDirection.js"}}
 
 ## Segments
 
