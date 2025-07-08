@@ -1,5 +1,5 @@
 'use client';
-import { useLazyRef } from './useLazyRef';
+import { useLazyRef } from '@base-ui-components/utils/useLazyRef';
 import { useOnMount } from './useOnMount';
 
 type TimeoutId = number;

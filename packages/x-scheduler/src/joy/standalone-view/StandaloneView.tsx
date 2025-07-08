@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { useLazyRef } from '@base-ui-components/utils/useLazyRef';
 import { EventCalendarStoreContext } from '../internals/hooks/useEventCalendarStore';
 import { Store } from '../../base-ui-copy/utils/store';
-import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { EventCalendarProps } from '../event-calendar/EventCalendar.types';
 import { State } from '../event-calendar/store';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
