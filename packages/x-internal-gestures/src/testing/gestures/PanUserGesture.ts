@@ -1,4 +1,5 @@
 import { PointerManager } from '../PointerManager';
+import type { PointerType } from '../types/Pointers';
 import { PanUserGestureOptions } from './PanUserGesture.types';
 
 /**
@@ -8,15 +9,14 @@ import { PanUserGestureOptions } from './PanUserGesture.types';
  * @param advanceTimers - Optional function to advance timers in tests.
  * @returns A promise that resolves when the pan gesture is completed.
  */
-export const pan = async (
+export const pan = async <P extends PointerType>(
   pointerManager: PointerManager,
-  options: PanUserGestureOptions,
+  options: PanUserGestureOptions<P>,
   advanceTimers?: (ms: number) => Promise<void>,
 ): Promise<void> => {
   const {
     target,
     distance,
-    pointers,
     duration = 500,
     steps = 10,
     angle = 0,
@@ -34,10 +34,19 @@ export const pan = async (
   const deltaX = Math.cos(rad) * distance;
   const deltaY = Math.sin(rad) * distance;
 
-  const pointersArray = pointerManager.parsePointers(pointers, target, {
-    amount: 1,
-    distance: 0,
-  });
+  let pointersArray;
+  if (pointerManager.mode === 'mouse') {
+    // For mouse, we use the MousePointer type from the options
+    const mousePointer = 'pointer' in options ? options.pointer : undefined;
+    pointersArray = [pointerManager.parseMousePointer(mousePointer, target)];
+  } else {
+    // For touch, we use the Pointers type from the options
+    const touchPointers = 'pointers' in options ? options.pointers : undefined;
+    pointersArray = pointerManager.parsePointers(touchPointers, target, {
+      amount: 1,
+      distance: 0,
+    });
+  }
 
   // Start the pan gesture by pressing down all pointers
   for (const pointer of pointersArray) {
