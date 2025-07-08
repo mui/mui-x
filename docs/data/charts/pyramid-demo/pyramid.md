@@ -24,7 +24,7 @@ The pyramid automatically changes its direction based on the provided data. If t
 If the values are sorted in descending order, the pyramid will be upright.
 
 In order to manually control the direction of the pyramid, the `funnelDirection` property can be set to either `increasing` or `decreasing`.
-This is useful when the data is not sorted, or when you want to enforce a specific direction regardless of the data order.
+This is useful when the data is not sorted, or when you want to enforce a specific direction regardless of the data order, like in the below example where an upright pyramid is required to show income levels.
 
 {{"demo": "PyramidInverted.js"}}
 

@@ -10,10 +10,10 @@ export default function Pyramid() {
           {
             curve: 'pyramid',
             data: [
-              { label: 'Below $1.90 a day', value: 9 },
-              { label: '$1.90-$10 a day', value: 50 },
-              { label: '$10-$30 a day', value: 25 },
-              { label: 'Above $30 a day', value: 16 },
+              { value: 10 },
+              { value: 100 },
+              { value: 1000 },
+              { value: 10000 },
             ],
           },
         ]}
