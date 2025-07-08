@@ -34,7 +34,7 @@ export const useGridSidebar = (
       apiRef.current.publishEvent('sidebarClose', {
         openedValue: state.sidebar.openedValue,
       });
-      return { ...state, preferencePanel: { open: false } };
+      return { ...state, sidebar: { open: false } };
     });
   }, [apiRef]);
 
