@@ -2,10 +2,10 @@
 /* eslint-disable jsdoc/require-returns-type */
 'use client';
 import * as React from 'react';
+import { useModernLayoutEffect } from '@base-ui-components/utils/useModernLayoutEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { makeEventPreventable, mergeProps } from '../merge-props';
-import { useModernLayoutEffect } from './useModernLayoutEffect';
 import { useRootElementName } from './useRootElementName';
 import { useCompositeRootContext } from '../composite/CompositeRootContext';
 import { BaseUIEvent, HTMLProps } from './types';
