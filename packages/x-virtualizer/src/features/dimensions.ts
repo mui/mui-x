@@ -248,16 +248,17 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     rightPinnedWidth,
   ]);
 
+  const { resizeThrottleMs, onResize } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
     () =>
-      params.resizeThrottleMs > 0
+      resizeThrottleMs > 0
         ? throttle(() => {
             updateDimensionCallback();
-            params.onResize?.(store.state.rootSize);
-          }, params.resizeThrottleMs)
+            onResize?.(store.state.rootSize);
+          }, resizeThrottleMs)
         : undefined,
-    [params.resizeThrottleMs, params.onResize, store, updateDimensionCallback],
+    [resizeThrottleMs, onResize, store, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
@@ -436,7 +437,7 @@ function useRowsMeta(
     }
 
     isHeightMetaValid.current = true;
-  }, [store, pinnedRows, rows, processHeightEntry]);
+  }, [store, pinnedRows, rows, processHeightEntry, updateDimensions]);
   const hydrateRowsMetaLatest = useEventCallback(hydrateRowsMeta);
 
   const getRowHeight = (rowId: RowId) => {
