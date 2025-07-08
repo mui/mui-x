@@ -2,23 +2,21 @@ import * as React from 'react';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
-import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
+import { populationByEducationLevelPercentageSeries } from '../funnel/populationByEducationLevel';
 
-const curveTypes = [
-  'bump',
-  'linear',
-  'linear-sharp',
-  'step',
-  'pyramid',
-  'step-pyramid',
-] as const;
+const curveTypes = ['pyramid', 'step-pyramid'] as const;
 
-export default function FunnelCurves() {
+export default function PyramidPlayground() {
   return (
     <ChartsUsageDemo
-      componentName="Funnel curve"
+      componentName="Pyramid Chart"
       data={
         {
+          direction: {
+            knob: 'radio',
+            options: ['vertical', 'horizontal'],
+            defaultValue: 'vertical',
+          },
           curveType: {
             knob: 'radio',
             options: curveTypes,
@@ -48,27 +46,11 @@ export default function FunnelCurves() {
           <FunnelChart
             series={[
               {
+                layout: props.direction,
                 curve: props.curveType,
-                borderRadius: props.borderRadius,
-                layout: 'vertical',
                 variant: props.variant,
-                funnelDirection: 'increasing',
-                ...populationByEducationLevelPercentageSeries,
-              },
-            ]}
-            gap={props.gap}
-            height={300}
-            slotProps={{ legend: { direction: 'vertical' } }}
-          />
-          <FunnelChart
-            series={[
-              {
-                curve: props.curveType,
                 borderRadius: props.borderRadius,
-                layout: 'horizontal',
-                variant: props.variant,
-                funnelDirection: 'increasing',
-                ...populationByEducationLevelPercentageSeries,
+                data: [...populationByEducationLevelPercentageSeries.data].reverse(),
               },
             ]}
             gap={props.gap}
@@ -82,9 +64,10 @@ export default function FunnelCurves() {
 
 <FunnelChart
   series={[{ 
+    layout: '${props.direction}',
     curve: '${props.curveType}',
     variant: '${props.variant}',
-    ${props.curveType === 'bump' ? '// ' : ''}borderRadius: ${props.borderRadius},
+    borderRadius: ${props.borderRadius},
   }]}
   gap={${props.gap}}
 />
