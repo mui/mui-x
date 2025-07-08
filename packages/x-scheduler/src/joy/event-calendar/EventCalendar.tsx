@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
@@ -13,7 +14,6 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { getColorClassName } from '../internals/utils/color-utils';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { Store, useSelector } from '../../base-ui-copy/utils/store';
-import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
 import { selectors, State } from './store';
 import { EventCalendarStoreContext } from '../internals/hooks/useEventCalendarStore';
 import { MonthView } from '../month-view';
