@@ -27,14 +27,14 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
         <Stack direction="column" spacing={1} sx={{ height: 1 }}>
           <Typography variant="h6">{`Order #${rowProp.id}`}</Typography>
           <Grid container>
-            <Grid item md={6}>
+            <Grid size={{ md: 6 }}>
               <Typography variant="body2" color="textSecondary">
                 Customer information
               </Typography>
               <Typography variant="body1">{rowProp.customer}</Typography>
               <Typography variant="body1">{rowProp.email}</Typography>
             </Grid>
-            <Grid item md={6}>
+            <Grid size={{ md: 6 }}>
               <Typography variant="body2" align="right" color="textSecondary">
                 Shipping address
               </Typography>

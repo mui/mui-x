@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 ---
 
 # Charts - Bars
@@ -12,7 +12,7 @@ components: BarChart, BarElement, BarPlot, ChartsGrid, ChartsOnAxisClickHandler,
 
 Bar charts series should contain a `data` property containing an array of values.
 
-You can customize bar ticks with the `xAxis`.
+You can specify bar ticks with the `xAxis` prop.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
 {{"demo": "BasicBars.js"}}
@@ -38,9 +38,9 @@ The ratio is obtained by dividing the size of the gap by the size of the categor
 The `barGapRatio` defines the gap between two bars of the same category.
 It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
-And a value of `-1` will make bars overlap on top of each over.
+And a value of `-1` will make bars overlap on top of each other.
 
-{{"demo": "BarGapNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Stacking
 
@@ -77,6 +77,8 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
+## Customization
+
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
@@ -100,32 +102,47 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 
 {{"demo": "ColorScale.js"}}
 
-### Border Radius
+### Border radius
 
 To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
-It will work with any positive value and will be properly applied to horizontal layouts, stacks and negative values.
+It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
 
 {{"demo": "BorderRadius.js"}}
+
+### CSS
+
+You can customize the bar chart elements using CSS selectors.
+
+Each series renders a `g` element that contains a `data-series` attribute.
+You can use this attribute to target elements based on their series.
+
+{{"demo": "BarGradient.js"}}
 
 ## Labels
 
 You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` property.
+To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
 It can either get a function that gets the bar item and some context.
 Or you can pass `'value'` to display the raw value of the bar.
 
 {{"demo": "BarLabel.js"}}
 
-### Custom Labels
+### Custom labels
 
-You can display, change or hide labels based on conditional logic.
+You can display, change, or hide labels based on conditional logic.
 To do so, provide a function to the `barLabel`.
 Labels are not displayed if the function returns `null`.
 
 In the example we display a `'High'` text on values higher than 10, and hide values when the generated bar height is lower than 60px.
 
 {{"demo": "CustomLabels.js"}}
+
+You can further customize the labels by providing a component to the `barLabel` slot.
+
+In the example below, we position the labels above the bars they refer to.
+
+{{"demo": "LabelsAboveBars.js"}}
 
 ## Click event
 
@@ -143,7 +160,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "BarClickNoSnap.js"}}
+{{"demo": "BarClick.js"}}
 
 :::info
 Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
@@ -153,37 +170,57 @@ Their is a slight difference between the `event` of `onItemClick` and `onAxisCli
 
 :::
 
-### Composition
-
-If you're using composition, you can get those click event as follow.
-Notice that the `onAxisClick` will handle both bar and line series if you mix them.
+If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
+Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
-import ChartsOnAxisClickHandler from '@mui/x-charts/ChartsOnAxisClickHandler';
-// ...
-
-<ChartContainer>
+<ChartContainer onAxisClick={onAxisClick}>
   {/* ... */}
-  <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>;
+</ChartContainer>
 ```
 
 ## Animation
 
-To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 ```jsx
 // For a single component chart
 <BarChart skipAnimation />
 
 // For a composed chart
-<ResponsiveChartContainer>
+<ChartContainer>
   <BarPlot skipAnimation />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "BarAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
+
+Here's how the Bar Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+    <ChartsTooltip />
+  </ChartsWrapper>
+</ChartDataProvider>
+```

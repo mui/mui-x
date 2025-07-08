@@ -31,7 +31,7 @@ You have a few possible options to provide it:
 
 You can browse the documentation, find an example close to your use case, and then open it in a live editor:
 
-<a href="/x/react-date-pickers/getting-started/#render-your-first-component">
+<a href="/x/react-date-pickers/quickstart/#render-the-component">
 <span class="only-light-mode">
 <img src="/static/docs-infra/forking-an-example.png" alt="Forking an example" loading="lazy" width="1628" height="700" style="display: block; max-width: 774px;">
 </span>
@@ -40,16 +40,16 @@ You can browse the documentation, find an example close to your use case, and th
 </span>
 </a>
 
-- [Data Grid](/x/react-data-grid/#mit-version-free-forever)
-- [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
-- [Charts](/x/react-charts/getting-started/#single-charts)
-- [Tree View](/x/react-tree-view/#simple-tree-view)
+- [Data Grid](/x/react-data-grid/#community-version-free-forever)
+- [Date Pickers](/x/react-date-pickers/quickstart/#render-the-component)
+- [Charts](/x/react-charts/quickstart/#self-contained-charts)
+- [Tree View](/x/react-tree-view/)
 
 #### Use starter templates
 
 You can use a starter template to build a reproduction case with:
 
-<!-- #default-branch-switch -->
+<!-- #target-branch-reference -->
 
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
@@ -58,22 +58,22 @@ You can use a starter template to build a reproduction case with:
 
 We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
 
-You can search through existing questions and answers to see if someone has asked a similar question using one of [these tags](https://stackoverflow.com/questions/tagged/mui-x+or+mui-x-charts+or+mui-x-data-grid+or+mui-x-date-picker):
+You can search through existing questions and answers to see if someone has asked a similar question using one of these tags:
 
-- mui-x
-- mui-x-data-grid
-- mui-x-date-picker
-- mui-x-charts
+- [mui-x-data-grid](https://stackoverflow.com/questions/tagged/mui-x-data-grid)
+- [mui-x-date-picker](https://stackoverflow.com/questions/tagged/mui-x-date-picker)
+- [mui-x-charts](https://stackoverflow.com/questions/tagged/mui-x-charts)
+- [mui-x-tree-view](https://stackoverflow.com/questions/tagged/mui-x-tree-view)
 
-If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs%20mui-x) using the relevant tags.
+If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs) using the relevant tags.
 
 ## Technical support
 
 :::info
-The technical support covers only MUI X components.
+The technical support covers only MUI X components. If you need to cover the entire component library, check out [Priority Support](/x/introduction/priority-support/).
 :::
 
-When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your active license.
+When purchasing a MUI X Pro or Premium license you get access to free technical support until the end of your active license.
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
@@ -83,24 +83,24 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
+3. MUI X Priority Support (paid add-on): Provides a 24h SLA for the first answer.
 
 ## Long-term support (LTS)
 
 Bug fixes, performance enhancements, and other improvements are delivered in new releases.
-However, we remain committed to providing security updates and addressing regressions for the immediate predecessor of the current major version.
+However, we remain committed to providing security updates and addressing regressions for **two years** after a version enters LTS.
 
 This includes issues introduced by external sources, like browser upgrades or changes to upstream dependencies.
 
 ### Supported versions
 
-- MUI X v7: ✅ Stable major (Continuous support).
-- MUI X v6: ⚠️ Long-term support (Guaranteed Support for security issues and regressions).
-- MUI X v5: 🅧 No longer supported.
-- MUI X v4: 🅧 No longer supported.
-- MUI X v3: 🅧 Never existed.
-- MUI X v2: 🅧 Never existed.
-- MUI X v1: 🅧 Never existed.
+| MUI X version | Release    | Supported                                                                       |
+| ------------: | :--------- | :------------------------------------------------------------------------------ |
+|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support).                                           |
+|        ^7.0.0 | 2024-03-23 | ⚠️ LTS - Support for security issues and regressions **until April 17th 2027**. |
+|        ^6.0.0 | 2023-03-03 | ⚠️ LTS - Support for security issues and regressions **until March 23th 2026**. |
+|        ^5.0.0 | 2021-11-23 | ❌                                                                              |
+|        ^4.0.0 | 2021-09-28 | ❌                                                                              |
 
 ## Community
 

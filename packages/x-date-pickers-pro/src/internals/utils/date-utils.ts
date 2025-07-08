@@ -1,33 +1,47 @@
-import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
-import { DateRange, NonEmptyDateRange } from '../../models';
+import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
-export const isRangeValid = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  range: DateRange<TDate> | null,
-): range is NonEmptyDateRange<TDate> => {
-  return Boolean(range && range[0] && range[1] && !utils.isBefore(range[1], range[0]));
+export const isRangeValid = (
+  adapter: MuiPickersAdapter,
+  range: PickerRangeValue,
+): range is PickerNonNullableRangeValue => {
+  return (
+    adapter.isValid(range[0]) && adapter.isValid(range[1]) && !adapter.isBefore(range[1], range[0])
+  );
 };
 
-export const isWithinRange = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  day: TDate,
-  range: DateRange<TDate> | null,
+export const isWithinRange = (
+  adapter: MuiPickersAdapter,
+  day: PickerValidDate,
+  range: PickerRangeValue,
 ) => {
-  return isRangeValid(utils, range) && utils.isWithinRange(day, range);
+  return isRangeValid(adapter, range) && adapter.isWithinRange(day, range);
 };
 
-export const isStartOfRange = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  day: TDate,
-  range: DateRange<TDate> | null,
+export const isStartOfRange = (
+  adapter: MuiPickersAdapter,
+  day: PickerValidDate,
+  range: PickerRangeValue,
 ) => {
-  return isRangeValid(utils, range) && utils.isSameDay(day, range[0]!);
+  return isRangeValid(adapter, range) && adapter.isSameDay(day, range[0]!);
 };
 
-export const isEndOfRange = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  day: TDate,
-  range: DateRange<TDate> | null,
+export const isEndOfRange = (
+  adapter: MuiPickersAdapter,
+  day: PickerValidDate,
+  range: PickerRangeValue,
 ) => {
-  return isRangeValid(utils, range) && utils.isSameDay(day, range[1]!);
+  return isRangeValid(adapter, range) && adapter.isSameDay(day, range[1]!);
+};
+
+export const formatRange = (
+  adapter: MuiPickersAdapter,
+  range: PickerRangeValue,
+  formatKey: keyof AdapterFormats,
+) => {
+  if (!isRangeValid(adapter, range)) {
+    return null;
+  }
+
+  return `${adapter.format(range[0]!, formatKey)} - ${adapter.format(range[1]!, formatKey)}`;
 };

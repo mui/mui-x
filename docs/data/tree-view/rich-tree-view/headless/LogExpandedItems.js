@@ -1,21 +1,20 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { RichTreeViewRoot } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
-  DEFAULT_TREE_VIEW_PLUGINS,
-  extractPluginParamsFromProps,
+  RichTreeViewRoot,
+  RICH_TREE_VIEW_PLUGINS,
+} from '@mui/x-tree-view/RichTreeView';
+import {
   useTreeView,
   TreeViewProvider,
+  RichTreeViewItems,
 } from '@mui/x-tree-view/internals';
 
-const useTreeViewLogExpanded = ({ params, models }) => {
-  const expandedStr = JSON.stringify(models.expandedItems.value);
+const useTreeViewLogExpanded = ({ params, store }) => {
+  const expandedStr = JSON.stringify(store.value.expansion.expandedItems);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {
@@ -27,7 +26,7 @@ const useTreeViewLogExpanded = ({ params, models }) => {
 };
 
 // Sets the default value of this plugin parameters.
-useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
+useTreeViewLogExpanded.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
@@ -37,41 +36,23 @@ useTreeViewLogExpanded.params = {
   logMessage: true,
 };
 
-const TREE_VIEW_PLUGINS = [...DEFAULT_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
+const TREE_VIEW_PLUGINS = [...RICH_TREE_VIEW_PLUGINS, useTreeViewLogExpanded];
 
-function TreeView(inProps) {
-  const themeProps = useThemeProps({ props: inProps, name: 'HeadlessTreeView' });
-  const ownerState = themeProps;
-
-  const { pluginParams, otherProps } = extractPluginParamsFromProps({
-    props: themeProps,
+function TreeView(props) {
+  const { getRootProps, contextValue } = useTreeView({
     plugins: TREE_VIEW_PLUGINS,
+    props,
   });
-
-  const { getRootProps, contextValue, instance } = useTreeView(pluginParams);
-
-  const rootProps = useSlotProps({
-    elementType: RichTreeViewRoot,
-    externalSlotProps: {},
-    externalForwardedProps: otherProps,
-    getSlotProps: getRootProps,
-    ownerState,
-  });
-
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({ children: itemChildren, ...itemProps }) => {
-    return (
-      <TreeItem key={itemProps.itemId} {...itemProps}>
-        {itemChildren?.map(renderItem)}
-      </TreeItem>
-    );
-  };
 
   return (
-    <TreeViewProvider value={contextValue}>
-      <RichTreeViewRoot {...rootProps}>
-        {itemsToRender.map(renderItem)}
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={{}}
+      slots={{}}
+      slotProps={{}}
+    >
+      <RichTreeViewRoot {...getRootProps()}>
+        <RichTreeViewItems slots={undefined} slotProps={undefined} />
       </RichTreeViewRoot>
     </TreeViewProvider>
   );

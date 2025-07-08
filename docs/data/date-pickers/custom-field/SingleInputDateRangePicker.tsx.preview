@@ -1,1 +1,0 @@
-<DateRangePicker slots={{ field: SingleInputDateRangeField }} />

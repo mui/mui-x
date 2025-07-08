@@ -1,23 +1,30 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridToolbarContainer,
-  GridToolbarFilterButton,
+  Toolbar,
+  ToolbarButton,
+  FilterPanelTrigger,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Tooltip from '@mui/material/Tooltip';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 function CustomToolbar({ setFilterButtonEl }) {
   return (
-    <GridToolbarContainer>
-      <GridToolbarFilterButton ref={setFilterButtonEl} />
-    </GridToolbarContainer>
+    <Toolbar>
+      <Tooltip title="Filters">
+        <FilterPanelTrigger render={<ToolbarButton />} ref={setFilterButtonEl}>
+          <FilterListIcon fontSize="small" />
+        </FilterPanelTrigger>
+      </Tooltip>
+    </Toolbar>
   );
 }
 
 export default function CustomFilterPanelPosition() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -29,16 +36,14 @@ export default function CustomFilterPanelPosition() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        slots={{
-          toolbar: CustomToolbar,
-        }}
+        loading={loading}
+        slots={{ toolbar: CustomToolbar }}
+        showToolbar
         slotProps={{
           panel: {
-            anchorEl: filterButtonEl,
+            target: filterButtonEl,
           },
-          toolbar: {
-            setFilterButtonEl,
-          },
+          toolbar: { setFilterButtonEl },
         }}
       />
     </div>

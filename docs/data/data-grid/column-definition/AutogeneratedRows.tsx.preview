@@ -1,0 +1,12 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  apiRef={apiRef}
+  initialState={initialState}
+  defaultGroupingExpansionDepth={-1}
+  sx={{
+    '.MuiDataGrid-cell:not(.highlighted)': {
+      color: '#999',
+    },
+  }}
+/>

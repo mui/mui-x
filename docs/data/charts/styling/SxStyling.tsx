@@ -12,7 +12,7 @@ export default function SxStyling(): React.JSX.Element {
     <BarChart
       sx={(theme) => ({
         [`.${barElementClasses.root}`]: {
-          fill: theme.palette.background.paper,
+          fill: (theme.vars || theme).palette.background.paper,
           strokeWidth: 2,
         },
         [`.MuiBarElement-series-l_id`]: {
@@ -30,19 +30,23 @@ export default function SxStyling(): React.JSX.Element {
             fill: '#006BD6',
           },
         },
-
-        border: `1px solid rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1)`,
-        backgroundImage: `linear-gradient(rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(${theme.palette.mode === 'dark' ? '255,255,255' : '0, 0, 0'}, 0.1) 1px, transparent 1px)`,
+        border: '1px solid rgba(0, 0, 0, 0.1)',
+        backgroundImage:
+          'linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px)',
         backgroundSize: '35px 35px',
         backgroundPosition: '20px 20px, 20px 20px',
+        ...theme.applyStyles('dark', {
+          borderColor: 'rgba(255,255,255, 0.1)',
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255, 0.1) 1px, transparent 1px)',
+        }),
       })}
-      xAxis={[{ scaleType: 'band', data: labels }]}
+      xAxis={[{ data: labels }]}
       series={[
         { data: lData, label: 'l', id: 'l_id' },
         { data: rData, label: 'r', id: 'r_id' },
       ]}
       colors={colors}
-      width={500}
       height={300}
     />
   );

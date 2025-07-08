@@ -1,8 +1,8 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.6.2",
-  "description": "The community edition of the Tree View components (MUI X).",
+  "version": "8.7.0",
   "author": "MUI Team",
+  "description": "The community edition of the MUI X Tree View components.",
   "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
@@ -29,40 +29,54 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
+    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui/mui-x.git",
+    "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-tree-view"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.6",
-    "@mui/base": "^5.0.0-beta.40",
-    "@mui/system": "^5.15.15",
-    "@mui/utils": "^5.15.14",
-    "@types/react-transition-group": "^4.4.10",
-    "clsx": "^2.1.1",
-    "prop-types": "^15.8.1",
-    "react-transition-group": "^4.4.5"
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-internals": "workspace:*",
+    "@types/react-transition-group": "catalog:",
+    "clsx": "catalog:",
+    "prop-types": "catalog:",
+    "react-transition-group": "catalog:",
+    "reselect": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "1.0.0",
-    "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.7"
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

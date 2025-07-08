@@ -4,7 +4,7 @@
 
 ## Clipboard copy
 
-You can copy selected grid data to the clipboard using the <kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd> (<kbd class="key">⌘ Command</kbd>+<kbd class="key">C</kbd> on macOS) keyboard shortcut.
+You can copy selected grid data to the clipboard using the <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">C</kbd></kbd> on macOS) keyboard shortcut.
 The copied cell values are separated by a tab (`\t`) character and the rows are separated by a new line (`\n`) character.
 
 The priority of the data copied to the clipboard is the following, from highest to lowest:
@@ -39,13 +39,13 @@ so that the values can be parsed correctly during the paste operation.
 
 :::
 
-You can paste data from clipboard using the <kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd> (<kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd> on macOS) keyboard shortcut.
+You can paste data from clipboard using the <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd></kbd> on macOS) keyboard shortcut.
 The paste operation only affects cells in the columns that are [`editable`](/x/react-data-grid/editing/#making-a-column-editable).
 
 Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.
 See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and-value-setter) section of the editing documentation for more details.
 
-The behavior of the clipboard paste operation depends on the selection state of the data grid and the data pasted from clipboard.
+The behavior of the clipboard paste operation depends on the selection state of the Data Grid and the data pasted from clipboard.
 The priority is the following, from highest to lowest:
 
 1. If multiple cells are selected (see [Cell selection<span class="plan-premium" title="Premium plan"></span>](/x/react-data-grid/cell-selection/)), the selected cells are updated with the pasted values.
@@ -62,7 +62,7 @@ To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
 
 ### Persisting pasted data
 
-Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/#server-side-persistence)—use the `processRowUpdate` prop to persist the updated row in your data source:
+Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/persistence/)—use the `processRowUpdate` prop to persist the updated row in your data source:
 
 ```tsx
 processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;

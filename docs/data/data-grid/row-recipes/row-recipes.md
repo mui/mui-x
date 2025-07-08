@@ -8,7 +8,7 @@ title: Data Grid - Row customization recipes
 
 ## One expanded detail panel at a time
 
-By default, the [Master detail <span class="plan-pro" />](/x/react-data-grid/master-detail/) feature supports multiple expanded detail panels simultaneously.
+By default, the [Master-detail row panel <span class="plan-pro" />](/x/react-data-grid/master-detail/) feature supports multiple expanded detail panels simultaneously.
 
 However, you can [control the expanded detail panels](/x/react-data-grid/master-detail/#controlling-expanded-detail-panels) to have only one detail panel expanded at a time.
 
@@ -25,3 +25,9 @@ It checks the status of open panels using the [`useGridSelector` hook](/x/react-
 When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#grid-api-prop-setExpandedDetailPanels) from the [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) to expand or collapse all detail panels.
 
 {{"demo": "DetailPanelExpandCollapseAll.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Toggling detail panels on row click
+
+In the demo below, you can toggle the detail panel by clicking anywhere on the row:
+
+{{"demo": "DetailPanelExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}

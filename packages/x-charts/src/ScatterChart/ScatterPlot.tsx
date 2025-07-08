@@ -1,16 +1,17 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Scatter, ScatterProps } from './Scatter';
-import { CartesianContext } from '../context/CartesianContextProvider';
-import getColor from './getColor';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useScatterSeries } from '../hooks/useSeries';
+import { Scatter, ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
+import { useScatterSeriesContext } from '../hooks/useScatterSeries';
+import { useXAxes, useYAxes } from '../hooks';
+import { useZAxes } from '../hooks/useZAxis';
+import { seriesConfig as scatterSeriesConfig } from './seriesConfig';
 
-export interface ScatterPlotSlots {
+export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
 }
 
-export interface ScatterPlotSlotProps {
+export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
@@ -39,18 +40,18 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  */
 function ScatterPlot(props: ScatterPlotProps) {
   const { slots, slotProps, onItemClick } = props;
-  const seriesData = useScatterSeries();
-  const axisData = React.useContext(CartesianContext);
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const seriesData = useScatterSeriesContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+  const { zAxis, zAxisIds } = useZAxes();
 
   if (seriesData === undefined) {
     return null;
   }
+
   const { series, seriesOrder } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
-
   const defaultZAxisId = zAxisIds[0];
 
   const ScatterItems = slots?.scatter ?? Scatter;
@@ -58,16 +59,16 @@ function ScatterPlot(props: ScatterPlotProps) {
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisKey, yAxisKey, zAxisKey, markerSize, color } = series[seriesId];
+        const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
-        const colorGetter = getColor(
+        const colorGetter = scatterSeriesConfig.colorProcessor(
           series[seriesId],
-          xAxis[xAxisKey ?? defaultXAxisId],
-          yAxis[yAxisKey ?? defaultYAxisId],
-          zAxis[zAxisKey ?? defaultZAxisId],
+          xAxis[xAxisId ?? defaultXAxisId],
+          yAxis[yAxisId ?? defaultYAxisId],
+          zAxis[zAxisId ?? defaultZAxisId],
         );
-        const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
-        const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;
+        const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+        const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
         return (
           <ScatterItems
             key={id}
@@ -75,9 +76,10 @@ function ScatterPlot(props: ScatterPlotProps) {
             yScale={yScale}
             color={color}
             colorGetter={colorGetter}
-            markerSize={markerSize ?? 4}
             series={series[seriesId]}
             onItemClick={onItemClick}
+            slots={slots}
+            slotProps={slotProps}
             {...slotProps?.scatter}
           />
         );

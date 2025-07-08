@@ -10,7 +10,7 @@ import {
   DesktopDatePickerProps,
 } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { PickersSubcomponentType } from 'docsx/src/modules/utils/useCustomizationPlayground';
 
 type PickerExamplesType<TComponent, TComponentProps> = {
@@ -115,25 +115,7 @@ export const staticDatePickerExamples: PickersSubcomponentType = {
         componentProps: { views: ['month'] },
       },
     },
-    slots: ['root'],
-  },
-  PickersMonth: {
-    examples: {
-      customTheme: {
-        type: 'success',
-        componentProps: { views: ['month'] },
-      },
-      sxProp: {
-        type: 'success',
-        componentProps: { views: ['month'] },
-      },
-
-      styledComponents: {
-        type: 'success',
-        componentProps: { views: ['month'] },
-      },
-    },
-    slots: ['root', 'monthButton'],
+    slots: ['root', 'button'],
   },
 };
 
@@ -166,7 +148,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: ['root'],
@@ -187,7 +169,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: ['root', 'label', 'labelContainer', 'switchViewButton', 'switchViewIcon'],
@@ -208,7 +190,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: [
@@ -235,12 +217,12 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: ['root', 'today'],
   },
-  PickersMonth: {
+  MonthCalendar: {
     examples: {
       customTheme: {
         type: 'success',
@@ -259,39 +241,64 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
         componentProps: { views: ['month'] },
       },
     },
-    slots: ['root', 'monthButton'],
+    slots: ['button'],
   },
-  TextField: {
+  PickersTextField: {
     examples: {
       customTheme: {
         type: 'info',
         comments:
-          'This approach would change the styles of all the TextField components in the application. Consider using a nested theme with this style wrapping your local picker component to isolate this override',
+          'This approach would change the styles of all the PickersTextField components in the application. Consider using a nested theme with this style wrapping your local picker component to isolate this override',
       },
       sxProp: {
         type: 'success',
         parentSlot: 'textField',
         current: true,
-        comments: 'You can apply the sx prop to the `TextField` via slotProps',
+        comments:
+          'You can apply the sx prop to the `PickersTextField` via slotProps',
       },
       styledComponents: {
         type: 'success',
         parentSlot: 'textField',
-        parentComponent: 'TextField',
-        comments: 'You can style the `TextField` component directly',
+        parentComponent: 'PickersTextField',
+        comments: 'You can style the `PickersTextField` component directly',
         current: true,
       },
     },
     slots: ['root'],
     moreInformation: <TextFieldMoreInfo />,
   },
+  PickerPopper: {
+    examples: {
+      customTheme: {
+        type: 'success',
+        parentSlot: 'paper',
+      },
+      sxProp: {
+        type: 'warning',
+        parentSlot: 'popper',
+        current: true,
+        comments:
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `popper` slot',
+      },
+      styledComponents: {
+        type: 'warning',
+        parentSlot: 'desktopPaper',
+        parentComponent: 'Paper',
+        current: true,
+        comments:
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `desktopPaper` slot will need to be replaced with a styled component',
+      },
+    },
+    slots: ['paper', 'root'],
+  },
 };
 
-const pickerProps: DatePickerProps<Dayjs> = {
+const pickerProps: DatePickerProps = {
   views: ['day', 'month', 'year'],
   monthsPerRow: 3,
   yearsPerRow: 3,
@@ -306,7 +313,7 @@ export const pickerExamples = [
     component: StaticDatePicker,
     componentProps: { ...pickerProps, orientation: 'portrait' },
     examples: staticDatePickerExamples,
-  } as PickerExamplesType<typeof StaticDatePicker, StaticDatePickerProps<Dayjs>>,
+  } as PickerExamplesType<typeof StaticDatePicker, StaticDatePickerProps>,
   {
     name: 'DesktopDatePicker',
     component: DesktopDatePicker,
@@ -331,5 +338,5 @@ export const pickerExamples = [
       ...pickerProps,
     },
     examples: datePickerExamples,
-  } as PickerExamplesType<typeof DesktopDatePicker, DesktopDatePickerProps<Dayjs>>,
+  } as PickerExamplesType<typeof DesktopDatePicker, DesktopDatePickerProps>,
 ];

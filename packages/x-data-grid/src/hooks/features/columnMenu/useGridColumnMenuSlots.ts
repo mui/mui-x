@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
 import { GridColumnMenuRootProps } from './columnMenuInterfaces';
 import { GridColDef } from '../../../models/colDef/gridColDef';
+import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 
 interface UseGridColumnMenuSlotsProps extends GridColumnMenuRootProps {
@@ -16,6 +16,7 @@ type UseGridColumnMenuSlotsResponse = Array<
 
 const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
   const apiRef = useGridPrivateApiContext();
+  const rootProps = useGridRootProps();
   const {
     defaultSlots,
     defaultSlotProps,
@@ -71,7 +72,7 @@ const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
         itemProps = { ...itemProps, ...customProps };
       }
       return addDividers && index !== sorted.length - 1
-        ? [...acc, [processedComponents[key]!, itemProps], [Divider, {}]]
+        ? [...acc, [processedComponents[key]!, itemProps], [rootProps.slots.baseDivider, {}]]
         : [...acc, [processedComponents[key]!, itemProps]];
     }, []);
   }, [
@@ -82,6 +83,7 @@ const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
     processedComponents,
     processedSlotProps,
     userItems,
+    rootProps.slots.baseDivider,
   ]);
 };
 

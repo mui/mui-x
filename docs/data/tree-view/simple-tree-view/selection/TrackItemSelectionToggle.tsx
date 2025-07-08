@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import Typography from '@mui/material/Typography';
 
 export default function TrackItemSelectionToggle() {
   const [lastSelectedItem, setLastSelectedItem] = React.useState<string | null>(
@@ -11,7 +11,7 @@ export default function TrackItemSelectionToggle() {
   );
 
   const handleItemSelectionToggle = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemId: string,
     isSelected: boolean,
   ) => {

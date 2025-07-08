@@ -1,28 +1,28 @@
 import { MuiPickersAdapter, PickerValidDate } from '../models';
 import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
-interface IGetHoursSectionOptions<TDate extends PickerValidDate> {
-  now: TDate;
-  value: TDate | null;
-  utils: MuiPickersAdapter<TDate>;
+interface GetHoursSectionOptionsParameters {
+  now: PickerValidDate;
+  value: PickerValidDate | null;
+  adapter: MuiPickersAdapter;
   ampm: boolean;
   isDisabled: (value: number) => boolean;
   timeStep: number;
   resolveAriaLabel: (value: string) => string;
-  valueOrReferenceDate: TDate;
+  valueOrReferenceDate: PickerValidDate;
 }
 
-export const getHourSectionOptions = <TDate extends PickerValidDate>({
+export const getHourSectionOptions = ({
   now,
   value,
-  utils,
+  adapter,
   ampm,
   isDisabled,
   resolveAriaLabel,
   timeStep,
   valueOrReferenceDate,
-}: IGetHoursSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
-  const currentHours = value ? utils.getHours(value) : null;
+}: GetHoursSectionOptionsParameters): MultiSectionDigitalClockOption<number>[] => {
+  const currentHours = value ? adapter.getHours(value) : null;
 
   const result: MultiSectionDigitalClockOption<number>[] = [];
 
@@ -44,15 +44,15 @@ export const getHourSectionOptions = <TDate extends PickerValidDate>({
   };
 
   const isFocused = (hour: number) => {
-    return isSelected(hour, utils.getHours(valueOrReferenceDate));
+    return isSelected(hour, adapter.getHours(valueOrReferenceDate));
   };
 
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
-    let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
+    let label = adapter.format(adapter.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
     const ariaLabel = resolveAriaLabel(parseInt(label, 10).toString());
 
-    label = utils.formatNumber(label);
+    label = adapter.formatNumber(label);
 
     result.push({
       value: hour,
@@ -66,9 +66,9 @@ export const getHourSectionOptions = <TDate extends PickerValidDate>({
   return result;
 };
 
-interface IGetTimeSectionOptions<TDate extends PickerValidDate> {
+interface GetTimeSectionOptionsParameters {
   value: number | null;
-  utils: MuiPickersAdapter<TDate>;
+  adapter: MuiPickersAdapter;
   isDisabled: (value: number) => boolean;
   timeStep: number;
   resolveLabel: (value: number) => string;
@@ -76,15 +76,15 @@ interface IGetTimeSectionOptions<TDate extends PickerValidDate> {
   resolveAriaLabel: (value: string) => string;
 }
 
-export const getTimeSectionOptions = <TDate extends PickerValidDate>({
+export const getTimeSectionOptions = ({
   value,
-  utils,
+  adapter,
   isDisabled,
   timeStep,
   resolveLabel,
   resolveAriaLabel,
   hasValue = true,
-}: IGetTimeSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
+}: GetTimeSectionOptionsParameters): MultiSectionDigitalClockOption<number>[] => {
   const isSelected = (timeValue: number) => {
     if (value === null) {
       return false;
@@ -102,7 +102,7 @@ export const getTimeSectionOptions = <TDate extends PickerValidDate>({
       const timeValue = timeStep * index;
       return {
         value: timeValue,
-        label: utils.formatNumber(resolveLabel(timeValue)),
+        label: adapter.formatNumber(resolveLabel(timeValue)),
         isDisabled,
         isSelected,
         isFocused,

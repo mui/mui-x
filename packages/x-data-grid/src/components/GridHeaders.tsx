@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fastMemo } from '../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -30,7 +30,11 @@ function GridHeaders() {
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-  const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
+  const hasNoCellTabIndexState = useGridSelector(
+    apiRef,
+    () => gridTabIndexCellSelector(apiRef) === null,
+  );
+
   const columnGroupHeaderTabIndexState = useGridSelector(
     apiRef,
     gridTabIndexColumnGroupHeaderSelector,
@@ -51,14 +55,10 @@ function GridHeaders() {
   const hasOtherElementInTabSequence = !(
     columnGroupHeaderTabIndexState === null &&
     columnHeaderTabIndexState === null &&
-    cellTabIndexState === null
+    hasNoCellTabIndexState
   );
 
-  const columnsContainerRef = React.useRef<HTMLDivElement>(null);
-
-  apiRef.current.register('private', {
-    columnHeadersContainerRef: columnsContainerRef,
-  });
+  const columnsContainerRef = apiRef.current.columnHeadersContainerRef;
 
   return (
     <rootProps.slots.columnHeaders

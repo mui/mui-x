@@ -1,7 +1,7 @@
 name: 'Priority Support: SLA ⏰'
 description: I'm an MUI X Premium user and we have purchased the Priority Support add-on. I can't find a solution to my problem with MUI X.
 title: '[question] '
-labels: ['status: waiting for maintainer', 'support: commercial', 'support: unknown']
+labels: ['status: waiting for maintainer', 'support: unknown']
 body:
   - type: markdown
     attributes:
@@ -22,6 +22,16 @@ body:
       options:
         - label: I have tested the latest version
           required: true
+  - type: dropdown
+    attributes:
+      label: Affected products
+      description: Which products are affected by this issue? If you're not sure, leave this blank.
+      multiple: true
+      options:
+        - Data Grid
+        - Date and Time Pickers
+        - Charts
+        - Tree View
   - type: textarea
     attributes:
       label: The problem in depth

@@ -77,11 +77,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, MMM d',
 
-  fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
 };
@@ -117,7 +115,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
+export class AdapterLuxon implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -149,8 +147,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, DateTime> => {
-    type R = DateBuilderReturnType<T, DateTime>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
       return <R>null;
     }
@@ -199,7 +197,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return this.locale;
   };
 
-  /* istanbul ignore next */
+  /* v8 ignore start */
   public is12HourCycleInCurrentLocale = () => {
     if (typeof Intl === 'undefined' || typeof Intl.DateTimeFormat === 'undefined') {
       return true; // Luxon defaults to en-US if Intl not found
@@ -209,6 +207,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
       new Intl.DateTimeFormat(this.locale, { hour: 'numeric' })?.resolvedOptions()?.hour12,
     );
   };
+  /* v8 ignore stop */
 
   public expandFormat = (format: string) => {
     // Extract escaped section to avoid extending them
@@ -247,7 +246,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     );
   };
 
-  public isValid = (value: DateTime | null): boolean => {
+  public isValid = (value: DateTime | null): value is DateTime => {
     if (value === null) {
       return false;
     }
@@ -348,7 +347,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public startOfWeek = (value: DateTime) => {
-    return value.startOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).startOf('week', { useLocaleWeeks: true });
   };
 
   public startOfDay = (value: DateTime) => {
@@ -364,7 +363,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public endOfWeek = (value: DateTime) => {
-    return value.endOf('week', { useLocaleWeeks: true });
+    return this.setLocaleToValue(value).endOf('week', { useLocaleWeeks: true });
   };
 
   public endOfDay = (value: DateTime) => {
@@ -461,9 +460,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekArray = (value: DateTime) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const firstDay = this.startOfWeek(this.startOfMonth(cleanValue));
-    const lastDay = this.endOfWeek(this.endOfMonth(cleanValue));
+    const firstDay = this.startOfWeek(this.startOfMonth(value));
+    const lastDay = this.endOfWeek(this.endOfMonth(value));
 
     const { days } = lastDay.diff(firstDay, 'days').toObject();
 
@@ -485,6 +483,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekNumber = (value: DateTime) => {
+    /* v8 ignore next */
     return value.localWeekNumber ?? value.weekNumber;
   };
 

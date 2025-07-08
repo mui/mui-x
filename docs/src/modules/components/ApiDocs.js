@@ -22,9 +22,9 @@ const PrimaryHeading = styled(Typography)(({ theme }) => ({
 
 const SecondaryHeading = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   '& code': {
-    color: theme.palette.secondary.main,
+    color: (theme.vars || theme).palette.secondary.main,
   },
   [theme.breakpoints.down('sm')]: {
     display: 'none',
@@ -69,7 +69,6 @@ function ApiProperty({ index, property, plan }) {
       >
         <PrimaryHeading>
           <React.Fragment>
-            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             {`${property.name}()`}
             <PlanIcon plan={plan} />
           </React.Fragment>
@@ -77,7 +76,6 @@ function ApiProperty({ index, property, plan }) {
         <SecondaryHeading dangerouslySetInnerHTML={{ __html: property.description }} />
       </AccordionSummary>
       <AccordionDetails sx={{ display: 'block' }}>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Typography variant="subtitle2">Signature:</Typography>
         <HighlightedCode
           code={`${property.name}: ${property.type}`}

@@ -8,7 +8,7 @@ export default function BasicV7DOMStructure() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField']}>
-        <DateField label="Date Field" enableAccessibleFieldDOMStructure />
+        <DateField label="Date Field" />
       </DemoContainer>
     </LocalizationProvider>
   );

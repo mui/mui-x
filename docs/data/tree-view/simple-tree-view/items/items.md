@@ -3,7 +3,7 @@ productId: x-tree-view
 title: Simple Tree View - Items
 components: SimpleTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -51,7 +51,7 @@ Use the `disabled` prop on the Tree Item component to disable interaction and fo
 
 #### The disabledItemsFocusable prop
 
-Note that the demo above also includes a switch.
+Note that the demo below also includes a switch.
 This toggles the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
 
 When this prop is set to false:
@@ -73,3 +73,37 @@ When it's set to true:
 - Programmatic focus will focus disabled items.
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+
+## Track item clicks
+
+Use the `onItemClick` prop to track the clicked item:
+
+{{"demo": "OnItemClick.js"}}
+
+## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+When your component first renders, `apiRef` is `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement()` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -9,9 +9,10 @@ import CancelIcon from '@mui/icons-material/Close';
 import {
   GridRowModes,
   DataGrid,
-  GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
+  Toolbar,
+  ToolbarButton,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -68,7 +69,10 @@ function EditToolbar(props) {
 
   const handleClick = () => {
     const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+    setRows((oldRows) => [
+      ...oldRows,
+      { id, name: '', age: '', role: '', isNew: true },
+    ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
@@ -76,11 +80,13 @@ function EditToolbar(props) {
   };
 
   return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
-      </Button>
-    </GridToolbarContainer>
+    <Toolbar>
+      <Tooltip title="Add record">
+        <ToolbarButton onClick={handleClick}>
+          <AddIcon fontSize="small" />
+        </ToolbarButton>
+      </Tooltip>
+    </Toolbar>
   );
 }
 
@@ -168,8 +174,10 @@ export default function FullFeaturedCrudGrid() {
             <GridActionsCellItem
               icon={<SaveIcon />}
               label="Save"
-              sx={{
-                color: 'primary.main',
+              material={{
+                sx: {
+                  color: 'primary.main',
+                },
               }}
               onClick={handleSaveClick(id)}
             />,
@@ -223,12 +231,11 @@ export default function FullFeaturedCrudGrid() {
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
-        slots={{
-          toolbar: EditToolbar,
-        }}
+        slots={{ toolbar: EditToolbar }}
         slotProps={{
           toolbar: { setRows, setRowModesModel },
         }}
+        showToolbar
       />
     </Box>
   );

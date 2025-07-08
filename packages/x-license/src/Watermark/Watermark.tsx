@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { MuiCommercialPackageName, useLicenseVerifier } from '../useLicenseVerifier';
+import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
+import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
@@ -13,6 +15,8 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
       return 'MUI X Invalid license key';
     case LICENSE_STATUS.OutOfScope:
       return 'MUI X License key plan mismatch';
+    case LICENSE_STATUS.NotAvailableInInitialProPlan:
+      return 'MUI X Product not covered by plan';
     case LICENSE_STATUS.NotFound:
       return 'MUI X Missing license key';
     default:
@@ -25,7 +29,7 @@ interface WatermarkProps {
   releaseInfo: string;
 }
 
-export function Watermark(props: WatermarkProps) {
+function Watermark(props: WatermarkProps) {
   const { packageName, releaseInfo } = props;
   const licenseStatus = useLicenseVerifier(packageName, releaseInfo);
 
@@ -52,3 +56,6 @@ export function Watermark(props: WatermarkProps) {
     </div>
   );
 }
+
+const MemoizedWatermark = fastMemo(Watermark);
+export { MemoizedWatermark as Watermark };

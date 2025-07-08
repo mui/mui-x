@@ -14,8 +14,11 @@ const StyledBox = styled('div')(({ theme }) => ({
     },
   },
   '& .Mui-error': {
-    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+    backgroundColor: 'rgb(126,10,15, 0.1)',
     color: theme.palette.error.main,
+    ...theme.applyStyles('dark', {
+      backgroundColor: 'rgb(126,10,15, 0)',
+    }),
   },
 }));
 

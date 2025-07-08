@@ -1,10 +1,15 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+
+const groupingColDef = {
+  leafField: 'traderEmail',
+};
 
 export default function RowGroupingFullExample() {
   const { data, loading } = useDemoData({
@@ -23,7 +28,7 @@ export default function RowGroupingFullExample() {
         model: ['commodity'],
       },
       sorting: {
-        sortModel: [{ field: '__row_group_by_columns_group__', sort: 'asc' }],
+        sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'asc' }],
       },
     },
   });
@@ -36,9 +41,7 @@ export default function RowGroupingFullExample() {
         loading={loading}
         disableRowSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          leafField: 'traderEmail',
-        }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

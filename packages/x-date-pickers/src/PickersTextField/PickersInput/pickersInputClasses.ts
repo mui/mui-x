@@ -1,10 +1,6 @@
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import {
-  PickersInputBaseClasses,
-  pickersInputBaseClasses,
-  PickersInputBaseClassKey,
-} from '../PickersInputBase';
+import { PickersInputBaseClasses, pickersInputBaseClasses } from '../PickersInputBase';
 
 export interface PickersInputClasses extends PickersInputBaseClasses {
   /** Styles applied to the root element unless `disableUnderline={true}`. */
@@ -19,5 +15,5 @@ export function getPickersInputUtilityClass(slot: string) {
 
 export const pickersInputClasses = {
   ...pickersInputBaseClasses,
-  ...generateUtilityClasses<PickersInputBaseClassKey>('MuiPickersInput', ['root', 'input']),
+  ...generateUtilityClasses('MuiPickersInput', ['root', 'underline', 'input']),
 };

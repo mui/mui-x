@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import { styled, alpha } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
@@ -14,20 +13,16 @@ import ImageIcon from '@mui/icons-material/Image';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
-  unstable_useTreeItem2 as useTreeItem2,
-  UseTreeItem2Parameters,
-} from '@mui/x-tree-view/useTreeItem2';
-import {
-  TreeItem2Checkbox,
-  TreeItem2Content,
-  TreeItem2IconContainer,
-  TreeItem2Label,
-  TreeItem2Root,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
+  TreeItemCheckbox,
+  TreeItemIconContainer,
+  TreeItemLabel,
+} from '@mui/x-tree-view/TreeItem';
+import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
+import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
@@ -96,32 +91,39 @@ declare module 'react' {
   }
 }
 
-const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
-  color:
-    theme.palette.mode === 'light'
-      ? theme.palette.grey[800]
-      : theme.palette.grey[400],
-  position: 'relative',
-  [`& .${treeItemClasses.groupTransition}`]: {
-    marginLeft: theme.spacing(3.5),
-  },
-})) as unknown as typeof TreeItem2Root;
+const TreeItemRoot = styled('li')(({ theme }) => ({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  outline: 0,
+  color: theme.palette.grey[400],
+  ...theme.applyStyles('light', {
+    color: theme.palette.grey[800],
+  }),
+}));
 
-const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
+const TreeItemContent = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0.5),
+  paddingRight: theme.spacing(1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
+  width: '100%',
+  boxSizing: 'border-box', // prevent width + padding to overflow
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  cursor: 'pointer',
+  WebkitTapHighlightColor: 'transparent',
   flexDirection: 'row-reverse',
   borderRadius: theme.spacing(0.7),
   marginBottom: theme.spacing(0.5),
   marginTop: theme.spacing(0.5),
-  padding: theme.spacing(0.5),
-  paddingRight: theme.spacing(1),
   fontWeight: 500,
-  [`&.Mui-expanded `]: {
-    '&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon': {
-      color:
-        theme.palette.mode === 'light'
-          ? theme.palette.primary.main
-          : theme.palette.primary.dark,
-    },
+  '&[data-expanded]:not([data-focused], [data-selected]) .labelIcon': {
+    color: theme.palette.primary.dark,
+    ...theme.applyStyles('light', {
+      color: theme.palette.primary.main,
+    }),
     '&::before': {
       content: '""',
       display: 'block',
@@ -130,26 +132,33 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
       top: '44px',
       height: 'calc(100% - 48px)',
       width: '1.5px',
-      backgroundColor:
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[300]
-          : theme.palette.grey[700],
+      backgroundColor: theme.palette.grey[700],
+      ...theme.applyStyles('light', {
+        backgroundColor: theme.palette.grey[300],
+      }),
     },
   },
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    color: theme.palette.mode === 'light' ? theme.palette.primary.main : 'white',
-  },
-  [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
-    backgroundColor:
-      theme.palette.mode === 'light'
-        ? theme.palette.primary.main
-        : theme.palette.primary.dark,
+  [`&[data-focused], &[data-selected]`]: {
+    backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
+    ...theme.applyStyles('light', {
+      backgroundColor: theme.palette.primary.main,
+    }),
+  },
+  '&:not([data-focused], [data-selected]):hover': {
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    color: 'white',
+    ...theme.applyStyles('light', {
+      color: theme.palette.primary.main,
+    }),
   },
 }));
 
-const AnimatedCollapse = animated(Collapse);
+const CustomCollapse = styled(Collapse)({
+  padding: 0,
+});
+
+const AnimatedCollapse = animated(CustomCollapse);
 
 function TransitionComponent(props: TransitionProps) {
   const style = useSpring({
@@ -162,11 +171,11 @@ function TransitionComponent(props: TransitionProps) {
   return <AnimatedCollapse style={style} {...props} />;
 }
 
-const StyledTreeItemLabelText = styled(Typography)({
+const TreeItemLabelText = styled(Typography)({
   color: 'inherit',
   fontFamily: 'General Sans',
   fontWeight: 500,
-}) as unknown as typeof Typography;
+});
 
 interface CustomLabelProps {
   children: React.ReactNode;
@@ -181,7 +190,7 @@ function CustomLabel({
   ...other
 }: CustomLabelProps) {
   return (
-    <TreeItem2Label
+    <TreeItemLabel
       {...other}
       sx={{
         display: 'flex',
@@ -197,18 +206,11 @@ function CustomLabel({
         />
       )}
 
-      <StyledTreeItemLabelText variant="body2">{children}</StyledTreeItemLabelText>
+      <TreeItemLabelText variant="body2">{children}</TreeItemLabelText>
       {expandable && <DotIcon />}
-    </TreeItem2Label>
+    </TreeItemLabel>
   );
 }
-
-const isExpandable = (reactChildren: React.ReactNode) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isExpandable);
-  }
-  return Boolean(reactChildren);
-};
 
 const getIconFromFileType = (fileType: FileType) => {
   switch (fileType) {
@@ -232,7 +234,7 @@ const getIconFromFileType = (fileType: FileType) => {
 };
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -242,49 +244,45 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   const { id, itemId, label, disabled, children, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
     getCheckboxProps,
     getLabelProps,
     getGroupTransitionProps,
+    getDragAndDropOverlayProps,
     status,
-    publicAPI,
-  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const item = publicAPI.getItem(itemId);
-  const expandable = isExpandable(children);
+  const item = useTreeItemModel<ExtendedTreeItemProps>(itemId)!;
+
   let icon;
-  if (expandable) {
+  if (status.expandable) {
     icon = FolderRounded;
   } else if (item.fileType) {
     icon = getIconFromFileType(item.fileType);
   }
 
   return (
-    <TreeItem2Provider itemId={itemId}>
-      <StyledTreeItemRoot {...getRootProps(other)}>
-        <CustomTreeItemContent
-          {...getContentProps({
-            className: clsx('content', {
-              'Mui-expanded': status.expanded,
-              'Mui-selected': status.selected,
-              'Mui-focused': status.focused,
-              'Mui-disabled': status.disabled,
-            }),
-          })}
-        >
-          <TreeItem2IconContainer {...getIconContainerProps()}>
-            <TreeItem2Icon status={status} />
-          </TreeItem2IconContainer>
-          <TreeItem2Checkbox {...getCheckboxProps()} />
+    <TreeItemProvider {...getContextProviderProps()}>
+      <TreeItemRoot {...getRootProps(other)}>
+        <TreeItemContent {...getContentProps()}>
+          <TreeItemIconContainer {...getIconContainerProps()}>
+            <TreeItemIcon status={status} />
+          </TreeItemIconContainer>
+          <TreeItemCheckbox {...getCheckboxProps()} />
           <CustomLabel
-            {...getLabelProps({ icon, expandable: expandable && status.expanded })}
+            {...getLabelProps({
+              icon,
+              expandable: status.expandable && status.expanded,
+            })}
           />
-        </CustomTreeItemContent>
+          <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
+        </TreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
-      </StyledTreeItemRoot>
-    </TreeItem2Provider>
+      </TreeItemRoot>
+    </TreeItemProvider>
   );
 });
 
@@ -296,6 +294,7 @@ export default function FileExplorer() {
       defaultSelectedItems="1.1"
       sx={{ height: 'fit-content', flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
       slots={{ item: CustomTreeItem }}
+      itemChildrenIndentation={24}
     />
   );
 }

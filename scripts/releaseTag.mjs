@@ -3,6 +3,7 @@ import fse from 'fs-extra';
 import path from 'path';
 import { promisify } from 'util';
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { getWorkspaceRoot } from './utils.mjs';
 
 /**
@@ -75,7 +76,7 @@ async function main(argv) {
   );
 }
 
-yargs(process.argv.slice(2))
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'Tags the current release and pushes these changes to mui/mui-x.',

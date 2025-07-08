@@ -2,6 +2,11 @@
   "componentDescription": "",
   "propDescriptions": {},
   "classDescriptions": {
+    "animate": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "animation is not skipped"
+    },
     "faded": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",
@@ -12,6 +17,10 @@
       "nodeName": "the root element",
       "conditions": "highlighted"
     },
-    "root": { "description": "Styles applied to the root element." }
+    "root": { "description": "Styles applied to the root element." },
+    "series": {
+      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${pieArcLabelClasses.series}-${seriesId}</code>.",
+      "nodeName": "the root element for a specified series"
+    }
   }
 }

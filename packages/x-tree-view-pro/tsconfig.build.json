@@ -7,11 +7,12 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build",
+    "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["node", "@mui/material/themeCssVarsAugmentation"]
+    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
   },
   "references": [
+    { "path": "../x-internals/tsconfig.build.json" },
     { "path": "../x-tree-view/tsconfig.build.json" },
     { "path": "../x-license/tsconfig.build.json" }
   ],

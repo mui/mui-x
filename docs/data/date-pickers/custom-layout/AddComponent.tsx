@@ -8,7 +8,6 @@ import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
   PickersLayoutProps,
@@ -17,18 +16,23 @@ import {
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateView } from '@mui/x-date-pickers/models';
+import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
 
 function ActionList(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday } = props;
+  const { className } = props;
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
+
   const actions = [
-    { text: 'Accept', method: onAccept },
-    { text: 'Clear', method: onClear },
-    { text: 'Cancel', method: onCancel },
-    { text: 'Today', method: onSetToday },
+    { text: 'Accept', method: acceptValueChanges },
+    { text: 'Clear', method: clearValue },
+    { text: 'Cancel', method: cancelValueChanges },
+    { text: 'Today', method: setValueToToday },
   ];
+
   return (
-    <List>
+    <List className={className}>
       {actions.map(({ text, method }) => (
         <ListItem key={text} disablePadding>
           <ListItemButton onClick={method}>
@@ -58,12 +62,12 @@ function RestaurantHeader() {
   );
 }
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) {
-  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+function CustomLayout(props: PickersLayoutProps<Dayjs | null>) {
+  const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
 
   return (
     <PickersLayoutRoot
-      ownerState={props}
+      ownerState={ownerState}
       sx={{
         overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
@@ -79,7 +83,10 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) 
       <RestaurantHeader />
       {toolbar}
       {actionBar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

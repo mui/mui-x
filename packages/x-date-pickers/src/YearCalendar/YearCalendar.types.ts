@@ -1,10 +1,40 @@
+import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
-import { PickerValidDate, TimezoneProps } from '../models';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
+import { FormProps } from '../internals/models/formProps';
+
+export interface YearButtonOwnerState extends PickerOwnerState {
+  isYearSelected: boolean;
+  isYearDisabled: boolean;
+}
+
+export interface YearCalendarSlots {
+  /**
+   * Button displayed to render a single year in the `year` view.
+   * @default YearCalendarButton
+   */
+  yearButton?: React.ElementType;
+}
+
+export interface YearCalendarSlotProps {
+  yearButton?: SlotComponentPropsFromProps<
+    React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
+    {},
+    YearButtonOwnerState
+  >;
+}
 
 export interface ExportedYearCalendarProps {
+  /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder?: 'asc' | 'desc';
   /**
    * Years rendered per row.
    * @default 3
@@ -12,11 +42,12 @@ export interface ExportedYearCalendarProps {
   yearsPerRow?: 3 | 4;
 }
 
-export interface YearCalendarProps<TDate extends PickerValidDate>
+export interface YearCalendarProps
   extends ExportedYearCalendarProps,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    TimezoneProps {
+    YearValidationProps,
+    BaseDateValidationProps,
+    TimezoneProps,
+    FormProps {
   autoFocus?: boolean;
   className?: string;
   /**
@@ -24,34 +55,39 @@ export interface YearCalendarProps<TDate extends PickerValidDate>
    */
   classes?: Partial<YearCalendarClasses>;
   /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: YearCalendarSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: YearCalendarSlotProps;
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TDate | null;
+  value?: PickerValidDate | null;
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue?: TDate | null;
+  defaultValue?: PickerValidDate | null;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid year using the validation props, except callbacks such as `shouldDisableYear`.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerValidDate;
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate} value The new value.
+   * @param {PickerValidDate} value The new value.
    */
-  onChange?: (value: TDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
+  onChange?: (value: PickerValidDate) => void;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false

@@ -13,7 +13,18 @@ function CustomInputAdornment(props) {
     <InputAdornment {...other}>
       <PriorityHighIcon
         color="error"
-        sx={{ marginLeft: 1, opacity: hasError ? 1 : 0 }}
+        sx={[
+          {
+            marginLeft: 1,
+          },
+          hasError
+            ? {
+                opacity: 1,
+              }
+            : {
+                opacity: 0,
+              },
+        ]}
       />
       {children}
     </InputAdornment>

@@ -1,7 +1,17 @@
 export { useTreeView } from './useTreeView';
-export { TreeViewProvider } from './TreeViewProvider';
+export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
 
-export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
+export { RichTreeViewItems } from './components/RichTreeViewItems';
+export type {
+  RichTreeViewItemsSlots,
+  RichTreeViewItemsSlotProps,
+} from './components/RichTreeViewItems';
+
+export {
+  unstable_resetCleanupTracking,
+  useInstanceEventHandler,
+} from './hooks/useInstanceEventHandler';
+export { useSelector } from './hooks/useSelector';
 
 export type {
   TreeViewPlugin,
@@ -9,17 +19,17 @@ export type {
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
   TreeViewPublicAPI,
-  TreeViewExperimentalFeatures,
+  TreeViewState,
+  TreeViewItemMeta,
+  TreeViewInstance,
+  TreeViewItemPlugin,
+  TreeViewUsedStore,
 } from './models';
 
+// Core plugins
+export type { TreeViewCorePluginParameters } from './corePlugins';
+
 // Plugins
-export { DEFAULT_TREE_VIEW_PLUGINS } from './plugins/defaultPlugins';
-export type {
-  DefaultTreeViewPluginSignatures,
-  DefaultTreeViewPluginSlots,
-  DefaultTreeViewPluginSlotProps,
-} from './plugins/defaultPlugins';
-export type { DefaultTreeViewPluginParameters } from './plugins/defaultPlugins';
 export { useTreeViewExpansion } from './plugins/useTreeViewExpansion';
 export type {
   UseTreeViewExpansionSignature,
@@ -37,23 +47,51 @@ export type {
 } from './plugins/useTreeViewFocus';
 export { useTreeViewKeyboardNavigation } from './plugins/useTreeViewKeyboardNavigation';
 export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeViewKeyboardNavigation';
-export { useTreeViewId } from './plugins/useTreeViewId';
-export type { UseTreeViewIdSignature, UseTreeViewIdParameters } from './plugins/useTreeViewId';
-export { useTreeViewIcons } from './plugins/useTreeViewIcons';
-export type {
-  UseTreeViewIconsSignature,
-  UseTreeViewIconsParameters,
-} from './plugins/useTreeViewIcons';
-export { useTreeViewItems } from './plugins/useTreeViewItems';
+export {
+  useTreeViewItems,
+  buildSiblingIndexes,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from './plugins/useTreeViewItems';
+export {
+  selectorItemMetaLookup,
+  selectorItemMeta,
+  selectorItemIndex,
+  selectorItemOrderedChildrenIds,
+} from './plugins/useTreeViewItems/useTreeViewItems.selectors';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
+  UseTreeViewItemsState,
 } from './plugins/useTreeViewItems';
+export { useTreeViewLabel } from './plugins/useTreeViewLabel';
+export {
+  selectorIsItemBeingEdited,
+  selectorIsAnyItemBeingEdited,
+} from './plugins/useTreeViewLabel/useTreeViewLabel.selectors';
+export type {
+  UseTreeViewLabelSignature,
+  UseTreeViewLabelParameters,
+} from './plugins/useTreeViewLabel';
+export { selectorIsItemExpanded } from './plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+export { selectorIsItemSelected } from './plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+export {
+  selectorDataSourceState,
+  selectorGetTreeItemError,
+} from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+export type { UseTreeViewLazyLoadingSignature } from './plugins/useTreeViewLazyLoading';
+export type { UseTreeViewLazyLoadingParameters } from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
-export { buildWarning } from './utils/warning';
-export { extractPluginParamsFromProps } from './utils/extractPluginParamsFromProps';
+export { createSelector } from './utils/selectors';
+export { isTargetInDescendants } from './utils/tree';
+export { TreeViewStore } from './utils/TreeViewStore';
+
+export type {
+  TreeViewClasses,
+  TreeViewSlots,
+  TreeViewSlotProps,
+} from './TreeViewProvider/TreeViewStyleContext';

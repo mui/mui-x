@@ -20,7 +20,7 @@ To initialize the visible columns without controlling them, provide the model to
 
 :::info
 
-Passing the visible columns to the `initialState` prop will only have an impact when the data grid is rendered for the first time. In order to update the visible columns after the first render, you need to use the [`columnVisibilityModel`](#controlled-visible-columns) prop.
+Passing the visible columns to the `initialState` prop will only have an impact when the Data Grid is rendered for the first time. In order to update the visible columns after the first render, you need to use the [`columnVisibilityModel`](#controlled-visible-columns) prop.
 
 :::
 
@@ -86,8 +86,13 @@ In the following demo, the columns panel is disabled, and access to columns `id`
 To show or hide specific columns in the column visibility panel, use the `slotProps.columnsManagement.getTogglableColumns` prop. It should return an array of column field names.
 
 ```tsx
-// stop `id`, `__row_group_by_columns_group__`, and `status` columns to be togglable
-const hiddenFields = ['id', '__row_group_by_columns_group__', 'status'];
+import {
+  DataGridPremium,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+} from '@mui/x-data-grid-premium';
+
+// stop `id`, GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, and `status` columns to be togglable
+const hiddenFields = ['id', GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'status'];
 
 const getTogglableColumns = (columns: GridColDef[]) => {
   return columns
@@ -95,10 +100,8 @@ const getTogglableColumns = (columns: GridColDef[]) => {
     .map((column) => column.field);
 };
 
-<DataGrid
-  slots={{
-    toolbar: GridToolbar,
-  }}
+<DataGridPremium
+  showToolbar
   slotProps={{
     columnsManagement: {
       getTogglableColumns,
@@ -115,9 +118,7 @@ To disable `Show/Hide All` checkbox or `Reset` button in the footer of the colum
 
 ```tsx
 <DataGrid
-  slots={{
-    toolbar: GridToolbar,
-  }}
+  showToolbar
   slotProps={{
     columnsManagement: {
       disableShowHideToggle: true,

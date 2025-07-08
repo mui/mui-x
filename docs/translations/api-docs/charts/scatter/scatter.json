@@ -9,5 +9,6 @@
       }
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }
 }

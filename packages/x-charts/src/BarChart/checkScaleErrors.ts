@@ -1,49 +1,69 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import {
+  AxisId,
+  isBandScaleConfig,
+  isPointScaleConfig,
+  ComputedXAxis,
+  ComputedYAxis,
+} from '../models/axis';
+import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 import { SeriesId } from '../models/seriesType/common';
 
-const getAxisMessage = (axisDirection: 'x' | 'y', axisKey: string) => {
+const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
   const axisName = `${axisDirection}-axis`;
-  const axisKeyName = `${axisDirection}Axis`;
+  const axisIdName = `${axisDirection}Axis`;
   const axisDefaultKey = axisDirection === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY;
-  return axisKey === axisDefaultKey
-    ? `The first \`${axisKeyName}\``
-    : `The ${axisName} with id "${axisKey}"`;
+  return axisId === axisDefaultKey
+    ? `The first \`${axisIdName}\``
+    : `The ${axisName} with id "${axisId}"`;
 };
 
 export function checkScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
-  xAxisKey: string,
-  xAxis: { DEFAULT_X_AXIS_KEY: AxisDefaultized } & { [axisKey: string]: AxisDefaultized },
-  yAxisKey: string,
-  yAxis: { DEFAULT_X_AXIS_KEY: AxisDefaultized } & { [axisKey: string]: AxisDefaultized },
+  series: DefaultizedBarSeriesType & { stackedData: [number, number][] },
+  xAxisId: AxisId,
+  xAxis: { [axisId: AxisId]: ComputedXAxis },
+  yAxisId: AxisId,
+  yAxis: { [axisId: AxisId]: ComputedYAxis },
 ): void {
-  const xAxisConfig = xAxis[xAxisKey];
-  const yAxisConfig = yAxis[yAxisKey];
+  const xAxisConfig = xAxis[xAxisId];
+  const yAxisConfig = yAxis[yAxisId];
 
   const discreteAxisConfig = verticalLayout ? xAxisConfig : yAxisConfig;
   const continuousAxisConfig = verticalLayout ? yAxisConfig : xAxisConfig;
 
-  const discreteAxisKey = verticalLayout ? xAxisKey : yAxisKey;
-  const continuousAxisKey = verticalLayout ? yAxisKey : xAxisKey;
+  const discreteAxisId = verticalLayout ? xAxisId : yAxisId;
+  const continuousAxisId = verticalLayout ? yAxisId : xAxisId;
 
   const discreteAxisDirection = verticalLayout ? 'x' : 'y';
   const continuousAxisDirection = verticalLayout ? 'y' : 'x';
 
   if (!isBandScaleConfig(discreteAxisConfig)) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should be of type "band" to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
     );
   }
   if (discreteAxisConfig.data === undefined) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisKey)} should have data property.`,
+      `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
     );
   }
   if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
     throw new Error(
-      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisKey)} should be a continuous type to display the bar series of id "${seriesId}".`,
+      `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
+  }
+  if (process.env.NODE_ENV !== 'production') {
+    if (discreteAxisConfig.data.length < series.stackedData.length) {
+      warnOnce(
+        [
+          `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
+          'The axis data should have at least the same length than the series using it.',
+        ],
+        'error',
+      );
+    }
   }
 }

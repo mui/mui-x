@@ -11,6 +11,7 @@ const rows = [
   { id: 3, column: 'c', name: 'James', score: 300 },
 ];
 
+// prettier-ignore
 function App() {
   const [proFilterModel, setProFilterModel] = React.useState<GridFilterModel>({
     items: [

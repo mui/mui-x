@@ -1,0 +1,12 @@
+<Button onClick={() => setIndex((prev) => prev + 1)}>
+  Update columns reference
+</Button>
+<div style={{ height: 250 }}>
+  <DataGridPro
+    apiRef={apiRef}
+    columns={columnsState.columns}
+    onColumnWidthChange={columnsState.onColumnWidthChange}
+    onColumnOrderChange={columnsState.onColumnOrderChange}
+    rows={rows}
+  />
+</div>

@@ -1,63 +1,25 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
-import { animated, to, useSpring } from '@react-spring/web';
-import { getSymbol } from '../internals/utils';
-import { InteractionContext } from '../context/InteractionProvider';
+import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { SeriesId } from '../models/seriesType/common';
-import { useItemHighlighted } from '../context';
+import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 
-export interface MarkElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the root element when highlighted. */
-  highlighted: string;
-  /** Styles applied to the root element when faded. */
-  faded: string;
-}
-
-export type MarkElementClassKey = keyof MarkElementClasses;
-
-interface MarkElementOwnerState {
-  id: SeriesId;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<MarkElementClasses>;
-}
-
-export function getMarkElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiMarkElement', slot);
-}
-
-export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
-  'root',
-  'highlighted',
-  'faded',
-]);
-
-const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getMarkElementUtilityClass, classes);
-};
-
-const MarkElementPath = styled(animated.path, {
+const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
+  [`&.${markElementClasses.animate}`]: {
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionProperty: 'transform, transform-origin',
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
+  },
 }));
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
@@ -75,6 +37,16 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighli
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    /**
+     * If `true`, the marker is faded.
+     * @default false
+     */
+    isFaded?: boolean;
+    /**
+     * If `true`, the marker is highlighted.
+     * @default false
+     */
+    isHighlighted?: boolean;
   };
 
 /**
@@ -98,22 +70,20 @@ function MarkElement(props: MarkElementProps) {
     dataIndex,
     onClick,
     skipAnimation,
+    isFaded = false,
+    isHighlighted = false,
     ...other
   } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-  });
-  const { axis } = React.useContext(InteractionContext);
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
 
-  const position = useSpring({ x, y, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: axis.x?.index === dataIndex || isHighlighted,
+    isHighlighted,
     isFaded,
     color,
+    skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -121,15 +91,17 @@ function MarkElement(props: MarkElementProps) {
     <MarkElementPath
       {...other}
       style={{
-        transform: to([position.x, position.y], (pX, pY) => `translate(${pX}px, ${pY}px)`),
-        transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
+        transform: `translate(${x}px, ${y}px)`,
+        transformOrigin: `${x}px ${y}px`,
       }}
       ownerState={ownerState}
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
+      {...interactionProps}
+      data-highlighted={isHighlighted || undefined}
+      data-faded={isFaded || undefined}
     />
   );
 }
@@ -146,13 +118,22 @@ MarkElement.propTypes = {
   dataIndex: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
+   * If `true`, the marker is faded.
+   * @default false
+   */
+  isFaded: PropTypes.bool,
+  /**
+   * If `true`, the marker is highlighted.
+   * @default false
+   */
+  isHighlighted: PropTypes.bool,
+  /**
    * The shape of the marker.
    */
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
    */
   skipAnimation: PropTypes.bool,
 } as any;

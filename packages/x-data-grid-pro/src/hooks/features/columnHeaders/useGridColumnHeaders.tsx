@@ -6,10 +6,12 @@ import {
   gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
   GridFilterItem,
-  GridPinnedColumnPosition,
-  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import {
+  gridColumnsTotalWidthSelector,
+  gridHasFillerSelector,
+  gridHeaderFilterHeightSelector,
+  gridVerticalScrollbarWidthSelector,
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
   GetHeadersParams,
@@ -17,8 +19,11 @@ import {
   getGridFilter,
   GridStateColDef,
   GridColumnHeaderRow,
+  shouldCellShowLeftBorder,
+  shouldCellShowRightBorder,
+  PinnedColumnPosition,
 } from '@mui/x-data-grid/internals';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -46,12 +51,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   );
   const {
     getColumnsToRender,
+    getPinnedCellOffset,
     renderContext,
     leftRenderContext,
     rightRenderContext,
     pinnedColumns,
     visibleColumns,
-    getCellOffsetStyle,
+    columnPositions,
     ...otherProps
   } = useGridColumnHeadersCommunity({
     ...props,
@@ -66,9 +72,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.headerFilters;
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
+  const headerFilterHeight = useGridSelector(apiRef, gridHeaderFilterHeightSelector);
+  const scrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
@@ -117,17 +125,32 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const item = getFilterItem(colDef);
 
       const pinnedPosition = params?.position;
-      const style = getCellOffsetStyle({
+      const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
+        colDef.computedWidth,
         columnIndex,
-        computedWidth: colDef.computedWidth,
-      });
+        columnPositions,
+        columnsTotalWidth,
+        scrollbarWidth,
+      );
+
+      const indexInSection = i;
+      const sectionLength = renderedColumns.length;
+
+      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showRightBorder = shouldCellShowRightBorder(
+        pinnedPosition,
+        indexInSection,
+        sectionLength,
+        rootProps.showColumnVerticalBorder,
+        gridHasFiller,
+      );
 
       filters.push(
         <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
-          height={dimensions.headerFilterHeight}
+          height={headerFilterHeight}
           width={colDef.computedWidth}
           colDef={colDef}
           hasFocus={hasFocus}
@@ -137,10 +160,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           data-field={colDef.field}
           item={item}
           pinnedPosition={pinnedPosition}
-          style={style}
-          indexInSection={i}
-          sectionLength={renderedColumns.length}
-          gridHasFiller={gridHasFiller}
+          pinnedOffset={pinnedOffset}
+          showLeftBorder={showLeftBorder}
+          showRightBorder={showRightBorder}
           {...rootProps.slotProps?.headerFilterCell}
         />,
       );
@@ -164,21 +186,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       >
         {leftRenderContext &&
           getColumnFilters({
-            position: GridPinnedColumnPosition.LEFT,
+            position: PinnedColumnPosition.LEFT,
             renderContext: leftRenderContext,
-            minFirstColumn: leftRenderContext.firstColumnIndex,
             maxLastColumn: leftRenderContext.lastColumnIndex,
           })}
         {getColumnFilters({
           renderContext,
-          minFirstColumn: pinnedColumns.left.length,
           maxLastColumn: visibleColumns.length - pinnedColumns.right.length,
         })}
         {rightRenderContext &&
           getColumnFilters({
-            position: GridPinnedColumnPosition.RIGHT,
+            position: PinnedColumnPosition.RIGHT,
             renderContext: rightRenderContext,
-            minFirstColumn: rightRenderContext.firstColumnIndex,
             maxLastColumn: rightRenderContext.lastColumnIndex,
           })}
       </GridColumnHeaderRow>

@@ -10,7 +10,7 @@ productId: x-data-grid
 
 This is a reference guide for upgrading your site from MUI X v4 to v5.
 MUI X v5 is fully compatible with Material UI v5 and MUI System v5 and can be used with Material UI v4 and MUI System v4 with some additional steps.
-Most breaking changes are renaming of CSS classes or variables to improve the consistency of the data grid.
+Most breaking changes are renaming of CSS classes or variables to improve the consistency of the Data Grid.
 
 ## Migrating MUI Core from v4
 
@@ -25,7 +25,7 @@ The alternative is to install Material UI v5 and configure it to keep Material�
 Using Material UI v4 with v5 can be achieved with the following steps:
 
 1. First, make sure you have Material UI v5 installed. If not, install it with these [instructions](/material-ui/getting-started/installation/).
-1. Add a custom [`createGenerateClassName`](/system/styles/api/#creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
+1. Add a custom [`createGenerateClassName`](https://v6.mui.com/system/styles/api/#creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
 import { createGenerateClassName } from '@material-ui/core/styles';
@@ -88,7 +88,7 @@ export default function DataGridDemo() {
 ```
 
 **Done!** Now, you can render any dependencies that rely on Material UI v5 without upgrading from v4, and they will both run seamlessly alongside.
-For example, the following interactive demo shows how these steps tie together with the data grid:
+For example, the following interactive demo shows how these steps tie together with the Data Grid:
 
 {{"demo": "CoreV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
@@ -126,7 +126,7 @@ To use the v5 version of MUI X, you first need to update to the new package nam
 
 ### Module augmentation
 
-- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together.
+- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using Data Grid and Data Grid Pro together.
 
   In order to still be able to do overrides at the theme level, add the following imports to your project:
 
@@ -169,7 +169,6 @@ To use the v5 version of MUI X, you first need to update to the new package nam
 - Some event listeners and DOM attributes were removed from `GridCell` and `GridRow` to improve performance.
 
   The following props were removed.
-
   - `onCellBlur`
   - `onCellOver`
   - `onCellOut`
@@ -262,7 +261,6 @@ To use the v5 version of MUI X, you first need to update to the new package nam
   | `densitySelector`                 | `gridDensitySelector`                 |
 
 - Some selectors have been removed/reworked
-
   1. `sortedGridRowsSelector` was removed. You can use `gridSortedRowEntriesSelector` instead.
 
   The return format has changed:
@@ -335,7 +333,6 @@ To use the v5 version of MUI X, you first need to update to the new package nam
 ### `apiRef` methods
 
 - The `apiRef` methods to partially update the filter model have been renamed:
-
   1. `apiRef.current.applyFilterLinkOperator` was renamed to `apiRef.current.setFilterLinkOperator`
   2. `apiRef.current.upsertFilter` was renamed to `apiRef.current.upsertFilterItem`
   3. `apiRef.current.deleteFilter` was renamed to `apiRef.current.deleteFilterItem`
@@ -370,7 +367,7 @@ To use the v5 version of MUI X, you first need to update to the new package nam
   +   */
   +  value: GridCellValue;
   +  /**
-  +   * GridApi that lets you manipulate the data grid.
+  +   * GridApi that lets you manipulate the Data Grid.
   +   */
   +  api: any;
   +}

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, createEvent } from '@mui/internal-test-utils';
-import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
-import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
+import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
+import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
+import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
 function createDragOverEvent(target: ChildNode) {
@@ -29,7 +28,6 @@ describe('<DataGridPro /> - Row reorder', () => {
   const { render } = createRenderer();
 
   it('should cancel the reordering when dropping the row outside the grid', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -38,11 +36,9 @@ describe('<DataGridPro /> - Row reorder', () => {
     const columns = [{ field: 'brand' }];
 
     function Test() {
-      apiRef = useGridApiRef();
-
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering />
+          <DataGridPro rows={rows} columns={columns} rowReordering />
         </div>
       );
     }
@@ -65,7 +61,6 @@ describe('<DataGridPro /> - Row reorder', () => {
   });
 
   it('should keep the order of the rows when dragStart is fired and rowReordering=false', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -74,11 +69,9 @@ describe('<DataGridPro /> - Row reorder', () => {
     const columns = [{ field: 'brand' }];
 
     function Test() {
-      apiRef = useGridApiRef();
-
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+          <DataGridPro rows={rows} columns={columns} />
         </div>
       );
     }
@@ -91,7 +84,6 @@ describe('<DataGridPro /> - Row reorder', () => {
   });
 
   it('should keep the order of the rows when dragEnd is fired and rowReordering=false', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -100,11 +92,9 @@ describe('<DataGridPro /> - Row reorder', () => {
     const columns = [{ field: 'brand' }];
 
     function Test() {
-      apiRef = useGridApiRef();
-
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
+          <DataGridPro rows={rows} columns={columns} />
         </div>
       );
     }
@@ -119,9 +109,7 @@ describe('<DataGridPro /> - Row reorder', () => {
 
   it('should call onRowOrderChange after the row stops being dragged', () => {
     const handleOnRowOrderChange = spy();
-    let apiRef: React.MutableRefObject<GridApi>;
     function Test() {
-      apiRef = useGridApiRef();
       const rows = [
         { id: 0, brand: 'Nike' },
         { id: 1, brand: 'Adidas' },
@@ -132,7 +120,6 @@ describe('<DataGridPro /> - Row reorder', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
-            apiRef={apiRef}
             rows={rows}
             columns={columns}
             onRowOrderChange={handleOnRowOrderChange}
@@ -165,9 +152,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     const handleDragEnter = spy();
     const handleDragOver = spy();
     const handleDragEnd = spy();
-    let apiRef: React.MutableRefObject<GridApi>;
     function Test() {
-      apiRef = useGridApiRef();
       const data = useBasicDemoData(3, 3);
 
       return (
@@ -179,7 +164,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           onDragEnd={handleDragEnd}
           style={{ width: 300, height: 300 }}
         >
-          <DataGridPro apiRef={apiRef} {...data} rowReordering />
+          <DataGridPro {...data} rowReordering />
         </div>
       );
     }
@@ -199,5 +184,115 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(handleDragStart.callCount).to.equal(0);
     expect(handleDragOver.callCount).to.equal(0);
     expect(handleDragEnd.callCount).to.equal(0);
+  });
+
+  it('should reorder rows correctly on any page when pagination is enabled', () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Skechers' },
+    ];
+    const columns = [{ field: 'brand' }];
+
+    function Test() {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            rows={rows}
+            columns={columns}
+            rowReordering
+            pagination
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 2 },
+              },
+            }}
+            pageSizeOptions={[2]}
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Skechers']);
+    const rowReorderCell = getCell(2, 0).firstChild!;
+    const targetCell = getCell(3, 0);
+
+    fireEvent.dragStart(rowReorderCell);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
+  });
+
+  it('should render vertical scroll areas when row reordering is active', () => {
+    // Create more rows to ensure scrolling is needed
+    const rows = Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      brand: `Brand ${i}`,
+    }));
+    const columns = [{ field: 'brand' }];
+
+    function Test() {
+      return (
+        <div style={{ width: 300, height: 200 }}>
+          {/* Smaller height to force scrolling */}
+          <DataGridPro rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    }
+
+    const { container } = render(<Test />);
+
+    // Initially, no scroll areas should be visible
+    expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+
+    // Start dragging a row at the top (scroll = 0)
+    const rowReorderCell = getCell(0, 0).firstChild!;
+    fireEvent.dragStart(rowReorderCell);
+
+    // Check what scroll areas are rendered when at the top
+    let allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
+    let upScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--up']}`);
+    let downScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--down']}`);
+
+    // At the top: only down scroll area should be rendered (up should NOT exist)
+    expect(allScrollAreas.length).to.equal(1);
+    expect(upScrollAreas).to.have.length(0); // No up scroll area when at top
+    expect(downScrollAreas).to.have.length(1); // Down scroll area available
+
+    // End dragging to reset state
+    let dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+
+    // Scroll areas should be hidden again
+    expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+
+    // Now scroll down to enable both up and down scrolling
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+    fireEvent.scroll(virtualScroller, { target: { scrollTop: 100 } });
+
+    // Start dragging again after scrolling down
+    fireEvent.dragStart(rowReorderCell);
+
+    // Check scroll areas after scrolling down
+    allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
+    upScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--up']}`);
+    downScrollAreas = container.querySelectorAll(`.${gridClasses['scrollArea--down']}`);
+
+    // After scrolling down: both up and down scroll areas should be rendered
+    expect(allScrollAreas.length).to.equal(2);
+    expect(upScrollAreas).to.have.length(1); // Up scroll area now available
+    expect(downScrollAreas).to.have.length(1); // Down scroll area still available
+
+    // End dragging
+    dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+
+    // Scroll areas should be hidden again
+    expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
   });
 });

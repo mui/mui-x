@@ -1,7 +1,5 @@
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_generateUtilityClasses as generateUtilityClasses,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 export interface ClockClasses {
   /** Styles applied to the root element. */
@@ -20,6 +18,8 @@ export interface ClockClasses {
   pmButton: string;
   /** Styles applied to the meridiem typography element. */
   meridiemText: string;
+  /** Styles applied to the selected meridiem button element */
+  selected: string;
 }
 
 export type ClockClassKey = keyof ClockClasses;
@@ -37,4 +37,5 @@ export const clockClasses: ClockClasses = generateUtilityClasses('MuiClock', [
   'amButton',
   'pmButton',
   'meridiemText',
+  'selected',
 ]);

@@ -1,19 +1,18 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   PickersArrowSwitcher,
-  useLocaleText,
   useNextMonthDisabled,
   usePreviousMonthDisabled,
-  useUtils,
 } from '@mui/x-date-pickers/internals';
+import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
-type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(
-  props: PickersRangeCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type PickersRangeCalendarHeaderComponent = ((
+  props: PickersRangeCalendarHeaderProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher)({
@@ -23,13 +22,14 @@ const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSw
   justifyContent: 'space-between',
 });
 
-const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader<
-  TDate extends PickerValidDate,
->(props: PickersRangeCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
+const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader(
+  props: PickersRangeCalendarHeaderProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const adapter = usePickerAdapter();
+  const translations = usePickerTranslations();
 
-  const { calendars, month, monthIndex, ...other } = props;
+  const { calendars, month, monthIndex, labelId, ...other } = props;
   const {
     format,
     slots,
@@ -41,7 +41,12 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
     minDate,
     maxDate,
     timezone,
-  } = props;
+    // omit props that are not used in the PickersArrowSwitcher
+    reduceAnimations,
+    views,
+    view,
+    ...otherRangeProps
+  } = other;
 
   const isNextMonthDisabled = useNextMonthDisabled(currentMonth, {
     disableFuture,
@@ -56,28 +61,30 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   });
 
   if (calendars === 1) {
-    return <PickersCalendarHeader {...other} ref={ref} />;
+    return <PickersCalendarHeader {...other} labelId={labelId} ref={ref} />;
   }
 
-  const selectNextMonth = () => onMonthChange(utils.addMonths(currentMonth, 1), 'left');
+  const selectNextMonth = () => onMonthChange(adapter.addMonths(currentMonth, 1));
 
-  const selectPreviousMonth = () => onMonthChange(utils.addMonths(currentMonth, -1), 'right');
+  const selectPreviousMonth = () => onMonthChange(adapter.addMonths(currentMonth, -1));
 
   return (
     <PickersRangeCalendarHeaderContentMultipleCalendars
+      {...otherRangeProps}
       ref={ref}
       onGoToPrevious={selectPreviousMonth}
       onGoToNext={selectNextMonth}
       isPreviousHidden={monthIndex !== 0}
       isPreviousDisabled={isPreviousMonthDisabled}
-      previousLabel={localeText.previousMonth}
+      previousLabel={translations.previousMonth}
       isNextHidden={monthIndex !== calendars - 1}
       isNextDisabled={isNextMonthDisabled}
-      nextLabel={localeText.nextMonth}
+      nextLabel={translations.nextMonth}
       slots={slots}
       slotProps={slotProps}
+      labelId={labelId}
     >
-      {utils.formatByString(month, format ?? `${utils.formats.month} ${utils.formats.year}`)}
+      {adapter.formatByString(month, format ?? `${adapter.formats.month} ${adapter.formats.year}`)}
     </PickersRangeCalendarHeaderContentMultipleCalendars>
   );
 }) as PickersRangeCalendarHeaderComponent;
@@ -105,6 +112,10 @@ PickersRangeCalendarHeader.propTypes = {
    * @default `${adapter.formats.month} ${adapter.formats.year}`
    */
   format: PropTypes.string,
+  /**
+   * Id of the calendar text element.
+   * It is used to establish an `aria-labelledby` relationship with the calendar `grid` element.
+   */
   labelId: PropTypes.string,
   maxDate: PropTypes.object.isRequired,
   minDate: PropTypes.object.isRequired,

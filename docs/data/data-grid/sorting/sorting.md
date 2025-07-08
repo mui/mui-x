@@ -2,7 +2,7 @@
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
-Sorting is enabled by default to the data grid users and works out of the box without any explicit configuration.
+Sorting is enabled by default to the Data Grid users and works out of the box without any explicit configuration.
 Users can set a sorting rule simply by clicking on a column header.
 Following clicks change the column's sorting direction. You can see the applied direction on the header's arrow indicator.
 
@@ -20,11 +20,16 @@ To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensin
 
 The following demo lets you sort the rows according to several criteria at the same time.
 
-Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
+By default, users need to hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass sorting rules to the data grid
+You can also enable multi-sorting without modifier keys by setting the `multipleColumnsSortingMode` prop to `"always"`.
+This allows users to click on multiple column headers to add them as sort criteria without needing to hold down modifier keys.
+
+{{"demo": "MultiSortingWithoutModifier.js", "bg": "inline"}}
+
+## Pass sorting rules to the Data Grid
 
 ### Structure of the model
 
@@ -163,6 +168,10 @@ const columns: GridColDef = [
 Sorting can be run server-side by setting the `sortingMode` prop to `server`, and implementing the `onSortModelChange` handler.
 
 {{"demo": "ServerSortingGrid.js", "bg": "inline"}}
+
+:::success
+You can combine server-side sorting with [server-side filtering](/x/react-data-grid/filtering/server-side/) and [server-side pagination](/x/react-data-grid/pagination/#server-side-pagination) to avoid fetching more data than needed, since it's already processed outside of the Data Grid.
+:::
 
 ## apiRef
 

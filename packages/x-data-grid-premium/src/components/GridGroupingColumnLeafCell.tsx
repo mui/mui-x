@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import { vars } from '@mui/x-data-grid/internals';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -8,17 +8,16 @@ function GridGroupingColumnLeafCell(props: GridRenderCellParams) {
   const rootProps = useGridRootProps();
 
   return (
-    <Box
-      sx={{
-        ml:
+    <div
+      style={{
+        marginLeft:
           rootProps.rowGroupingColumnMode === 'multiple'
-            ? 1
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            ? vars.spacing(1)
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
       {props.formattedValue ?? props.value}
-    </Box>
+    </div>
   );
 }
 

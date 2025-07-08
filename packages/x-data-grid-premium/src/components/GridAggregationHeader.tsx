@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
@@ -8,7 +8,7 @@ import {
   GridColumnHeaderParams,
   GridColumnHeaderTitle,
 } from '@mui/x-data-grid';
-import type { GridBaseColDef } from '@mui/x-data-grid/internals';
+import { vars, type GridBaseColDef } from '@mui/x-data-grid/internals';
 import { getAggregationFunctionLabel } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -22,7 +22,15 @@ interface OwnerState extends DataGridPremiumProcessedProps {
 const GridAggregationHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeader',
-  overridesResolver: (_, styles) => styles.aggregationColumnHeader,
+  overridesResolver: (props, styles) => {
+    const { ownerState } = props;
+    return [
+      styles.aggregationColumnHeader,
+      ownerState.colDef.headerAlign === 'left' && styles['aggregationColumnHeader--alignLeft'],
+      ownerState.colDef.headerAlign === 'center' && styles['aggregationColumnHeader--alignCenter'],
+      ownerState.colDef.headerAlign === 'right' && styles['aggregationColumnHeader--alignRight'],
+    ];
+  },
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -37,17 +45,11 @@ const GridAggregationHeaderRoot = styled('div', {
 const GridAggregationFunctionLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeaderLabel',
-  overridesResolver: (_, styles) => styles.aggregationColumnHeaderLabel,
-})<{ ownerState: OwnerState }>(({ theme }) => {
-  return {
-    fontSize: theme.typography.caption.fontSize,
-    lineHeight: theme.typography.caption.fontSize,
-    position: 'absolute',
-    bottom: 4,
-    fontWeight: theme.typography.fontWeightMedium,
-    color: (theme.vars || theme).palette.primary.dark,
-    textTransform: 'uppercase',
-  };
+})<{ ownerState: OwnerState }>({
+  font: vars.typography.font.small,
+  lineHeight: 'normal',
+  color: vars.colors.foreground.muted,
+  marginTop: -1,
 });
 
 const useUtilityClasses = (ownerState: OwnerState) => {

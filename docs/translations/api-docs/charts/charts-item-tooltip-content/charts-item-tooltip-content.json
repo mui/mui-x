@@ -1,17 +1,24 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." }
+  },
   "classDescriptions": {
+    "axisValueCell": {
+      "description": "Styles applied to {{nodeName}}. Only available for axis tooltip.",
+      "nodeName": "the axisValueCell element"
+    },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "labelCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the labelCell element"
     },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the mark element" },
-    "markCell": {
+    "markContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the markCell element"
+      "nodeName": "the markContainer element"
     },
+    "paper": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the paper element" },
     "root": { "description": "Styles applied to the root element." },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "table": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the table element" },

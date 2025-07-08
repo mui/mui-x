@@ -3,3 +3,5 @@ export interface TimeStepOptions {
   minutes?: number;
   seconds?: number;
 }
+
+export type PickerValueType = 'date' | 'time' | 'date-time';

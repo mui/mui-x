@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
+import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 const queryByTextInView = (text: string) => {
@@ -19,11 +19,7 @@ const queryByTextInView = (text: string) => {
 export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { views, componentFamily, render } = getOptions();
 
-  if (componentFamily === 'field' || !views.includes('year')) {
-    return;
-  }
-
-  describe('year view:', () => {
+  describe.skipIf(componentFamily === 'field' || !views.includes('year'))('year view:', () => {
     const defaultProps = {
       onChange: () => {},
       ...(views.length > 1 && {
@@ -38,7 +34,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       }),
     };
 
-    it('should apply shouldDisableYear', function test() {
+    it('should apply shouldDisableYear', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -52,47 +48,59 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       expect(queryByTextInView('2017')).not.to.have.attribute('disabled');
     });
 
-    it('should apply disablePast', function test() {
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
-      }
-      render(<WithFakeTimer {...defaultProps} disablePast />);
+    describe('with fake timers', () => {
+      // TODO: temporary for vitest. Can move to `vi.useFakeTimers`
+      let timer: SinonFakeTimers | null = null;
+      beforeEach(() => {
+        timer = useFakeTimers({ now: new Date(2018, 0, 1), toFake: ['Date'] });
+      });
+      afterEach(() => {
+        timer?.restore();
+      });
+      it('should apply disablePast', () => {
+        const now = adapterToUse.date();
+        function WithFakeTimer(props: any) {
+          return <ElementToTest value={now} {...props} />;
+        }
+        render(<WithFakeTimer {...defaultProps} disablePast />);
 
-      const nextYear = adapterToUse.addYears(now, 1);
-      const prevYear = adapterToUse.addYears(now, -1);
+        const nextYear = adapterToUse.addYears(now, 1);
+        const prevYear = adapterToUse.addYears(now, -1);
 
-      expect(queryByTextInView(adapterToUse.format(now, 'year'))).not.to.have.attribute('disabled');
-      expect(queryByTextInView(adapterToUse.format(nextYear, 'year'))).not.to.have.attribute(
-        'disabled',
-      );
-      expect(queryByTextInView(adapterToUse.format(prevYear, 'year'))).to.have.attribute(
-        'disabled',
-      );
+        expect(queryByTextInView(adapterToUse.format(now, 'year'))).not.to.have.attribute(
+          'disabled',
+        );
+        expect(queryByTextInView(adapterToUse.format(nextYear, 'year'))).not.to.have.attribute(
+          'disabled',
+        );
+        expect(queryByTextInView(adapterToUse.format(prevYear, 'year'))).to.have.attribute(
+          'disabled',
+        );
+      });
+
+      it('should apply disableFuture', () => {
+        const now = adapterToUse.date();
+        function WithFakeTimer(props: any) {
+          return <ElementToTest value={now} {...props} />;
+        }
+        render(<WithFakeTimer {...defaultProps} disableFuture />);
+
+        const nextYear = adapterToUse.addYears(now, 1);
+        const prevYear = adapterToUse.addYears(now, -1);
+
+        expect(queryByTextInView(adapterToUse.format(now, 'year'))).not.to.have.attribute(
+          'disabled',
+        );
+        expect(queryByTextInView(adapterToUse.format(nextYear, 'year'))).to.have.attribute(
+          'disabled',
+        );
+        expect(queryByTextInView(adapterToUse.format(prevYear, 'year'))).not.to.have.attribute(
+          'disabled',
+        );
+      });
     });
 
-    it('should apply disableFuture', function test() {
-      let now;
-      function WithFakeTimer(props: any) {
-        now = adapterToUse.date();
-        return <ElementToTest value={now} {...props} />;
-      }
-      render(<WithFakeTimer {...defaultProps} disableFuture />);
-
-      const nextYear = adapterToUse.addYears(now, 1);
-      const prevYear = adapterToUse.addYears(now, -1);
-
-      expect(queryByTextInView(adapterToUse.format(now, 'year'))).not.to.have.attribute('disabled');
-      expect(queryByTextInView(adapterToUse.format(nextYear, 'year'))).to.have.attribute(
-        'disabled',
-      );
-      expect(queryByTextInView(adapterToUse.format(prevYear, 'year'))).not.to.have.attribute(
-        'disabled',
-      );
-    });
-
-    it('should apply minDate', function test() {
+    it('should apply minDate', () => {
       render(
         <ElementToTest
           {...defaultProps}
@@ -106,7 +114,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       expect(queryByTextInView('2020')).not.to.equal(null);
     });
 
-    it('should apply maxDate', function test() {
+    it('should apply maxDate', () => {
       render(
         <ElementToTest
           {...defaultProps}

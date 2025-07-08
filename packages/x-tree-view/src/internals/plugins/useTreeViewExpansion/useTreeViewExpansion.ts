@@ -1,76 +1,122 @@
 import * as React from 'react';
+import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewPlugin } from '../../models';
-import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
+import {
+  UseTreeViewExpansionInstance,
+  UseTreeViewExpansionSignature,
+} from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
+import {
+  selectorExpandedItems,
+  selectorIsItemExpandable,
+  selectorIsItemExpanded,
+} from './useTreeViewExpansion.selectors';
+import { getExpansionTrigger } from './useTreeViewExpansion.utils';
+import {
+  selectorItemMeta,
+  selectorItemOrderedChildrenIds,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
+import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
+  store,
   params,
-  models,
 }) => {
-  const expandedItemsMap = React.useMemo(() => {
-    const temp = new Map<TreeViewItemId, boolean>();
-    models.expandedItems.value.forEach((id) => {
-      temp.set(id, true);
-    });
+  useAssertModelConsistency({
+    componentName: 'Tree View',
+    propName: 'expandedItems',
+    controlled: params.expandedItems,
+    defaultValue: params.defaultExpandedItems,
+  });
 
-    return temp;
-  }, [models.expandedItems.value]);
-
-  const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
-    params.onExpandedItemsChange?.(event, value);
-    models.expandedItems.setControlledValue(value);
-  };
-
-  const isItemExpanded = React.useCallback(
-    (itemId: string) => expandedItemsMap.has(itemId),
-    [expandedItemsMap],
-  );
-
-  const isItemExpandable = React.useCallback(
-    (itemId: string) => !!instance.getItemMeta(itemId)?.expandable,
-    [instance],
-  );
-
-  const toggleItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent, itemId: TreeViewItemId) => {
-      const isExpandedBefore = instance.isItemExpanded(itemId);
-      instance.setItemExpansion(event, itemId, !isExpandedBefore);
-    },
-  );
-
-  const setItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent, itemId: TreeViewItemId, isExpanded: boolean) => {
-      const isExpandedBefore = instance.isItemExpanded(itemId);
-      if (isExpandedBefore === isExpanded) {
-        return;
+  useEnhancedEffect(() => {
+    store.update((prevState) => {
+      const newExpansionTrigger = getExpansionTrigger({
+        isItemEditable: params.isItemEditable,
+        expansionTrigger: params.expansionTrigger,
+      });
+      if (prevState.expansion.expansionTrigger === newExpansionTrigger) {
+        return prevState;
       }
 
+      return {
+        ...prevState,
+        expansion: {
+          ...prevState.expansion,
+          expansionTrigger: newExpansionTrigger,
+        },
+      };
+    });
+  }, [store, params.isItemEditable, params.expansionTrigger]);
+
+  const setExpandedItems = (event: React.SyntheticEvent | null, value: TreeViewItemId[]) => {
+    if (params.expandedItems === undefined) {
+      store.update((prevState) => ({
+        ...prevState,
+        expansion: { ...prevState.expansion, expandedItems: value },
+      }));
+    }
+    params.onExpandedItemsChange?.(event, value);
+  };
+
+  const applyItemExpansion: UseTreeViewExpansionInstance['applyItemExpansion'] = useEventCallback(
+    ({ itemId, event, shouldBeExpanded }) => {
+      const oldExpanded = selectorExpandedItems(store.value);
       let newExpanded: string[];
-      if (isExpanded) {
-        newExpanded = [itemId].concat(models.expandedItems.value);
+      if (shouldBeExpanded) {
+        newExpanded = [itemId].concat(oldExpanded);
       } else {
-        newExpanded = models.expandedItems.value.filter((id) => id !== itemId);
+        newExpanded = oldExpanded.filter((id) => id !== itemId);
       }
 
       if (params.onItemExpansionToggle) {
-        params.onItemExpansionToggle(event, itemId, isExpanded);
+        params.onItemExpansionToggle(event, itemId, shouldBeExpanded);
       }
 
       setExpandedItems(event, newExpanded);
     },
   );
 
+  const setItemExpansion: UseTreeViewExpansionInstance['setItemExpansion'] = useEventCallback(
+    ({ itemId, event = null, shouldBeExpanded }) => {
+      const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
+      const cleanShouldBeExpanded = shouldBeExpanded ?? !isExpandedBefore;
+      if (isExpandedBefore === cleanShouldBeExpanded) {
+        return;
+      }
+
+      const eventParameters = {
+        isExpansionPrevented: false,
+        shouldBeExpanded: cleanShouldBeExpanded,
+        event,
+        itemId,
+      };
+      publishTreeViewEvent(instance, 'beforeItemToggleExpansion', eventParameters);
+      if (eventParameters.isExpansionPrevented) {
+        return;
+      }
+
+      instance.applyItemExpansion({ itemId, event, shouldBeExpanded: cleanShouldBeExpanded });
+    },
+  );
+
   const expandAllSiblings = (event: React.KeyboardEvent, itemId: TreeViewItemId) => {
-    const itemMeta = instance.getItemMeta(itemId);
-    const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
+    const itemMeta = selectorItemMeta(store.value, itemId);
+    if (itemMeta == null) {
+      return;
+    }
+
+    const siblings = selectorItemOrderedChildrenIds(store.value, itemMeta.parentId);
 
     const diff = siblings.filter(
-      (child) => instance.isItemExpandable(child) && !instance.isItemExpanded(child),
+      (child) =>
+        selectorIsItemExpandable(store.value, child) && !selectorIsItemExpanded(store.value, child),
     );
 
-    const newExpanded = models.expandedItems.value.concat(diff);
+    const newExpanded = selectorExpandedItems(store.value).concat(diff);
 
     if (diff.length > 0) {
       if (params.onItemExpansionToggle) {
@@ -83,31 +129,44 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
+  /**
+   * Update the controlled model when the `expandedItems` prop changes.
+   */
+  useEnhancedEffect(() => {
+    const expandedItems = params.expandedItems;
+    if (expandedItems !== undefined) {
+      store.update((prevState) => ({
+        ...prevState,
+        expansion: { ...prevState.expansion, expandedItems },
+      }));
+    }
+  }, [store, params.expandedItems]);
+
   return {
     publicAPI: {
       setItemExpansion,
     },
     instance: {
-      isItemExpanded,
-      isItemExpandable,
       setItemExpansion,
-      toggleItemExpansion,
+      applyItemExpansion,
       expandAllSiblings,
     },
   };
 };
 
-useTreeViewExpansion.models = {
-  expandedItems: {
-    getDefaultValue: (params) => params.defaultExpandedItems,
-  },
-};
-
 const DEFAULT_EXPANDED_ITEMS: string[] = [];
 
-useTreeViewExpansion.getDefaultizedParams = (params) => ({
+useTreeViewExpansion.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
+});
+
+useTreeViewExpansion.getInitialState = (params) => ({
+  expansion: {
+    expandedItems:
+      params.expandedItems === undefined ? params.defaultExpandedItems : params.expandedItems,
+    expansionTrigger: getExpansionTrigger(params),
+  },
 });
 
 useTreeViewExpansion.params = {
@@ -115,4 +174,5 @@ useTreeViewExpansion.params = {
   defaultExpandedItems: true,
   onExpandedItemsChange: true,
   onItemExpansionToggle: true,
+  expansionTrigger: true,
 };

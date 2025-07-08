@@ -1,62 +1,19 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   useGridSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
   gridRenderContextSelector,
-  useGridApiOptionHandler,
+  useGridEventPriority,
   GridEventListener,
-  GridRowEntry,
 } from '@mui/x-data-grid';
 import { getVisibleRows } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
-
-function findSkeletonRowsSection({
-  apiRef,
-  visibleRows,
-  range,
-}: {
-  apiRef: React.MutableRefObject<GridPrivateApiPro>;
-  visibleRows: GridRowEntry[];
-  range: { firstRowIndex: number; lastRowIndex: number };
-}) {
-  let { firstRowIndex, lastRowIndex } = range;
-  const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
-  let startIndex = 0;
-  let endIndex = visibleRowsSection.length - 1;
-  let isSkeletonSectionFound = false;
-
-  while (!isSkeletonSectionFound && firstRowIndex < lastRowIndex) {
-    const isStartingWithASkeletonRow =
-      apiRef.current.getRowNode(visibleRowsSection[startIndex].id)?.type === 'skeletonRow';
-    const isEndingWithASkeletonRow =
-      apiRef.current.getRowNode(visibleRowsSection[endIndex].id)?.type === 'skeletonRow';
-
-    if (isStartingWithASkeletonRow && isEndingWithASkeletonRow) {
-      isSkeletonSectionFound = true;
-    }
-
-    if (!isStartingWithASkeletonRow) {
-      startIndex += 1;
-      firstRowIndex += 1;
-    }
-
-    if (!isEndingWithASkeletonRow) {
-      endIndex -= 1;
-      lastRowIndex -= 1;
-    }
-  }
-
-  return isSkeletonSectionFound
-    ? {
-        firstRowIndex,
-        lastRowIndex,
-      }
-    : undefined;
-}
+import { findSkeletonRowsSection } from './utils';
 
 /**
  * @requires useGridRows (state)
@@ -65,10 +22,10 @@ function findSkeletonRowsSection({
  * @requires useGridScroll (method
  */
 export const useGridLazyLoader = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'experimentalFeatures'
+    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode'
   >,
 ): void => {
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
@@ -175,12 +132,8 @@ export const useGridLazyLoader = (
     [privateApiRef, isDisabled, sortModel],
   );
 
-  useGridApiEventHandler(
-    privateApiRef,
-    'renderedRowsIntervalChange',
-    handleRenderedRowsIntervalChange,
-  );
-  useGridApiEventHandler(privateApiRef, 'sortModelChange', handleGridSortModelChange);
-  useGridApiEventHandler(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
-  useGridApiOptionHandler(privateApiRef, 'fetchRows', props.onFetchRows);
+  useGridEvent(privateApiRef, 'renderedRowsIntervalChange', handleRenderedRowsIntervalChange);
+  useGridEvent(privateApiRef, 'sortModelChange', handleGridSortModelChange);
+  useGridEvent(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
+  useGridEventPriority(privateApiRef, 'fetchRows', props.onFetchRows);
 };

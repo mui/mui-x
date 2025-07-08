@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
+import { RefObject } from '@mui/x-internals/types';
 import {
   GridApi,
   DataGridProProps,
@@ -9,28 +9,29 @@ import {
   GridRenderEditCellParams,
   GridValueSetter,
   GridPreProcessEditCellProps,
-  GridCellProps,
   GridCellModes,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { getCell, spyApi } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
+import { onTestFinished, vi } from 'vitest';
 
 describe('<DataGridPro /> - Cell editing', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
-  let apiRef: React.MutableRefObject<GridApi>;
+  let apiRef: RefObject<GridApi | null>;
 
   const defaultData = getBasicGridData(4, 2);
 
-  const renderEditCell = spy((() => <input />) as (
+  const defaultRenderEditCell = (() => <input />) as (
     props: GridRenderEditCellParams,
-  ) => React.ReactNode);
+  ) => React.ReactNode;
 
-  let columnProps: any = {};
-
-  function TestCase(props: Partial<DataGridProProps>) {
+  function TestCase(props: Partial<DataGridProProps> & { columnProps?: Record<string, any> }) {
     apiRef = useGridApiRef();
+    const { columnProps = {}, ...rest } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
@@ -38,56 +39,64 @@ describe('<DataGridPro /> - Cell editing', () => {
           {...defaultData}
           columns={defaultData.columns.map((column) =>
             column.field === 'currencyPair'
-              ? { ...column, renderEditCell, editable: true, ...columnProps }
+              ? {
+                  ...column,
+                  renderEditCell: defaultRenderEditCell,
+                  editable: true,
+                  ...columnProps,
+                }
               : column,
           )}
-          {...props}
+          {...rest}
         />
       </div>
     );
   }
 
-  afterEach(() => {
-    renderEditCell.resetHistory();
-    columnProps = {};
-  });
-
   describe('apiRef', () => {
     describe('startCellEditMode', () => {
-      it('should throw when the cell is already in edit mode', () => {
+      it('should throw when the cell is already in edit mode', async () => {
         render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(() => {
-          apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' });
+          apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' });
         }).to.throw('MUI X: The cell with id=0 and field=currencyPair is not in view mode.');
       });
 
       it('should update the CSS class of the cell', () => {
         render(<TestCase />);
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should render the component given in renderEditCell', () => {
-        render(<TestCase />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
         expect(renderEditCell.callCount).to.equal(0);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.callCount).not.to.equal(0);
       });
 
       it('should pass props to renderEditCell', () => {
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
+
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
         expect(renderEditCell.lastCall.args[0].error).to.equal(false);
         expect(renderEditCell.lastCall.args[0].isProcessingProps).to.equal(false);
       });
 
       it('should empty the value if deleteValue is true', () => {
-        render(<TestCase />);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
+
         act(() =>
-          apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair', deleteValue: true }),
+          apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair', deleteValue: true }),
         );
         expect(renderEditCell.lastCall.args[0].value).to.equal('');
         expect(renderEditCell.lastCall.args[0].error).to.equal(false);
@@ -97,11 +106,14 @@ describe('<DataGridPro /> - Cell editing', () => {
 
     describe('setEditCellValue', () => {
       it('should update the value prop given to renderEditCell', async () => {
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ renderEditCell }} />);
+
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'usdgbp' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'usdgbp' }),
         );
         expect(renderEditCell.lastCall.args[0].value).to.equal('usdgbp');
       });
@@ -111,12 +123,14 @@ describe('<DataGridPro /> - Cell editing', () => {
           ...row,
           currencyPair: value.trim(),
         });
-        columnProps.valueSetter = valueSetter;
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ valueSetter, renderEditCell }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].row).to.deep.equal(defaultData.rows[0]);
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: ' usdgbp ' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: ' usdgbp ' }),
         );
         expect(renderEditCell.lastCall.args[0].row).to.deep.equal({
           ...defaultData.rows[0],
@@ -125,37 +139,40 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should pass the new value through the value parser if defined', async () => {
-        columnProps.valueParser = spy((value) => value.toLowerCase());
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(columnProps.valueParser.callCount).to.equal(0);
+        const valueParser = spy((value) => value.toLowerCase());
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ valueParser, renderEditCell }} />);
+
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(valueParser.callCount).to.equal(0);
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        expect(columnProps.valueParser.callCount).to.equal(1);
+        expect(valueParser.callCount).to.equal(1);
         expect(renderEditCell.lastCall.args[0].value).to.equal('usd gbp');
       });
 
       it('should return true if no preProcessEditCellProps is defined', async () => {
         render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(
           await act(() =>
-            apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+            apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
           ),
         ).to.equal(true);
       });
 
       it('should set isProcessingProps to true before calling preProcessEditCellProps', async () => {
-        columnProps.preProcessEditCellProps = spy(
-          ({ props }: GridPreProcessEditCellProps) => props,
-        );
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => props);
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         let promise: Promise<boolean> | null = null;
         // We want to flush updates before preProcessEditCellProps resolves
         act(() => {
-          promise = apiRef.current.setEditCellValue({
+          promise = apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
@@ -166,19 +183,17 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should call preProcessEditCellProps with the correct params', async () => {
-        columnProps.preProcessEditCellProps = spy(
-          ({ props }: GridPreProcessEditCellProps) => props,
-        );
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => props);
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({
+          apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
           }),
         );
-        const args = columnProps.preProcessEditCellProps.lastCall.args[0];
+        const args = preProcessEditCellProps.lastCall.args[0];
         expect(args.id).to.equal(0);
         expect(args.row).to.deep.equal(defaultData.rows[0]);
         expect(args.hasChanged).to.equal(true);
@@ -191,17 +206,22 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should not publish onCellEditStop if field has error', async () => {
-        columnProps.preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
+        const preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: true,
         }));
 
         const handleEditCellStop = spy();
 
-        render(<TestCase onCellEditStop={handleEditCellStop} />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        render(
+          <TestCase
+            onCellEditStop={handleEditCellStop}
+            columnProps={{ preProcessEditCellProps }}
+          />,
+        );
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({
+          apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
@@ -210,49 +230,53 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         cell.focus();
 
-        await act(() => {
-          fireEvent.keyDown(cell, { key: 'Enter' });
-        });
+        fireEvent.keyDown(cell, { key: 'Enter' });
 
         expect(handleEditCellStop.callCount).to.equal(0);
       });
 
       it('should pass to renderEditCell the props returned by preProcessEditCellProps', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           foo: 'bar',
         });
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].foo).to.equal(undefined);
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         expect(renderEditCell.lastCall.args[0].foo).to.equal('bar');
       });
 
       it('should not pass to renderEditCell the value returned by preProcessEditCellProps', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           value: 'foobar',
         });
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
       });
 
       it('should set isProcessingProps to false after calling preProcessEditCellProps', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => props;
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         let promise: Promise<boolean> | null = null;
         // We want to flush updates before preProcessEditCellProps resolves
         act(() => {
-          promise = apiRef.current.setEditCellValue({
+          promise = apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
@@ -264,15 +288,15 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should return false if preProcessEditCellProps sets an error', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: true,
         });
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(
           await act(() =>
-            apiRef.current.setEditCellValue({
+            apiRef.current?.setEditCellValue({
               id: 0,
               field: 'currencyPair',
               value: 'USD GBP',
@@ -281,31 +305,26 @@ describe('<DataGridPro /> - Cell editing', () => {
         ).to.equal(false);
       });
 
-      it('should return false if the cell left the edit mode while calling preProcessEditCellProps', (done) => {
+      it('should return false if the cell left the edit mode while calling preProcessEditCellProps', async () => {
         let resolveCallback: () => void;
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => {
             resolveCallback = () => resolve(props);
           });
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
 
         let promise: Promise<boolean>;
         act(() => {
-          promise = apiRef.current.setEditCellValue({
+          promise = apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
           }) as Promise<boolean>;
         });
 
-        promise!.then((result) => {
-          expect(result).to.equal(false);
-          done();
-        });
-
         act(() =>
-          apiRef.current.stopCellEditMode({
+          apiRef.current?.stopCellEditMode({
             id: 0,
             field: 'currencyPair',
             ignoreModifications: true,
@@ -313,37 +332,46 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
 
         resolveCallback!();
+
+        expect(await act(async () => promise)).to.equal(false);
       });
 
       describe('with debounceMs > 0', () => {
-        it('should debounce multiple changes if debounceMs > 0', () => {
-          render(<TestCase />);
-          act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        it('should debounce multiple changes if debounceMs > 0', async () => {
+          const renderEditCell = spy((() => <input />) as (
+            props: GridRenderEditCellParams,
+          ) => React.ReactNode);
+
+          render(<TestCase columnProps={{ renderEditCell }} />);
+          act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
           expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
           renderEditCell.resetHistory();
-          apiRef.current.setEditCellValue({
+          apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD',
             debounceMs: 100,
           });
           expect(renderEditCell.callCount).to.equal(0);
-          apiRef.current.setEditCellValue({
+          apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
             debounceMs: 100,
           });
           expect(renderEditCell.callCount).to.equal(0);
-          clock.tick(100);
-          expect(renderEditCell.callCount).not.to.equal(0);
+
+          await waitFor(() => {
+            expect(renderEditCell.callCount).not.to.equal(0);
+          });
+
           expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
         });
       });
     });
 
     describe('stopCellEditMode', () => {
-      function CustomEditComponent({ hasFocus }: GridCellProps) {
+      function CustomEditComponent({ hasFocus }: GridRenderEditCellParams) {
         const ref = React.useRef<HTMLInputElement>(null);
         React.useLayoutEffect(() => {
           if (hasFocus) {
@@ -355,29 +383,29 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);
-        expect(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw(
+        expect(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' })).to.throw(
           'MUI X: The cell with id=0 and field=currencyPair is not in edit mode.',
         );
       });
 
       it('should update the row with the new value stored', async () => {
         render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        await act(async () => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(async () =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1).textContent).to.equal('USD GBP');
       });
 
       it('should not update the row if ignoreModifications=true', async () => {
         render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() =>
-          apiRef.current.stopCellEditMode({
+          apiRef.current?.stopCellEditMode({
             id: 0,
             field: 'currencyPair',
             ignoreModifications: true,
@@ -388,23 +416,23 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should do nothing if props are still being processed and ignoreModifications=false', async () => {
         let resolveCallback: () => void;
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
           new Promise((resolve) => {
             resolveCallback = () => resolve(props);
           });
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
 
         let promise: Promise<boolean>;
         act(() => {
-          promise = apiRef.current.setEditCellValue({
+          promise = apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
           }) as Promise<boolean>;
         });
 
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
 
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
 
@@ -414,76 +442,81 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should do nothing if props contain error=true', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: true,
         });
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should keep mode=edit if props of any column contains error=true', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: true,
         });
         const onCellModesModelChange = spy();
-        render(<TestCase onCellModesModelChange={onCellModesModelChange} />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        render(
+          <TestCase
+            onCellModesModelChange={onCellModesModelChange}
+            columnProps={{ preProcessEditCellProps }}
+          />,
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() =>
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
           0: { currencyPair: { mode: 'edit' } },
         });
       });
 
       it('should allow a 2nd call if the first call was when error=true', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: props.value.length === 0,
         });
-        render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
 
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: '' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: '' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
 
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should update the CSS class of the cell', async () => {
         render(<TestCase />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should call processRowUpdate before updating the row', async () => {
         const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
         render(<TestCase processRowUpdate={processRowUpdate} />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() => Promise.resolve());
         expect(processRowUpdate.callCount).to.equal(1);
         expect(getCell(0, 1).textContent).to.equal('USD-GBP');
@@ -492,11 +525,11 @@ describe('<DataGridPro /> - Cell editing', () => {
       it('should call processRowUpdate with the new and old row', async () => {
         const processRowUpdate = spy((newRow, oldRow) => ({ ...oldRow, ...newRow }));
         render(<TestCase processRowUpdate={processRowUpdate} />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() => Promise.resolve());
         expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
           ...defaultData.rows[0],
@@ -506,14 +539,19 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should stay in edit mode if processRowUpdate throws an error', async () => {
+        const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        onTestFinished(() => {
+          consoleMock.mockRestore();
+        });
+
         const processRowUpdate = () => {
           throw new Error('Something went wrong');
         };
         render(<TestCase processRowUpdate={processRowUpdate} />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(() =>
-          act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' })),
-        ).toErrorDev(
+        await act(async () => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(async () => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+
+        expect(consoleMock.mock.lastCall?.[0]).to.include(
           'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
@@ -531,8 +569,8 @@ describe('<DataGridPro /> - Cell editing', () => {
             onProcessRowUpdateError={onProcessRowUpdateError}
           />,
         );
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
       });
 
@@ -548,8 +586,8 @@ describe('<DataGridPro /> - Cell editing', () => {
             onProcessRowUpdateError={onProcessRowUpdateError}
           />,
         );
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() => Promise.resolve());
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
       });
@@ -568,45 +606,47 @@ describe('<DataGridPro /> - Cell editing', () => {
             onProcessRowUpdateError={onProcessRowUpdateError}
           />,
         );
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
           0: { currencyPair: { mode: 'edit' } },
         });
       });
 
       it('should pass the new value through the value setter before calling processRowUpdate', async () => {
-        columnProps.valueSetter = spy<GridValueSetter>((value, row) => ({
+        const valueSetter = spy<GridValueSetter>((value, row) => ({
           ...row,
           _currencyPair: value,
         }));
         const processRowUpdate = spy(() => new Promise(() => {}));
-        render(<TestCase processRowUpdate={processRowUpdate} />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        render(<TestCase processRowUpdate={processRowUpdate} columnProps={{ valueSetter }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect((processRowUpdate.lastCall as any).args[0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USDGBP',
           _currencyPair: 'USD GBP',
         });
-        expect(columnProps.valueSetter.lastCall.args[0]).to.equal('USD GBP');
-        expect(columnProps.valueSetter.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
+        expect(valueSetter.lastCall.args[0]).to.equal('USD GBP');
+        expect(valueSetter.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', async () => {
-        columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
-        render(<TestCase />);
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
+        render(<TestCase columnProps={{ renderEditCell: renderEditCellProp }} />);
 
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
         act(() =>
-          apiRef.current.stopCellEditMode({
+          apiRef.current?.stopCellEditMode({
             id: 0,
             field: 'currencyPair',
             cellToFocusAfter: 'below',
@@ -616,7 +656,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell on the right when cellToFocusAfter=right', async () => {
-        columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(
           <TestCase
             {...getBasicGridData(1, 3)}
@@ -625,13 +667,14 @@ describe('<DataGridPro /> - Cell editing', () => {
               { field: 'currencyPair', editable: true },
               { field: 'price1M', editable: true },
             ]}
+            columnProps={{ renderEditCell: renderEditCellProp }}
           />,
         );
 
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
         act(() =>
-          apiRef.current.stopCellEditMode({
+          apiRef.current?.stopCellEditMode({
             id: 0,
             field: 'currencyPair',
             cellToFocusAfter: 'right',
@@ -641,7 +684,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell on the left when cellToFocusAfter=left', async () => {
-        columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(
           <TestCase
             {...getBasicGridData(1, 3)}
@@ -650,13 +695,14 @@ describe('<DataGridPro /> - Cell editing', () => {
               { field: 'currencyPair', editable: true },
               { field: 'price1M', editable: true },
             ]}
+            columnProps={{ renderEditCell: renderEditCellProp }}
           />,
         );
 
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'price1M' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'price1M' }));
         expect(getCell(0, 2).querySelector('input')).toHaveFocus();
         act(() =>
-          apiRef.current.stopCellEditMode({
+          apiRef.current?.stopCellEditMode({
             id: 0,
             field: 'price1M',
             cellToFocusAfter: 'left',
@@ -667,12 +713,14 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should run all pending value mutations before calling processRowUpdate', async () => {
         const processRowUpdate = spy(() => new Promise(() => {}));
-        render(<TestCase processRowUpdate={processRowUpdate} />);
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        const renderEditCell = spy(defaultRenderEditCell);
+
+        render(<TestCase processRowUpdate={processRowUpdate} columnProps={{ renderEditCell }} />);
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(
           () =>
             new Promise<void>((resolve) => {
-              apiRef.current.setEditCellValue({
+              apiRef.current?.setEditCellValue({
                 id: 0,
                 field: 'currencyPair',
                 value: 'USD GBP',
@@ -681,7 +729,7 @@ describe('<DataGridPro /> - Cell editing', () => {
               resolve();
             }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
         expect((processRowUpdate.lastCall as any).args[0].currencyPair).to.equal('USD GBP');
       });
@@ -700,16 +748,16 @@ describe('<DataGridPro /> - Cell editing', () => {
           />,
         );
 
-        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
           0: { currencyPair: { mode: 'view' } },
         });
 
-        act(() => apiRef.current.startCellEditMode({ id: 1, field: 'currencyPair' }));
+        act(() => apiRef.current?.startCellEditMode({ id: 1, field: 'currencyPair' }));
         expect(onCellModesModelChange.lastCall.args[0]).to.have.keys('0', '1');
         expect(onCellModesModelChange.lastCall.args[0][1]).to.deep.equal({
           currencyPair: { mode: 'edit' },
@@ -729,7 +777,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStart' with reason=cellDoubleClick`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         expect(listener.lastCall.args[0].reason).to.equal('cellDoubleClick');
@@ -738,7 +786,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
@@ -746,7 +794,7 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current!, 'startCellEditMode');
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         expect(spiedStartCellEditMode.callCount).to.equal(1);
@@ -757,20 +805,20 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: '$' });
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
 
-      it(`should not publish 'cellEditStart' if space is pressed`, () => {
-        render(<TestCase autoHeight />);
+      it(`should not publish 'cellEditStart' if space is pressed`, async () => {
+        const { user } = render(<TestCase autoHeight />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: ' ' });
+        await user.click(cell);
+        await user.keyboard('[Space]');
         expect(listener.callCount).to.equal(0);
       });
     });
@@ -779,9 +827,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: '1' });
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
@@ -791,9 +839,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStart' with reason=enterKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
@@ -801,18 +849,18 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(listener.callCount).to.equal(0);
       });
 
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current!, 'startCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
       });
@@ -822,9 +870,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStart' with reason=deleteKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(listener.lastCall.args[0].reason).to.equal('deleteKeyDown');
       });
@@ -832,27 +880,27 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(listener.callCount).to.equal(0);
       });
 
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current!, 'startCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
       });
 
       it('should empty the cell', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current!, 'startCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
         expect(spiedStartCellEditMode.lastCall.args[0]).to.deep.equal({
@@ -861,14 +909,31 @@ describe('<DataGridPro /> - Cell editing', () => {
           deleteValue: true,
         });
       });
+
+      it('should call preProcessEditCellProps', async () => {
+        const preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => props);
+        const { user } = render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+
+        const cell = getCell(0, 1);
+        await user.click(cell);
+        await user.keyboard('{Delete}');
+
+        expect(preProcessEditCellProps.callCount).to.equal(1);
+
+        expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+          value: '',
+          error: false,
+          isProcessingProps: true,
+        });
+      });
     });
 
     describe('by pressing a printable character', () => {
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current!, 'startCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' }); // A
         expect(spiedStartCellEditMode.callCount).to.equal(1);
       });
@@ -876,9 +941,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' }); // A
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
@@ -886,10 +951,10 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'a' }); // A
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'a', keyCode: 65 }); // A
         expect(listener.callCount).to.equal(0);
       });
 
@@ -897,10 +962,10 @@ describe('<DataGridPro /> - Cell editing', () => {
         it(`should not publish 'cellEditStart' if ${key} is pressed`, () => {
           render(<TestCase />);
           const listener = spy();
-          apiRef.current.subscribeEvent('cellEditStart', listener);
+          apiRef.current?.subscribeEvent('cellEditStart', listener);
           const cell = getCell(0, 1);
-          userEvent.mousePress(cell);
-          fireEvent.keyDown(cell, { key: 'a', [key]: true }); // for example Ctrl + A, copy
+          fireUserEvent.mousePress(cell);
+          fireEvent.keyDown(cell, { key: 'a', keyCode: 65, [key]: true }); // for example Ctrl + A, copy
           expect(listener.callCount).to.equal(0);
         });
       });
@@ -908,38 +973,38 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should call startCellEditMode if shiftKey is pressed with a letter`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'a', shiftKey: true }); // Print A in uppercase
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'a', keyCode: 65, shiftKey: true }); // Print A in uppercase
         expect(listener.callCount).to.equal(1);
       });
 
       it(`should call startCellEditMode if the paste shortcut is pressed`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'v', ctrlKey: true }); // Ctrl+V
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
         expect(listener.callCount).to.equal(1);
       });
 
       it(`should call startCellEditMode if a special character on macOS is pressed`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStart', listener);
+        apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'π', altKey: true }); // ⌥ Option + P
         expect(listener.callCount).to.equal(1);
       });
 
       it('should empty the cell', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current!, 'startCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
         expect(spiedStartCellEditMode.lastCall.args[0]).to.deep.equal({
@@ -952,7 +1017,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should ignore keydown event until the IME is confirmed with a letter`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStop', listener);
+        apiRef.current?.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
@@ -968,7 +1033,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should ignore keydown event until the IME is confirmed with multiple letters`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStop', listener);
+        apiRef.current?.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         const input = cell.querySelector('input')!;
@@ -988,18 +1053,18 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStop' with reason=cellFocusOut`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStop', listener);
+        apiRef.current?.subscribeEvent('cellEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
-        userEvent.mousePress(getCell(1, 1));
+        fireUserEvent.mousePress(getCell(1, 1));
         expect(listener.lastCall.args[0].reason).to.equal('cellFocusOut');
       });
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=undefined', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
-        userEvent.mousePress(getCell(1, 1));
+        fireUserEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1010,18 +1075,18 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
-        columnProps.preProcessEditCellProps = () => new Promise(() => {});
-        render(<TestCase />);
-        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
+        const preProcessEditCellProps = () => new Promise(() => {});
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
         await act(
           () =>
             new Promise<void>((resolve) => {
-              apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+              apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
               resolve();
             }),
         );
-        userEvent.mousePress(getCell(1, 1));
+        fireUserEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
@@ -1031,9 +1096,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStop' with reason=escapeKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStop', listener);
+        apiRef.current?.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell, { key: 'Escape' });
@@ -1042,9 +1107,9 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should call stopCellEditMode with ignoreModifications=true and cellToFocusAfter=undefined', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Escape' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
@@ -1061,9 +1126,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       it(`should publish 'cellEditStop' with reason=enterKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStop', listener);
+        apiRef.current?.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell, { key: 'Enter' });
@@ -1072,9 +1137,9 @@ describe('<DataGridPro /> - Cell editing', () => {
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
@@ -1087,16 +1152,16 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
-        columnProps.preProcessEditCellProps = () => new Promise(() => {});
-        render(<TestCase />);
-        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
+        const preProcessEditCellProps = () => new Promise(() => {});
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         await act(
           () =>
             new Promise<void>((resolve) => {
-              apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+              apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
               resolve();
             }),
         );
@@ -1107,23 +1172,23 @@ describe('<DataGridPro /> - Cell editing', () => {
     });
 
     describe('by pressing Tab', () => {
-      it(`should publish 'cellEditStop' with reason=tabKeyDown`, () => {
-        render(<TestCase />);
+      it(`should publish 'cellEditStop' with reason=tabKeyDown`, async () => {
+        const { user } = render(<TestCase />);
         const listener = spy();
-        apiRef.current.subscribeEvent('cellEditStop', listener);
+        apiRef.current?.subscribeEvent('cellEditStop', listener);
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
-        fireEvent.doubleClick(cell);
+        await user.click(cell);
+        await user.dblClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell, { key: 'Tab' });
+        await user.keyboard('{Tab}');
         expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
       });
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=right', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Tab' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
@@ -1136,16 +1201,16 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
-        columnProps.preProcessEditCellProps = () => new Promise(() => {});
-        render(<TestCase />);
-        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
+        const preProcessEditCellProps = () => new Promise(() => {});
+        render(<TestCase columnProps={{ preProcessEditCellProps }} />);
+        const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         const cell = getCell(0, 1);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         await act(
           () =>
             new Promise<void>((resolve) => {
-              apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+              apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
               resolve();
             }),
         );
@@ -1181,7 +1246,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           <TestCase cellModesModel={{ 0: { currencyPair: { mode: GridCellModes.Edit } } }} />,
         );
         await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         setProps({
           cellModesModel: {
@@ -1195,9 +1260,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         const { setProps } = render(
           <TestCase cellModesModel={{ 0: { currencyPair: { mode: GridCellModes.Edit } } }} />,
         );
-        await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
-        );
+        await act(() => {
+          apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        });
         setProps({
           cellModesModel: {
             0: { currencyPair: { mode: GridCellModes.View, cellToFocusAfter: 'below' } },
@@ -1210,7 +1275,7 @@ describe('<DataGridPro /> - Cell editing', () => {
     it(`should publish 'cellModesModelChange' when the model changes`, () => {
       render(<TestCase />);
       const listener = spy();
-      apiRef.current.subscribeEvent('cellModesModelChange', listener);
+      apiRef.current?.subscribeEvent('cellModesModelChange', listener);
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
       expect(listener.lastCall.args[0]).to.deep.equal({
@@ -1222,7 +1287,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       const { setProps } = render(<TestCase cellModesModel={{}} />);
       const listener = spy();
       expect(listener.callCount).to.equal(0);
-      apiRef.current.subscribeEvent('cellModesModelChange', listener);
+      apiRef.current?.subscribeEvent('cellModesModelChange', listener);
       setProps({ cellModesModel: { 0: { currencyPair: { mode: 'edit' } } } });
       expect(listener.lastCall.args[0]).to.deep.equal({
         0: { currencyPair: { mode: 'edit' } },
@@ -1232,25 +1297,25 @@ describe('<DataGridPro /> - Cell editing', () => {
     it(`should not publish 'cellModesModelChange' when the model changes and cellModesModel is set`, () => {
       render(<TestCase cellModesModel={{}} />);
       const listener = spy();
-      apiRef.current.subscribeEvent('cellModesModelChange', listener);
+      apiRef.current?.subscribeEvent('cellModesModelChange', listener);
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
       expect(listener.callCount).to.equal(0);
     });
 
     it('should not mutate the cellModesModel prop if props of any column contains error=true', async () => {
-      columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+      const preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
         ...props,
         error: true,
       });
-      const { setProps } = render(<TestCase />);
+      const { setProps } = render(<TestCase columnProps={{ preProcessEditCellProps }} />);
       const cell = getCell(0, 1);
       fireEvent.mouseUp(cell);
       fireEvent.click(cell);
       fireEvent.doubleClick(cell);
 
       await act(() =>
-        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
       );
 
       const cellModesModel = { 0: { currencyPair: { mode: 'view' } } };
@@ -1264,7 +1329,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       const onCellModesModelChange = spy();
       render(<TestCase onCellModesModelChange={onCellModesModelChange} />);
       expect(onCellModesModelChange.callCount).to.equal(0);
-      act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+      act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
       expect(onCellModesModelChange.callCount).to.equal(1);
       expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
         0: { currencyPair: { mode: 'edit' } },
@@ -1274,9 +1339,9 @@ describe('<DataGridPro /> - Cell editing', () => {
     it('should call with mode=view when stopEditMode is called', () => {
       const onCellModesModelChange = spy();
       render(<TestCase onCellModesModelChange={onCellModesModelChange} />);
-      act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+      act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
       onCellModesModelChange.resetHistory();
-      act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+      act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
       expect(onCellModesModelChange.args[0][0]).to.deep.equal({
         0: { currencyPair: { mode: 'view' } },
       });

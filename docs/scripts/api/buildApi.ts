@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import path from 'path';
 import fs from 'fs';
 import * as prettier from 'prettier';
@@ -19,7 +20,7 @@ import {
 } from '../createXTypeScriptProjects';
 import { DocumentedInterfaces } from './utils';
 
-const DEFAULT_PRETTIER_CONFIG_PATH = path.join(process.cwd(), 'prettier.config.js');
+const DEFAULT_PRETTIER_CONFIG_PATH = path.join(process.cwd(), 'prettier.config.mjs');
 
 export async function writePrettifiedFile(
   filename: string,
@@ -94,7 +95,6 @@ async function run() {
   // Create documentation folder if it does not exist
   const apiPagesFolder = path.resolve('./docs/pages/x/api');
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const { folder, packages, documentedInterfaces } of interfacesToDocument) {
     const subProjects: XTypeScriptProjects = new Map();
 
@@ -144,7 +144,7 @@ async function run() {
   });
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'generates API docs',

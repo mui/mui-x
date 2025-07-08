@@ -18,6 +18,10 @@ Use `GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD` to pin a grouped column. In the de
 
 {{"demo": "RowGroupingPinning.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Creating and reordering groups with drag and drop
+
+See [Toolbar component—Row grouping bar](/x/react-data-grid/components/toolbar/#row-grouping-toolbar) for an example of how to add a custom toolbar that allows users to create row groups with drag and drop.
+
 ## Sorting row groups by the number of child rows
 
 By default, the row grouping column uses `sortComparator` of the grouping column for sorting.
@@ -25,3 +29,11 @@ By default, the row grouping column uses `sortComparator` of the grouping column
 To sort the row groups by the number of child rows, you can override it using `groupingColDef.sortComparator`:
 
 {{"demo": "RowGroupingSortByChildRows.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Displaying child row count in footer
+
+By default, the row count in the footer is the number of top level rows that are visible after filtering.
+
+In the demo below, a `CustomFooterRowCount` component is added to the `footerRowCount` slot. This component uses the `gridFilteredDescendantRowCountSelector` to get the number of child rows and display it alongside the number of groups.
+
+{{"demo": "RowGroupingChildRowCount.js", "bg": "inline", "defaultCodeOpen": false}}

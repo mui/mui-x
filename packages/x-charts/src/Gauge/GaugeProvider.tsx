@@ -1,8 +1,10 @@
 // @ignore - do not document.
+'use client';
 import * as React from 'react';
-import { getPercentageValue } from '../internals/utils';
+import { getPercentageValue } from '../internals/getPercentageValue';
 import { getArcRatios, getAvailableRadius } from './utils';
 import { useDrawingArea } from '../hooks/useDrawingArea';
+import { deg2rad } from '../internals/angleConversion';
 
 interface CircularConfig {
   /**
@@ -125,10 +127,6 @@ export const GaugeContext = React.createContext<
   valueAngle: null,
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  GaugeContext.displayName = 'GaugeContext';
-}
-
 export interface GaugeProviderProps extends GaugeConfig, CircularConfig {
   children: React.ReactNode;
 }
@@ -175,8 +173,8 @@ export function GaugeProvider(props: GaugeProviderProps) {
   const cornerRadius = getPercentageValue(cornerRadiusParam ?? 0, outerRadius - innerRadius);
 
   const contextValue = React.useMemo(() => {
-    const startAngleRad = (Math.PI * startAngle) / 180;
-    const endAngleRad = (Math.PI * endAngle) / 180;
+    const startAngleRad = deg2rad(startAngle);
+    const endAngleRad = deg2rad(endAngle);
     return {
       value,
       valueMin,

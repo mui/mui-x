@@ -1,28 +1,39 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridSlots,
-  GridToolbarContainer,
-  GridToolbarFilterButton,
+  GridSlotProps,
+  Toolbar,
+  ToolbarButton,
+  FilterPanelTrigger,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Tooltip from '@mui/material/Tooltip';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-interface CustomToolbarProps {
-  setFilterButtonEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    setFilterButtonEl: React.Dispatch<
+      React.SetStateAction<HTMLButtonElement | null>
+    >;
+  }
 }
 
-function CustomToolbar({ setFilterButtonEl }: CustomToolbarProps) {
+function CustomToolbar({ setFilterButtonEl }: GridSlotProps['toolbar']) {
   return (
-    <GridToolbarContainer>
-      <GridToolbarFilterButton ref={setFilterButtonEl} />
-    </GridToolbarContainer>
+    <Toolbar>
+      <Tooltip title="Filters">
+        <FilterPanelTrigger render={<ToolbarButton />} ref={setFilterButtonEl}>
+          <FilterListIcon fontSize="small" />
+        </FilterPanelTrigger>
+      </Tooltip>
+    </Toolbar>
   );
 }
 
 export default function CustomFilterPanelPosition() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -35,16 +46,14 @@ export default function CustomFilterPanelPosition() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        slots={{
-          toolbar: CustomToolbar as GridSlots['toolbar'],
-        }}
+        loading={loading}
+        slots={{ toolbar: CustomToolbar }}
+        showToolbar
         slotProps={{
           panel: {
-            anchorEl: filterButtonEl,
+            target: filterButtonEl,
           },
-          toolbar: {
-            setFilterButtonEl,
-          },
+          toolbar: { setFilterButtonEl },
         }}
       />
     </div>

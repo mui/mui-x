@@ -1,19 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import { vars, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 const Filler = styled('div')({
   flex: 1,
-  backgroundColor: 'var(--DataGrid-containerBackground)',
+  backgroundColor: vars.header.background.base,
 });
 
 export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
     UseGridColumnHeadersProps {}
 
-const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
+const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const {
       style,
@@ -50,7 +51,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
       });
 
     return (
-      <GridBaseColumnHeaders ref={ref} className={className} {...other} {...getInnerProps()}>
+      <GridBaseColumnHeaders className={className} {...other} {...getInnerProps()} ref={ref}>
         {getColumnGroupHeadersRows()}
         {getColumnHeadersRow()}
         {getColumnFiltersRow()}

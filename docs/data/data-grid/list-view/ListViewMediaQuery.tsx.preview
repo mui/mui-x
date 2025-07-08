@@ -1,0 +1,7 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  rowHeight={rowHeight}
+  listView={isListView}
+  listViewColumn={listViewColDef}
+/>

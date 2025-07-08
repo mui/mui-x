@@ -1,6 +1,6 @@
 # Data Grid - Accessibility
 
-<p class="description">The Data Grid has complete accessibility support, including built-in keyboard navigation that follows international standards.</p>
+<p class="description">Learn how the Data Grid implements accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
 ## Guidelines
 
@@ -10,37 +10,22 @@ Common conformance guidelines for accessibility include:
 - US:
   - [ADA](https://www.ada.gov/) - US Department of Justice
   - [Section 508](https://www.section508.gov/) - US federal agencies
-- Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
+- Europe: [EAA](https://employment-social-affairs.ec.europa.eu/policies-and-activities/social-protection-social-inclusion/persons-disabilities/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
-The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a Data Grid.
 
 ## Density
-
-You can change the density of the rows and the column header.
-
-### Density selection from the toolbar
-
-To enable the density selection from the toolbar, you can do one of the following:
-
-1. Enable the default toolbar component by passing the `slots.toolbar` prop to the Data Grid.
-2. Create a specific toolbar containing only the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
-
-The user can then change the density of the Data Grid by using the density selection menu from the toolbar, as the following demo illustrates:
-
-{{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
-
-To disable the density selection menu, pass the `disableDensitySelector` prop to the Data Grid.
-
-### Set the density programmatically
 
 The Data Grid exposes the `density` prop which supports the following values:
 
 - `standard` (default)
 - `compact`
 - `comfortable`
+
+### Set the density programmatically
 
 You can set the density programmatically in one of the following ways:
 
@@ -70,9 +55,11 @@ You can set the density programmatically in one of the following ways:
 The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-The following demo shows a Data Grid with the controlled density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
+You can create a custom toolbar with a density selector that allows users to change the density of the Data Grid, as shown in the demo below.
 
-{{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
+{{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
+
+See the [Toolbar component—Settings menu](/x/react-data-grid/components/toolbar/#settings-menu) for an example of how to create a settings menu that stores user preferences in local storage.
 
 ## Keyboard navigation
 
@@ -115,10 +102,10 @@ On macOS replace:
 
 Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
 
-- <kbd class="key">Page Up</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd>
-- <kbd class="key">Page Down</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd>
-- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
-- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
+- <kbd class="key">Page Up</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd></kbd>
+- <kbd class="key">Page Down</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd></kbd>
+- <kbd class="key">Home</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd></kbd>
+- <kbd class="key">End</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd></kbd>
 
 :::
 
@@ -141,7 +128,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 
 |                                                                         Keys | Description                                                          |
 | ---------------------------------------------------------------------------: | :------------------------------------------------------------------- |
-|         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select the current row                                               |
+|         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select/Deselect the current row                                      |
 | <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Select the current row and the row above or below                    |
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |

@@ -1,5 +1,8 @@
+'use client';
 import * as React from 'react';
-import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
+import useId from '@mui/utils/useId';
+import composeClasses from '@mui/utils/composeClasses';
+import { useRtl } from '@mui/system/RtlProvider';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -12,8 +15,8 @@ import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
-import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
+import { PinnedColumnPosition } from '../../internals/constants';
+import { attachPinnedStyle } from '../../internals/utils';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -26,11 +29,11 @@ interface GridColumnGroupHeaderProps {
   height: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  pinnedPosition?: GridPinnedColumnPosition;
   style?: React.CSSProperties;
-  indexInSection: number;
-  sectionLength: number;
-  gridHasFiller: boolean;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
+  pinnedPosition: PinnedColumnPosition | undefined;
+  pinnedOffset?: number;
 }
 
 type OwnerState = {
@@ -38,9 +41,10 @@ type OwnerState = {
   showLeftBorder: boolean;
   showRightBorder: boolean;
   isDragging: boolean;
+  isLastColumn: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
-  pinnedPosition?: GridPinnedColumnPosition;
+  pinnedPosition?: PinnedColumnPosition | undefined;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -48,6 +52,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     classes,
     headerAlign,
     isDragging,
+    isLastColumn,
     showLeftBorder,
     showRightBorder,
     groupId,
@@ -65,8 +70,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showLeftBorder && 'columnHeader--withLeftBorder',
       'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
-      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
-      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
+      isLastColumn && 'columnHeader--last',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer', 'withBorderColor'],
@@ -89,13 +95,11 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     tabIndex,
     isLastColumn,
     pinnedPosition,
-    style,
-    indexInSection,
-    sectionLength,
-    gridHasFiller,
+    pinnedOffset,
   } = props;
 
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
 
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
@@ -125,20 +129,9 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     headerComponent = render(renderParams);
   }
 
-  const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
-  const showRightBorder = shouldCellShowRightBorder(
-    pinnedPosition,
-    indexInSection,
-    sectionLength,
-    rootProps.showCellVerticalBorder,
-    gridHasFiller,
-  );
-
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showLeftBorder,
-    showRightBorder,
     headerAlign,
     depth,
     isDragging: false,
@@ -186,6 +179,11 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       ? group.headerClassName(renderParams)
       : group.headerClassName;
 
+  const style = React.useMemo(
+    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
+    [pinnedPosition, pinnedOffset, props.style, isRtl],
+  );
+
   return (
     <GridGenericColumnHeaderItem
       ref={headerCellRef}
@@ -205,7 +203,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       width={width}
       columnMenuIconButton={null}
       columnTitleIconButtons={null}
-      resizable
+      resizable={false}
       label={label}
       aria-colspan={fields.length}
       // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=

@@ -1,8 +1,6 @@
 import * as React from 'react';
-// @ts-ignore
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-// @ts-ignore
-import BrandingProvider from 'docs/src/BrandingProvider';
+import { BrandingProvider } from '@mui/docs/branding';
 import { styled, Theme, alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Tabs from '@mui/material/Tabs';
@@ -136,7 +134,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 
 type TabsProps = {
   value: string;
-  onChange: (e: React.SyntheticEvent, value: any) => void;
+  onChange: (event: React.SyntheticEvent, value: any) => void;
   options: Partial<CustomizationLabelType>;
 };
 
@@ -362,7 +360,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                     id="select-component"
                     label=""
                     value={selectedDemo}
-                    onChange={(e) => selectDemo(e.target.value as string)}
+                    onChange={(event) => selectDemo(event.target.value as string)}
                   >
                     {Object.keys(examples || {}).map((item) => (
                       <MenuItem key={item} value={item}>

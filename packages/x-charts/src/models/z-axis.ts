@@ -1,13 +1,21 @@
-import type { ScaleOrdinal, ScaleSequential, ScaleThreshold } from 'd3-scale';
+import type { ScaleOrdinal, ScaleSequential, ScaleThreshold } from '@mui/x-charts-vendor/d3-scale';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
 
 export interface ZAxisConfig<V = any> {
   id: string;
-  data?: V[];
+  data?: readonly V[];
   /**
    * The key used to retrieve `data` from the `dataset` prop.
    */
   dataKey?: string;
+  /**
+   * The minimal value of the scale.
+   */
+  min?: number;
+  /**
+   * The maximal value of the scale.
+   */
+  max?: number;
   colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
 }
 

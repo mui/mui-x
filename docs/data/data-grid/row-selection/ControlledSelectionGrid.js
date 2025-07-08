@@ -9,7 +9,10 @@ export default function ControlledSelectionGrid() {
     maxColumns: 6,
   });
 
-  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+  const [rowSelectionModel, setRowSelectionModel] = React.useState({
+    type: 'include',
+    ids: new Set(),
+  });
 
   return (
     <div style={{ height: 400, width: '100%' }}>

@@ -3,7 +3,7 @@ productId: x-tree-view
 title: Simple Tree View - Selection
 components: SimpleTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -73,3 +73,45 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
 
 {{"demo": "TrackItemSelectionToggle.js"}}
+
+## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+```
+
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Select or deselect an item
+
+Use the `setItemSelection()` API method to select or deselect an item:
+
+```ts
+apiRef.current.setItemSelection({
+  // The DOM event that triggered the change
+  event,
+  // The id of the item to select or deselect
+  itemId,
+  // If `true`, the other already selected items will remain selected
+  // Otherwise, they will be deselected
+  // This parameter is only relevant when `multiSelect` is `true`
+  keepExistingSelection,
+  // If `true` the item will be selected
+  // If `false` the item will be deselected
+  // If not defined, the item's selection status will be toggled
+  shouldBeSelected,
+});
+```
+
+{{"demo": "ApiMethodSetItemSelection.js"}}
+
+You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
+
+{{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js"}}

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { DateTime, Settings } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
@@ -18,7 +17,7 @@ describe('<AdapterLuxon />', () => {
     setDefaultTimezone: (timezone) => {
       Settings.defaultZone = timezone ?? 'system';
     },
-    getLocaleFromDate: (value: DateTime) => value.locale!,
+    getLocaleFromDate: (value) => (value as DateTime).locale!,
     frenchLocale: 'fr',
   });
 
@@ -35,7 +34,7 @@ describe('<AdapterLuxon />', () => {
       const adapter = new AdapterLuxon({ locale: 'ru' });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO_STRING)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING) as DateTime;
         const result = adapter.getWeekArray(date);
         expect(result[0][0].toFormat('ccc')).to.equal('пн');
       });
@@ -58,7 +57,7 @@ describe('<AdapterLuxon />', () => {
         expectedWithEn: string,
         expectedWithRu: string,
       ) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as DateTime;
 
         expect(cleanText(adapter.format(date, format))).to.equal(expectedWithEn);
         expect(cleanText(adapterRu.format(date, format))).to.equal(expectedWithRu);
@@ -66,7 +65,6 @@ describe('<AdapterLuxon />', () => {
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
       expectDate('keyboardDate', '2/1/2020', '01.02.2020');
-      expectDate('keyboardDateTime', '2/1/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '2/1/2020 11:44 PM', '01.02.2020 11:44 PM');
       expectDate('keyboardDateTime24h', '2/1/2020 23:44', '01.02.2020 23:44');
     });
@@ -94,34 +92,29 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'luxon',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });
@@ -153,38 +146,33 @@ describe('<AdapterLuxon />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, adapter, clock } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'luxon',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             format: 'DD',
           });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
             format: 'DD',
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

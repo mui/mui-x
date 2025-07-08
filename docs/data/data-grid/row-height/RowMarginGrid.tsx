@@ -4,7 +4,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { grey } from '@mui/material/colors';
 
 export default function RowMarginGrid() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 200,
     maxColumns: 6,
@@ -21,13 +21,14 @@ export default function RowMarginGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         getRowSpacing={getRowSpacing}
-        sx={{
+        sx={(theme) => ({
           [`& .${gridClasses.row}`]: {
-            bgcolor: (theme) =>
-              theme.palette.mode === 'light' ? grey[200] : grey[900],
+            bgcolor: grey[200],
+            ...theme.applyStyles('dark', { bgcolor: grey[900] }),
           },
-        }}
+        })}
       />
     </div>
   );

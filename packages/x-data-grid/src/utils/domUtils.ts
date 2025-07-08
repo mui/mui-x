@@ -166,23 +166,31 @@ const findPinnedCells = ({
   return cells;
 };
 
-export function findLeftPinnedCellsAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findLeftPinnedCellsAfterCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedCells({
     api,
     colIndex,
-    position: 'left',
-    filterFn: (index) => index > colIndex!,
+    position: isRtl ? 'right' : 'left',
+    filterFn: (index) => (isRtl ? index < colIndex! : index > colIndex!),
   });
 }
 
-export function findRightPinnedCellsBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findRightPinnedCellsBeforeCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedCells({
     api,
     colIndex,
-    position: 'right',
-    filterFn: (index) => index < colIndex!,
+    position: isRtl ? 'left' : 'right',
+    filterFn: (index) => (isRtl ? index > colIndex! : index < colIndex!),
   });
 }
 
@@ -195,7 +203,7 @@ const findPinnedHeaders = ({
   api: GridPrivateApiCommunity;
   colIndex: number | null;
   position: 'left' | 'right';
-  filterFn: (colIndex: number) => boolean;
+  filterFn: (colIndex: number, element: Element) => boolean;
 }) => {
   if (!api.columnHeadersContainerRef?.current) {
     return [];
@@ -211,30 +219,43 @@ const findPinnedHeaders = ({
     )
     .forEach((element) => {
       const currentColIndex = parseCellColIndex(element);
-      if (currentColIndex !== null && filterFn(currentColIndex)) {
+      if (currentColIndex !== null && filterFn(currentColIndex, element)) {
         elements.push(element as HTMLElement);
       }
     });
   return elements;
 };
 
-export function findLeftPinnedHeadersAfterCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findLeftPinnedHeadersAfterCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedHeaders({
     api,
-    position: 'left',
+    position: isRtl ? 'right' : 'left',
     colIndex,
-    filterFn: (index) => index > colIndex!,
+    filterFn: (index) => (isRtl ? index < colIndex! : index > colIndex!),
   });
 }
 
-export function findRightPinnedHeadersBeforeCol(api: GridPrivateApiCommunity, col: HTMLElement) {
+export function findRightPinnedHeadersBeforeCol(
+  api: GridPrivateApiCommunity,
+  col: HTMLElement,
+  isRtl: boolean,
+) {
   const colIndex = parseCellColIndex(col);
   return findPinnedHeaders({
     api,
-    position: 'right',
+    position: isRtl ? 'left' : 'right',
     colIndex,
-    filterFn: (index) => index < colIndex!,
+    filterFn: (index, element) => {
+      if (element.classList.contains(gridClasses['columnHeader--last'])) {
+        return false;
+      }
+      return isRtl ? index > colIndex! : index < colIndex!;
+    },
   });
 }
 
@@ -256,7 +277,7 @@ export function findGridCells(api: GridPrivateApiCommunity, field: string) {
 
 function queryRows(api: GridPrivateApiCommunity) {
   return api.virtualScrollerRef.current!.querySelectorAll(
-    // Use > to ignore rows from nested data grids (for example in detail panel)
+    // Use > to ignore rows from nested Data Grids (for example in detail panel)
     `:scope > div > div > .${gridClasses.row}`,
   );
 }

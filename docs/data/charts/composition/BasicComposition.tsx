@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -12,10 +11,9 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 export default function BasicComposition() {
   const [isResponsive, setIsResponsive] = React.useState(false);
 
-  const Container = isResponsive ? ResponsiveChartContainer : ChartContainer;
   const sizingProps = isResponsive ? {} : { width: 500, height: 300 };
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', overflow: 'auto' }}>
       <FormControlLabel
         checked={isResponsive}
         control={
@@ -25,9 +23,8 @@ export default function BasicComposition() {
         labelPlacement="end"
       />
 
-      <Paper sx={{ width: '100%', height: 300 }} elevation={3}>
-        {/* @ts-ignore */}
-        <Container
+      <Paper sx={{ margin: 1, height: 300 }} elevation={3}>
+        <ChartContainer
           series={[
             {
               type: 'bar',
@@ -43,6 +40,7 @@ export default function BasicComposition() {
               data: ['A', 'B', 'C', 'D', 'E'],
               scaleType: 'band',
               id: 'x-axis-id',
+              height: 45,
             },
           ]}
           {...sizingProps}
@@ -50,8 +48,8 @@ export default function BasicComposition() {
           <BarPlot />
           <LinePlot />
           <MarkPlot />
-          <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
-        </Container>
+          <ChartsXAxis label="X axis" axisId="x-axis-id" />
+        </ChartContainer>
       </Paper>
     </Box>
   );

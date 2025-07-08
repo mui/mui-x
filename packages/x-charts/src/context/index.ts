@@ -1,3 +1,8 @@
-export * from './HighlightedProvider';
-export { ZAxisContextProvider } from './ZAxisContextProvider';
-export type { ZAxisContextProviderProps } from './ZAxisContextProvider';
+export type {
+  HighlightScope,
+  FadeOptions,
+  HighlightItemData,
+  HighlightOptions,
+} from '../internals/plugins/featurePlugins/useChartHighlight';
+export * from './useChartApiContext';
+export type { ChartApi } from './ChartApi';

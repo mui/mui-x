@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { ProjectSettings, buildApi } from '@mui-internal/api-docs-builder';
 import { projectPickersSettings } from './pickersSettings';
 import { projectChartsSettings } from './chartsSettings';
@@ -19,7 +20,7 @@ async function run(argv: yargs.ArgumentsCamelCase<CommandOptions>) {
   return buildApi(projectSettings, grep);
 }
 
-yargs(process.argv.slice(2))
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Generates API documentation for the MUI packages.',

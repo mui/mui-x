@@ -7,8 +7,10 @@ import {
   DataGridPro,
   GridColDef,
   useGridApiContext,
-  GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridRowParams,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  useGridSelector,
+  gridDimensionsSelector,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -24,22 +26,8 @@ import {
 
 function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   const apiRef = useGridApiContext();
-  const [width, setWidth] = React.useState(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    return dimensions.viewportInnerSize.width;
-  });
-
-  const handleViewportInnerSizeChange = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    setWidth(dimensions.viewportInnerSize.width);
-  }, [apiRef]);
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(
-      'viewportInnerSizeChange',
-      handleViewportInnerSizeChange,
-    );
-  }, [apiRef, handleViewportInnerSizeChange]);
+  const width = useGridSelector(apiRef, gridDimensionsSelector).viewportInnerSize
+    .width;
 
   return (
     <Stack
@@ -205,7 +193,11 @@ export default function FullWidthDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
+        initialState={{
+          pinnedColumns: {
+            left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+          },
+        }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
         sx={{

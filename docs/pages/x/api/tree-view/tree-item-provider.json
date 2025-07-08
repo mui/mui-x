@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "TreeItemProvider",
+  "imports": [
+    "import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';",
+    "import { TreeItemProvider } from '@mui/x-tree-view';",
+    "import { TreeItemProvider } from '@mui/x-tree-view-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiTreeItemProvider",
+  "filename": "/packages/x-tree-view/src/TreeItemProvider/TreeItemProvider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "cssComponent": false
+}

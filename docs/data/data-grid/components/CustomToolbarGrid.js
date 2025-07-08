@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -13,16 +13,18 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
+      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
+        Custom Toolbar
+      </Typography>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector
         slotProps={{ tooltip: { title: 'Change density' } }}
       />
-      <Box sx={{ flexGrow: 1 }} />
       <GridToolbarExport
         slotProps={{
           tooltip: { title: 'Export data' },
-          button: { variant: 'outlined' },
+          button: { material: { variant: 'outlined' } },
         }}
       />
     </GridToolbarContainer>
@@ -43,6 +45,7 @@ export default function CustomToolbarGrid() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );

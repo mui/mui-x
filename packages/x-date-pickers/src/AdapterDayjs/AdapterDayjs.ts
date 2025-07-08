@@ -1,10 +1,17 @@
 /* eslint-disable class-methods-use-this */
+/* v8 ignore start */
 import defaultDayjs, { Dayjs } from 'dayjs';
-import weekOfYearPlugin from 'dayjs/plugin/weekOfYear';
-import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
-import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
-import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import advancedFormatPlugin from 'dayjs/plugin/advancedFormat';
+// dayjs has no exports field defined
+// See https://github.com/iamkun/dayjs/issues/2562
+/* eslint-disable import/extensions */
+import weekOfYearPlugin from 'dayjs/plugin/weekOfYear.js';
+import customParseFormatPlugin from 'dayjs/plugin/customParseFormat.js';
+import localizedFormatPlugin from 'dayjs/plugin/localizedFormat.js';
+import isBetweenPlugin from 'dayjs/plugin/isBetween.js';
+import advancedFormatPlugin from 'dayjs/plugin/advancedFormat.js';
+/* v8 ignore stop */
+/* eslint-enable import/extensions */
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -13,7 +20,6 @@ import {
   PickersTimezone,
   DateBuilderReturnType,
 } from '../models';
-import { buildWarning } from '../internals/utils/warning';
 
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(weekOfYearPlugin);
@@ -21,13 +27,6 @@ defaultDayjs.extend(isBetweenPlugin);
 defaultDayjs.extend(advancedFormatPlugin);
 
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
-
-const localeNotFoundWarning = buildWarning([
-  'Your locale has not been found.',
-  'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale',
-  "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
-  'fallback on English locale',
-]);
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -90,11 +89,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
 };
@@ -145,7 +142,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
+export class AdapterDayjs implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -213,7 +210,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       const timezone = defaultDayjs.tz.guess();
 
       // We can't change the system timezone in the tests
-      /* istanbul ignore next */
+      /* v8 ignore next 3 */
       if (timezone !== 'UTC') {
         return defaultDayjs.tz(value, timezone);
       }
@@ -225,7 +222,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {
-    /* istanbul ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
       throw new Error(MISSING_UTC_PLUGIN);
     }
@@ -234,12 +231,12 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Dayjs => {
-    /* istanbul ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasUTCPlugin()) {
       throw new Error(MISSING_UTC_PLUGIN);
     }
 
-    /* istanbul ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasTimezonePlugin()) {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
@@ -255,7 +252,16 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     let localeObject = locales[locale];
 
     if (localeObject === undefined) {
-      localeNotFoundWarning();
+      /* v8 ignore start */
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: Your locale has not been found.',
+          'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
+          "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
+          'fallback on English locale.',
+        ]);
+      }
+      /* v8 ignore stop */
       localeObject = locales.en;
     }
 
@@ -276,8 +282,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     const timezone = this.getTimezone(value);
     if (timezone !== 'UTC') {
       const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+      // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
+      /* v8 ignore next 3 */
       // @ts-ignore
-      if ((fixedValue.$offset ?? 0) === (value.$offset ?? 0)) {
+      if (fixedValue.$offset === (value.$offset ?? 0)) {
         return value;
       }
       // Change only what is needed to avoid creating a new object with unwanted data
@@ -293,10 +301,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, Dayjs> => {
-    type R = DateBuilderReturnType<T, Dayjs>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
     let parsedValue: Dayjs;
@@ -309,10 +317,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     }
 
     if (this.locale === undefined) {
-      return <R>parsedValue;
+      return parsedValue as unknown as R;
     }
 
-    return <R>parsedValue.locale(this.locale);
+    return parsedValue.locale(this.locale) as unknown as R;
   };
 
   public getInvalidDate = () => defaultDayjs(new Date('Invalid date'));
@@ -340,7 +348,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     }
 
     if (timezone === 'UTC') {
-      /* istanbul ignore next */
+      /* v8 ignore next 3 */
       if (!this.hasUTCPlugin()) {
         throw new Error(MISSING_UTC_PLUGIN);
       }
@@ -360,7 +368,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
         return value;
       }
 
-      /* istanbul ignore next */
+      /* v8 ignore next */
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
 
@@ -384,7 +392,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public is12HourCycleInCurrentLocale = () => {
-    /* istanbul ignore next */
+    /* v8 ignore next */
     return /A|a/.test(this.getLocaleFormats().LT || '');
   };
 
@@ -411,7 +419,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     );
   };
 
-  public isValid = (value: Dayjs | null) => {
+  public isValid = (value: Dayjs | null): value is Dayjs => {
     if (value == null) {
       return false;
     }
@@ -512,7 +520,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('week'));
+    return this.adjustOffset(this.setLocaleToValue(value).startOf('week'));
   };
 
   public startOfDay = (value: Dayjs) => {
@@ -528,7 +536,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('week'));
+    return this.adjustOffset(this.setLocaleToValue(value).endOf('week'));
   };
 
   public endOfDay = (value: Dayjs) => {
@@ -638,9 +646,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = this.startOfWeek(this.startOfMonth(cleanValue));
-    const end = this.endOfWeek(this.endOfMonth(cleanValue));
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;

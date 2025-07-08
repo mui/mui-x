@@ -15,13 +15,13 @@ export interface GridCellSelectionApi {
   isCellSelected: (id: GridRowId, field: GridColDef['field']) => boolean;
   /**
    * Returns an object containing the selection state of the cells.
-   * The keys of the object correpond to the row IDs.
-   * The value of each key is another object whose keys are the fields and values are the selection state.
+   * The keys of the object correspond to the row IDs.
+   * The value of each key is also an object, which has a column field for a key and a boolean value for its selection state.
    * @returns {GridCellSelectionModel} Object containing the selection state of the cells
    */
   getCellSelectionModel: () => GridCellSelectionModel;
   /**
-   * Updates the selected cells to be those passed to the `newModel` argument.
+   * Updates the cell selection model according to the value passed to the `newModel` argument.
    * Any cell already selected will be unselected.
    * @param {GridCellSelectionModel} newModel The cells to select.
    */

@@ -4,7 +4,5 @@
   loading={loading}
   disableRowSelectionOnClick
   initialState={initialState}
-  groupingColDef={{
-    leafField: 'traderEmail',
-  }}
+  groupingColDef={groupingColDef}
 />

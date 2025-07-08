@@ -4,12 +4,18 @@ import {
   TreeViewAnyPluginSignature,
   TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals/models';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
+import { TreeViewSlotProps, TreeViewSlots } from '@mui/x-tree-view/internals';
 
 export type DescribeTreeViewTestRunner<TSignatures extends TreeViewAnyPluginSignature[]> = (
   params: DescribeTreeViewTestRunnerParams<TSignatures>,
 ) => void;
+
+export interface TreeViewItemIdTreeElement {
+  id: TreeViewItemId;
+  children?: TreeViewItemIdTreeElement[];
+}
 
 export interface DescribeTreeViewRendererUtils {
   /**
@@ -40,6 +46,12 @@ export interface DescribeTreeViewRendererUtils {
    * @returns {HTMLElement} `content` slot of the item with the given id.
    */
   getItemContent: (id: string) => HTMLElement;
+  /**
+   * Returns the `labelInput` slot of the item with the given id.
+   * @param {string} id The id of the item to retrieve.
+   * @returns {HTMLElement} `labelInput` slot of the item with the given id.
+   */
+  getItemLabelInput: (id: string) => HTMLInputElement;
   /**
    * Returns the `checkbox` slot of the item with the given id.
    * @param {string} id The id of the item to retrieve.
@@ -83,6 +95,7 @@ export interface DescribeTreeViewRendererUtils {
    * @returns {HTMLElement[]} List of the item id of all the items currently selected.
    */
   getSelectedTreeItems: () => string[];
+  getItemIdTree: () => TreeViewItemIdTreeElement[];
 }
 
 export interface DescribeTreeViewRendererReturnValue<
@@ -96,7 +109,10 @@ export interface DescribeTreeViewRendererReturnValue<
    * Passes new props to the Tree View.
    * @param {Partial<TreeViewUsedParams<TSignatures>>} props A subset of the props accepted by the Tree View.
    */
-  setProps: (props: Partial<MergeSignaturesProperty<TSignatures, 'params'>>) => void;
+  setProps: (
+    props: Partial<MergeSignaturesProperty<TSignatures, 'params'>> &
+      React.HTMLAttributes<HTMLUListElement>,
+  ) => void;
   /**
    * Passes new items to the Tree View.
    * @param {readyonly DescribeTreeViewItem[]} items The new items.
@@ -114,21 +130,20 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
      */
     withErrorBoundary?: boolean;
   } & Omit<MergeSignaturesProperty<TSignatures, 'params'>, 'slots' | 'slotProps'> & {
-      slots?: MergeSignaturesProperty<TSignatures, 'slots'> & {
-        item?: React.ElementType<TreeItemProps | TreeItem2Props>;
+      slots?: TreeViewSlots & {
+        item?: React.ElementType<TreeItemProps>;
       };
-      slotProps?: MergeSignaturesProperty<TSignatures, 'slotProps'> & {
-        item?: Partial<TreeItemProps> | Partial<TreeItem2Props>;
+      slotProps?: TreeViewSlotProps & {
+        item?: Partial<TreeItemProps>;
       };
     },
 ) => DescribeTreeViewRendererReturnValue<TSignatures>;
 
 export type DescribeTreeViewJSXRenderer = (
-  element: React.ReactElement,
+  element: React.ReactElement<any>,
 ) => DescribeTreeViewRendererUtils;
 
 type TreeViewComponentName = 'RichTreeView' | 'RichTreeViewPro' | 'SimpleTreeView';
-type TreeItemComponentName = 'TreeItem' | 'TreeItem2';
 
 interface DescribeTreeViewTestRunnerParams<TSignatures extends TreeViewAnyPluginSignature[]> {
   /**
@@ -163,9 +178,7 @@ interface DescribeTreeViewTestRunnerParams<TSignatures extends TreeViewAnyPlugin
    * each item should receive a `label` and a `data-testid` equal to its `id`.
    */
   renderFromJSX: DescribeTreeViewJSXRenderer;
-  setup: `${TreeViewComponentName} + ${TreeItemComponentName}`;
   treeViewComponentName: TreeViewComponentName;
-  treeItemComponentName: TreeItemComponentName;
   TreeViewComponent: React.ElementType<any>;
   TreeItemComponent: React.ElementType<any>;
 }

@@ -6,14 +6,7 @@
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
-    "labelFontSize": {
-      "type": { "name": "number" },
-      "default": "14",
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>labelStyle.fontSize</code> instead."
-    },
     "labelStyle": { "type": { "name": "object" } },
-    "position": { "type": { "name": "enum", "description": "'left'<br>&#124;&nbsp;'right'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -21,12 +14,6 @@
       "additionalInfo": { "slotsApi": true }
     },
     "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
-    "tickFontSize": {
-      "type": { "name": "number" },
-      "default": "12",
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>tickLabelStyle.fontSize</code> instead."
-    },
     "tickInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
       "default": "'auto'"
@@ -55,7 +42,8 @@
   "name": "ChartsYAxis",
   "imports": [
     "import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';",
-    "import { ChartsYAxis } from '@mui/x-charts';"
+    "import { ChartsYAxis } from '@mui/x-charts';",
+    "import { ChartsYAxis } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
@@ -74,6 +62,12 @@
       "key": "directionY",
       "className": "MuiChartsYAxis-directionY",
       "description": "Styles applied to y-axes.",
+      "isGlobal": false
+    },
+    {
+      "key": "id",
+      "className": "MuiChartsYAxis-id",
+      "description": "Styles applied to the root element for the axis with the given ID.\nNeeds to be suffixed with the axis ID: `.${axisClasses.id}-${axisId}`.",
       "isGlobal": false
     },
     {
@@ -121,7 +115,7 @@
     {
       "key": "tickLabel",
       "className": "MuiChartsYAxis-tickLabel",
-      "description": "Styles applied to ticks label.",
+      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
       "isGlobal": false
     },
     {

@@ -1,11 +1,11 @@
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
-import { mergeDateAndTime } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePosition } from '../../models';
+import { mergeDateAndTime, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { RangePosition } from '../../models';
 
-interface CalculateRangeChangeOptions<TDate extends PickerValidDate> {
-  utils: MuiPickersAdapter<TDate>;
-  range: DateRange<TDate>;
-  newDate: TDate | null;
+interface CalculateRangeChangeOptions {
+  adapter: MuiPickersAdapter;
+  range: PickerRangeValue;
+  newDate: PickerValidDate | null;
   rangePosition: RangePosition;
   /**
    * Should allow flipping range `start` and `end` dates if the `newDate` would result in a new range creation.
@@ -14,59 +14,75 @@ interface CalculateRangeChangeOptions<TDate extends PickerValidDate> {
    */
   allowRangeFlip?: boolean;
   shouldMergeDateAndTime?: boolean;
+  referenceDate?: PickerValidDate | [PickerValidDate, PickerValidDate];
 }
 
-interface CalculateRangeChangeResponse<TDate extends PickerValidDate> {
+interface CalculateRangeChangeResponse {
   nextSelection: RangePosition;
-  newRange: DateRange<TDate>;
+  newRange: PickerRangeValue;
 }
 
-export function calculateRangeChange<TDate extends PickerValidDate>({
-  utils,
+export function resolveReferenceDate(
+  referenceDate: PickerValidDate | [PickerValidDate, PickerValidDate] | undefined,
+  rangePosition: RangePosition,
+): PickerValidDate | undefined {
+  if (Array.isArray(referenceDate)) {
+    return rangePosition === 'start' ? referenceDate[0] : referenceDate[1];
+  }
+  return referenceDate;
+}
+
+export function calculateRangeChange({
+  adapter,
   range,
   newDate: selectedDate,
   rangePosition,
   allowRangeFlip = false,
   shouldMergeDateAndTime = false,
-}: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
-  const [start, end] = range;
+  referenceDate,
+}: CalculateRangeChangeOptions): CalculateRangeChangeResponse {
+  const start = !adapter.isValid(range[0]) ? null : range[0];
+  const end = !adapter.isValid(range[1]) ? null : range[1];
 
   if (shouldMergeDateAndTime && selectedDate) {
     // If there is a date already selected, then we want to keep its time
     if (start && rangePosition === 'start') {
-      selectedDate = mergeDateAndTime(utils, selectedDate, start);
+      selectedDate = mergeDateAndTime(adapter, selectedDate, start);
     }
     if (end && rangePosition === 'end') {
-      selectedDate = mergeDateAndTime(utils, selectedDate, end);
+      selectedDate = mergeDateAndTime(adapter, selectedDate, end);
     }
   }
 
+  const newSelectedDate =
+    referenceDate && selectedDate && shouldMergeDateAndTime
+      ? mergeDateAndTime(adapter, selectedDate, resolveReferenceDate(referenceDate, rangePosition)!)
+      : selectedDate;
+
   if (rangePosition === 'start') {
-    const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
-      ? { nextSelection: 'start', newRange: [end!, selectedDate] }
-      : { nextSelection: 'end', newRange: [selectedDate, null] };
-    return Boolean(end) && utils.isAfter(selectedDate!, end!)
+    const truthyResult: CalculateRangeChangeResponse = allowRangeFlip
+      ? { nextSelection: 'start', newRange: [end!, newSelectedDate] }
+      : { nextSelection: 'end', newRange: [newSelectedDate, null] };
+    return Boolean(end) && adapter.isAfter(newSelectedDate!, end!)
       ? truthyResult
-      : { nextSelection: 'end', newRange: [selectedDate, end] };
+      : { nextSelection: 'end', newRange: [newSelectedDate, end] };
   }
 
-  const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
-    ? { nextSelection: 'end', newRange: [selectedDate, start!] }
-    : { nextSelection: 'end', newRange: [selectedDate, null] };
-  return Boolean(start) && utils.isBeforeDay(selectedDate!, start!)
+  const truthyResult: CalculateRangeChangeResponse = allowRangeFlip
+    ? { nextSelection: 'end', newRange: [newSelectedDate, start!] }
+    : { nextSelection: 'end', newRange: [newSelectedDate, null] };
+  return Boolean(start) && adapter.isBeforeDay(newSelectedDate!, start!)
     ? truthyResult
-    : { nextSelection: 'start', newRange: [start, selectedDate] };
+    : { nextSelection: 'start', newRange: [start, newSelectedDate] };
 }
 
-export function calculateRangePreview<TDate extends PickerValidDate>(
-  options: CalculateRangeChangeOptions<TDate>,
-): DateRange<TDate> {
+export function calculateRangePreview(options: CalculateRangeChangeOptions): PickerRangeValue {
   if (options.newDate == null) {
     return [null, null];
   }
 
   const [start, end] = options.range;
-  const { newRange } = calculateRangeChange(options as CalculateRangeChangeOptions<TDate>);
+  const { newRange } = calculateRangeChange(options as CalculateRangeChangeOptions);
 
   if (!start || !end) {
     return newRange;

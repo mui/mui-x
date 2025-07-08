@@ -1,28 +1,29 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_useControlled as useControlled,
-  unstable_composeClasses as composeClasses,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
-import { PickersMonth } from './PickersMonth';
-import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
-import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
-import { DefaultizedProps } from '../internals/models/helpers';
+import useControlled from '@mui/utils/useControlled';
+import composeClasses from '@mui/utils/composeClasses';
+import useEventCallback from '@mui/utils/useEventCallback';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { MonthCalendarButton } from './MonthCalendarButton';
+import { useNow } from '../internals/hooks/useUtils';
+import { getMonthCalendarUtilityClass, MonthCalendarClasses } from './monthCalendarClasses';
+import { getMonthsInYear } from '../internals/utils/date-utils';
 import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
-const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
-  const { classes } = ownerState;
-
+const useUtilityClasses = (classes: Partial<MonthCalendarClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -30,45 +31,50 @@ const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   return composeClasses(slots, getMonthCalendarUtilityClass, classes);
 };
 
-export function useMonthCalendarDefaultizedProps<TDate extends PickerValidDate>(
-  props: MonthCalendarProps<TDate>,
+export function useMonthCalendarDefaultizedProps(
+  props: MonthCalendarProps,
   name: string,
 ): DefaultizedProps<
-  MonthCalendarProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+  MonthCalendarProps,
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'monthsPerRow'
 > {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-  const themeProps = useThemeProps({
-    props,
-    name,
-  });
+  const themeProps = useThemeProps({ props, name });
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   return {
-    disableFuture: false,
-    disablePast: false,
     ...themeProps,
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    ...validationProps,
+    monthsPerRow: themeProps.monthsPerRow ?? 3,
   };
 }
 
 const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: MonthCalendarProps<any> }>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'monthsPerRow',
+})<{ ownerState: PickerOwnerState; monthsPerRow: 3 | 4 }>({
   display: 'flex',
   flexWrap: 'wrap',
-  alignContent: 'stretch',
-  padding: '0 4px',
+  justifyContent: 'space-evenly',
+  rowGap: 16,
+  padding: '8px 0',
   width: DIALOG_WIDTH,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
+  variants: [
+    {
+      props: { monthsPerRow: 3 },
+      style: { columnGap: 24 },
+    },
+    {
+      props: { monthsPerRow: 4 },
+      style: { columnGap: 0 },
+    },
+  ],
 });
 
-type MonthCalendarComponent = (<TDate extends PickerValidDate>(
-  props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MonthCalendarComponent = ((
+  props: MonthCalendarProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -80,13 +86,15 @@ type MonthCalendarComponent = (<TDate extends PickerValidDate>(
  *
  * - [MonthCalendar API](https://mui.com/x/api/date-pickers/month-calendar/)
  */
-export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate extends PickerValidDate>(
-  inProps: MonthCalendarProps<TDate>,
+export const MonthCalendar = React.forwardRef(function MonthCalendar(
+  inProps: MonthCalendarProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useMonthCalendarDefaultizedProps(inProps, 'MuiMonthCalendar');
   const {
+    autoFocus,
     className,
+    classes: classesProp,
     value: valueProp,
     defaultValue,
     referenceDate: referenceDateProp,
@@ -99,34 +107,37 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
     shouldDisableMonth,
     readOnly,
     disableHighlightToday,
-    autoFocus = false,
     onMonthFocus,
     hasFocus,
     onFocusedViewChange,
-    monthsPerRow = 3,
+    monthsPerRow,
     timezone: timezoneProp,
     gridLabelId,
+    slots,
+    slotProps,
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'MonthCalendar',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
-    onChange: onChange as (value: TDate | null) => void,
+    referenceDate: referenceDateProp,
+    onChange,
     valueManager: singleItemValueManager,
   });
 
-  const now = useNow<TDate>(timezone);
+  const now = useNow(timezone);
   const isRtl = useRtl();
-  const utils = useUtils<TDate>();
+  const adapter = usePickerAdapter();
+  const { ownerState } = usePickerPrivateContext();
 
   const referenceDate = React.useMemo(
     () =>
       singleItemValueManager.getInitialReferenceValue({
         value,
-        utils,
+        adapter,
         props,
         timezone,
         referenceDate: referenceDateProp,
@@ -135,20 +146,19 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
-  const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
+  const todayMonth = React.useMemo(() => adapter.getMonth(now), [adapter, now]);
 
   const selectedMonth = React.useMemo(() => {
     if (value != null) {
-      return utils.getMonth(value);
+      return adapter.getMonth(value);
     }
 
     return null;
-  }, [value, utils]);
+  }, [value, adapter]);
   const [focusedMonth, setFocusedMonth] = React.useState(
-    () => selectedMonth || utils.getMonth(referenceDate),
+    () => selectedMonth || adapter.getMonth(referenceDate),
   );
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
@@ -167,22 +177,22 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
   });
 
   const isMonthDisabled = React.useCallback(
-    (dateToValidate: TDate) => {
-      const firstEnabledMonth = utils.startOfMonth(
-        disablePast && utils.isAfter(now, minDate) ? now : minDate,
+    (dateToValidate: PickerValidDate) => {
+      const firstEnabledMonth = adapter.startOfMonth(
+        disablePast && adapter.isAfter(now, minDate) ? now : minDate,
       );
 
-      const lastEnabledMonth = utils.startOfMonth(
-        disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
+      const lastEnabledMonth = adapter.startOfMonth(
+        disableFuture && adapter.isBefore(now, maxDate) ? now : maxDate,
       );
 
-      const monthToValidate = utils.startOfMonth(dateToValidate);
+      const monthToValidate = adapter.startOfMonth(dateToValidate);
 
-      if (utils.isBefore(monthToValidate, firstEnabledMonth)) {
+      if (adapter.isBefore(monthToValidate, firstEnabledMonth)) {
         return true;
       }
 
-      if (utils.isAfter(monthToValidate, lastEnabledMonth)) {
+      if (adapter.isAfter(monthToValidate, lastEnabledMonth)) {
         return true;
       }
 
@@ -192,7 +202,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
 
       return shouldDisableMonth(monthToValidate);
     },
-    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, utils],
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, adapter],
   );
 
   const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
@@ -200,12 +210,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
       return;
     }
 
-    const newDate = utils.setMonth(value ?? referenceDate, month);
+    const newDate = adapter.setMonth(value ?? referenceDate, month);
     handleValueChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(utils.setMonth(value ?? referenceDate, month))) {
+    if (!isMonthDisabled(adapter.setMonth(value ?? referenceDate, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -267,17 +277,18 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
       ownerState={ownerState}
       role="radiogroup"
       aria-labelledby={gridLabelId}
+      monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(utils, value ?? referenceDate).map((month) => {
-        const monthNumber = utils.getMonth(month);
-        const monthText = utils.format(month, 'monthShort');
-        const monthLabel = utils.format(month, 'month');
+      {getMonthsInYear(adapter, value ?? referenceDate).map((month) => {
+        const monthNumber = adapter.getMonth(month);
+        const monthText = adapter.format(month, 'monthShort');
+        const monthLabel = adapter.format(month, 'month');
         const isSelected = monthNumber === selectedMonth;
         const isDisabled = disabled || isMonthDisabled(month);
 
         return (
-          <PickersMonth
+          <MonthCalendarButton
             key={monthText}
             selected={isSelected}
             value={monthNumber}
@@ -285,15 +296,17 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && monthNumber === focusedMonth}
             disabled={isDisabled}
-            tabIndex={monthNumber === focusedMonth ? 0 : -1}
+            tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
             aria-label={monthLabel}
-            monthsPerRow={monthsPerRow}
+            slots={slots}
+            slotProps={slotProps}
+            classes={classesProp}
           >
             {monthText}
-          </PickersMonth>
+          </MonthCalendarButton>
         );
       })}
     </MonthCalendarRoot>
@@ -317,7 +330,9 @@ MonthCalendar.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true` picker is disabled
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -339,10 +354,12 @@ MonthCalendar.propTypes = {
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -352,14 +369,15 @@ MonthCalendar.propTypes = {
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate} value The new value.
+   * @param {PickerValidDate} value The new value.
    */
   onChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
   onMonthFocus: PropTypes.func,
   /**
-   * If `true` picker is readonly
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**
@@ -369,11 +387,20 @@ MonthCalendar.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

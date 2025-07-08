@@ -1,35 +1,24 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils/types';
 import type { TreeViewContextValue } from '../TreeViewProvider';
 import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
-  MergeSignaturesProperty,
-  TreeViewInstance,
   TreeViewPublicAPI,
-  TreeViewExperimentalFeatures,
 } from '../models';
-import { TreeViewCorePluginSignatures } from '../corePlugins';
 
-export type UseTreeViewParameters<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  UseTreeViewBaseParameters<TSignatures> &
-    Omit<MergeSignaturesProperty<TSignatures, 'params'>, keyof UseTreeViewBaseParameters<any>>;
-
-export interface UseTreeViewBaseParameters<
+export interface UseTreeViewParameters<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
 > {
-  apiRef: React.MutableRefObject<TreeViewPublicAPI<TSignatures>> | undefined;
-  rootRef?: React.Ref<HTMLUListElement> | undefined;
   plugins: ConvertSignaturesIntoPlugins<TSignatures>;
-  slots: MergeSignaturesProperty<TSignatures, 'slots'>;
-  slotProps: MergeSignaturesProperty<TSignatures, 'slotProps'>;
-  experimentalFeatures: TreeViewExperimentalFeatures<TSignatures>;
+  rootRef?: React.Ref<HTMLUListElement> | undefined;
+  props: TProps; // Omit<MergeSignaturesProperty<TSignatures, 'params'>, keyof UseTreeViewBaseParameters<any>>
 }
 
-export type UseTreeViewDefaultizedParameters<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-> = UseTreeViewBaseParameters<TSignatures> &
-  MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'defaultizedParams'>;
+export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
+  apiRef: React.RefObject<TreeViewPublicAPI<TSignatures> | undefined> | undefined;
+}
 
 export interface UseTreeViewRootSlotProps
   extends Pick<
@@ -45,5 +34,4 @@ export interface UseTreeViewReturnValue<TSignatures extends readonly TreeViewAny
   ) => UseTreeViewRootSlotProps;
   rootRef: React.RefCallback<HTMLUListElement> | null;
   contextValue: TreeViewContextValue<TSignatures>;
-  instance: TreeViewInstance<TSignatures>;
 }

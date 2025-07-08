@@ -1,7 +1,6 @@
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { expect } from 'chai';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -19,9 +18,17 @@ describe('<AdapterDateFns />', () => {
   });
 
   describe('Adapter localization', () => {
+    describe('Default locale', () => {
+      const adapter = new AdapterDateFns();
+
+      it('getCurrentLocaleCode: should return locale code', () => {
+        expect(adapter.getCurrentLocaleCode()).to.equal('en-US');
+      });
+    });
+
     describe('English', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING) as Date;
 
       it('getWeekArray: should start on Sunday', () => {
         const result = adapter.getWeekArray(date);
@@ -37,7 +44,7 @@ describe('<AdapterDateFns />', () => {
       const adapter = new AdapterDateFns({ locale: ru });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO_STRING)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING) as Date;
         const result = adapter.getWeekArray(date);
         expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('пн');
       });
@@ -60,7 +67,7 @@ describe('<AdapterDateFns />', () => {
         expectedWithEn: string,
         expectedWithRu: string,
       ) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Date;
 
         expect(adapter.format(date, format)).to.equal(expectedWithEn);
         expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
@@ -68,7 +75,6 @@ describe('<AdapterDateFns />', () => {
 
       expectDate('fullDate', 'Feb 1, 2020', '1 фев. 2020 г.');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
-      expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 ПП');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
     });
@@ -96,34 +102,29 @@ describe('<AdapterDateFns />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { fr, de }[localeKey];
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'date-fns',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

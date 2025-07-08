@@ -1,10 +1,11 @@
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
   CommonSeriesType,
   CommonDefaultizedProps,
   StackableSeriesType,
+  SeriesId,
 } from './common';
 
 export interface BarSeriesType
@@ -15,7 +16,7 @@ export interface BarSeriesType
   /**
    * Data associated to each bar.
    */
-  data?: (number | null)[];
+  data?: readonly (number | null)[];
   /**
    * The key used to retrieve data from the dataset.
    */
@@ -42,7 +43,7 @@ export interface BarSeriesType
  */
 export type BarItemIdentifier = {
   type: 'bar';
-  seriesId: DefaultizedBarSeriesType['id'];
+  seriesId: SeriesId;
   dataIndex: number;
 };
 

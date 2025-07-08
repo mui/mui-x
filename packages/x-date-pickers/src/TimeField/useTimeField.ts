@@ -1,45 +1,14 @@
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
+'use client';
 import { useField } from '../internals/hooks/useField';
+import { useTimeManager } from '../managers';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../internals/utils/validation/validateTime';
-import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
-import { PickerValidDate, FieldSection } from '../models';
-import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
 export const useTimeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TProps,
 ) => {
-  const props = useDefaultizedTimeField<
-    TDate,
-    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseTimeFieldProps<any, TEnableAccessibleFieldDOMStructure>
-  >(props, 'time');
-
-  return useField<
-    TDate | null,
-    TDate,
-    FieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
-    forwardedProps,
-    internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateTime,
-    valueType: 'time',
-  });
+  const manager = useTimeManager(props);
+  return useField({ manager, props });
 };

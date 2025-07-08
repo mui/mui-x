@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -20,16 +19,23 @@ const CustomCalendarHeaderRoot = styled('div')({
 function CustomCalendarHeader(props) {
   const { currentMonth, onMonthChange, month, calendars, monthIndex } = props;
 
-  const selectNextMonth = () =>
-    onMonthChange(currentMonth.add(calendars, 'month'), 'left');
+  const selectNextMonth = () => onMonthChange(currentMonth.add(calendars, 'month'));
   const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(calendars, 'month'), 'right');
+    onMonthChange(currentMonth.subtract(calendars, 'month'));
 
   return (
     <CustomCalendarHeaderRoot>
       <IconButton
         onClick={selectPreviousMonth}
-        sx={{ visibility: monthIndex === 0 ? undefined : 'hidden' }}
+        sx={[
+          monthIndex === 0
+            ? {
+                visibility: null,
+              }
+            : {
+                visibility: 'hidden',
+              },
+        ]}
         title={`Previous ${calendars} month${calendars === 1 ? '' : 's'}`}
       >
         <ChevronLeft />
@@ -37,7 +43,15 @@ function CustomCalendarHeader(props) {
       <Typography>{month.format('MMMM YYYY')}</Typography>
       <IconButton
         onClick={selectNextMonth}
-        sx={{ visibility: monthIndex === calendars - 1 ? undefined : 'hidden' }}
+        sx={[
+          monthIndex === calendars - 1
+            ? {
+                visibility: null,
+              }
+            : {
+                visibility: 'hidden',
+              },
+        ]}
         title={`Next ${calendars} month${calendars === 1 ? '' : 's'}`}
       >
         <ChevronRight />

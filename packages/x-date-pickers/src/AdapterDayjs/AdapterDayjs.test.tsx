@@ -1,8 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { expect } from 'chai';
+import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   expectFieldValueV7,
   createPickerRenderer,
@@ -20,7 +19,7 @@ describe('<AdapterDayjs />', () => {
   const commonParams = {
     formatDateTime: 'YYYY-MM-DD HH:mm:ss',
     setDefaultTimezone: dayjs.tz.setDefault,
-    getLocaleFromDate: (value: Dayjs) => value.locale(),
+    getLocaleFromDate: (value: PickerValidDate) => (value as Dayjs).locale(),
     frenchLocale: 'fr',
   };
 
@@ -39,10 +38,21 @@ describe('<AdapterDayjs />', () => {
     },
   });
 
+  describe('Adapter timezone', () => {
+    it('setTimezone: should throw warning if no plugin is available', () => {
+      const modifiedAdapter = new AdapterDayjs();
+      // @ts-ignore
+      modifiedAdapter.hasTimezonePlugin = () => false;
+
+      const date = modifiedAdapter.date(TEST_DATE_ISO_STRING) as Dayjs;
+      expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
+    });
+  });
+
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterDayjs({ locale: 'en' });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING) as Dayjs;
 
       it('getWeekArray: should start on Sunday', () => {
         const result = adapter.getWeekArray(date);
@@ -58,7 +68,7 @@ describe('<AdapterDayjs />', () => {
       const adapter = new AdapterDayjs({ locale: 'ru' });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO_STRING)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING) as Dayjs;
         const result = adapter.getWeekArray(date);
         expect(result[0][0].format('dd')).to.equal('пн');
       });
@@ -81,7 +91,7 @@ describe('<AdapterDayjs />', () => {
         expectedWithEn: string,
         expectedWithRu: string,
       ) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Dayjs;
 
         expect(adapter.format(date, format)).to.equal(expectedWithEn);
         expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
@@ -89,7 +99,6 @@ describe('<AdapterDayjs />', () => {
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
-      expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
     });
@@ -124,34 +133,29 @@ describe('<AdapterDayjs />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'dayjs',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

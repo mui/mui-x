@@ -78,8 +78,6 @@ function ApiRefPrivateMethods() {
     apiRef.current.applyStrategyProcessor;
     // @ts-expect-error Property 'storeDetailPanelHeight' does not exist on type 'GridApiPremium'
     apiRef.current.storeDetailPanelHeight;
-    // @ts-expect-error Property 'detailPanelHasAutoHeight' does not exist on type 'GridApiPremium'
-    apiRef.current.detailPanelHasAutoHeight;
     // @ts-expect-error Property 'calculateColSpan' does not exist on type 'GridApiPremium'
     apiRef.current.calculateColSpan;
     // @ts-expect-error Property 'rowHasAutoHeight' does not exist on type 'GridApiPremium'
@@ -114,7 +112,7 @@ function ApiRefPrivateMethods() {
 function ApiRefPublicMethods() {
   const apiRef = useGridApiRef();
 
-  apiRef.current.unstable_applyPipeProcessors('exportMenu', [], {});
+  apiRef.current!.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
 function ApiRefProMethods() {
@@ -122,12 +120,12 @@ function ApiRefProMethods() {
 
   React.useEffect(() => {
     // available in Pro and Premium
-    apiRef.current.selectRows([]);
-    apiRef.current.selectRowRange({ startId: 0, endId: 1 });
-    apiRef.current.setColumnIndex;
-    apiRef.current.setRowIndex;
-    apiRef.current.setRowChildrenExpansion;
-    apiRef.current.getRowGroupChildren;
+    apiRef.current!.selectRows([]);
+    apiRef.current!.selectRowRange({ startId: 0, endId: 1 });
+    apiRef.current!.setColumnIndex;
+    apiRef.current!.setRowIndex;
+    apiRef.current!.setRowChildrenExpansion;
+    apiRef.current!.getRowGroupChildren;
   });
 
   return null;

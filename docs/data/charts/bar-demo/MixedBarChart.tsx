@@ -18,14 +18,14 @@ const xLabels = [
 export default function MixedBarChart() {
   return (
     <BarChart
-      width={500}
       height={300}
       series={[
         { data: pData, label: 'pv', stack: 'stack1' },
         { data: amtData, label: 'amt' },
         { data: uData, label: 'uv', stack: 'stack1' },
       ]}
-      xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      xAxis={[{ data: xLabels }]}
+      yAxis={[{ width: 50 }]}
     />
   );
 }

@@ -10,14 +10,16 @@ import {
 export default function IsCellEditableGrid() {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         height: 400,
         width: '100%',
         '& .MuiDataGrid-cell--editable': {
-          bgcolor: (theme) =>
-            theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+          bgcolor: 'rgb(217 243 190)',
+          ...theme.applyStyles('dark', {
+            bgcolor: '#376331',
+          }),
         },
-      }}
+      })}
     >
       <DataGrid
         rows={rows}

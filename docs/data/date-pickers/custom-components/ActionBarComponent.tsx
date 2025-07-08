@@ -1,19 +1,27 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
+import useId from '@mui/utils/useId';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import DialogActions from '@mui/material/DialogActions';
-import { unstable_useId as useId } from '@mui/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
-import { useLocaleText } from '@mui/x-date-pickers/internals';
+import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
-  const localeText = useLocaleText();
+  const { actions, className } = props;
+  const translations = usePickerTranslations();
+  const {
+    clearValue,
+    setValueToToday,
+    acceptValueChanges,
+    cancelValueChanges,
+    goToNextStep,
+    hasNextStep,
+  } = usePickerContext();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = useId();
@@ -27,14 +35,13 @@ function CustomActionBar(props: PickersActionBarProps) {
       case 'clear':
         return (
           <MenuItem
-            data-mui-test="clear-action-button"
             onClick={() => {
-              onClear();
+              clearValue();
               setAnchorEl(null);
             }}
             key={actionType}
           >
-            {localeText.clearButtonLabel}
+            {translations.clearButtonLabel}
           </MenuItem>
         );
       case 'cancel':
@@ -42,11 +49,11 @@ function CustomActionBar(props: PickersActionBarProps) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onCancel();
+              cancelValueChanges();
             }}
             key={actionType}
           >
-            {localeText.cancelButtonLabel}
+            {translations.cancelButtonLabel}
           </MenuItem>
         );
       case 'accept':
@@ -54,24 +61,62 @@ function CustomActionBar(props: PickersActionBarProps) {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
-              onAccept();
+              acceptValueChanges();
             }}
             key={actionType}
           >
-            {localeText.okButtonLabel}
+            {translations.okButtonLabel}
           </MenuItem>
         );
       case 'today':
         return (
           <MenuItem
-            data-mui-test="today-action-button"
             onClick={() => {
               setAnchorEl(null);
-              onSetToday();
+              setValueToToday();
             }}
             key={actionType}
           >
-            {localeText.todayButtonLabel}
+            {translations.todayButtonLabel}
+          </MenuItem>
+        );
+      case 'next':
+        return (
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              goToNextStep();
+            }}
+            key={actionType}
+          >
+            {translations.nextStepButtonLabel}
+          </MenuItem>
+        );
+
+      case 'nextOrAccept':
+        if (hasNextStep) {
+          return (
+            <MenuItem
+              onClick={() => {
+                setAnchorEl(null);
+                goToNextStep();
+              }}
+              key={actionType}
+            >
+              {translations.nextStepButtonLabel}
+            </MenuItem>
+          );
+        }
+
+        return (
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              acceptValueChanges();
+            }}
+            key={actionType}
+          >
+            {translations.okButtonLabel}
           </MenuItem>
         );
       default:

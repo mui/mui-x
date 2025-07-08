@@ -7,8 +7,10 @@
     {
       ...xAxisCommon,
       id: 'half days',
+      position: 'top',
       tickMinStep: 3600 * 1000 * 12, // min step: 12hu
     },
   ]}
+  yAxis={[{ position: 'none' }]}
   {...config}
 />

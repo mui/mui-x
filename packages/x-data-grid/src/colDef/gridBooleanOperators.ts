@@ -1,4 +1,7 @@
-import { GridFilterInputBoolean } from '../components/panel/filterPanel/GridFilterInputBoolean';
+import {
+  GridFilterInputBoolean,
+  sanitizeFilterItemValue,
+} from '../components/panel/filterPanel/GridFilterInputBoolean';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 
@@ -6,14 +9,12 @@ export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | nul
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      const sanitizedValue = sanitizeFilterItemValue(filterItem.value);
+      if (sanitizedValue === undefined) {
         return null;
       }
 
-      const valueAsBoolean = String(filterItem.value) === 'true';
-      return (value): boolean => {
-        return Boolean(value) === valueAsBoolean;
-      };
+      return (value): boolean => Boolean(value) === sanitizedValue;
     },
     InputComponent: GridFilterInputBoolean,
   },

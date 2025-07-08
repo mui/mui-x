@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 export default function BasicMobileDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MobileDatePicker enableAccessibleFieldDOMStructure label="Mobile Date Picker" />
+      <MobileDatePicker label="Mobile Date Picker" />
     </LocalizationProvider>
   );
 }

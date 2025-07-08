@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { checkScaleErrors } from './checkScaleErrors';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 
@@ -11,9 +10,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -33,9 +33,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band' },
           },
           yKey,
@@ -46,6 +47,34 @@ describe('BarChart - checkScaleErrors', () => {
       }).throws('MUI X Charts: The first `xAxis` should have data property.');
     });
 
+    it('should throw an error when the x-axis data property is smaller than the series data.', () => {
+      expect(() => {
+        const xKey = DEFAULT_X_AXIS_KEY;
+        const yKey = DEFAULT_Y_AXIS_KEY;
+        checkScaleErrors(
+          true,
+          'seriesId',
+          // @ts-expect-error
+          {
+            stackedData: [
+              [0, 1],
+              [0, 1],
+            ],
+          },
+          xKey,
+          {
+            [xKey]: { id: xKey, scaleType: 'band', data: [1] },
+          },
+          yKey,
+          {
+            [yKey]: { id: yKey, scaleType: 'linear' },
+          },
+        );
+      }).toErrorDev(
+        'MUI X Charts: The first `xAxis` has less data (1 values) than the bar series of id "seriesId" (2 values)',
+      );
+    });
+
     it('should throw an error when the y-axis is not a continuous scale', () => {
       expect(() => {
         const xKey = DEFAULT_X_AXIS_KEY;
@@ -53,9 +82,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band', data: [] },
           },
           yKey,
@@ -75,9 +105,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           true,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band', data: [] },
           },
           yKey,
@@ -97,9 +128,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -119,9 +151,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -139,9 +172,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [[0, 1]] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'band' },
           },
           yKey,
@@ -161,9 +195,10 @@ describe('BarChart - checkScaleErrors', () => {
         checkScaleErrors(
           false,
           'seriesId',
+          // @ts-expect-error
+          { stackedData: [] },
           xKey,
           {
-            // @ts-expect-error
             [xKey]: { id: xKey, scaleType: 'linear' },
           },
           yKey,
@@ -182,9 +217,10 @@ describe('BarChart - checkScaleErrors', () => {
       checkScaleErrors(
         true,
         'seriesId',
+        // @ts-expect-error
+        { stackedData: [[0, 1]] },
         xKey,
         {
-          // @ts-expect-error
           [xKey]: { id: xKey, scaleType: 'linear' },
         },
         yKey,
@@ -204,9 +240,10 @@ describe('BarChart - checkScaleErrors', () => {
       checkScaleErrors(
         false,
         'seriesId',
+        // @ts-expect-error
+        { stackedData: [[0, 1]] },
         xKey,
         {
-          // @ts-expect-error
           [xKey]: { id: xKey, scaleType: 'band' },
         },
         yKey,

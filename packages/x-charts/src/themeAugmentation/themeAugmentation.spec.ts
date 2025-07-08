@@ -3,15 +3,10 @@ import { createTheme } from '@mui/material/styles';
 createTheme({
   components: {
     MuiChartsAxis: {
-      defaultProps: {
-        leftAxis: 'test',
-        // @ts-expect-error invalid MuiChartsAxis prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsAxis class key
-        constent: { color: 'red' },
+        line: { color: 'red' },
       },
     },
     MuiChartsXAxis: {
@@ -20,6 +15,11 @@ createTheme({
         // @ts-expect-error invalid MuiChartsXAxis prop
         someRandomProp: true,
       },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsXAxis class key
+        line: { color: 'red' },
+      },
     },
     MuiChartsYAxis: {
       defaultProps: {
@@ -27,41 +27,29 @@ createTheme({
         // @ts-expect-error invalid MuiChartsYAxis prop
         someRandomProp: true,
       },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsYAxis class key
+        line: { color: 'red' },
+      },
     },
     MuiChartsAxisHighlight: {
-      defaultProps: {
-        x: 'line',
-        // @ts-expect-error invalid MuiChartsAxisHighlight prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsAxisHighlight class key
         constent: { color: 'red' },
       },
     },
-    MuiChartsClipPath: {
-      defaultProps: {
-        id: 'test',
-        // @ts-expect-error invalid MuiChartsClipPath prop
-        someRandomProp: true,
-      },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiChartsClipPath class key
-      //   constent: { color: 'red' },
-      // },
-    },
     MuiChartsLegend: {
       defaultProps: {
-        direction: 'row',
+        direction: 'vertical',
         // @ts-expect-error invalid MuiChartsLegend prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiChartsLegend class key
-        constent: { color: 'red' },
+        mark: { color: 'red' },
       },
     },
     MuiChartsTooltip: {
@@ -82,11 +70,11 @@ createTheme({
         // @ts-expect-error invalid MuiChartsSurface prop
         someRandomProp: true,
       },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiChartsSurface class key
-      //   constent: { color: 'red' },
-      // },
+      styleOverrides: {
+        root: { backgroundColor: 'red' },
+        // @ts-expect-error invalid MuiChartsSurface class key
+        constent: { color: 'red' },
+      },
     },
 
     // BarChart components
@@ -103,11 +91,6 @@ createTheme({
       // },
     },
     MuiBarElement: {
-      defaultProps: {
-        id: 'toto',
-        // @ts-expect-error invalid MuiBarElement prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiBarElement class key
@@ -128,11 +111,6 @@ createTheme({
       // },
     },
     MuiAreaElement: {
-      defaultProps: {
-        id: 'toto',
-        // @ts-expect-error invalid MuiAreaElement prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiAreaElement class key
@@ -140,11 +118,6 @@ createTheme({
       },
     },
     MuiLineElement: {
-      defaultProps: {
-        id: 'toto',
-        // @ts-expect-error invalid MuiLineElement prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiLineElement class key
@@ -152,11 +125,6 @@ createTheme({
       },
     },
     MuiMarkElement: {
-      defaultProps: {
-        id: 'toto',
-        // @ts-expect-error invalid MuiMarkElement prop
-        someRandomProp: true,
-      },
       styleOverrides: {
         root: { backgroundColor: 'red' },
         // @ts-expect-error invalid MuiMarkElement class key
@@ -173,18 +141,6 @@ createTheme({
       // styleOverrides: {
       //   root: { backgroundColor: 'red' },
       //   // @ts-expect-error invalid MuiScatterChart class key
-      //   constent: { color: 'red' },
-      // },
-    },
-    MuiScatter: {
-      defaultProps: {
-        markerSize: 10,
-        // @ts-expect-error invalid MuiScatter prop
-        someRandomProp: true,
-      },
-      // styleOverrides: {
-      //   root: { backgroundColor: 'red' },
-      //   // @ts-expect-error invalid MuiScatter class key
       //   constent: { color: 'red' },
       // },
     },

@@ -53,10 +53,6 @@ export default function ColorScale() {
             area: true,
           },
         ]}
-        margin={{
-          top: 10,
-          bottom: 20,
-        }}
         yAxis={[
           {
             colorMap:

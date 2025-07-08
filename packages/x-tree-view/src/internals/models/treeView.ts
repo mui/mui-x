@@ -9,27 +9,33 @@ export interface TreeViewItemMeta {
   expandable: boolean;
   disabled: boolean;
   /**
-   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   * Only defined for `<RichTreeView />` and `<RichTreeViewPro />`.
    */
   depth?: number;
   /**
-   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   * Only defined for `<RichTreeView />` and `<RichTreeViewPro />`.
    */
   label?: string;
 }
 
-export interface TreeViewModel<TValue> {
-  name: string;
-  value: TValue;
-  setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
-}
-
-export type TreeViewInstance<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'instance'>;
-
-export type TreeViewPublicAPI<TSignatures extends readonly TreeViewAnyPluginSignature[]> =
-  MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'>;
-
-export type TreeViewExperimentalFeatures<
+export type TreeViewInstance<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
-> = { [key in MergeSignaturesProperty<TSignatures, 'experimentalFeatures'>]?: boolean };
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'instance'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
+
+export type TreeViewPublicAPI<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
+
+export type TreeViewStateCacheKey = { id: number };
+
+export type TreeViewState<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'state'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & {
+    cacheKey: TreeViewStateCacheKey;
+  };

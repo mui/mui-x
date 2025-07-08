@@ -1,0 +1,13 @@
+<DataGridPremium
+  columns={columns}
+  dataSource={dataSource}
+  treeData
+  apiRef={apiRef}
+  initialState={{
+    ...initialState,
+    aggregation: {
+      model: { rating: 'avg', website: 'size' },
+    },
+  }}
+  aggregationFunctions={aggregationFunctions}
+/>

@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers';
-import { userEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
@@ -16,19 +15,14 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
     ...pickerParams
   } = options;
 
-  if (componentFamily !== 'picker') {
-    return;
-  }
-
-  describe('Picker shortcuts', () => {
-    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', () => {
+  describe.skipIf(componentFamily !== 'picker')('Picker shortcuts', () => {
+    it('should call onClose, onChange and onAccept when picking a shortcut without explicit changeImportance', async () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -48,8 +42,9 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
         />,
       );
 
-      const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      const shortcut = await screen.findByRole('button', { name: 'Test shortcut' });
+
+      fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
@@ -65,7 +60,6 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -87,7 +81,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);
@@ -103,7 +97,6 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -125,7 +118,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
       );
 
       const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
-      userEvent.mousePress(shortcut);
+      fireEvent.click(shortcut);
 
       expect(onChange.callCount).to.equal(1);
       expectPickerChangeHandlerValue(pickerParams.type, onChange, values[1]);

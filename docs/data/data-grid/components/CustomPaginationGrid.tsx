@@ -37,7 +37,7 @@ function CustomPagination(props: any) {
 }
 
 export default function CustomPaginationGrid() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
@@ -46,6 +46,7 @@ export default function CustomPaginationGrid() {
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
+        loading={loading}
         pagination
         slots={{
           pagination: CustomPagination,
