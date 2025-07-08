@@ -66,7 +66,7 @@ export interface GridChartsConfigurationSection {
 export interface GridChartsConfigurationOptions {
   [key: string]: {
     label: string;
-    icon: any; // TODO: fix type
+    icon: (props: any) => React.ReactNode;
     maxCategories?: number;
     maxSeries?: number;
     customization: GridChartsConfigurationSection[];
