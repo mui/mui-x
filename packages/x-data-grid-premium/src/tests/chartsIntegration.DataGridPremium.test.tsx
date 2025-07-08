@@ -554,15 +554,16 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       const fieldsTab = screen.getAllByRole('tab')[1];
       await user.click(fieldsTab);
 
-      const availableFields = screen
+      const availableFieldsSection = screen
         .getAllByRole('tabpanel')[0]
-        .querySelector('[data-drag-over="false"]')! // available fields section
-        .querySelectorAll('[draggable="true"]'); // the fields
+        .querySelector('[data-drag-over="false"]')!; // available fields section
 
-      // open the menu
-      const field1Menu = availableFields[0].querySelector('[data-testid="AddIcon"]')!;
-      const field2Menu = availableFields[1].querySelector('[data-testid="AddIcon"]')!;
-      await user.click(field1Menu);
+      // open the menu of the first field
+      await user.click(
+        availableFieldsSection
+          .querySelectorAll('[draggable="true"]')[0]
+          .querySelector('[data-testid="AddIcon"]')!,
+      );
 
       expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
 
@@ -573,8 +574,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         expect(integrationContext!.chartStateLookup.test.series.length).to.equal(2);
       });
 
-      // open the menu for the second field
-      await user.click(field2Menu);
+      // open the menu for the remaining field
+      await user.click(
+        availableFieldsSection
+          .querySelectorAll('[draggable="true"]')[0]
+          .querySelector('[data-testid="AddIcon"]')!,
+      );
 
       expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
 
