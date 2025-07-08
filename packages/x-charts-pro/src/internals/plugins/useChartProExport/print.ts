@@ -31,7 +31,7 @@ export function printChart(
       }
     });
 
-    onBeforeExport?.(printWindow);
+    await onBeforeExport?.(printWindow);
 
     printWindow.contentWindow!.print();
   };

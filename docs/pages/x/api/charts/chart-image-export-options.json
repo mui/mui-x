@@ -9,7 +9,7 @@
       "isProPlan": true
     },
     "onBeforeExport": {
-      "type": { "description": "(iframe: HTMLIFrameElement) =&gt; void" },
+      "type": { "description": "(iframe: HTMLIFrameElement) =&gt; Promise&lt;void&gt; | void" },
       "isProPlan": true
     },
     "quality": { "type": { "description": "number" }, "default": "0.9", "isProPlan": true },

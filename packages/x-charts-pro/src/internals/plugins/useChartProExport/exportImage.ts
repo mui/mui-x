@@ -58,7 +58,7 @@ export async function exportImage(
   doc.body.appendChild(iframe);
 
   await iframeLoadPromise;
-  onBeforeExport?.(iframe);
+  await onBeforeExport?.(iframe);
 
   const drawDocument = await drawDocumentPromise;
 

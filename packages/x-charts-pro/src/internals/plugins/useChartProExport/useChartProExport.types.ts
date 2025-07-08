@@ -23,8 +23,9 @@ export interface ChartExportOptions {
    * It can be used to modify the iframe or perform any other actions before the export, such as updating styles,
    * removing elements, etc.
    * @param {HTMLIFrameElement} iframe containing the chart to be exported.
+   * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export will wait for it to resolve before proceeding.
    */
-  onBeforeExport?: (iframe: HTMLIFrameElement) => void;
+  onBeforeExport?: (iframe: HTMLIFrameElement) => Promise<void> | void;
 }
 
 /**
