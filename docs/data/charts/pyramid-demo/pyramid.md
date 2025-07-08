@@ -35,7 +35,7 @@ For this use-case the `increasing` pyramid is always correct, regardless of the 
 ## Segments
 
 By default, the pyramid chart creates segments with the same height. To make the segments proportional to the values, set `categoryAxis.scaleType` to `linear`.
-This will adjust the height of each segment based on the value it represents.
+This adjusts the height of each segment based on the value it represents.
 
 {{"demo": "PyramidSegmentLinear.js"}}
 
