@@ -5,7 +5,7 @@ export default function SymlogBars() {
   return (
     <BarChart
       xAxis={[{ data: ['group A', 'group B', 'group C'] }]}
-      yAxis={[{ scaleType: 'symlog', constant: 1 }]}
+      yAxis={[{ scaleType: 'symlog', constant: 1, width: 52 }]}
       series={[
         { data: [4_000, 30, 50] },
         { data: [1, 600, 34] },
