@@ -3,15 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import useId from '@mui/utils/useId';
+import type { GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { useGridSelector, vars } from '@mui/x-data-grid-pro/internals';
 import { GridMenu } from '@mui/x-data-grid-pro';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type {
-  ChartState,
-  GridChartsConfigurationOptions,
-} from '../../models/gridChartsIntegration';
+import type { ChartState } from '../../models/gridChartsIntegration';
 import { GridChartsPanelChart } from './chart/GridChartsPanelChart';
 import { GridChartsPanelCustomize } from './customize/GridChartsPanelCustomize';
 import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
