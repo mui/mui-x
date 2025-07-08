@@ -81,7 +81,7 @@ export type VirtualizerParams = {
   /**
    * Function that allows to specify the spacing between rows.
    * @param rowEntry
-   * @param params With all properties from [[GridRowSpacingParams]].
+   * @param visibility With all properties from [[RowVisibilityParams]].
    * @returns The row spacing values.
    */
   getRowSpacing?: (rowEntry: RowEntry, visibility: RowVisibilityParams) => RowSpacing;

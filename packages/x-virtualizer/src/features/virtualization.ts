@@ -320,32 +320,32 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
    */
   const getRows = (
     // eslint-disable-next-line @typescript-eslint/default-param-last
-    params: {
+    rowParams: {
       rows?: RowEntry[];
       position?: PinnedRowPosition;
       renderContext?: RenderContext;
     } = {},
     unstable_rowTree: Record<RowId, any>,
   ) => {
-    if (!params.rows && !range) {
+    if (!rowParams.rows && !range) {
       return [];
     }
 
     let baseRenderContext = renderContext;
-    if (params.renderContext) {
-      baseRenderContext = params.renderContext as RenderContext;
+    if (rowParams.renderContext) {
+      baseRenderContext = rowParams.renderContext as RenderContext;
 
       baseRenderContext.firstColumnIndex = renderContext.firstColumnIndex;
       baseRenderContext.lastColumnIndex = renderContext.lastColumnIndex;
     }
 
     const isLastSection =
-      (!hasBottomPinnedRows && params.position === undefined) ||
-      (hasBottomPinnedRows && params.position === 'bottom');
-    const isPinnedSection = params.position !== undefined;
+      (!hasBottomPinnedRows && rowParams.position === undefined) ||
+      (hasBottomPinnedRows && rowParams.position === 'bottom');
+    const isPinnedSection = rowParams.position !== undefined;
 
     let rowIndexOffset: number;
-    switch (params.position) {
+    switch (rowParams.position) {
       case 'top':
         rowIndexOffset = 0;
         break;
@@ -358,13 +358,13 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         break;
     }
 
-    const rowModels = params.rows ?? rows;
+    const rowModels = rowParams.rows ?? rows;
 
     const firstRowToRender = baseRenderContext.firstRowIndex;
     const lastRowToRender = Math.min(baseRenderContext.lastRowIndex, rowModels.length);
 
-    const rowIndexes = params.rows
-      ? createRange(0, params.rows.length)
+    const rowIndexes = rowParams.rows
+      ? createRange(0, rowParams.rows.length)
       : createRange(firstRowToRender, lastRowToRender);
 
     let virtualRowIndex = -1;
@@ -423,7 +423,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         : 'auto';
 
       let isFirstVisible = false;
-      if (params.position === undefined) {
+      if (rowParams.position === undefined) {
         isFirstVisible = rowIndexInPage === 0;
       }
 
@@ -459,7 +459,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         currentRenderContext,
         pinnedColumns.left.length,
       );
-      const showBottomBorder = isLastVisibleInSection && params.position === 'top';
+      const showBottomBorder = isLastVisibleInSection && rowParams.position === 'top';
 
       const firstColumnIndex = currentRenderContext.firstColumnIndex;
       const lastColumnIndex = currentRenderContext.lastColumnIndex;
@@ -491,7 +491,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       if (panel) {
         rowElements.push(panel);
       }
-      if (params.position === undefined && isLastVisibleInSection) {
+      if (rowParams.position === undefined && isLastVisibleInSection) {
         rowElements.push(renderInfiniteLoadingTrigger(id));
       }
     });
