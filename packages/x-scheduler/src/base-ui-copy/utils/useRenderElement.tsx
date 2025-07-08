@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { mergeObjects } from '@base-ui-components/utils/mergeObjects';
 import { isReactVersionAtLeast } from '@base-ui-components/utils/reactVersion';
+import { useForkRef, useForkRefN } from '@base-ui-components/utils/useForkRef';
 import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types';
 import { CustomStyleHookMapping, getStyleHookProps } from './getStyleHookProps';
-import { useForkRef, useForkRefN } from './useForkRef';
 import { resolveClassName } from './resolveClassName';
 import { mergeProps, mergePropsN } from '../merge-props';
 
