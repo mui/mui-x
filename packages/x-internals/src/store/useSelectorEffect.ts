@@ -23,22 +23,21 @@ function initialize<State, Value>(params?: {
 
   let previousState = selector(store.state);
 
-  // We want a single subscription done right away and cleared on unmount only,
-  // but React triggers `useOnMount` multiple times in dev, so we need to manage
-  // the subscription anyway.
-  const subscribe = () => {
-    instance.dispose ??= store.subscribe((state) => {
-      const nextState = selector(state);
-      instance.effect(previousState, nextState);
-      previousState = nextState;
-    });
-  };
-
   const instance = {
     effect: noop as (previous: Value, next: Value) => void,
     dispose: null as Function | null,
+    // We want a single subscription done right away and cleared on unmount only,
+    // but React triggers `useOnMount` multiple times in dev, so we need to manage
+    // the subscription anyway.
+    subscribe: () => {
+      instance.dispose ??= store.subscribe((state) => {
+        const nextState = selector(state);
+        instance.effect(previousState, nextState);
+        previousState = nextState;
+      });
+    },
     onMount: () => {
-      subscribe();
+      instance.subscribe();
       return () => {
         instance.dispose?.();
         instance.dispose = null;
@@ -46,7 +45,7 @@ function initialize<State, Value>(params?: {
     },
   };
 
-  subscribe();
+  instance.subscribe();
 
   return instance;
 }
