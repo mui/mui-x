@@ -83,25 +83,21 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         const isIncreasing = completedSeries[seriesId].funnelDirection === 'increasing';
 
         let currentMaxMain = 0;
-        let currentMaxOther = 0;
         let nextMaxMain = 0;
-        let nextMaxOther = 0;
         let nextDataIndex = 0;
 
         if (isIncreasing) {
           nextDataIndex = dataIndex === 0 ? dataIndex : dataIndex - 1;
           currentMaxMain = array[nextDataIndex].value ?? 0;
           nextMaxMain = item.value;
-          nextMaxOther = 0;
-          currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
         } else {
           nextDataIndex = dataIndex === array.length - 1 ? dataIndex : dataIndex + 1;
           currentMaxMain = item.value;
           nextMaxMain = array[nextDataIndex].value ?? 0;
-          nextMaxOther = 0;
-          currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
         }
         const stackOffset = stackOffsets[dataIndex];
+        const nextMaxOther = 0;
+        const currentMaxOther = completedSeries[seriesId].data[dataIndex].value;
 
         return [
           // Top right (vertical) or Top left (horizontal)
