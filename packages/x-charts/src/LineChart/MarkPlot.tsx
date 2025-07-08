@@ -101,7 +101,7 @@ function MarkPlot(props: MarkPlotProps) {
   return (
     <g {...other}>
       {(() => {
-        const children = [];
+        const children: React.JSX.Element[] = [];
 
         for (const { ids: groupIds } of stackingGroups) {
           for (const seriesId of groupIds) {
@@ -144,7 +144,7 @@ function MarkPlot(props: MarkPlotProps) {
             children.push(
               <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
                 {(() => {
-                  const grandchildren = [];
+                  const grandchildren: React.JSX.Element[] = [];
 
                   for (let dataIndex = 0; dataIndex < xData.length; dataIndex += 1) {
                     const value = data[dataIndex] == null ? null : stackedData[dataIndex][1];
