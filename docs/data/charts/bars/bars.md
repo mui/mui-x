@@ -91,7 +91,7 @@ It also doesn't work with stacked series.
 
 A bar chart renders a bar from 0 to the value of a data point. However, the logarithm of zero is undefined, meaning that a y-axis with a log scale cannot plot the bar.
 
-To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the remaining values.
+To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the remaining ones.
 
 You can also configure the values at which the scale switches from linear to logarithmic with the `constant` property, which defaults to 1.
 
