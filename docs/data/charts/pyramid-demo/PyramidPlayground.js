@@ -48,7 +48,7 @@ export default function PyramidPlayground() {
                 curve: props.curveType,
                 variant: props.variant,
                 borderRadius: props.borderRadius,
-                data: [...populationByEducationLevelPercentageSeries.data].reverse()
+                data: [...populationByEducationLevelPercentageSeries.data].reverse(),
               },
             ]}
             gap={props.gap}

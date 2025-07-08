@@ -8,6 +8,7 @@
         { label: '$10-$30 a day', value: 25 },
         { label: 'Above $30 a day', value: 16 },
       ],
+      funnelDirection: 'decreasing',
     },
   ]}
   height={300}

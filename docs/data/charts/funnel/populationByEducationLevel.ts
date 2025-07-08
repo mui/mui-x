@@ -69,12 +69,6 @@ export const populationByEducationLevelPercentageSeries = {
   ],
 };
 
-// export const populationByEducationLevelPercentageSeriesReversed = {
-//   label: 'World population by education level',
-//   valueFormatter: (item: { value: number }) => `${item.value}%`,
-//   data: [...populationByEducationLevelPercentageSeries.data].reverse(),
-// };
-
 const labels = [
   'Total population',
   'Primary education',
@@ -99,18 +93,3 @@ export const populationByEducationLevelAbsolute = {
   upperSecondary: fullData.upperSecondary + fullData.postSecondary,
   postSecondary: fullData.postSecondary,
 };
-
-// export const populationByEducationLevelPercentageSeriesLabeledReversed = {
-//   ...populationByEducationLevelPercentageSeriesReversed,
-//   data: labelData(populationByEducationLevelPercentageSeriesReversed.data),
-// };
-
-// const reversedLabels = [...labels].reverse();
-// const labelDataReversed = (data: Record<'value', number>[]) => {
-//   return data.map((item, i) => ({ ...item, label: reversedLabels[i] }));
-// };
-
-// export const populationByEducationLevelPercentageSeriesLabeledReversed = {
-//   ...populationByEducationLevelPercentageSeries,
-//   data: labelDataReversed([...populationByEducationLevelPercentageSeries.data].reverse()),
-// };
