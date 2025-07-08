@@ -89,12 +89,12 @@ export interface FunnelSeriesType
    */
   variant?: 'filled' | 'outlined';
   /**
-   * Denotes if the funnel is increasing or decreasing.
-   * Only used in the `pyramid` and `step-pyramid` curves.
+   * Controls how the funnel is drawn.
+   * Ignored on `step` and `linear-sharp` curves.
    *
-   * - `increasing`, funnel is drawn with a point at the top and a wide base.
-   * - `decreasing`, funnel is drawn with a wide top and a point at the base.
-   * - `auto`, the direction is determined automatically based on the first and last data points.
+   * This affects different curves in different ways:
+   * - `bump` & `linear`: Controls which section is the "starting" point of the funnel. This section has straight edges.
+   * - `pyramid` & `step-pyramid`: Fully changes the direction of the shape.
    *
    * @default 'auto'
    */
