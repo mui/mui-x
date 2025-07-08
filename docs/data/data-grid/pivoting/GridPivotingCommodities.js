@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -18,7 +19,10 @@ const pivotModel = {
 const initialState = {
   pivoting: {
     model: pivotModel,
-    panelOpen: true,
+  },
+  sidebar: {
+    open: true,
+    openedValue: GridSidebarValue.pivot,
   },
   pinnedColumns: {
     left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],

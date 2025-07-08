@@ -30,8 +30,8 @@ export interface GridPivotingInitialState {
   model?: GridPivotModel;
   enabled?: boolean;
   /**
-   * @deprecated Use sidebar state instead.
    * To open the pivot sidebar on init, set sidebar's `openValue` to `GridSidebarValue.pivot`.
+   * @deprecated Use sidebar state instead.
    */
   panelOpen?: boolean;
 }
