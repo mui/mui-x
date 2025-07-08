@@ -10,6 +10,7 @@
 
 import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
 import { Gesture, GestureEventData, GestureOptions, GestureState } from '../Gesture';
+import type { KeyboardManager } from '../KeyboardManager';
 import { PointerData, PointerManager } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
@@ -185,6 +186,8 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
       min: this.min,
       initialDelta: this.initialDelta,
       invert: this.invert,
+      requiredKeys: [...this.requiredKeys],
+      pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,
@@ -195,8 +198,9 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
-    super.init(element, pointerManager, gestureRegistry);
+    super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
     // Add event listener directly to the element
     // @ts-expect-error, WheelEvent is correct.
