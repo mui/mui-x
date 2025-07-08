@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useSelector } from '@base-ui-components/utils/store';
 import { DayViewProps } from './DayView.types';
 import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
-import { useSelector } from '../../base-ui-copy/utils/store';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { selectors } from '../event-calendar/store';
 
