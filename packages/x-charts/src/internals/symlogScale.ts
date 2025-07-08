@@ -37,7 +37,7 @@ export function scaleSymlog<Range, Output = Range, Unknown = never>(
       }
     });
 
-    const finalTicks = [];
+    const finalTicks: number[] = [];
 
     if (negativeLogTickCount > 0) {
       const negativeDomain = [domain[0], Math.min(domain[1], -constant)];
