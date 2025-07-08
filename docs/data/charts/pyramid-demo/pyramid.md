@@ -20,7 +20,7 @@ To create a pyramid chart, set the `curve` property to `pyramid` in the series.
 
 ## Direction
 
-The pyramid automatically changes its direction based on the provided data. If the values are sorted in ascending order, the pyramid will be inverted.
+The pyramid automatically changes its direction based on the provided data. If the values are sorted in ascending order, the pyramid is drawn upright.
 If the values are sorted in descending order, the pyramid will be upright.
 
 In order to manually control the direction of the pyramid, the `funnelDirection` property can be set to either `increasing` or `decreasing`.
