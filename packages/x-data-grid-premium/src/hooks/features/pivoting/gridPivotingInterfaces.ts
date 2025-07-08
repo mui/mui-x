@@ -63,8 +63,8 @@ export interface GridPivotingApi {
    */
   setPivotActive: (active: boolean | ((prev: boolean) => boolean)) => void;
   /**
-   * @deprecated Use the `showSidebar` method instead. Using this method will not trigger the `sidebarOpen` and `sidebarClose` events.
    * Sets whether the pivot panel is open.
+   * @deprecated Use the `showSidebar` method instead. Using this method will not trigger the `sidebarOpen` and `sidebarClose` events.
    * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the pivot panel open state.
    */
   setPivotPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
