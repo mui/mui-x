@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const rows = [
   { id: 1, product: 'Apples', region: 'North', quarter: 'Q1', sales: 1000 },
@@ -47,9 +47,6 @@ export default function GridPivotingControlled() {
   // Pivot mode toggle state
   const [pivotModeEnabled, setPivotModeEnabled] = React.useState(true);
 
-  // Pivot panel visibility state
-  const [pivotPanelOpen, setPivotPanelOpen] = React.useState(true);
-
   return (
     <div style={{ height: 560, width: '100%' }}>
       <DataGridPremium
@@ -59,10 +56,14 @@ export default function GridPivotingControlled() {
         onPivotModelChange={setPivotModel}
         pivotActive={pivotModeEnabled}
         onPivotActiveChange={setPivotModeEnabled}
-        pivotPanelOpen={pivotPanelOpen}
-        onPivotPanelOpenChange={setPivotPanelOpen}
         columnGroupHeaderHeight={36}
         showToolbar
+        initialState={{
+          sidebar: {
+            open: true,
+            openedValue: GridSidebarValue.pivot,
+          },
+        }}
         slotProps={{
           toolbar: {
             showQuickFilter: false,

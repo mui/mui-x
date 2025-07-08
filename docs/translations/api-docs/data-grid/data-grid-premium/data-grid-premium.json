@@ -830,6 +830,22 @@
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
+    "onSidebarClose": {
+      "description": "Callback fired when the sidebar is closed.",
+      "typeDescriptions": {
+        "params": "With all properties from GridSidebarParams.",
+        "event": "The event object.",
+        "details": "Additional details for this callback."
+      }
+    },
+    "onSidebarOpen": {
+      "description": "Callback fired when the sidebar is opened.",
+      "typeDescriptions": {
+        "params": "With all properties from GridSidebarParams.",
+        "event": "The event object.",
+        "details": "Additional details for this callback."
+      }
+    },
     "onSortModelChange": {
       "description": "Callback fired when the sort model changes before a column is sorted.",
       "typeDescriptions": {
