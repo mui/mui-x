@@ -9,12 +9,7 @@ export default function Pyramid() {
         series={[
           {
             curve: 'pyramid',
-            data: [
-              { value: 10 },
-              { value: 100 },
-              { value: 1000 },
-              { value: 10000 },
-            ],
+            data: [{ value: 10 }, { value: 100 }, { value: 1000 }, { value: 10000 }],
           },
         ]}
         height={300}
