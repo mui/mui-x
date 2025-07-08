@@ -166,6 +166,7 @@ ChartsToolbarPro.propTypes = {
   imageExportOptions: PropTypes.arrayOf(
     PropTypes.shape({
       fileName: PropTypes.string,
+      onBeforeExport: PropTypes.func,
       quality: PropTypes.number,
       type: PropTypes.string.isRequired,
     }),

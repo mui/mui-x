@@ -1,6 +1,5 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
 import {
@@ -9,6 +8,7 @@ import {
 } from '@mui/internal-scripts/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
+import { resolvePrettierConfigPath } from './utils';
 
 const COMPONENTS_WITHOUT_PROPTYPES = [
   'AnimatedBarElement',
@@ -169,8 +169,9 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     throw new Error('Unable to produce inject propTypes into code.');
   }
 
+  const prettierConfigPath = await resolvePrettierConfigPath();
   const prettierConfig = await prettier.resolveConfig(process.cwd(), {
-    config: path.join(__dirname, '../../prettier.config.mjs'),
+    config: prettierConfigPath,
   });
 
   const prettified = await prettier.format(result, { ...prettierConfig, filepath: sourceFile });

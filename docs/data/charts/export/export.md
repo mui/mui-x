@@ -57,7 +57,6 @@ yarn add rasterizehtml
 Export behavior can be modified with [print](/x/api/charts/chart-print-export-options/) and [image export](/x/api/charts/chart-image-export-options/) options.
 
 Options can be passed to the built-in Toolbar with `slotProps.toolbar`.
-In that case, the `imageExportOptions` must be an array of objects, each representing an image type to export.
 
 Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
 
@@ -70,15 +69,34 @@ Where relevant, the options are automatically shown in the toolbar. You can cust
 <ChartsToolbarPrintExportTrigger options={printExportOptions} />
 ```
 
+### Export formats
+
+Using the export options, you can customize the available export formats.
+
+The print export can be disabled by setting the `disableToolbarButton` property to `true`.
+
+The image export formats can be customized by providing an array of objects to the `imageExportOptions` property. These objects must contain the `type` property, which specifies the image format.
+
+:::info
+If the browser does not support a requested image format, the export defaults to PNG.
+:::
+
 In the example below, you can toggle which export formats are available to the user.
 
 Additionally, the name of the exported file has been customized to resemble the chart's title.
 
 {{"demo": "ExportChartToolbarCustomization.js"}}
 
-:::info
-If the browser does not support a requested image format, the export defaults to PNG.
-:::
+### `onBeforeExport`
+
+To add custom styles or modify the chart's appearance before exporting, use the `onBeforeExport` callback.
+
+When exporting, the chart is rendered onto an iframe and then exported as an image or PDF.
+The `onBeforeExport` callback gives you access to the iframe before the export process starts.
+
+For example, you can hide the toolbar when exporting the chart, as shown below:
+
+{{"demo": "ExportChartOnBeforeExport.js"}}
 
 ## Composition
 

@@ -277,7 +277,6 @@ export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOpti
       await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
-        project,
       );
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', parsedInterface.name);
@@ -322,7 +321,6 @@ export async function buildInterfacesDocumentationPage(
   for (const [interfaceName, packagesWithThisInterface] of Array.from(
     documentedInterfaces.entries(),
   )) {
-    const project = projects.get(packagesWithThisInterface[0])!;
     // eslint-disable-next-line no-await-in-loop
     const parsedInterface = await parseInterfaceSymbol(
       interfaceName,
@@ -395,14 +393,12 @@ export async function buildInterfacesDocumentationPage(
     await writePrettifiedFile(
       path.resolve(apiPagesDirectory, `${slug}.json`),
       JSON.stringify(content),
-      project,
     );
 
     // eslint-disable-next-line no-await-in-loop
     await writePrettifiedFile(
       path.resolve(translationPagesDirectory, `${slug}.json`),
       JSON.stringify(translations),
-      project,
     );
 
     // eslint-disable-next-line no-await-in-loop
@@ -433,7 +429,6 @@ export async function buildInterfacesDocumentationPage(
       };
     };
     `.replace(/\r?\n/g, EOL),
-      project,
     );
 
     // eslint-disable-next-line no-console
