@@ -12,6 +12,7 @@ import {
   redPalette,
   strawberrySkyPalette,
   yellowPalette,
+  blueberryTwilightPalette,
 } from '@mui/x-charts/colorPalettes';
 import { PaletteOption } from './components/PaletteOption';
 import type { GridChartsConfigurationOptions, GridChartsConfigurationSection } from './types';
@@ -29,7 +30,11 @@ const colorOptions = {
   default: 'rainbowSurgePalette',
   options: [
     {
-      content: 'Blueberry Twilight',
+      content: <PaletteOption palette={rainbowSurgePalette}>Rainbow Surge</PaletteOption>,
+      value: 'rainbowSurgePalette',
+    },
+    {
+      content: <PaletteOption palette={blueberryTwilightPalette}>Blueberry Twilight</PaletteOption>,
       value: 'blueberryTwilightPalette',
     },
     {
@@ -43,10 +48,6 @@ const colorOptions = {
     {
       content: <PaletteOption palette={strawberrySkyPalette}>Strawberry Sky</PaletteOption>,
       value: 'strawberrySkyPalette',
-    },
-    {
-      content: <PaletteOption palette={rainbowSurgePalette}>Rainbow Surge</PaletteOption>,
-      value: 'rainbowSurgePalette',
     },
     { content: <PaletteOption palette={bluePalette}>Blue</PaletteOption>, value: 'bluePalette' },
     { content: <PaletteOption palette={greenPalette}>Green</PaletteOption>, value: 'greenPalette' },
