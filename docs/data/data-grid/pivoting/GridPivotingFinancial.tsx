@@ -3,6 +3,7 @@ import {
   DataGridPremium,
   GridColDef,
   GridPivotModel,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 
 const columns: GridColDef[] = [
@@ -58,8 +59,11 @@ export default function GridPivotingFinancial() {
           initialState={{
             pivoting: {
               enabled: true,
-              panelOpen: true,
               model: pivotModel,
+            },
+            sidebar: {
+              open: true,
+              openedValue: GridSidebarValue.pivot,
             },
           }}
           columnGroupHeaderHeight={36}

@@ -5,6 +5,7 @@ import {
   GridRowModel,
   GridPivotModel,
   GridInitialState,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { pivotHeightlightStyles } from './pivotHighlightStyles';
 
@@ -121,7 +122,10 @@ const pivotModel: GridPivotModel = {
 const initialState: GridInitialState = {
   pivoting: {
     model: pivotModel,
-    panelOpen: true,
+  },
+  sidebar: {
+    open: true,
+    openedValue: GridSidebarValue.pivot,
   },
 };
 

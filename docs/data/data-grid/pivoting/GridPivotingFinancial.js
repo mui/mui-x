@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -53,8 +53,11 @@ export default function GridPivotingFinancial() {
           initialState={{
             pivoting: {
               enabled: true,
-              panelOpen: true,
               model: pivotModel,
+            },
+            sidebar: {
+              open: true,
+              openedValue: GridSidebarValue.pivot,
             },
           }}
           columnGroupHeaderHeight={36}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const rows = [
   { id: 1, product: 'Apples', region: 'North', quarter: 'Q1', sales: 1000 },
@@ -40,7 +40,10 @@ const initialState = {
   pivoting: {
     model: pivotModel,
     enabled: true,
-    panelOpen: true,
+  },
+  sidebar: {
+    open: true,
+    openedValue: GridSidebarValue.pivot,
   },
 };
 
