@@ -3,7 +3,7 @@
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ fileName?: string, quality?: number, type: string }"
+        "description": "{ fileName?: string, onBeforeExport?: func, quality?: number, type: string }"
       }
     },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }

@@ -106,8 +106,15 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     }
     const { code } = await babel.transformAsync(source, transformOptions);
 
+    const prettierConfigPath = await prettier.resolveConfigFile();
+    if (!prettierConfigPath) {
+      throw new Error(
+        `Could not resolve prettier config file.
+        Please provide a valid prettier config path or ensure that a prettier config file exists in the project root.`,
+      );
+    }
     const prettierConfig = await prettier.resolveConfig(jsPath, {
-      config: path.join(workspaceRoot, 'prettier.config.mjs'),
+      config: prettierConfigPath,
     });
     const prettierFormat = async (jsSource) =>
       prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });

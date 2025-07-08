@@ -19,17 +19,21 @@ import {
   interfacesToDocument,
 } from '../createXTypeScriptProjects';
 import { DocumentedInterfaces } from './utils';
-
-const DEFAULT_PRETTIER_CONFIG_PATH = path.join(process.cwd(), 'prettier.config.mjs');
+import { resolvePrettierConfigPath } from '../utils';
 
 export async function writePrettifiedFile(
   filename: string,
   data: string,
-  prettierConfigPath: string = DEFAULT_PRETTIER_CONFIG_PATH,
+  prettierConfigPath: string = '',
   options: object = {},
 ) {
+  let resolvedPrettierConfigPath = prettierConfigPath;
+  if (!resolvedPrettierConfigPath) {
+    // If no prettier config path is provided, use the default one
+    resolvedPrettierConfigPath = await resolvePrettierConfigPath();
+  }
   const prettierConfig = await prettier.resolveConfig(filename, {
-    config: prettierConfigPath,
+    config: resolvedPrettierConfigPath,
   });
   if (prettierConfig === null) {
     throw new Error(
