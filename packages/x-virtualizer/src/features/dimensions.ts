@@ -234,6 +234,8 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
     store.update({ dimensions: newDimensions });
   }, [
+    store,
+    params.refs.container,
     params.scrollbarSize,
     params.autoHeight,
     rowHeight,
@@ -316,6 +318,7 @@ function useRowsMeta(
     return entry;
   };
 
+  const { rowIdToIndexMap, applyRowHeight } = params;
   const processHeightEntry = React.useCallback(
     (row: RowEntry) => {
       // HACK: rowHeight trails behind the most up-to-date value just enough to
@@ -353,7 +356,7 @@ function useRowsMeta(
       }
 
       if (getRowSpacing) {
-        const indexRelativeToCurrentPage = params.rowIdToIndexMap.get(row.id) ?? -1;
+        const indexRelativeToCurrentPage = rowIdToIndexMap.get(row.id) ?? -1;
 
         const spacing = getRowSpacing(row, {
           isFirstVisible: indexRelativeToCurrentPage === 0,
@@ -368,11 +371,22 @@ function useRowsMeta(
         entry.spacingBottom = 0;
       }
 
-      params.applyRowHeight?.(entry, row);
+      applyRowHeight?.(entry, row);
 
       return entry;
     },
-    [rows, getRowHeightProp, getEstimatedRowHeight, rowHeight, getRowSpacing],
+    // NOTE: getRowHeightEntry is stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      store,
+      rows,
+      getRowHeightProp,
+      getEstimatedRowHeight,
+      rowHeight,
+      getRowSpacing,
+      rowIdToIndexMap,
+      applyRowHeight,
+    ],
   );
 
   const hydrateRowsMeta = React.useCallback(() => {
