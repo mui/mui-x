@@ -82,8 +82,6 @@ interface ScatterPreviewItemsProps {
   width: number;
 }
 
-const DEFAULT_MARKER_SIZE = 1;
-
 function ScatterPreviewItems(props: ScatterPreviewItemsProps) {
   const { series, xScale, yScale, color, colorGetter, x, y, width, height } = props;
 
@@ -105,7 +103,7 @@ function ScatterPreviewItems(props: ScatterPreviewItemsProps) {
             x={dataPoint.x}
             y={dataPoint.y}
             seriesId={series.id}
-            size={DEFAULT_MARKER_SIZE}
+            size={series.preview.markerSize}
             isHighlighted={false}
             isFaded={false}
           />

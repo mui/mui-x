@@ -55,6 +55,12 @@
       "@mui-internal/api-docs-builder/*": [
         "./node_modules/@mui/monorepo/packages/api-docs-builder/*"
       ],
+      "@mui-internal-scripts/generate-llms-txt": [
+        "./node_modules/@mui/monorepo/packages-internal/scripts/generate-llms-txt/src"
+      ],
+      "@mui-internal-scripts/generate-llms-txt/*": [
+        "./node_modules/@mui/monorepo/packages-internal/scripts/generate-llms-txt/src/*"
+      ],
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
