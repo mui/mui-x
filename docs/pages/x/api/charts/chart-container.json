@@ -8,6 +8,12 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableVoronoi": { "type": { "name": "bool" } },
     "height": { "type": { "name": "number" } },
+    "highlightedAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+      }
+    },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -34,6 +40,13 @@
       "signature": {
         "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onHighlightedAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
       }
     },
     "onItemClick": {
