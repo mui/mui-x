@@ -347,15 +347,6 @@ export function PickerPopper(inProps: PickerPopperProps) {
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
 
-  const handleClickAway: OnClickAway = useEventCallback(() => {
-    lastFocusedElementRef.current = null;
-    if (onBlur) {
-      onBlur();
-      return;
-    }
-    onDismiss();
-  });
-
   React.useEffect(() => {
     if (viewContainerRole === 'tooltip' || getCurrentViewMode() === 'field') {
       return;
@@ -380,7 +371,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const classes = useUtilityClasses(classesProp);
   const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
 
-  const handleClickAway = useEventCallback(() => {
+  const handleClickAway: OnClickAway = useEventCallback(() => {
     if (viewContainerRole === 'tooltip') {
       executeInTheNextEventLoopTick(() => {
         if (
@@ -393,6 +384,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
         dismissViews();
       });
     } else {
+      lastFocusedElementRef.current = null;
       dismissViews();
     }
   });
