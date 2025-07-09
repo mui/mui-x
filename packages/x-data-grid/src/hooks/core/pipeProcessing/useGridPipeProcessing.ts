@@ -8,6 +8,7 @@ import {
   GridPipeProcessorGroup,
 } from './gridPipeProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useRunOncePerLoop } from '../../utils/useRunOncePerLoop';
 
 type Cache = {
   [G in GridPipeProcessorGroup]?: GroupCache;
@@ -54,7 +55,7 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
   const cache = React.useRef<Cache>({});
 
   const isRunning = React.useRef(false);
-  const runAppliers = React.useCallback((groupCache: GroupCache | undefined) => {
+  const runAppliersSync = React.useCallback((groupCache: GroupCache | undefined) => {
     if (isRunning.current || !groupCache) {
       return;
     }
@@ -64,6 +65,8 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
     });
     isRunning.current = false;
   }, []);
+
+  const runAppliers = useRunOncePerLoop(runAppliersSync);
 
   const registerPipeProcessor = React.useCallback<
     GridPipeProcessingPrivateApi['registerPipeProcessor']
