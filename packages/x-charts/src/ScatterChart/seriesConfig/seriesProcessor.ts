@@ -36,6 +36,10 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
           labelMarkType: 'circle' as const,
           markerSize: 4,
           ...seriesData,
+          preview: {
+            markerSize: 1,
+            ...seriesData?.preview,
+          },
           data,
           valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
         },
