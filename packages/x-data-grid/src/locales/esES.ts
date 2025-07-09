@@ -266,12 +266,16 @@ const esESGrid: Partial<GridLocaleText> = {
   // chartsNoFields: 'No fields',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
+  // chartsMenuAddToCategories: 'Add to Categories',
+  // chartsMenuAddToSeries: 'Add to Series',
   // chartsMenuMoveUp: 'Move up',
   // chartsMenuMoveDown: 'Move down',
   // chartsMenuMoveToTop: 'Move to top',
   // chartsMenuMoveToBottom: 'Move to bottom',
   // chartsMenuOptions: 'Field options',
   // chartsMenuRemove: 'Remove',
+  // chartsDragToCategories: 'Drag here to use column as category',
+  // chartsDragToSeries: 'Drag here to use column as series',
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
