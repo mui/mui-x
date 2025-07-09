@@ -125,6 +125,17 @@ The demo below shows charts' responsiveness to live data updates in the Grid.
 
 {{"demo": "GridChartsIntegrationLiveData.js", "bg": "inline"}}
 
+## Localization
+
+To localize all components included in the charts integration, choose one of the ways to localize [Grid](/x/react-data-grid/localization/) and [Charts](/x/react-charts/localization/).
+Easiest way is to use `createTheme()` and `ThemeProvider`.
+
+In addition to this, use `getLocalizedConfigurationOptions()` instead of `configurationOptions` to get localized configuration options.
+
+The demo below shows the integration using `frFr` locale.
+
+{{"demo": "GridChartsIntegrationLocalization.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
