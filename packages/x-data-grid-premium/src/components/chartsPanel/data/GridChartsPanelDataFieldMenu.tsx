@@ -54,8 +54,8 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
   const getMenuItems = React.useCallback((): (MenuAction | MenuDivider)[] => {
     if (isAvailableField) {
       return [
-        { key: 'categories', label: 'Add to categories' },
-        { key: 'series', label: 'Add to series' },
+        { key: 'categories', label: apiRef.current.getLocaleText('chartsMenuAddToCategories') },
+        { key: 'series', label: apiRef.current.getLocaleText('chartsMenuAddToSeries') },
       ].filter((item) => !blockedSections?.includes(item.key)) as MenuAction[];
     }
 
@@ -99,12 +99,12 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
     const addToSectionMenuItems: (MenuAction | MenuDivider)[] = [
       {
         key: 'categories',
-        label: 'Add to categories',
+        label: apiRef.current.getLocaleText('chartsMenuAddToCategories'),
         icon: <span />,
       },
       {
         key: 'series',
-        label: 'Add to series',
+        label: apiRef.current.getLocaleText('chartsMenuAddToSeries'),
         icon: <span />,
       },
     ].filter(

@@ -247,12 +247,16 @@ export interface GridLocaleText {
   chartsNoFields: string;
   chartsCategories: string;
   chartsSeries: string;
+  chartsMenuAddToCategories: string;
+  chartsMenuAddToSeries: string;
   chartsMenuMoveUp: string;
   chartsMenuMoveDown: string;
   chartsMenuMoveToTop: string;
   chartsMenuMoveToBottom: string;
   chartsMenuOptions: string;
   chartsMenuRemove: string;
+  chartsDragToCategories: string;
+  chartsDragToSeries: string;
 
   // AI Assistant panel
   aiAssistantPanelTitle: string;

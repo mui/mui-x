@@ -349,7 +349,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                   ownerState={rootProps}
                   className={classes.placeholder}
                 >
-                  Drag to use column as category
+                  {apiRef.current.getLocaleText('chartsDragToCategories')}
                 </GridChartsPanelDataPlaceholder>
               )}
               {categories.length > 0 && (
@@ -407,7 +407,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                   ownerState={rootProps}
                   className={classes.placeholder}
                 >
-                  Drag to use column as series
+                  {apiRef.current.getLocaleText('chartsDragToSeries')}
                 </GridChartsPanelDataPlaceholder>
               )}
               {series.length > 0 && (
