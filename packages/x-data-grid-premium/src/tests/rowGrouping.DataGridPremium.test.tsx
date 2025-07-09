@@ -80,32 +80,38 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
   describe('Setting grouping criteria', () => {
     describe('initialState: rowGrouping.model', () => {
-      it('should allow to initialize the row grouping', () => {
+      it('should allow to initialize the row grouping', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
             defaultGroupingExpansionDepth={-1}
           />,
         );
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        });
       });
 
-      it('should not react to initial state updates', () => {
+      it('should not react to initial state updates', async () => {
         const { setProps } = render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
             defaultGroupingExpansionDepth={-1}
           />,
         );
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        });
 
         setProps({ initialState: { rowGrouping: { model: ['category2'] } } });
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        });
       });
     });
 
     describe('prop: rowGroupingModel', () => {
-      it('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', () => {
+      it('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', async () => {
         const onRowGroupingModelChange = spy();
 
         const { setProps } = render(
@@ -115,47 +121,61 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(onRowGroupingModelChange.callCount).to.equal(0);
-        setProps({ rowGroupingModel: ['category2'] });
+        await waitFor(() => {
+          expect(onRowGroupingModelChange.callCount).to.equal(0);
+        });
 
-        expect(onRowGroupingModelChange.callCount).to.equal(0);
+        setProps({ rowGroupingModel: ['category2'] });
+        await waitFor(() => {
+          expect(onRowGroupingModelChange.callCount).to.equal(0);
+        });
       });
 
-      it('should allow to update the row grouping model from the outside', () => {
+      it('should allow to update the row grouping model from the outside', async () => {
         const { setProps } = render(
           <Test rowGroupingModel={['category1']} defaultGroupingExpansionDepth={-1} />,
         );
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        });
+
         setProps({ rowGroupingModel: ['category2'] });
-        expect(getColumnValues(0)).to.deep.equal(['Cat 1 (2)', '', '', 'Cat 2 (3)', '', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat 1 (2)', '', '', 'Cat 2 (3)', '', '', '']);
+        });
+
         setProps({ rowGroupingModel: ['category1', 'category2'] });
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (3)',
-          'Cat 1 (1)',
-          '',
-          'Cat 2 (2)',
-          '',
-          '',
-          'Cat B (2)',
-          'Cat 2 (1)',
-          '',
-          'Cat 1 (1)',
-          '',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (3)',
+            'Cat 1 (1)',
+            '',
+            'Cat 2 (2)',
+            '',
+            '',
+            'Cat B (2)',
+            'Cat 2 (1)',
+            '',
+            'Cat 1 (1)',
+            '',
+          ]);
+        });
       });
     });
 
-    it('should ignore grouping criteria that do not match any column', () => {
+    it('should ignore grouping criteria that do not match any column', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category3'] } }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+      });
     });
 
-    it('should display the value from the `valueOptions` for `singleSelect` column type', () => {
+    it('should display the value from the `valueOptions` for `singleSelect` column type', async () => {
       render(
         <Test
           columns={[
@@ -178,10 +198,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           initialState={{ rowGrouping: { model: ['category'] } }}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['categoryLabel1 (3)', 'categoryLabel2 (2)']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['categoryLabel1 (3)', 'categoryLabel2 (2)']);
+      });
     });
 
-    it('should display icon on auto-generated row', () => {
+    it('should display icon on auto-generated row', async () => {
       render(
         <Test
           initialState={{
@@ -193,11 +215,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           rows={baselineProps.rows?.map((row) => ({ ...row, isFilled: false }))}
         />,
       );
-
-      expect(screen.getByTestId('CloseIcon')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('CloseIcon')).toBeVisible();
+      });
     });
 
-    it('should respect the grouping criteria with colDef.groupable = false', () => {
+    it('should respect the grouping criteria with colDef.groupable = false', async () => {
       render(
         <Test
           columns={[
@@ -217,45 +240,48 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal([
-        'Cat A (3)',
-        'Cat 1 (1)',
-        '',
-        'Cat 2 (2)',
-        '',
-        '',
-        'Cat B (2)',
-        'Cat 2 (1)',
-        '',
-        'Cat 1 (1)',
-        '',
-      ]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (3)',
+          'Cat 1 (1)',
+          '',
+          'Cat 2 (2)',
+          '',
+          '',
+          'Cat B (2)',
+          'Cat 2 (1)',
+          '',
+          'Cat 1 (1)',
+          '',
+        ]);
+      });
     });
 
-    it('should allow to use several time the same grouping criteria', () => {
+    it('should allow to use several time the same grouping criteria', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category1'] } }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
-
-      expect(getColumnValues(0)).to.deep.equal([
-        'Cat A (3)',
-        'Cat A (3)',
-        '',
-        '',
-        '',
-        'Cat B (2)',
-        'Cat B (2)',
-        '',
-        '',
-      ]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (3)',
+          'Cat A (3)',
+          '',
+          '',
+          '',
+          'Cat B (2)',
+          'Cat B (2)',
+          '',
+          '',
+        ]);
+      });
     });
   });
 
   describe('colDef: groupingValueGetter & valueGetter', () => {
-    it('should use groupingValueGetter to group rows when defined', () => {
+    it('should use groupingValueGetter to group rows when defined', async () => {
       render(
         <Test
           columns={[
@@ -271,19 +297,21 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal([
-        'groupingValue Cat A (3)',
-        '',
-        '',
-        '',
-        'groupingValue Cat B (2)',
-        '',
-        '',
-      ]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'groupingValue Cat A (3)',
+          '',
+          '',
+          '',
+          'groupingValue Cat B (2)',
+          '',
+          '',
+        ]);
+      });
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
     });
 
-    it('should react to groupingValueGetter update', () => {
+    it('should react to groupingValueGetter update', async () => {
       render(
         <Test
           columns={[
@@ -299,8 +327,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['0 (3)', '', '', '', '1 (2)', '', '']);
-      expect(getColumnValues(1)).to.deep.equal(['', '0', '2', '4', '', '1', '3']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0 (3)', '', '', '', '1 (2)', '', '']);
+      });
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '2', '4', '', '1', '3']);
+      });
 
       act(() =>
         apiRef.current?.updateColumns([
@@ -310,12 +342,15 @@ describe('<DataGridPremium /> - Row grouping', () => {
           },
         ]),
       );
-
-      expect(getColumnValues(0)).to.deep.equal(['0 (2)', '', '', '1 (2)', '', '', '2 (1)', '']);
-      expect(getColumnValues(1)).to.deep.equal(['', '0', '3', '', '1', '4', '', '2']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0 (2)', '', '', '1 (2)', '', '', '2 (1)', '']);
+      });
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '3', '', '1', '4', '', '2']);
+      });
     });
 
-    it('should use valueGetter to group the rows when defined', () => {
+    it('should use valueGetter to group the rows when defined', async () => {
       render(
         <Test
           columns={[
@@ -331,19 +366,23 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal([
-        'value Cat A (3)',
-        '',
-        '',
-        '',
-        'value Cat B (2)',
-        '',
-        '',
-      ]);
-      expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'value Cat A (3)',
+          '',
+          '',
+          '',
+          'value Cat B (2)',
+          '',
+          '',
+        ]);
+      });
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+      });
     });
 
-    it('should still pass the raw row value to the groupingValueGetter callback when valueGetter defined', () => {
+    it('should still pass the raw row value to the groupingValueGetter callback when valueGetter defined', async () => {
       render(
         <Test
           initialState={{
@@ -363,16 +402,20 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal([
-        'groupingValue Cat A (3)',
-        '',
-        '',
-        '',
-        'groupingValue Cat B (2)',
-        '',
-        '',
-      ]);
-      expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'groupingValue Cat A (3)',
+          '',
+          '',
+          '',
+          'groupingValue Cat B (2)',
+          '',
+          '',
+        ]);
+      });
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+      });
     });
   });
 
@@ -631,22 +674,24 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
         await microtasks();
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat B (2)',
-          'Cat 2 (1)',
-          '',
-          'Cat 1 (1)',
-          '',
-          'Cat A (3)',
-          'Cat 2 (2)',
-          '',
-          '',
-          'Cat 1 (1)',
-          '',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat B (2)',
+            'Cat 2 (1)',
+            '',
+            'Cat 1 (1)',
+            '',
+            'Cat A (3)',
+            'Cat 2 (2)',
+            '',
+            '',
+            'Cat 1 (1)',
+            '',
+          ]);
+        });
       });
 
-      it('should sort leaves if leaf field is defined', () => {
+      it('should sort leaves if leaf field is defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -658,22 +703,24 @@ describe('<DataGridPremium /> - Row grouping', () => {
             defaultGroupingExpansionDepth={-1}
           />,
         );
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat B (2)',
-          'Cat 2 (1)',
-          '3',
-          'Cat 1 (1)',
-          '4',
-          'Cat A (3)',
-          'Cat 2 (2)',
-          '1',
-          '2',
-          'Cat 1 (1)',
-          '0',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat B (2)',
+            'Cat 2 (1)',
+            '3',
+            'Cat 1 (1)',
+            '4',
+            'Cat A (3)',
+            'Cat 2 (2)',
+            '1',
+            '2',
+            'Cat 1 (1)',
+            '0',
+          ]);
+        });
       });
 
-      it('should use the leaf field for sorting if mainGroupingCriteria is not defined and leaf field is defined', () => {
+      it('should use the leaf field for sorting if mainGroupingCriteria is not defined and leaf field is defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -685,22 +732,24 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (3)',
-          'Cat 1 (1)',
-          '0',
-          'Cat 2 (2)',
-          '2',
-          '1',
-          'Cat B (2)',
-          'Cat 2 (1)',
-          '3',
-          'Cat 1 (1)',
-          '4',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (3)',
+            'Cat 1 (1)',
+            '0',
+            'Cat 2 (2)',
+            '2',
+            '1',
+            'Cat B (2)',
+            'Cat 2 (1)',
+            '3',
+            'Cat 1 (1)',
+            '4',
+          ]);
+        });
       });
 
-      it('should use the leaf field for sorting if mainGroupingCriteria is not one of the grouping criteria and leaf field is defined', () => {
+      it('should use the leaf field for sorting if mainGroupingCriteria is not one of the grouping criteria and leaf field is defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -713,22 +762,24 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (3)',
-          'Cat 1 (1)',
-          '0',
-          'Cat 2 (2)',
-          '2',
-          '1',
-          'Cat B (2)',
-          'Cat 2 (1)',
-          '3',
-          'Cat 1 (1)',
-          '4',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (3)',
+            'Cat 1 (1)',
+            '0',
+            'Cat 2 (2)',
+            '2',
+            '1',
+            'Cat B (2)',
+            'Cat 2 (1)',
+            '3',
+            'Cat 1 (1)',
+            '4',
+          ]);
+        });
       });
 
-      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by a grouping criteria', () => {
+      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by a grouping criteria', async () => {
         render(
           <Test
             rows={unbalancedRows}
@@ -739,19 +790,21 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat B (2)',
-          '2',
-          '3',
-          'Cat A (2)',
-          '0',
-          '1',
-          '4',
-          '5',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat B (2)',
+            '2',
+            '3',
+            'Cat A (2)',
+            '0',
+            '1',
+            '4',
+            '5',
+          ]);
+        });
       });
 
-      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by leaves', () => {
+      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by leaves', async () => {
         render(
           <Test
             rows={unbalancedRows}
@@ -762,21 +815,23 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (2)',
-          '1',
-          '0',
-          'Cat B (2)',
-          '3',
-          '2',
-          '5',
-          '4',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (2)',
+            '1',
+            '0',
+            'Cat B (2)',
+            '3',
+            '2',
+            '5',
+            '4',
+          ]);
+        });
       });
     });
 
     describe('prop: rowGroupingColumnMode = "multiple"', () => {
-      it('should use the column grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
+      it('should use the column grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -786,10 +841,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '', '', 'Cat A (3)', '', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '', '', 'Cat A (3)', '', '', '']);
+        });
       });
 
-      it('should use the column grouping criteria for sorting if mainGroupingCriteria matches the column grouping criteria and leaf field is defined', () => {
+      it('should use the column grouping criteria for sorting if mainGroupingCriteria matches the column grouping criteria and leaf field is defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -803,18 +860,20 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat B (2)',
-          '3',
-          '4',
-          'Cat A (3)',
-          '0',
-          '1',
-          '2',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat B (2)',
+            '3',
+            '4',
+            'Cat A (3)',
+            '0',
+            '1',
+            '2',
+          ]);
+        });
       });
 
-      it('should use the leaf field for sorting if mainGroupingCriteria is not defined and leaf field is defined', () => {
+      it('should use the leaf field for sorting if mainGroupingCriteria is not defined and leaf field is defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -827,18 +886,20 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (3)',
-          '2',
-          '1',
-          '0',
-          'Cat B (2)',
-          '4',
-          '3',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (3)',
+            '2',
+            '1',
+            '0',
+            'Cat B (2)',
+            '4',
+            '3',
+          ]);
+        });
       });
 
-      it("should use the leaf field for sorting if mainGroupingCriteria doesn't match the column grouping criteria and leaf field is defined", () => {
+      it("should use the leaf field for sorting if mainGroupingCriteria doesn't match the column grouping criteria and leaf field is defined", async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -852,15 +913,17 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (3)',
-          '2',
-          '1',
-          '0',
-          'Cat B (2)',
-          '4',
-          '3',
-        ]);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal([
+            'Cat A (3)',
+            '2',
+            '1',
+            '0',
+            'Cat B (2)',
+            '4',
+            '3',
+          ]);
+        });
       });
     });
   });
@@ -990,7 +1053,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         });
       });
 
-      it('should not filter the groups when filtering with an item that is not on the grouping column', () => {
+      it('should not filter the groups when filtering with an item that is not on the grouping column', async () => {
         render(
           <Test
             initialState={{
@@ -1006,10 +1069,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // "Cat A" & "Cat 2" groups are not tested against the "id" filter item
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (1)', 'Cat 2 (1)', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (1)', 'Cat 2 (1)', '']);
+        });
       });
 
-      it('should apply quick filter without throwing error', () => {
+      it('should apply quick filter without throwing error', async () => {
         render(
           <Test
             initialState={{
@@ -1025,10 +1090,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
+        });
       });
 
-      it('should let group appears when a leaf rows pass quick filter', () => {
+      it('should let group appears when a leaf rows pass quick filter', async () => {
         render(
           <Test
             initialState={{
@@ -1045,10 +1112,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
-        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+        });
       });
 
-      it('should let group appears when a rows pass quick filter based on both grouping and leaf values', () => {
+      it('should let group appears when a rows pass quick filter based on both grouping and leaf values', async () => {
         render(
           <Test
             initialState={{
@@ -1065,10 +1134,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // Corresponds to rows A.1 and B.1
-        expect(getColumnValues(1)).to.deep.equal(['', '1', '2']);
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', '1', '2']);
+        });
       });
 
-      it('should show all children when a group pass quick filter', () => {
+      it('should show all children when a group pass quick filter', async () => {
         render(
           <Test
             initialState={{
@@ -1084,10 +1155,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+        });
       });
 
-      it('should let group appears when a leaf rows pass filterModel', () => {
+      it('should let group appears when a leaf rows pass filterModel', async () => {
         render(
           <Test
             initialState={{
@@ -1109,10 +1182,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
-        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+        });
       });
 
-      it('should manage link operator OR across group and leaf columns', () => {
+      it('should manage link operator OR across group and leaf columns', async () => {
         render(
           <Test
             initialState={{
@@ -1142,10 +1217,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // Corresponds to rows id 0, 1, 2 because of Cat A, ann id 4 because of Cat 1
-        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
+        });
       });
 
-      it('should keep the correct count of the children and descendants in the filter state', () => {
+      it('should keep the correct count of the children and descendants in the filter state', async () => {
         const extendedColumns = [
           ...baselineProps.columns,
           {
@@ -1170,10 +1247,14 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
+        await waitFor(() => {
+          const { filteredChildrenCountLookup } = apiRef.current!.state.filter;
+          expect(filteredChildrenCountLookup['auto-generated-row-category1/Cat A']).to.equal(2);
+        });
+
         const { filteredChildrenCountLookup, filteredDescendantCountLookup } =
           apiRef.current!.state.filter;
 
-        expect(filteredChildrenCountLookup['auto-generated-row-category1/Cat A']).to.equal(2);
         expect(filteredDescendantCountLookup['auto-generated-row-category1/Cat A']).to.equal(5);
 
         expect(
@@ -1206,7 +1287,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
           expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '']);
         });
 
-        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+        });
       });
 
       it('should use the column grouping criteria for filtering if mainGroupingCriteria matches the column grouping criteria and leaf field is defined', async () => {
@@ -1291,7 +1374,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         });
       });
 
-      it('should not filter the groups when filtering with an item that is not on the grouping column', () => {
+      it('should not filter the groups when filtering with an item that is not on the grouping column', async () => {
         render(
           <Test
             initialState={{
@@ -1308,11 +1391,15 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // "Cat A" & "Cat 2" groups are not tested against the "id" filter item
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (1)', '', '']);
-        expect(getColumnValues(1)).to.deep.equal(['', 'Cat 2 (1)', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (1)', '', '']);
+        });
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', 'Cat 2 (1)', '']);
+        });
       });
 
-      it('should not filter the groups when filtering with an item that is from another grouping column', () => {
+      it('should not filter the groups when filtering with an item that is from another grouping column', async () => {
         render(
           <Test
             initialState={{
@@ -1335,12 +1422,16 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         // "Cat A" is testing against the "__row_group_by_columns_group_category1__" filter item, but "Cat 1" and "Cat 2" are not
-        expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', '', '']);
-        expect(getColumnValues(1)).to.deep.equal(['', 'Cat 1 (1)', '', 'Cat 2 (2)', '', '']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', '', '']);
+        });
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal(['', 'Cat 1 (1)', '', 'Cat 2 (2)', '', '']);
+        });
       });
     });
 
-    it('should not apply filters when the row is expanded', () => {
+    it('should not apply filters when the row is expanded', async () => {
       render(
         <Test
           initialState={{
@@ -1353,10 +1444,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.callCount).to.equal(0);
+      await waitFor(() => {
+        expect(onFilteredRowsSet.callCount).to.equal(0);
+      });
     });
 
-    it('should not apply filters when the row is collapsed', () => {
+    it('should not apply filters when the row is collapsed', async () => {
       render(
         <Test
           initialState={{
@@ -1370,12 +1463,14 @@ describe('<DataGridPremium /> - Row grouping', () => {
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.callCount).to.equal(0);
+      await waitFor(() => {
+        expect(onFilteredRowsSet.callCount).to.equal(0);
+      });
     });
   });
 
   describe('column pinning', () => {
-    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "single"', () => {
+    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "single"', async () => {
       const { setProps } = render(
         <Test
           checkboxSelection
@@ -1384,20 +1479,26 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       const initialColumnOrder = ['', 'category1', 'id', 'category1', 'category2'];
-      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      });
       setProps({ pinnedColumns: { left: ['id'] } });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        'id',
-        '',
-        'category1',
-        'category1',
-        'category2',
-      ]);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          'id',
+          '',
+          'category1',
+          'category1',
+          'category2',
+        ]);
+      });
       setProps({ pinnedColumns: { left: [] } });
-      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      });
     });
 
-    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "multiple"', () => {
+    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "multiple"', async () => {
       const { setProps } = render(
         <Test
           checkboxSelection
@@ -1413,21 +1514,25 @@ describe('<DataGridPremium /> - Row grouping', () => {
           left: ['__row_group_by_columns_group_category2__', 'id'],
         },
       });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        'category2',
-        'id',
-        '',
-        'category1',
-        'category1',
-        'category2',
-      ]);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          'category2',
+          'id',
+          '',
+          'category1',
+          'category1',
+          'category2',
+        ]);
+      });
       setProps({ pinnedColumns: { left: [] } });
-      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      });
     });
   });
 
   describe('accessibility', () => {
-    it('should add necessary treegrid aria attributes to the rows', () => {
+    it('should add necessary treegrid aria attributes to the rows', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1436,7 +1541,9 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
 
-      expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // Cat A
+      await waitFor(() => {
+        expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // Cat A
+      });
       expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // Cat 1
       expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
       expect(getRow(1).getAttribute('aria-setsize')).to.equal('2'); // Cat A has Cat 1 & Cat 2
@@ -1499,13 +1606,17 @@ describe('<DataGridPremium /> - Row grouping', () => {
       />,
     );
 
-    expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+    await waitFor(() => {
+      expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+    });
 
     // trigger row update without any changes in row data
     await act(async () => {
       apiRef.current?.updateRows([{ id: 1 }]);
     });
 
-    expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+    await waitFor(() => {
+      expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+    });
   });
 });
