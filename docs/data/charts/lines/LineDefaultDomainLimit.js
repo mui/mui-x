@@ -6,16 +6,19 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { dataset } from './GDPperCapita';
 
 export default function LineDefaultDomainLimit() {
-  const [strictDomainLimit, setStrictDomainLimit] = React.useState(false);
+  const [preferStrictDomainInLineCharts, setpreferStrictDomainInLineCharts] =
+    React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(false);
   return (
     <Stack sx={{ width: '100%' }}>
       <Stack direction="row">
         <FormControlLabel
-          checked={strictDomainLimit}
+          checked={preferStrictDomainInLineCharts}
           control={
             <Checkbox
-              onChange={(event) => setStrictDomainLimit(event.target.checked)}
+              onChange={(event) =>
+                setpreferStrictDomainInLineCharts(event.target.checked)
+              }
             />
           }
           label="Strict domain limit"
@@ -33,7 +36,7 @@ export default function LineDefaultDomainLimit() {
       <div style={{ width: '100%', maxWidth: fullWidth ? undefined : 450 }}>
         <LineChart
           dataset={dataset}
-          experimentalFeatures={{ strictDomainLimit }}
+          experimentalFeatures={{ preferStrictDomainInLineCharts }}
           xAxis={[
             {
               id: 'Years',

@@ -233,7 +233,7 @@ LineChart.propTypes = {
    * Options to enable features planned for the next major.
    */
   experimentalFeatures: PropTypes.shape({
-    strictDomainLimit: PropTypes.bool,
+    preferStrictDomainInLineCharts: PropTypes.bool,
   }),
   /**
    * Option to display a cartesian grid in the background.

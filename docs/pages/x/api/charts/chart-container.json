@@ -8,7 +8,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableVoronoi": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ strictDomainLimit?: bool }" }
+      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },
     "height": { "type": { "name": "number" } },
     "highlightedAxis": {

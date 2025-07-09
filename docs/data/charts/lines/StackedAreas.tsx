@@ -42,6 +42,7 @@ export default function StackedAreas() {
             showMark: false,
           },
         ]}
+        experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
         height={300}
       />
     </div>

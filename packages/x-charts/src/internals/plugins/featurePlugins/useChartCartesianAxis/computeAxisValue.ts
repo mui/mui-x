@@ -56,7 +56,10 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   zoomMap?: Map<AxisId, ZoomData>;
   zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
-  experimental_strictDomainLimit?: boolean;
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts?: boolean;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -80,7 +83,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   zoomOptions,
   getFilters,
-  experimental_strictDomainLimit,
+  preferStrictDomainInLineCharts,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -183,7 +186,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const domainLimit = experimental_strictDomainLimit
+    const domainLimit = preferStrictDomainInLineCharts
       ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
       : (axis.domainLimit ?? 'nice');
 

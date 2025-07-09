@@ -23,7 +23,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ strictDomainLimit?: bool }" }
+      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }

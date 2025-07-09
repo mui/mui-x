@@ -5,7 +5,7 @@ export const selectorChartExperimentalFeaturesState: ChartRootSelector<
   UseChartExperimentalFeaturesSignature
 > = (state) => state.experimentalFeatures;
 
-export const selectorUseStrictDomainLimit = createSelector(
+export const selectorPreferStrictDomainInLineCharts = createSelector(
   [selectorChartExperimentalFeaturesState],
-  (features) => Boolean(features?.strictDomainLimit),
+  (features) => Boolean(features?.preferStrictDomainInLineCharts),
 );

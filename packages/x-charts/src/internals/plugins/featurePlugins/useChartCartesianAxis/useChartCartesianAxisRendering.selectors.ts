@@ -15,7 +15,7 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import { selectorUseStrictDomainLimit } from '../../corePlugins/useChartExperimentalFeature';
+import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -138,7 +138,7 @@ export const selectorChartXAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    selectorUseStrictDomainLimit,
+    selectorPreferStrictDomainInLineCharts,
   ],
   (
     axis,
@@ -148,7 +148,7 @@ export const selectorChartXAxis = createSelector(
     zoomMap,
     zoomOptions,
     getFilters,
-    experimental_strictDomainLimit,
+    preferStrictDomainInLineCharts,
   ) =>
     computeAxisValue({
       drawingArea,
@@ -159,7 +159,7 @@ export const selectorChartXAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
-      experimental_strictDomainLimit,
+      preferStrictDomainInLineCharts,
     }),
 );
 
@@ -172,7 +172,7 @@ export const selectorChartYAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    selectorUseStrictDomainLimit,
+    selectorPreferStrictDomainInLineCharts,
   ],
   (
     axis,
@@ -182,7 +182,7 @@ export const selectorChartYAxis = createSelector(
     zoomMap,
     zoomOptions,
     getFilters,
-    experimental_strictDomainLimit,
+    preferStrictDomainInLineCharts,
   ) =>
     computeAxisValue({
       drawingArea,
@@ -193,7 +193,7 @@ export const selectorChartYAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
-      experimental_strictDomainLimit,
+      preferStrictDomainInLineCharts,
     }),
 );
 
