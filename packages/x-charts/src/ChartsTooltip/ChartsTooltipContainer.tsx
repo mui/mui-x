@@ -13,6 +13,7 @@ import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
+  selectorChartsAxisTooltipPosition,
   selectorChartsInteractionAxisTooltip,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -82,6 +83,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       : selectorChartsInteractionItemIsDefined,
   );
 
+  const position = useSelector(
+    store,
+    trigger === 'axis' && axisSystem === 'cartesian'
+      ? selectorChartsAxisTooltipPosition
+      : () => null,
+  );
+
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null) {
@@ -104,23 +112,46 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       element.removeEventListener('pointermove', handlePointerEvent);
       update.clear();
     };
-  }, [svgRef, positionRef]);
+  }, [svgRef, positionRef, position]);
 
+  React.useEffect(() => {
+    const update = rafThrottle(() => popperRef.current?.update());
+
+    update();
+  }, [position]);
   const anchorEl = React.useMemo(
-    () => ({
-      getBoundingClientRect: () => ({
-        x: positionRef.current.x,
-        y: positionRef.current.y,
-        top: positionRef.current.y,
-        left: positionRef.current.x,
-        right: positionRef.current.x,
-        bottom: positionRef.current.y,
-        width: 0,
-        height: 0,
-        toJSON: () => '',
-      }),
-    }),
-    [positionRef],
+    () =>
+      position !== null
+        ? {
+            getBoundingClientRect: () => {
+              const boundingCLientRect = svgRef.current!.getBoundingClientRect();
+              return {
+                x: boundingCLientRect.left + position.x,
+                y: boundingCLientRect.top + position.y,
+                top: boundingCLientRect.top + position.y,
+                left: boundingCLientRect.left + position.x,
+                right: boundingCLientRect.left + position.x,
+                bottom: boundingCLientRect.top + position.y,
+                width: 0,
+                height: 0,
+                toJSON: () => '',
+              };
+            },
+          }
+        : {
+            getBoundingClientRect: () => ({
+              x: positionRef.current.x,
+              y: positionRef.current.y,
+              top: positionRef.current.y,
+              left: positionRef.current.x,
+              right: positionRef.current.x,
+              bottom: positionRef.current.y,
+              width: 0,
+              height: 0,
+              toJSON: () => '',
+            }),
+          },
+    [position, positionRef],
   );
 
   const isMouse = pointerType?.pointerType === 'mouse' || isFineMainPointer;
