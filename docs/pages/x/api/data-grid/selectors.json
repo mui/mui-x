@@ -324,6 +324,12 @@
     "description": ""
   },
   { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
+  {
+    "name": "gridSidebarContentSelector",
+    "returnType": "{ sidebarId: string | undefined; labelId: string | undefined; value: GridSidebarValue | undefined }",
+    "description": ""
+  },
+  { "name": "gridSidebarOpenSelector", "returnType": "boolean", "description": "" },
   { "name": "gridSidebarStateSelector", "returnType": "GridSidebarState", "description": "" },
   {
     "name": "gridSortModelSelector",

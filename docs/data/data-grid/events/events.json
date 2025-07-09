@@ -463,7 +463,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "sidebarClose",
     "description": "Fired when the sidebar is closed.",
-    "params": "{ openedValue: GridSidebarValue }",
+    "params": "{ value: GridSidebarValue }",
     "event": "MuiEvent<{}>",
     "componentProp": "onSidebarClose"
   },
@@ -471,7 +471,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "sidebarOpen",
     "description": "Fired when the sidebar is opened.",
-    "params": "{ openedValue: GridSidebarValue }",
+    "params": "{ value: GridSidebarValue }",
     "event": "MuiEvent<{}>",
     "componentProp": "onSidebarOpen"
   },
