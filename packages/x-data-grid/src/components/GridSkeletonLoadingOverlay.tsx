@@ -17,7 +17,7 @@ import {
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
-import { GridColDef, GridEventListener, GridColType } from '../models';
+import { GridColDef, GridEventListener } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
@@ -26,6 +26,7 @@ import { escapeOperandAttributeSelector } from '../utils/domUtils';
 import { GridScrollbarFillerCell } from './GridScrollbarFillerCell';
 import { rtlFlipSide } from '../utils/rtlFlipSide';
 import { attachPinnedStyle } from '../internals/utils';
+import { GridStateColDef } from '../models/colDef/gridColDef';
 
 const SkeletonOverlay = styled('div', {
   name: 'MuiDataGrid',
@@ -156,7 +157,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
           <slots.skeletonCell
             key={`skeleton-column-${i}-${column.field}`}
             field={column.field}
-            type={'type' in column ? (column.type as GridColType) : 'string'}
+            type={(column as GridStateColDef).type}
             align={column.align}
             width="var(--width)"
             height={dimensions.rowHeight}
