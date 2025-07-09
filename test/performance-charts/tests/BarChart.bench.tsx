@@ -22,7 +22,7 @@ describe('BarChart', () => {
         <BarChart xAxis={[{ data: xData }]} series={[{ data: yData }]} width={500} height={300} />,
       );
 
-      expect(page.getByText('143')).toBeInTheDocument();
+      expect(page.getByText('205')).toBeInTheDocument();
 
       cleanup();
     },
