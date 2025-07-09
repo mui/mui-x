@@ -1,7 +1,6 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import index from 'eslint-plugin-jsdoc';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartId } from '../hooks/useChartId';
