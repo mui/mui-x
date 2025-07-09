@@ -1,5 +1,5 @@
 import { bench as vitestBench, BenchOptions } from 'vitest';
-import { commands } from '@vitest/browser/context';
+import { cdp, commands } from '@vitest/browser/context';
 import { getTaskMode } from './options';
 import { isTrace } from './env';
 
@@ -11,9 +11,12 @@ export function bench(name: string, fn: () => Promise<void>, options?: BenchOpti
 function wrapFn(fn: () => Promise<void>) {
   return async function wrappedFn() {
     try {
+      console.log('Memory before:', await cdp().send('Runtime.getHeapUsage'));
       await fn();
     } finally {
+      console.log('Memory after run:', await cdp().send('Runtime.getHeapUsage'));
       await commands.requestGC();
+      console.log('Memory after GC:', await cdp().send('Runtime.getHeapUsage'));
     }
   };
 }
