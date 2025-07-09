@@ -62,7 +62,7 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
       if (open) {
         apiRef.current.hideSidebar();
       } else {
-        apiRef.current.showSidebar(GridSidebarValue.pivot, panelId, buttonId);
+        apiRef.current.showSidebar(GridSidebarValue.Pivot, panelId, buttonId);
       }
       onClick?.(event);
     };

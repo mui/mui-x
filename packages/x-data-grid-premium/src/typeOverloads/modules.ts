@@ -71,11 +71,11 @@ interface GridEventLookupPremium extends GridEventLookupPro {
   /**
    * Fired when the sidebar is opened.
    */
-  sidebarOpen: { params: { openedValue: GridSidebarValue } };
+  sidebarOpen: { params: { value: GridSidebarValue } };
   /**
    * Fired when the sidebar is closed.
    */
-  sidebarClose: { params: { openedValue: GridSidebarValue } };
+  sidebarClose: { params: { value: GridSidebarValue } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {

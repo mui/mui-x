@@ -7,7 +7,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridSidebarStateSelector, GridSidebarValue } from '../../hooks/features/sidebar';
+import { gridSidebarContentSelector } from '../../hooks/features/sidebar';
 
 export type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -40,20 +40,20 @@ function Sidebar(props: SidebarProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const sidebarState = useGridSelector(apiRef, gridSidebarStateSelector);
+  const { value, sidebarId, labelId } = useGridSelector(apiRef, gridSidebarContentSelector);
 
-  const sidebarContent = apiRef.current.unstable_applyPipeProcessors(
-    'sidebar',
-    null,
-    sidebarState.openedValue ?? GridSidebarValue.pivot,
-  );
+  if (!value) {
+    return null;
+  }
+
+  const sidebarContent = apiRef.current.unstable_applyPipeProcessors('sidebar', null, value);
 
   return (
     <SidebarRoot
-      id={sidebarState.sidebarId}
+      id={sidebarId}
       className={clsx(className, classes.root)}
       ownerState={rootProps}
-      aria-labelledby={sidebarState.labelId}
+      aria-labelledby={labelId}
       {...other}
     >
       <ResizablePanelHandle />

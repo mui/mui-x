@@ -13,7 +13,7 @@ export function GridColumnMenuPivotItem(props: GridColumnMenuItemProps) {
 
   const openPivotSettings = (event: React.MouseEvent<HTMLElement>) => {
     onClick(event);
-    apiRef.current.showSidebar(GridSidebarValue.pivot);
+    apiRef.current.showSidebar(GridSidebarValue.Pivot);
   };
 
   return (

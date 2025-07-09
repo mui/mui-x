@@ -86,7 +86,7 @@ export const pivotingStateInitializer: GridStateInitializer<
   const sidebarStateUpdate = open
     ? {
         open,
-        openedValue: GridSidebarValue.pivot,
+        value: GridSidebarValue.Pivot,
       }
     : {};
 
@@ -380,8 +380,7 @@ export const useGridPivoting = (
         return;
       }
       apiRef.current.setState((state) => {
-        const panelOpen =
-          state.sidebar.open && state.sidebar.openedValue === GridSidebarValue.pivot;
+        const panelOpen = state.sidebar.open && state.sidebar.value === GridSidebarValue.Pivot;
         const newPanelOpen = typeof callback === 'function' ? callback(panelOpen) : callback;
         if (panelOpen === newPanelOpen) {
           return state;
@@ -392,7 +391,7 @@ export const useGridPivoting = (
           sidebar: {
             ...state.sidebar,
             open: newPanelOpen,
-            openedValue: GridSidebarValue.pivot,
+            value: GridSidebarValue.Pivot,
           },
         };
       });
@@ -495,7 +494,7 @@ export const useGridPivoting = (
 
   const sidebarPreProcessing = React.useCallback<GridPipeProcessor<'sidebar'>>(
     (initialValue, value) => {
-      if (value === GridSidebarValue.pivot) {
+      if (value === GridSidebarValue.Pivot) {
         return <GridPivotPanel />;
       }
 

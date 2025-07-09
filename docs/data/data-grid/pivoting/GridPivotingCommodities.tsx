@@ -25,7 +25,7 @@ const initialState: GridInitialState = {
   },
   sidebar: {
     open: true,
-    openedValue: GridSidebarValue.pivot,
+    value: GridSidebarValue.Pivot,
   },
   pinnedColumns: {
     left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],

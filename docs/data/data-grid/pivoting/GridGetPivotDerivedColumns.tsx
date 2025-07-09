@@ -86,7 +86,7 @@ export default function GridGetPivotDerivedColumns() {
             },
             sidebar: {
               open: true,
-              openedValue: GridSidebarValue.pivot,
+              value: GridSidebarValue.Pivot,
             },
           }}
           showToolbar

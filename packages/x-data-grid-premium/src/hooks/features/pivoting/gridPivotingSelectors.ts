@@ -6,7 +6,7 @@ const gridPivotingStateSelector = createRootSelector((state: GridStatePremium) =
 
 export const gridPivotPanelOpenSelector = createSelector(
   gridSidebarStateSelector,
-  (sidebar) => sidebar.openedValue === GridSidebarValue.pivot && sidebar.open,
+  (sidebar) => sidebar.value === GridSidebarValue.Pivot && sidebar.open,
 );
 
 export const gridPivotModelSelector = createSelector(

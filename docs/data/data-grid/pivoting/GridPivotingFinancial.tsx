@@ -63,7 +63,7 @@ export default function GridPivotingFinancial() {
             },
             sidebar: {
               open: true,
-              openedValue: GridSidebarValue.pivot,
+              value: GridSidebarValue.Pivot,
             },
           }}
           columnGroupHeaderHeight={36}

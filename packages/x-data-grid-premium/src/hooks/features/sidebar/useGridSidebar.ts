@@ -27,12 +27,12 @@ export const useGridSidebar = (
 ): void => {
   const hideSidebar = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      if (!state.sidebar.open || !state.sidebar.openedValue) {
+      if (!state.sidebar.open || !state.sidebar.value) {
         return state;
       }
 
       apiRef.current.publishEvent('sidebarClose', {
-        openedValue: state.sidebar.openedValue,
+        value: state.sidebar.value,
       });
       return { ...state, sidebar: { open: false } };
     });
@@ -45,13 +45,13 @@ export const useGridSidebar = (
         sidebar: {
           ...state.sidebar,
           open: true,
-          openedValue: newValue,
+          value: newValue,
           sidebarId,
           labelId,
         },
       }));
       apiRef.current.publishEvent('sidebarOpen', {
-        openedValue: newValue,
+        value: newValue,
       });
     },
     [apiRef],
@@ -66,9 +66,6 @@ export const useGridSidebar = (
     'public',
   );
 
-  /**
-   * PRE-PROCESSING
-   */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const sidebarToExport = gridSidebarStateSelector(apiRef);

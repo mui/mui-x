@@ -121,7 +121,7 @@ const initialState = {
   },
   sidebar: {
     open: true,
-    openedValue: GridSidebarValue.pivot,
+    value: GridSidebarValue.Pivot,
   },
 };
 
