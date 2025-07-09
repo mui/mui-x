@@ -204,14 +204,14 @@ function generateResultMarkdown(results) {
   if (results.removed.length > 0) {
     markdown += `\n**Removed benchmarks**: ${results.removed.length}\n`;
     results.removed.forEach((r) => {
-      markdown += `- ${r.name}`;
+      markdown += `- ${r.name}\n`;
     });
   }
 
   if (results.failed.length > 0) {
     markdown += `\n**Failed benchmarks**: ${results.failed.length}\n`;
     results.failed.forEach((r) => {
-      markdown += `- ${r.name}`;
+      markdown += `- ${r.name}\n`;
     });
   }
 
