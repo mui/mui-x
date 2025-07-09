@@ -1,6 +1,7 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
 import { Gesture } from './Gesture';
-import { PointerManager } from './PointerManager';
+import { KeyboardManager } from './KeyboardManager';
+import { PointerManager, PointerManagerOptions } from './PointerManager';
 import { GestureElement } from './types/GestureElement';
 import { MergeUnions } from './types/MergeUnions';
 import { OmitNever } from './types/OmitNever';
@@ -13,35 +14,7 @@ import { TargetElement } from './types/TargetElement';
 export type GestureManagerOptions<
   GestureName extends string,
   Gestures extends Gesture<GestureName>,
-> = {
-  /**
-   * The root DOM element to which the PointerManager will attach its event listeners.
-   * All gesture detection will be limited to events within this element.
-   */
-  root?: TargetElement;
-
-  /**
-   * CSS touch-action property to apply to the root element.
-   * Controls how the browser responds to touch interactions.
-   *
-   * Common values:
-   * - "none": Disable browser handling of all panning/zooming gestures
-   * - "pan-x": Allow horizontal panning, disable vertical gestures
-   * - "pan-y": Allow vertical panning, disable horizontal gestures
-   * - "manipulation": Allow panning and pinch zoom, disable double-tap
-   *
-   * @see https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-   */
-  touchAction?: string;
-
-  /**
-   * Whether to use passive event listeners for improved scrolling performance.
-   * When true, gestures cannot use preventDefault() on touch events.
-   *
-   * @default false
-   */
-  passive?: boolean;
-
+> = PointerManagerOptions & {
   /**
    * Array of gesture templates to register with the manager.
    * These serve as prototypes that can be cloned for individual elements.
@@ -171,6 +144,8 @@ export class GestureManager<
     new ActiveGesturesRegistry();
 
   private pointerManager: PointerManager;
+
+  private keyboardManager: KeyboardManager = new KeyboardManager();
 
   /**
    * Create a new GestureManager instance to coordinate gesture recognition
@@ -373,7 +348,12 @@ export class GestureManager<
     // Clone the gesture template and create a new instance with optional overrides
     // This allows each element to have its own state, event listeners, and configuration
     const gestureInstance = gestureTemplate.clone(options);
-    gestureInstance.init(element, this.pointerManager, this.activeGesturesRegistry);
+    gestureInstance.init(
+      element,
+      this.pointerManager,
+      this.activeGesturesRegistry,
+      this.keyboardManager,
+    );
 
     // Store the gesture in the element's gesture map
     elementGestures.set(gestureName, gestureInstance);
@@ -445,5 +425,6 @@ export class GestureManager<
     this.gestureTemplates.clear();
     this.elementGestureMap.clear();
     this.activeGesturesRegistry.destroy();
+    this.keyboardManager.destroy();
   }
 }

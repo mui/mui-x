@@ -46,7 +46,7 @@ const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 export type ComputeResult<T extends ChartsAxisProps> = {
   axis: ComputedAxisConfig<T>;
-  axisIds: string[];
+  axisIds: AxisId[];
 };
 
 type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {

@@ -1,3 +1,4 @@
+'use client';
 import { SlotComponentProps } from '@mui/utils/types';
 import * as React from 'react';
 

@@ -1,4 +1,4 @@
-import { Gesture, PointerManager } from '../../core';
+import { Gesture, KeyboardManager, PointerManager } from '../../core';
 import { ActiveGesturesRegistry } from '../../core/ActiveGesturesRegistry';
 import { AnyGesture } from '../AnyGesture';
 import { MatcherState, SyncMatcherFn } from '../Matcher.types';
@@ -73,9 +73,10 @@ export const toUpdateOptions: SyncMatcherFn = function toUpdateOptions(
 
   const pointerManager = new PointerManager({});
   const gestureRegistry = new ActiveGesturesRegistry();
+  const keyboardManager = new KeyboardManager();
 
   // Setup the environment for testing
-  clone.init(target, pointerManager, gestureRegistry);
+  clone.init(target, pointerManager, gestureRegistry, keyboardManager);
 
   // Create and dispatch the change options event
   const changeOptionsEvent = new CustomEvent(`${clone.name}ChangeOptions`, {

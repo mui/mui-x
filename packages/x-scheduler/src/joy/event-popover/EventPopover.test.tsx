@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
 import { spy } from 'sinon';
@@ -11,7 +11,7 @@ const calendarEvent: CalendarEvent = {
   id: '1',
   start: DateTime.fromISO('2025-05-26T07:30:00'),
   end: DateTime.fromISO('2025-05-26T08:15:00'),
-  title: 'Footing',
+  title: 'Running',
   description: 'Morning run',
 };
 
@@ -31,6 +31,7 @@ describe('<EventPopover />', () => {
     calendarEvent,
     calendarEventResource,
     onEventEdit: () => {},
+    onEventDelete: () => {},
     onClose: () => {},
   };
 
@@ -42,7 +43,7 @@ describe('<EventPopover />', () => {
         <EventPopover {...defaultProps} />
       </Popover.Root>,
     );
-    expect(screen.getByDisplayValue('Footing')).not.to.equal(null);
+    expect(screen.getByDisplayValue('Running')).not.to.equal(null);
     expect(screen.getByDisplayValue('Morning run')).not.to.equal(null);
     expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/end date/i)).to.have.value('2025-05-26');
@@ -50,30 +51,45 @@ describe('<EventPopover />', () => {
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
   });
 
-  it('should call onEventEdit with updated values on submit', () => {
+  it('should call "onEventEdit" with updated values on submit', async () => {
     const onEventEdit = spy();
-    render(
+    const { user } = render(
       <Popover.Root open>
         <EventPopover {...defaultProps} onEventEdit={onEventEdit} />
       </Popover.Root>,
     );
-    fireEvent.change(screen.getByRole('textbox', { name: /event title/i }), {
-      target: { value: 'Updated title' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
+    await user.type(screen.getByLabelText(/event title/i), ' test');
+    await user.click(screen.getByRole('button', { name: /save changes/i }));
     expect(onEventEdit.calledOnce).to.equal(true);
-    expect(onEventEdit.firstCall.args[0].title).to.equal('Updated title');
+    expect(onEventEdit.firstCall.args[0].title).to.equal('Running test');
   });
 
-  it('should show error if start date is after end date', () => {
-    render(
+  it('should show error if start date is after end date', async () => {
+    const { user } = render(
       <Popover.Root open>
         <EventPopover {...defaultProps} />
       </Popover.Root>,
     );
-    fireEvent.change(screen.getByLabelText(/start date/i), { target: { value: '2025-05-27' } });
-    fireEvent.change(screen.getByLabelText(/end date/i), { target: { value: '2025-05-26' } });
-    fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
-    expect(screen.getByRole('alert').textContent).to.match(/start.*before.*end/i);
+    await user.clear(screen.getByLabelText(/start date/i));
+    await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
+    await user.clear(screen.getByLabelText(/end date/i));
+    await user.type(screen.getByLabelText(/end date/i), '2025-05-26');
+    await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+    expect(screen.getDescriptionOf(screen.getByLabelText(/start date/i)).textContent).to.match(
+      /start.*before.*end/i,
+    );
+  });
+
+  it('should call "onEventDelete" with the event id when delete button is clicked', async () => {
+    const onEventDelete = spy();
+    const { user } = render(
+      <Popover.Root open>
+        <EventPopover {...defaultProps} onEventDelete={onEventDelete} />
+      </Popover.Root>,
+    );
+    await user.click(screen.getByRole('button', { name: /delete event/i }));
+    expect(onEventDelete.calledOnce).to.equal(true);
+    expect(onEventDelete.firstCall.args[0]).to.equal('1');
   });
 });

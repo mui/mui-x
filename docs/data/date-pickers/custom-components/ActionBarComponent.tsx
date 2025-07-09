@@ -1,24 +1,27 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
+import useId from '@mui/utils/useId';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import DialogActions from '@mui/material/DialogActions';
-import useId from '@mui/utils/useId';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
-import {
-  usePickerActionsContext,
-  usePickerTranslations,
-} from '@mui/x-date-pickers/hooks';
+import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props: PickersActionBarProps) {
   const { actions, className } = props;
   const translations = usePickerTranslations();
-  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
-    usePickerActionsContext();
+  const {
+    clearValue,
+    setValueToToday,
+    acceptValueChanges,
+    cancelValueChanges,
+    goToNextStep,
+    hasNextStep,
+  } = usePickerContext();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = useId();
@@ -75,6 +78,45 @@ function CustomActionBar(props: PickersActionBarProps) {
             key={actionType}
           >
             {translations.todayButtonLabel}
+          </MenuItem>
+        );
+      case 'next':
+        return (
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              goToNextStep();
+            }}
+            key={actionType}
+          >
+            {translations.nextStepButtonLabel}
+          </MenuItem>
+        );
+
+      case 'nextOrAccept':
+        if (hasNextStep) {
+          return (
+            <MenuItem
+              onClick={() => {
+                setAnchorEl(null);
+                goToNextStep();
+              }}
+              key={actionType}
+            >
+              {translations.nextStepButtonLabel}
+            </MenuItem>
+          );
+        }
+
+        return (
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              acceptValueChanges();
+            }}
+            key={actionType}
+          >
+            {translations.okButtonLabel}
           </MenuItem>
         );
       default:

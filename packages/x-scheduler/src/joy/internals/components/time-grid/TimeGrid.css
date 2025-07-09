@@ -1,16 +1,7 @@
 .TimeGridContainer {
-  --weekend-background: var(--mauve-1);
-  --text-strong: var(--mauve-9);
-  --text-soft: var(--mauve-5);
   --fixed-cell-width: 68px;
   --hour-height: 46px;
   --has-scroll: 1;
-}
-
-.mode-dark .TimeGridContainer {
-  --weekend-background: var(--mauve-9);
-  --text-strong: var(--mauve-5);
-  --text-soft: var(--mauve-2);
 }
 
 .TimeGridContainer {
@@ -106,18 +97,17 @@
   font-style: var(--em-font-style);
   padding: var(--space-2);
   text-align: end;
-  color: var(--text-soft);
+  color: var(--secondary-text-color);
 }
 
 .TimeGridHeaderDayName {
   font-size: var(--font-size-2);
-  color: var(--text-soft);
+  color: var(--secondary-text-color);
   line-height: 1;
 }
 
 .TimeGridHeaderDayNumber {
   font-size: var(--font-size-5);
-  color: var(--text-strong);
   font-weight: var(--font-weight-3);
   line-height: 1;
 }
@@ -152,7 +142,7 @@
 .TimeGridTimeAxisText:not(:empty) {
   font-size: var(--font-size-1);
   line-height: calc(100% / 24);
-  color: var(--text-soft);
+  color: var(--secondary-text-color);
   white-space: nowrap;
 }
 
