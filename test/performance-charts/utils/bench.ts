@@ -1,33 +1,29 @@
 import { bench as vitestBench, BenchOptions } from 'vitest';
 import { cdp, commands } from '@vitest/browser/context';
-import type { Protocol } from 'playwright-core/types/protocol';
 import { getTaskMode } from './options';
 import { isTrace } from './env';
+import { addMemoryUsageEntry } from './memory-utils';
 
 export function bench(name: string, fn: () => Promise<void>, options?: BenchOptions) {
-  const wrappedFn = wrapFn(fn);
+  const wrappedFn = wrapFn(name, fn);
   vitestBench(name, isTrace ? wrapFnWithTrace(name, wrappedFn) : wrappedFn, options);
 }
 
-function wrapFn(fn: () => Promise<void>) {
+function wrapFn(name: string, fn: () => Promise<void>) {
   return async function wrappedFn() {
+    const memoryUsageBefore = await getMemoryUsage();
+
     try {
-      console.log('Memory before:', formatMemoryUsage(await cdp().send('Runtime.getHeapUsage')));
       await fn();
     } finally {
-      console.log('Memory after run:', formatMemoryUsage(await cdp().send('Runtime.getHeapUsage')));
+      addMemoryUsageEntry(name, (await getMemoryUsage()) - memoryUsageBefore);
       await commands.requestGC();
-      console.log('Memory after GC:', formatMemoryUsage(await cdp().send('Runtime.getHeapUsage')));
     }
   };
 }
 
-function formatMemoryUsage(usage: Protocol.CommandParameters['Runtime.getHeapUsage']) {
-  return {
-    used: `${(usage.usedSize / 1024 / 1024).toFixed(2)} MB`,
-    total: `${(usage.totalSize / 1024 / 1024).toFixed(2)} MB`,
-    limit: `${(usage.sizeLimit / 1024 / 1024).toFixed(2)} MB`,
-  };
+async function getMemoryUsage() {
+  return (await cdp().send('Runtime.getHeapUsage')).usedSize;
 }
 
 function wrapFnWithTrace(name: string, fn: () => Promise<void>): () => Promise<void> {

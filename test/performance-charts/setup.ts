@@ -1,5 +1,6 @@
-import { beforeAll } from 'vitest';
+import { afterAll, beforeAll } from 'vitest';
 import { generateLicense, LicenseInfo } from '@mui/x-license';
+import { reportMemoryUsage } from './utils/memory-utils';
 
 beforeAll(() => {
   const licenseKey = generateLicense({
@@ -11,4 +12,8 @@ beforeAll(() => {
   });
 
   LicenseInfo.setLicenseKey(licenseKey);
+});
+
+afterAll(() => {
+  reportMemoryUsage();
 });
