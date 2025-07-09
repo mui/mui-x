@@ -316,7 +316,7 @@ importers:
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/monorepo':
         specifier: github:mui/material-ui#544079da3de33e24e5a0119816c959ae3acc725f
-        version: https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f(@babel/core@7.27.7)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)
+        version: https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.2.0(@types/react@19.1.8)(react@19.1.0)
@@ -15122,7 +15122,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/react': 19.1.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f(@babel/core@7.27.7)(@types/express@5.0.0)(encoding@0.1.13)(rollup@4.40.0)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.44.2)
