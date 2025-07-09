@@ -143,7 +143,7 @@ describe('useChartCartesianAxis - axis highlight', () => {
   );
 
   it.skipIf(isJSDOM)(
-    'should can onHighlightedAxisChange when highlighted axis got removed',
+    'should call onHighlightedAxisChange when highlighted axis got removed',
     async () => {
       const onHighlightedAxisChange = spy();
       const { user, setProps } = render(
