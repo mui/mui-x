@@ -315,7 +315,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
     const { setProps } = render(<Component loading rows={[]} />);
 
-    await sleep(500);
+    await act(() => sleep(500));
     setProps({ loading: false, rows: ROWS });
 
     await waitFor(() => {
@@ -352,10 +352,12 @@ describe('<DataGridPremium /> - Pivoting', () => {
       '[aria-rowindex="2"] [role="columnheader"]',
     );
 
-    expect(Array.from(yearHeaders).map((header) => header.textContent)).to.deep.equal([
-      '2024',
-      '2023',
-    ]);
+    await waitFor(() => {
+      expect(Array.from(yearHeaders).map((header) => header.textContent)).to.deep.equal([
+        '2024',
+        '2023',
+      ]);
+    });
     expect(Array.from(typeHeaders).map((header) => header.textContent)).to.deep.equal([
       'stock',
       'bond',
@@ -378,9 +380,11 @@ describe('<DataGridPremium /> - Pivoting', () => {
         }}
       />,
     );
-    expect(
-      screen.getByText('Add fields to rows, columns, and values to create a pivot table'),
-    ).not.to.equal(null);
+    await waitFor(() => {
+      expect(
+        screen.getByText('Add fields to rows, columns, and values to create a pivot table'),
+      ).not.to.equal(null);
+    });
   });
 
   it('should not render "empty pivot overlay" when pivot mode is enabled and there are rows', async () => {
@@ -398,9 +402,11 @@ describe('<DataGridPremium /> - Pivoting', () => {
         }}
       />,
     );
-    expect(
-      screen.queryByText('Add fields to rows, columns, and values to create a pivot table'),
-    ).to.equal(null);
+    await waitFor(() => {
+      expect(
+        screen.queryByText('Add fields to rows, columns, and values to create a pivot table'),
+      ).to.equal(null);
+    });
   });
 
   it('should not throw when a field is moved from pivot values to pivot rows', async () => {
@@ -427,7 +433,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getColumnHeadersTextContent()).to.deep.equal(['Date (Year)size']);
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Date (Year)size']);
+    });
     expect(getColumnValues(0)).to.have.length(0);
 
     setProps({
@@ -438,7 +446,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       },
     });
 
-    expect(getColumnHeadersTextContent()).to.deep.equal(['Date (Year)']);
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Date (Year)']);
+    });
     expect(getColumnValues(0)).to.deep.equal(['2024 (9)', '2023 (1)']);
   });
 
