@@ -103,6 +103,8 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
       stopPropagation: this.stopPropagation,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
+      requiredKeys: [...this.requiredKeys],
+      pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,

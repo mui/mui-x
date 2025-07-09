@@ -54,7 +54,7 @@ export interface ScatterChartSlotProps
 export interface ScatterChartProps
   extends Omit<
       ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
-      'series' | 'plugins' | 'onItemClick'
+      'series' | 'plugins' | 'onItemClick' | 'highlightedAxis' | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {

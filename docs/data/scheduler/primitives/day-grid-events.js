@@ -5,7 +5,7 @@ export const events = [
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
     end: DateTime.fromISO('2025-05-26T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'personal',
   },
   {
@@ -40,7 +40,7 @@ export const events = [
     id: '6',
     start: DateTime.fromISO('2025-05-29T07:30:00'),
     end: DateTime.fromISO('2025-05-29T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
     resource: 'personal',
   },
   {
