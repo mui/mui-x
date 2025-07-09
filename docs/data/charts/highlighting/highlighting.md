@@ -45,7 +45,7 @@ This kind of interaction is controlled by series properties `highlightScope` whi
 
 ## Controlled item highlight
 
-The item highlight can be controlled by using `highlightedItem` and `onHighlightChange`.
+The highlighted item can be controlled by using `highlightedItem` and `onHighlightChange`.
 
 You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
 
@@ -53,13 +53,12 @@ You can set the `highlightedItem` value based on inputs, and sync it when the us
 
 ## Controlled axis highlight
 
-The highlight can be controlled by using `highlightedAxis` prop.
-Its value is an array of objects `{ axisId: string, dataIndex: number }`.
-An empty array meaning no highlight.
+The highlighted axis item can be controlled by using `highlightedAxis` prop.
+Its value is an array of `{ axisId: string, dataIndex: number }` objects.
+An empty array means no highlight.
 
 The `onHighlightedAxisChange` handler is triggered each time the pointer crosses the boundaries between two axis values.
-Its parameter is an array of objects `{ axisId, dataIndex }`.
-One per axis.
+Its parameter is an array of one `{ axisId, dataIndex }` object per axis.
 Axes without a `data` property are ignored by the handler.
 
 :::warning

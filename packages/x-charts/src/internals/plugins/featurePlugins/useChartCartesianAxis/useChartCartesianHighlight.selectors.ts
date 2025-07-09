@@ -99,10 +99,8 @@ const selectAxis = (
   const filteredAxes = axisItems
     .map((item) => axis.axis[item.axisId] ?? null)
     .filter((item) => item !== null);
-  if (filteredAxes.length > 0) {
-    return filteredAxes;
-  }
-  return [];
+
+  return filteredAxes;
 };
 
 export const selectorChartsHighlightXAxis = createSelector(

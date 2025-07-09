@@ -521,7 +521,7 @@ export type CartesianDirection = 'x' | 'y';
 export type PolarDirection = 'rotation' | 'radius';
 
 /**
- * The data used to identify pointer interaction with axis
+ * Identifies a data point within an axis.
  */
 export interface AxisItemIdentifier {
   /**
