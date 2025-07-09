@@ -64,6 +64,118 @@ export type TickItemType = {
   labelOffset: number;
 };
 
+export function getTicks(
+  options: {
+    scale: D3Scale;
+    valueFormatter?: AxisConfig['valueFormatter'];
+    isInside: (offset: number) => boolean;
+  } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
+) {
+  const {
+    scale,
+    tickNumber,
+    valueFormatter,
+    tickInterval,
+    tickPlacement = 'extremities',
+    tickLabelPlacement: tickLabelPlacementProp,
+    isInside,
+  } = options;
+
+  // band scale
+  if (isBandScale(scale)) {
+    const domain = scale.domain();
+
+    const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
+
+    if (scale.bandwidth() > 0) {
+      // scale type = 'band'
+      const filteredDomain =
+        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+        (typeof tickInterval === 'object' && tickInterval) ||
+        domain;
+      return [
+        ...filteredDomain.map((value) => ({
+          value,
+          formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
+          offset:
+            scale(value)! -
+            (scale.step() - scale.bandwidth()) / 2 +
+            offsetRatio[tickPlacement] * scale.step(),
+          labelOffset:
+            tickLabelPlacement === 'tick'
+              ? 0
+              : scale.step() * (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]),
+        })),
+
+        ...(tickPlacement === 'extremities'
+          ? [
+              {
+                formattedValue: undefined,
+                offset: scale.range()[1],
+                labelOffset: 0,
+              },
+            ]
+          : []),
+      ];
+    }
+
+    // scale type = 'point'
+    const filteredDomain =
+      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+      (typeof tickInterval === 'object' && tickInterval) ||
+      domain;
+
+    return filteredDomain.map((value) => ({
+      value,
+      formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
+      offset: scale(value)!,
+      labelOffset: 0,
+    }));
+  }
+
+  const domain = scale.domain();
+  // Skip axis rendering if no data is available
+  // - The domains contains Infinity for continuous scales.
+  if (domain.some(isInfinity)) {
+    return [];
+  }
+  const tickLabelPlacement = tickLabelPlacementProp;
+  const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
+
+  // Ticks inside the drawing area
+  const visibleTicks: TickItemType[] = [];
+
+  for (let i = 0; i < ticks.length; i += 1) {
+    const value = ticks[i];
+    const offset = scale(value);
+
+    if (isInside(offset)) {
+      const defaultTickLabel = scale.tickFormat(tickNumber)(value);
+      /* If d3 returns an empty string, it means that a tick should be shown, but its label shouldn't.
+       * This is especially useful in a log scale where we want to show ticks to demonstrate it's a log
+       * scale, but don't want to show labels because they would overlap.
+       * https://github.com/mui/mui-x/issues/18239 */
+      const shouldDisplayLabel = defaultTickLabel !== '';
+
+      visibleTicks.push({
+        value,
+        formattedValue: shouldDisplayLabel
+          ? (valueFormatter?.(value, { location: 'tick', scale }) ?? defaultTickLabel)
+          : '',
+        offset,
+        // Allowing the label to be placed in the middle of a continuous scale is weird.
+        // But it is useful in some cases, like funnel categories with a linear scale.
+        labelOffset:
+          tickLabelPlacement === 'middle'
+            ? scale(ticks[i - 1] ?? 0) - (offset + scale(ticks[i - 1] ?? 0)) / 2
+            : 0,
+      });
+    }
+  }
+
+  return visibleTicks;
+}
+
 export function useTicks(
   options: {
     scale: D3Scale;
@@ -77,114 +189,23 @@ export function useTicks(
     valueFormatter,
     tickInterval,
     tickPlacement = 'extremities',
-    tickLabelPlacement: tickLabelPlacementProp,
+    tickLabelPlacement,
     direction,
   } = options;
   const { instance } = useChartContext();
+  const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
 
-  return React.useMemo(() => {
-    // band scale
-    if (isBandScale(scale)) {
-      const domain = scale.domain();
-
-      const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
-
-      if (scale.bandwidth() > 0) {
-        // scale type = 'band'
-        const filteredDomain =
-          (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-          (typeof tickInterval === 'object' && tickInterval) ||
-          domain;
-        return [
-          ...filteredDomain.map((value) => ({
-            value,
-            formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
-            offset:
-              scale(value)! -
-              (scale.step() - scale.bandwidth()) / 2 +
-              offsetRatio[tickPlacement] * scale.step(),
-            labelOffset:
-              tickLabelPlacement === 'tick'
-                ? 0
-                : scale.step() * (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]),
-          })),
-
-          ...(tickPlacement === 'extremities'
-            ? [
-                {
-                  formattedValue: undefined,
-                  offset: scale.range()[1],
-                  labelOffset: 0,
-                },
-              ]
-            : []),
-        ];
-      }
-
-      // scale type = 'point'
-      const filteredDomain =
-        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-        (typeof tickInterval === 'object' && tickInterval) ||
-        domain;
-
-      return filteredDomain.map((value) => ({
-        value,
-        formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
-        offset: scale(value)!,
-        labelOffset: 0,
-      }));
-    }
-
-    const domain = scale.domain();
-    // Skip axis rendering if no data is available
-    // - The domains contains Infinity for continuous scales.
-    if (domain.some(isInfinity)) {
-      return [];
-    }
-    const tickLabelPlacement = tickLabelPlacementProp;
-    const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
-
-    // Ticks inside the drawing area
-    const visibleTicks: TickItemType[] = [];
-
-    for (let i = 0; i < ticks.length; i += 1) {
-      const value = ticks[i];
-      const offset = scale(value);
-      const isInside = direction === 'x' ? instance.isXInside(offset) : instance.isYInside(offset);
-
-      if (isInside) {
-        const defaultTickLabel = scale.tickFormat(tickNumber)(value);
-        /* If d3 returns an empty string, it means that a tick should be shown, but its label shouldn't.
-         * This is especially useful in a log scale where we want to show ticks to demonstrate it's a log
-         * scale, but don't want to show labels because they would overlap.
-         * https://github.com/mui/mui-x/issues/18239 */
-        const shouldDisplayLabel = defaultTickLabel !== '';
-
-        visibleTicks.push({
-          value,
-          formattedValue: shouldDisplayLabel
-            ? (valueFormatter?.(value, { location: 'tick', scale }) ?? defaultTickLabel)
-            : '',
-          offset,
-          // Allowing the label to be placed in the middle of a continuous scale is weird.
-          // But it is useful in some cases, like funnel categories with a linear scale.
-          labelOffset:
-            tickLabelPlacement === 'middle'
-              ? scale(ticks[i - 1] ?? 0) - (offset + scale(ticks[i - 1] ?? 0)) / 2
-              : 0,
-        });
-      }
-    }
-
-    return visibleTicks;
-  }, [
-    scale,
-    tickLabelPlacementProp,
-    tickInterval,
-    tickNumber,
-    tickPlacement,
-    valueFormatter,
-    direction,
-    instance,
-  ]);
+  return React.useMemo(
+    () =>
+      getTicks({
+        scale,
+        tickNumber,
+        tickPlacement,
+        tickInterval,
+        tickLabelPlacement,
+        valueFormatter,
+        isInside,
+      }),
+    [scale, tickNumber, tickPlacement, tickInterval, tickLabelPlacement, valueFormatter, isInside],
+  );
 }
