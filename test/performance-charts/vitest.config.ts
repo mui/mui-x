@@ -7,6 +7,7 @@ export default defineConfig({
     setupFiles: ['./setup.ts'],
     env: { TRACE: process.env.TRACE },
     environment: 'node',
+    maxConcurrency: 1,
     browser: {
       enabled: true,
       headless: true,
