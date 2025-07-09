@@ -23,6 +23,9 @@ export default defineConfig({
           },
         },
       ],
+      commands: {
+        requestGC: (ctx) => ctx.page.requestGC(),
+      },
       provider: 'playwright',
     },
   },

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { render, cleanup } from 'vitest-browser-react/pure';
 import { describe, expect } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { commands } from '@vitest/browser/context';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
@@ -25,6 +26,8 @@ describe('BarChart', () => {
       expect(page.getByText('143')).toBeInTheDocument();
 
       cleanup();
+
+      await commands.requestGC();
     },
     options,
   );
