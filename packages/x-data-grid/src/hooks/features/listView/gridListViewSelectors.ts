@@ -7,7 +7,7 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
  * @ignore - Do not document
  */
 export const gridListViewSelector = createRootSelector(
-  (state: GridStateCommunity) => state.listView,
+  (state: GridStateCommunity) => state.props.listView ?? false,
 );
 
 /**

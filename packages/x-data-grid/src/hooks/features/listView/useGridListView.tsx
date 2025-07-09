@@ -14,10 +14,9 @@ import { useGridEvent } from '../../utils/useGridEvent';
 export type GridListViewState = (GridListViewColDef & { computedWidth: number }) | undefined;
 
 export const listViewStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'listView' | 'listViewColumn'>
+  Pick<DataGridProcessedProps, 'listViewColumn'>
 > = (state, props, apiRef) => ({
   ...state,
-  listView: props.listView ?? false,
   listViewColumn: props.listViewColumn
     ? { ...props.listViewColumn, computedWidth: getListColumnWidth(apiRef) }
     : undefined,
@@ -75,13 +74,6 @@ export function useGridListView(
       });
     }
   }, [apiRef, props.listViewColumn]);
-
-  useEnhancedEffect(() => {
-    apiRef.current.setState((state) => ({
-      ...state,
-      listView: props.listView ?? false,
-    }));
-  }, [apiRef, props.listView]);
 
   React.useEffect(() => {
     if (props.listView && !props.listViewColumn) {
