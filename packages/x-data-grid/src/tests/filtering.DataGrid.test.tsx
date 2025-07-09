@@ -9,7 +9,7 @@ import {
   GridPreferencePanelsValue,
   GridFilterOperator,
 } from '@mui/x-data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, microtasks } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -56,7 +56,7 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('prop: filterModel', () => {
     it('should throw for more than one filter item', () => {
-      expect(() => {
+      expect(async () => {
         render(
           <TestCase
             rows={[]}
@@ -69,12 +69,13 @@ describe('<DataGrid /> - Filter', () => {
             }}
           />,
         );
+        await microtasks();
       }).toErrorDev(
         'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
       );
     });
 
-    it('should apply the model for `filterable: false` columns but the applied filter should be readonly', () => {
+    it('should apply the model for `filterable: false` columns but the applied filter should be readonly', async () => {
       render(
         <TestCase
           columns={[{ field: 'brand', filterable: false }]}
@@ -87,78 +88,73 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      // filter has been applied
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        // filter has been applied
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
 
       // field has the applied value and is read-only
       const valueInput = screen.getByRole('textbox', { name: 'Value' });
-      expect(valueInput).to.have.value('Adidas');
+      await waitFor(() => {
+        expect(valueInput).to.have.value('Adidas');
+      });
       expect(valueInput).to.have.property('disabled', true);
     });
 
-    it('should apply the model', () => {
+    it('should apply the model', async () => {
       render(
         <TestCase
           filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      });
     });
 
-    it('should apply the model when row prop changes', () => {
+    it('should apply the model when row prop changes', async () => {
       render(
         <TestCase
           filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
           rows={[
-            {
-              id: 3,
-              brand: 'Asics',
-            },
-            {
-              id: 4,
-              brand: 'RedBull',
-            },
-            {
-              id: 5,
-              brand: 'Hugo',
-            },
+            { id: 3, brand: 'Asics' },
+            { id: 4, brand: 'RedBull' },
+            { id: 5, brand: 'Hugo' },
           ]}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Asics']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Asics']);
+      });
     });
 
-    it('should support new dataset', () => {
+    it('should support new dataset', async () => {
       const { setProps } = render(
         <TestCase
           filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      });
+
       setProps({
         rows: [
-          {
-            id: 0,
-            country: 'France',
-          },
-          {
-            id: 1,
-            country: 'UK',
-          },
-          {
-            id: 12,
-            country: 'US',
-          },
+          { id: 0, country: 'France' },
+          { id: 1, country: 'UK' },
+          { id: 12, country: 'US' },
         ],
         columns: [{ field: 'country' }],
         filterModel: { items: [{ field: 'country', operator: 'contains', value: 'a' }] },
       });
-      expect(getColumnValues(0)).to.deep.equal(['France']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['France']);
+      });
     });
   });
 
   describe('prop: initialState.filter', () => {
-    it('should allow to initialize the filterModel', () => {
+    it('should allow to initialize the filterModel', async () => {
       render(
         <TestCase
           initialState={{
@@ -170,11 +166,12 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
     });
 
-    it('should allow to initialize the filterModel for non-filterable columns', () => {
+    it('should allow to initialize the filterModel for non-filterable columns', async () => {
       render(
         <TestCase
           columns={[{ field: 'brand', filterable: false }]}
@@ -188,10 +185,12 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
     });
 
-    it('should use the control state upon the initialize state when both are defined', () => {
+    it('should use the control state upon the initialize state when both are defined', async () => {
       render(
         <TestCase
           filterModel={{
@@ -207,10 +206,12 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
     });
 
-    it('should not update the filters when updating the initial state', () => {
+    it('should not update the filters when updating the initial state', async () => {
       const { setProps } = render(
         <TestCase
           initialState={{
@@ -233,7 +234,9 @@ describe('<DataGrid /> - Filter', () => {
         },
       });
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
     });
 
     it('should allow to update the filters when initialized with initialState', async () => {
@@ -253,7 +256,9 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
       fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
@@ -265,7 +270,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('prop: getRowId', () => {
-    it('works with filter', () => {
+    it('works with filter', async () => {
       render(
         <TestCase
           getRowId={(row) => row.brand}
@@ -274,10 +279,12 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nike']);
+      });
     });
 
-    it('works with quick filter', () => {
+    it('works with quick filter', async () => {
       render(
         <TestCase
           getRowId={(row) => row.brand}
@@ -287,7 +294,9 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nike']);
+      });
     });
   });
 
@@ -627,18 +636,9 @@ describe('<DataGrid /> - Filter', () => {
             { id: 1, year: null },
             { id: 2, year: '' },
             { id: 3, year: 0 },
-            {
-              id: 4,
-              year: 1954,
-            },
-            {
-              id: 5,
-              year: 1974,
-            },
-            {
-              id: 6,
-              year: 1984,
-            },
+            { id: 4, year: 1954 },
+            { id: 5, year: 1974 },
+            { id: 6, year: 1984 },
           ]}
           columns={[
             {
@@ -736,34 +736,13 @@ describe('<DataGrid /> - Filter', () => {
             items: [{ field: 'date', ...item }],
           }}
           rows={[
-            {
-              id: 0,
-              date: undefined,
-            },
-            {
-              id: 1,
-              date: null,
-            },
-            {
-              id: 2,
-              date: '',
-            },
-            {
-              id: 3,
-              date: new Date(2000, 0, 1),
-            },
-            {
-              id: 4,
-              date: new Date(2001, 0, 1),
-            },
-            {
-              id: 5,
-              date: new Date(2001, 0, 1, 8, 30),
-            },
-            {
-              id: 6,
-              date: new Date(2002, 0, 1),
-            },
+            { id: 0, date: undefined },
+            { id: 1, date: null },
+            { id: 2, date: '' },
+            { id: 3, date: new Date(2000, 0, 1) },
+            { id: 4, date: new Date(2001, 0, 1) },
+            { id: 5, date: new Date(2001, 0, 1, 8, 30) },
+            { id: 6, date: new Date(2002, 0, 1) },
           ]}
           columns={[
             {
@@ -907,30 +886,12 @@ describe('<DataGrid /> - Filter', () => {
             items: [{ field: 'date', ...item }],
           }}
           rows={[
-            {
-              id: 0,
-              date: undefined,
-            },
-            {
-              id: 1,
-              date: null,
-            },
-            {
-              id: 2,
-              date: '',
-            },
-            {
-              id: 3,
-              date: new Date(2001, 0, 1, 6, 30),
-            },
-            {
-              id: 4,
-              date: new Date(2001, 0, 1, 7, 30),
-            },
-            {
-              id: 5,
-              date: new Date(2001, 0, 1, 8, 30),
-            },
+            { id: 0, date: undefined },
+            { id: 1, date: null },
+            { id: 2, date: '' },
+            { id: 3, date: new Date(2001, 0, 1, 6, 30) },
+            { id: 4, date: new Date(2001, 0, 1, 7, 30) },
+            { id: 5, date: new Date(2001, 0, 1, 8, 30) },
           ]}
           columns={[
             {
@@ -1064,22 +1025,10 @@ describe('<DataGrid /> - Filter', () => {
             items: [{ field: 'isPublished', ...item }],
           }}
           rows={[
-            {
-              id: 0,
-              isPublished: undefined,
-            },
-            {
-              id: 1,
-              isPublished: null,
-            },
-            {
-              id: 2,
-              isPublished: true,
-            },
-            {
-              id: 3,
-              isPublished: false,
-            },
+            { id: 0, isPublished: undefined },
+            { id: 1, isPublished: null },
+            { id: 2, isPublished: true },
+            { id: 3, isPublished: false },
           ]}
           columns={[
             {
@@ -1139,26 +1088,10 @@ describe('<DataGrid /> - Filter', () => {
             items: [item],
           }}
           rows={[
-            {
-              id: 0,
-              country: undefined,
-              year: undefined,
-            },
-            {
-              id: 1,
-              country: null,
-              year: null,
-            },
-            {
-              id: 2,
-              country: 'United States',
-              year: 1974,
-            },
-            {
-              id: 3,
-              country: 'Germany',
-              year: 1984,
-            },
+            { id: 0, country: undefined, year: undefined },
+            { id: 1, country: null, year: null },
+            { id: 2, country: 'United States', year: 1974 },
+            { id: 3, country: 'Germany', year: 1984 },
           ]}
           columns={[
             {
@@ -1263,7 +1196,7 @@ describe('<DataGrid /> - Filter', () => {
       );
     });
 
-    it('should support `valueParser`', () => {
+    it('should support `valueParser`', async () => {
       const valueOptions = [
         { value: 'Status 0', label: 'Payment Pending' },
         { value: 'Status 1', label: 'Shipped' },
@@ -1293,22 +1226,28 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['0']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0']);
+      });
       setProps({
         filterModel: {
           items: [{ field: 'status', operator: 'not', value: 0 }],
         },
       });
-      expect(getColumnValues(0)).to.deep.equal(['1', '2']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['1', '2']);
+      });
       setProps({
         filterModel: {
           items: [{ field: 'status', operator: 'isAnyOf', value: [0, 2] }],
         },
       });
-      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+      });
     });
 
-    it('should support a function for `valueOptions`', () => {
+    it('should support a function for `valueOptions`', async () => {
       const { setProps } = render(
         <TestCase
           rows={[
@@ -1329,14 +1268,18 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+      });
       setProps({
         filterModel: { items: [{ field: 'voltage', operator: 'is', value: 220 }] },
       });
-      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
+      });
     });
 
-    it('should work if valueOptions is not provided', () => {
+    it('should work if valueOptions is not provided', async () => {
       const { setProps } = render(
         <TestCase
           rows={[
@@ -1348,11 +1291,15 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{ items: [{ field: 'voltage', operator: 'is' }] }}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+      });
       setProps({
         filterModel: { items: [{ field: 'voltage', operator: 'is', value: 220 }] },
       });
-      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
+      });
     });
   });
 
@@ -1388,22 +1335,19 @@ describe('<DataGrid /> - Filter', () => {
       expect(getFilterCount({ field: 'year', operator: '=', value: '' })).to.equal(0);
     });
 
-    it('should include value-less operators', () => {
+    it('should include value-less operators', async () => {
       render(
         <TestCase
           rows={[]}
           columns={[{ field: 'brand', type: 'string' }]}
           filterModel={{
-            items: [
-              {
-                field: 'brand',
-                operator: 'isNotEmpty',
-              },
-            ],
+            items: [{ field: 'brand', operator: 'isNotEmpty' }],
           }}
         />,
       );
-      expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+      });
     });
   });
 
@@ -1415,13 +1359,7 @@ describe('<DataGrid /> - Filter', () => {
             items: [{ id: 0, field: 'isAdmin', operator: 'is', value: false }],
           }}
           autoHeight
-          rows={[
-            {
-              id: 0,
-              isAdmin: false,
-              level: 0,
-            },
-          ]}
+          rows={[{ id: 0, isAdmin: false, level: 0 }]}
           columns={[
             {
               field: 'isAdmin',
@@ -1433,10 +1371,7 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             },
-            {
-              field: 'level',
-              type: 'number',
-            },
+            { field: 'level', type: 'number' },
           ]}
           slots={{ toolbar: GridToolbarFilterButton }}
           showToolbar
@@ -1562,7 +1497,7 @@ describe('<DataGrid /> - Filter', () => {
     }).not.to.throw();
   });
 
-  it('should update the filter model on columns change', () => {
+  it('should update the filter model on columns change', async () => {
     const columns = [{ field: 'id' }, { field: 'brand' }];
     const rows = [
       { id: 0, brand: 'Nike' },
@@ -1587,10 +1522,14 @@ describe('<DataGrid /> - Filter', () => {
       );
     }
     const { setProps } = render(<Demo rows={rows} />);
-    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+    await waitFor(() => {
+      expect(getColumnValues(1)).to.deep.equal(['Puma']);
+    });
 
     setProps({ columns: [{ field: 'id' }] });
-    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
   });
@@ -1622,7 +1561,9 @@ describe('<DataGrid /> - Filter', () => {
       );
     }
     const { setProps } = render(<Demo rows={rows} />);
-    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+    await waitFor(() => {
+      expect(getColumnValues(1)).to.deep.equal(['Puma']);
+    });
 
     setProps({
       columns: [{ field: 'id' }],
@@ -1630,7 +1571,9 @@ describe('<DataGrid /> - Filter', () => {
         items: [{ field: 'id', operator: 'equals', value: '1' }],
       },
     });
-    expect(getColumnValues(0)).to.deep.equal(['1']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+    });
     expect(onFilterModelChange.callCount).to.equal(0);
   });
 });
