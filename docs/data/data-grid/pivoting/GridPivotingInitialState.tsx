@@ -56,7 +56,7 @@ const initialState: GridInitialState = {
   },
   sidebar: {
     open: true,
-    openedValue: GridSidebarValue.pivot,
+    value: GridSidebarValue.Pivot,
   },
 };
 

@@ -4,7 +4,7 @@ export interface GridSidebarState {
   open: boolean;
   sidebarId?: string;
   labelId?: string;
-  openedValue?: GridSidebarValue;
+  value?: GridSidebarValue;
 }
 
 export type GridSidebarInitialState = GridSidebarState;

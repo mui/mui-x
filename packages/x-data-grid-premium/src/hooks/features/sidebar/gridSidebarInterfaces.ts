@@ -1,5 +1,5 @@
 export enum GridSidebarValue {
-  pivot = 'pivot',
+  Pivot = 'pivot',
 }
 
 export interface GridSidebarApi {

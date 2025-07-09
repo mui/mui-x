@@ -30,7 +30,7 @@ import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaA
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
-import { gridSidebarStateSelector } from '../hooks/features/sidebar';
+import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -67,13 +67,12 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   const props = useDataGridPremiumComponent(privateApiRef, initialProps);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  const sidebarState = useGridSelector(privateApiRef, gridSidebarStateSelector);
-
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
 
-  const sidePanel = sidebarState.open ? <Sidebar /> : null;
+  const sidebarOpen = useGridSelector(privateApiRef, gridSidebarOpenSelector);
+  const sidePanel = sidebarOpen ? <Sidebar /> : null;
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>

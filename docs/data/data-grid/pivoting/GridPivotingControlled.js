@@ -61,7 +61,7 @@ export default function GridPivotingControlled() {
         initialState={{
           sidebar: {
             open: true,
-            openedValue: GridSidebarValue.pivot,
+            value: GridSidebarValue.Pivot,
           },
         }}
         slotProps={{
