@@ -126,6 +126,8 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
       maxPointers: this.maxPointers,
       duration: this.duration,
       maxDistance: this.maxDistance,
+      requiredKeys: [...this.requiredKeys],
+      pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,

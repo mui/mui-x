@@ -1,6 +1,9 @@
 {
   "interfaceDescription": "The options to apply on the Print export.",
   "propertiesDescriptions": {
-    "fileName": { "description": "The name of the file without the extension." }
+    "fileName": { "description": "The name of the file without the extension." },
+    "onBeforeExport": {
+      "description": "Callback function that is called before the export is triggered.<br />It can be used to modify the iframe or perform any other actions before the export, such as updating styles,<br />removing elements, etc."
+    }
   }
 }

@@ -1,6 +1,8 @@
 {
   "props": {
-    "options": { "type": { "name": "shape", "description": "{ fileName?: string }" } },
+    "options": {
+      "type": { "name": "shape", "description": "{ fileName?: string, onBeforeExport?: func }" }
+    },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "ChartsToolbarPrintExportTrigger",

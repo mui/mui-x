@@ -8,6 +8,10 @@
       "default": "The title of the document the chart belongs to",
       "isProPlan": true
     },
+    "onBeforeExport": {
+      "type": { "description": "(iframe: HTMLIFrameElement) =&gt; Promise&lt;void&gt; | void" },
+      "isProPlan": true
+    },
     "quality": { "type": { "description": "number" }, "default": "0.9", "isProPlan": true },
     "type": {
       "type": { "description": "'image/png' | string" },
