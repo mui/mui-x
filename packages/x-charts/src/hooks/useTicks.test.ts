@@ -3,10 +3,9 @@ import { expect } from 'vitest';
 import { getTicks } from './useTicks';
 
 describe('getTicks', () => {
-  it('returns ticks without a formatted value in a zoomed-in log scale', () => {
+  it('returns ticks without a formatted value in a log scale', () => {
     const scale = scaleLog();
     scale.domain([100, 10000]);
-    // Simulates a zoomed-in chart
     scale.range([100, 0]);
     const tickNumber = 4;
 
@@ -29,11 +28,10 @@ describe('getTicks', () => {
     ]);
   });
 
-  it('returns ticks without a formatted value in a zoomed-in log scale with a custom value formatter', () => {
+  it('returns ticks without a formatted value in a log scale with a custom value formatter', () => {
     // https://github.com/mui/mui-x/issues/18239
     const scale = scaleLog();
     scale.domain([100, 10000]);
-    // Simulates a zoomed-in chart
     scale.range([100, 0]);
     const tickNumber = 4;
 
