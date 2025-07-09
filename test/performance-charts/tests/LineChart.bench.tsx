@@ -27,7 +27,7 @@ describe('LineChart', () => {
         />,
       );
 
-      await page.findByText(dataLength.toLocaleString());
+      expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
 
       cleanup();
     },
