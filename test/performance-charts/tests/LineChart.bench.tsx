@@ -27,7 +27,7 @@ describe('LineChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      await page.findByText(dataLength.toLocaleString());
 
       cleanup();
     },
@@ -37,7 +37,7 @@ describe('LineChart', () => {
   bench(
     'Area chart with big data amount (no marks)',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <LineChart
           xAxis={[{ data: xData }]}
           series={[{ area: true, data: yData, showMark: false }]}
