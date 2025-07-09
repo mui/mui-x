@@ -2,7 +2,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { gridColumnDefinitionsSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
 import { GridExportOptions, GridCsvGetRowsToExportParams } from '../../../models/gridExport';
-import { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridFilteredSortedRowIdsSelector } from '../filter';
 import { GridRowId } from '../../../models';
 import { gridPinnedRowsSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
@@ -36,9 +36,7 @@ export const getColumnsToExport = ({
   }
 
   const validColumns = options.allColumns ? columns : gridVisibleColumnDefinitionsSelector(apiRef);
-  return validColumns.filter(
-    (column) => 'disableExport' in column && column.disableExport !== true,
-  );
+  return validColumns.filter((column) => (column as GridColDef).disableExport !== true);
 };
 
 export const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
