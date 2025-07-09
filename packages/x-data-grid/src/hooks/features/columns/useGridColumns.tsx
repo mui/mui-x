@@ -445,11 +445,7 @@ export function useGridColumns(
   /**
    * APPLIERS
    */
-  const isPivotActive = gridPivotActiveSelector(apiRef);
   const hydrateColumns = React.useCallback(() => {
-    if (isPivotActive) {
-      return;
-    }
     logger.info(`Columns pipe processing have changed, regenerating the columns`);
 
     const columnsState = createColumnsState({
@@ -459,7 +455,7 @@ export function useGridColumns(
       keepOnlyColumnsToUpsert: false,
     });
     setGridColumnsState(columnsState);
-  }, [apiRef, logger, setGridColumnsState, isPivotActive]);
+  }, [apiRef, logger, setGridColumnsState]);
 
   useGridRegisterPipeApplier(apiRef, 'hydrateColumns', hydrateColumns);
 
