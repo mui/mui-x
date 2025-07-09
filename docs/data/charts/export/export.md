@@ -98,6 +98,16 @@ For example, you can hide the toolbar when exporting the chart, as shown below:
 
 {{"demo": "ExportChartOnBeforeExport.js"}}
 
+## Copy styles
+
+The styles of the page the chart belongs to are copied to the export iframe by default.
+
+You can disable this behavior by setting the `copyStyles` property to `false` in the export options.
+
+```tsx
+<BarChartPro slotProps={{ toolbar: { printOptions: { copyStyles: false } } }} />
+```
+
 ## Composition
 
 As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
