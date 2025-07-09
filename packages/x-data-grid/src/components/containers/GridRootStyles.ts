@@ -774,6 +774,7 @@ export const GridRootStyles = styled('div', {
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
         backgroundColor: vars.cell.background.pinned,
         position: 'sticky',
+        zIndex: 40, // Should be above the column separator
         right: 0,
       },
     },

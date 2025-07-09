@@ -44,7 +44,14 @@ export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'onItemClick' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'seriesConfig'
+      | 'onItemClick'
+      | 'slots'
+      | 'slotProps'
+      | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
     > {
   /**
    * Overridable component slots.
