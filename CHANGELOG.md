@@ -61,6 +61,7 @@ Same changes as in `@mui/x-date-pickers@8.8.0`.
 - [charts] Add support for filtering gestures based on pointer types (#18682) @JCQuintas
 - [charts] Allow gestures to require a key to be pressed (#18681) @JCQuintas
 - [charts] Avoid processing area plot data if area isn't used in series (#18712) @bernardobelchior
+- [charts] Make smarter default domain limit (#18506) @alexfauquette
 
 #### `@mui/x-charts-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
