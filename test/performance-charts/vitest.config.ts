@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { page } from '@vitest/browser/context';
 
 export default defineConfig({
   plugins: [react()],
@@ -26,7 +27,34 @@ export default defineConfig({
         },
       ],
       commands: {
-        requestGC: (ctx) => ctx.page.requestGC(),
+        requestGC: async (ctx) => {
+          await ctx.page.evaluate(() => {
+            const testObj = {};
+            const weakRef = new WeakRef(testObj);
+
+            testObj = null;
+            window.testWeakRef = weakRef;
+          });
+
+          await ctx.page.requestGC();
+
+          const { promise, resolve } = Promise.withResolvers<void>();
+
+          const checkGCRun = async () => {
+            const wasCollected = await ctx.page.evaluate(() => {
+              return window.testWeakRef.deref() === undefined;
+            });
+
+            if (wasCollected) {
+              resolve();
+            } else {
+              setTimeout(checkGCRun);
+            }
+          };
+
+          checkGCRun();
+          await promise;
+        },
       },
       provider: 'playwright',
     },
