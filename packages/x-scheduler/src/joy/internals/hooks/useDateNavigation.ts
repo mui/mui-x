@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { ViewType } from '../../models/views';
 import { SchedulerValidDate } from '../../../primitives/models';
+import { useEventCallback } from '../../../base-ui-copy/utils/useEventCallback';
 
 const adapter = getAdapter();
 
@@ -26,19 +26,19 @@ function getNavigationDate(view: ViewType, visibleDate: SchedulerValidDate, delt
 }
 
 export function useDateNavigation({ visibleDate, setVisibleDate, view }: UseDateNavigationProps) {
-  const handleNext = React.useCallback(() => {
+  const handleNext = useEventCallback(() => {
     const nextDate = getNavigationDate(view, visibleDate, 1);
     setVisibleDate(nextDate);
-  }, [visibleDate, setVisibleDate, view]);
+  });
 
-  const handlePrevious = React.useCallback(() => {
+  const handlePrevious = useEventCallback(() => {
     const prevDate = getNavigationDate(view, visibleDate, -1);
     setVisibleDate(prevDate);
-  }, [visibleDate, setVisibleDate, view]);
+  });
 
-  const handleToday = React.useCallback(() => {
+  const handleToday = useEventCallback(() => {
     setVisibleDate(adapter.date());
-  }, [setVisibleDate]);
+  });
 
   return {
     onNextClick: handleNext,

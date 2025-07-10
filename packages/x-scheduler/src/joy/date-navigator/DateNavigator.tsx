@@ -23,7 +23,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
       className={clsx('DateNavigatorContainer', className)}
       {...other}
     >
-      <p className="DateNavigatorLabel">
+      <p className="DateNavigatorLabel" aria-live="polite">
         {adapter.format(visibleDate, 'monthShort')} {adapter.format(visibleDate, 'year')}
       </p>
       <div className="DateNavigatorButtonsContainer">
