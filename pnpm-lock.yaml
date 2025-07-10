@@ -228,7 +228,7 @@ overrides:
 
 patchedDependencies:
   '@vitest/browser':
-    hash: 4ac0634e9763d3487c4268717c3701dff92bbcde249173643b557bf19727a7c7
+    hash: b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516
     path: patches/@vitest__browser.patch
 
 importers:
@@ -378,7 +378,7 @@ importers:
         version: 4.6.0(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
       '@vitest/browser':
         specifier: 'catalog:'
-        version: 3.2.4(patch_hash=4ac0634e9763d3487c4268717c3701dff92bbcde249173643b557bf19727a7c7)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
+        version: 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
@@ -2157,7 +2157,7 @@ importers:
         version: 3.10.2(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
       '@vitest/browser':
         specifier: 'catalog:'
-        version: 3.2.4(patch_hash=4ac0634e9763d3487c4268717c3701dff92bbcde249173643b557bf19727a7c7)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
+        version: 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
       '@vitest/runner':
         specifier: ^3.2.4
         version: 3.2.4
@@ -16908,7 +16908,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/browser@3.2.4(patch_hash=4ac0634e9763d3487c4268717c3701dff92bbcde249173643b557bf19727a7c7)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)':
+  '@vitest/browser@3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)':
     dependencies:
       '@testing-library/dom': 10.4.0
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.0)
@@ -16944,7 +16944,7 @@ snapshots:
       tinyrainbow: 2.0.0
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.10)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
     optionalDependencies:
-      '@vitest/browser': 3.2.4(patch_hash=4ac0634e9763d3487c4268717c3701dff92bbcde249173643b557bf19727a7c7)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
+      '@vitest/browser': 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -24065,7 +24065,7 @@ snapshots:
 
   vitest-browser-react@1.0.0(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(@vitest/browser@3.2.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.2.4):
     dependencies:
-      '@vitest/browser': 3.2.4(patch_hash=4ac0634e9763d3487c4268717c3701dff92bbcde249173643b557bf19727a7c7)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
+      '@vitest/browser': 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.10)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
@@ -24107,7 +24107,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 24.0.10
-      '@vitest/browser': 3.2.4(patch_hash=4ac0634e9763d3487c4268717c3701dff92bbcde249173643b557bf19727a7c7)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
+      '@vitest/browser': 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
       '@vitest/ui': 3.2.4(vitest@3.2.4)
       jsdom: 26.1.0
     transitivePeerDependencies:
