@@ -441,7 +441,6 @@ export function PickerPopper(inProps: PickerPopperProps) {
           // which would force screen readers to read too old label
           disableRestoreFocus
           disableEnforceFocus={viewContainerRole === 'tooltip'}
-          isEnabled={() => true}
           {...slotProps?.desktopTrapFocus}
         >
           <Transition
