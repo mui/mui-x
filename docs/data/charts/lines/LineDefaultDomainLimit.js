@@ -6,36 +6,26 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { dataset } from './GDPperCapita';
 
 export default function LineDefaultDomainLimit() {
-  const [preferStrictDomainInLineCharts, setpreferStrictDomainInLineCharts] =
+  const [preferStrictDomainInLineCharts, setPreferStrictDomainInLineCharts] =
     React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(false);
+
   return (
-    <Stack sx={{ width: '100%' }}>
-      <Stack direction="row">
-        <FormControlLabel
-          checked={preferStrictDomainInLineCharts}
-          control={
-            <Checkbox
-              onChange={(event) =>
-                setpreferStrictDomainInLineCharts(event.target.checked)
-              }
-            />
-          }
-          label="Strict domain limit"
-          labelPlacement="end"
-        />
-        <FormControlLabel
-          checked={fullWidth}
-          control={
-            <Checkbox onChange={(event) => setFullWidth(event.target.checked)} />
-          }
-          label="full width"
-          labelPlacement="end"
-        />
-      </Stack>
-      <div style={{ width: '100%', maxWidth: fullWidth ? undefined : 450 }}>
+    <Stack alignItems="center">
+      <FormControlLabel
+        checked={preferStrictDomainInLineCharts}
+        control={
+          <Checkbox
+            onChange={(event) =>
+              setPreferStrictDomainInLineCharts(event.target.checked)
+            }
+          />
+        }
+        label="Strict domain limit"
+        labelPlacement="end"
+      />
+      <div style={{ width: '100%', maxWidth: 450 }}>
         <LineChart
-          dataset={dataset}
+          dataset={dataset.slice(2, dataset.length)}
           experimentalFeatures={{ preferStrictDomainInLineCharts }}
           xAxis={[
             {
