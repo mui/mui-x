@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, cleanup } from 'vitest-browser-react/pure';
+import { render } from 'vitest-browser-react/pure';
 import { describe, expect } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { options } from '../utils/options';

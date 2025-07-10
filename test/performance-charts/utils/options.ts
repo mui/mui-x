@@ -31,21 +31,31 @@ const benchOptions: BenchOptions = {
   iterations,
   throws: true,
   time: 0,
+  setup(task, mode) {
+    taskModes.set(task.name, mode);
+  },
   async beforeEach(task: Task) {
-    const memoryUsageBefore = await getMemoryUsage();
-    lastMemoryUsage.set(task.name, memoryUsageBefore);
+    const mode = getTaskMode(task.name);
+    if (mode === 'run') {
+      const memoryUsageBefore = await getMemoryUsage();
+      lastMemoryUsage.set(task.name, memoryUsageBefore);
+    }
   },
   async afterEach(task: Task) {
     cleanup();
-    const memoryUsageAfter = await getMemoryUsage();
-    await commands.requestGC();
-    const lastUsage = lastMemoryUsage.get(task.name);
-    lastMemoryUsage.delete(task.name);
 
-    if (lastUsage === undefined) {
-      console.warn(`No last memory usage found for task: ${task.name}`);
-    } else {
-      addMemoryUsageEntry(task.name, memoryUsageAfter - lastUsage);
+    const mode = getTaskMode(task.name);
+    if (mode === 'run') {
+      const memoryUsageAfter = await getMemoryUsage();
+      await commands.requestGC();
+      const lastUsage = lastMemoryUsage.get(task.name);
+      lastMemoryUsage.delete(task.name);
+
+      if (lastUsage === undefined) {
+        console.warn(`No last memory usage found for task: ${task.name}`);
+      } else {
+        addMemoryUsageEntry(task.name, memoryUsageAfter - lastUsage);
+      }
     }
   },
 };

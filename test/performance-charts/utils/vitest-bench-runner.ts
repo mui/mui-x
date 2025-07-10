@@ -3,6 +3,7 @@ import { Benchmark, BenchmarkResult, BenchTask, RunnerTestSuite, Suite } from 'v
 import { getBenchFn, getBenchOptions } from 'vitest/suite';
 import { updateTask as updateRunnerTask, type TaskUpdateEvent, type Task } from '@vitest/runner';
 
+// Adapted from https://github.com/vitest-dev/vitest/blob/c1f78d2adc78ef08ef8b61b0dd6a925fb08f20b6/packages/vitest/src/runtime/runners/benchmark.ts
 export default class VitestBenchRunner extends NodeBenchmarkRunner implements VitestRunner {
   async runSuite(suite: RunnerTestSuite): Promise<void> {
     await runBenchmarkSuite(suite, this);

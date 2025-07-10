@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, cleanup } from 'vitest-browser-react/pure';
+import { render } from 'vitest-browser-react/pure';
 import { describe, expect } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { options } from '../utils/options';

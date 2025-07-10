@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, cleanup } from 'vitest-browser-react/pure';
+import { render } from 'vitest-browser-react/pure';
 import { describe, expect } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
