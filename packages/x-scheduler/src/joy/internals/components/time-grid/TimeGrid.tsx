@@ -34,6 +34,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
   const store = useEventCalendarStore();
   const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
   const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+  const visibleDate = useSelector(store, selectors.visibleDate);
 
   useModernLayoutEffect(() => {
     const body = bodyRef.current;
@@ -129,10 +130,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                       <time className="TimeGridTimeAxisText">
                         {hour === 0
                           ? null
-                          : adapter.formatByString(
-                              adapter.setHours(adapter.startOfDay(today), hour),
-                              'h:mm a',
-                            )}
+                          : adapter.formatByString(adapter.setHours(visibleDate, hour), 'h:mm a')}
                       </time>
                     </div>
                   ))}
