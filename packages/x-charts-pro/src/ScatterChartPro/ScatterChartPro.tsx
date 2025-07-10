@@ -50,6 +50,7 @@ export interface ScatterChartProProps
       | 'onItemClick'
       | 'slots'
       | 'slotProps'
+      | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
     > {
