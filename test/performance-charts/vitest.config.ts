@@ -8,6 +8,7 @@ export default defineConfig({
     env: { TRACE: process.env.TRACE },
     environment: 'node',
     maxConcurrency: 1,
+    runner: './utils/vitest-bench-runner.ts',
     browser: {
       enabled: true,
       headless: true,

@@ -2153,6 +2153,9 @@ importers:
       '@vitest/browser':
         specifier: 'catalog:'
         version: 3.2.4(playwright@1.53.2)(vite@7.0.3(@types/node@24.0.10)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
+      '@vitest/runner':
+        specifier: ^3.2.4
+        version: 3.2.4
       '@vitest/ui':
         specifier: 'catalog:'
         version: 3.2.4(vitest@3.2.4)
