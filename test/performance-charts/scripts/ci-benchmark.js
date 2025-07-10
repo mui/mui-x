@@ -42,11 +42,11 @@ export default async function ciBenchmark({ github, context, core }) {
 
     if (results.failed.length > 0) {
       core.setFailed('Some benchmarks failed.');
-    } else if (results.changed.length > 0) {
-      core.setFailed('Benchmarks changed above threshold.');
+    } else if (results.regressed.length > 0) {
+      core.setFailed('Some benchmarks regressed above threshold.');
     }
 
-    const result = results.failed.length > 0 || results.changed.length > 0 ? 'fail' : 'pass';
+    const result = results.failed.length > 0 || results.regressed.length > 0 ? 'fail' : 'pass';
 
     const body = `${COMMENT_MARKER}
 

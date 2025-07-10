@@ -31,13 +31,15 @@ function processResults(compareBenchmarks, baselineBenchmarks, threshold) {
   const added = [];
   const removed = [];
   const unchanged = [];
-  const changed = [];
+  const regressed = [];
+  const improved = [];
   /** @type {Array<import('./compare-benchmark-results.types.js').FailedBenchmarkResult>} */
   const failed = [];
 
   const compareMap = new Map(compareBenchmarks.map((b) => [b.name, b]));
   const baselineMap = new Map(baselineBenchmarks?.map((b) => [b.name, b]) ?? []);
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/no-unused-vars
   for (const [_, baselineBench] of baselineMap) {
     const compareBench = compareMap.get(baselineBench.name);
 
@@ -53,7 +55,9 @@ function processResults(compareBenchmarks, baselineBenchmarks, threshold) {
       };
 
       if (diff > threshold) {
-        changed.push(benchmark);
+        regressed.push(benchmark);
+      } else if (diff < -threshold) {
+        improved.push(benchmark);
       } else {
         unchanged.push(benchmark);
       }
@@ -65,6 +69,7 @@ function processResults(compareBenchmarks, baselineBenchmarks, threshold) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/no-unused-vars
   for (const [_, compareBench] of compareMap) {
     if ('median' in compareBench) {
       added.push(compareBench);
@@ -76,7 +81,8 @@ function processResults(compareBenchmarks, baselineBenchmarks, threshold) {
   return {
     added,
     removed,
-    changed,
+    regressed,
+    improved,
     unchanged,
     failed,
   };
@@ -87,12 +93,28 @@ function processResults(compareBenchmarks, baselineBenchmarks, threshold) {
  */
 function printResults(results) {
   console.log(
-    `Overall result: ${results.failed.length > 0 || results.changed.length > 0 ? 'fail' : 'pass'}`,
+    `Overall result: ${results.failed.length > 0 || results.regressed.length > 0 ? 'fail' : 'pass'}`,
   );
 
-  console.log(`Changed benchmarks: ${results.changed.length}`);
-  if (results.changed.length > 0) {
-    const changedTable = results.changed.map((c) => ({
+  console.log(`Regressed benchmarks: ${results.regressed.length}`);
+  if (results.regressed.length > 0) {
+    const changedTable = results.regressed.map((c) => ({
+      name: c.name,
+      medianBaseline: c.baseline.median.toFixed(2),
+      medianCompare: c.compare.median.toFixed(2),
+      diff: `${(c.diff * 100).toFixed(2)}%`,
+      sampleCount: c.compare.sampleCount,
+      mean: c.compare.mean.toFixed(2),
+      p75: c.compare.p75.toFixed(2),
+      p99: c.compare.p99.toFixed(2),
+      marginOfError: c.compare.moe.toFixed(2),
+    }));
+    console.table(changedTable);
+  }
+
+  console.log(`Improved benchmarks: ${results.improved.length}`);
+  if (results.improved.length > 0) {
+    const changedTable = results.improved.map((c) => ({
       name: c.name,
       medianBaseline: c.baseline.median.toFixed(2),
       medianCompare: c.compare.median.toFixed(2),
@@ -153,13 +175,13 @@ function generateResultMarkdown(results) {
   const fMs = (/** @type {number} */ number) => `${number.toFixed(2)}ms`;
   const fPerc = (/** @type {number} */ number) => `${number.toFixed(2)}%`;
 
-  if (results.changed.length > 0) {
-    markdown += `\n**Changed benchmarks**: ${results.changed.length}\n`;
+  if (results.regressed.length > 0) {
+    markdown += `\n**Regressed benchmarks**: ${results.regressed.length}\n`;
 
     markdown += `| Name | Median (Baseline) | Median (This run) | Diff | Sample Count | Margin of Error |\n`;
     markdown += `| ---- | ----------------- | ----------------- | ---- | ------------ | --------------- |\n`;
 
-    results.changed.forEach((r) => {
+    results.regressed.forEach((r) => {
       markdown += `| ${r.name} | ${fMs(r.baseline.median)} | ${fMs(r.compare.median)} | ${fPerc(r.diff * 100)} | ${r.compare.sampleCount} | ${fPerc(r.compare.moe)} |\n`;
     });
 
@@ -168,7 +190,29 @@ function generateResultMarkdown(results) {
     markdown += `| Name | Median (Baseline) | Median (This run) | Diff | Sample Count | Min | Mean | P75 | P99 | Max | Margin of Error |\n`;
     markdown += `| ---- | ----------------- | ----------------- | ---- | ------------ | --- | ---- | --- | --- | --- | --------------- |\n`;
 
-    results.changed.forEach((r) => {
+    results.regressed.forEach((r) => {
+      markdown += `| ${r.name} | ${fMs(r.baseline.median)} | ${fMs(r.compare.median)} | ${fPerc(r.diff * 100)} | ${r.compare.sampleCount} | ${fMs(r.compare.min)} | ${fMs(r.compare.mean)} | ${fMs(r.compare.p75)} | ${fMs(r.compare.p99)} | ${fMs(r.compare.max)} | ${fPerc(r.compare.moe)} |\n`;
+    });
+
+    markdown += `</details>\n`;
+  }
+
+  if (results.improved.length > 0) {
+    markdown += `\n**Improved benchmarks**: ${results.improved.length}\n`;
+
+    markdown += `| Name | Median (Baseline) | Median (This run) | Diff | Sample Count | Margin of Error |\n`;
+    markdown += `| ---- | ----------------- | ----------------- | ---- | ------------ | --------------- |\n`;
+
+    results.improved.forEach((r) => {
+      markdown += `| ${r.name} | ${fMs(r.baseline.median)} | ${fMs(r.compare.median)} | ${fPerc(r.diff * 100)} | ${r.compare.sampleCount} | ${fPerc(r.compare.moe)} |\n`;
+    });
+
+    markdown += `<details>\n`;
+    markdown += `<summary>Detailed Results</summary>\n\n`;
+    markdown += `| Name | Median (Baseline) | Median (This run) | Diff | Sample Count | Min | Mean | P75 | P99 | Max | Margin of Error |\n`;
+    markdown += `| ---- | ----------------- | ----------------- | ---- | ------------ | --- | ---- | --- | --- | --- | --------------- |\n`;
+
+    results.improved.forEach((r) => {
       markdown += `| ${r.name} | ${fMs(r.baseline.median)} | ${fMs(r.compare.median)} | ${fPerc(r.diff * 100)} | ${r.compare.sampleCount} | ${fMs(r.compare.min)} | ${fMs(r.compare.mean)} | ${fMs(r.compare.p75)} | ${fMs(r.compare.p99)} | ${fMs(r.compare.max)} | ${fPerc(r.compare.moe)} |\n`;
     });
 

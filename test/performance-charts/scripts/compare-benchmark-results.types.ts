@@ -43,6 +43,7 @@ export interface BenchmarkResults {
   failed: FailedBenchmarkResult[];
   added: BenchmarkResult[];
   removed: BenchmarkResult[];
-  changed: BenchmarkComparison[];
+  improved: BenchmarkComparison[];
+  regressed: BenchmarkComparison[];
   unchanged: BenchmarkComparison[];
 }
