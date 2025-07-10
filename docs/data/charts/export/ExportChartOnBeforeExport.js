@@ -2,8 +2,9 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { chartsToolbarClasses } from '@mui/x-charts/Toolbar';
+
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
+import { defaultOnBeforeExport } from '@mui/x-charts-pro/models';
 import { inflationData } from '../dataset/inflationRates';
 
 const yAxisFormatter = new Intl.NumberFormat('en-US', {
@@ -59,9 +60,8 @@ const settings = {
 };
 
 function onBeforeExport(iframe) {
-  // Hide toolbar
+  defaultOnBeforeExport(iframe);
   const document = iframe.contentDocument;
-  document.querySelector(`.${chartsToolbarClasses.root}`)?.remove();
 
   // Show legend
   const legend = document.querySelector(`.${legendClasses.root}`);
