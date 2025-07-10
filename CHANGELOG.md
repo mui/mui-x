@@ -5,6 +5,103 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.8.0
+
+_Jul 10, 2025_
+
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Chart zoom preview can be enabled
+- 🌎 Add Indonesian (id-ID) locale on the Data Grid
+
+Special thanks go out to the community members for their valuable contributions:
+@kennarddh
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, noraleonte, @prakhargupta1, @rita-codes, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.8.0`
+
+- [DataGrid] Fix `useGridSelector` missing subscription in `React.StrictMode` (#18676) @cherniavskii
+- [DataGrid] Fix scrollbar filler `z-index` (#18688) @KenanYusuf
+- [DataGrid] Set correct data source cache chunk size when pagination is disabled (#18636) @arminmeh
+- [l10n] Add Indonesian (id-ID) locale (#18710) @kennarddh
+
+#### `@mui/x-data-grid-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.8.0`, plus:
+
+- [DataGridPro] Fix row ordering not auto-scrolling when moving beyond viewport (#18557) @MBilalShafi
+- [DataGridPro] Set correct parent paths when tree is refreshed with data source tree data and row grouping (#18715) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.8.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.8.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.8.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.8.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.8.0`
+
+- [charts] Add control to the axis highlight (#17900) @alexfauquette
+- [charts] Add support for filtering gestures based on pointer types (#18682) @JCQuintas
+- [charts] Allow gestures to require a key to be pressed (#18681) @JCQuintas
+- [charts] Avoid processing area plot data if area isn't used in series (#18712) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.8.0`, plus:
+
+- [charts-pro] Add `funnelDirection` to control pyramid direction (#18568) @JCQuintas
+- [charts-pro] Add `onBeforeExport` callback (#18722) @bernardobelchior
+- [charts-pro] Add chart zoom preview (#18267) @bernardobelchior
+- [charts-pro] Allow customizing scatter preview marker size (#18726) @bernardobelchior
+- [charts-pro] Allow disabling the copy of styles in charts export (#18753) @bernardobelchior
+- [charts-pro] Fix funnel regression (#18727) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.8.0`
+
+- [tree view] Fix scrolling bug when lazy loading and `checkboxSelection` are enabled (#18749) @rita-codes
+
+#### `@mui/x-tree-view-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.8.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.8.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add standalone Pyramid chart page to improve SEO (#18527) @prakhargupta1
+- [docs] Add example to customise line interaction (#18539) @alexfauquette
+- [docs] Fix `size` column filtering in files tree demo (#17952) @cherniavskii
+- [docs] Generate `llms.txt` for X and their products (#18595) @siriwatknp
+- [docs] Improve bar chart demos on mobile (#18721) @alexfauquette
+- [docs] Refine charts overview page (#17447) @noraleonte
+
+### Miscellaneous
+
+- [code-infra] Ensure all `@mui/*` packages are picked by `Material UI` renovate group (#18711) @LukasTy
+- [code-infra] Fix broken CI (#18716) @LukasTy
+- [code-infra] Refactor `prettier` config resolving (#18720) @LukasTy
+- [test] Increase data points in chart benchmarks (#18714) @bernardobelchior
+
 ## 8.7.0
 
 _Jul 4, 2025_
