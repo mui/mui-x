@@ -653,6 +653,7 @@ const StyledTab = styled(MUITab, {
   slot: 'Tab',
 })({
   flex: 1,
+  minWidth: 'fit-content',
 });
 
 const StyledTabPanel = styled('div', {
