@@ -127,7 +127,7 @@ function printResults(results) {
   if (results.added.length > 0) {
     const addedTable = results.added.map((c) => ({
       name: c.name,
-      medianBaseline: c.median.toFixed(2),
+      median: c.median.toFixed(2),
       sampleCount: c.sampleCount,
       mean: c.mean.toFixed(2),
       p75: c.p75.toFixed(2),
