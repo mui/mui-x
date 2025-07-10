@@ -129,7 +129,10 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                       <time className="TimeGridTimeAxisText">
                         {hour === 0
                           ? null
-                          : adapter.formatByString(adapter.setHours(today, hour), 'h:mm a')}
+                          : adapter.formatByString(
+                              adapter.setHours(adapter.startOfDay(today), hour),
+                              'h:mm a',
+                            )}
                       </time>
                     </div>
                   ))}
