@@ -64,7 +64,7 @@ export type PromptResponse = {
 
 export type PromptResolverOptions = {
   /*
-   * Disable storing of prompts by MUI's prompt resolver service. Defaults to false.
+   * Disable storing of prompts by MUI's prompt resolver service.
   */
   disablePromptRetention?: boolean;
   /*
