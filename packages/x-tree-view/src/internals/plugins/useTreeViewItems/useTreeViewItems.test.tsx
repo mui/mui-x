@@ -67,38 +67,6 @@ describeTreeView<
         expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
       });
 
-      // it('should NOT publish removeItem event if items do not change', async () => {
-      //   const publishSpy = spy(publishTreeViewEvent);
-
-      //   const view = render({
-      //     items: [{ id: '1' }, { id: '2' }],
-      //   });
-
-      //   view.setItems([{ id: '1' }, { id: '2' }]);
-      //   expect(view.getAllTreeItemIds()).to.deep.equal(['1', '2']);
-
-      //   // Filtra solo las llamadas a 'removeItem'
-      //   const removeItemCalls = publishSpy
-      //     .getCalls()
-      //     .filter((call) => call.args[1] === 'removeItem');
-      //   expect(removeItemCalls.length).to.equal(0);
-      // });
-
-      // it('should publish removeItem event when an item is removed', async () => {
-      //   const publishSpy = spy(publishTreeViewEvent);
-      //   const view = render({
-      //     items: [{ id: '1' }, { id: '2' }],
-      //   });
-      //   view.setItems([]);
-
-      //   // expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
-
-      //   const removeItemCalls = publishSpy
-      //     .getCalls()
-      //     .filter((call) => call.args[1] === 'removeItem');
-      //   expect(removeItemCalls.length).to.equal(1);
-      // });
-
       it('should support adding an item at the end', () => {
         const view = render({
           items: [{ id: '1' }],
