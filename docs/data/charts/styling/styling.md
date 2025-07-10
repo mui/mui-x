@@ -1,5 +1,6 @@
 ---
 title: Charts - Styling
+components: ChartsCartesianDrawingArea
 productId: x-charts
 ---
 
