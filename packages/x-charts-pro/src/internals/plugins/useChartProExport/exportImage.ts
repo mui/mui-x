@@ -20,7 +20,13 @@ export async function exportImage(
   element: HTMLElement | SVGElement,
   params?: ChartImageExportOptions,
 ) {
-  const { fileName, type = 'image/png', quality = 0.9, onBeforeExport } = params ?? {};
+  const {
+    fileName,
+    type = 'image/png',
+    quality = 0.9,
+    onBeforeExport,
+    copyStyles = true,
+  } = params ?? {};
   const drawDocumentPromise = getDrawDocument();
   const { width, height } = element.getBoundingClientRect();
   const doc = ownerDocument(element);
@@ -50,7 +56,9 @@ export async function exportImage(
     const root =
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
-    await Promise.all(loadStyleSheets(exportDoc, root));
+    if (copyStyles) {
+      await Promise.all(loadStyleSheets(exportDoc, root));
+    }
 
     resolve();
   };
