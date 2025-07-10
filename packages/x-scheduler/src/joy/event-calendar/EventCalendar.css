@@ -1,3 +1,7 @@
+@import '../styles/colors.css';
+@import '../styles/tokens.css';
+@import '../styles/utils.css';
+
 .EventCalendarRoot {
   width: 100%;
   display: flex;
@@ -12,6 +16,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  padding: var(--space-4) 0 var(--space-4) var(--space-4);
 }
 
 .EventCalendarMainPanel {
@@ -19,6 +24,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-4) 0;
+}
+
+.EventCalendarMainPanel--month {
+  max-height: 100%;
+  height: 100dvh;
+  height: 100vh;
 }
 
 .EventCalendarContent {
@@ -36,4 +48,30 @@
   align-items: center;
   justify-content: center;
   color: var(--gray-6);
+}
+
+.EventCalendarResourceLegend {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2);
+  gap: var(--space-1);
+}
+
+.EventCalendarResourceLegendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.EventCalendarResourceLegendColor {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: var(--event-color-9);
+}
+
+.EventCalendarResourceLegendName {
+  font-size: var(--font-size-2);
+  color: var(--text-secondary);
 }

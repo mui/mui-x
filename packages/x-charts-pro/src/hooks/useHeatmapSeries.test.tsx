@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useHeatmapSeries, useHeatmapSeriesContext } from './useHeatmapSeries';
 import { Heatmap } from '../Heatmap';
@@ -48,7 +47,6 @@ describe('useHeatmapSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useHeatmapSeries', () => {
   it('should return the specific heatmap series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useHeatmapSeries('1'), options);

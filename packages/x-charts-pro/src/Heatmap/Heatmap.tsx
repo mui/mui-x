@@ -31,7 +31,6 @@ import {
   ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -41,12 +40,17 @@ import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { ChartsToolbarPro } from '../ChartsToolbarPro';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
 
 export interface HeatmapSlots
   extends ChartsAxisSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots,
-    ChartsToolbarSlots,
+    ChartsToolbarProSlots,
     Partial<ChartsSlotsPro> {
   /**
    * Custom component for the tooltip.
@@ -64,7 +68,7 @@ export interface HeatmapSlotProps
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
     ChartsLegendSlotProps,
-    ChartsToolbarSlotProps,
+    ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
   tooltip?: Partial<HeatmapTooltipProps>;
 }
@@ -72,7 +76,16 @@ export interface HeatmapSlotProps
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'xAxis'
+      | 'yAxis'
+      | 'skipAnimation'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
+      | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -103,6 +116,11 @@ export interface HeatmapProps
    * @default true
    */
   hideLegend?: boolean;
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -168,6 +186,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     highlightedItem,
     onHighlightChange,
     hideLegend = true,
+    showToolbar = false,
   } = props;
 
   const id = useId();
@@ -216,6 +235,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     legendDirection: props.slotProps?.legend?.direction,
   };
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
+  const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>
@@ -240,6 +260,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       plugins={HEATMAP_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
             slots={{ ...slots, legend: slots?.legend ?? ContinuousColorLegend }}
@@ -359,6 +380,11 @@ Heatmap.propTypes = {
    * @ignore Unstable props for internal usage.
    */
   seriesConfig: PropTypes.object,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

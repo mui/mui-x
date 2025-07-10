@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import Box, { BoxProps } from '@mui/material/Box';
-import { testSkipIf } from 'test/utils/skipIf';
 import { RenderProp, useComponentRenderer } from './useComponentRenderer';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('useComponentRenderer', () => {
   const { render } = createRenderer();
@@ -97,26 +92,5 @@ describe('useComponentRenderer', () => {
       'style',
       'color: blue; outline: blue solid 1px; background-color: blue;',
     );
-  });
-
-  // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)('should merge sx props', () => {
-    function TestComponentWithSxProp(
-      props: BoxProps & { render?: RenderProp<BoxProps, { someState: string }> },
-    ) {
-      const { render: renderProp, ...other } = props;
-      return useComponentRenderer(Box, renderProp, other as Omit<BoxProps, 'color'>);
-    }
-    render(
-      <TestComponentWithSxProp
-        data-testid="rendered-element"
-        sx={{ color: 'blue', outline: '1px solid red' }}
-        render={<Box sx={{ backgroundColor: 'blue', outline: 'blue solid 1px' }} />}
-      />,
-    );
-    const computedStyle = window.getComputedStyle(screen.getByTestId('rendered-element'));
-    expect(computedStyle.color).to.equal('rgb(0, 0, 255)');
-    expect(computedStyle.backgroundColor).to.equal('rgb(0, 0, 255)');
-    expect(computedStyle.outline).to.equal('rgb(0, 0, 255) solid 1px');
   });
 });

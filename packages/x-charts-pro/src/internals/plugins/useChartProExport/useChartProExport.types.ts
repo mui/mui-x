@@ -12,34 +12,45 @@ export interface UseChartProExportState {
   export: {};
 }
 
+export interface ChartExportOptions {
+  /**
+   * The name of the file without the extension.
+   * @default The title of the document the chart belongs to
+   */
+  fileName?: string;
+  /**
+   * Callback function that is called before the export is triggered.
+   * It can be used to modify the iframe or perform any other actions before the export, such as updating styles,
+   * removing elements, etc.
+   * @param {HTMLIFrameElement} iframe containing the chart to be exported.
+   * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export will wait for it to resolve before proceeding.
+   */
+  onBeforeExport?: (iframe: HTMLIFrameElement) => Promise<void> | void;
+  /**
+   * If `true`, the styles of the page the chart belongs to will be copied to the export iframe.
+   * Copying styles is useful to ensure that the exported chart looks the same as it does on the page.
+   * @default true
+   */
+  copyStyles?: boolean;
+}
+
 /**
  * The options to apply on the Print export.
  * @demos
- *   - [Print export](/x/react-charts/export/#print-export-as-pdf)
+ *   - [Print export](https://mui.com/x/react-charts/export/#print-export-as-pdf)
  */
-export interface ChartPrintExportOptions {
-  /**
-   * The value to be used as the print window title.
-   * @default The title of the page.
-   */
-  fileName?: string;
-}
+export interface ChartPrintExportOptions extends ChartExportOptions {}
 
 /**
  * The options to apply on the image export.
  * @demos
- *   - [Image export](/x/react-charts/export/#export-as-image)
+ *   - [Image export](https://mui.com/x/react-charts/export/#export-as-image)
  */
-export interface ChartImageExportOptions {
-  /**
-   * The value to be used as the print window title.
-   * @default The title of the page.
-   */
-  fileName?: string;
-
+export interface ChartImageExportOptions extends ChartExportOptions {
   /**
    * The format of the image to be exported.
    * Browsers are required to support 'image/png'. Some browsers also support 'image/jpeg' and 'image/webp'.
+   * If the provided `type` is not supported by the browser, it will default to 'image/png'.
    * @default 'image/png'
    */
   type?: 'image/png' | string;

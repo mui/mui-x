@@ -1,27 +1,31 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { CalendarEvent } from '@mui/x-scheduler/joy';
+import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
 import { WeekView } from '@mui/x-scheduler/joy/week-view';
+import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
 import classes from './StandaloneWeekView.module.css';
 
-const events: CalendarEvent[] = [
+const initialEvents: CalendarEvent[] = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),
     end: DateTime.fromISO('2025-05-26T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
+    resource: 'workout',
   },
   {
     id: '2',
     start: DateTime.fromISO('2025-05-26T16:00:00'),
     end: DateTime.fromISO('2025-05-26T17:00:00'),
     title: 'Weekly',
+    resource: 'work',
   },
   {
     id: '3',
     start: DateTime.fromISO('2025-05-27T10:00:00'),
     end: DateTime.fromISO('2025-05-27T11:00:00'),
     title: 'Backlog grooming',
+    resource: 'work',
   },
   {
     id: '4',
@@ -34,21 +38,42 @@ const events: CalendarEvent[] = [
     start: DateTime.fromISO('2025-05-28T08:00:00'),
     end: DateTime.fromISO('2025-05-28T17:00:00'),
     title: 'Scheduler deep dive',
+    resource: 'work',
   },
   {
-    id: '1',
+    id: '6',
     start: DateTime.fromISO('2025-05-29T07:30:00'),
     end: DateTime.fromISO('2025-05-29T08:15:00'),
-    title: 'Footing',
+    title: 'Running',
+    resource: 'workout',
   },
   {
-    id: '1',
+    id: '7',
+    start: DateTime.fromISO('2025-05-29T08:15:00'),
+    end: DateTime.fromISO('2025-05-29T08:30:00'),
+    title: 'Standup',
+    resource: 'work',
+  },
+  {
+    id: '8',
     start: DateTime.fromISO('2025-05-30T15:00:00'),
     end: DateTime.fromISO('2025-05-30T15:45:00'),
     title: 'Retrospective',
+    resource: 'work',
   },
 ];
 
+const resources: CalendarResource[] = [
+  { name: 'Work', id: 'work', color: 'red' },
+  { name: 'Workout', id: 'workout', color: 'jade' },
+];
+
 export default function StandaloneWeekView() {
-  return <WeekView events={events} className={classes.Container} />;
+  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+
+  return (
+    <StandaloneView events={events} resources={resources}>
+      <WeekView className={classes.Container} onEventsChange={setEvents} />
+    </StandaloneView>
+  );
 }

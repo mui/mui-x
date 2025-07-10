@@ -1,4 +1,3 @@
-import { RefObject } from '@mui/x-internals/types';
 import {
   createRootSelector,
   createSelector,
@@ -6,7 +5,6 @@ import {
 } from '../../../utils/createSelector';
 import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
  * Get the columns state
@@ -54,6 +52,13 @@ export const gridRenderContextSelector = createSelector(
   (state) => state.renderContext,
 );
 
+const firstColumnIndexSelector = createRootSelector(
+  (state: GridStateCommunity) => state.virtualization.renderContext.firstColumnIndex,
+);
+const lastColumnIndexSelector = createRootSelector(
+  (state: GridStateCommunity) => state.virtualization.renderContext.lastColumnIndex,
+);
+
 /**
  * Get the render context, with only columns filled in.
  * This is cached, so it can be used to only re-render when the column interval changes.
@@ -61,10 +66,8 @@ export const gridRenderContextSelector = createSelector(
  * @ignore - do not document.
  */
 export const gridRenderContextColumnsSelector = createSelectorMemoized(
-  (apiRef: RefObject<GridApiCommunity>) =>
-    apiRef.current.state.virtualization.renderContext.firstColumnIndex,
-  (apiRef: RefObject<GridApiCommunity>) =>
-    apiRef.current.state.virtualization.renderContext.lastColumnIndex,
+  firstColumnIndexSelector,
+  lastColumnIndexSelector,
   (firstColumnIndex, lastColumnIndex): GridColumnsRenderContext => ({
     firstColumnIndex,
     lastColumnIndex,

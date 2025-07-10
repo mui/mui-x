@@ -1,0 +1,185 @@
+.TimeGridContainer {
+  --fixed-cell-width: 68px;
+  --hour-height: 46px;
+  --has-scroll: 1;
+}
+
+.TimeGridContainer {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-4);
+}
+
+.TimeGridRoot {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.TimeGridHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.TimeGridGridRow {
+  display: grid;
+  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
+  width: 100%;
+}
+
+.TimeGridHeaderRow {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridHeaderRow {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-color: transparent transparent;
+}
+
+.TimeGridAllDayEventsRow {
+  max-height: 84px;
+
+  > *:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+}
+
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-color: transparent transparent;
+}
+
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow[data-weekend] {
+  scrollbar-color: var(--weekend-background) var(--weekend-background);
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridHeaderRow::-webkit-scrollbar {
+  background: transparent;
+}
+
+.TimeGridHeader[style*='--has-scroll: 1'] .TimeGridAllDayEventsRow::-webkit-scrollbar {
+  background: transparent;
+}
+
+.TimeGridHeader[style*='--has-scroll: 1']
+  .TimeGridAllDayEventsRow[data-weekend]::-webkit-scrollbar {
+  background: var(--weekend-background);
+}
+
+.TimeGridHeaderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px;
+}
+
+.TimeGridHeaderButton {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.TimeGridHeaderButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: -2px;
+  border-radius: var(--radius-3);
+}
+
+.TimeGridAllDayEventsHeaderCell {
+  font-size: var(--font-size-1);
+  font-style: var(--em-font-style);
+  padding: var(--space-2);
+  text-align: end;
+  color: var(--secondary-text-color);
+}
+
+.TimeGridHeaderDayName {
+  font-size: var(--font-size-2);
+  color: var(--secondary-text-color);
+  line-height: 1;
+}
+
+.TimeGridHeaderDayNumber {
+  font-size: var(--font-size-5);
+  font-weight: var(--font-weight-3);
+  line-height: 1;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-3);
+}
+
+.TimeGridHeaderDayNumber.Today {
+  background-color: var(--primary-3);
+}
+
+.TimeGridBody {
+  flex: 1;
+  border-top: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+
+.TimeGridScrollableContent {
+  display: flex;
+  height: calc(var(--hour-height) * 24);
+  position: relative;
+}
+
+.TimeGridTimeAxis {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--fixed-cell-width);
+}
+
+.TimeGridTimeAxisCell {
+  height: calc(100% / 24);
+  line-height: calc(100% / 24);
+  border-right: 1px solid var(--border-color);
+  padding-inline: var(--space-2);
+  text-align: end;
+}
+
+.TimeGridTimeAxisText:not(:empty) {
+  font-size: var(--font-size-1);
+  line-height: calc(100% / 24);
+  color: var(--secondary-text-color);
+  white-space: nowrap;
+}
+
+.TimeGridTimeAxisCell:not(:first-child)::after {
+  content: '';
+  position: absolute;
+  left: var(--fixed-cell-width);
+  right: 0;
+  border-bottom: 1px solid var(--border-color);
+  top: calc(var(--hour) * var(--hour-height));
+  z-index: 1;
+}
+
+.TimeGridGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  width: 100%;
+
+  > *:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+}
+
+.TimeGridColumn {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex: 1;
+}
+
+.TimeGridColumn[data-weekend],
+.TimeGridAllDayEventsCell[data-weekend] {
+  background: var(--weekend-background);
+}

@@ -100,6 +100,8 @@ function MarkElement(props: MarkElementProps) {
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       {...interactionProps}
+      data-highlighted={isHighlighted || undefined}
+      data-faded={isFaded || undefined}
     />
   );
 }

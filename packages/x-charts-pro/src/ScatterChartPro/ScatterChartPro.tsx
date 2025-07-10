@@ -26,17 +26,33 @@ import {
   SCATTER_CHART_PRO_PLUGINS,
   ScatterChartProPluginsSignatures,
 } from './ScatterChartPro.plugins';
+import {
+  ChartsToolbarProSlots,
+  ChartsToolbarProSlotProps,
+} from '../ChartsToolbarPro/Toolbar.types';
 
-export interface ScatterChartProSlots extends ScatterChartSlots, Partial<ChartsSlotsPro> {}
+export interface ScatterChartProSlots
+  extends Omit<ScatterChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
 export interface ScatterChartProSlotProps
-  extends ScatterChartSlotProps,
+  extends Omit<ScatterChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'onItemClick' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'seriesConfig'
+      | 'onItemClick'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
+      | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
     > {
   /**
    * Overridable component slots.
@@ -384,6 +400,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -475,6 +492,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -557,6 +575,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -639,6 +658,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -721,6 +741,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -803,6 +824,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -885,6 +907,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -967,6 +990,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1068,6 +1092,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1158,6 +1183,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1239,6 +1265,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1320,6 +1347,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1401,6 +1429,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1482,6 +1511,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1563,6 +1593,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1644,6 +1675,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
