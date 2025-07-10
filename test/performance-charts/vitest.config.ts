@@ -28,7 +28,7 @@ export default defineConfig({
       commands: {
         requestGC: async (ctx) => {
           await ctx.page.evaluate(() => {
-            const testObj = {};
+            let testObj: {} | null = {};
             const weakRef = new WeakRef(testObj);
 
             testObj = null;
