@@ -12,6 +12,9 @@ _Jul 10, 2025_
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Chart zoom preview can be enabled
+
+  <img width="758" alt="chart with x-axis preview" src="https://github.com/user-attachments/assets/50ce6f61-16dc-4e9b-a727-ca65d80927d7" />
+
 - 🌎 Add Indonesian (id-ID) locale on the Data Grid
 
 Special thanks go out to the community members for their valuable contributions:
