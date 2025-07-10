@@ -12,7 +12,7 @@
 
 .joy .NeutralButton {
   background: var(--gray-3);
-  color: var(--gray-12);
+  color: var(--default-text-color);
 }
 
 .joy .NeutralButton:hover {
@@ -21,6 +21,11 @@
 
 .joy .NeutralButton:active {
   background: var(--gray-5);
+}
+
+.joy .NeutralButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
 }
 
 .joy .PrimaryButton {
@@ -55,6 +60,24 @@
 }
 
 .joy .SecondaryErrorButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.joy .NeutralTextButton {
+  background: transparent;
+  color: var(--default-text-color);
+}
+
+.joy .NeutralTextButton:hover {
+  background: var(--gray-4);
+}
+
+.joy .NeutralTextButton:active {
+  background: var(--gray-5);
+}
+
+.joy .NeutralTextButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }

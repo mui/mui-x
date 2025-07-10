@@ -38,8 +38,7 @@ export const MonthView = React.memo(
     const store = useEventCalendarStore();
     const visibleDate = useSelector(store, selectors.visibleDate);
     const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-    // TODO: Temporary fake today until Issue 17698 is resolved.
-    const today = adapter.date('2025-05-26');
+    const today = adapter.date();
     const translations = useTranslations();
 
     const getWeekList = useWeekList();
