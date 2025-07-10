@@ -1,5 +1,3 @@
-import { createRequire } from 'module';
-
 interface TelemetryEnvConfig {
   NODE_ENV: string | '<unknown>';
   IS_COLLECTING: boolean | undefined;
@@ -43,7 +41,7 @@ function getBooleanEnvFromEnvObject(envKey: string, envObj: Record<string, any>)
   return undefined;
 }
 
-function getIsTelemetryCollecting(): boolean | undefined {
+function getIsTelemetryCollecting() {
   // Check global variable
   // eslint-disable-next-line no-underscore-dangle
   const globalValue = globalThis.__MUI_X_TELEMETRY_DISABLED__;
@@ -68,8 +66,7 @@ function getIsTelemetryCollecting(): boolean | undefined {
 
   try {
     // e.g. Vite.js
-    const require = createRequire(import.meta.url);
-    const { importMetaEnv } = require('./config.import-meta');
+    const importMetaEnv = import.meta.env;
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
       if (typeof result === 'boolean') {
@@ -104,7 +101,7 @@ function getIsTelemetryCollecting(): boolean | undefined {
   return undefined;
 }
 
-function getIsDebugModeEnabled(): boolean {
+function getIsDebugModeEnabled() {
   try {
     // Check global variable
     // eslint-disable-next-line no-underscore-dangle
@@ -133,8 +130,7 @@ function getIsDebugModeEnabled(): boolean {
 
   try {
     // e.g. Vite.js
-    const require = createRequire(import.meta.url);
-    const { importMetaEnv } = require('./config.import-meta');
+    const importMetaEnv = import.meta.env;
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', importMetaEnv);
       if (typeof result === 'boolean') {
@@ -174,7 +170,7 @@ function getNodeEnv(): string {
 
 let cachedEnv: TelemetryEnvConfig | null = null;
 
-export function getTelemetryEnvConfig(skipCache: boolean = false): TelemetryEnvConfig {
+export function getTelemetryEnvConfig(skipCache: boolean = false) {
   if (skipCache || !cachedEnv) {
     cachedEnv = {
       NODE_ENV: getNodeEnv(),
