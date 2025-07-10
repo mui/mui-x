@@ -35,8 +35,6 @@ describe('ScatterChartPro', () => {
       );
 
       expect(page.getByText('60', { exact: true })).toBeInTheDocument();
-
-      cleanup();
     },
     options,
   );
@@ -66,8 +64,6 @@ describe('ScatterChartPro', () => {
       );
 
       expect(page.getByText('50.06')).toBeInTheDocument();
-
-      cleanup();
     },
     options,
   );

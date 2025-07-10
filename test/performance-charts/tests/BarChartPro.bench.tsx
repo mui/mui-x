@@ -33,8 +33,6 @@ describe('BarChartPro', () => {
       );
 
       expect(page.getByText('60')).toBeInTheDocument();
-
-      cleanup();
     },
     options,
   );

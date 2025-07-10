@@ -19,8 +19,6 @@ describe('FunnelChart', () => {
       const page = render(<FunnelChart series={series} width={500} height={300} />);
 
       expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
-
-      cleanup();
     },
     options,
   );

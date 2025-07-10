@@ -29,8 +29,6 @@ describe('PieChart', () => {
 
       const result = 1050;
       expect(page.getByText(result.toString())).toBeInTheDocument();
-
-      cleanup();
     },
     options,
   );
