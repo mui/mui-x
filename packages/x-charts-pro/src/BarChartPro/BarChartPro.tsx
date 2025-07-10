@@ -37,7 +37,7 @@ export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.

@@ -49,7 +49,7 @@ export interface BarChartSlotProps
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginsSignatures>,
-      'series' | 'plugins' | 'zAxis'
+      'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,

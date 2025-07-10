@@ -26,6 +26,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
+import { getAxisDomainLimit } from './getAxisDomainLimit';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -55,6 +56,10 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   zoomMap?: Map<AxisId, ZoomData>;
   zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts?: boolean;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -78,6 +83,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   zoomOptions,
   getFilters,
+  preferStrictDomainInLineCharts,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -180,7 +186,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const domainLimit = axis.domainLimit ?? 'nice';
+    const domainLimit = preferStrictDomainInLineCharts
+      ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
+      : (axis.domainLimit ?? 'nice');
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
 
