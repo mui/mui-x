@@ -1,4 +1,10 @@
+import { cdp } from '@vitest/browser/context';
+
 const memoryUsageData = new Map<string, number[]>();
+
+export async function getMemoryUsage() {
+  return (await cdp().send('Runtime.getHeapUsage')).usedSize;
+}
 
 export function addMemoryUsageEntry(name: string, usage: number) {
   const usages = memoryUsageData.get(name) ?? [];

@@ -1,6 +1,9 @@
 import { BenchOptions } from 'vitest';
 import { cleanup } from 'vitest-browser-react/pure';
+import { commands } from '@vitest/browser/context';
+import { Task } from 'tinybench';
 import { isTrace } from './env';
+import { addMemoryUsageEntry, getMemoryUsage } from './memory-utils';
 
 const defaultIterations = isTrace ? 1 : 100;
 const iterations = import.meta.env.BENCHMARK_ITERATIONS
@@ -20,18 +23,30 @@ const traceOptions: BenchOptions = {
   },
 };
 
+const lastMemoryUsage = new Map<string, number>();
+
 const benchOptions: BenchOptions = {
   warmupIterations: 5,
   warmupTime: 0,
   iterations,
   throws: true,
   time: 0,
-  beforeEach() {
-    console.log('beforeEach');
+  async beforeEach(task: Task) {
+    const memoryUsageBefore = await getMemoryUsage();
+    lastMemoryUsage.set(task.name, memoryUsageBefore);
   },
-  afterEach() {
-    console.log('afterEach');
+  async afterEach(task: Task) {
     cleanup();
+    const memoryUsageAfter = await getMemoryUsage();
+    await commands.requestGC();
+    const lastUsage = lastMemoryUsage.get(task.name);
+    lastMemoryUsage.delete(task.name);
+
+    if (lastUsage === undefined) {
+      console.warn(`No last memory usage found for task: ${task.name}`);
+    } else {
+      addMemoryUsageEntry(task.name, memoryUsageAfter - lastUsage);
+    }
   },
 };
 
