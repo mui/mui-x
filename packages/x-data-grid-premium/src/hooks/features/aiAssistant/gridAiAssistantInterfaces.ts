@@ -62,16 +62,18 @@ export type PromptResponse = {
   pivoting: Pivoting;
 };
 
-export type PromptResolverOptions = {
-  /*
-   * Disable storing of prompts by MUI's prompt resolver service.
-  */
-  disablePromptRetention?: boolean;
-  /*
-   * Additional context to make the processing results more accurate.
-  */
-  additionalContext?: string;
-} | {};
+export type PromptResolverOptions =
+  | {
+      /*
+       * Disable storing of prompts by MUI's prompt resolver service.
+       */
+      disablePromptRetention?: boolean;
+      /*
+       * Additional context to make the processing results more accurate.
+       */
+      additionalContext?: string;
+    }
+  | {};
 
 /**
  * The prompt API interface that is available in the grid [[apiRef]].

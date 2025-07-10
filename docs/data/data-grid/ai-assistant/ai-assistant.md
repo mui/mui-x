@@ -121,8 +121,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    When using MUI's service, you may choose to disable prompt retention. This disables the storage of user prompts as well as all AI responses on MUI's end:
 
    ```ts
-     function processPrompt(query: string, context: string, conversationId?: string) {   
-
+   function processPrompt(query: string, context: string, conversationId?: string) {
      return unstable_gridDefaultPromptResolver(
        `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
        query,
