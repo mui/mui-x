@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, cleanup } from 'vitest-browser-react/pure';
+import { render } from 'vitest-browser-react/pure';
 import { describe, expect } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { options } from '../utils/options';
@@ -23,8 +23,6 @@ describe('BarChart', () => {
       );
 
       expect(page.getByText('205')).toBeInTheDocument();
-
-      cleanup();
     },
     options,
   );

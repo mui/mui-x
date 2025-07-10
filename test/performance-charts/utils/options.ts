@@ -1,4 +1,5 @@
 import { BenchOptions } from 'vitest';
+import { cleanup } from 'vitest-browser-react/pure';
 import { isTrace } from './env';
 
 const defaultIterations = isTrace ? 1 : 100;
@@ -25,6 +26,13 @@ const benchOptions: BenchOptions = {
   iterations,
   throws: true,
   time: 0,
+  beforeEach() {
+    console.log('beforeEach');
+  },
+  afterEach() {
+    console.log('afterEach');
+    cleanup();
+  },
 };
 
 export const options: BenchOptions = isTrace ? traceOptions : benchOptions;

@@ -122,7 +122,10 @@ async function runBenchmarkSuite(suite: Suite, runner: NodeBenchmarkRunner) {
         benchmark: createBenchmarkResult(benchmark.name),
       };
 
-      const task = new Task(benchmarkInstance, benchmark.name, benchmarkFn);
+      const task = new Task(benchmarkInstance, benchmark.name, benchmarkFn, {
+        beforeEach: () => options.beforeEach?.(),
+        afterEach: () => options.afterEach?.(),
+      });
       benchmarkTasks.set(benchmark, task);
       addBenchTaskListener(task, benchmark);
     });

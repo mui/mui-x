@@ -2170,6 +2170,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.1.0(react@19.1.0)
+      tinybench:
+        specifier: ^2.9.0
+        version: 2.9.0
       vitest:
         specifier: 'catalog:'
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.10)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)

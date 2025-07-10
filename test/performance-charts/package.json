@@ -19,6 +19,7 @@
     "@vitest/browser": "catalog:",
     "@vitest/ui": "catalog:",
     "@vitest/runner": "^3.2.4",
+    "tinybench": "^2.9.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "vitest": "catalog:",
