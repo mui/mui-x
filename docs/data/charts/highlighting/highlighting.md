@@ -48,15 +48,52 @@ Detailed explanations are available in a [dedicated line interaction demonstrati
 
 {{"demo": "ElementHighlights.js"}}
 
-## Controlled highlight
+## Controlled item highlight
 
-The highlight can be controlled by the user when they set `highlightedItem` and `onHighlightChange`.
+The highlighted item can be controlled by using `highlightedItem` and `onHighlightChange`.
 
 You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
 
 {{"demo": "ControlledHighlight.js"}}
 
-### Synchronizing highlights
+## Controlled axis highlight
+
+The highlighted axis item can be controlled by using `highlightedAxis` prop.
+Its value is an array of `{ axisId: string, dataIndex: number }` objects.
+An empty array means no highlight.
+
+The `onHighlightedAxisChange` handler is triggered each time the pointer crosses the boundaries between two axis values.
+Its parameter is an array of one `{ axisId, dataIndex }` object per axis.
+Axes without a `data` property are ignored by the handler.
+
+:::warning
+The `onHighlightedAxisChange` can be triggered at a high frequency when the user moves their pointer over the chart.
+
+To avoid performance issues, avoid re-creating objects that are passed to props on every render.
+Prefer defining them outside the component, or memoizing them.
+
+This suggestion is especially useful for axes and series which, when updated, impact a lot of computation.
+
+```jsx
+// ❌ The chart gets a new axis on each render, leading to useless computation.
+const Component = () => <BarChart xAxis={[{ data: [1, 2, 3]}]}>
+
+// ✅ For static settings, define them outside the component.
+const quarterAxis = [{ data: ['Q1', 'Q2', 'Q3', 'Q4'] }];
+const Component = () => <BarChart xAxis={quarterAxis}>
+
+// ✅ For dynamic settings, memoize them.
+const Component = ({ data }) => {
+  const axis = React.useMemo(() => [{ data }], [data]);
+  return <BarChart xAxis={quarterAxis}>
+}
+```
+
+:::
+
+{{"demo": "ControlledAxisHighlight.js"}}
+
+## Synchronizing highlights
 
 Having a controlled highlight allows you to control it in multiple charts at the same time.
 You need to ensure that the `series` has the same `ids` and the data is in the same order.
