@@ -69,7 +69,8 @@ export function getTicks(
     scale: D3Scale;
     valueFormatter?: AxisConfig['valueFormatter'];
     isInside: (offset: number) => boolean;
-  } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
+  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
+    Required<Pick<TickParams, 'tickNumber'>>,
 ) {
   const {
     scale,
@@ -93,19 +94,26 @@ export function getTicks(
         (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
         (typeof tickInterval === 'object' && tickInterval) ||
         domain;
+
       return [
-        ...filteredDomain.map((value) => ({
-          value,
-          formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
-          offset:
-            scale(value)! -
-            (scale.step() - scale.bandwidth()) / 2 +
-            offsetRatio[tickPlacement] * scale.step(),
-          labelOffset:
-            tickLabelPlacement === 'tick'
-              ? 0
-              : scale.step() * (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]),
-        })),
+        ...filteredDomain.map((value) => {
+          const defaultTickLabel = `${value}`;
+
+          return {
+            value,
+            formattedValue:
+              valueFormatter?.(value, { location: 'tick', scale, tickNumber, defaultTickLabel }) ??
+              defaultTickLabel,
+            offset:
+              scale(value)! -
+              (scale.step() - scale.bandwidth()) / 2 +
+              offsetRatio[tickPlacement] * scale.step(),
+            labelOffset:
+              tickLabelPlacement === 'tick'
+                ? 0
+                : scale.step() * (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]),
+          };
+        }),
 
         ...(tickPlacement === 'extremities'
           ? [
@@ -125,12 +133,21 @@ export function getTicks(
       (typeof tickInterval === 'object' && tickInterval) ||
       domain;
 
-    return filteredDomain.map((value) => ({
-      value,
-      formattedValue: valueFormatter?.(value, { location: 'tick', scale }) ?? `${value}`,
-      offset: scale(value)!,
-      labelOffset: 0,
-    }));
+    return filteredDomain.map((value) => {
+      const defaultTickLabel = `${value}`;
+      return {
+        value,
+        formattedValue:
+          valueFormatter?.(value, {
+            location: 'tick',
+            scale,
+            tickNumber,
+            defaultTickLabel,
+          }) ?? defaultTickLabel,
+        offset: scale(value)!,
+        labelOffset: 0,
+      };
+    });
   }
 
   const domain = scale.domain();
@@ -160,7 +177,8 @@ export function getTicks(
       visibleTicks.push({
         value,
         formattedValue: shouldDisplayLabel
-          ? (valueFormatter?.(value, { location: 'tick', scale }) ?? defaultTickLabel)
+          ? (valueFormatter?.(value, { location: 'tick', scale, tickNumber, defaultTickLabel }) ??
+            defaultTickLabel)
           : '',
         offset,
         // Allowing the label to be placed in the middle of a continuous scale is weird.
@@ -181,7 +199,8 @@ export function useTicks(
     scale: D3Scale;
     valueFormatter?: AxisConfig['valueFormatter'];
     direction: 'x' | 'y';
-  } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
+  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
+    Required<Pick<TickParams, 'tickNumber'>>,
 ): TickItemType[] {
   const {
     scale,
