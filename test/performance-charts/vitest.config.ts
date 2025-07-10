@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import { page } from '@vitest/browser/context';
 
 export default defineConfig({
   plugins: [react()],
@@ -38,9 +37,9 @@ export default defineConfig({
 
           await ctx.page.requestGC();
 
-          const { promise, resolve } = Promise.withResolvers<void>();
+          const { promise: waitForGCToComplete, resolve } = Promise.withResolvers<void>();
 
-          const checkGCRun = async () => {
+          const checkIfGCIsComplete = async () => {
             const wasCollected = await ctx.page.evaluate(() => {
               return window.testWeakRef.deref() === undefined;
             });
@@ -48,12 +47,12 @@ export default defineConfig({
             if (wasCollected) {
               resolve();
             } else {
-              setTimeout(checkGCRun);
+              setTimeout(checkIfGCIsComplete);
             }
           };
 
-          checkGCRun();
-          await promise;
+          checkIfGCIsComplete();
+          await waitForGCToComplete;
         },
       },
       provider: 'playwright',
