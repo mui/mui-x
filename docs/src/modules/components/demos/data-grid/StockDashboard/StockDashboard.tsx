@@ -11,7 +11,7 @@ import {
   useGridApiRef,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import { LineChart, SparkLineChart } from '@mui/x-charts';
+import { LineChartPro, SparkLineChart } from '@mui/x-charts-pro';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { format } from 'date-fns';
@@ -65,11 +65,12 @@ function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) 
         </IconButton>
       </Box>
       <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <LineChart
+        <LineChartPro
           series={[
             {
               type: 'line',
               curve: 'natural',
+              showMark: false,
               data: selectedStock.history.map((h: { price: number }) => h.price),
               color:
                 selectedStock.history[selectedStock.history.length - 1].price >
@@ -82,17 +83,17 @@ function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) 
             {
               data: selectedStock.history.map((h: { date: string }) => new Date(h.date)),
               scaleType: 'time',
-              valueFormatter: (value: Date) => format(value, 'MM/dd'),
-            },
-          ]}
-          yAxis={[
-            {
-              min: Math.min(...selectedStock.history.map((h: { price: number }) => h.price)) * 0.99,
-              max: Math.max(...selectedStock.history.map((h: { price: number }) => h.price)) * 1.01,
+              domainLimit: 'strict',
+              valueFormatter: (value: Date, context) =>
+                context.location === 'tooltip'
+                  ? format(value, 'yyyy/MM/dd hh:mm:ss')
+                  : format(value, 'hh:mm:ss'),
+              zoom: {slider: { enabled: true, preview: true }  },
             },
           ]}
           height={280}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
+          skipAnimation
         />
       </Box>
     </Box>
@@ -187,7 +188,9 @@ function StockDashboard() {
         maxWidth: 200,
         renderCell: (params: GridRenderCellParams<StockData>) => {
           const history = params.row.history;
-          const historicalData = history.map((h: { price: number }) => h.price);
+          const historicalData = history
+            .filter((_, index) => index % 10 === 0)
+            .map((h: { price: number }) => h.price);
           const firstPrice = historicalData[0];
           const lastPrice = historicalData[historicalData.length - 1];
           const isTrendUp = lastPrice > firstPrice;
