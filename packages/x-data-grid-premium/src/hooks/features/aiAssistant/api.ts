@@ -1,4 +1,4 @@
-import { PromptResponse } from './gridAiAssistantInterfaces';
+import { PromptResponse, PromptResolverOptions } from './gridAiAssistantInterfaces';
 
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 
@@ -8,16 +8,16 @@ type Result<T> = { ok: false; message: string } | { ok: true; data: T };
  * @param {string} query The query to be processed.
  * @param {string} context The prompt context containing necessary information about the current columns definition.
  * Either use the `context` parameter of the `onPrompt` callback or the return value of the `unstable_getPromptContext()` API method.
- * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation.
- * @param {string} additionalContext Optional, additional context to make the processing results more accurate.
+ * @param {string} conversationId The id of the conversation the prompt is part of. If not passed, prompt response will return a new conversation id that can be used to continue the newly started conversation. 
+ * @param {object} options Optional, includes settings to extend and customize the prompt resolver's behaviour.
  * @returns {Promise<PromptResponse>} The grid state updates to be applied.
  */
 export function gridDefaultPromptResolver(
   url: string,
   query: string,
   context: string,
-  conversationId?: string,
-  additionalContext = '',
+  conversationId?: string,  
+  options: PromptResolverOptions  = {} 
 ) {
   return fetch(url, {
     mode: 'cors',
@@ -28,9 +28,9 @@ export function gridDefaultPromptResolver(
     credentials: 'include',
     body: JSON.stringify({
       context,
-      query,
-      additionalContext,
+      query,      
       conversationId,
+      options
     }),
   })
     .then((result) => result.json())

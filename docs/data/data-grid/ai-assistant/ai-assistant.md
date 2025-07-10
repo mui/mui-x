@@ -113,7 +113,22 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        query,
        context,
        conversationId,
-       additionalContext,
+       { additionalContext },
+     );
+   }
+   ```
+
+   When using MUI's service, you may choose to disable prompt retention. This disables the storage of user prompts as well as all AI responses on MUI's end:
+
+   ```ts
+     function processPrompt(query: string, context: string, conversationId?: string) {   
+
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       { disablePromptRetention: false },
      );
    }
    ```
@@ -138,7 +153,7 @@ You can use a fully custom solution and apply the processing result using other 
 To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API.
 
 The body of the request requires `query` and `context` parameters.
-`conversationId` and `additionalContext` are optional.
+`conversationId` and `options` are optional.
 To keep the previous messages in the context you should pass the `conversationId` from the previous response.
 
 The API response type is `Result<PromptResponse>`.
