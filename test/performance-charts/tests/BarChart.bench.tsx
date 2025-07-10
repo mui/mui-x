@@ -6,7 +6,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('BarChart', () => {
-  const dataLength = 800;
+  const dataLength = 2_500;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,

@@ -6,7 +6,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('FunnelChart', () => {
-  const dataLength = 10;
+  const dataLength = 100;
   const series = [
     {
       data: Array.from({ length: dataLength }, (_, i) => ({ value: dataLength / (i + 1) })),

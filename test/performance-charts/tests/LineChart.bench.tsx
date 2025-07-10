@@ -6,7 +6,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('LineChart', () => {
-  const dataLength = 1_400;
+  const dataLength = 5_000;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
