@@ -1,3 +1,5 @@
+import { createRequire } from 'module';
+
 interface TelemetryEnvConfig {
   NODE_ENV: string | '<unknown>';
   IS_COLLECTING: boolean | undefined;
@@ -66,7 +68,7 @@ function getIsTelemetryCollecting(): boolean | undefined {
 
   try {
     // e.g. Vite.js
-    // eslint-disable-next-line global-require
+    const require = createRequire(import.meta.url);
     const { importMetaEnv } = require('./config.import-meta');
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
@@ -131,7 +133,7 @@ function getIsDebugModeEnabled(): boolean {
 
   try {
     // e.g. Vite.js
-    // eslint-disable-next-line global-require
+    const require = createRequire(import.meta.url);
     const { importMetaEnv } = require('./config.import-meta');
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', importMetaEnv);
