@@ -10,7 +10,6 @@ index 9916c1f32e9af801b6d425d1ec785f23e830a236..0e2a404d1f40e00e607302d2207622c1
 +    config,
 +    executor,
 +){
-+  console.log('getting test runner constructor', config.runner);
 +  if (!config.runner) {
 +    const { VitestTestRunner, NodeBenchmarkRunner }
 +        = await executor.executeFile(runnersFile)
