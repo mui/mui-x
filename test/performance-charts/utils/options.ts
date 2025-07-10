@@ -26,7 +26,7 @@ const traceOptions: BenchOptions = {
 const lastMemoryUsage = new Map<string, number>();
 
 const benchOptions: BenchOptions = {
-  warmupIterations: 5,
+  warmupIterations: 10,
   warmupTime: 0,
   iterations,
   throws: true,
