@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["tests/**/*", "utils/**/*", "vitest-browser-mode.d.ts"],
+  "include": ["tests/**/*", "utils/**/*", "./vitest-browser-mode.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "types": [ "@vitest/browser/providers/playwright", "vite/client", "./vitest-browser-mode.d.ts"]

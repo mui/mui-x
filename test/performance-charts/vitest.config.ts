@@ -26,34 +26,7 @@ export default defineConfig({
         },
       ],
       commands: {
-        requestGC: async (ctx) => {
-          await ctx.page.evaluate(() => {
-            let testObj: {} | null = {};
-            const weakRef = new WeakRef(testObj);
-
-            testObj = null;
-            window.testWeakRef = weakRef;
-          });
-
-          await ctx.page.requestGC();
-
-          const { promise: waitForGCToComplete, resolve } = Promise.withResolvers<void>();
-
-          const checkIfGCIsComplete = async () => {
-            const wasCollected = await ctx.page.evaluate(() => {
-              return window.testWeakRef.deref() === undefined;
-            });
-
-            if (wasCollected) {
-              resolve();
-            } else {
-              setTimeout(checkIfGCIsComplete);
-            }
-          };
-
-          checkIfGCIsComplete();
-          await waitForGCToComplete;
-        },
+        requestGC: (ctx) => ctx.page.requestGC(),
       },
       provider: 'playwright',
     },
