@@ -12,6 +12,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsCartesianDrawingArea } from '@mui/x-charts/ChartsCartesianDrawingArea';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -106,6 +107,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
+          <ChartsCartesianDrawingArea />
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />

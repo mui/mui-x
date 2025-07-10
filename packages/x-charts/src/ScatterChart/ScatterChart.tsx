@@ -33,6 +33,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { ChartsCartesianDrawingArea } from '../ChartsCartesianDrawingArea/ChartsCartesianDrawingArea';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -150,6 +151,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
+          <ChartsCartesianDrawingArea />
           <ChartsAxis {...chartsAxisProps} />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>

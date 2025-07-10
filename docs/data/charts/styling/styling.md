@@ -170,6 +170,12 @@ From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
 
+### Drawing area background
+
+Bar, line and scatter charts render a drawing area `<rect />` that can be used to set a background color for the chart.
+
+{{"demo": "BackgroundStyling.js"}}
+
 ### Gradients and patterns
 
 It is possible to use gradients and patterns to fill the charts.

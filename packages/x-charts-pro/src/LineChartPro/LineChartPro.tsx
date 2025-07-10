@@ -20,6 +20,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsCartesianDrawingArea } from '@mui/x-charts/ChartsCartesianDrawingArea';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -115,6 +116,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
+          <ChartsCartesianDrawingArea />
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <AreaPlot {...areaPlotProps} />
