@@ -74,7 +74,7 @@ Same changes as in `@mui/x-charts@8.8.0`, plus:
 
 #### `@mui/x-tree-view@8.8.0`
 
-- [tree view] Fix scrolling bug when lazy loading and `checkboxSelection` are enabled (#18749) @rita-codes
+- [tree view] Fix state update that caused scrolling bug when lazy loading and `checkboxSelection` are enabled (#18749) @rita-codes
 
 #### `@mui/x-tree-view-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
