@@ -55,7 +55,7 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
   const cache = React.useRef<Cache>({});
 
   const isRunning = React.useRef(false);
-  const runAppliersSync = React.useCallback((groupCache: GroupCache | undefined) => {
+  const runAppliers = React.useCallback((groupCache: GroupCache | undefined) => {
     if (isRunning.current || !groupCache) {
       return;
     }
@@ -66,7 +66,7 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
     isRunning.current = false;
   }, []);
 
-  const runAppliers = useRunOncePerLoop(runAppliersSync);
+  const runAppliersDeferred = useRunOncePerLoop(runAppliers);
 
   const registerPipeProcessor = React.useCallback<
     GridPipeProcessingPrivateApi['registerPipeProcessor']
@@ -123,9 +123,9 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
     GridPipeProcessingPrivateApi['requestPipeProcessorsApplication']
   >(
     (group) => {
-      runAppliers(cache.current[group]);
+      runAppliersDeferred(cache.current[group]);
     },
-    [runAppliers],
+    [runAppliersDeferred],
   );
 
   const applyPipeProcessors = React.useCallback<
