@@ -56,7 +56,7 @@ export const useGridKeyboardNavigation = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'pagination' | 'paginationMode' | 'getRowId' | 'signature' | 'headerFilters' | 'listView'
+    'pagination' | 'paginationMode' | 'getRowId' | 'signature' | 'headerFilters'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
@@ -497,10 +497,7 @@ export const useGridKeyboardNavigation = (
 
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
-      const getColumnIndexFn = props.listView ? () => 0 : apiRef.current.getColumnIndex;
-      const colIndexBefore = (params as GridCellParams).field
-        ? getColumnIndexFn((params as GridCellParams).field)
-        : 0;
+      const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const rowIndexBefore = currentPageRows.findIndex((row) => row.id === params.id);
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
@@ -647,7 +644,6 @@ export const useGridKeyboardNavigation = (
       headerFilteringEnabled,
       goToHeaderFilter,
       goToHeader,
-      props.listView,
     ],
   );
 
