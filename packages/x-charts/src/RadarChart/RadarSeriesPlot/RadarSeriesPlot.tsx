@@ -75,6 +75,14 @@ RadarSeriesPlot.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * Callback fired when an area element is clicked.
+   */
+  onAreaClick: PropTypes.func,
+  /**
+   * Callback fired when a line element is clicked.
+   */
+  onMarkClick: PropTypes.func,
+  /**
    * The id of the series to display.
    * If undefined all series are displayed.
    */

@@ -16,8 +16,8 @@ interface CommonRadarSeriesPlotProps {
 
 export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {
   /**
-    * Callback fired when an area element is clicked.
-    */
+   * Callback fired when an area element is clicked.
+   */
   onAreaClick?: RadarSeriesAreaProps['onItemClick'];
   /**
    * Callback fired when a line element is clicked.
@@ -27,12 +27,12 @@ export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {
 
 export interface RadarSeriesMarksProps
   extends CommonRadarSeriesPlotProps,
-  React.SVGAttributes<SVGCircleElement> {
+    React.SVGAttributes<SVGCircleElement> {
   /**
-     * Callback fired when a mark is clicked.
-     * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-     * @param {RadarItemIdentifier} radarItemIdentifier The line item identifier.
-     */
+   * Callback fired when a mark is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The line item identifier.
+   */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
     radarItemIdentifier: Required<RadarItemIdentifier>,
@@ -41,7 +41,7 @@ export interface RadarSeriesMarksProps
 
 export interface RadarSeriesAreaProps
   extends CommonRadarSeriesPlotProps,
-  React.SVGAttributes<SVGPathElement> {
+    React.SVGAttributes<SVGPathElement> {
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

@@ -57,7 +57,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     highlightedItem,
     onHighlightChange,
     skipAnimation,
-    onAxisClick
+    onAxisClick,
   };
 
   const overlayProps: ChartsOverlayProps = {
@@ -77,8 +77,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const radarGrid: RadarGridProps = { divisions, shape, stripeColor };
 
-  const radarSeriesAreaProps: RadarSeriesAreaProps = { onItemClick: onAreaClick }
-  const radarSeriesMarksProps: RadarSeriesMarksProps = { onItemClick: onMarkClick }
+  const radarSeriesAreaProps: RadarSeriesAreaProps = { onItemClick: onAreaClick };
+  const radarSeriesMarksProps: RadarSeriesMarksProps = { onItemClick: onMarkClick };
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 
   return {

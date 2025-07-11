@@ -105,7 +105,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   React.useEffect(() => {
     const element = svgRef.current;
     if (!isInteractionEnabled || element === null || params.disableAxisListener) {
-      return () => { };
+      return () => {};
     }
 
     // Clean the interaction when the mouse leaves the chart.
@@ -213,7 +213,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     const element = svgRef.current;
     const onAxisClick = params.onAxisClick;
     if (element === null || !onAxisClick) {
-      return () => { };
+      return () => {};
     }
 
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
@@ -222,14 +222,11 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
 
       const svgPoint = getSVGPoint(element, event.detail.srcEvent);
 
-      const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y)
+      const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
       const rotationIndex = getAxisIndex(rotationAxisWithScale[usedRotationAxisId], rotation);
       isRotationAxis = rotationIndex !== -1;
 
-
-      dataIndex = isRotationAxis
-        ? rotationIndex
-        : null; // radius index is not yet implemented.
+      dataIndex = isRotationAxis ? rotationIndex : null; // radius index is not yet implemented.
 
       const USED_AXIS_ID = isRotationAxis ? usedRotationAxisId : usedRadiusAxisId;
       if (dataIndex == null || dataIndex === -1) {
@@ -267,7 +264,16 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       axisClickHandler.cleanup();
     };
   }, [
-    center, instance, params.onAxisClick, processedSeries, radiusAxisWithScale, rotationAxisWithScale, svgRef, usedRadiusAxisId, usedRotationAxisId]);
+    center,
+    instance,
+    params.onAxisClick,
+    processedSeries,
+    radiusAxisWithScale,
+    rotationAxisWithScale,
+    svgRef,
+    usedRadiusAxisId,
+    usedRotationAxisId,
+  ]);
 
   return {
     instance: {
