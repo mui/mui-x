@@ -8,7 +8,7 @@ import {
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import * as React from 'react';
-import { includeRowSelection } from 'test/utils/helperFn';
+import { includeRowSelection, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -24,7 +24,7 @@ describe('<DataGridPro /> - Export', () => {
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
   describe('getDataAsCsv', () => {
-    it('should work with basic strings', () => {
+    it('should work with basic strings', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
 
@@ -45,6 +45,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,Adidas', '2,Puma'].join('\r\n'),
       );
@@ -61,7 +62,7 @@ describe('<DataGridPro /> - Export', () => {
       );
     });
 
-    it('should work with comma', () => {
+    it('should work with comma', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -80,12 +81,13 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,"Adidas,Puma"'].join('\r\n'),
       );
     });
 
-    it('should apply valueFormatter correctly', () => {
+    it('should apply valueFormatter correctly', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -111,12 +113,13 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Jordan', '1,Adidas'].join('\r\n'),
       );
     });
 
-    it('should work with double quotes', () => {
+    it('should work with double quotes', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -135,12 +138,13 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,"Samsung 24"" (inches)"'].join('\r\n'),
       );
     });
 
-    it('should work with newline', () => {
+    it('should work with newline', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -161,6 +165,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(
         [
           'id,Brand',
@@ -172,7 +177,7 @@ describe('<DataGridPro /> - Export', () => {
       );
     });
 
-    it('should allow to change the delimiter', () => {
+    it('should allow to change the delimiter', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -191,6 +196,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(
         apiRef.current?.getDataAsCsv({
           delimiter: ';',
@@ -198,7 +204,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['id;Brand', '0;Nike', '1;Adidas'].join('\r\n'));
     });
 
-    it('should only export the selected rows if any', () => {
+    it('should only export the selected rows if any', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -218,10 +224,11 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
     });
 
-    it('should export the rows returned by params.getRowsToExport if defined', () => {
+    it('should export the rows returned by params.getRowsToExport if defined', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -240,12 +247,13 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv({ getRowsToExport: () => [0] })).to.equal(
         ['id,Brand', '0,Nike'].join('\r\n'),
       );
     });
 
-    it('should not export hidden column', () => {
+    it('should not export hidden column', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -265,10 +273,11 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(['id', '0', '1'].join('\r\n'));
     });
 
-    it('should export hidden column if params.allColumns = true', () => {
+    it('should export hidden column if params.allColumns = true', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -288,6 +297,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(
         apiRef.current?.getDataAsCsv({
           allColumns: true,
@@ -295,7 +305,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
 
-    it('should not export columns with column.disableExport = true', () => {
+    it('should not export columns with column.disableExport = true', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -317,6 +327,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(
         apiRef.current?.getDataAsCsv({
           fields: ['brand'],
@@ -324,7 +335,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should only export columns in params.fields if defined', () => {
+    it('should only export columns in params.fields if defined', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -344,6 +355,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(
         apiRef.current?.getDataAsCsv({
           fields: ['brand'],
@@ -351,7 +363,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should export column defined in params.fields even if `columnVisibilityModel` does not include the field or column.disableExport=true', () => {
+    it('should export column defined in params.fields even if `columnVisibilityModel` does not include the field or column.disableExport=true', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -374,6 +386,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(
         apiRef.current?.getDataAsCsv({
           fields: ['id', 'brand'],
@@ -381,7 +394,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
 
-    it('should work with booleans', () => {
+    it('should work with booleans', async () => {
       function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
@@ -400,10 +413,11 @@ describe('<DataGridPro /> - Export', () => {
         );
       }
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(apiRef.current?.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
     });
 
-    it('should warn when a value of a field is an object and no `valueFormatter` is provided', () => {
+    it('should warn when a value of a field is an object and no `valueFormatter` is provided', async () => {
       const COUNTRY_ISO_OPTIONS = [
         { value: 'FR', label: 'France' },
         { value: 'BR', label: 'Brazil' },
@@ -433,6 +447,7 @@ describe('<DataGridPro /> - Export', () => {
       }
 
       render(<TestCaseCSVExport />);
+      await microtasks();
       expect(() => {
         apiRef.current?.getDataAsCsv();
       }).toWarnDev(
@@ -474,8 +489,9 @@ describe('<DataGridPro /> - Export', () => {
         );
       }
 
-      it('should include column groups by default', () => {
+      it('should include column groups by default', async () => {
         render(<TestCaseCSVExport />);
+        await microtasks();
         expect(apiRef.current?.getDataAsCsv()).to.equal(
           [
             'Internal,Basic info,Basic info,Basic info',
@@ -486,8 +502,9 @@ describe('<DataGridPro /> - Export', () => {
         );
       });
 
-      it('should not include column groups if disabled', () => {
+      it('should not include column groups if disabled', async () => {
         render(<TestCaseCSVExport />);
+        await microtasks();
         expect(apiRef.current?.getDataAsCsv({ includeColumnGroupsHeaders: false })).to.equal(
           ['ID,First name,Last name,Age', '1,Jon,Snow,35'].join('\r\n'),
         );

@@ -15,7 +15,7 @@ import {
   GridApi,
   GridEventListener,
 } from '@mui/x-data-grid-pro';
-import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, includeRowSelection, microtasks } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -24,21 +24,9 @@ describe('<DataGridPro /> - Events params', () => {
 
   const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
     rows: [
-      {
-        id: 1,
-        first: 'Mike',
-        age: 11,
-      },
-      {
-        id: 2,
-        first: 'Jack',
-        age: 11,
-      },
-      {
-        id: 3,
-        first: 'Mike',
-        age: 20,
-      },
+      { id: 1, first: 'Mike', age: 11 },
+      { id: 2, first: 'Jack', age: 11 },
+      { id: 3, first: 'Mike', age: 20 },
     ],
     columns: [
       { field: 'id' },
@@ -64,12 +52,13 @@ describe('<DataGridPro /> - Events params', () => {
   }
 
   describe('columnHeaderParams', () => {
-    it('should include the correct params', () => {
+    it('should include the correct params', async () => {
       let eventArgs: { params: GridColumnHeaderParams; event: React.MouseEvent } | null = null;
       const handleClick: GridEventListener<'columnHeaderClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onColumnHeaderClick={handleClick} />);
+      await microtasks();
 
       const ageColumnElement = getColumnHeaderCell(2);
       fireEvent.click(ageColumnElement);
@@ -82,13 +71,14 @@ describe('<DataGridPro /> - Events params', () => {
   });
 
   describe('RowsParams', () => {
-    it('should include the correct params', () => {
+    it('should include the correct params', async () => {
       let eventArgs: { params: GridRowParams; event: React.MouseEvent } | null = null;
 
       const handleClick: GridEventListener<'rowClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onRowClick={handleClick} />);
+      await microtasks();
 
       const row1 = getCell(1, 0);
       fireEvent.click(row1);
@@ -105,11 +95,12 @@ describe('<DataGridPro /> - Events params', () => {
     let eventArgs: { params: GridCellParams; event: React.MouseEvent } | null = null;
     let cell11;
 
-    it('should include the correct params', () => {
+    it('should include the correct params', async () => {
       const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
+      await microtasks();
       cell11 = getCell(1, 1);
       fireEvent.click(cell11);
 
@@ -126,11 +117,12 @@ describe('<DataGridPro /> - Events params', () => {
       expect(eventArgs!.params.api).to.not.equal(null);
     });
 
-    it('should include the correct params when grid is sorted', () => {
+    it('should include the correct params when grid is sorted', async () => {
       const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
+      await microtasks();
       const header = screen
         .getByRole('columnheader', { name: 'first' })
         .querySelector('.MuiDataGrid-columnHeaderTitleContainer')!;
@@ -151,22 +143,24 @@ describe('<DataGridPro /> - Events params', () => {
       });
     });
 
-    it('should consider value getter', () => {
+    it('should consider value getter', async () => {
       const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
+      await microtasks();
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
 
       expect(eventArgs!.params.value).to.equal('Jack_11');
     });
 
-    it('should consider value formatter', () => {
+    it('should consider value formatter', async () => {
       const handleClick: GridEventListener<'cellClick'> = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
+      await microtasks();
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
 
@@ -184,30 +178,33 @@ describe('<DataGridPro /> - Events params', () => {
       eventStack = [];
     });
 
-    it('should bubble to the row', () => {
+    it('should bubble to the row', async () => {
       render(<TestEvents onCellClick={push('cellClick')} onRowClick={push('rowClick')} />);
+      await microtasks();
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(eventStack).to.deep.equal(['cellClick', 'rowClick']);
     });
 
-    it('should allow to stop propagation', () => {
+    it('should allow to stop propagation', async () => {
       const stopClick = (params: GridCellParams, event: React.MouseEvent) => {
         event.stopPropagation();
       };
       render(<TestEvents onCellClick={stopClick} onRowClick={push('rowClick')} />);
+      await microtasks();
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(eventStack).to.deep.equal([]);
     });
 
-    it('should allow to prevent the default behavior', () => {
+    it('should allow to prevent the default behavior', async () => {
       const handleCellDoubleClick = spy((params, event) => {
         event.defaultMuiPrevented = true;
       });
       render(<TestEvents onCellDoubleClick={handleCellDoubleClick} />);
+      await microtasks();
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
       expect(handleCellDoubleClick.callCount).to.equal(1);
@@ -219,6 +216,7 @@ describe('<DataGridPro /> - Events params', () => {
         event.defaultMuiPrevented = true;
       });
       render(<TestEvents onCellEditStop={handleCellEditStop} />);
+      await microtasks();
       const cell = getCell(1, 1);
       expect(cell).not.to.have.class(gridClasses['cell--editing']);
       fireEvent.doubleClick(cell);
@@ -230,9 +228,10 @@ describe('<DataGridPro /> - Events params', () => {
       expect(cell).to.have.class(gridClasses['cell--editing']);
     });
 
-    it('should select a row by default', () => {
+    it('should select a row by default', async () => {
       const handleRowSelectionModelChange = spy();
       render(<TestEvents onRowSelectionModelChange={handleRowSelectionModelChange} />);
+      await microtasks();
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
@@ -242,7 +241,7 @@ describe('<DataGridPro /> - Events params', () => {
       );
     });
 
-    it('should not select a row if props.disableRowSelectionOnClick', () => {
+    it('should not select a row if props.disableRowSelectionOnClick', async () => {
       const handleRowSelectionModelChange = spy();
       render(
         <TestEvents
@@ -250,6 +249,7 @@ describe('<DataGridPro /> - Events params', () => {
           disableRowSelectionOnClick
         />,
       );
+      await microtasks();
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(handleRowSelectionModelChange.callCount).to.equal(0);
@@ -266,15 +266,17 @@ describe('<DataGridPro /> - Events params', () => {
       eventStack = [];
     });
 
-    it('should be called when clicking a cell', () => {
+    it('should be called when clicking a cell', async () => {
       render(<TestEvents onRowClick={push('rowClick')} />);
+      await microtasks();
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(eventStack).to.deep.equal(['rowClick']);
     });
 
-    it('should not be called when clicking the checkbox added by checkboxSelection', () => {
+    it('should not be called when clicking the checkbox added by checkboxSelection', async () => {
       render(<TestEvents onRowClick={push('rowClick')} checkboxSelection />);
+      await microtasks();
       const cell11 = getCell(1, 0).querySelector('input')!;
       fireEvent.click(cell11);
       expect(eventStack).to.deep.equal([]);
@@ -298,13 +300,14 @@ describe('<DataGridPro /> - Events params', () => {
       expect(eventStack).to.deep.equal([]);
     });
 
-    it('should not be called when opening the detail panel of a row', () => {
+    it('should not be called when opening the detail panel of a row', async () => {
       render(<TestEvents onRowClick={push('rowClick')} getDetailPanelContent={() => <div />} />);
+      await microtasks();
       fireEvent.click(getCell(0, 0));
       expect(eventStack).to.deep.equal([]);
     });
 
-    it('should not be called when expanding a group of rows', () => {
+    it('should not be called when expanding a group of rows', async () => {
       render(
         <TestEvents
           onRowClick={push('rowClick')}
@@ -316,12 +319,14 @@ describe('<DataGridPro /> - Events params', () => {
           treeData
         />,
       );
+      await microtasks();
       fireEvent.click(screen.getByRole('button', { name: 'see children' }));
       expect(eventStack).to.deep.equal([]);
     });
 
-    it('should not be called when clicking inside a cell being edited', () => {
+    it('should not be called when clicking inside a cell being edited', async () => {
       render(<TestEvents onRowClick={push('rowClick')} />);
+      await microtasks();
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
       fireEvent.click(cell.querySelector('input')!);
@@ -332,7 +337,7 @@ describe('<DataGridPro /> - Events params', () => {
   // Needs layout
   it.skipIf(isJSDOM)(
     'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
-    () => {
+    async () => {
       const handleFetchRows = spy();
       render(
         <TestEvents
@@ -344,6 +349,7 @@ describe('<DataGridPro /> - Events params', () => {
           rowCount={50}
         />,
       );
+      await microtasks();
       expect(handleFetchRows.callCount).to.equal(1);
       expect(handleFetchRows.lastCall.firstArg).to.contain({
         firstRowToRender: 3,
@@ -352,7 +358,7 @@ describe('<DataGridPro /> - Events params', () => {
     },
   );
 
-  it('publishing renderedRowsIntervalChange should call onFetchRows callback when rows lazy loading is enabled', () => {
+  it('publishing renderedRowsIntervalChange should call onFetchRows callback when rows lazy loading is enabled', async () => {
     const handleFetchRows = spy();
     render(
       <TestEvents
@@ -364,6 +370,7 @@ describe('<DataGridPro /> - Events params', () => {
         rowCount={50}
       />,
     );
+    await microtasks();
     // Since rowheight < viewport height, onmount calls fetchRows directly
     expect(handleFetchRows.callCount).to.equal(1);
     act(() => {
