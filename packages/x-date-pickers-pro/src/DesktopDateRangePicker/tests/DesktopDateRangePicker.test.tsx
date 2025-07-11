@@ -802,7 +802,7 @@ describe('<DesktopDateRangePicker />', () => {
     const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
     await user.click(decoyInput);
 
-    expect(screen.queryByRole('dialog')).to.equal(null);
+    await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
     // the input should be focused—the new active element
     expect(document.activeElement!).to.equal(decoyInput);
   });

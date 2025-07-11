@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { adapterToUse, createPickerRenderer, openPickerAsync } from 'test/utils/pickers';
 
@@ -209,7 +209,7 @@ describe('<DesktopTimePicker />', () => {
       const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
       await user.click(decoyInput);
 
-      expect(screen.queryByRole('dialog')).to.equal(null);
+      await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
       // the input should be focused—the new active element
       expect(document.activeElement!).to.equal(decoyInput);
     });
@@ -227,7 +227,7 @@ describe('<DesktopTimePicker />', () => {
       const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
       await user.click(decoyInput);
 
-      expect(screen.queryByRole('dialog')).to.equal(null);
+      await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
       // the input should be focused—the new active element
       expect(document.activeElement!).to.equal(decoyInput);
     });

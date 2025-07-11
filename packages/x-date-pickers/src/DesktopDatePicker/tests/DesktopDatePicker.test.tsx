@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { act, screen } from '@mui/internal-test-utils';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -121,7 +121,7 @@ describe('<DesktopDatePicker />', () => {
       const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
       await user.click(decoyInput);
 
-      expect(screen.queryByRole('dialog')).to.equal(null);
+      await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
       // the input should be focused—the new active element
       expect(document.activeElement!).to.equal(decoyInput);
     });
