@@ -6,6 +6,7 @@ import {
   GridRowsProp,
   gridClasses,
 } from '@mui/x-data-grid-premium';
+import { microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -58,7 +59,7 @@ describe('<DataGridPremium /> - Row pinning', () => {
     return container.contains(row);
   }
 
-  it('should render pinned rows outside of row groups', () => {
+  it('should render pinned rows outside of row groups', async () => {
     function Test() {
       const [pinnedRow0, pinnedRow1, ...rowsData] = rows;
 
@@ -81,5 +82,6 @@ describe('<DataGridPremium /> - Row pinning', () => {
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+    await microtasks();
   });
 });

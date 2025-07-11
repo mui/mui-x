@@ -3,11 +3,12 @@ import { addYears } from 'date-fns/addYears';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { generateLicense, LicenseInfo } from '@mui/x-license';
+import { microtasks } from 'test/utils/helperFn';
 
 describe('<DataGridPremium /> - License', () => {
   const { render } = createRenderer();
 
-  it('should throw out of scope error when using DataGridPremium with a pro license', () => {
+  it('should throw out of scope error when using DataGridPremium with a pro license', async () => {
     LicenseInfo.setLicenseKey(
       generateLicense({
         expiryDate: addYears(new Date(), 1),
@@ -20,9 +21,10 @@ describe('<DataGridPremium /> - License', () => {
     expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
       'MUI X: License key plan mismatch',
     ]);
+    await microtasks();
   });
 
-  it('should render watermark when the license is missing', () => {
+  it('should render watermark when the license is missing', async () => {
     LicenseInfo.setLicenseKey('');
 
     expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
@@ -30,5 +32,6 @@ describe('<DataGridPremium /> - License', () => {
     ]);
 
     expect(screen.getByText('MUI X Missing license key')).not.to.equal(null);
+    await microtasks();
   });
 });

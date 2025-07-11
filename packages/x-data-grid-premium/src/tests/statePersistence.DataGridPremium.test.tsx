@@ -23,15 +23,7 @@ const rows: GridRowsProp = [
   { id: 5, category: 'Cat B' },
 ];
 
-const columns: GridColDef[] = [
-  {
-    field: 'id',
-    type: 'number',
-  },
-  {
-    field: 'category',
-  },
-];
+const columns: GridColDef[] = [{ field: 'id', type: 'number' }, { field: 'category' }];
 
 const FULL_INITIAL_STATE: GridInitialState = {
   columns: {
@@ -83,19 +75,21 @@ describe('<DataGridPremium /> - State persistence', () => {
       expect(exportedState?.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
 
-    it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
+    it('should not export the default values of the models when using exportOnlyDirtyModels', async () => {
       render(<TestCase />);
       expect(apiRef.current?.exportState({ exportOnlyDirtyModels: true })).to.deep.equal({
         columns: {
           orderedFields: ['id', 'category'],
         },
       });
+      await microtasks();
     });
 
     it('should export the current version of the exportable state', async () => {
       render(<TestCase />);
-      await act(() => {
+      await act(async () => {
         apiRef.current?.setRowGroupingModel(['category']);
+        await microtasks();
       });
       await act(async () => {
         apiRef.current?.setAggregationModel({
@@ -111,8 +105,9 @@ describe('<DataGridPremium /> - State persistence', () => {
 
     it('should export the current version of the exportable state when using exportOnlyDirtyModels', async () => {
       render(<TestCase />);
-      await act(() => {
+      await act(async () => {
         apiRef.current?.setRowGroupingModel(['category']);
+        await microtasks();
       });
       await act(async () => {
         apiRef.current?.setAggregationModel({

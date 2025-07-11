@@ -11,7 +11,7 @@ import {
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { spy, SinonSpy } from 'sinon';
 import Excel from 'exceljs';
-import { spyApi } from 'test/utils/helperFn';
+import { microtasks, spyApi } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -22,18 +22,9 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
   const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
   const rows = [
-    {
-      id: 0,
-      brand: 'Nike',
-    },
-    {
-      id: 1,
-      brand: 'Adidas',
-    },
-    {
-      id: 2,
-      brand: 'Puma',
-    },
+    { id: 0, brand: 'Nike' },
+    { id: 1, brand: 'Adidas' },
+    { id: 2, brand: 'Puma' },
   ];
   const baselineProps = {
     columns,
@@ -97,6 +88,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
         );
       }
       render(<Test />);
+      await microtasks();
 
       const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
@@ -141,6 +133,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
         );
       }
       render(<Test />);
+      await microtasks();
 
       const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
@@ -169,18 +162,14 @@ describe('<DataGridPremium /> - Export Excel', () => {
                   ],
                 },
               ]}
-              rows={[
-                {
-                  id: 1,
-                  str: 'test',
-                },
-              ]}
+              rows={[{ id: 1, str: 'test' }]}
               apiRef={apiRef}
             />
           </div>
         );
       }
       render(<Test />);
+      await microtasks();
 
       const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
@@ -219,6 +208,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
         );
       }
       render(<Test />);
+      await microtasks();
 
       let workbook: Excel.Workbook | null | undefined = null;
       await act(async () => {
@@ -275,6 +265,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
         );
       }
       render(<Test />);
+      await microtasks();
 
       const workbook = await apiRef.current?.getDataAsExcel({
         allColumns: true,
@@ -295,14 +286,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
           <div style={{ width: 300, height: 300 }}>
             <DataGridPremium
               columns={[{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }]}
-              rows={[
-                {
-                  id: 1,
-                  col1: 1,
-                  col2: 2,
-                  col3: 3,
-                },
-              ]}
+              rows={[{ id: 1, col1: 1, col2: 2, col3: 3 }]}
               columnGroupingModel={[
                 { groupId: 'group1', children: [{ field: 'col1' }] },
                 {
@@ -323,6 +307,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
         );
       }
       render(<Test />);
+      await microtasks();
 
       const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
@@ -380,6 +365,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
 
       render(<Test />);
+      await microtasks();
 
       const workbook = await apiRef.current?.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];

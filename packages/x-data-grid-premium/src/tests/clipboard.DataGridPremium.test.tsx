@@ -9,7 +9,13 @@ import {
 } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { SinonSpy, spy, stub, SinonStub } from 'sinon';
-import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
+import {
+  getCell,
+  getColumnValues,
+  includeRowSelection,
+  microtasks,
+  sleep,
+} from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -68,6 +74,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected cells to the clipboard when ${key} + C is pressed`, async () => {
         const { user } = render(<Test />);
+        await microtasks();
 
         writeText = spy(navigator.clipboard, 'writeText');
 
@@ -91,6 +98,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
     it(`should copy cells range selected in one row`, async () => {
       const { user } = render(<Test />);
+      await microtasks();
 
       writeText = spy(navigator.clipboard, 'writeText');
 
@@ -122,6 +130,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           />
         </div>,
       );
+      await microtasks();
 
       writeText = spy(navigator.clipboard, 'writeText');
 
@@ -153,6 +162,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           />
         </div>,
       );
+      await microtasks();
 
       writeText = spy(navigator.clipboard, 'writeText');
 
@@ -211,6 +221,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     describe('cell selection', () => {
       it('should paste into each cell of the range when single value is pasted', async () => {
         const { user } = render(<Test />);
+        await microtasks();
 
         const cell = getCell(0, 1);
         await act(() => cell.focus());
@@ -247,6 +258,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
             editMode="cell"
           />,
         );
+        await microtasks();
 
         const clipboardData = '12';
         const cell = getCell(3, 1); // cell in the first row on the next page
@@ -277,6 +289,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       it('should not paste values outside of the selected cells range', async () => {
         const { user } = render(<Test rowLength={5} colLength={5} />);
+        await microtasks();
 
         const cell = getCell(0, 1);
         await act(() => cell.focus());
@@ -314,6 +327,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       it('should not paste empty values into cells within selected range when there are no corresponding values in the clipboard', async () => {
         const { user } = render(<Test rowLength={5} colLength={5} />);
+        await microtasks();
 
         const cell = getCell(0, 1);
         await act(() => cell.focus());
@@ -360,6 +374,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
             pagination={false}
           />,
         );
+        await microtasks();
 
         const cell = getCell(1, 1);
         await act(() => cell.focus());
@@ -391,6 +406,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     describe('row selection', () => {
       it('should paste into each selected row if single row of data is pasted', async () => {
         const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
+        await microtasks();
 
         const cell = getCell(2, 1);
         await act(() => cell.focus());
@@ -408,6 +424,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       it('should paste into selected rows if multiple rows of data are pasted', async () => {
         const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
+        await microtasks();
 
         const cell = getCell(2, 1);
         await act(() => cell.focus());
@@ -430,6 +447,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       it('should ignore row selection when single cell value is pasted', async () => {
         const { user } = render(<Test rowSelectionModel={includeRowSelection([0, 1, 2])} />);
+        await microtasks();
 
         const cell = getCell(2, 1);
         await act(() => cell.focus());
@@ -483,6 +501,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       }
 
       const { user } = render(<Component />);
+      await microtasks();
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
@@ -503,6 +522,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     ].forEach((newLine) => {
       it(`should support ${newLine.key} new line character`, async () => {
         const { user } = render(<Test />);
+        await microtasks();
 
         const cell = getCell(0, 1);
         await act(() => cell.focus());
@@ -548,6 +568,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       }
 
       const { user } = render(<Component />);
+      await microtasks();
 
       const cell = getCell(1, 0);
       await act(() => cell.focus());
@@ -597,6 +618,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       }
 
       const { user } = render(<Component />);
+      await microtasks();
 
       const cell = getCell(1, 2);
       await act(() => cell.focus());
@@ -639,6 +661,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       }
 
       const { user } = render(<Component />);
+      await microtasks();
 
       const cell = getCell(1, 0);
       await act(() => cell.focus());
@@ -678,6 +701,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       }
 
       const { user } = render(<Component />);
+      await microtasks();
 
       const cell = getCell(1, 0);
       await act(() => cell.focus());
@@ -701,6 +725,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         return newRow;
       });
       const { user } = render(<Test processRowUpdate={processRowUpdateSpy} />);
+      await microtasks();
 
       const cell = getCell(0, 1);
       await act(() => cell.focus());
@@ -860,6 +885,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           processRowUpdate={processRowUpdateSpy}
         />,
       );
+      await microtasks();
 
       const cell = getCell(0, 1);
       await act(() => cell.focus());
@@ -1130,6 +1156,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       const { user } = render(
         <Test rowLength={5} colLength={5} splitClipboardPastedText={splitClipboardText} />,
       );
+      await microtasks();
 
       const cell = getCell(0, 1);
       await act(() => cell.focus());
@@ -1160,6 +1187,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
     it('should remove the last line break when pasting', async () => {
       const { user } = render(<Test rowLength={5} colLength={5} />);
+      await microtasks();
 
       const cell = getCell(0, 1);
       await act(() => cell.focus());

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { getCell, includeRowSelection } from 'test/utils/helperFn';
+import { getCell, includeRowSelection, microtasks } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import {
   DataGridPremium,
@@ -29,18 +29,7 @@ const baselineProps: BaselineProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
   rows,
-  columns: [
-    {
-      field: 'id',
-      type: 'number',
-    },
-    {
-      field: 'category1',
-    },
-    {
-      field: 'category2',
-    },
-  ],
+  columns: [{ field: 'id', type: 'number' }, { field: 'category1' }, { field: 'category2' }],
 };
 
 describe('<DataGridPremium /> - Row selection', () => {
@@ -69,7 +58,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       );
     }
 
-    it('should auto select parents when controlling row selection model', () => {
+    it('should auto select parents when controlling row selection model', async () => {
       const onRowSelectionModelChange = spy();
       render(
         <Test
@@ -81,6 +70,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
+      await microtasks();
     });
 
     it('should auto select the parent when updating the controlled row selection model', async () => {
@@ -100,6 +90,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
+      await microtasks();
     });
 
     it('should auto select descendants when updating the controlled row selection model', async () => {
@@ -121,9 +112,10 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
+      await microtasks();
     });
 
-    it('should select all the children when selecting a parent', () => {
+    it('should select all the children when selecting a parent', async () => {
       render(<Test />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
@@ -132,9 +124,10 @@ describe('<DataGridPremium /> - Row selection', () => {
         3,
         4,
       ]);
+      await microtasks();
     });
 
-    it('should deselect all the children when deselecting a parent', () => {
+    it('should deselect all the children when deselecting a parent', async () => {
       render(<Test />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
@@ -145,9 +138,10 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(apiRef.current?.getSelectedRows().size).to.equal(0);
+      await microtasks();
     });
 
-    it('should auto select the parent if all the children are selected', () => {
+    it('should auto select the parent if all the children are selected', async () => {
       render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
 
       fireEvent.click(getCell(1, 0).querySelector('input')!);
@@ -159,6 +153,7 @@ describe('<DataGridPremium /> - Row selection', () => {
         2,
         'auto-generated-row-category1/Cat A',
       ]);
+      await microtasks();
     });
 
     it('should deselect auto selected parent if one of the children is deselected', async () => {
@@ -178,7 +173,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     });
 
     // Context: https://github.com/mui/mui-x/issues/15206
-    it('should keep the correct selection items and the selection count when rows are updated', () => {
+    it('should keep the correct selection items and the selection count when rows are updated', async () => {
       render(<Test />);
 
       const expectedKeys = ['auto-generated-row-category1/Cat B', 3, 4];
@@ -195,9 +190,10 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(apiRef.current?.getSelectedRows()).to.have.keys(expectedKeys);
       expect(apiRef.current?.state.rowSelection.type).to.equal('include');
       expect(apiRef.current?.state.rowSelection.ids.size).to.equal(expectedCount);
+      await microtasks();
     });
 
-    it('should select all the children when selecting an indeterminate parent', () => {
+    it('should select all the children when selecting an indeterminate parent', async () => {
       render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
 
       fireEvent.click(getCell(2, 0).querySelector('input')!);
@@ -209,6 +205,7 @@ describe('<DataGridPremium /> - Row selection', () => {
         2,
         'auto-generated-row-category1/Cat A',
       ]);
+      await microtasks();
     });
 
     // Use case yet to be supported
