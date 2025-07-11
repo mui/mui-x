@@ -26,6 +26,12 @@ export interface ChartExportOptions {
    * @returns {Promise<void> | void} A promise or void. If a promise is returned, the export will wait for it to resolve before proceeding.
    */
   onBeforeExport?: (iframe: HTMLIFrameElement) => Promise<void> | void;
+  /**
+   * If `true`, the styles of the page the chart belongs to will be copied to the export iframe.
+   * Copying styles is useful to ensure that the exported chart looks the same as it does on the page.
+   * @default true
+   */
+  copyStyles?: boolean;
 }
 
 /**

@@ -14,7 +14,9 @@ export const enUS: SchedulerTranslations = {
 
   // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
+  nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   noResourceAriaLabel: 'No specific resource',
+  previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
   resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,

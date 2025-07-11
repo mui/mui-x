@@ -297,14 +297,14 @@ importers:
         specifier: ^1.0.4-canary.2
         version: 1.0.4-canary.2(@babel/core@7.28.0)(@babel/preset-react@7.27.1(@babel/core@7.28.0))
       '@mui/internal-babel-plugin-resolve-imports':
-        specifier: ^2.0.7-canary.3
-        version: 2.0.7-canary.3(@babel/core@7.28.0)
+        specifier: ^2.0.7-canary.4
+        version: 2.0.7-canary.4(@babel/core@7.28.0)
       '@mui/internal-bundle-size-checker':
         specifier: ^1.0.9-canary.3
         version: 1.0.9-canary.3(@swc/core@1.12.11)(@types/node@24.0.10)(esbuild@0.25.6)(rollup@4.44.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.99.9))(yaml@2.8.0)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.13
-        version: 0.0.2-canary.13(@typescript-eslint/parser@8.36.0(eslint@9.30.1)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.1)(prettier@3.6.2)(typescript@5.8.3)
+        specifier: ^0.0.2-canary.14
+        version: 0.0.2-canary.14(@typescript-eslint/parser@8.36.0(eslint@9.30.1)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.1)(prettier@3.6.2)(typescript@5.8.3)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.7
@@ -315,8 +315,8 @@ importers:
         specifier: 'catalog:'
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#90546216d1448ab3dc8b2d3538cf7cfcbeb53aa0
-        version: https://codeload.github.com/mui/material-ui/tar.gz/90546216d1448ab3dc8b2d3538cf7cfcbeb53aa0(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
+        specifier: github:mui/material-ui#544079da3de33e24e5a0119816c959ae3acc725f
+        version: https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.2.0(@types/react@19.1.8)(react@19.1.0)
@@ -4221,8 +4221,8 @@ packages:
       '@babel/core': '7'
       '@babel/preset-react': '7'
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.3':
-    resolution: {integrity: sha512-Hsvp3j4ZMIDQPnxv8HI2VNODmdzEjtDPowCWr1ZOcVLXBO67sTY0LiIg6EzUbE3OAodLLZwAKZl4K7dARBSMYw==}
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.4':
+    resolution: {integrity: sha512-hnDsND1ZHBlqVQWDA7+9ri/Rrx0hOzad07pTTndoQdmUCTmiaBryJyldM49r+fW/SBnQ2Suw0RmfatMxdKEUww==}
     peerDependencies:
       '@babel/core': '7'
 
@@ -4230,8 +4230,8 @@ packages:
     resolution: {integrity: sha512-xUO1GQDl6xbFdQJMYOgKMdxD8duz/HRVO9FfOravWvHGqvfErFo9+mcS0Q99czlmViSol05CVqOOBdjZwFy+OQ==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.2-canary.13':
-    resolution: {integrity: sha512-XyE1NvwHfKH7PpbMEwQ8B4rHLB6FlA9hTcbFEpt5Jxp4Xsis6Trm6tri8nSHiZrjOYAp1+VXeDElES+bIPlzzQ==}
+  '@mui/internal-code-infra@0.0.2-canary.14':
+    resolution: {integrity: sha512-sjRvA0kTczJLg5bEv67ZHobydyhNzx0EOdxfHce5AjGHQS6Z00QMmSxAcMeek5gD8kKykFSFLmFERL1zBuE8tQ==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -4329,8 +4329,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/90546216d1448ab3dc8b2d3538cf7cfcbeb53aa0':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/90546216d1448ab3dc8b2d3538cf7cfcbeb53aa0}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f}
     version: 7.2.0
     engines: {pnpm: 10.12.1}
 
@@ -14908,7 +14908,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.3(@babel/core@7.28.0)':
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.4(@babel/core@7.28.0)':
     dependencies:
       '@babel/core': 7.28.0
       resolve: 1.22.10
@@ -14960,7 +14960,7 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@0.0.2-canary.13(@typescript-eslint/parser@8.36.0(eslint@9.30.1)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.1)(prettier@3.6.2)(typescript@5.8.3)':
+  '@mui/internal-code-infra@0.0.2-canary.14(@typescript-eslint/parser@8.36.0(eslint@9.30.1)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.30.1)(prettier@3.6.2)(typescript@5.8.3)':
     dependencies:
       '@argos-ci/core': 3.2.0
       '@eslint/compat': 1.3.1(eslint@9.30.1)
@@ -15122,7 +15122,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/react': 19.1.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/90546216d1448ab3dc8b2d3538cf7cfcbeb53aa0(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/544079da3de33e24e5a0119816c959ae3acc725f(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.44.2)
