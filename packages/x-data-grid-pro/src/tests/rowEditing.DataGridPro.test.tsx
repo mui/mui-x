@@ -14,7 +14,7 @@ import {
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
-import { getCell, getRow, spyApi } from 'test/utils/helperFn';
+import { getCell, getRow, microtasks, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { onTestFinished, vi } from 'vitest';
 
@@ -76,7 +76,7 @@ describe('<DataGridPro /> - Row editing', () => {
 
   describe('apiRef', () => {
     describe('startRowEditMode', () => {
-      it('should throw when the row is already in edit mode', () => {
+      it('should throw when the row is already in edit mode', async () => {
         render(<TestCase />);
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
         expect(() => act(() => apiRef.current?.startRowEditMode({ id: 0 }))).to.throw(
@@ -84,8 +84,9 @@ describe('<DataGridPro /> - Row editing', () => {
         );
       });
 
-      it('should update the CSS class of all editable cells', () => {
+      it('should update the CSS class of all editable cells', async () => {
         render(<TestCase />);
+        await microtasks();
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
@@ -93,14 +94,15 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(getCell(0, 3)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
-      it('should update the CSS class of the row', () => {
+      it('should update the CSS class of the row', async () => {
         render(<TestCase />);
+        await microtasks();
         expect(getRow(0)).not.to.have.class('MuiDataGrid-row--editing');
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
         expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
       });
 
-      it('should render the components given in renderEditCell', () => {
+      it('should render the components given in renderEditCell', async () => {
         const renderEditCell1 = spy(defaultRenderEditCell);
         const renderEditCell2 = spy(defaultRenderEditCell);
 
@@ -110,6 +112,7 @@ describe('<DataGridPro /> - Row editing', () => {
             column2Props={{ renderEditCell: renderEditCell2 }}
           />,
         );
+        await microtasks();
         expect(renderEditCell1.callCount).to.equal(0);
         expect(renderEditCell2.callCount).to.equal(0);
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
@@ -117,7 +120,7 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(renderEditCell2.callCount).not.to.equal(0);
       });
 
-      it('should pass props to renderEditCell', () => {
+      it('should pass props to renderEditCell', async () => {
         const renderEditCell1 = spy(defaultRenderEditCell);
         const renderEditCell2 = spy(defaultRenderEditCell);
 
@@ -127,6 +130,7 @@ describe('<DataGridPro /> - Row editing', () => {
             column2Props={{ renderEditCell: renderEditCell2 }}
           />,
         );
+        await microtasks();
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
         expect(renderEditCell1.lastCall.args[0].value).to.equal('USDGBP');
         expect(renderEditCell1.lastCall.args[0].error).to.equal(false);
@@ -136,7 +140,7 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(renderEditCell2.lastCall.args[0].isProcessingProps).to.equal(false);
       });
 
-      it('should empty the value if deleteValue is true', () => {
+      it('should empty the value if deleteValue is true', async () => {
         const renderEditCell1 = spy(defaultRenderEditCell);
         const renderEditCell2 = spy(defaultRenderEditCell);
 
@@ -146,6 +150,7 @@ describe('<DataGridPro /> - Row editing', () => {
             column2Props={{ renderEditCell: renderEditCell2 }}
           />,
         );
+        await microtasks();
 
         act(() =>
           apiRef.current?.startRowEditMode({
@@ -455,6 +460,7 @@ describe('<DataGridPro /> - Row editing', () => {
     describe('stopRowEditMode', () => {
       it('should reject when the cell is not in edit mode', async () => {
         render(<TestCase />);
+        await microtasks();
         expect(() => apiRef.current?.stopRowEditMode({ id: 0 })).to.throw(
           'MUI X: The row with id=0 is not in edit mode.',
         );
@@ -653,7 +659,7 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
-      it('should call onProcessRowUpdateError if processRowUpdate throws an error', () => {
+      it('should call onProcessRowUpdateError if processRowUpdate throws an error', async () => {
         const error = new Error('Something went wrong');
         const processRowUpdate = () => {
           throw error;
@@ -665,6 +671,7 @@ describe('<DataGridPro /> - Row editing', () => {
             onProcessRowUpdateError={onProcessRowUpdateError}
           />,
         );
+        await microtasks();
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
         act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
@@ -684,8 +691,8 @@ describe('<DataGridPro /> - Row editing', () => {
         );
         act(() => apiRef.current?.startRowEditMode({ id: 0 }));
         act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
-        await Promise.resolve();
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
+        await microtasks();
       });
 
       it('should keep mode=edit if processRowUpdate rejects', async () => {
@@ -752,7 +759,7 @@ describe('<DataGridPro /> - Row editing', () => {
         });
       });
 
-      it('should move focus to the cell below when cellToFocusAfter=below', () => {
+      it('should move focus to the cell below when cellToFocusAfter=below', async () => {
         render(<TestCase />);
         act(() => apiRef.current?.startRowEditMode({ id: 0, fieldToFocus: 'currencyPair' }));
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
@@ -764,9 +771,10 @@ describe('<DataGridPro /> - Row editing', () => {
           }),
         );
         expect(getCell(1, 1)).toHaveFocus();
+        await microtasks();
       });
 
-      it('should move focus to the cell below when cellToFocusAfter=right', () => {
+      it('should move focus to the cell below when cellToFocusAfter=right', async () => {
         render(<TestCase />);
         act(() => apiRef.current?.startRowEditMode({ id: 0, fieldToFocus: 'currencyPair' }));
         expect(getCell(0, 1).querySelector('input')).toHaveFocus();
@@ -778,9 +786,10 @@ describe('<DataGridPro /> - Row editing', () => {
           }),
         );
         expect(getCell(0, 2)).toHaveFocus();
+        await microtasks();
       });
 
-      it('should move focus to the cell below when cellToFocusAfter=left', () => {
+      it('should move focus to the cell below when cellToFocusAfter=left', async () => {
         render(<TestCase />);
         act(() => apiRef.current?.startRowEditMode({ id: 0, fieldToFocus: 'price1M' }));
         expect(getCell(0, 2).querySelector('input')).toHaveFocus();
@@ -788,6 +797,7 @@ describe('<DataGridPro /> - Row editing', () => {
           apiRef.current?.stopRowEditMode({ id: 0, field: 'price1M', cellToFocusAfter: 'left' }),
         );
         expect(getCell(0, 1)).toHaveFocus();
+        await microtasks();
       });
 
       it('should keep in edit mode the cells that entered edit mode while processRowUpdate is called', async () => {
@@ -855,8 +865,9 @@ describe('<DataGridPro /> - Row editing', () => {
 
   describe('start edit mode', () => {
     describe('by double-click', () => {
-      it(`should publish 'rowEditStart' with reason=cellDoubleClick`, () => {
+      it(`should publish 'rowEditStart' with reason=cellDoubleClick`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
@@ -864,8 +875,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('cellDoubleClick');
       });
 
-      it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
+      it(`should not publish 'rowEditStart' if the cell is not editable`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
@@ -873,8 +885,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
-      it('should call startRowEditMode', () => {
+      it('should call startRowEditMode', async () => {
         render(<TestCase />);
+        await microtasks();
         const spiedStartRowEditMode = spyApi(apiRef.current!, 'startRowEditMode');
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
@@ -883,8 +896,9 @@ describe('<DataGridPro /> - Row editing', () => {
     });
 
     describe('by pressing Enter', () => {
-      it(`should publish 'rowEditStart' with reason=enterKeyDown`, () => {
+      it(`should publish 'rowEditStart' with reason=enterKeyDown`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
@@ -893,8 +907,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
 
-      it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
+      it(`should not publish 'rowEditStart' if the cell is not editable`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
@@ -903,8 +918,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
-      it('should call startRowEditMode passing fieldToFocus', () => {
+      it('should call startRowEditMode passing fieldToFocus', async () => {
         render(<TestCase />);
+        await microtasks();
         const spiedStartRowEditMode = spyApi(apiRef.current!, 'startRowEditMode');
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
@@ -918,8 +934,9 @@ describe('<DataGridPro /> - Row editing', () => {
     });
 
     describe('by pressing Delete', () => {
-      it(`should publish 'rowEditStart' with reason=deleteKeyDown`, () => {
+      it(`should publish 'rowEditStart' with reason=deleteKeyDown`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
@@ -928,8 +945,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('deleteKeyDown');
       });
 
-      it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
+      it(`should not publish 'rowEditStart' if the cell is not editable`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
@@ -938,8 +956,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
-      it('should call startRowEditMode passing fieldToFocus and deleteValue', () => {
+      it('should call startRowEditMode passing fieldToFocus and deleteValue', async () => {
         render(<TestCase />);
+        await microtasks();
         const spiedStartRowEditMode = spyApi(apiRef.current!, 'startRowEditMode');
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
@@ -971,8 +990,9 @@ describe('<DataGridPro /> - Row editing', () => {
     });
 
     describe('by pressing a printable character', () => {
-      it(`should publish 'rowEditStart' with reason=printableKeyDown`, () => {
+      it(`should publish 'rowEditStart' with reason=printableKeyDown`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
@@ -981,8 +1001,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
 
-      it(`should not publish 'rowEditStart' if the cell is not editable`, () => {
+      it(`should not publish 'rowEditStart' if the cell is not editable`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 0);
@@ -1010,8 +1031,9 @@ describe('<DataGridPro /> - Row editing', () => {
       });
 
       ['ctrlKey', 'metaKey'].forEach((key) => {
-        it(`should not publish 'rowEditStart' if ${key} is pressed`, () => {
+        it(`should not publish 'rowEditStart' if ${key} is pressed`, async () => {
           render(<TestCase />);
+          await microtasks();
           const listener = spy();
           apiRef.current?.subscribeEvent('rowEditStart', listener);
           const cell = getCell(0, 1);
@@ -1021,8 +1043,9 @@ describe('<DataGridPro /> - Row editing', () => {
         });
       });
 
-      it(`should call startRowEditMode if shiftKey is pressed with a letter`, () => {
+      it(`should call startRowEditMode if shiftKey is pressed with a letter`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
@@ -1031,8 +1054,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(1);
       });
 
-      it('should not call startRowEditMode if space is pressed', () => {
+      it('should not call startRowEditMode if space is pressed', async () => {
         render(<TestCase autoHeight />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
@@ -1041,8 +1065,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
-      it(`should call startRowEditMode if ctrl+V is pressed`, () => {
+      it(`should call startRowEditMode if ctrl+V is pressed`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
@@ -1051,8 +1076,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(1);
       });
 
-      it('should call startRowEditMode passing fieldToFocus and deleteValue', () => {
+      it('should call startRowEditMode passing fieldToFocus and deleteValue', async () => {
         render(<TestCase />);
+        await microtasks();
         const spiedStartRowEditMode = spyApi(apiRef.current!, 'startRowEditMode');
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
@@ -1065,8 +1091,9 @@ describe('<DataGridPro /> - Row editing', () => {
         });
       });
 
-      it(`should ignore keydown event until the IME is confirmed with a letter`, () => {
+      it(`should ignore keydown event until the IME is confirmed with a letter`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
@@ -1081,8 +1108,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
 
-      it(`should ignore keydown event until the IME is confirmed with multiple letters`, () => {
+      it(`should ignore keydown event until the IME is confirmed with multiple letters`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
@@ -1167,8 +1195,9 @@ describe('<DataGridPro /> - Row editing', () => {
     });
 
     describe('by pressing Escape', () => {
-      it(`should publish 'rowEditStop' with reason=escapeKeyDown`, () => {
+      it(`should publish 'rowEditStop' with reason=escapeKeyDown`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
@@ -1198,8 +1227,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
       });
 
-      it('should call stopRowEditMode with ignoreModifications=true', () => {
+      it('should call stopRowEditMode with ignoreModifications=true', async () => {
         render(<TestCase />);
+        await microtasks();
         const spiedStopRowEditMode = spyApi(apiRef.current!, 'stopRowEditMode');
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
@@ -1216,8 +1246,9 @@ describe('<DataGridPro /> - Row editing', () => {
     });
 
     describe('by pressing Enter', () => {
-      it(`should publish 'rowEditStop' with reason=enterKeyDown`, () => {
+      it(`should publish 'rowEditStop' with reason=enterKeyDown`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
@@ -1247,8 +1278,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
-      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {
+      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=below', async () => {
         render(<TestCase />);
+        await microtasks();
         const spiedStopRowEditMode = spyApi(apiRef.current!, 'stopRowEditMode');
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
@@ -1266,6 +1298,7 @@ describe('<DataGridPro /> - Row editing', () => {
       it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         const preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase column1Props={{ preProcessEditCellProps }} />);
+        await microtasks();
         const spiedStopRowEditMode = spyApi(apiRef.current!, 'stopRowEditMode');
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
@@ -1280,8 +1313,9 @@ describe('<DataGridPro /> - Row editing', () => {
     });
 
     describe('by pressing Tab', () => {
-      it(`should publish 'rowEditStop' with reason=tabKeyDown if on the last column`, () => {
+      it(`should publish 'rowEditStop' with reason=tabKeyDown if on the last column`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 2);
@@ -1292,8 +1326,9 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
       });
 
-      it(`should publish 'rowEditStop' with reason=shiftTabKeyDown if on the first column and Shift is pressed`, () => {
+      it(`should publish 'rowEditStop' with reason=shiftTabKeyDown if on the first column and Shift is pressed`, async () => {
         render(<TestCase />);
+        await microtasks();
         const listener = spy();
         apiRef.current?.subscribeEvent('rowEditStop', listener);
         const cell = getCell(0, 1);
@@ -1320,8 +1355,9 @@ describe('<DataGridPro /> - Row editing', () => {
         });
       });
 
-      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=left if Shift is pressed', () => {
+      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=left if Shift is pressed', async () => {
         render(<TestCase />);
+        await microtasks();
         const spiedStopRowEditMode = spyApi(apiRef.current!, 'stopRowEditMode');
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
@@ -1351,7 +1387,7 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
 
-      it('should keep focus on the first column when editing the first column of the first row of the 2nd page', () => {
+      it('should keep focus on the first column when editing the first column of the first row of the 2nd page', async () => {
         render(
           <TestCase
             pageSizeOptions={[2]}
@@ -1360,6 +1396,7 @@ describe('<DataGridPro /> - Row editing', () => {
             pagination
           />,
         );
+        await microtasks();
         const cell = getCell(2, 0);
         fireEvent.doubleClick(cell);
         expect(cell.querySelector('input')).toHaveFocus();
@@ -1367,7 +1404,7 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(getCell(2, 0)).toHaveFocus();
       });
 
-      it('should keep focus on the last column when editing the last column of the last row of the 2nd page', () => {
+      it('should keep focus on the last column when editing the last column of the last row of the 2nd page', async () => {
         render(
           <TestCase
             pageSizeOptions={[2]}
@@ -1376,6 +1413,7 @@ describe('<DataGridPro /> - Row editing', () => {
             pagination
           />,
         );
+        await microtasks();
         const cell = getCell(3, 2);
         fireEvent.doubleClick(cell);
         expect(cell.querySelector('input')).toHaveFocus();
@@ -1387,31 +1425,34 @@ describe('<DataGridPro /> - Row editing', () => {
 
   describe('prop: rowModesModel', () => {
     describe('mode=view to mode=edit', () => {
-      it('should start edit mode', () => {
+      it('should start edit mode', async () => {
         const { setProps } = render(<TestCase />);
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
         setProps({ rowModesModel: { 0: { mode: GridRowModes.Edit } } });
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+        await microtasks();
       });
     });
 
     describe('mode=edit to mode=view', () => {
-      it('should stop edit mode', () => {
+      it('should stop edit mode', async () => {
         const { setProps } = render(
           <TestCase rowModesModel={{ 0: { mode: GridRowModes.Edit } }} />,
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         setProps({ rowModesModel: { 0: { mode: GridRowModes.View } } });
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
+        await microtasks();
       });
 
-      it('should stop edit mode when rowModesModel empty', () => {
+      it('should stop edit mode when rowModesModel empty', async () => {
         const { setProps } = render(
           <TestCase rowModesModel={{ 0: { mode: GridRowModes.Edit } }} />,
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         setProps({ rowModesModel: {} });
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
+        await microtasks();
       });
 
       it('should ignode modifications if ignoreModifications=true', async () => {
@@ -1423,6 +1464,7 @@ describe('<DataGridPro /> - Row editing', () => {
         );
         setProps({ rowModesModel: { 0: { mode: GridRowModes.View, ignoreModifications: true } } });
         expect(getCell(0, 1).textContent).to.equal('USDGBP');
+        await microtasks();
       });
 
       it('should move focus to the cell that is set in cellToFocusAfter', async () => {
@@ -1438,10 +1480,11 @@ describe('<DataGridPro /> - Row editing', () => {
           },
         });
         expect(getCell(1, 1)).toHaveFocus();
+        await microtasks();
       });
     });
 
-    it(`should publish 'rowModesModelChange' when the model changes`, () => {
+    it(`should publish 'rowModesModelChange' when the model changes`, async () => {
       render(<TestCase />);
       const listener = spy();
       act(() => apiRef.current?.subscribeEvent('rowModesModelChange', listener));
@@ -1450,9 +1493,10 @@ describe('<DataGridPro /> - Row editing', () => {
       expect(listener.lastCall.args[0]).to.deep.equal({
         0: { mode: 'edit', fieldToFocus: 'currencyPair' },
       });
+      await microtasks();
     });
 
-    it(`should publish 'rowModesModelChange' when the prop changes`, () => {
+    it(`should publish 'rowModesModelChange' when the prop changes`, async () => {
       const { setProps } = render(<TestCase rowModesModel={{}} />);
       const listener = spy();
       expect(listener.callCount).to.equal(0);
@@ -1461,15 +1505,17 @@ describe('<DataGridPro /> - Row editing', () => {
       expect(listener.lastCall.args[0]).to.deep.equal({
         0: { currencyPair: { mode: 'edit' } },
       });
+      await microtasks();
     });
 
-    it(`should not publish 'rowModesModelChange' when the model changes and rowModesModel is set`, () => {
+    it(`should not publish 'rowModesModelChange' when the model changes and rowModesModel is set`, async () => {
       render(<TestCase rowModesModel={{}} />);
       const listener = spy();
       act(() => apiRef.current?.subscribeEvent('rowModesModelChange', listener));
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
       expect(listener.callCount).to.equal(0);
+      await microtasks();
     });
 
     it('should not mutate the rowModesModel prop if props of any column contains error=true', async () => {
@@ -1490,11 +1536,12 @@ describe('<DataGridPro /> - Row editing', () => {
       const rowModesModel = { 0: { mode: 'view' } };
       setProps({ rowModesModel });
       expect(rowModesModel).to.deep.equal({ 0: { mode: 'view' } });
+      await microtasks();
     });
   });
 
   describe('prop: onRowModesModelChange', () => {
-    it('should call with mode=edit when startEditMode is called', () => {
+    it('should call with mode=edit when startEditMode is called', async () => {
       const onRowModesModelChange = spy();
       render(<TestCase onRowModesModelChange={onRowModesModelChange} />);
       expect(onRowModesModelChange.callCount).to.equal(0);
@@ -1503,9 +1550,10 @@ describe('<DataGridPro /> - Row editing', () => {
       expect(onRowModesModelChange.lastCall.args[0]).to.deep.equal({
         0: { mode: 'edit', fieldToFocus: 'currencyPair' },
       });
+      await microtasks();
     });
 
-    it('should call with mode=view when stopEditMode is called', () => {
+    it('should call with mode=view when stopEditMode is called', async () => {
       const onRowModesModelChange = spy();
       render(<TestCase onRowModesModelChange={onRowModesModelChange} />);
       act(() => apiRef.current?.startRowEditMode({ id: 0, fieldToFocus: 'currencyPair' }));
@@ -1515,9 +1563,10 @@ describe('<DataGridPro /> - Row editing', () => {
         0: { mode: 'view' },
       });
       expect(onRowModesModelChange.args[1][0]).to.deep.equal({});
+      await microtasks();
     });
 
-    it(`should not be called when changing the rowModesModel prop`, () => {
+    it(`should not be called when changing the rowModesModel prop`, async () => {
       const onRowModesModelChange = spy();
       const { setProps } = render(
         <TestCase rowModesModel={{}} onRowModesModelChange={onRowModesModelChange} />,
@@ -1525,10 +1574,11 @@ describe('<DataGridPro /> - Row editing', () => {
       expect(onRowModesModelChange.callCount).to.equal(0);
       setProps({ rowModesModel: { 0: { mode: 'edit' } } });
       expect(onRowModesModelChange.callCount).to.equal(0);
+      await microtasks();
     });
   });
 
-  it('should correctly handle Portals when pressing Tab to go to the next column', () => {
+  it('should correctly handle Portals when pressing Tab to go to the next column', async () => {
     function PortaledEditComponent({ hasFocus }: GridRenderEditCellParams) {
       const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null);
       React.useLayoutEffect(() => {
@@ -1551,9 +1601,10 @@ describe('<DataGridPro /> - Row editing', () => {
     expect(input).toHaveFocus();
     fireEvent.keyDown(input, { key: 'Tab' });
     expect(getCell(0, 2).querySelector('input')).toHaveFocus();
+    await microtasks();
   });
 
-  it('should correctly handle Portals when pressing Shift+Tab to go to the previous column', () => {
+  it('should correctly handle Portals when pressing Shift+Tab to go to the previous column', async () => {
     function PortaledEditComponent({ hasFocus }: GridRenderEditCellParams) {
       const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null);
       React.useLayoutEffect(() => {
@@ -1581,5 +1632,6 @@ describe('<DataGridPro /> - Row editing', () => {
     expect(input).toHaveFocus();
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
     expect(getCell(0, 1).querySelector('input')).toHaveFocus();
+    await microtasks();
   });
 });

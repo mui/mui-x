@@ -6,6 +6,7 @@ import {
   getColumnHeadersTextContent,
   getColumnValues,
   getRow,
+  microtasks,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
@@ -74,7 +75,7 @@ describe('<DataGridPro /> - Tree data', () => {
   }
 
   describe('prop: treeData', () => {
-    it('should support tree data toggling', () => {
+    it('should support tree data toggling', async () => {
       const { setProps } = render(<Test treeData={false} />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
       expect(getColumnValues(0)).to.deep.equal([
@@ -89,9 +90,11 @@ describe('<DataGridPro /> - Tree data', () => {
         'C',
       ]);
       setProps({ treeData: true });
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       setProps({ treeData: false });
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
       expect(getColumnValues(0)).to.deep.equal([
         'A',
@@ -106,7 +109,7 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should support enabling treeData after apiRef.current.updateRows has modified the rows', () => {
+    it('should support enabling treeData after apiRef.current.updateRows has modified the rows', async () => {
       const { setProps } = render(<Test treeData={false} defaultGroupingExpansionDepth={-1} />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
       expect(getColumnValues(0)).to.deep.equal([
@@ -132,6 +135,7 @@ describe('<DataGridPro /> - Tree data', () => {
         'C',
       ]);
       setProps({ treeData: true });
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
       expect(getColumnValues(1)).to.deep.equal([
         'A',
@@ -145,7 +149,7 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should support new dataset', () => {
+    it('should support new dataset', async () => {
       const { setProps } = render(<Test />);
       setProps({
         rows: [
@@ -155,21 +159,18 @@ describe('<DataGridPro /> - Tree data', () => {
           { nameBis: '2' },
           { nameBis: '2.1' },
         ],
-        columns: [
-          {
-            field: 'nameBis',
-            width: 200,
-          },
-        ],
+        columns: [{ field: 'nameBis', width: 200 }],
         getTreeDataPath: (row) => row.nameBis.split('.'),
         getRowId: (row) => row.nameBis,
       } as DataGridProProps);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'nameBis']);
       expect(getColumnValues(1)).to.deep.equal(['1', '2']);
     });
 
-    it('should keep children expansion when changing some of the rows', () => {
+    it('should keep children expansion when changing some of the rows', async () => {
       render(<Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A']);
       act(() => apiRef.current?.setRowChildrenExpansion('A', true));
 
@@ -180,13 +181,14 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('prop: getTreeDataPath', () => {
-    it('should allow to transform path', () => {
+    it('should allow to transform path', async () => {
       render(
         <Test
           getTreeDataPath={(row) => [...row.name.split('.').reverse()]}
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',
@@ -201,8 +203,9 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should support new getTreeDataPath', () => {
+    it('should support new getTreeDataPath', async () => {
       const { setProps } = render(<Test defaultGroupingExpansionDepth={-1} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',
@@ -233,18 +236,21 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('prop: defaultGroupingExpansionDepth', () => {
-    it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
+    it('should not expand any row if defaultGroupingExpansionDepth = 0', async () => {
       render(<Test defaultGroupingExpansionDepth={0} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
 
-    it('should expand all top level rows if defaultGroupingExpansionDepth = 1', () => {
+    it('should expand all top level rows if defaultGroupingExpansionDepth = 1', async () => {
       render(<Test defaultGroupingExpansionDepth={1} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'B.A', 'B.B', 'C']);
     });
 
-    it('should expand all rows up to depth of 2 if defaultGroupingExpansionDepth = 2', () => {
+    it('should expand all rows up to depth of 2 if defaultGroupingExpansionDepth = 2', async () => {
       render(<Test defaultGroupingExpansionDepth={2} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',
@@ -257,8 +263,9 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should expand all rows if defaultGroupingExpansionDepth = -1', () => {
+    it('should expand all rows if defaultGroupingExpansionDepth = -1', async () => {
       render(<Test defaultGroupingExpansionDepth={2} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',
@@ -271,8 +278,9 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
+    it('should not re-apply default expansion on rerender after expansion manually toggled', async () => {
       const { setProps } = render(<Test />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       act(() => apiRef.current?.setRowChildrenExpansion('B', true));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'B.A', 'B.B', 'C']);
@@ -282,10 +290,11 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('prop: isGroupExpandedByDefault', () => {
-    it('should expand groups according to isGroupExpandedByDefault when defined', () => {
+    it('should expand groups according to isGroupExpandedByDefault when defined', async () => {
       const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'A');
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
+      await microtasks();
       expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
       const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current?.state.rows
         .tree.A as GridGroupNode;
@@ -296,7 +305,7 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
     });
 
-    it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
+    it('should have priority over defaultGroupingExpansionDepth when both defined', async () => {
       const isGroupExpandedByDefault = (node: GridGroupNode) => node.id === 'A';
 
       render(
@@ -305,20 +314,23 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
     });
   });
 
   describe('prop: groupingColDef', () => {
-    it('should set the custom headerName', () => {
+    it('should set the custom headerName', async () => {
       render(<Test groupingColDef={{ headerName: 'Custom header name' }} />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['Custom header name', 'name']);
     });
 
-    it('should render descendant count when hideDescendantCount = false', () => {
+    it('should render descendant count when hideDescendantCount = false', async () => {
       render(
         <Test groupingColDef={{ hideDescendantCount: false }} defaultGroupingExpansionDepth={-1} />,
       );
+      await microtasks();
       expect(getColumnValues(0)).to.deep.equal([
         'A (2)',
         'A',
@@ -332,21 +344,23 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should not render descendant count when hideDescendantCount = true', () => {
+    it('should not render descendant count when hideDescendantCount = true', async () => {
       render(
         <Test groupingColDef={{ hideDescendantCount: true }} defaultGroupingExpansionDepth={-1} />,
       );
+      await microtasks();
       expect(getColumnValues(0)).to.deep.equal(['A', 'A', 'B', 'B', 'A', 'B', 'A', 'A', 'C']);
     });
 
     // https://github.com/mui/mui-x/issues/9344
-    it('should support valueFormatter', () => {
+    it('should support valueFormatter', async () => {
       render(
         <Test
           groupingColDef={{ valueFormatter: (value) => `> ${value}` }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
       expect(getColumnValues(0)).to.deep.equal([
         '> A (2)',
         '> A',
@@ -362,13 +376,14 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('row grouping column', () => {
-    it('should add a grouping column', () => {
+    it('should add a grouping column', async () => {
       render(<Test />);
+      await microtasks();
       const columnsHeader = getColumnHeadersTextContent();
       expect(columnsHeader).to.deep.equal(['Group', 'name']);
     });
 
-    it('should render a toggling icon only when a row has children', () => {
+    it('should render a toggling icon only when a row has children', async () => {
       render(
         <Test
           rows={[{ name: 'A' }, { name: 'A.C' }, { name: 'B' }, { name: 'B.A' }]}
@@ -381,6 +396,7 @@ describe('<DataGridPro /> - Tree data', () => {
           }}
         />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
       // No children after filtering
       expect(getCell(0, 0).querySelectorAll('button')).to.have.length(0);
@@ -388,8 +404,9 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getCell(1, 0).querySelectorAll('button')).to.have.length(1);
     });
 
-    it('should toggle expansion when clicking on grouping column icon', () => {
+    it('should toggle expansion when clicking on grouping column icon', async () => {
       render(<Test />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
@@ -397,8 +414,9 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
 
-    it('should toggle expansion when pressing Space while focusing grouping column', () => {
+    it('should toggle expansion when pressing Space while focusing grouping column', async () => {
       render(<Test />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireUserEvent.mousePress(getCell(0, 0));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
@@ -408,13 +426,15 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
 
-    it('should add auto generated rows if some parents do not exist', () => {
+    it('should add auto generated rows if some parents do not exist', async () => {
       render(<Test rows={rowsWithGap} defaultGroupingExpansionDepth={-1} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.B', 'A.A', '', 'B.A', 'B.B']);
     });
 
-    it('should keep the grouping column width between generations', () => {
+    it('should keep the grouping column width between generations', async () => {
       render(<Test groupingColDef={{ width: 200 }} />);
+      await microtasks();
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
       act(() =>
         apiRef.current?.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]),
@@ -445,8 +465,9 @@ describe('<DataGridPro /> - Tree data', () => {
       );
     }
 
-    it('should respect the pageSize for the top level rows when toggling children expansion', () => {
+    it('should respect the pageSize for the top level rows when toggling children expansion', async () => {
       render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
       fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B']);
@@ -454,8 +475,9 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getColumnValues(1)).to.deep.equal(['C']);
     });
 
-    it('should keep the row expansion when switching page', () => {
+    it('should keep the row expansion when switching page', async () => {
       render(<PaginatedTest initialModel={{ pageSize: 1, page: 0 }} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A']);
       fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
@@ -473,7 +495,7 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('filter', () => {
-    it('should not show a node if none of its children match the filters and it does not match the filters', () => {
+    it('should not show a node if none of its children match the filters and it does not match the filters', async () => {
       render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.B' }]}
@@ -481,11 +503,12 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
 
       expect(getColumnValues(1)).to.deep.equal([]);
     });
 
-    it('should show a node if some of its children match the filters even if it does not match the filters', () => {
+    it('should show a node if some of its children match the filters even if it does not match the filters', async () => {
       render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
@@ -493,11 +516,12 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
 
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A']);
     });
 
-    it('should show a node if none of its children match the filters but it does match the filters', () => {
+    it('should show a node if none of its children match the filters but it does match the filters', async () => {
       render(
         <Test
           rows={[{ name: 'A' }, { name: 'A.B' }]}
@@ -505,11 +529,11 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['A']);
     });
 
-    it('should not filter the children if props.disableChildrenFiltering = true', () => {
+    it('should not filter the children if props.disableChildrenFiltering = true', async () => {
       render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
@@ -518,11 +542,12 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
 
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
     });
 
-    it('should allow to toggle props.disableChildrenFiltering', () => {
+    it('should allow to toggle props.disableChildrenFiltering', async () => {
       const { setProps } = render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
@@ -530,6 +555,7 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.B']);
 
       setProps({ disableChildrenFiltering: true });
@@ -540,24 +566,26 @@ describe('<DataGridPro /> - Tree data', () => {
     });
 
     it('should throw an error when using filterMode="server" and treeData', () => {
-      expect(() => {
+      expect(async () => {
         render(<Test filterMode="server" />);
+        await microtasks();
       }).toErrorDev(
         'MUI X: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
       );
     });
 
-    it('should set the filtered descendant count on matching nodes even if the children are collapsed', () => {
+    it('should set the filtered descendant count on matching nodes even if the children are collapsed', async () => {
       render(
         <Test filterModel={{ items: [{ field: 'name', value: 'A', operator: 'endsWith' }] }} />,
       );
+      await microtasks();
 
       // A has A.A but not A.B
       // B has B.A (match filter), B.B (has matching children), B.B.A (match filters), B.B.A.A (match filters)
       expect(getColumnValues(0)).to.deep.equal(['A (1)', 'B (4)']);
     });
 
-    it('should apply quick filter without throwing error', () => {
+    it('should apply quick filter without throwing error', async () => {
       render(
         <Test
           initialState={{
@@ -570,13 +598,14 @@ describe('<DataGridPro /> - Tree data', () => {
           }}
         />,
       );
+      await microtasks();
 
       // A has A.A but not A.B
       // B has B.A (match filter), B.B (has matching children), B.B.A (match filters), B.B.A.A (match filters)
       expect(getColumnValues(0)).to.deep.equal(['A (1)', 'B (4)']);
     });
 
-    it('should remove generated rows when they and their children do not pass quick filter', () => {
+    it('should remove generated rows when they and their children do not pass quick filter', async () => {
       render(
         <Test
           rows={[
@@ -590,11 +619,11 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-
+      await microtasks();
       expect(getColumnValues(0)).to.deep.equal(['B (1)', 'D', 'D (1)', 'A']);
     });
 
-    it('should keep the correct count of the children and descendants in the filter state', () => {
+    it('should keep the correct count of the children and descendants in the filter state', async () => {
       render(
         <Test
           rows={[
@@ -614,6 +643,7 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={3}
         />,
       );
+      await microtasks();
 
       const { filteredChildrenCountLookup, filteredDescendantCountLookup } =
         apiRef.current!.state.filter;
@@ -637,20 +667,22 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('sorting', () => {
-    it('should respect the prop order for a given depth when no sortModel provided', () => {
+    it('should respect the prop order for a given depth when no sortModel provided', async () => {
       render(
         <Test
           rows={[{ name: 'D' }, { name: 'A.B' }, { name: 'A' }, { name: 'A.A' }]}
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal(['D', 'A', 'A.B', 'A.A']);
     });
 
-    it('should apply the sortModel on every depth of the tree if props.disableChildrenSorting = false', () => {
+    it('should apply the sortModel on every depth of the tree if props.disableChildrenSorting = false', async () => {
       render(
         <Test sortModel={[{ field: 'name', sort: 'desc' }]} defaultGroupingExpansionDepth={-1} />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'C',
         'B',
@@ -664,7 +696,7 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should only apply the sortModel on top level rows if props.disableChildrenSorting = true', () => {
+    it('should only apply the sortModel on top level rows if props.disableChildrenSorting = true', async () => {
       render(
         <Test
           sortModel={[{ field: 'name', sort: 'desc' }]}
@@ -672,6 +704,7 @@ describe('<DataGridPro /> - Tree data', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'C',
         'B',
@@ -685,10 +718,11 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should allow to toggle props.disableChildrenSorting', () => {
+    it('should allow to toggle props.disableChildrenSorting', async () => {
       const { setProps } = render(
         <Test sortModel={[{ field: 'name', sort: 'desc' }]} defaultGroupingExpansionDepth={-1} />,
       );
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'C',
         'B',
@@ -728,8 +762,9 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
-    it('should update the order server side', () => {
+    it('should update the order server side', async () => {
       const { setProps } = render(<Test sortingMode="server" defaultGroupingExpansionDepth={-1} />);
+      await microtasks();
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',
@@ -769,9 +804,9 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('accessibility', () => {
-    it('should add necessary treegrid aria attributes to the rows', () => {
+    it('should add necessary treegrid aria attributes to the rows', async () => {
       render(<Test defaultGroupingExpansionDepth={-1} />);
-
+      await microtasks();
       expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // A
       expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // A.A
       expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
@@ -780,7 +815,7 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getRow(4).getAttribute('aria-posinset')).to.equal('1'); // B.A
     });
 
-    it('should adjust treegrid aria attributes after filtering', () => {
+    it('should adjust treegrid aria attributes after filtering', async () => {
       render(
         <Test
           defaultGroupingExpansionDepth={-1}
@@ -794,7 +829,7 @@ describe('<DataGridPro /> - Tree data', () => {
           }}
         />,
       );
-
+      await microtasks();
       expect(getRow(0).getAttribute('aria-level')).to.equal('1'); // A
       expect(getRow(1).getAttribute('aria-level')).to.equal('2'); // A.B
       expect(getRow(1).getAttribute('aria-posinset')).to.equal('1');
@@ -804,7 +839,7 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getRow(3).getAttribute('aria-setsize')).to.equal('2'); // B.A & B.B
     });
 
-    it('should not add the set specific aria attributes to pinned rows', () => {
+    it('should not add the set specific aria attributes to pinned rows', async () => {
       render(
         <Test
           defaultGroupingExpansionDepth={-1}
@@ -817,6 +852,7 @@ describe('<DataGridPro /> - Tree data', () => {
           }}
         />,
       );
+      await microtasks();
 
       expect(getRow(0).getAttribute('aria-rowindex')).to.equal('2'); // header row is 1
       expect(getRow(0).getAttribute('aria-level')).to.equal(null);
@@ -831,10 +867,10 @@ describe('<DataGridPro /> - Tree data', () => {
 
   describe('regressions', () => {
     // See https://github.com/mui/mui-x/issues/9402
-    it('should not fail with checkboxSelection', () => {
+    it('should not fail with checkboxSelection', async () => {
       const initialRows = rowsWithoutGap;
       const { setProps } = render(<Test checkboxSelection rows={initialRows} />);
-
+      await microtasks();
       const newRows = [...initialRows];
       newRows.splice(7, 1);
       setProps({
