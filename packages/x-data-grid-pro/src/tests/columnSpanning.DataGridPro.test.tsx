@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
-import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getActiveCell, getCell, getColumnHeaderCell, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -11,34 +11,16 @@ describe('<DataGridPro /> - Column spanning', () => {
 
   const baselineProps = {
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-        category: 'Shoes',
-        price: '$120',
-        rating: '4.5',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-        category: 'Shoes',
-        price: '$100',
-        rating: '4.5',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-        category: 'Shoes',
-        price: '$90',
-        rating: '4.5',
-      },
+      { id: 0, brand: 'Nike', category: 'Shoes', price: '$120', rating: '4.5' },
+      { id: 1, brand: 'Adidas', category: 'Shoes', price: '$100', rating: '4.5' },
+      { id: 2, brand: 'Puma', category: 'Shoes', price: '$90', rating: '4.5' },
     ],
   };
 
   // Need layouting
   it.skipIf(isJSDOM)(
     'should not apply `colSpan` in pinned columns section if there is only one column there',
-    () => {
+    async () => {
       render(
         <div style={{ width: 500, height: 300 }}>
           <DataGridPro
@@ -52,6 +34,7 @@ describe('<DataGridPro /> - Column spanning', () => {
           />
         </div>,
       );
+      await microtasks();
 
       expect(getCell(0, 0).offsetWidth).to.equal(110);
       expect(() => getCell(0, 0)).not.to.throw();
@@ -60,7 +43,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     },
   );
 
-  it('should apply `colSpan` inside pinned columns section', () => {
+  it('should apply `colSpan` inside pinned columns section', async () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGridPro
@@ -70,6 +53,7 @@ describe('<DataGridPro /> - Column spanning', () => {
         />
       </div>,
     );
+    await microtasks();
 
     expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
@@ -84,7 +68,7 @@ describe('<DataGridPro /> - Column spanning', () => {
       { field: 'rating' },
     ];
 
-    it('should work after column reordering', () => {
+    it('should work after column reordering', async () => {
       let apiRef: RefObject<GridApi | null>;
 
       function Test() {
@@ -98,6 +82,7 @@ describe('<DataGridPro /> - Column spanning', () => {
       }
 
       render(<Test />);
+      await microtasks();
 
       act(() => apiRef!.current?.setColumnIndex('price', 1));
 
@@ -107,7 +92,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     });
   });
 
-  it('should recalculate cells after column reordering', () => {
+  it('should recalculate cells after column reordering', async () => {
     let apiRef: RefObject<GridApi | null>;
 
     function Test() {
@@ -131,6 +116,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     act(() => apiRef.current?.setColumnIndex('brand', 1));
 
@@ -154,7 +140,7 @@ describe('<DataGridPro /> - Column spanning', () => {
   });
 
   // Need layouting
-  it.skipIf(isJSDOM)('should work with column resizing', () => {
+  it.skipIf(isJSDOM)('should work with column resizing', async () => {
     const columns = [{ field: 'brand', colSpan: 2 }, { field: 'category' }, { field: 'price' }];
 
     render(
@@ -162,6 +148,7 @@ describe('<DataGridPro /> - Column spanning', () => {
         <DataGridPro {...baselineProps} columns={columns} />
       </div>,
     );
+    await microtasks();
 
     expect(getColumnHeaderCell(0).offsetWidth).to.equal(100);
     expect(getColumnHeaderCell(1).offsetWidth).to.equal(100);
@@ -177,7 +164,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     expect(getCell(0, 0).offsetWidth).to.equal(300);
   });
 
-  it('should apply `colSpan` correctly on GridApiRef setRows', () => {
+  it('should apply `colSpan` correctly on GridApiRef setRows', async () => {
     const columns: GridColDef[] = [
       { field: 'brand', colSpan: (value, row) => (row.brand === 'Nike' ? 2 : 1) },
       { field: 'category', colSpan: (value, row) => (row.brand === 'Adidas' ? 2 : 1) },
@@ -203,6 +190,7 @@ describe('<DataGridPro /> - Column spanning', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     act(() =>
       apiRef.current?.setRows([

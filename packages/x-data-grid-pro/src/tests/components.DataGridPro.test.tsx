@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, EventType, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, EventType, fireEvent } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -10,7 +10,7 @@ import {
   GridApi,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { getCell, getRow, microtasks } from 'test/utils/helperFn';
 
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
@@ -28,13 +28,17 @@ describe('<DataGridPro/> - Components', () => {
   }
 
   describe('footer', () => {
-    it('should hide the row count if `hideFooterRowCount` prop is set', () => {
+    it('should hide the row count if `hideFooterRowCount` prop is set', async () => {
       render(<TestCase hideFooterRowCount />);
+      await microtasks();
       expect(document.querySelector(`.${gridClasses.rowCount}`)).to.equal(null);
     });
 
     it('should throw a console error if hideFooterRowCount is used with pagination', () => {
-      expect(() => render(<TestCase hideFooterRowCount pagination />)).toErrorDev(
+      expect(async () => {
+        render(<TestCase hideFooterRowCount pagination />);
+        await microtasks();
+      }).toErrorDev(
         'MUI X: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
       );
     });
@@ -71,11 +75,10 @@ describe('<DataGridPro/> - Components', () => {
 
         fireEvent[eventToFire](cell);
 
-        await waitFor(() => {
-          expect(propHandler.callCount).to.equal(1);
-        });
+        expect(propHandler.callCount).to.equal(1);
         expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
         expect(eventHandler.callCount).to.equal(1);
+        await microtasks();
       });
     });
 
@@ -102,7 +105,7 @@ describe('<DataGridPro/> - Components', () => {
         ['onDoubleClick', 'rowDoubleClick'],
       ] as const
     ).forEach(([prop, event]) => {
-      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
+      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, async () => {
         const propHandler = spy();
         const eventHandler = spy();
         render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
@@ -119,6 +122,7 @@ describe('<DataGridPro/> - Components', () => {
         expect(propHandler.callCount).to.equal(1);
         expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
         expect(eventHandler.callCount).to.equal(1);
+        await microtasks();
       });
     });
   });

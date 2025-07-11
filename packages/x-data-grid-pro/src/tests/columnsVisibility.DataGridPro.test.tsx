@@ -13,7 +13,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -46,7 +46,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
   }
 
   describe('apiRef: updateColumns', () => {
-    it('should not call `onColumnVisibilityModelChange` when no column visibility has changed', () => {
+    it('should not call `onColumnVisibilityModelChange` when no column visibility has changed', async () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGridPro
@@ -54,6 +54,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
+      await microtasks();
 
       act(() => apiRef.current?.updateColumns([{ field: 'id', width: 300 }]));
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
@@ -61,10 +62,11 @@ describe('<DataGridPro /> - Columns visibility', () => {
   });
 
   describe('apiRef: setColumnVisibility', () => {
-    it('should update `columnVisibilityModel` in state', () => {
+    it('should update `columnVisibilityModel` in state', async () => {
       render(
         <TestDataGridPro initialState={{ columns: { columnVisibilityModel: { idBis: false } } }} />,
       );
+      await microtasks();
       act(() => apiRef.current?.setColumnVisibility('id', false));
       expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
         id: false,
@@ -78,7 +80,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       });
     });
 
-    it('should call `onColumnVisibilityModelChange` with the new model', () => {
+    it('should call `onColumnVisibilityModelChange` with the new model', async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(
@@ -87,6 +89,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
+      await microtasks();
 
       act(() => apiRef.current?.setColumnVisibility('id', false));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
@@ -105,7 +108,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
   });
 
   describe('apiRef: setColumnVisibilityModel', () => {
-    it('should update `setColumnVisibilityModel` in state and call `onColumnVisibilityModelChange`', () => {
+    it('should update `setColumnVisibilityModel` in state and call `onColumnVisibilityModelChange`', async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(
@@ -114,6 +117,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
+      await microtasks();
       act(() => apiRef.current?.setColumnVisibilityModel({}));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});

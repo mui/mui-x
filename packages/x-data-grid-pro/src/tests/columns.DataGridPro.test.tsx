@@ -13,7 +13,7 @@ import {
   GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
-import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getCell, getRow, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Columns', () => {
@@ -44,6 +44,7 @@ describe('<DataGridPro /> - Columns', () => {
   describe('showColumnMenu', () => {
     it('should open the column menu', async () => {
       render(<Test />);
+      await microtasks();
       expect(screen.queryByRole('menu')).to.equal(null);
       await act(() => apiRef.current?.showColumnMenu('brand'));
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -51,6 +52,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should set the correct id and aria-labelledby', async () => {
       render(<Test />);
+      await microtasks();
       expect(screen.queryByRole('menu')).to.equal(null);
       await act(() => apiRef.current?.showColumnMenu('brand'));
       const menu = screen.getByRole('menu');
@@ -80,8 +82,9 @@ describe('<DataGridPro /> - Columns', () => {
   describe.skipIf(isJSDOM)('resizing', () => {
     const columns = [{ field: 'brand', width: 100 }];
 
-    it('should allow to resize columns with the mouse', () => {
+    it('should allow to resize columns with the mouse', async () => {
       render(<Test columns={columns} />);
+      await microtasks();
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
@@ -91,22 +94,26 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     // Only run in supported browsers
-    it.skipIf(typeof Touch === 'undefined')('should allow to resize columns with the touch', () => {
-      render(<Test columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-      const now = Date.now();
-      fireEvent.touchStart(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
-      });
-      fireEvent.touchMove(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-      });
-      fireEvent.touchEnd(separator, {
-        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-      });
-      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
-    });
+    it.skipIf(typeof Touch === 'undefined')(
+      'should allow to resize columns with the touch',
+      async () => {
+        render(<Test columns={columns} />);
+        await microtasks();
+        const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+        const now = Date.now();
+        fireEvent.touchStart(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
+        });
+        fireEvent.touchMove(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+        });
+        fireEvent.touchEnd(separator, {
+          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+        });
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
+        expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
+      },
+    );
 
     it('should call onColumnResize during resizing', async () => {
       const onColumnResize = spy();
@@ -168,7 +175,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(isColDefWidth120Present).to.equal(true);
     });
 
-    it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
+    it('should not affect other cell elements that are not part of the main DataGrid instance', async () => {
       render(
         <Test
           rows={baselineProps.rows.slice(0, 1)}
@@ -185,6 +192,7 @@ describe('<DataGridPro /> - Columns', () => {
           ]}
         />,
       );
+      await microtasks();
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
@@ -196,7 +204,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
-    it('should work with pinned rows', () => {
+    it('should work with pinned rows', async () => {
       render(
         <Test
           {...baselineProps}
@@ -206,6 +214,7 @@ describe('<DataGridPro /> - Columns', () => {
           }}
         />,
       );
+      await microtasks();
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       const nonPinnedCell = getCell(1, 0);
       const columnHeaderCell = getColumnHeaderCell(0);
@@ -233,7 +242,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     // https://github.com/mui/mui-x/issues/12852
-    it('should work with right pinned column', () => {
+    it('should work with right pinned column', async () => {
       render(
         <Test
           columns={[
@@ -243,6 +252,7 @@ describe('<DataGridPro /> - Columns', () => {
           initialState={{ pinnedColumns: { right: ['brand'] } }}
         />,
       );
+      await microtasks();
 
       const pinnedHeaderCell = getColumnHeaderCell(1);
       const pinnedCell = getCell(1, 1);
@@ -283,7 +293,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     // https://github.com/mui/mui-x/issues/15755
-    it('should keep right-pinned column group aligned with its pinned children', () => {
+    it('should keep right-pinned column group aligned with its pinned children', async () => {
       render(
         <Test
           rows={[
@@ -305,6 +315,7 @@ describe('<DataGridPro /> - Columns', () => {
           ]}
         />,
       );
+      await microtasks();
 
       const lastColumnSeparator = document.querySelector(
         `[role="columnheader"][data-field="category"] .${gridClasses['columnSeparator--resizable']}`,
@@ -339,8 +350,9 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     // https://github.com/mui/mui-x/issues/13548
-    it('should fill remaining horizontal space in a row with an empty cell', () => {
+    it('should fill remaining horizontal space in a row with an empty cell', async () => {
       render(<Test columns={[{ field: 'id', width: 100 }]} />);
+      await microtasks();
 
       const row = getRow(0);
       const rowWidth = row.getBoundingClientRect().width;
@@ -363,13 +375,14 @@ describe('<DataGridPro /> - Columns', () => {
 
     // Need layouting
     describe.skipIf(isJSDOM)('flex resizing', () => {
-      it('should resize the flex width after resizing another column with api', () => {
+      it('should resize the flex width after resizing another column with api', async () => {
         const twoColumns = [
           { field: 'id', width: 100, flex: 1 },
           { field: 'brand', width: 100 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
@@ -380,13 +393,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should resize the flex width after resizing a column with the separator', () => {
+      it('should resize the flex width after resizing a column with the separator', async () => {
         const twoColumns = [
           { field: 'id', width: 100, flex: 1 },
           { field: 'brand', width: 100 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
@@ -403,13 +417,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should not resize a flex column under its minWidth property (api resize)', () => {
+      it('should not resize a flex column under its minWidth property (api resize)', async () => {
         const twoColumns = [
           { field: 'id', minWidth: 175, flex: 1 },
           { field: 'brand', width: 100 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
@@ -420,13 +435,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should not resize a flex column above its maxWidth property (api resize)', () => {
+      it('should not resize a flex column above its maxWidth property (api resize)', async () => {
         const twoColumns = [
           { field: 'id', maxWidth: 125, flex: 1 },
           { field: 'brand', width: 200 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
@@ -437,13 +453,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should not resize a flex column under its minWidth property (separator resize)', () => {
+      it('should not resize a flex column under its minWidth property (separator resize)', async () => {
         const twoColumns = [
           { field: 'id', minWidth: 175, flex: 1 },
           { field: 'brand', width: 100 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
@@ -460,13 +477,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should not resize a flex column above its maxWidth property (separator resize)', () => {
+      it('should not resize a flex column above its maxWidth property (separator resize)', async () => {
         const twoColumns = [
           { field: 'id', maxWidth: 125, flex: 1 },
           { field: 'brand', width: 200 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
@@ -483,13 +501,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should be able to resize a flex column under its width property (api resize)', () => {
+      it('should be able to resize a flex column under its width property (api resize)', async () => {
         const twoColumns = [
           { field: 'id', width: 175, flex: 1 },
           { field: 'brand', width: 100 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
@@ -500,13 +519,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should be able to resize a flex column under its width property (separator resize)', () => {
+      it('should be able to resize a flex column under its width property (separator resize)', async () => {
         const twoColumns = [
           { field: 'id', width: 175, flex: 1 },
           { field: 'brand', width: 100 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
@@ -523,13 +543,14 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it('should be able to resize a column with flex twice (separator resize)', () => {
+      it('should be able to resize a column with flex twice (separator resize)', async () => {
         const twoColumns = [
           { field: 'id', flex: 1 },
           { field: 'brand', width: 100 },
         ];
 
         render(<Test columns={twoColumns} />);
+        await microtasks();
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
 
@@ -653,13 +674,14 @@ describe('<DataGridPro /> - Columns', () => {
   describe('column pipe processing', () => {
     type GridPrivateApiContextRef = ReturnType<typeof useGridPrivateApiContext>;
 
-    it('should not loose column width when re-applying pipe processing', () => {
+    it('should not loose column width when re-applying pipe processing', async () => {
       let privateApi: GridPrivateApiContextRef;
       function Footer() {
         privateApi = useGridPrivateApiContext();
         return null;
       }
       render(<Test checkboxSelection slots={{ footer: Footer }} />);
+      await microtasks();
 
       if (apiRef.current === null) {
         throw new Error('apiRef is not defined');
@@ -672,7 +694,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
 
-    it('should not loose column index when re-applying pipe processing', () => {
+    it('should not loose column index when re-applying pipe processing', async () => {
       let privateApi: GridPrivateApiContextRef;
       function Footer() {
         privateApi = useGridPrivateApiContext();
@@ -685,6 +707,7 @@ describe('<DataGridPro /> - Columns', () => {
           slots={{ footer: Footer }}
         />,
       );
+      await microtasks();
 
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       act(() => apiRef.current?.setColumnIndex('brand', 1));
@@ -694,13 +717,14 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
-    it('should not loose imperatively added columns when re-applying pipe processing', () => {
+    it('should not loose imperatively added columns when re-applying pipe processing', async () => {
       let privateApi: GridPrivateApiContextRef;
       function Footer() {
         privateApi = useGridPrivateApiContext();
         return null;
       }
       render(<Test checkboxSelection slots={{ footer: Footer }} />);
+      await microtasks();
 
       act(() => apiRef.current?.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
@@ -711,7 +735,7 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe.skipIf(isJSDOM)('flex columns with pinned columns', () => {
-    it('should maintain correct widths and positions when flex columns are set', () => {
+    it('should maintain correct widths and positions when flex columns are set', async () => {
       render(
         <Test
           columns={[
@@ -721,6 +745,7 @@ describe('<DataGridPro /> - Columns', () => {
           initialState={{ pinnedColumns: { left: ['name'] } }}
         />,
       );
+      await microtasks();
 
       const firstColumn = getColumnHeaderCell(0);
       expect(firstColumn.offsetWidth).to.equal(100);
@@ -728,7 +753,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(secondColumn.offsetWidth).to.equal(200);
     });
 
-    it('should grow flex column beyond minWidth when space is available', () => {
+    it('should grow flex column beyond minWidth when space is available', async () => {
       const columns = [
         { field: 'name', headerName: 'Name', flex: 1, minWidth: 200, editable: true },
         { field: 'email', headerName: 'Email', width: 200, editable: true },
@@ -742,6 +767,7 @@ describe('<DataGridPro /> - Columns', () => {
           disableVirtualization
         />,
       );
+      await microtasks();
 
       const firstColumn = getColumnHeaderCell(0);
       const secondColumn = getColumnHeaderCell(1);

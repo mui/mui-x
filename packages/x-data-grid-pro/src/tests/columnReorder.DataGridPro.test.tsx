@@ -6,6 +6,7 @@ import {
   getColumnHeaderCell,
   getCell,
   raf,
+  microtasks,
 } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
@@ -38,14 +39,8 @@ describe('<DataGridPro /> - Columns reorder', () => {
   const baselineProps = {
     autoHeight: isJSDOM,
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
     ],
     columns: [{ field: 'id' }, { field: 'brand' }],
   };
@@ -64,6 +59,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     const { setProps } = render(<TestCase width={300} />);
+    await microtasks();
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     await act(() => apiRef.current?.setColumnIndex('id', 1));
@@ -88,6 +84,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     const { forceUpdate } = render(<Test />);
+    await microtasks();
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     await act(() => apiRef.current?.setColumnIndex('brand', 2));
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
@@ -95,7 +92,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
   });
 
-  it('should allow to reorder columns by dropping outside the header row', () => {
+  it('should allow to reorder columns by dropping outside the header row', async () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -108,6 +105,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const dragCol = getColumnHeaderCell(0).firstChild!;
     const targetCell = getCell(0, 2)!;
@@ -123,7 +121,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
   });
 
-  it('should cancel the reordering when dropping the column outside the grid', () => {
+  it('should cancel the reordering when dropping the column outside the grid', async () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -136,6 +134,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const dragCol = getColumnHeaderCell(0).firstChild!;
     const targetCell = getCell(0, 2);
@@ -151,7 +150,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
   });
 
-  it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', () => {
+  it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', async () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -164,6 +163,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const columnHeader = getColumnHeaderCell(0);
     const columnHeaderDraggableContainer = columnHeader.firstChild!;
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(columnHeaderDraggableContainer).not.to.have.class(gridClasses['columnHeader--dragging']);
   });
 
-  it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
+  it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', async () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -184,6 +184,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const dragCol = getColumnHeaderCell(2).firstChild!;
     const dragEndEvent = createDragEndEvent(dragCol, true);
@@ -191,7 +192,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
   });
 
-  it('should call onColumnOrderChange after the column has been reordered', () => {
+  it('should call onColumnOrderChange after the column has been reordered', async () => {
     const onColumnOrderChange = spy();
     function Test() {
       const data = useBasicDemoData(1, 3);
@@ -204,6 +205,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     const dragCol = getColumnHeaderCell(0).firstChild!;
     const targetCell = getCell(0, 2)!;
@@ -224,7 +226,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   describe('column - disableReorder', () => {
-    it('should not allow to start dragging a column with disableReorder=true', () => {
+    it('should not allow to start dragging a column with disableReorder=true', async () => {
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -241,6 +243,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
       const dragCol = getColumnHeaderCell(1).firstChild!;
       const targetCol = getColumnHeaderCell(0).firstChild!;
@@ -260,7 +263,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     });
 
-    it('should not allow to drag left of first visible column if it has disableReorder=true', () => {
+    it('should not allow to drag left of first visible column if it has disableReorder=true', async () => {
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand', disableReorder: true },
@@ -277,6 +280,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
       const dragCol = getColumnHeaderCell(1).firstChild!;
       const targetCol = getColumnHeaderCell(0).firstChild!;
@@ -292,7 +296,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     });
 
-    it('should not allow to drag right of last visible column if it has disableReorder=true', () => {
+    it('should not allow to drag right of last visible column if it has disableReorder=true', async () => {
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -309,6 +313,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
       const dragCol = getColumnHeaderCell(1).firstChild!;
       const targetCol = getColumnHeaderCell(2).firstChild!;
@@ -324,7 +329,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     });
 
-    it('should allow to drag right of a column with disableReorder=true if it is not the last visible one', () => {
+    it('should allow to drag right of a column with disableReorder=true if it is not the last visible one', async () => {
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -341,6 +346,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
       const dragCol = getColumnHeaderCell(0).firstChild!;
       const targetCol = getColumnHeaderCell(2).firstChild!;
@@ -357,7 +363,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     });
   });
 
-  it('should prevent drag events propagation', () => {
+  it('should prevent drag events propagation', async () => {
     const handleDragStart = spy();
     const handleDragEnter = spy();
     const handleDragOver = spy();
@@ -380,6 +386,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     const dragCol = getColumnHeaderCell(1).firstChild!;
     const targetCell = getCell(1, 2)!;
@@ -398,7 +405,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   });
 
   describe('reorder with column grouping', () => {
-    it('should not allow to drag column outside of its group', () => {
+    it('should not allow to drag column outside of its group', async () => {
       const rows = [{ id: 0 }];
       const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
 
@@ -415,6 +422,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
       const dragCol = getColumnHeaderCell(0, 1).firstChild!;
       const targetCol = getColumnHeaderCell(2, 1).firstChild!;
@@ -431,7 +439,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     });
 
     describe('column - hidden', () => {
-      it('should use the correct start and end index', () => {
+      it('should use the correct start and end index', async () => {
         const rows = [{ id: 0 }];
         const columns = [
           { field: 'col1' },
@@ -458,6 +466,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         }
 
         render(<Test />);
+        await microtasks();
         expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col2', 'col3', 'col4']);
         const dragCol = getColumnHeaderCell(0, 1).firstChild!;
         const col3 = getColumnHeaderCell(1, 1).firstChild!;
@@ -477,7 +486,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col3', 'col2', 'col4']);
       });
 
-      it('should consider moving the column between hidden columns if it respect group constraint and visible behavior', () => {
+      it('should consider moving the column between hidden columns if it respect group constraint and visible behavior', async () => {
         const rows = [{ id: 0 }];
         const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
 
@@ -500,6 +509,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         }
 
         const { setProps } = render(<Test />);
+        await microtasks();
         expect(getColumnHeadersTextContent()).to.deep.equal(['', 'col23', 'col1', 'col2']);
         const dragCol = getColumnHeaderCell(0, 1).firstChild!;
         const targetCol = getColumnHeaderCell(1, 1).firstChild!;
@@ -516,7 +526,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       });
     });
 
-    it('should not allow to drag column inside a group', () => {
+    it('should not allow to drag column inside a group', async () => {
       const rows = [{ id: 0 }];
       const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
 
@@ -533,6 +543,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
       const dragCol = getColumnHeaderCell(2, 1).firstChild!;
       const targetCol = getColumnHeaderCell(1, 1).firstChild!;
@@ -548,7 +559,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
     });
 
-    it('should allow to drag column outside of its group if it allows freeReordering', () => {
+    it('should allow to drag column outside of its group if it allows freeReordering', async () => {
       const rows = [{ id: 0 }];
       const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
 
@@ -569,6 +580,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
       const dragCol = getColumnHeaderCell(0, 1).firstChild!;
       const targetCol = getColumnHeaderCell(2, 1).firstChild!;
@@ -598,7 +610,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       ]);
     });
 
-    it('should allow to drag column inside a group if it allows freeReordering', () => {
+    it('should allow to drag column inside a group if it allows freeReordering', async () => {
       // TODO: I observed columns are always moved from left to right
       // The reason being that is:
       // - when event.clientX does not change we consider that column is moving to the right
@@ -623,6 +635,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['', 'col23', 'col1', 'col2', 'col3']);
       const dragCol = getColumnHeaderCell(0, 1).firstChild!;
       const targetCol = getColumnHeaderCell(1, 1).firstChild!;
@@ -652,7 +665,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       ]);
     });
 
-    it('should allow to split a group with freeReordering in another group', () => {
+    it('should allow to split a group with freeReordering in another group', async () => {
       const rows = [{ id: 0 }];
       const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
 
@@ -679,6 +692,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal([
         'col123',
         '',
@@ -717,7 +731,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       ]);
     });
 
-    it('should block dragging outside of a group even at deeper level', () => {
+    it('should block dragging outside of a group even at deeper level', async () => {
       const rows = [{ id: 0 }];
       const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
 
@@ -744,6 +758,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       }
 
       render(<Test />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal([
         'col12',
         '',
