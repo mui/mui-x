@@ -69,6 +69,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisTooltipContent',
   },
   {
+    pathname: '/x/api/charts/charts-cartesian-drawing-area',
+    title: 'ChartsCartesianDrawingArea',
+  },
+  {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
   },

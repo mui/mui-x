@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "ChartsCartesianDrawingArea",
+  "imports": [
+    "import { ChartsCartesianDrawingArea } from '@mui/x-charts/ChartsCartesianDrawingArea';",
+    "import { ChartsCartesianDrawingArea } from '@mui/x-charts';",
+    "import { ChartsCartesianDrawingArea } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsCartesianDrawingArea",
+  "filename": "/packages/x-charts/src/ChartsCartesianDrawingArea/ChartsCartesianDrawingArea.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/styling/\">Charts - Styling</a></li></ul>",
+  "cssComponent": false
+}

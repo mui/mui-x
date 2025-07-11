@@ -16,6 +16,7 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsCartesianDrawingArea } from '@mui/x-charts/ChartsCartesianDrawingArea';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
@@ -117,6 +118,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
+          <ChartsCartesianDrawingArea />
           <ChartsAxis {...chartsAxisProps} />
           <ChartZoomSlider />
           <ChartsGrid {...gridProps} />

@@ -35,6 +35,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 import { LineChartPluginsSignatures } from './LineChart.plugins';
 import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
+import { ChartsCartesianDrawingArea } from '../ChartsCartesianDrawingArea/ChartsCartesianDrawingArea';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -168,6 +169,7 @@ const LineChart = React.forwardRef(function LineChart(
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
+          <ChartsCartesianDrawingArea />
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <AreaPlot {...areaPlotProps} />
