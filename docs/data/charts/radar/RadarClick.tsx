@@ -77,12 +77,14 @@ const commonSettings = {
 const lisaGrades: RadarSeriesType = {
   type: 'radar',
   label: 'Lisa',
+  id: 'lisa-grade-series',
   data: [120, 98, 86, 99, 85, 65],
   hideMark: false,
 };
 const bartGrades: RadarSeriesType = {
   type: 'radar',
   label: 'Bart',
+  id: 'bar-grade-series',
   data: [25, 34, 51, 16, 90, 20],
   hideMark: false,
 };
