@@ -108,6 +108,24 @@ describe('<DesktopDatePicker />', () => {
       expect(document.activeElement).to.have.text('5');
     });
 
+    it('should close the Picker and move focus to the text field when clicking it', async () => {
+      const { user } = render(
+        <React.Fragment>
+          <input aria-label="decoy" />
+          <DesktopDatePicker />
+        </React.Fragment>,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Choose date' }));
+
+      const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
+      await user.click(decoyInput);
+
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      // the input should be focused—the new active element
+      expect(document.activeElement!).to.equal(decoyInput);
+    });
+
     it('should go to the relevant `view` when `view` prop changes', async () => {
       const { setProps, user } = render(
         <DesktopDatePicker
