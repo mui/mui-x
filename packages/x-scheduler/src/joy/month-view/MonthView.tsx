@@ -16,6 +16,7 @@ import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { SchedulerValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
+import { CalendarEvent } from '../models/events';
 import './MonthView.css';
 
 const adapter = getAdapter();
@@ -44,6 +45,7 @@ export const MonthView = React.memo(
     const getWeekList = useWeekList();
     const getDayList = useDayList();
     const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
+    const visibleResourceIds = useSelector(store, selectors.visibleResourceIds);
 
     const weeks = React.useMemo(() => {
       const weeksFirstDays = getWeekList({
@@ -59,6 +61,20 @@ export const MonthView = React.memo(
         }));
       });
     }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);
+
+    const visibleEventsByDay = React.useMemo(() => {
+      const map = new Map<string, CalendarEvent[]>();
+      weeks.forEach((week) => {
+        week.forEach((day) => {
+          const dayKey = day.date.toString();
+          const filteredEvents = day.events.filter(
+            (event) => event.resource && visibleResourceIds.includes(event.resource),
+          );
+          map.set(dayKey, filteredEvents);
+        });
+      });
+      return map;
+    }, [weeks, visibleResourceIds]);
 
     const handleHeaderClick = React.useCallback(
       (day: SchedulerValidDate) => (event: React.MouseEvent) => {
@@ -122,15 +138,19 @@ export const MonthView = React.memo(
                         {weekNumer}
                       </div>
                       {week.map((day, dayIdx) => {
+                        const dayKey = day.date.toString();
                         const isCurrentMonth = adapter.isSameMonth(day.date, visibleDate);
                         const isToday = adapter.isSameDay(day.date, today);
 
-                        const visibleEvents = day.events.slice(0, maxEvents);
-                        const hiddenCount = day.events.length - maxEvents;
+                        const visibleEvents =
+                          visibleEventsByDay.get(dayKey)?.slice(0, maxEvents) ?? [];
+                        const hiddenCount =
+                          (visibleEventsByDay.get(dayKey)?.length ?? 0) - maxEvents;
+
                         return (
                           <DayGrid.Cell
                             ref={weekIdx === 0 && dayIdx === 0 ? cellRef : undefined}
-                            key={day.date.toString()}
+                            key={dayKey}
                             className={clsx(
                               'MonthViewCell',
                               !isCurrentMonth && 'OtherMonth',
@@ -156,7 +176,7 @@ export const MonthView = React.memo(
                                 event={eventProp}
                                 eventResource={resourcesByIdMap.get(eventProp.resource)}
                                 variant="compact"
-                                ariaLabelledBy={`MonthViewHeaderCell-${day.date.toString()}`}
+                                ariaLabelledBy={`MonthViewHeaderCell-${dayKey}`}
                                 onEventClick={onEventClick}
                               />
                             ))}

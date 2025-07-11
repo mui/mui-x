@@ -13,6 +13,7 @@ export type State = {
   views: ViewType[];
   events: CalendarEvent[];
   resources: CalendarResource[];
+  visibleResourceIds: CalendarResourceId[];
 };
 
 export type EventCalendarStore = Store<State>;
@@ -22,6 +23,7 @@ export const selectors = {
   currentView: createSelector((state: State) => state.currentView),
   views: createSelector((state: State) => state.views),
   resources: createSelector((state: State) => state.resources),
+  visibleResourceIds: createSelector((state: State) => state.visibleResourceIds),
   resourcesByIdMap: createSelectorMemoized(
     (state: State) => state.resources,
     (resources) => {
