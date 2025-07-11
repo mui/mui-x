@@ -65,9 +65,9 @@ export type PromptResponse = {
 export type PromptResolverOptions =
   | {
       /*
-       * Disable storing of prompts by MUI's prompt resolver service.
+       * By default, MUI's prompt resolver service stores the queries made to the service to analyze potential errors and improve the service (data is never stored). Enable private mode to make the service only keep track of the token count, without any query related data.
        */
-      disablePromptRetention?: boolean;
+      privateMode?: boolean;
       /*
        * Additional context to make the processing results more accurate.
        */
