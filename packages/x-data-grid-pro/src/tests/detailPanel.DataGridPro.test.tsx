@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, waitFor, act, reactMajor } from '@mui/internal-test-utils';
-import { $, $$, grid, getRow, getCell, getColumnValues } from 'test/utils/helperFn';
+import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Detail panel', () => {
@@ -165,7 +165,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   );
 
   // Doesn't work with mocked window.getComputedStyle
-  it.skipIf(isJSDOM)('should position correctly the detail panels', () => {
+  it.skipIf(isJSDOM)('should position correctly the detail panels', async () => {
     const rowHeight = 50;
     const evenHeight = rowHeight;
     const oddHeight = 2 * rowHeight;
@@ -183,6 +183,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         }}
       />,
     );
+    await microtasks();
     const detailPanels = $$('.MuiDataGrid-detailPanel');
     expect(detailPanels[0]).toHaveComputedStyle({
       height: `${evenHeight}px`,
@@ -286,7 +287,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByText('Detail')).to.equal(null);
   });
 
-  it('should allow to pass a custom toggle by adding a column with field=GRID_DETAIL_PANEL_TOGGLE_FIELD', () => {
+  it('should allow to pass a custom toggle by adding a column with field=GRID_DETAIL_PANEL_TOGGLE_FIELD', async () => {
     render(
       <TestCase
         nbRows={1}
@@ -297,6 +298,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelContent={() => <div>Detail</div>}
       />,
     );
+    await microtasks();
     expect(screen.queryByRole('button', { name: 'Expand' })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Toggle' })).not.to.equal(null);
     expect(getCell(0, 1).firstChild).to.equal(screen.queryByRole('button', { name: 'Toggle' }));
@@ -317,6 +319,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
+    await microtasks();
 
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
@@ -325,8 +328,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
     // from React 19 it is:
     //   2x during state initialization
+    // + 2x during state initialization (StrictMode)
     // + 2x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 4 : 8;
+    const expectedCallCount = reactMajor >= 19 ? 6 : 8;
 
     expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
@@ -359,6 +363,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
+    await microtasks();
 
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
@@ -367,8 +372,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
     // from React 19 it is:
     //   2x during state initialization
+    // + 2x during state initialization (StrictMode)
     // + 2x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 4 : 8;
+    const expectedCallCount = reactMajor >= 19 ? 6 : 8;
 
     expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
@@ -417,10 +423,11 @@ describe('<DataGridPro /> - Detail panel', () => {
 
       expect(detailPanel).toHaveComputedStyle({ height: '200px' });
       expect(virtualScroller.scrollHeight).to.equal(200 + 52 + 56);
+      await microtasks();
     },
   );
 
-  it('should only call getDetailPanelHeight on the rows that have detail content', () => {
+  it('should only call getDetailPanelHeight on the rows that have detail content', async () => {
     const getDetailPanelHeight = spy(({ row }) => row.id + 100); // Use `row` to allow to assert its args below
     render(
       <TestCase
@@ -445,6 +452,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
+    await microtasks();
   });
 
   it('should not select the row when opening the detail panel', async () => {
@@ -474,8 +482,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.getByText('Detail').offsetWidth).to.equal(50 + 400);
   });
 
-  it('should add an accessible name to the toggle column', () => {
+  it('should add an accessible name to the toggle column', async () => {
     render(<TestCase getDetailPanelContent={() => <div />} />);
+    await microtasks();
     expect(screen.queryByRole('columnheader', { name: /detail panel toggle/i })).not.to.equal(null);
   });
 
@@ -504,7 +513,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     },
   );
 
-  it('should not reuse detail panel components', () => {
+  it('should not reuse detail panel components', async () => {
     let counter = 0;
     function DetailPanel() {
       counter += 1;
@@ -519,6 +528,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
     setProps({ detailPanelExpandedRowIds: new Set([1]) });
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
+    await microtasks();
   });
 
   // Needs layout
@@ -584,13 +594,14 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   describe('prop: detailPanelExpandedRowIds', () => {
-    it('should open the detail panel of the specified rows', () => {
+    it('should open the detail panel of the specified rows', async () => {
       render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
           detailPanelExpandedRowIds={new Set([0, 1])}
         />,
       );
+      await microtasks();
       expect(screen.queryByText('Row 0')).not.to.equal(null);
       expect(screen.queryByText('Row 1')).not.to.equal(null);
       expect(screen.queryByText('Row 2')).to.equal(null);
@@ -610,13 +621,14 @@ describe('<DataGridPro /> - Detail panel', () => {
       expect(screen.queryByText('Row 1')).to.equal(null);
     });
 
-    it('should filter out duplicated ids and render only one panel', () => {
+    it('should filter out duplicated ids and render only one panel', async () => {
       render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
           detailPanelExpandedRowIds={new Set([0, 0])}
         />,
       );
+      await microtasks();
       expect(screen.queryAllByText('Row 0').length).to.equal(1);
     });
   });
