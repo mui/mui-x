@@ -118,7 +118,8 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    }
    ```
 
-   When using MUI's service, you may choose to disable prompt retention. This disables the storage of user prompts as well as all AI responses on MUI's end:
+   By default, MUI's prompt resolver service stores the queries made to the service to analyze potential errors and improve the service (data is never stored).
+   Enable `privateMode` to make the service only keep track of the data needed for billing, without any query related data.
 
    ```ts
    function processPrompt(query: string, context: string, conversationId?: string) {
