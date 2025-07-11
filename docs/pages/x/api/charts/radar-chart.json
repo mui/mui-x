@@ -41,6 +41,14 @@
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
+    "onAreaClick": { "type": { "name": "func" } },
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -48,6 +56,7 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onMarkClick": { "type": { "name": "func" } },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"

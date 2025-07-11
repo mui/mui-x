@@ -40,7 +40,7 @@ export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPath
 }
 
 function RadarSeriesArea(props: RadarSeriesAreaProps) {
-  const { seriesId, ...other } = props;
+  const { seriesId, onItemClick, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(seriesId);
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
@@ -62,6 +62,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               isHighlighted,
               classes,
             })}
+            onClick={(event) => onItemClick?.(event, { type: 'radar', seriesId: id })}
+            cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
             {...other}
           />
@@ -80,6 +82,12 @@ RadarSeriesArea.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * Callback fired when an area is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The line item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The id of the series to display.
    * If undefined all series are displayed.

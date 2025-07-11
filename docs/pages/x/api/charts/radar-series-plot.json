@@ -1,6 +1,8 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "onAreaClick": { "type": { "name": "func" } },
+    "onMarkClick": { "type": { "name": "func" } },
     "seriesId": { "type": { "name": "string" } }
   },
   "name": "RadarSeriesPlot",
