@@ -1,19 +1,24 @@
 import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/getColor';
 import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
-import { MaskData, ProcessedBarSeriesData } from './types';
+import { ProcessedBarSeriesData } from './types';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import { SeriesId } from '../models/seriesType/common';
+
+export type BarStackMap = Map<string | number, { seriesId: SeriesId; dataIndex: number }>;
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
   xAxes: ComputedAxisConfig<ChartsXAxisProps>,
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
+  withoutBorderRadius: boolean,
 ): {
   completedData: ProcessedBarSeriesData[];
-  masksData: MaskData[];
+  positiveStacks: BarStackMap;
+  negativeStacks: BarStackMap;
 } {
   const seriesData =
     useBarSeriesContext() ??
@@ -25,7 +30,8 @@ export function useBarPlotData(
 
   const { series, stackingGroups } = seriesData;
 
-  const masks: Record<string, MaskData> = {};
+  const positiveStacks: BarStackMap = new Map();
+  const negativeStacks: BarStackMap = new Map();
 
   const data = stackingGroups.flatMap(({ ids: seriesIds }, groupIndex) => {
     const xMin = drawingArea.left;
@@ -34,7 +40,7 @@ export function useBarPlotData(
     const yMin = drawingArea.top;
     const yMax = drawingArea.top + drawingArea.height;
 
-    return seriesIds.map((seriesId) => {
+    return seriesIds.map((seriesId, seriesIndex) => {
       const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
       const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
@@ -88,6 +94,7 @@ export function useBarPlotData(
             color: colorGetter(dataIndex),
             value: currentSeriesData[dataIndex],
             maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
+            stackId,
           };
 
           if (
@@ -99,28 +106,22 @@ export function useBarPlotData(
             return null;
           }
 
-          if (!masks[result.maskId]) {
-            masks[result.maskId] = {
-              id: result.maskId,
-              width: 0,
-              height: 0,
-              hasNegative: false,
-              hasPositive: false,
-              layout: result.layout,
-              xOrigin: xScale(0)!,
-              yOrigin: yScale(0)!,
-              x: 0,
-              y: 0,
-            };
-          }
+          if (!withoutBorderRadius) {
+            const previousStack = stackId ?? seriesIds[seriesIndex - 1];
+            if ((result.value ?? 0) > 0) {
+              if (previousStack != null) {
+                positiveStacks.delete(previousStack);
+              }
 
-          const mask = masks[result.maskId];
-          mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
-          mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
-          mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
-          mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
-          mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
-          mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
+              positiveStacks.set(`${stackId || seriesId}-${dataIndex}`, { seriesId, dataIndex });
+            } else if ((result.value ?? 0) < 0) {
+              if (previousStack != null) {
+                negativeStacks.delete(previousStack);
+              }
+
+              negativeStacks.set(`${stackId || seriesId}-${dataIndex}`, { seriesId, dataIndex });
+            }
+          }
 
           return result;
         })
@@ -135,7 +136,8 @@ export function useBarPlotData(
 
   return {
     completedData: data,
-    masksData: Object.values(masks),
+    positiveStacks,
+    negativeStacks,
   };
 }
 
