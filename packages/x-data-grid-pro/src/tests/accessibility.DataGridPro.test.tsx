@@ -3,6 +3,7 @@ import axe from 'axe-core';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer } from '@mui/internal-test-utils';
+import { microtasks } from 'test/utils/helperFn';
 
 function logViolations(violations: any) {
   if (violations.length !== 0) {
@@ -34,6 +35,7 @@ describe.skipIf(!/chrome/i.test(window.navigator.userAgent))(
       }
 
       render(<TestCase />);
+      await microtasks();
 
       axe.configure({
         rules: [{ id: 'aria-required-parent', enabled: true }],
