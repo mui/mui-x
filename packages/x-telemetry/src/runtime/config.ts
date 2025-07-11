@@ -9,6 +9,14 @@ declare namespace globalThis {
   let __MUI_X_TELEMETRY_DISABLED__: boolean | undefined;
 }
 
+interface LocalImportMetaEnv {
+  [key: string]: string;
+}
+
+interface LocalImportMeta {
+  env?: LocalImportMetaEnv;
+}
+
 const envEnabledValues = ['1', 'true', 'yes', 'y'];
 const envDisabledValues = ['0', 'false', 'no', 'n'];
 
@@ -41,7 +49,7 @@ function getBooleanEnvFromEnvObject(envKey: string, envObj: Record<string, any>)
   return undefined;
 }
 
-function getIsTelemetryCollecting(): boolean | undefined {
+function getIsTelemetryCollecting() {
   // Check global variable
   // eslint-disable-next-line no-underscore-dangle
   const globalValue = globalThis.__MUI_X_TELEMETRY_DISABLED__;
@@ -66,8 +74,7 @@ function getIsTelemetryCollecting(): boolean | undefined {
 
   try {
     // e.g. Vite.js
-    // eslint-disable-next-line global-require
-    const { importMetaEnv } = require('./config.import-meta');
+    const importMetaEnv = (import.meta as unknown as LocalImportMeta).env;
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
       if (typeof result === 'boolean') {
@@ -102,7 +109,7 @@ function getIsTelemetryCollecting(): boolean | undefined {
   return undefined;
 }
 
-function getIsDebugModeEnabled(): boolean {
+function getIsDebugModeEnabled() {
   try {
     // Check global variable
     // eslint-disable-next-line no-underscore-dangle
@@ -131,8 +138,7 @@ function getIsDebugModeEnabled(): boolean {
 
   try {
     // e.g. Vite.js
-    // eslint-disable-next-line global-require
-    const { importMetaEnv } = require('./config.import-meta');
+    const importMetaEnv = (import.meta as unknown as LocalImportMeta).env;
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', importMetaEnv);
       if (typeof result === 'boolean') {
@@ -172,7 +178,7 @@ function getNodeEnv(): string {
 
 let cachedEnv: TelemetryEnvConfig | null = null;
 
-export function getTelemetryEnvConfig(skipCache: boolean = false): TelemetryEnvConfig {
+export function getTelemetryEnvConfig(skipCache: boolean = false) {
   if (skipCache || !cachedEnv) {
     cachedEnv = {
       NODE_ENV: getNodeEnv(),
