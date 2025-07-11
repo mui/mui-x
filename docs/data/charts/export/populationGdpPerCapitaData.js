@@ -175,7 +175,6 @@ export const rawData = [
   { code: 'SLB', population: 728147, gdpPerCapita: 2223.66502559565 },
   { code: 'SOM', population: 16030971, gdpPerCapita: 539.893931565468 },
   { code: 'ZAF', population: 59587885, gdpPerCapita: 6533.71121032856 },
-  { code: 'KOR', population: 51764822, gdpPerCapita: 31902.4169048194 },
   { code: 'ESP', population: 47134837, gdpPerCapita: 29776.2011500384 },
   { code: 'LKA', population: 21803000, gdpPerCapita: 4082.69404871533 },
   { code: 'KNA', population: 46952, gdpPerCapita: 23595.4923231291 },
