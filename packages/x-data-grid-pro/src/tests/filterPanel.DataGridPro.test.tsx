@@ -8,6 +8,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, act } from '@mui/internal-test-utils';
+import { microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -32,8 +33,9 @@ describe('<DataGrid /> - Filter panel', () => {
     );
   }
 
-  it('should add an id and `operator` to the filter item created when opening the filter panel', () => {
+  it('should add an id and `operator` to the filter item created when opening the filter panel', async () => {
     render(<TestCase />);
+    await microtasks();
     act(() => apiRef.current?.showFilterPanel('brand'));
     const model = gridFilterModelSelector(apiRef);
     expect(model.items).to.have.length(1);

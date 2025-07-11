@@ -1,5 +1,5 @@
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, microtasks } from 'test/utils/helperFn';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
@@ -10,7 +10,7 @@ describe('<DataGridPro /> - Pagination', () => {
   const { render } = createRenderer();
 
   describe('setPage', () => {
-    it('should apply valid value', () => {
+    it('should apply valid value', async () => {
       let apiRef: RefObject<GridApi | null>;
 
       function GridTest() {
@@ -31,6 +31,7 @@ describe('<DataGridPro /> - Pagination', () => {
       }
 
       render(<GridTest />);
+      await microtasks();
 
       expect(getColumnValues(0)).to.deep.equal(['0']);
       act(() => {
@@ -39,7 +40,7 @@ describe('<DataGridPro /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
-    it('should apply last page if trying to go to a non-existing page', () => {
+    it('should apply last page if trying to go to a non-existing page', async () => {
       let apiRef: RefObject<GridApi | null>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
@@ -59,6 +60,7 @@ describe('<DataGridPro /> - Pagination', () => {
       }
 
       render(<GridTest />);
+      await microtasks();
 
       expect(getColumnValues(0)).to.deep.equal(['0']);
       act(() => {
@@ -69,7 +71,7 @@ describe('<DataGridPro /> - Pagination', () => {
   });
 
   describe('setPageSize', () => {
-    it('should apply value', () => {
+    it('should apply value', async () => {
       let apiRef: RefObject<GridApiPro | null>;
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
@@ -90,7 +92,7 @@ describe('<DataGridPro /> - Pagination', () => {
       }
 
       render(<GridTest />);
-
+      await microtasks();
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
       act(() => {
         apiRef.current?.setPageSize(2);
@@ -101,12 +103,13 @@ describe('<DataGridPro /> - Pagination', () => {
   });
 
   it('should log an error if rowCount is used with client-side pagination', () => {
-    expect(() => {
+    expect(async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro rows={[]} columns={[]} paginationMode="client" rowCount={100} />
         </div>,
       );
+      await microtasks();
     }).toErrorDev([
       'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.',
     ]);

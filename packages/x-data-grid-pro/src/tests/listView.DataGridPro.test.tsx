@@ -7,6 +7,7 @@ import {
   GridListViewColDef,
   GridRowsProp,
 } from '@mui/x-data-grid-pro';
+import { microtasks } from 'test/utils/helperFn';
 
 const rows: GridRowsProp = [{ id: '123567', title: 'test' }];
 
@@ -28,26 +29,28 @@ describe('<DataGridPro /> - List view', () => {
     );
   }
 
-  it('should not render list column when list view is not enabled', () => {
+  it('should not render list column when list view is not enabled', async () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro columns={columns} rows={rows} listViewColumn={listColumn} />
       </div>,
     );
+    await microtasks();
     expect(screen.queryByTestId('list-column')).to.equal(null);
   });
 
-  it('should render list column when list view is enabled', () => {
+  it('should render list column when list view is enabled', async () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro columns={columns} rows={rows} listView listViewColumn={listColumn} />
       </div>,
     );
+    await microtasks();
     expect(screen.getByTestId('list-column')).not.to.equal(null);
     expect(screen.getByTestId('list-column')).to.have.text('Title: test');
   });
 
-  it('should render list column when `listView` prop updates', () => {
+  it('should render list column when `listView` prop updates', async () => {
     const { setProps } = render(<Test listViewColumn={listColumn} />);
     expect(screen.queryByTestId('list-column')).to.equal(null);
 
@@ -59,9 +62,10 @@ describe('<DataGridPro /> - List view', () => {
     setProps({ listView: false });
 
     expect(screen.queryByTestId('list-column')).to.equal(null);
+    await microtasks();
   });
 
-  it('should update cell contents when the `renderCell` function changes', () => {
+  it('should update cell contents when the `renderCell` function changes', async () => {
     const { setProps } = render(<Test listView listViewColumn={listColumn} />);
 
     setProps({
@@ -72,15 +76,17 @@ describe('<DataGridPro /> - List view', () => {
     } as Partial<DataGridProProps>);
 
     expect(screen.getByTestId('list-column')).to.have.text('ID: 123567');
+    await microtasks();
   });
 
   it('should warn if the `listViewColumn` prop is not provided when `listView` is enabled', () => {
-    expect(() => {
+    expect(async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro columns={columns} rows={rows} listView />
         </div>,
       );
+      await microtasks();
     }).toWarnDev(
       [
         'MUI X: The `listViewColumn` prop must be set if `listView` is enabled.',

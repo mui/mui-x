@@ -4,6 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { microtasks } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
@@ -48,20 +49,22 @@ describe('<DataGridPro /> - Print export', () => {
   ];
 
   describe('Export toolbar', () => {
-    it('should display print button by default', () => {
+    it('should display print button by default', async () => {
       render(<Test showToolbar />);
+      await microtasks();
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
     });
 
-    it('should disable print export when passing `printOptions.disableToolbarButton`', () => {
+    it('should disable print export when passing `printOptions.disableToolbarButton`', async () => {
       render(
         <Test
           showToolbar
           slotProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
         />,
       );
+      await microtasks();
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).to.equal(null);

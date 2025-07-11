@@ -187,13 +187,10 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnForNewFilter.callCount).to.equal(2);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     fireEvent.click(addButton);
-    await waitFor(() => {
-      expect(getColumnForNewFilter.callCount).to.equal(4);
-    });
+    expect(getColumnForNewFilter.callCount).to.equal(4);
     fireEvent.click(addButton);
-    await waitFor(() => {
-      expect(getColumnForNewFilter.callCount).to.equal(6);
-    });
+    expect(getColumnForNewFilter.callCount).to.equal(6);
+    await microtasks();
   });
 
   it('should pass columns filtered by `filterColumns` to filters column list', async () => {

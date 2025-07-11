@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
-import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRowsFieldContent, microtasks } from 'test/utils/helperFn';
 import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
@@ -27,7 +27,7 @@ function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false
 describe('<DataGridPro /> - Row reorder', () => {
   const { render } = createRenderer();
 
-  it('should cancel the reordering when dropping the row outside the grid', () => {
+  it('should cancel the reordering when dropping the row outside the grid', async () => {
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -44,6 +44,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0).firstChild!;
@@ -60,7 +61,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should keep the order of the rows when dragStart is fired and rowReordering=false', () => {
+  it('should keep the order of the rows when dragStart is fired and rowReordering=false', async () => {
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -77,13 +78,14 @@ describe('<DataGridPro /> - Row reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0)!;
     fireEvent.dragStart(rowReorderCell);
     expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
   });
 
-  it('should keep the order of the rows when dragEnd is fired and rowReordering=false', () => {
+  it('should keep the order of the rows when dragEnd is fired and rowReordering=false', async () => {
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -100,6 +102,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0).firstChild!;
     const dragEndEvent = createDragEndEvent(rowReorderCell, true);
@@ -107,7 +110,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should call onRowOrderChange after the row stops being dragged', () => {
+  it('should call onRowOrderChange after the row stops being dragged', async () => {
     const handleOnRowOrderChange = spy();
     function Test() {
       const rows = [
@@ -130,6 +133,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
@@ -147,7 +151,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
-  it('should prevent drag events propagation', () => {
+  it('should prevent drag events propagation', async () => {
     const handleDragStart = spy();
     const handleDragEnter = spy();
     const handleDragOver = spy();
@@ -170,6 +174,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     const rowReorderCell = getCell(0, 0).firstChild!;
     const targetrowReorderCell = getCell(1, 0)!;
@@ -186,7 +191,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(handleDragEnd.callCount).to.equal(0);
   });
 
-  it('should reorder rows correctly on any page when pagination is enabled', () => {
+  it('should reorder rows correctly on any page when pagination is enabled', async () => {
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -215,6 +220,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     }
 
     render(<Test />);
+    await microtasks();
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
     expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Skechers']);
@@ -228,7 +234,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
   });
 
-  it('should render vertical scroll areas when row reordering is active', () => {
+  it('should render vertical scroll areas when row reordering is active', async () => {
     // Create more rows to ensure scrolling is needed
     const rows = Array.from({ length: 20 }, (_, i) => ({
       id: i,
@@ -246,6 +252,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     }
 
     const { container } = render(<Test />);
+    await microtasks();
 
     // Initially, no scroll areas should be visible
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);

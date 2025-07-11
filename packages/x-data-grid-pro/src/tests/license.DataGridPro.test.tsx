@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { LicenseInfo } from '@mui/x-license';
+import { microtasks } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - License', () => {
   const { render } = createRenderer();
@@ -9,9 +10,10 @@ describe('<DataGridPro /> - License', () => {
   it('should render watermark when the license is missing', () => {
     LicenseInfo.setLicenseKey('');
 
-    expect(() => render(<DataGridPro columns={[]} rows={[]} autoHeight />)).toErrorDev([
-      'MUI X: Missing license key.',
-    ]);
+    expect(async () => {
+      render(<DataGridPro columns={[]} rows={[]} autoHeight />);
+      await microtasks();
+    }).toErrorDev(['MUI X: Missing license key.']);
 
     expect(screen.getByText('MUI X Missing license key')).not.to.equal(null);
   });

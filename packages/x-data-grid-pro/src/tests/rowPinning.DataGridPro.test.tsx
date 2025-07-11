@@ -68,14 +68,15 @@ describe('<DataGridPro /> - Row pinning', () => {
     );
   }
 
-  it('should render pinned rows in pinned containers', () => {
+  it('should render pinned rows in pinned containers', async () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
+    await microtasks();
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should treat row as pinned even if row with the same id is present in `rows` prop', () => {
+  it('should treat row as pinned even if row with the same id is present in `rows` prop', async () => {
     const rowCount = 5;
 
     function TestCase({ pinRows = true }) {
@@ -118,6 +119,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
     expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
     expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
+    await microtasks();
   });
 
   // Needs layouting
@@ -137,7 +139,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should update pinned rows when `pinnedRows` prop change', () => {
+  it('should update pinned rows when `pinnedRows` prop change', async () => {
     const data = getBasicGridData(20, 5);
     function TestCase(props: any) {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -172,6 +174,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(isRowPinned(getRowById(11), 'top')).to.equal(true, '#11 pinned top');
     expect(isRowPinned(getRowById(3), 'bottom')).to.equal(true, '#3 pinned bottom');
+    await microtasks();
   });
 
   it('should update pinned rows when calling `apiRef.current.setPinnedRows` method', async () => {
@@ -199,6 +202,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     render(<TestCase />);
+    await microtasks();
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -230,7 +234,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(5), 'bottom')).to.equal(true, '#5 pinned bottom');
   });
 
-  it('should work with `getRowId`', () => {
+  it('should work with `getRowId`', async () => {
     function TestCase() {
       const data = getBasicGridData(20, 5);
 
@@ -265,6 +269,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     render(<TestCase />);
+    await microtasks();
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -290,7 +295,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getColumnValues(0)).to.deep.equal(['0', '4', '3', '2', '1']);
   });
 
-  it('should not be impacted by filtering', () => {
+  it('should not be impacted by filtering', async () => {
     const { setProps } = render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
@@ -314,10 +319,12 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+    await microtasks();
   });
 
-  it('should work when there is no rows data', () => {
+  it('should work when there is no rows data', async () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
+    await microtasks();
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -476,7 +483,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   // Needs layouting
-  it.skipIf(isJSDOM)('should work with variable row height', () => {
+  it.skipIf(isJSDOM)('should work with variable row height', async () => {
     function TestCase() {
       return (
         <BaselineTestCase
@@ -496,6 +503,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     render(<TestCase />);
+    await microtasks();
 
     expect(getRowById(0)?.clientHeight).to.equal(100);
     expect(getRowById(1)?.clientHeight).to.equal(20);
@@ -512,7 +520,6 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     const { setProps } = render(<TestCase />);
-    await microtasks();
 
     expect(getRowById(0)!.offsetHeight).to.equal(defaultRowHeight);
     expect(grid('pinnedRows--top')!.offsetHeight).to.equal(defaultRowHeight);
@@ -525,10 +532,11 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(grid('pinnedRows--top')!.offsetHeight).to.equal(36);
     expect(getRowById(1)?.clientHeight).to.equal(36);
     expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36);
+    await microtasks();
   });
 
   // Needs layouting
-  it.skipIf(isJSDOM)('should work with `autoHeight`', () => {
+  it.skipIf(isJSDOM)('should work with `autoHeight`', async () => {
     const columnHeaderHeight = 56;
     const rowHeight = 52;
     const rowCount = 10;
@@ -543,12 +551,13 @@ describe('<DataGridPro /> - Row pinning', () => {
         autoHeight
       />,
     );
+    await microtasks();
 
     expect(grid('main')!.clientHeight).to.equal(columnHeaderHeight + rowHeight * rowCount);
   });
 
   // Needs layouting
-  it.skipIf(isJSDOM)('should work with `autoPageSize`', () => {
+  it.skipIf(isJSDOM)('should work with `autoPageSize`', async () => {
     render(
       <BaselineTestCase
         rowCount={10}
@@ -560,13 +569,14 @@ describe('<DataGridPro /> - Row pinning', () => {
         hideFooter
       />,
     );
+    await microtasks();
 
     // 300px grid height - 56px header = 244px available for rows
     // 244px / 52px = 4 rows = 2 rows + 1 top-pinned row + 1 bottom-pinned row
     expect(getRows().length).to.equal(4);
   });
 
-  it('should not allow to expand detail panel of pinned row', () => {
+  it('should not allow to expand detail panel of pinned row', async () => {
     render(
       <BaselineTestCase
         rowCount={10}
@@ -575,13 +585,15 @@ describe('<DataGridPro /> - Row pinning', () => {
         getDetailPanelContent={({ row }) => <div>{row.id}</div>}
       />,
     );
+    await microtasks();
 
     const cell = getCell(0, 0);
     expect(cell.querySelector('[aria-label="Expand"]')).to.have.attribute('disabled');
   });
 
-  it('should not allow to reorder pinned rows', () => {
+  it('should not allow to reorder pinned rows', async () => {
     render(<BaselineTestCase rowCount={10} colCount={5} rowReordering />);
+    await microtasks();
 
     const cell = getCell(0, 0);
     expect(cell.querySelector(`.${gridClasses.rowReorderCell}`)).to.equal(null);
@@ -613,7 +625,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should not count pinned rows as part of the page', () => {
+  it('should not count pinned rows as part of the page', async () => {
     const pageSize = 3;
 
     render(
@@ -626,11 +638,12 @@ describe('<DataGridPro /> - Row pinning', () => {
         pageSizeOptions={[pageSize]}
       />,
     );
+    await microtasks();
 
     expect(getRows().length).to.equal(pageSize + 2); // + 2 pinned rows
   });
 
-  it('should render pinned rows outside of the tree data', () => {
+  it('should render pinned rows outside of the tree data', async () => {
     const rows: GridRowsProp = [
       { id: 0, name: 'A' },
       { id: 1, name: 'A.B' },
@@ -661,6 +674,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     render(<Test />);
+    await microtasks();
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -680,14 +694,15 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(apiRef!.current?.isRowSelected(0)).to.equal(false);
   });
 
-  it('should not render selection checkbox for pinned rows', () => {
+  it('should not render selection checkbox for pinned rows', async () => {
     render(<BaselineTestCase rowCount={20} colCount={5} checkboxSelection />);
+    await microtasks();
 
     expect(getRowById(0)!.querySelector('input[type="checkbox"]')).to.equal(null);
     expect(getRowById(1)!.querySelector('input[type="checkbox"]')).to.equal(null);
   });
 
-  it('should export pinned rows to CSV', () => {
+  it('should export pinned rows to CSV', async () => {
     let apiRef: RefObject<GridApi | null>;
 
     function TestCase() {
@@ -696,6 +711,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     render(<TestCase />);
+    await microtasks();
 
     const csv =
       apiRef!.current?.getDataAsCsv({
@@ -707,20 +723,22 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(csvRows[csvRows.length - 1]).to.equal('1');
   });
 
-  it('should include pinned rows in `aria-rowcount` attribute', () => {
+  it('should include pinned rows in `aria-rowcount` attribute', async () => {
     const rowCount = 10;
 
     render(<BaselineTestCase rowCount={rowCount} colCount={1} />);
+    await microtasks();
 
     expect(screen.getByRole('grid')).to.have.attribute('aria-rowcount', `${rowCount + 1}`); // +1 for header row
   });
 
   // https://github.com/mui/mui-x/issues/5845
-  it('should work with `getCellClassName` when `rows=[]`', () => {
+  it('should work with `getCellClassName` when `rows=[]`', async () => {
     const className = 'test-class-name';
     render(
       <BaselineTestCase rowCount={2} colCount={1} rows={[]} getRowClassName={() => className} />,
     );
+    await microtasks();
 
     expect(getRowById(0)!).to.have.class(className);
     expect(getRowById(1)!).to.have.class(className);

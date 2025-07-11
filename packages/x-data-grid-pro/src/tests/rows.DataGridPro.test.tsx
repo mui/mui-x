@@ -13,6 +13,7 @@ import {
   getColumnValues,
   getRows,
   getColumnHeaderCell,
+  microtasks,
 } from 'test/utils/helperFn';
 import {
   GridRowModel,
@@ -41,27 +42,15 @@ describe('<DataGridPro /> - Rows', () => {
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
-          {
-            clientId: 'c1',
-            first: 'Mike',
-            age: 11,
-          },
-          {
-            clientId: 'c2',
-            first: 'Jack',
-            age: 11,
-          },
-          {
-            clientId: 'c3',
-            first: 'Mike',
-            age: 20,
-          },
+          { clientId: 'c1', first: 'Mike', age: 11 },
+          { clientId: 'c2', first: 'Jack', age: 11 },
+          { clientId: 'c3', first: 'Mike', age: 20 },
         ],
         columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
       };
     });
 
-    it('should not crash with weird id', () => {
+    it('should not crash with weird id', async () => {
       const columns = [{ field: 'id' }];
       const rows = [{ id: "'1" }, { id: '"2' }];
 
@@ -70,9 +59,10 @@ describe('<DataGridPro /> - Rows', () => {
           <DataGridPro rows={rows} columns={columns} checkboxSelection />
         </div>,
       );
+      await microtasks();
     });
 
-    it('should allow to switch between cell mode', () => {
+    it('should allow to switch between cell mode', async () => {
       let apiRef: RefObject<GridApi | null>;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
@@ -87,6 +77,7 @@ describe('<DataGridPro /> - Rows', () => {
         );
       }
       render(<Test />);
+      await microtasks();
       act(() => apiRef.current?.startCellEditMode({ id: 'c2', field: 'first' }));
       const cell = getCell(1, 1);
 
@@ -100,7 +91,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(cell.querySelector('input')).to.equal(null);
     });
 
-    it('should not clone the row', () => {
+    it('should not clone the row', async () => {
       const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
       let apiRef: RefObject<GridApi | null>;
       function Test() {
@@ -112,12 +103,13 @@ describe('<DataGridPro /> - Rows', () => {
         );
       }
       render(<Test />);
+      await microtasks();
       expect(apiRef!.current?.getRow('c1')).to.equal(baselineProps.rows[0]);
     });
   });
 
   describe('prop: rows', () => {
-    it('should not throttle even when props.throttleRowsMs is defined', () => {
+    it('should not throttle even when props.throttleRowsMs is defined', async () => {
       const { rows, columns } = getBasicGridData(5, 2);
 
       function Test(props: Pick<DataGridProProps, 'rows'>) {
@@ -139,6 +131,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
       setProps({ rows });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+      await microtasks();
     });
   });
 
@@ -147,18 +140,9 @@ describe('<DataGridPro /> - Rows', () => {
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Adidas',
-          },
-          {
-            id: 2,
-            brand: 'Puma',
-          },
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
         ],
         columns: [{ field: 'brand', headerName: 'Brand' }],
       };
@@ -184,8 +168,9 @@ describe('<DataGridPro /> - Rows', () => {
         vi.useRealTimers();
       });
 
-      it('should not throttle by default', () => {
+      it('should not throttle by default', async () => {
         render(<TestCase />);
+        await microtasks();
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
@@ -213,16 +198,18 @@ describe('<DataGridPro /> - Rows', () => {
       });
     });
 
-    it('should allow to update row data', () => {
+    it('should allow to update row data', async () => {
       render(<TestCase />);
+      await microtasks();
       act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
       act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
       act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
-    it('update row data can also add rows', () => {
+    it('update row data can also add rows', async () => {
       render(<TestCase />);
+      await microtasks();
       act(() => apiRef.current?.updateRows([{ id: 1, brand: 'Fila' }]));
       act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Pata' }]));
       act(() => apiRef.current?.updateRows([{ id: 2, brand: 'Pum' }]));
@@ -230,8 +217,9 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
-    it('update row data can also add rows in bulk', () => {
+    it('update row data can also add rows in bulk', async () => {
       render(<TestCase />);
+      await microtasks();
       act(() =>
         apiRef.current?.updateRows([
           { id: 1, brand: 'Fila' },
@@ -243,8 +231,9 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
-    it('update row data can also delete rows', () => {
+    it('update row data can also delete rows', async () => {
       render(<TestCase />);
+      await microtasks();
       act(() => apiRef.current?.updateRows([{ id: 1, _action: 'delete' }]));
       act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Apple' }]));
       act(() => apiRef.current?.updateRows([{ id: 2, _action: 'delete' }]));
@@ -252,8 +241,9 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
-    it('update row data can also delete rows in bulk', () => {
+    it('update row data can also delete rows in bulk', async () => {
       render(<TestCase />);
+      await microtasks();
       act(() =>
         apiRef.current?.updateRows([
           { id: 1, _action: 'delete' },
@@ -265,7 +255,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
-    it('update row data should process getRowId', () => {
+    it('update row data should process getRowId', async () => {
       function TestCaseGetRowId() {
         apiRef = useGridApiRef();
         const getRowId = React.useCallback((row: GridRowModel) => row.idField, []);
@@ -282,6 +272,7 @@ describe('<DataGridPro /> - Rows', () => {
       }
 
       render(<TestCaseGetRowId />);
+      await microtasks();
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       act(() =>
         apiRef.current?.updateRows([
@@ -294,7 +285,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
-    it('should not loose partial updates after a props.loading switch', () => {
+    it('should not loose partial updates after a props.loading switch', async () => {
       function Test(props: Partial<DataGridProProps>) {
         apiRef = useGridApiRef();
         return (
@@ -311,9 +302,10 @@ describe('<DataGridPro /> - Rows', () => {
       act(() => apiRef.current?.updateRows([{ id: 0, brand: 'Nike 2' }]));
       setProps({ loading: false });
       expect(getColumnValues(0)).to.deep.equal(['Nike 2', 'Adidas', 'Puma']);
+      await microtasks();
     });
 
-    it('should not trigger unnecessary cells rerenders', () => {
+    it('should not trigger unnecessary cells rerenders', async () => {
       const renderCellSpy = spy((params: any) => {
         return params.value;
       });
@@ -331,6 +323,7 @@ describe('<DataGridPro /> - Rows', () => {
       }
 
       render(<Test />);
+      await microtasks();
       const initialRendersCount = 2;
       expect(renderCellSpy.callCount).to.equal(initialRendersCount);
 
@@ -344,18 +337,9 @@ describe('<DataGridPro /> - Rows', () => {
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Adidas',
-          },
-          {
-            id: 2,
-            brand: 'Puma',
-          },
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+          { id: 2, brand: 'Puma' },
         ],
         columns: [{ field: 'brand', headerName: 'Brand' }],
       };
@@ -381,8 +365,9 @@ describe('<DataGridPro /> - Rows', () => {
         vi.useRealTimers();
       });
 
-      it('should not throttle by default', () => {
+      it('should not throttle by default', async () => {
         render(<TestCase />);
+        await microtasks();
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         act(() => apiRef.current?.setRows([{ id: 3, brand: 'Asics' }]));
 
@@ -422,9 +407,8 @@ describe('<DataGridPro /> - Rows', () => {
       act(() => apiRef.current?.setRows(newRows));
       setProps({ loading: false });
 
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Asics']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
+      await microtasks();
     });
   });
 
@@ -510,13 +494,15 @@ describe('<DataGridPro /> - Rows', () => {
       );
     });
 
-    it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
+    it('should have all the rows rendered of the page in the DOM when autoPageSize: true', async () => {
       render(<TestCaseVirtualization autoPageSize pagination />);
+      await microtasks();
       expect(getRows()).to.have.length(apiRef.current!.state.pagination.paginationModel.pageSize);
     });
 
-    it('should have all the rows rendered in the DOM when autoPageSize: true', () => {
+    it('should have all the rows rendered in the DOM when autoPageSize: true', async () => {
       render(<TestCaseVirtualization autoHeight />);
+      await microtasks();
       expect(getRows()).to.have.length(apiRef.current!.state.pagination.paginationModel.pageSize);
     });
 
@@ -741,8 +727,9 @@ describe('<DataGridPro /> - Rows', () => {
       );
     }
 
-    it('should allow to disable virtualization', () => {
+    it('should allow to disable virtualization', async () => {
       render(<TestCase />);
+      await microtasks();
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(10);
       expect(document.querySelectorAll('[role="gridcell"]')).to.have.length(10 * 10);
     });
@@ -931,29 +918,31 @@ describe('<DataGridPro /> - Rows', () => {
       );
     }
 
-    it('should not show total row count in footer if `rowCount === rows.length`', () => {
+    it('should not show total row count in footer if `rowCount === rows.length`', async () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length;
       render(
         <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
       );
+      await microtasks();
 
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length}`);
     });
 
-    it('should show total row count in footer if `rowCount !== rows.length`', () => {
+    it('should show total row count in footer if `rowCount !== rows.length`', async () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length + 10;
       render(
         <TestCase rows={rows} columns={columns} rowCount={rowCount} paginationMode="server" />,
       );
+      await microtasks();
 
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
 
-    it('should update total row count in footer on `rowCount` prop change', () => {
+    it('should update total row count in footer on `rowCount` prop change', async () => {
       const { rows, columns } = getBasicGridData(10, 2);
       let rowCount = rows.length;
       const { setProps } = render(
@@ -964,6 +953,7 @@ describe('<DataGridPro /> - Rows', () => {
 
       const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
+      await microtasks();
     });
   });
 });

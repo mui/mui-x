@@ -4,7 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { ptBR } from '@mui/x-data-grid-pro/locales';
-import { grid } from 'test/utils/helperFn';
+import { grid, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
@@ -12,31 +12,23 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
 
   const baselineProps = {
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand', width: 100 }],
   };
 
   // Adaptation of describeConformance()
   describe('MUI component API', () => {
-    it(`attaches the ref`, () => {
+    it(`attaches the ref`, async () => {
       const ref = React.createRef<HTMLDivElement>();
       const { container } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} ref={ref} />
         </div>,
       );
+      await microtasks();
       expect(ref.current).to.be.instanceof(window.HTMLDivElement);
       expect(ref.current).to.equal(container.firstChild?.firstChild);
     });
@@ -45,7 +37,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
       return `r${Math.random().toString(36).slice(2)}`;
     }
 
-    it('applies the className to the root component', () => {
+    it('applies the className to the root component', async () => {
       const className = randomStringValue();
 
       const { container } = render(
@@ -53,12 +45,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
           <DataGridPro {...baselineProps} className={className} />
         </div>,
       );
+      await microtasks();
 
       expect(container.firstChild?.firstChild).to.have.class(className);
       expect(container.firstChild?.firstChild).to.have.class('MuiDataGrid-root');
     });
 
-    it('applies the style to the root component', () => {
+    it('applies the style to the root component', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -69,6 +62,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
           />
         </div>,
       );
+      await microtasks();
 
       expect(document.querySelector('.MuiDataGrid-root')).toHaveInlineStyle({
         mixBlendMode: 'darken',
@@ -77,7 +71,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
   });
 
   describe('columns width', () => {
-    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
+    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', async () => {
       let apiRef: RefObject<GridApi | null>;
 
       function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
@@ -93,21 +87,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
       render(
         <TestCase
           rows={[
-            {
-              id: 1,
-              first: 'Mike',
-              age: 11,
-            },
-            {
-              id: 2,
-              first: 'Jack',
-              age: 11,
-            },
-            {
-              id: 3,
-              first: 'Mike',
-              age: 20,
-            },
+            { id: 1, first: 'Mike', age: 11 },
+            { id: 2, first: 'Jack', age: 11 },
+            { id: 3, first: 'Mike', age: 20 },
           ]}
           columns={[
             { field: 'id', flex: 1 },
@@ -123,6 +105,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
           }}
         />,
       );
+      await microtasks();
 
       let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
       expect(firstColumn).toHaveInlineStyle({
@@ -137,7 +120,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
     });
   });
 
-  it('should work with `headerFilterHeight` prop', () => {
+  it('should work with `headerFilterHeight` prop', async () => {
     render(
       <div style={{ display: 'flex', flexDirection: 'column', width: 300 }}>
         <DataGridPro
@@ -149,10 +132,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
         />
       </div>,
     );
+    await microtasks();
     expect(grid('main')!.clientHeight).to.equal(baselineProps.rows.length * 20 + 20 + 60);
   });
 
-  it('should support translations in the theme', () => {
+  it('should support translations in the theme', async () => {
     render(
       <ThemeProvider theme={createTheme({}, ptBR)}>
         <div style={{ width: 300, height: 300 }}>
@@ -160,10 +144,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
         </div>
       </ThemeProvider>,
     );
+    await microtasks();
     expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
   });
 
-  it('should support the sx prop', () => {
+  it('should support the sx prop', async () => {
     const theme = createTheme({
       palette: {
         primary: {
@@ -179,6 +164,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
         </div>
       </ThemeProvider>,
     );
+    await microtasks();
 
     expect(grid('root')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
@@ -186,7 +172,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
   });
 
   it('should have ownerState in the theme style overrides', () => {
-    expect(() =>
+    expect(async () => {
       render(
         <ThemeProvider
           theme={createTheme({
@@ -206,7 +192,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
             <DataGridPro {...baselineProps} />
           </div>
         </ThemeProvider>,
-      ),
-    ).not.to.throw();
+      );
+      await microtasks();
+    }).not.to.throw();
   });
 });
