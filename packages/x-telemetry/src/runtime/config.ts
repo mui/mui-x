@@ -9,6 +9,14 @@ declare namespace globalThis {
   let __MUI_X_TELEMETRY_DISABLED__: boolean | undefined;
 }
 
+interface LocalImportMetaEnv {
+  [key: string]: any;
+}
+
+interface LocalImportMeta {
+  env: LocalImportMetaEnv;
+}
+
 const envEnabledValues = ['1', 'true', 'yes', 'y'];
 const envDisabledValues = ['0', 'false', 'no', 'n'];
 
@@ -66,7 +74,7 @@ function getIsTelemetryCollecting() {
 
   try {
     // e.g. Vite.js
-    const importMetaEnv = import.meta.env;
+    const importMetaEnv = (import.meta as unknown as LocalImportMeta).env;
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
       if (typeof result === 'boolean') {
@@ -130,7 +138,7 @@ function getIsDebugModeEnabled() {
 
   try {
     // e.g. Vite.js
-    const importMetaEnv = import.meta.env;
+    const importMetaEnv = (import.meta as unknown as LocalImportMeta).env;
     if (importMetaEnv) {
       const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', importMetaEnv);
       if (typeof result === 'boolean') {
