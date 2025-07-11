@@ -12,46 +12,51 @@ interface TailwindDemoContainerProps {
  * WARNING: This is an internal component used in documentation to inject the Tailwind script.
  * Please do not use it in your application.
  */
+
+let tailwindLoaded = false;
+let tailwindLoading = false;
+let tailwindPromise: Promise<void> | null = null;
+
 export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
   const { children, documentBody } = props;
-  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(tailwindLoaded);
 
   React.useEffect(() => {
-    const body = documentBody ?? document.body;
-
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/@tailwindcss/browser@4';
-
-    let mounted = true;
-    const cleanup = () => {
-      mounted = false;
-      script.remove();
-
-      const head = body?.ownerDocument?.head;
-      if (!head) {
-        return;
-      }
-
-      const styles = head.querySelectorAll('style:not([data-emotion])');
-      styles.forEach((style) => {
-        const styleText = style.textContent?.substring(0, 100);
-        const isTailwindStylesheet = styleText?.includes('tailwind');
-        if (isTailwindStylesheet) {
-          style.remove();
-        }
-      });
-    };
-
-    script.onload = () => {
-      if (!mounted) {
-        cleanup();
-        return;
-      }
+    if (tailwindLoaded) {
       setIsLoaded(true);
-    };
-    body.appendChild(script);
+      return;
+    }
 
-    return cleanup;
+    if (tailwindLoading && tailwindPromise) {
+      tailwindPromise.then(() => setIsLoaded(true));
+      return;
+    }
+
+    tailwindLoading = true;
+    tailwindPromise = new Promise<void>((resolve) => {
+      const body = documentBody ?? document.body;
+
+      const existingScript = body.querySelector(
+        'script[src="https://unpkg.com/@tailwindcss/browser@4"]',
+      );
+      if (existingScript) {
+        tailwindLoaded = true;
+        tailwindLoading = false;
+        setIsLoaded(true);
+        resolve();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/@tailwindcss/browser@4';
+      script.onload = () => {
+        tailwindLoaded = true;
+        tailwindLoading = false;
+        setIsLoaded(true);
+        resolve();
+      };
+      body.appendChild(script);
+    });
   }, [documentBody]);
 
   return isLoaded ? (
