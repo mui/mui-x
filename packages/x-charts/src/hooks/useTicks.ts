@@ -167,19 +167,17 @@ export function getTicks(
     const offset = scale(value);
 
     if (isInside(offset)) {
-      const defaultTickLabel = scale.tickFormat(tickNumber)(value);
       /* If d3 returns an empty string, it means that a tick should be shown, but its label shouldn't.
        * This is especially useful in a log scale where we want to show ticks to demonstrate it's a log
        * scale, but don't want to show labels because they would overlap.
        * https://github.com/mui/mui-x/issues/18239 */
-      const shouldDisplayLabel = defaultTickLabel !== '';
+      const defaultTickLabel = scale.tickFormat(tickNumber)(value);
 
       visibleTicks.push({
         value,
-        formattedValue: shouldDisplayLabel
-          ? (valueFormatter?.(value, { location: 'tick', scale, tickNumber, defaultTickLabel }) ??
-            defaultTickLabel)
-          : '',
+        formattedValue:
+          valueFormatter?.(value, { location: 'tick', scale, tickNumber, defaultTickLabel }) ??
+          defaultTickLabel,
         offset,
         // Allowing the label to be placed in the middle of a continuous scale is weird.
         // But it is useful in some cases, like funnel categories with a linear scale.

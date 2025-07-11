@@ -357,6 +357,8 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
       scale: AxisScaleConfig[S]['scale'];
       /**
        * The tick label shown by default if the value isn't formatted.
+       * This value might be an empty string if no tick label should be displayed, which is particularly useful in log
+       * scales where we want to show ticks to demonstrate it's a log scale, but not label them to avoid labels overlapping.
        */
       defaultTickLabel: string;
       /**
