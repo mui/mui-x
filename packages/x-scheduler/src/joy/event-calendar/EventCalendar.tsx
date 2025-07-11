@@ -10,7 +10,6 @@ import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { getColorClassName } from '../internals/utils/color-utils';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { Store, useSelector } from '../../base-ui-copy/utils/store';
 import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
@@ -21,6 +20,8 @@ import { DateNavigator } from '../date-navigator/DateNavigator';
 import '../index.css';
 import './EventCalendar.css';
 import { useDateNavigation } from '../internals/hooks/useDateNavigation';
+import { ResourceLegend } from '../resource-legend/ResourceLegend';
+import { CalendarResourceId } from '../models/resource';
 
 const adapter = getAdapter();
 
@@ -42,6 +43,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       new Store<State>({
         events: eventsProp,
         resources: resourcesProp || [],
+        visibleResourceIds: resourcesProp ? resourcesProp.map((r) => r.id) : [],
         visibleDate: adapter.startOfDay(adapter.date()),
         currentView: 'week',
         views: ['week', 'day', 'month', 'agenda'],
@@ -51,10 +53,22 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const currentView = useSelector(store, selectors.currentView);
   const resources = useSelector(store, selectors.resources);
   const visibleDate = useSelector(store, selectors.visibleDate);
+  const visibleResourceIds = useSelector(store, selectors.visibleResourceIds);
 
   const setVisibleDate = useEventCallback((date: SchedulerValidDate) => {
     store.apply({ visibleDate: date });
   });
+
+  const handleResourceVisibilityChange = useEventCallback(
+    (event: React.SyntheticEvent, value: CalendarResourceId) => {
+      const isVisible = store.state.visibleResourceIds.includes(value);
+      store.apply({
+        visibleResourceIds: isVisible
+          ? store.state.visibleResourceIds.filter((id) => id !== value)
+          : [...store.state.visibleResourceIds, value],
+      });
+    },
+  );
 
   const { onNextClick, onPreviousClick, onTodayClick } = useDateNavigation({
     visibleDate,
@@ -113,24 +127,12 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
             >
               Month Calendar
             </section>
-            {resources && resources.length > 0 && (
-              <section
-                // TODO: Add localization
-                aria-label="Resource legend"
-                className="EventCalendarResourceLegend"
-              >
-                {resources.map((resource) => (
-                  <div key={resource.id} className="EventCalendarResourceLegendItem">
-                    <span
-                      className={clsx(
-                        'EventCalendarResourceLegendColor',
-                        getColorClassName({ resource }),
-                      )}
-                    />
-                    <span className="EventCalendarResourceLegendName">{resource.name}</span>
-                  </div>
-                ))}
-              </section>
+            {resources.length > 0 && (
+              <ResourceLegend
+                visibleResourceIds={visibleResourceIds}
+                onResourceVisibilityChange={handleResourceVisibilityChange}
+                resources={resources}
+              />
             )}
           </aside>
           <div

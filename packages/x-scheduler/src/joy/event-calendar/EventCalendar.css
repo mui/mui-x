@@ -49,29 +49,3 @@
   justify-content: center;
   color: var(--gray-6);
 }
-
-.EventCalendarResourceLegend {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-2);
-  gap: var(--space-1);
-}
-
-.EventCalendarResourceLegendItem {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.EventCalendarResourceLegendColor {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background-color: var(--event-color-9);
-}
-
-.EventCalendarResourceLegendName {
-  font-size: var(--font-size-2);
-  color: var(--text-secondary);
-}
