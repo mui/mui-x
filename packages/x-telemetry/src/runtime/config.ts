@@ -14,7 +14,7 @@ interface LocalImportMetaEnv {
 }
 
 interface LocalImportMeta {
-  env: LocalImportMetaEnv;
+  env?: LocalImportMetaEnv;
 }
 
 const envEnabledValues = ['1', 'true', 'yes', 'y'];
