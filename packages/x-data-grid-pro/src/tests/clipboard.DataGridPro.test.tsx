@@ -3,7 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { SinonSpy, spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -47,8 +47,9 @@ describe('<DataGridPro /> - Clipboard', () => {
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
-      it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
+      it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, async () => {
         render(<Test disableRowSelectionOnClick />);
+        await microtasks();
 
         writeText = spy(navigator.clipboard, 'writeText');
 
@@ -60,7 +61,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       });
     });
 
-    it('should not escape double quotes when copying a single cell to clipboard', () => {
+    it('should not escape double quotes when copying a single cell to clipboard', async () => {
       render(
         <Test
           columns={[{ field: 'value' }]}
@@ -68,6 +69,7 @@ describe('<DataGridPro /> - Clipboard', () => {
           disableRowSelectionOnClick
         />,
       );
+      await microtasks();
 
       writeText = spy(navigator.clipboard, 'writeText');
 
@@ -79,7 +81,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       expect(writeText.lastCall.firstArg).to.equal('1 " 1');
     });
 
-    it('should not escape double quotes when copying rows to clipboard', () => {
+    it('should not escape double quotes when copying rows to clipboard', async () => {
       render(
         <Test
           columns={[{ field: 'value' }]}
@@ -90,6 +92,7 @@ describe('<DataGridPro /> - Clipboard', () => {
           disableRowSelectionOnClick
         />,
       );
+      await microtasks();
 
       writeText = spy(navigator.clipboard, 'writeText');
 

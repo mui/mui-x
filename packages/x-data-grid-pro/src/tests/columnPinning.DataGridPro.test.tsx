@@ -97,8 +97,9 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   it.skipIf(isJSDOM)(
     'should scroll when the next cell to focus is covered by the left pinned columns',
-    () => {
+    async () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
+      await microtasks();
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
       virtualScroller.scrollLeft = 100;
       act(() => virtualScroller.dispatchEvent(new Event('scroll')));
@@ -111,8 +112,9 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   it.skipIf(isJSDOM)(
     'should scroll when the next cell to focus is covered by the right pinned columns',
-    () => {
+    async () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['price16M'] } }} />);
+      await microtasks();
       const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
       expect(virtualScroller.scrollLeft).to.equal(0);
       const cell = getCell(0, 1);
@@ -124,8 +126,9 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   it.skipIf(isJSDOM)(
     'should increase the width of right pinned columns by resizing to the left',
-    () => {
+    async () => {
       render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
+      await microtasks();
       const columnHeader = getColumnHeaderCell(2);
       expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
@@ -143,8 +146,9 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   it.skipIf(isJSDOM)(
     'should reduce the width of right pinned columns by resizing to the right',
-    () => {
+    async () => {
       render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
+      await microtasks();
       const columnHeader = getColumnHeaderCell(2);
       expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
@@ -160,18 +164,19 @@ describe('<DataGridPro /> - Column pinning', () => {
     },
   );
 
-  it('should not allow to drag pinned columns', () => {
+  it('should not allow to drag pinned columns', async () => {
     render(
       <TestCase
         nbCols={3}
         initialState={{ pinnedColumns: { left: ['id'], right: ['price1M'] } }}
       />,
     );
+    await microtasks();
     expect(getColumnHeaderCell(0).firstChild).to.have.attribute('draggable', 'false');
     expect(getColumnHeaderCell(2).firstChild).to.have.attribute('draggable', 'false');
   });
 
-  it('should not allow to drop a column on top of a pinned column', () => {
+  it('should not allow to drop a column on top of a pinned column', async () => {
     const onPinnedColumnsChange = spy();
     render(
       <TestCase
@@ -180,6 +185,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         onPinnedColumnsChange={onPinnedColumnsChange}
       />,
     );
+    await microtasks();
 
     const dragCol = getColumnHeaderCell(1).firstChild!;
     const targetCell = getCell(0, 2)!;
@@ -191,8 +197,9 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(onPinnedColumnsChange.callCount).to.equal(0);
   });
 
-  it('should filter out invalid columns when blocking a column from being dropped', () => {
+  it('should filter out invalid columns when blocking a column from being dropped', async () => {
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { left: ['foo', 'bar'] } }} />);
+    await microtasks();
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M']);
     const dragCol = getColumnHeaderCell(0).firstChild!;
     const targetCell = getCell(0, 1)!;
@@ -203,22 +210,24 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
   });
 
-  it('should not override the first left pinned column when checkboxSelection=true', () => {
+  it('should not override the first left pinned column when checkboxSelection=true', async () => {
     render(
       <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
     );
+    await microtasks();
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
   });
 
   // Doesn't work with mocked window.getComputedStyle
   it.skipIf(isJSDOM)(
     'should add border to right pinned columns section when `showCellVerticalBorder={true}`',
-    () => {
+    async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <TestCase showCellVerticalBorder initialState={{ pinnedColumns: { right: ['id'] } }} />
         </div>,
       );
+      await microtasks();
 
       const computedStyle = window.getComputedStyle(
         document.querySelector<HTMLElement>('.MuiDataGrid-cell--pinnedRight')!,
@@ -232,7 +241,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   );
 
   // https://github.com/mui/mui-x/issues/12431
-  it.skipIf(isJSDOM)('should not render unnecessary filler after the last row', () => {
+  it.skipIf(isJSDOM)('should not render unnecessary filler after the last row', async () => {
     const rowHeight = 50;
     const columns: GridColDef[] = [
       { field: 'id', headerName: 'ID', width: 120 },
@@ -256,6 +265,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         />
       </div>,
     );
+    await microtasks();
 
     expect(grid('virtualScroller')?.scrollHeight).to.equal((rows.length + 1) * rowHeight);
   });
@@ -264,6 +274,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should call when a column is pinned', async () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
+      await microtasks();
       await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
         left: ['currencyPair'],
@@ -284,6 +295,7 @@ describe('<DataGridPro /> - Column pinning', () => {
           onPinnedColumnsChange={handlePinnedColumnsChange}
         />,
       );
+      await microtasks();
       expect($$(`[role="gridcell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       await microtasks();
@@ -298,6 +310,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   describe('prop: pinnedColumns', () => {
     it('should pin the columns specified', async () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
+      await microtasks();
       const cell = document.querySelector<HTMLDivElement>(
         `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`,
       )!;
@@ -306,6 +319,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
     it("should not change the pinned columns if the prop didn't change", async () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'] }} />);
+      await microtasks();
       expect(
         document.querySelector(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`),
       ).not.to.equal(null);
@@ -315,8 +329,9 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should filter our duplicated columns', () => {
+    it('should filter our duplicated columns', async () => {
       render(<TestCase pinnedColumns={{ left: ['currencyPair'], right: ['currencyPair'] }} />);
+      await microtasks();
       const cell = document.querySelector<HTMLDivElement>(
         `.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`,
       )!;
@@ -338,16 +353,18 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
     });
 
-    it('should allow to pin column using `initialState.pinnedColumns` prop', () => {
+    it('should allow to pin column using `initialState.pinnedColumns` prop', async () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} disableColumnPinning />);
+      await microtasks();
       const cell = document.querySelector<HTMLDivElement>(
         `.${gridClasses['cell--pinnedLeft']}[data-field="id"]`,
       )!;
       expect(cell).not.to.equal(null);
     });
 
-    it('should allow to pin column using `pinnedColumns` prop', () => {
+    it('should allow to pin column using `pinnedColumns` prop', async () => {
       render(<TestCase pinnedColumns={{ left: ['id'] }} disableColumnPinning />);
+      await microtasks();
       const cell = document.querySelector<HTMLDivElement>(
         `.${gridClasses['cell--pinnedLeft']}[data-field="id"]`,
       )!;
@@ -356,6 +373,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
     it('should allow to pin column using `apiRef.current.pinColumn`', async () => {
       render(<TestCase disableColumnPinning />);
+      await microtasks();
       await act(() => apiRef.current?.pinColumn('id', GridPinnedColumnPosition.LEFT));
       const cell = document.querySelector<HTMLDivElement>(
         `.${gridClasses['cell--pinnedLeft']}[data-field="id"]`,
@@ -365,23 +383,26 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('apiRef', () => {
-    it('should reorder the columns to render the left pinned columns before all other columns', () => {
+    it('should reorder the columns to render the left pinned columns before all other columns', async () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['currencyPair', 'price1M'] } }} />);
+      await microtasks();
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(
         null,
       );
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="price1M"]`)).not.to.equal(null);
     });
 
-    it('should reorder the columns to render the right pinned columns after all other columns', () => {
+    it('should reorder the columns to render the right pinned columns after all other columns', async () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['price16M', 'price17M'] } }} />);
+      await microtasks();
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="price16M"]`)).not.to.equal(null);
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="price17M"]`)).not.to.equal(null);
     });
 
     it('should not crash if a non-existent column is pinned', () => {
-      expect(() => {
+      expect(async () => {
         render(<TestCase initialState={{ pinnedColumns: { left: ['currency'] } }} />);
+        await microtasks();
       }).not.to.throw();
       expect(() => {
         render(<TestCase initialState={{ pinnedColumns: { right: ['currency'] } }} />);
@@ -391,6 +412,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     describe('pinColumn', () => {
       it('should pin the given column', async () => {
         render(<TestCase />);
+        await microtasks();
         expect($('[data-field="currencyPair"]')?.className).not.to.include('pinned');
         await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="currencyPair"]`)).not.to.equal(
@@ -400,6 +422,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
       it('should change the side when called on a pinned column', async () => {
         render(<TestCase />);
+        await microtasks();
 
         const renderZone = $(`.${gridClasses.virtualScrollerRenderZone}`)!;
 
@@ -420,6 +443,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
       it('should not change the columns when called on a pinned column with the same side', async () => {
         render(<TestCase />);
+        await microtasks();
         await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect($$(`.${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
         await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
@@ -430,6 +454,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     describe('unpinColumn', () => {
       it('should unpin the given column', async () => {
         render(<TestCase />);
+        await microtasks();
         await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
         expect($$(`.${gridClasses['cell--pinnedLeft']}`).length).not.to.equal(0);
         await act(() => apiRef.current?.unpinColumn('currencyPair'));
@@ -440,10 +465,11 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
 
     describe('isColumnPinned', () => {
-      it('should return the correct value', () => {
+      it('should return the correct value', async () => {
         render(
           <TestCase initialState={{ pinnedColumns: { left: ['id'], right: ['price16M'] } }} />,
         );
+        await microtasks();
         expect(apiRef.current?.isColumnPinned('id')).to.equal(GridPinnedColumnPosition.LEFT);
         expect(apiRef.current?.isColumnPinned('price16M')).to.equal(GridPinnedColumnPosition.RIGHT);
         expect(apiRef.current?.isColumnPinned('currencyPair')).to.equal(false);
@@ -452,10 +478,11 @@ describe('<DataGridPro /> - Column pinning', () => {
 
     // See https://github.com/mui/mui-x/issues/7819
     describe('`getCellElement` method should return cell element', () => {
-      it('should return the correct value', () => {
+      it('should return the correct value', async () => {
         render(
           <TestCase initialState={{ pinnedColumns: { left: ['id'], right: ['price16M'] } }} />,
         );
+        await microtasks();
         const cellElement = apiRef.current?.getCellElement(0, 'currencyPair');
         expect(cellElement).not.to.equal(null);
       });
@@ -540,8 +567,9 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('restore column position after unpinning', () => {
-    it('should restore the position when unpinning existing columns', () => {
+    it('should restore the position when unpinning existing columns', async () => {
       const { setProps } = render(<TestCase nbCols={4} checkboxSelection disableVirtualization />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['', 'id', 'Currency Pair', '1M', '2M']);
       setProps({ pinnedColumns: { left: ['currencyPair', 'id'], right: ['__check__'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M', '2M', '']);
@@ -551,8 +579,10 @@ describe('<DataGridPro /> - Column pinning', () => {
 
     it('should restore the position when unpinning a column added after the first pinned column', async () => {
       const { setProps } = render(<TestCase nbCols={2} disableVirtualization />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
       setProps({ pinnedColumns: { left: ['currencyPair'] } });
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id']);
       await act(() => {
         apiRef.current?.updateColumns([{ field: 'foo' }, { field: 'bar' }]);
@@ -568,6 +598,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const { setProps } = render(
         <TestCase nbCols={2} pinnedColumns={{ left: ['foo'] }} disableVirtualization />,
       );
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
       await act(() => apiRef.current?.updateColumns([{ field: 'foo' }, { field: 'bar' }]));
       expect(getColumnHeadersTextContent()).to.deep.equal(['foo', 'id', 'Currency Pair', 'bar']);
@@ -575,7 +606,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', 'foo', 'bar']);
     });
 
-    it('should restore the position of a column unpinned after a column is removed', () => {
+    it('should restore the position of a column unpinned after a column is removed', async () => {
       const { setProps } = render(
         <TestCase
           nbCols={3}
@@ -589,10 +620,12 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['price1M', 'id']);
       setProps({ pinnedColumns: {}, columns: [{ field: 'id' }, { field: 'price1M' }] });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+      await microtasks();
     });
 
     it('should restore the position when the neighboring columns are reordered', async () => {
       const { setProps } = render(<TestCase nbCols={4} disableVirtualization />);
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M', '2M']); // price1M's index = 2
       setProps({ pinnedColumns: { left: ['price1M'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['1M', 'id', 'Currency Pair', '2M']);
@@ -602,7 +635,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M', '2M']); // price1M's index = 2
     });
 
-    it('should not crash when unpinning the first column', () => {
+    it('should not crash when unpinning the first column', async () => {
       const { setProps } = render(
         <TestCase
           nbCols={3}
@@ -611,12 +644,13 @@ describe('<DataGridPro /> - Column pinning', () => {
           disableVirtualization
         />,
       );
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'currencyPair', 'price1M']);
       setProps({ pinnedColumns: { left: ['currencyPair'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['currencyPair', 'id', 'price1M']);
     });
 
-    it('should not crash when unpinning the last column', () => {
+    it('should not crash when unpinning the last column', async () => {
       const { setProps } = render(
         <TestCase
           nbCols={3}
@@ -625,12 +659,13 @@ describe('<DataGridPro /> - Column pinning', () => {
           disableVirtualization
         />,
       );
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'currencyPair', 'price1M']);
       setProps({ pinnedColumns: { right: ['currencyPair'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M', 'currencyPair']);
     });
 
-    it('should not crash when removing a pinned column', () => {
+    it('should not crash when removing a pinned column', async () => {
       const { setProps } = render(
         <TestCase
           nbCols={3}
@@ -645,28 +680,16 @@ describe('<DataGridPro /> - Column pinning', () => {
         columns: [{ field: 'id' }, { field: 'price1M' }],
       });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
+      await microtasks();
     });
   });
 
   describe('Column grouping', () => {
     const columns: GridColDef[] = [
       { field: 'id', headerName: 'ID', width: 90 },
-      {
-        field: 'firstName',
-        headerName: 'First name',
-        width: 150,
-      },
-      {
-        field: 'lastName',
-        headerName: 'Last name',
-        width: 150,
-      },
-      {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 110,
-      },
+      { field: 'firstName', headerName: 'First name', width: 150 },
+      { field: 'lastName', headerName: 'Last name', width: 150 },
+      { field: 'age', headerName: 'Age', type: 'number', width: 110 },
     ];
 
     const rows = [
@@ -699,7 +722,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       },
     ];
 
-    it('should create separate column groups for pinned and non-pinned columns having same column group', () => {
+    it('should create separate column groups for pinned and non-pinned columns having same column group', async () => {
       render(
         <TestCase
           columns={columns}
@@ -708,6 +731,7 @@ describe('<DataGridPro /> - Column pinning', () => {
           initialState={{ pinnedColumns: { right: ['age'] } }}
         />,
       );
+      await microtasks();
 
       const firstNameLastNameColumnGroupHeader = document.querySelector(
         '[role="columnheader"][data-fields="|-firstName-|-lastName-|"]',
