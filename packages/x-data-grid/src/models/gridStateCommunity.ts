@@ -19,7 +19,7 @@ import type {
   GridTabIndexState,
   GridVirtualizationState,
 } from '../hooks';
-import type { DataGridProps } from './props/DataGridProps';
+import type { DataGridProcessedProps } from './props/DataGridProps';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditingState } from './gridEditRowModel';
 import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
@@ -33,7 +33,7 @@ import type { GridListViewState } from '../hooks/features/listView/useGridListVi
  * Some props are passed on the state to enable grid selectors to select
  * and react to them.
  */
-type GridStateProps = Pick<DataGridProps, 'getRowId'>;
+type GridStateProps = Pick<DataGridProcessedProps, 'getRowId' | 'listView'>;
 
 /**
  * The state of Data Grid.

@@ -391,7 +391,7 @@
   },
   {
     "name": "gridVisibleColumnDefinitionsSelector",
-    "returnType": "GridStateColDef[]",
+    "returnType": "(GridListViewColDef & { computedWidth: number })[]",
     "category": "Visible Columns",
     "description": "Get the visible columns as a lookup (an object containing the field for keys and the definition for values)."
   },
@@ -403,7 +403,7 @@
   },
   {
     "name": "gridVisiblePinnedColumnDefinitionsSelector",
-    "returnType": "{ left: GridStateColDef[]; right: GridStateColDef[] }",
+    "returnType": "GridPinnedColumns",
     "category": "Visible Columns",
     "description": "Get the visible pinned columns."
   },
