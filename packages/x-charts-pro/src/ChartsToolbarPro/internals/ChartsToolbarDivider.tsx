@@ -2,13 +2,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import { NotRendered, useChartsSlots } from '@mui/x-charts/internals';
-import { ChartsBaseSlotsPro } from '../../internals/slots/chartsBaseSlots';
-import { ChartBaseDividerProps } from '../../internals/slots/chartBaseSlotProps';
+import { ChartsBaseSlotPropsPro } from '../../internals/slots/chartsBaseSlots';
 
-export interface ChartsToolbarDividerProps extends ChartBaseDividerProps {}
+export type ChartsToolbarDividerProps = ChartsBaseSlotPropsPro['baseDivider'];
 
 // This is workaround because api-docs-builder does not support the `NotRendered<ChartBaseDividerProps>` syntax.
-const NotRenderedDivider = NotRendered as unknown as React.ComponentType<ChartBaseDividerProps>;
+const NotRenderedDivider = NotRendered as unknown as React.ComponentType<
+  ChartsBaseSlotPropsPro['baseDivider']
+>;
 
 const Divider = styled(NotRenderedDivider, {
   name: 'MuiChartsToolbar',
@@ -18,9 +19,9 @@ const Divider = styled(NotRenderedDivider, {
   height: '50%',
 }));
 
-const ChartsToolbarDivider = React.forwardRef<HTMLHRElement, ChartsToolbarDividerProps>(
+const ChartsToolbarDivider = React.forwardRef<HTMLHRElement, ChartsBaseSlotPropsPro['baseDivider']>(
   function ChartsToolbarDivider(props, ref) {
-    const { slots, slotProps } = useChartsSlots<ChartsBaseSlotsPro>();
+    const { slots, slotProps } = useChartsSlots();
 
     return (
       <Divider
