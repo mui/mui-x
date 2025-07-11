@@ -128,7 +128,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        query,
        context,
        conversationId,
-       { disablePromptRetention: false },
+       { privateMode: true },
      );
    }
    ```
