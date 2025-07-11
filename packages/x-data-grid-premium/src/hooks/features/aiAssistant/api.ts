@@ -17,7 +17,7 @@ export function gridDefaultPromptResolver(
   query: string,
   context: string,
   conversationId?: string,
-  options: PromptResolverOptions = {},
+  options?: PromptResolverOptions,
 ) {
   return fetch(url, {
     mode: 'cors',
