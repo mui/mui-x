@@ -7,6 +7,7 @@ import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -185,7 +186,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
-      if (active && autoFocus && activeItem) {
+      if (activeItem && active && autoFocus && activeItem !== previousActive.current) {
         activeItem.focus();
       }
       if (!activeItem || previousActive.current === activeItem) {
@@ -196,6 +197,19 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
 
       // Subtracting the 4px of extra margin intended for the first visible section item
       containerRef.current.scrollTop = offsetTop - 4;
+    });
+
+    const handleBlur = useEventCallback((event: React.FocusEvent<HTMLElement>) => {
+      // handle case when focus is moved to another section (i.e. Shift+Tab => Select)
+      // and we want the focus to be reset to the current active item, which wouldn't change as the view stays the same
+      const blurParent = event.relatedTarget?.parentElement;
+      if (
+        previousActive.current &&
+        blurParent?.nodeName === 'UL' &&
+        blurParent !== containerRef.current
+      ) {
+        previousActive.current = null;
+      }
     });
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
@@ -238,6 +252,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         autoFocusItem={autoFocus && active}
         role="listbox"
         onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         {...other}
       >
         {items.map((option, index) => {
