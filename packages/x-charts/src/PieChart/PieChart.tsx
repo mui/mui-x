@@ -45,7 +45,7 @@ export interface PieChartSlotProps
 export interface PieChartProps
   extends Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
