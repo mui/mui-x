@@ -58,8 +58,6 @@ Same changes as in `@mui/x-date-pickers@8.8.0`.
 #### `@mui/x-charts@8.8.0`
 
 - [charts] Add control to the axis highlight (#17900) @alexfauquette
-- [charts] Add support for filtering gestures based on pointer types (#18682) @JCQuintas
-- [charts] Allow gestures to require a key to be pressed (#18681) @JCQuintas
 - [charts] Avoid processing area plot data if area isn't used in series (#18712) @bernardobelchior
 - [charts] Make smarter default domain limit (#18506) @alexfauquette
 
@@ -72,7 +70,6 @@ Same changes as in `@mui/x-charts@8.8.0`, plus:
 - [charts-pro] Add chart zoom preview (#18267) @bernardobelchior
 - [charts-pro] Allow customizing scatter preview marker size (#18726) @bernardobelchior
 - [charts-pro] Allow disabling the copy of styles in charts export (#18753) @bernardobelchior
-- [charts-pro] Fix funnel regression (#18727) @JCQuintas
 
 ### Tree View
 
