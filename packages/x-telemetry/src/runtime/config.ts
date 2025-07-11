@@ -10,7 +10,7 @@ declare namespace globalThis {
 }
 
 interface LocalImportMetaEnv {
-  [key: string]: any;
+  [key: string]: string;
 }
 
 interface LocalImportMeta {
