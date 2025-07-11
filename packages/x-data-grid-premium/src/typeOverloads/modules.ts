@@ -16,7 +16,10 @@ import type {
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
 import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
-import type { GridPivotModel } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import type {
+  GridPivotingInternalCache,
+  GridPivotModel,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -102,6 +105,7 @@ export interface GridColumnHeaderParamsPremium<R extends GridValidRowModel = any
 }
 
 export interface GridApiCachesPremium extends GridApiCachesPro {
+  pivoting: GridPivotingInternalCache;
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
 }

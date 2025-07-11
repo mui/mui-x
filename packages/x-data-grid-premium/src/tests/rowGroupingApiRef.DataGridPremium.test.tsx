@@ -11,6 +11,7 @@ import {
   getGroupRowIdFromPath,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { microtasks } from 'test/utils/helperFn';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -28,18 +29,7 @@ const baselineProps: BaselineProps = {
   autoHeight: isJSDOM,
   disableVirtualization: true,
   rows,
-  columns: [
-    {
-      field: 'id',
-      type: 'number',
-    },
-    {
-      field: 'category1',
-    },
-    {
-      field: 'category2',
-    },
-  ],
+  columns: [{ field: 'id', type: 'number' }, { field: 'category1' }, { field: 'category2' }],
 };
 
 describe('<DataGridPremium /> - Row grouping', () => {
@@ -58,37 +48,41 @@ describe('<DataGridPremium /> - Row grouping', () => {
   }
 
   describe('apiRef: addRowGroupingCriteria', () => {
-    it('should add grouping criteria to model', () => {
+    it('should add grouping criteria to model', async () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current?.addRowGroupingCriteria('category2'));
       expect(apiRef.current?.state.rowGrouping.model).to.deep.equal(['category1', 'category2']);
+      await microtasks();
     });
 
-    it('should add grouping criteria to model at the right position', () => {
+    it('should add grouping criteria to model at the right position', async () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current?.addRowGroupingCriteria('category2', 0));
       expect(apiRef.current?.state.rowGrouping.model).to.deep.equal(['category2', 'category1']);
+      await microtasks();
     });
   });
 
   describe('apiRef: removeRowGroupingCriteria', () => {
-    it('should remove field from model', () => {
+    it('should remove field from model', async () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current?.removeRowGroupingCriteria('category1'));
       expect(apiRef.current?.state.rowGrouping.model).to.deep.equal([]);
+      await microtasks();
     });
   });
 
   describe('apiRef: setRowGroupingCriteriaIndex', () => {
-    it('should change the grouping criteria order', () => {
+    it('should change the grouping criteria order', async () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />);
       act(() => apiRef.current?.setRowGroupingCriteriaIndex('category1', 1));
       expect(apiRef.current?.state.rowGrouping.model).to.deep.equal(['category2', 'category1']);
+      await microtasks();
     });
   });
 
   describe('apiRef: getRowGroupChildren', () => {
-    it('should return the rows in group of depth 0 of length 1 from tree of depth 1', () => {
+    it('should return the rows in group of depth 0 of length 1 from tree of depth 1', async () => {
       render(
         <Test
           initialState={{
@@ -120,9 +114,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           applyFiltering: true,
         }),
       ).to.deep.equal([2, 1]);
+      await microtasks();
     });
 
-    it('should return the rows in group of depth 0 from tree of depth 2', () => {
+    it('should return the rows in group of depth 0 from tree of depth 2', async () => {
       render(
         <Test
           initialState={{
@@ -174,9 +169,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           applyFiltering: true,
         }),
       ).to.deep.equal(['auto-generated-row-category1/Cat A-category2/Cat 2', 2, 1]);
+      await microtasks();
     });
 
-    it('should return the rows in group of depth 1 from tree of depth 2', () => {
+    it('should return the rows in group of depth 1 from tree of depth 2', async () => {
       render(
         <Test
           initialState={{
@@ -204,6 +200,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(apiRef.current?.getRowGroupChildren({ groupId, applyFiltering: true })).to.deep.equal([
         2,
       ]);
+      await microtasks();
     });
   });
 });

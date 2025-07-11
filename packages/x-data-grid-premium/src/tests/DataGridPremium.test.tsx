@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium as DataGrid,
   DataGridPremiumProps as DataGridProps,
@@ -93,7 +93,7 @@ describe('<DataGridPremium />', () => {
       />,
     );
 
-    await act(() => apiRef.current?.addRowGroupingCriteria('year'));
+    await act(async () => apiRef.current?.addRowGroupingCriteria('year'));
 
     setProps({
       filterModel: {
@@ -102,6 +102,8 @@ describe('<DataGridPremium />', () => {
       },
     });
 
-    expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
+    });
   });
 });

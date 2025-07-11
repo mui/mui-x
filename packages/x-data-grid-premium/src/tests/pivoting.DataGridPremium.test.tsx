@@ -12,6 +12,7 @@ import {
   getColumnHeadersTextContent,
   getColumnValues,
   getRowValues,
+  microtasks,
   sleep,
 } from 'test/utils/helperFn';
 
@@ -280,7 +281,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    });
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
@@ -313,13 +316,12 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
     const { setProps } = render(<Component loading rows={[]} />);
 
-    await sleep(500);
+    await act(() => sleep(500));
     setProps({ loading: false, rows: ROWS });
 
     await waitFor(() => {
       expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
     });
-
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
@@ -360,6 +362,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
       'bond',
       'stock',
     ]);
+    await microtasks();
   });
 
   it('should render "empty pivot overlay" when pivot mode is enabled but no rows are defined', async () => {
@@ -380,6 +383,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(
       screen.getByText('Add fields to rows, columns, and values to create a pivot table'),
     ).not.to.equal(null);
+    await microtasks();
   });
 
   it('should not render "empty pivot overlay" when pivot mode is enabled and there are rows', async () => {
@@ -400,6 +404,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(
       screen.queryByText('Add fields to rows, columns, and values to create a pivot table'),
     ).to.equal(null);
+    await microtasks();
   });
 
   it('should not throw when a field is moved from pivot values to pivot rows', async () => {
@@ -439,6 +444,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['Date (Year)']);
     expect(getColumnValues(0)).to.deep.equal(['2024 (9)', '2023 (1)']);
+    await microtasks();
   });
 
   it('should allow to filter rows in pivot mode using original columns', async () => {
@@ -504,7 +510,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1,058,475', '1,293,770']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1,058,475', '1,293,770']);
+    });
     expect(getRowValues(1)).to.deep.equal(['GOOGL (1)', '402,144', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (1)', '1,415,402', '']);
   });
@@ -680,7 +688,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+    });
   });
 
   it('should not revert prior edits when pivot mode is disabled', async () => {

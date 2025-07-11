@@ -6,6 +6,7 @@ import {
   getColumnHeadersTextContent,
   getColumnValues,
   getCell,
+  microtasks,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
@@ -67,8 +68,8 @@ describe('<DataGridPremium /> - Row grouping', () => {
     );
   }
 
-  describe('prop: rowGroupingColumnMode', () => {
-    it('should gather all the grouping criteria into a single column when rowGroupingColumnMode is not defined', () => {
+  describe('prop: rowGroupingColumnMode', async () => {
+    it('should gather all the grouping criteria into a single column when rowGroupingColumnMode is not defined', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -95,9 +96,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 1 (1)',
         '',
       ]);
+      await microtasks();
     });
 
-    it('should gather all the grouping criteria into a single column when rowGroupingColumnMode = "single"', () => {
+    it('should gather all the grouping criteria into a single column when rowGroupingColumnMode = "single"', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -124,9 +126,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 1 (1)',
         '',
       ]);
+      await microtasks();
     });
 
-    it('should create one grouping column per grouping criteria when rowGroupingColumnMode = "multiple"', () => {
+    it('should create one grouping column per grouping criteria when rowGroupingColumnMode = "multiple"', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -168,9 +171,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 1 (1)',
         '',
       ]);
+      await microtasks();
     });
 
-    it('should support rowGroupingColumnMode switch', () => {
+    it('should support rowGroupingColumnMode switch', async () => {
       const { setProps } = render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -214,12 +218,14 @@ describe('<DataGridPremium /> - Row grouping', () => {
       ]);
 
       setProps({ rowGroupingColumnMode: 'single' });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        'Group',
-        'id',
-        'category1',
-        'category2',
-      ]);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          'Group',
+          'id',
+          'category1',
+          'category2',
+        ]);
+      });
       expect(getColumnValues(0)).to.deep.equal([
         'Cat A (3)',
         'Cat 1 (1)',
@@ -235,13 +241,15 @@ describe('<DataGridPremium /> - Row grouping', () => {
       ]);
 
       setProps({ rowGroupingColumnMode: 'multiple' });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        'category1',
-        'category2',
-        'id',
-        'category1',
-        'category2',
-      ]);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          'category1',
+          'category2',
+          'id',
+          'category1',
+          'category2',
+        ]);
+      });
       expect(getColumnValues(0)).to.deep.equal([
         'Cat A (3)',
         '',
@@ -271,7 +279,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
 
     // https://github.com/mui/mui-x/issues/17046
-    it('should support rowGroupingColumnMode switch with one grouping column', () => {
+    it('should support rowGroupingColumnMode switch with one grouping column', async () => {
       const { setProps } = render(
         <Test
           rowGroupingModel={['category1']}
@@ -296,9 +304,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'category2',
       ]);
       expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+      await microtasks();
     });
 
-    it('should respect the model grouping order when rowGroupingColumnMode = "single"', () => {
+    it('should respect the model grouping order when rowGroupingColumnMode = "single"', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category2', 'category1'] } }}
@@ -325,9 +334,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat B (1)',
         '',
       ]);
+      await microtasks();
     });
 
-    it('should respect the model grouping order when rowGroupingColumnMode = "multiple"', () => {
+    it('should respect the model grouping order when rowGroupingColumnMode = "multiple"', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category2', 'category1'] } }}
@@ -369,6 +379,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat B (1)',
         '',
       ]);
+      await microtasks();
     });
   });
 
@@ -412,8 +423,8 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
   });
 
-  describe('prop: defaultGroupingExpansionDepth', () => {
-    it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
+  describe('prop: defaultGroupingExpansionDepth', async () => {
+    it('should not expand any row if defaultGroupingExpansionDepth = 0', async () => {
       render(
         <Test
           defaultGroupingExpansionDepth={0}
@@ -421,9 +432,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', 'Cat B (2)']);
+      await microtasks();
     });
 
-    it('should expand all top level rows if defaultGroupingExpansionDepth = 1', () => {
+    it('should expand all top level rows if defaultGroupingExpansionDepth = 1', async () => {
       render(
         <Test
           defaultGroupingExpansionDepth={1}
@@ -438,9 +450,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 2 (1)',
         'Cat 1 (1)',
       ]);
+      await microtasks();
     });
 
-    it('should expand all rows up to depth of 2 if defaultGroupingExpansionDepth = 2', () => {
+    it('should expand all rows up to depth of 2 if defaultGroupingExpansionDepth = 2', async () => {
       render(
         <Test
           defaultGroupingExpansionDepth={2}
@@ -460,9 +473,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 1 (1)',
         '',
       ]);
+      await microtasks();
     });
 
-    it('should expand all rows if defaultGroupingExpansionDepth = -1', () => {
+    it('should expand all rows if defaultGroupingExpansionDepth = -1', async () => {
       render(
         <Test
           defaultGroupingExpansionDepth={-1}
@@ -482,9 +496,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 1 (1)',
         '',
       ]);
+      await microtasks();
     });
 
-    it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
+    it('should not re-apply default expansion on rerender after expansion manually toggled', async () => {
       const { setProps } = render(
         <Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />,
       );
@@ -499,17 +514,19 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 1 (1)',
       ]);
       setProps({ sortModel: [{ field: '__row_group_by_columns_group__', sort: 'desc' }] });
-      expect(getColumnValues(0)).to.deep.equal([
-        'Cat B (2)',
-        'Cat 2 (1)',
-        'Cat 1 (1)',
-        'Cat A (3)',
-      ]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat B (2)',
+          'Cat 2 (1)',
+          'Cat 1 (1)',
+          'Cat A (3)',
+        ]);
+      });
     });
   });
 
   describe('prop: isGroupExpandedByDefault', () => {
-    it('should expand groups according to isGroupExpandedByDefault when defined', () => {
+    it('should expand groups according to isGroupExpandedByDefault when defined', async () => {
       const isGroupExpandedByDefault = spy(
         (node: GridGroupNode) => node.groupingKey === 'Cat A' && node.groupingField === 'category1',
       );
@@ -537,9 +554,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 2 (2)',
         'Cat B (2)',
       ]);
+      await microtasks();
     });
 
-    it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
+    it('should have priority over defaultGroupingExpansionDepth when both defined', async () => {
       const isGroupExpandedByDefault = (node: GridGroupNode) =>
         node.groupingKey === 'Cat A' && node.groupingField === 'category1';
 
@@ -556,11 +574,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         'Cat 2 (2)',
         'Cat B (2)',
       ]);
+      await microtasks();
     });
   });
 
   describe('prop: groupingColDef when groupingColumnMode = "single"', () => {
-    it('should not allow to override the field', () => {
+    it('should not allow to override the field', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -572,9 +591,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
       );
 
       expect(apiRef.current?.getAllColumns()[0].field).to.equal('__row_group_by_columns_group__');
+      await microtasks();
     });
 
-    it('should react to groupingColDef update', () => {
+    it('should react to groupingColDef update', async () => {
       const { setProps } = render(
         <Test initialState={{ rowGrouping: { model: ['category1'] } }} groupingColDef={{}} />,
       );
@@ -591,15 +611,17 @@ describe('<DataGridPremium /> - Row grouping', () => {
           headerName: 'Custom group',
         },
       });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        'Custom group',
-        'id',
-        'category1',
-        'category2',
-      ]);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          'Custom group',
+          'id',
+          'category1',
+          'category2',
+        ]);
+      });
     });
 
-    it('should keep the grouping column width between generations', () => {
+    it('should keep the grouping column width between generations', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -623,10 +645,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
         ]),
       );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
+      await microtasks();
     });
 
     describe('prop: groupColDef.leafField', () => {
-      it('should render the leafField `value` on leaves', () => {
+      it('should render the leafField `value` on leaves', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -644,9 +667,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           '3',
           '4',
         ]);
+        await microtasks();
       });
 
-      it('should render the leafField `formattedValue` on leaves if `valueFormatter` is defined on the leafColDef', () => {
+      it('should render the leafField `formattedValue` on leaves if `valueFormatter` is defined on the leafColDef', async () => {
         render(
           <Test
             columns={[
@@ -680,9 +704,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           '#3',
           '#4',
         ]);
+        await microtasks();
       });
 
-      it('should render the leafField `renderCell` on leaves  if `renderCell` is defined on the leafColDef', () => {
+      it('should render the leafField `renderCell` on leaves  if `renderCell` is defined on the leafColDef', async () => {
         const renderIdCell = spy(() => 'Custom leaf');
 
         render(
@@ -712,10 +737,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Custom leaf',
           'Custom leaf',
         ]);
+        await microtasks();
       });
 
       // See https://github.com/mui/mui-x/issues/7949
-      it('should correctly pass `hasFocus` to `renderCell` defined on the leafColDef', () => {
+      it('should correctly pass `hasFocus` to `renderCell` defined on the leafColDef', async () => {
         const renderIdCell = spy((params) => `Focused: ${params.hasFocus}`);
 
         render(
@@ -739,11 +765,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
         fireUserEvent.mousePress(getCell(1, 0));
         expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
         expect(getCell(1, 0)).to.have.text('Focused: true');
+        await microtasks();
       });
     });
 
     describe('prop: groupColDef.headerName', () => {
-      it('should allow to override the headerName in object mode', () => {
+      it('should allow to override the headerName in object mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -759,9 +786,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'category1',
           'category2',
         ]);
+        await microtasks();
       });
 
-      it('should allow to override the headerName in callback mode', () => {
+      it('should allow to override the headerName in callback mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -781,11 +809,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'category1',
           'category2',
         ]);
+        await microtasks();
       });
     });
 
     describe('prop: groupColDef.valueFormatter', () => {
-      it('should allow to format the value in object mode', () => {
+      it('should allow to format the value in object mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -816,9 +845,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'category2 / Cat 2 (1)',
           'category2 / Cat 1 (1)',
         ]);
+        await microtasks();
       });
 
-      it('should allow to format the value in callback mode', () => {
+      it('should allow to format the value in callback mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -849,11 +879,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'category2 / Cat 2 (1)',
           'category2 / Cat 1 (1)',
         ]);
+        await microtasks();
       });
     });
 
     describe('prop: groupingColDef.hideDescendantCount', () => {
-      it('should render descendant count when hideDescendantCount = false', () => {
+      it('should render descendant count when hideDescendantCount = false', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -875,9 +906,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1 (1)',
           '',
         ]);
+        await microtasks();
       });
 
-      it('should not render descendant count when hideDescendantCount = true', () => {
+      it('should not render descendant count when hideDescendantCount = true', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -899,12 +931,13 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1',
           '',
         ]);
+        await microtasks();
       });
     });
   });
 
   describe('prop: groupingColDef when groupingColumnMode = "multiple"', () => {
-    it('should not allow to override the field', () => {
+    it('should not allow to override the field', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -919,9 +952,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
       expect(apiRef.current?.getAllColumns()[0].field).to.equal(
         '__row_group_by_columns_group_category1__',
       );
+      await microtasks();
     });
 
-    it('should react to groupingColDef update', () => {
+    it('should react to groupingColDef update', async () => {
       const { setProps } = render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -952,16 +986,18 @@ describe('<DataGridPremium /> - Row grouping', () => {
               }
             : {},
       });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        'category1',
-        'Custom group',
-        'id',
-        'category1',
-        'category2',
-      ]);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          'category1',
+          'Custom group',
+          'id',
+          'category1',
+          'category2',
+        ]);
+      });
     });
 
-    it('should keep the grouping column width between generations', () => {
+    it('should keep the grouping column width between generations', async () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -991,10 +1027,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
       );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
+      await microtasks();
     });
 
     describe('prop: groupColDef.leafField', () => {
-      it('should render the leafField `value` on leaves', () => {
+      it('should render the leafField `value` on leaves', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1035,9 +1072,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1 (1)',
           '4',
         ]);
+        await microtasks();
       });
 
-      it('should render the leafField `formattedValue` on leaves if `valueFormatter` is defined on the leafColDef', () => {
+      it('should render the leafField `formattedValue` on leaves if `valueFormatter` is defined on the leafColDef', async () => {
         render(
           <Test
             columns={[
@@ -1098,9 +1136,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1 (1)',
           '#4',
         ]);
+        await microtasks();
       });
 
-      it('should render the leafField `renderCell` on leaves  if `renderCell` is defined on the leafColDef', () => {
+      it('should render the leafField `renderCell` on leaves  if `renderCell` is defined on the leafColDef', async () => {
         const renderIdCell = spy(() => 'Custom leaf');
 
         render(
@@ -1157,11 +1196,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1 (1)',
           'Custom leaf',
         ]);
+        await microtasks();
       });
     });
 
     describe('prop: groupColDef.headerName', () => {
-      it('should allow to override the headerName in object mode', () => {
+      it('should allow to override the headerName in object mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1179,9 +1219,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'category1',
           'category2',
         ]);
+        await microtasks();
       });
 
-      it('should allow to override the headerName in callback mode', () => {
+      it('should allow to override the headerName in callback mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1203,11 +1244,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'category1',
           'category2',
         ]);
+        await microtasks();
       });
     });
 
     describe('prop: groupColDef.valueFormatter', () => {
-      it('should allow to format the value in object mode', () => {
+      it('should allow to format the value in object mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1247,9 +1289,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'category2 / Cat 2 (1)',
           'category2 / Cat 1 (1)',
         ]);
+        await microtasks();
       });
 
-      it('should allow to format the value in callback mode', () => {
+      it('should allow to format the value in callback mode', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1295,11 +1338,12 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 2 (1)',
           'Cat 1 (1)',
         ]);
+        await microtasks();
       });
     });
 
     describe('prop: groupingColDef.hideDescendantCount', () => {
-      it('should render descendant count when hideDescendantCount = false', () => {
+      it('should render descendant count when hideDescendantCount = false', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1335,9 +1379,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1 (1)',
           '',
         ]);
+        await microtasks();
       });
 
-      it('should not render descendant count when hideDescendantCount = true', () => {
+      it('should not render descendant count when hideDescendantCount = true', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1373,6 +1418,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           'Cat 1',
           '',
         ]);
+        await microtasks();
       });
     });
   });
