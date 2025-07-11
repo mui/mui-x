@@ -84,3 +84,11 @@ Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the sh
 Here is an example with horizontal shortcuts.
 
 {{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
+
+## Shortcuts in DateTimePicker
+
+Like other pickers, the `DateTimePicker` uses the `PickersShortcuts` component to display shortcuts.
+
+You can use the same `shortcuts` prop to add shortcuts to the `DateTimePicker`.
+
+{{"demo": "StaticDateTimePickerShortcuts.js", "bg": "inline"}}
