@@ -11,6 +11,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { microtasks } from 'test/utils/helperFn';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -74,8 +75,9 @@ describe('<DataGridPremium /> - Prompt', () => {
   });
 
   describe.skipIf(isJSDOM)('data sampling', () => {
-    it('should not show AI Assistant button in the Toolbarif the feature is disabled', () => {
+    it('should not show AI Assistant button in the Toolbarif the feature is disabled', async () => {
       render(<Test aiAssistant={false} />);
+      await microtasks();
       expect(screen.queryByTestId('AssistantIcon')).to.equal(null);
     });
 

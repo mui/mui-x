@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { stub, SinonStub, spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { spyApi, getCell, grid } from 'test/utils/helperFn';
+import { spyApi, getCell, grid, microtasks } from 'test/utils/helperFn';
 import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
@@ -198,6 +198,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
     it('should call selectCellRange when ArrowUp is pressed', async () => {
       const { user } = render(<TestDataGridSelection />);
+      await microtasks();
       const spiedSelectCellsBetweenRange = spyApi(apiRef.current!, 'selectCellRange');
       const cell = getCell(1, 0);
       await act(() => {
@@ -298,6 +299,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     describe('selectCellRange', () => {
       it('should select all cells within the given arguments if end > start', async () => {
         render(<TestDataGridSelection />);
+        await microtasks();
         act(() =>
           apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
         );
@@ -317,6 +319,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
       it('should select all cells within the given arguments if start > end', async () => {
         render(<TestDataGridSelection />);
+        await microtasks();
         await act(() =>
           apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
         );
@@ -340,6 +343,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             initialState={{ cellSelection: { 0: { id: true, currencyPair: true, price1M: true } } }}
           />,
         );
+        await microtasks();
 
         expect(getCell(0, 0)).to.have.class('Mui-selected');
         expect(getCell(0, 1)).to.have.class('Mui-selected');
@@ -364,12 +368,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     describe('getSelectedCellsAsArray', () => {
-      it('should return the selected cells as an array', () => {
+      it('should return the selected cells as an array', async () => {
         render(
           <TestDataGridSelection
             cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
           />,
         );
+        await microtasks();
         expect(apiRef.current?.getSelectedCellsAsArray()).to.deep.equal([
           { id: 0, field: 'id' },
           { id: 0, field: 'currencyPair' },
