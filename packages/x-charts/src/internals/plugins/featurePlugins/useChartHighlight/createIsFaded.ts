@@ -1,10 +1,20 @@
 import { HighlightScope } from './highlightConfig.types';
 import { HighlightItemData } from './useChartHighlight.types';
 
-export const createIsFaded =
-  (highlightScope: HighlightScope | null | undefined, highlightedItem: HighlightItemData | null) =>
-  (item: HighlightItemData | null): boolean => {
-    if (!highlightScope || !highlightedItem || !item) {
+function alwaysFalse(): boolean {
+  return false;
+}
+
+export function createIsFaded(
+  highlightScope: HighlightScope | null | undefined,
+  highlightedItem: HighlightItemData | null,
+) {
+  if (!highlightScope || !highlightedItem) {
+    return alwaysFalse;
+  }
+
+  return function isFaded(item: HighlightItemData | null): boolean {
+    if (!item) {
       return false;
     }
 
@@ -22,3 +32,4 @@ export const createIsFaded =
 
     return false;
   };
+}

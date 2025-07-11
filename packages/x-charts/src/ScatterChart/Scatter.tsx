@@ -91,39 +91,53 @@ function Scatter(props: ScatterProps) {
 
   const classes = useUtilityClasses(inClasses);
 
+  const children = React.useMemo(() => {
+    return scatterPlotData.map((dataPoint, i) => {
+      const isItemHighlighted = isHighlighted(dataPoint);
+      const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
+
+      return (
+        <Marker
+          key={dataPoint.id ?? dataPoint.dataIndex}
+          dataIndex={dataPoint.dataIndex}
+          color={colorGetter ? colorGetter(i) : color}
+          isHighlighted={isItemHighlighted}
+          isFaded={isItemFaded}
+          x={dataPoint.x}
+          y={dataPoint.y}
+          onClick={
+            onItemClick &&
+            ((event) =>
+              onItemClick(event, {
+                type: 'scatter',
+                seriesId: series.id,
+                dataIndex: dataPoint.dataIndex,
+              }))
+          }
+          data-highlighted={isItemHighlighted || undefined}
+          data-faded={isItemFaded || undefined}
+          {...(skipInteractionHandlers ? undefined : getInteractionItemProps(instance, dataPoint))}
+          {...markerProps}
+        />
+      );
+    });
+  }, [
+    Marker,
+    color,
+    colorGetter,
+    instance,
+    isFaded,
+    isHighlighted,
+    markerProps,
+    onItemClick,
+    scatterPlotData,
+    series.id,
+    skipInteractionHandlers,
+  ]);
+
   return (
     <g data-series={series.id} className={classes.root}>
-      {scatterPlotData.map((dataPoint, i) => {
-        const isItemHighlighted = isHighlighted(dataPoint);
-        const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
-
-        return (
-          <Marker
-            key={dataPoint.id ?? dataPoint.dataIndex}
-            dataIndex={dataPoint.dataIndex}
-            color={colorGetter ? colorGetter(i) : color}
-            isHighlighted={isItemHighlighted}
-            isFaded={isItemFaded}
-            x={dataPoint.x}
-            y={dataPoint.y}
-            onClick={
-              onItemClick &&
-              ((event) =>
-                onItemClick(event, {
-                  type: 'scatter',
-                  seriesId: series.id,
-                  dataIndex: dataPoint.dataIndex,
-                }))
-            }
-            data-highlighted={isItemHighlighted || undefined}
-            data-faded={isItemFaded || undefined}
-            {...(skipInteractionHandlers
-              ? undefined
-              : getInteractionItemProps(instance, dataPoint))}
-            {...markerProps}
-          />
-        );
-      })}
+      {children}
     </g>
   );
 }

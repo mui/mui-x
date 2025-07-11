@@ -127,21 +127,27 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     // Clean the interaction when the mouse leaves the chart.
-    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
-      if (!event.detail.activeGestures.pan) {
-        instance.cleanInteraction?.();
-      }
-    });
-    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+    const moveEndHandler = instance.addInteractionListener(
+      'moveEnd',
+      function handleMoveEnd(event) {
+        if (!event.detail.activeGestures.pan) {
+          instance.cleanInteraction?.();
+        }
+      },
+    );
+    const panEndHandler = instance.addInteractionListener('panEnd', function handlePanEnd(event) {
       if (!event.detail.activeGestures.move) {
         instance.cleanInteraction?.();
       }
     });
-    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
-      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
-        instance.cleanInteraction?.();
-      }
-    });
+    const pressEndHandler = instance.addInteractionListener(
+      'quickPressEnd',
+      function handlePressEnd(event) {
+        if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+          instance.cleanInteraction?.();
+        }
+      },
+    );
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
       const srvEvent = event.detail.srcEvent;
@@ -164,10 +170,19 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       }
       instance.setPointerCoordinate?.(svgPoint);
     };
+    function handleAxisMove(event: CustomEvent<PointerGestureEventData>) {
+      gestureHandler(event);
+    }
+    function handleAxisPan(event: CustomEvent<PointerGestureEventData>) {
+      gestureHandler(event);
+    }
+    function handleAxisQuickPress(event: CustomEvent<PointerGestureEventData>) {
+      gestureHandler(event);
+    }
 
-    const moveHandler = instance.addInteractionListener('move', gestureHandler);
-    const panHandler = instance.addInteractionListener('pan', gestureHandler);
-    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
+    const moveHandler = instance.addInteractionListener('move', handleAxisMove);
+    const panHandler = instance.addInteractionListener('pan', handleAxisPan);
+    const pressHandler = instance.addInteractionListener('quickPress', handleAxisQuickPress);
 
     return () => {
       moveHandler.cleanup();
