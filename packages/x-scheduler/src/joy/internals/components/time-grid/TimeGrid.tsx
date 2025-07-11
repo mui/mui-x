@@ -13,6 +13,7 @@ import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
 import { selectors } from '../../../event-calendar/store';
 import { EventPopoverProvider } from '../../utils/EventPopoverProvider';
+import { CalendarEvent } from '../../../models/events';
 import './TimeGrid.css';
 
 const adapter = getAdapter();
@@ -163,7 +164,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                         className="TimeGridColumn"
                         data-weekend={isWeekend(adapter, day) ? '' : undefined}
                       >
-                        {visibleEventsByDay.get(dayKey).map((event) => (
+                        {visibleEventsByDay.get(dayKey).map((event: CalendarEvent) => (
                           <TimeGridEvent
                             key={event.id}
                             event={event}

@@ -10,6 +10,7 @@ import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
+import { CalendarEvent } from '../models/events';
 import './AgendaView.css';
 
 const adapter = getAdapter();
@@ -77,7 +78,7 @@ export const AgendaView = React.memo(
                       </div>
                     </div>
                     <div className="EventsList">
-                      {visibleEventsByDay.get(dayKey).map((event) => (
+                      {visibleEventsByDay.get(dayKey).map((event: CalendarEvent) => (
                         <DayGridEvent
                           key={event.id}
                           event={event}
