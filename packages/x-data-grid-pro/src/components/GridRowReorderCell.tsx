@@ -48,6 +48,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   // eslint-disable-next-line no-underscore-dangle
   const cellValue = params.row.__reorder__ || params.id;
+  const cellRef = React.useRef<HTMLDivElement>(null);
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
   const isDraggable = React.useMemo(
@@ -108,11 +109,34 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     [publish, handleMouseUp],
   );
 
+  const handleNativeDragEnd = React.useCallback(
+    (event: DragEvent) => {
+      // Always publish `dragEnd` event, even if element was virtualized out
+      if (apiRef.current.getRow(params.id)) {
+        apiRef.current.publishEvent('rowDragEnd', apiRef.current.getRowParams(params.id), event);
+      }
+      handleMouseUp();
+    },
+    [apiRef, params.id, handleMouseUp],
+  );
+
+  // Setup event listeners - key is to depend on the DOM node, not the handlers
+  const node = cellRef.current;
+  React.useEffect(() => {
+    if (!node || !isDraggable) {
+      return;
+    }
+    node.addEventListener('dragend', handleNativeDragEnd);
+
+    return () => {
+      node.removeEventListener('dragend', handleNativeDragEnd);
+    };
+  }, [handleNativeDragEnd, node, isDraggable]);
+
   const draggableEventHandlers = isDraggable
     ? {
         onDragStart: publish('rowDragStart'),
         onDragOver: publish('rowDragOver'),
-        onDragEnd: handleDragEnd,
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
       }
@@ -123,7 +147,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   }
 
   return (
-    <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
+    <div ref={cellRef} className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <RowReorderIcon
         as={rootProps.slots.rowReorderIcon}
         ownerState={ownerState}
