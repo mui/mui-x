@@ -116,4 +116,101 @@ describe('RadarChart - click event', () => {
       },
     );
   });
+
+  describe('onMarkClick', () => {
+    it('should add cursor="pointer" to mark elements', () => {
+      render(<RadarChart {...config} onMarkClick={() => {}} />);
+      const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
+
+      expect(Array.from(marks).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
+        'pointer',
+        'pointer',
+        'pointer',
+        'pointer',
+        'pointer',
+        'pointer',
+        'pointer',
+        'pointer',
+      ]);
+    });
+
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
+      const onItemClick = spy();
+      const { user } = render(
+        <div
+          style={{
+            width: 100,
+            height: 100,
+          }}
+        >
+          <RadarChart {...config} onMarkClick={onItemClick} />
+        </div>,
+      );
+
+      const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
+
+      await user.click(marks[0]);
+      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+        type: 'radar',
+        seriesId: 's1',
+        dataIndex: 0,
+      });
+
+      await user.click(marks[1]);
+      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+        type: 'radar',
+        seriesId: 's1',
+        dataIndex: 1,
+      });
+
+      await user.click(marks[4]);
+      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+        type: 'radar',
+        seriesId: 's2',
+        dataIndex: 0,
+      });
+    });
+  });
+
+  describe('onAreaClick', () => {
+    it('should add cursor="pointer" to mark elements', () => {
+      render(<RadarChart {...config} onAreaClick={() => {}} />);
+      const marks = document.querySelectorAll<HTMLElement>('path.MuiRadarSeriesPlot-area');
+
+      expect(Array.from(marks).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
+        'pointer',
+        'pointer',
+      ]);
+    });
+
+    // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
+      const onItemClick = spy();
+      const { user } = render(
+        <div
+          style={{
+            width: 100,
+            height: 100,
+          }}
+        >
+          <RadarChart {...config} onAreaClick={onItemClick} />
+        </div>,
+      );
+
+      const marks = document.querySelectorAll<HTMLElement>('path.MuiRadarSeriesPlot-area');
+
+      await user.click(marks[0]);
+      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+        type: 'radar',
+        seriesId: 's1',
+      });
+
+      await user.click(marks[1]);
+      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+        type: 'radar',
+        seriesId: 's2',
+      });
+    });
+  });
 });
