@@ -216,9 +216,19 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       }
     });
 
-    const moveHandler = instance.addInteractionListener('move', gestureHandler);
-    const panHandler = instance.addInteractionListener('pan', gestureHandler);
-    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
+    function handleVoronoiMove(event: CustomEvent<PointerGestureEventData>) {
+      gestureHandler(event);
+    }
+    function handleVoronoiPan(event: CustomEvent<PointerGestureEventData>) {
+      gestureHandler(event);
+    }
+    function handleVoronoiQuickPress(event: CustomEvent<PointerGestureEventData>) {
+      gestureHandler(event);
+    }
+
+    const moveHandler = instance.addInteractionListener('move', handleVoronoiMove);
+    const panHandler = instance.addInteractionListener('pan', handleVoronoiPan);
+    const pressHandler = instance.addInteractionListener('quickPress', handleVoronoiQuickPress);
 
     return () => {
       tapHandler.cleanup();
